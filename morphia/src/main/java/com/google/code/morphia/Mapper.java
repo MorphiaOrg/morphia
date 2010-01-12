@@ -295,20 +295,22 @@ public class Mapper {
             if ( dbObject.containsField(name) ) {
                 Class paramClass = ReflectionUtils.getParameterizedClass(field);
                 List list = (List) dbObject.get(name);
+                List values = mongoValue.listClass().newInstance();
 
                 if (paramClass == Locale.class) {
-                    List values = mongoValue.listClass().newInstance();
                     for ( Object o : list ) {
                         values.add(parseLocale((String)o));
                     }
                     field.set(entity, values);
                 } else if (paramClass.isEnum()) {
-                    List values = mongoValue.listClass().newInstance();
                     for ( Object o : list ) {
                         values.add(Enum.valueOf(paramClass, (String)o));
                     }
                     field.set(entity, values);
                 } else {
+                    for ( Object o : list ) {
+                        values.add(o);
+                    }
                     field.set(entity, list);
                 }
             } else {
