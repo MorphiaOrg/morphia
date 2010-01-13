@@ -311,7 +311,7 @@ public class Mapper {
                     for ( Object o : list ) {
                         values.add(o);
                     }
-                    field.set(entity, list);
+                    field.set(entity, values);
                 }
             } else {
                 field.set(entity, mongoValue.listClass().newInstance());
