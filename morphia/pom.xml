@@ -5,7 +5,7 @@
     <groupId>com.google.code</groupId>
     <artifactId>morphia</artifactId>
     <packaging>jar</packaging>
-    <version>0.9</version>
+    <version>0.91</version>
     <name>morphia</name>
     
     <url>http://code.google.com/p/morphia/</url>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>1.1</version>
+            <version>1.2.1</version>
         </dependency>
         
         <dependency>
