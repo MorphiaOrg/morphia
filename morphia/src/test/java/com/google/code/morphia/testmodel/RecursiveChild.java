@@ -17,12 +17,14 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
+import com.google.code.morphia.annotations.MongoDocument;
 import com.google.code.morphia.annotations.MongoReference;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
+@MongoDocument
 public class RecursiveChild extends AbstractMongoEntity {
 
     @MongoReference

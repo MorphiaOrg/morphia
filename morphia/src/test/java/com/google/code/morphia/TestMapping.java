@@ -17,10 +17,13 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.testmodel.Address;
+import com.google.code.morphia.testmodel.Article;
+import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.PhoneNumber;
 import com.google.code.morphia.testmodel.RecursiveChild;
 import com.google.code.morphia.testmodel.RecursiveParent;
+import com.google.code.morphia.testmodel.Translation;
 import com.google.code.morphia.testmodel.TravelAgency;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -58,6 +61,7 @@ public class TestMapping {
             borg.setType(Hotel.Type.LEISURE);
             borg.getTags().add("Swimming pool");
             borg.getTags().add("Room service");
+            borg.setTemp("A temporary transient value");
             borg.getPhoneNumbers().add(new PhoneNumber(354,5152233,PhoneNumber.Type.PHONE));
             borg.getPhoneNumbers().add(new PhoneNumber(354,5152244,PhoneNumber.Type.FAX));
 
@@ -77,9 +81,10 @@ public class TestMapping {
             assertEquals(borg.getType(), borgLoaded.getType());
             assertEquals(borg.getAddress().getStreet(), borgLoaded.getAddress().getStreet());
             assertEquals(borg.getTags().size(), borgLoaded.getTags().size());
-            assertEquals(borg.getTags().get(0), borgLoaded.getTags().get(0));
+            assertEquals(borg.getTags(), borgLoaded.getTags());
             assertEquals(borg.getPhoneNumbers().size(), borgLoaded.getPhoneNumbers().size());
             assertEquals(borg.getPhoneNumbers().get(1), borgLoaded.getPhoneNumbers().get(1));
+            assertNull(borgLoaded.getTemp());
             assertTrue(borgLoaded.getPhoneNumbers() instanceof Vector);
 
             TravelAgency agency = new TravelAgency();
@@ -94,6 +99,51 @@ public class TestMapping {
             assertEquals(agency.getName(), agencyLoaded.getName());
             assertEquals(agency.getHotels().size(), 1);
             assertEquals(agency.getHotels().get(0).getName(), borg.getName());
+
+        } finally {
+            db.dropDatabase();
+        }
+    }
+
+    @Test
+    public void testMaps() throws Exception {
+        Mongo mongo = new Mongo();
+        DB db = mongo.getDB("morphia_test");
+        try {
+            DBCollection articles = db.getCollection("articles");
+            Morphia morphia = new Morphia();
+            morphia.map(Article.class).map(Translation.class).map(Circle.class);
+
+            Article related = new Article();
+            BasicDBObject relatedDbObj = (BasicDBObject) morphia.toDBObject(related);
+            articles.save(relatedDbObj);
+
+            Article relatedLoaded = morphia.fromDBObject(Article.class, (BasicDBObject)articles.findOne(new BasicDBObject("_id", relatedDbObj.get("_id"))));
+
+            Article article = new Article();
+            article.setTranslation("en", new Translation("Hello World", "Just a test"));
+            article.setTranslation("is", new Translation("Halló heimur", "Bara að prófa"));
+
+            article.setAttribute("myDate", new Date());
+            article.setAttribute("myString", "Test");
+            article.setAttribute("myInt", 123);
+
+            article.putRelated("test", relatedLoaded);
+
+            BasicDBObject articleDbObj = (BasicDBObject) morphia.toDBObject(article);
+            articles.save(articleDbObj);
+
+            Article articleLoaded = morphia.fromDBObject(Article.class, (BasicDBObject)articles.findOne(new BasicDBObject("_id", articleDbObj.get("_id"))));
+
+            assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
+            assertEquals(article.getTranslation("en").getTitle(), articleLoaded.getTranslation("en").getTitle());
+            assertEquals(article.getTranslation("is").getBody(), articleLoaded.getTranslation("is").getBody());
+            assertEquals(article.getAttributes().size(), articleLoaded.getAttributes().size());
+            assertEquals(article.getAttribute("myDate"), articleLoaded.getAttribute("myDate"));
+            assertEquals(article.getAttribute("myString"), articleLoaded.getAttribute("myString"));
+            assertEquals(article.getAttribute("myInt"), articleLoaded.getAttribute("myInt"));
+            assertEquals(article.getRelated().size(), articleLoaded.getRelated().size());
+            assertEquals(article.getRelated("test").getId(), articleLoaded.getRelated("test").getId());
 
         } finally {
             db.dropDatabase();

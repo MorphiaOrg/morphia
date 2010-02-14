@@ -33,11 +33,11 @@ public class Morphia {
     private final Validator validator;
 
     public Morphia() {
-        this(true, Collections.EMPTY_SET);
+        this(Collections.EMPTY_SET);
     }
 
-    public Morphia( boolean dynamicInstantiation, Set<Class> classesToMap ) {
-        this.mapper = new Mapper(dynamicInstantiation);
+    public Morphia( Set<Class> classesToMap ) {
+        this.mapper = new Mapper();
         this.validator = new Validator();
         for (Class c : classesToMap) {
             map(c);
@@ -46,7 +46,7 @@ public class Morphia {
 
     public synchronized Morphia map(Class entityClass) {
         if ( !mapper.isMapped(entityClass) ) {
-            Set<Class> validClasses = validator.validate(entityClass, mapper.isDynamicInstantiation());
+            Set<Class> validClasses = validator.validate(entityClass);
             for (Class c : validClasses) {
                 mapper.addMappedClass(c);
             }
@@ -114,7 +114,7 @@ public class Morphia {
     }
 
     public <T> T fromDBObject(Class<T> entityClass, BasicDBObject dbObject) {
-        if (!mapper.isDynamicInstantiation() && !mapper.isMapped(entityClass)) {
+        if ( !entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MongoMappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {

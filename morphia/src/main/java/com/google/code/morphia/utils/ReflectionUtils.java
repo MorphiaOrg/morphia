@@ -15,6 +15,7 @@
  */
 package com.google.code.morphia.utils;
 
+import com.google.code.morphia.annotations.MongoDocument;
 import com.google.code.morphia.annotations.MongoEmbedded;
 import java.io.File;
 import java.io.FileInputStream;
@@ -141,6 +142,10 @@ public class ReflectionUtils {
                 ;
     }
 
+    public static boolean isValidMapValueType(Class type) {
+        return isPropertyType(type);
+    }
+
     private static boolean isArrayOfType(Class c, Class type) {
         return c.isArray() && c.getComponentType() == type;
     }
@@ -172,6 +177,10 @@ public class ReflectionUtils {
     public static Class getParameterizedClass(Field field, int index) {
         if (field.getGenericType() instanceof ParameterizedType) {
             ParameterizedType ptype = (ParameterizedType) field.getGenericType();
+            if ( ptype.getActualTypeArguments() != null
+                    && ptype.getActualTypeArguments().length <= index ) {
+                return null;
+            }
             Type paramType = ptype.getActualTypeArguments()[index];
             if (paramType instanceof GenericArrayType) {
                 Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
@@ -262,7 +271,7 @@ public class ReflectionUtils {
         return false;
     }
 
-    public static MongoEmbedded getClassMongoDocumentAnnotation(Class c) {
+    public static MongoEmbedded getClassMongoEmbeddedAnnotation(Class c) {
 
         if (c.isAnnotationPresent(MongoEmbedded.class)) {
             return (MongoEmbedded) c.getAnnotation(MongoEmbedded.class);
@@ -288,6 +297,39 @@ public class ReflectionUtils {
             for (Class interfaceClass : c.getInterfaces()) {
                 if (interfaceClass.isAnnotationPresent(MongoEmbedded.class)) {
                     return (MongoEmbedded) interfaceClass.getAnnotation(MongoEmbedded.class);
+                }
+            }
+        }
+        // no annotation found, use the defaults
+        return null;
+    }
+
+    public static MongoDocument getClassMongoDocumentAnnotation(Class c) {
+
+        if (c.isAnnotationPresent(MongoDocument.class)) {
+            return (MongoDocument) c.getAnnotation(MongoDocument.class);
+        } else {
+            // need to check all superclasses
+            Class parent = c.getSuperclass();
+            while (parent != null && parent != Object.class) {
+                if (parent.isAnnotationPresent(MongoDocument.class)) {
+                    return (MongoDocument) parent.getAnnotation(MongoDocument.class);
+                }
+
+                // ...and interfaces that the superclass implements
+                for (Class interfaceClass : parent.getInterfaces()) {
+                    if (interfaceClass.isAnnotationPresent(MongoDocument.class)) {
+                        return (MongoDocument) interfaceClass.getAnnotation(MongoDocument.class);
+                    }
+                }
+
+                parent = parent.getSuperclass();
+            }
+
+            // ...and all implemented interfaces
+            for (Class interfaceClass : c.getInterfaces()) {
+                if (interfaceClass.isAnnotationPresent(MongoDocument.class)) {
+                    return (MongoDocument) interfaceClass.getAnnotation(MongoDocument.class);
                 }
             }
         }

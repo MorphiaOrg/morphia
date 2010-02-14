@@ -21,7 +21,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -45,4 +49,18 @@ public @interface MongoValue {
      * @return The implementing class of the list
      */
     Class<? extends List> listClass() default ArrayList.class;
+
+    /**
+     * Specify the implementing class to user for Set.
+     *
+     * @return The implementing class of the set
+     */
+    Class<? extends Set> setClass() default HashSet.class;
+
+    /**
+     * Specify the implementing class to user for Map.
+     *
+     * @return The implementing class of the map
+     */
+    Class<? extends Map> mapClass() default HashMap.class;
 }

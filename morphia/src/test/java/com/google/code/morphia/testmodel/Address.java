@@ -16,12 +16,14 @@
 
 package com.google.code.morphia.testmodel;
 
+import com.google.code.morphia.annotations.MongoEmbedded;
 import com.google.code.morphia.annotations.MongoValue;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
+@MongoEmbedded
 public class Address {
 
     @MongoValue("address_street")

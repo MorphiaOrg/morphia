@@ -17,6 +17,7 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.annotations.MongoCollectionName;
+import com.google.code.morphia.annotations.MongoDocument;
 import com.google.code.morphia.annotations.MongoEmbedded;
 import com.google.code.morphia.annotations.MongoID;
 import com.google.code.morphia.annotations.MongoReference;
@@ -25,6 +26,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,33 +39,44 @@ public class Validator {
 
     private static final Logger logger = Logger.getLogger(Validator.class.getName());
 
-    Set<Class> validate(Class c, boolean dynamicInstantiation) {
+    Set<Class> validate(Class c) {
         Set<Class> validClasses = new HashSet<Class>();
-        validateInternal(c, validClasses, dynamicInstantiation, true, false);
+        validateInternal(c, validClasses);
         return validClasses;
     }
 
-    private void validateInternal(Class c, Set<Class> validClasses, boolean dynamicInstantiation,
-            boolean idFieldNeeded, boolean collectionNameFieldNeeded ) {
+    private void validateInternal(Class c, Set<Class> validClasses ) {
         if (!validClasses.contains(c)) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.finer("Processing class: " + c.getName());
             }
 
-            validClasses.add(c);
-
-            // when dynamic instantiation is turned on, we ignore interfaces
-            if (!(c.isInterface() && dynamicInstantiation)) {
-                validateFields(c, ReflectionUtils.getDeclaredAndInheritedFields(c, true), validClasses,
-                        dynamicInstantiation, idFieldNeeded, collectionNameFieldNeeded);
+            // we ignore interfaces
+            if ( !c.isInterface() ) {
+                validateFields(c, ReflectionUtils.getDeclaredAndInheritedFields(c, true));
+                validClasses.add(c);
             }
         }
     }
 
-    private void validateFields(Class c, Field[] fields, Set<Class> validClasses, boolean dynamicInstantiation,
-            boolean idFieldNeeded, boolean collectionNameFieldNeeded ) {
+    private void validateFields(Class c, Field[] fields ) {
+        MongoEmbedded classMongoEmbedded = ReflectionUtils.getClassMongoEmbeddedAnnotation(c);
+        MongoDocument classMongoDocument = ReflectionUtils.getClassMongoDocumentAnnotation(c);
+
+        if ( classMongoDocument == null && classMongoEmbedded == null ) {
+            throw new MongoMappingException(
+                    "In [" + c.getName()
+                           + "]: This class is neither annotated as @MongoDocument or @MongoEmbedded.");
+        }
+        if ( classMongoDocument != null && classMongoEmbedded != null ) {
+            throw new MongoMappingException(
+                    "In [" + c.getName()
+                           + "]: Cannot have both @MongoDocument and @MongoEmbedded annotation at class level.");
+        }
+
         boolean foundIDField = false;
         boolean foundCollectionNameField = false;
+
         for (Field field : fields) {
             field.setAccessible(true);
             if (logger.isLoggable(Level.FINE)) {
@@ -72,16 +85,11 @@ public class Validator {
 
             if ( field.isAnnotationPresent(MongoValue.class) ) {
                 // make sure that the property type is supported
-                if (ReflectionUtils.implementsInterface(field.getType(), List.class)) {
-                    if (!ReflectionUtils.isFieldParameterizedWithPropertyType(field)) {
-                        throw new MongoMappingException(
-                                "In ["
-                                        + c.getName()
-                                        + "]: Field ["
-                                        + field.getName()
-                                        + "] which is a List annotated as @MongoValue is not parameterized with an invalid type.");
-                    }
-                } else if (!ReflectionUtils.isPropertyType(field.getType())) {
+                if ( !ReflectionUtils.implementsInterface(field.getType(), List.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Set.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Map.class)
+                        && !ReflectionUtils.isPropertyType(field.getType())
+                        ) {
                     throw new MongoMappingException("In [" + c.getName() + "]: Field [" + field.getName()
                             + "] which is annotated as @MongoValue is of type that cannot be mapped (type is "
                             + field.getType().getName() + ").");
@@ -106,26 +114,41 @@ public class Validator {
                 foundCollectionNameField = true;
 
             } else if (field.isAnnotationPresent(MongoEmbedded.class)) {
-                validateInternal(field.getType(), validClasses, dynamicInstantiation, false, false);
+                if ( !ReflectionUtils.implementsInterface(field.getType(), List.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Set.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Map.class)
+                        && (!field.getType().isInterface() && ReflectionUtils.getClassMongoEmbeddedAnnotation(field.getType()) == null) ) {
 
-            } else if (field.isAnnotationPresent(MongoReference.class)) {
-                Class fieldType;
-                if (ReflectionUtils.implementsInterface(field.getType(), List.class)) {
-                    fieldType = ReflectionUtils.getParameterizedClass(field);
-                } else {
-                    fieldType = field.getType();
+                    throw new MongoMappingException(
+                            "In ["
+                                    + c.getName()
+                                    + "]: Field ["
+                                    + field.getName()
+                                    + "] which is annotated as @MongoEmbedded is of type [" + field.getType().getName() + "] which cannot be embedded.");
                 }
 
-                if (fieldType != null) {
-                    // validate the class
-                    validateInternal(fieldType, validClasses, dynamicInstantiation, true, true);
+            } else if (field.isAnnotationPresent(MongoReference.class)) {
+                if ( !ReflectionUtils.implementsInterface(field.getType(), List.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Set.class)
+                        && !ReflectionUtils.implementsInterface(field.getType(), Map.class)
+                        && (!field.getType().isInterface() && ReflectionUtils.getClassMongoDocumentAnnotation(field.getType()) == null) ) {
+
+                    throw new MongoMappingException(
+                            "In ["
+                                    + c.getName()
+                                    + "]: Field ["
+                                    + field.getName()
+                                    + "] which is annotated as @MongoReference is of type [" + field.getType().getName() + "] which cannot be referenced.");
                 }
             }
         }
-        if (!foundIDField && idFieldNeeded) {
+
+
+
+        if (!foundIDField && classMongoDocument != null) {
             throw new MongoMappingException("In [" + c.getName() + "]: No field is annotated with @MongoID");
         }
-        if (!foundCollectionNameField && collectionNameFieldNeeded) {
+        if (!foundCollectionNameField && classMongoDocument != null) {
             throw new MongoMappingException("In [" + c.getName() + "]: No field is annotated with @MongoCollectionName");
         }
     }

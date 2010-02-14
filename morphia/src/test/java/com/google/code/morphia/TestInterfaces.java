@@ -74,7 +74,6 @@ public class TestInterfaces {
             assertTrue(shifterLoaded.getReferencedShape() instanceof Rectangle);
             assertTrue(shifter.getMainShape().getArea() == shifterLoaded.getMainShape().getArea());
             assertEquals(shifter.getAvailableShapes().size(), shifterLoaded.getAvailableShapes().size());
-            assertTrue(shifter.getAvailableShapes().get(0).getArea() == shifterLoaded.getAvailableShapes().get(0).getArea());
 
         } finally {
             db.dropDatabase();

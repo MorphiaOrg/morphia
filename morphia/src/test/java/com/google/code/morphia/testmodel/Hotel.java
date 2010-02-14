@@ -17,38 +17,33 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
+import com.google.code.morphia.annotations.MongoDocument;
 import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoValue;
-import java.util.ArrayList;
+import com.google.code.morphia.annotations.MongoTransient;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
+@MongoDocument
 public class Hotel extends AbstractMongoEntity {
 
     public enum Type { BUSINESS, LEISURE }
 
-    @MongoValue
     private String name;
-
-    @MongoValue
     private Date startDate;
-
-    @MongoValue
     private int stars;
-
-    @MongoValue
     private boolean takesCreditCards;
-
-    @MongoValue
     private Type type;
+    private Set<String> tags;
 
-    @MongoValue
-    private List<String> tags;
+    @MongoTransient
+    private String temp;
 
     @MongoEmbedded
     private Address address;
@@ -58,7 +53,7 @@ public class Hotel extends AbstractMongoEntity {
 
     public Hotel() {
         super();
-        tags = new ArrayList<String>();
+        tags = new HashSet<String>();
         phoneNumbers = new Vector<PhoneNumber>();
     }
 
@@ -110,11 +105,11 @@ public class Hotel extends AbstractMongoEntity {
         this.type = type;
     }
 
-    public List<String> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
@@ -124,5 +119,13 @@ public class Hotel extends AbstractMongoEntity {
 
     public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+
+    public String getTemp() {
+        return temp;
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
     }
 }

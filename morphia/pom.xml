@@ -5,7 +5,7 @@
     <groupId>com.google.code</groupId>
     <artifactId>morphia</artifactId>
     <packaging>jar</packaging>
-    <version>0.91</version>
+    <version>0.92</version>
     <name>morphia</name>
     
     <url>http://code.google.com/p/morphia/</url>

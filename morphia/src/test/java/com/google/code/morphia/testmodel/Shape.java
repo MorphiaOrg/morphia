@@ -16,10 +16,13 @@
 
 package com.google.code.morphia.testmodel;
 
+import com.google.code.morphia.annotations.MongoDocument;
+
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
+@MongoDocument
 public interface Shape {
 
     public double getArea();

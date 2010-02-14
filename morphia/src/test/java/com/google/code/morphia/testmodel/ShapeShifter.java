@@ -17,15 +17,17 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
+import com.google.code.morphia.annotations.MongoDocument;
 import com.google.code.morphia.annotations.MongoEmbedded;
 import com.google.code.morphia.annotations.MongoReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
+@MongoDocument
 public class ShapeShifter extends AbstractMongoEntity {
 
     @MongoEmbedded
@@ -35,18 +37,18 @@ public class ShapeShifter extends AbstractMongoEntity {
     private Shape referencedShape;
 
     @MongoEmbedded
-    private List<Shape> availableShapes;
+    private Set<Shape> availableShapes;
 
     public ShapeShifter() {
         super();
-        availableShapes = new ArrayList<Shape>();
+        availableShapes = new HashSet<Shape>();
     }
 
-    public List<Shape> getAvailableShapes() {
+    public Set<Shape> getAvailableShapes() {
         return availableShapes;
     }
 
-    public void setAvailableShapes(List<Shape> availableShapes) {
+    public void setAvailableShapes(Set<Shape> availableShapes) {
         this.availableShapes = availableShapes;
     }
 
