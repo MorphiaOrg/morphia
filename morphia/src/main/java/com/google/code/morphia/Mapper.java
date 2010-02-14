@@ -442,7 +442,7 @@ public class Mapper {
                 }
 
             } else {
-                field.set(entity, mongoValue.listClass().newInstance());
+                field.set(entity, mongoValue != null ? mongoValue.listClass().newInstance() : new ArrayList());
             }
 
         } else if (ReflectionUtils.implementsInterface(field.getType(), Set.class)) {
@@ -473,7 +473,7 @@ public class Mapper {
                 }
 
             } else {
-                field.set(entity, mongoValue.setClass().newInstance());
+                field.set(entity, mongoValue != null ? mongoValue.setClass().newInstance() : new HashSet());
             }
 
         } else if (ReflectionUtils.implementsInterface(field.getType(), Map.class)) {
@@ -493,7 +493,7 @@ public class Mapper {
                 field.set(entity, values);
 
             } else {
-                field.set(entity, mongoValue.mapClass().newInstance());
+                field.set(entity, mongoValue != null ? mongoValue.mapClass().newInstance() : new HashMap());
             }
 
         } else {

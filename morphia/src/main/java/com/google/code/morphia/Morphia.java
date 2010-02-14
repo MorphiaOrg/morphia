@@ -16,6 +16,8 @@
 
 package com.google.code.morphia;
 
+import com.google.code.morphia.annotations.MongoDocument;
+import com.google.code.morphia.annotations.MongoEmbedded;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -78,7 +80,11 @@ public class Morphia {
         try {
             for (Class c : ReflectionUtils.getClasses(packageName)) {
                 try {
-                    map(c);
+                    MongoEmbedded classMongoEmbedded = ReflectionUtils.getClassMongoEmbeddedAnnotation(c);
+                    MongoDocument classMongoDocument = ReflectionUtils.getClassMongoDocumentAnnotation(c);
+                    if ( classMongoDocument != null || classMongoEmbedded != null ) {
+                        map(c);
+                    }
                 } catch (MongoMappingException ex) {
                     if (!ignoreInvalidClasses) {
                         throw ex;
