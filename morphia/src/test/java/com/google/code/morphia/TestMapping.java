@@ -16,10 +16,10 @@
 
 package com.google.code.morphia;
 
+import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Article;
 import com.google.code.morphia.testmodel.Circle;
-import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.PhoneNumber;
 import com.google.code.morphia.testmodel.RecursiveChild;
 import com.google.code.morphia.testmodel.RecursiveParent;
@@ -53,7 +53,7 @@ public class TestMapping {
             morphia.map(Hotel.class);
             morphia.map(TravelAgency.class);
 
-            Hotel borg = new Hotel();
+            Hotel borg = Hotel.create();
             borg.setName("Hotel Borg");
             borg.setStars(4);
             borg.setTakesCreditCards(true);

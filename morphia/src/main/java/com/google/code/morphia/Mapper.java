@@ -27,6 +27,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.ObjectId;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,11 +107,14 @@ public class Mapper {
     Object createEntityInstanceForDbObject( Class entityClass, BasicDBObject dbObject ) throws Exception {
         // see if there is a className value
         String className = (String) dbObject.get(CLASS_NAME);
+        Class c = entityClass;
         if ( className != null ) {
-            return getClassForName(className, entityClass).newInstance();
-        } else {
-            return entityClass.newInstance();
+            c = getClassForName(className, entityClass);
         }
+
+        Constructor constructor = c.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
     }
 
     Object fromDBObject(Class entityClass, BasicDBObject dbObject) throws Exception {
@@ -135,9 +140,16 @@ public class Mapper {
             }
 
             if ( field.isAnnotationPresent(MongoID.class) ) {
-                String value = (String) field.get(entity);
-                if ( value != null && value.length() > 0 ) {
-                    dbObject.put("_id", new ObjectId(value));
+                if (field.getAnnotation(MongoID.class).useObjectId()) {
+                    String value = (String) field.get(entity);
+                    if (value != null && value.length() > 0) {
+                        dbObject.put("_id", new ObjectId(value));
+                    }
+                } else {
+                    Object value = (Object) field.get(entity);
+                    if (value != null) {
+                        dbObject.put("_id", value);
+                    }
                 }
 
             } else if ( field.isAnnotationPresent(MongoCollectionName.class) ) {

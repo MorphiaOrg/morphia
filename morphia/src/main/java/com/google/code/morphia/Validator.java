@@ -96,13 +96,15 @@ public class Validator {
                 }
 
             } else if (field.isAnnotationPresent(MongoID.class)) {
-                // make sure this is a String field
-                if (field.getType() != String.class) {
-                    throw new MongoMappingException("In [" + c.getName() + "]: Field [" + field.getName()
-                            + "] which is annotated as @MongoID must be of type java.lang.String, but is of type: "
-                            + field.getType().getName());
-                }
-                foundIDField = true;
+            	foundIDField = true;
+            	if (field.getAnnotation(MongoID.class).useObjectId()) {
+	                // make sure this is a String field
+	                if (field.getType() != String.class) {
+	                    throw new MongoMappingException("In [" + c.getName() + "]: Field [" + field.getName()
+	                            + "] which is annotated as @MongoID must be of type java.lang.String, but is of type: "
+	                            + field.getType().getName());
+	                }
+            	}
 
             } else if (field.isAnnotationPresent(MongoCollectionName.class)) {
                 // make sure this is a String field

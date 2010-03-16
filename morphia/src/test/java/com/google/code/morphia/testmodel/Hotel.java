@@ -51,10 +51,14 @@ public class Hotel extends AbstractMongoEntity {
     @MongoEmbedded(listClass = Vector.class)
     private List<PhoneNumber> phoneNumbers;
 
-    public Hotel() {
+    private Hotel() {
         super();
         tags = new HashSet<String>();
         phoneNumbers = new Vector<PhoneNumber>();
+    }
+
+    public static Hotel create() {
+        return new Hotel();
     }
 
     public Address getAddress() {

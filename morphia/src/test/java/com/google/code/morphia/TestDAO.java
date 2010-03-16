@@ -16,9 +16,9 @@
 
 package com.google.code.morphia;
 
+import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
-import com.google.code.morphia.testmodel.Hotel;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class TestDAO {
             Morphia morphia = new Morphia();
             morphia.map(Hotel.class);
 
-            Hotel borg = new Hotel();
+            Hotel borg = Hotel.create();
             borg.setName("Hotel Borg");
             borg.setStars(4);
             borg.setTakesCreditCards(true);
@@ -68,7 +68,7 @@ public class TestDAO {
 
             assertTrue(hotelDAO.exists("stars", 4));
 
-            Hotel hilton = new Hotel();
+            Hotel hilton = Hotel.create();
             hilton.setName("Hilton Hotel");
             hilton.setStars(4);
             hilton.setTakesCreditCards(true);
