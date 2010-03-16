@@ -59,32 +59,40 @@ public abstract class AbstractMongoDAO<T> implements MongoDAO<T> {
 
     @Override
     public boolean exists(String key, String value) {
-        return collection().getCount(new BasicDBObject(key, value)) > 0;
+        return exists(new BasicDBObject(key, value));
     }
 
     @Override
     public boolean exists(String key, int value) {
-        return collection().getCount(new BasicDBObject(key, value)) > 0;
+        return exists(new BasicDBObject(key, value));
     }
 
     @Override
     public boolean exists(String key, long value) {
-        return collection().getCount(new BasicDBObject(key, value)) > 0;
+        return exists(new BasicDBObject(key, value));
     }
 
     @Override
     public boolean exists(String key, double value) {
-        return collection().getCount(new BasicDBObject(key, value)) > 0;
+        return exists(new BasicDBObject(key, value));
     }
 
     @Override
     public boolean exists(String key, boolean value) {
-        return collection().getCount(new BasicDBObject(key, value)) > 0;
+        return exists(new BasicDBObject(key, value));
     }
 
     @Override
     public boolean exists(String key, Enum value) {
-        return collection().getCount(new BasicDBObject(key, value.name())) > 0;
+        return exists(new BasicDBObject(key, value.name()));
+    }
+
+    protected boolean exists(final BasicDBObject condition) {
+        return collection().getCount(condition) > 0;
+    }
+
+    protected T get(final BasicDBObject condition) {
+        return morphia.fromDBObject(this.entityClass, (BasicDBObject) this.collection().findOne(condition));
     }
 
     @Override
@@ -94,32 +102,32 @@ public abstract class AbstractMongoDAO<T> implements MongoDAO<T> {
 
     @Override
     public T getByValue(String key, String value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value)));
+        return get(new BasicDBObject(key, value));
     }
 
     @Override
     public T getByValue(String key, int value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value)));
+        return get(new BasicDBObject(key, value));
     }
 
     @Override
     public T getByValue(String key, long value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value)));
+        return get(new BasicDBObject(key, value));
     }
 
     @Override
     public T getByValue(String key, double value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value)));
+        return get(new BasicDBObject(key, value));
     }
 
     @Override
     public T getByValue(String key, boolean value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value)));
+        return get(new BasicDBObject(key, value));
     }
 
     @Override
     public T getByValue(String key, Enum value) {
-        return morphia.fromDBObject(entityClass, (BasicDBObject) collection().findOne(new BasicDBObject(key, value.name())));
+        return get(new BasicDBObject(key, value.name()));
     }
 
     @Override
