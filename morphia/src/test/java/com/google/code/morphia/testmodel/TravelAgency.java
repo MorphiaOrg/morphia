@@ -17,9 +17,9 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoReference;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Property;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +27,14 @@ import java.util.List;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoDocument
+@Entity
 public class TravelAgency extends AbstractMongoEntity {
+	private static final long serialVersionUID = 1L;
 
-    @MongoValue
+    @Property
     private String name;
 
-    @MongoReference
+    @Reference
     private List<Hotel> hotels;
 
     public TravelAgency() {

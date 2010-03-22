@@ -16,31 +16,34 @@
 
 package com.google.code.morphia;
 
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoEmbedded;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
+import com.mongodb.Mongo;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
- */
+ * @author Scott Hernandez
+ **/
+@SuppressWarnings("unchecked")
 public class Morphia {
+	private final Mapper mapper;
 
-    private final Mapper mapper;
-    private final Validator validator;
-
-    public Morphia() {
+	public Morphia() {
         this(Collections.EMPTY_SET);
     }
 
     public Morphia( Set<Class> classesToMap ) {
         this.mapper = new Mapper();
-        this.validator = new Validator();
         for (Class c : classesToMap) {
             map(c);
         }
@@ -48,10 +51,7 @@ public class Morphia {
 
     public synchronized Morphia map(Class entityClass) {
         if ( !mapper.isMapped(entityClass) ) {
-            Set<Class> validClasses = validator.validate(entityClass);
-            for (Class c : validClasses) {
-                mapper.addMappedClass(c);
-            }
+            mapper.addMappedClass(entityClass);
         }
         return this;
     }
@@ -80,8 +80,8 @@ public class Morphia {
         try {
             for (Class c : ReflectionUtils.getClasses(packageName)) {
                 try {
-                    MongoEmbedded classMongoEmbedded = ReflectionUtils.getClassMongoEmbeddedAnnotation(c);
-                    MongoDocument classMongoDocument = ReflectionUtils.getClassMongoDocumentAnnotation(c);
+                    Embedded classMongoEmbedded = ReflectionUtils.getClassEmbeddedAnnotation(c);
+                    Entity classMongoDocument = ReflectionUtils.getClassEntityAnnotation(c);
                     if ( classMongoDocument != null || classMongoEmbedded != null ) {
                         map(c);
                     }
@@ -104,8 +104,8 @@ public class Morphia {
      *
      * @return all classes that are mapped by this instance
      */
-    public Set<Class> getMappedClasses() {
-        return Collections.unmodifiableSet(mapper.getMappedClasses());
+    public Map<String, MappedClass> getMappedClasses() {
+        return new HashMap(mapper.getMappedClasses());
     }
 
     /**
@@ -120,9 +120,6 @@ public class Morphia {
     }
 
     public <T> T fromDBObject(Class<T> entityClass, BasicDBObject dbObject) {
-        if ( dbObject == null ) {
-            return null;
-        }
         if ( !entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MongoMappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
@@ -146,5 +143,30 @@ public class Morphia {
         } finally {
             mapper.clearHistory();
         }
+    }
+    public Mapper getMapper() { return this.mapper; }
+
+    public DatastoreSimple createDatastore() {
+    	try {
+			return new DatastoreImpl(this, new Mongo());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+    }
+
+    public Datastore createDatastore(String dbName) {
+    	try {
+			return new DatastoreImpl(this, new Mongo(), dbName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+    }
+   
+    public Datastore createDatastore(Mongo mon) {
+    	return new DatastoreImpl(this, mon);
+    }
+
+    public Datastore createDatastore(Mongo mon, String dbName) {
+    	return new DatastoreImpl(this, mon, dbName);
     }
 }

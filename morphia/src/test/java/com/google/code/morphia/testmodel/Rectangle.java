@@ -17,17 +17,18 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Property;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
 public class Rectangle extends AbstractMongoEntity implements Shape {
-
-    @MongoValue
+	private static final long serialVersionUID = 1L;
+	
+	@Property
     private double height;
-    @MongoValue
+    @Property
     private double width;
 
     public Rectangle() {

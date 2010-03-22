@@ -22,12 +22,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.code.morphia.Mapper;
+
 /**
- *
+ * Allows marking and naming the collectionName
  * @author Olafur Gauti Gudmundsson
+ * @author Scott Hernandez
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface MongoDocument {
-
+public @interface Entity {
+	String value() default Mapper.IGNORED_FIELDNAME;
 }

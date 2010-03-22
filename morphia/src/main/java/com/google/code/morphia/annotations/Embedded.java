@@ -27,21 +27,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.code.morphia.Mapper;
+
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface MongoValue {
+@Target({ElementType.FIELD, ElementType.TYPE})
+@SuppressWarnings("unchecked")
+public @interface Embedded {
 
     /**
      * The name of the Mongo value to store the field.
      * Defaults to the name of the field being annotated.
      *
-     * @return the name of the Mongo value storing the field value
+     * @return the name of the Mongo value storing the field value (use on fields only, not applicable for Type level)
      */
-    String value() default "fieldName";
+    String value() default Mapper.IGNORED_FIELDNAME;
 
     /**
      * Specify the implementing class to user for List.

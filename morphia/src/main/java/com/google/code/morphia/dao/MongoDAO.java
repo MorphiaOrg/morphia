@@ -22,6 +22,7 @@ import java.util.List;
  *
  * @author Olafur Gauti Gudmundsson
  */
+@SuppressWarnings("unchecked")
 public interface MongoDAO<T> {
 
     public T save( T entity );

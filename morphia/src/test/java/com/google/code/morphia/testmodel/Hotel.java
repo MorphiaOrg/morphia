@@ -17,9 +17,9 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoTransient;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Transient;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -30,9 +30,14 @@ import java.util.Vector;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoDocument
+@Entity
 public class Hotel extends AbstractMongoEntity {
+	private static final long serialVersionUID = 1L;
 
+	public static Hotel create() {
+		return new Hotel();
+	}
+	
     public enum Type { BUSINESS, LEISURE }
 
     private String name;
@@ -42,13 +47,13 @@ public class Hotel extends AbstractMongoEntity {
     private Type type;
     private Set<String> tags;
 
-    @MongoTransient
+    @Transient
     private String temp;
 
-    @MongoEmbedded
+    @Embedded
     private Address address;
 
-    @MongoEmbedded(listClass = Vector.class)
+    @Embedded(listClass = Vector.class)
     private List<PhoneNumber> phoneNumbers;
 
     private Hotel() {
@@ -57,10 +62,7 @@ public class Hotel extends AbstractMongoEntity {
         phoneNumbers = new Vector<PhoneNumber>();
     }
 
-    public static Hotel create() {
-        return new Hotel();
-    }
-
+    
     public Address getAddress() {
         return address;
     }

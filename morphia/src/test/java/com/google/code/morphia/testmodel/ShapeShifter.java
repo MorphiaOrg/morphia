@@ -16,27 +16,29 @@
 
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoReference;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.code.morphia.AbstractMongoEntity;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoDocument
+@Entity
 public class ShapeShifter extends AbstractMongoEntity {
+	private static final long serialVersionUID = 1L;
 
-    @MongoEmbedded
+	@Embedded
     private Shape mainShape;
 
-    @MongoReference
+    @Reference
     private Shape referencedShape;
 
-    @MongoEmbedded
+    @Embedded
     private Set<Shape> availableShapes;
 
     public ShapeShifter() {

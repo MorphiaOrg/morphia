@@ -16,20 +16,20 @@
 
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Property;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoEmbedded
+@Embedded
 public class Address {
 
-    @MongoValue("address_street")
+    @Property("address_street")
     private String street;
 
-    @MongoValue
+    @Property
     private String postCode;
 
     public Address() {

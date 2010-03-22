@@ -15,8 +15,6 @@
  */
 package com.google.code.morphia.utils;
 
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoEmbedded;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,11 +39,17 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
+import com.mongodb.DBRef;
+import com.mongodb.ObjectId;
+
 /**
  * Various reflection utility methods, used mainly in the Mapper.
  * 
  * @author Olafur Gauti Gudmundsson
  */
+@SuppressWarnings("unchecked")
 public class ReflectionUtils {
 
     /**
@@ -56,7 +60,7 @@ public class ReflectionUtils {
      * @param returnFinalFields specifies whether to return final fields
      * @return an array of all declared and inherited fields
      */
-    public static Field[] getDeclaredAndInheritedFields(Class type, boolean returnFinalFields) {
+	public static Field[] getDeclaredAndInheritedFields(Class type, boolean returnFinalFields) {
         List<Field> allFields = new ArrayList<Field>();
         allFields.addAll(getValidFields(type.getDeclaredFields(), returnFinalFields));
         Class parent = type.getSuperclass();
@@ -78,6 +82,12 @@ public class ReflectionUtils {
         return validFields;
     }
 
+    public static boolean implementsAnyInterface(Class type, Class... interfaceClasses){
+    	for (Class iF : interfaceClasses) {
+			if (implementsInterface(type, iF)) return true;
+		}
+    	return false;
+    }
     /**
      * Check if a class implements a specific interface.
      *
@@ -138,6 +148,8 @@ public class ReflectionUtils {
                 || type == Boolean.class
                 || type == boolean.class
                 || type == Locale.class
+                || type == DBRef.class
+                || type == ObjectId.class
                 || type.isEnum()
                 ;
     }
@@ -146,7 +158,8 @@ public class ReflectionUtils {
         return isPropertyType(type);
     }
 
-    private static boolean isArrayOfType(Class c, Class type) {
+    @SuppressWarnings("unused")
+	private static boolean isArrayOfType(Class c, Class type) {
         return c.isArray() && c.getComponentType() == type;
     }
 
@@ -271,22 +284,24 @@ public class ReflectionUtils {
         return false;
     }
 
-    public static MongoEmbedded getClassMongoEmbeddedAnnotation(Class c) {
-
-        if (c.isAnnotationPresent(MongoEmbedded.class)) {
-            return (MongoEmbedded) c.getAnnotation(MongoEmbedded.class);
+    /**
+     * Returns the (first) instance of the annotation, on the class (or any superclass, or interfaces implemented).
+     */
+    protected static <T> T getAnnotation(Class c, Class<T> ann) {
+        if (c.isAnnotationPresent(ann)) {
+            return (T) c.getAnnotation(ann);
         } else {
             // need to check all superclasses
             Class parent = c.getSuperclass();
             while (parent != null && parent != Object.class) {
-                if (parent.isAnnotationPresent(MongoEmbedded.class)) {
-                    return (MongoEmbedded) parent.getAnnotation(MongoEmbedded.class);
+                if (parent.isAnnotationPresent(ann)) {
+                    return (T) parent.getAnnotation(ann);
                 }
 
                 // ...and interfaces that the superclass implements
                 for (Class interfaceClass : parent.getInterfaces()) {
-                    if (interfaceClass.isAnnotationPresent(MongoEmbedded.class)) {
-                        return (MongoEmbedded) interfaceClass.getAnnotation(MongoEmbedded.class);
+                    if (interfaceClass.isAnnotationPresent(ann)) {
+                        return (T) interfaceClass.getAnnotation(ann);
                     }
                 }
 
@@ -295,8 +310,8 @@ public class ReflectionUtils {
 
             // ...and all implemented interfaces
             for (Class interfaceClass : c.getInterfaces()) {
-                if (interfaceClass.isAnnotationPresent(MongoEmbedded.class)) {
-                    return (MongoEmbedded) interfaceClass.getAnnotation(MongoEmbedded.class);
+                if (interfaceClass.isAnnotationPresent(ann)) {
+                    return (T) interfaceClass.getAnnotation(ann);
                 }
             }
         }
@@ -304,37 +319,12 @@ public class ReflectionUtils {
         return null;
     }
 
-    public static MongoDocument getClassMongoDocumentAnnotation(Class c) {
+    public static Embedded getClassEmbeddedAnnotation(Class c) {
+    	return (Embedded) getAnnotation(c, Embedded.class);
+    }
 
-        if (c.isAnnotationPresent(MongoDocument.class)) {
-            return (MongoDocument) c.getAnnotation(MongoDocument.class);
-        } else {
-            // need to check all superclasses
-            Class parent = c.getSuperclass();
-            while (parent != null && parent != Object.class) {
-                if (parent.isAnnotationPresent(MongoDocument.class)) {
-                    return (MongoDocument) parent.getAnnotation(MongoDocument.class);
-                }
-
-                // ...and interfaces that the superclass implements
-                for (Class interfaceClass : parent.getInterfaces()) {
-                    if (interfaceClass.isAnnotationPresent(MongoDocument.class)) {
-                        return (MongoDocument) interfaceClass.getAnnotation(MongoDocument.class);
-                    }
-                }
-
-                parent = parent.getSuperclass();
-            }
-
-            // ...and all implemented interfaces
-            for (Class interfaceClass : c.getInterfaces()) {
-                if (interfaceClass.isAnnotationPresent(MongoDocument.class)) {
-                    return (MongoDocument) interfaceClass.getAnnotation(MongoDocument.class);
-                }
-            }
-        }
-        // no annotation found, use the defaults
-        return null;
+    public static Entity getClassEntityAnnotation(Class c) {
+    	return (Entity) getAnnotation(c, Entity.class);
     }
 
     private static String stripFilenameExtension( String filename ) {

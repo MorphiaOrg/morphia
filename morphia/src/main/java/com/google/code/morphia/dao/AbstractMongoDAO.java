@@ -28,6 +28,7 @@ import java.util.List;
  *
  * @author Olafur Gauti Gudmundsson
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractMongoDAO<T> implements MongoDAO<T> {
 
     private final Class<T> entityClass;
@@ -82,7 +83,7 @@ public abstract class AbstractMongoDAO<T> implements MongoDAO<T> {
         return exists(new BasicDBObject(key, value));
     }
 
-    @Override
+	@Override
     public boolean exists(String key, Enum value) {
         return exists(new BasicDBObject(key, value.name()));
     }

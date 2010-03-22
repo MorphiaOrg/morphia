@@ -1,10 +1,10 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoDocument;
-import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoReference;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Property;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,14 +12,15 @@ import java.util.Map;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoDocument
+@Entity
 public class Article extends AbstractMongoEntity {
+	private static final long serialVersionUID = 1L;
 
-    @MongoEmbedded
+    @Embedded
     private Map<String,Translation> translations;
-    @MongoValue
+    @Property
     private Map<String,Object> attributes;
-    @MongoReference
+    @Reference
     private Map<String,Article> related;
 
     public Article() {

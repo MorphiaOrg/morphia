@@ -27,13 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.code.morphia.Mapper;
+
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
-public @interface MongoEmbedded {
+@Target(ElementType.FIELD)
+@SuppressWarnings("unchecked")
+public @interface Reference {
 
     /**
      * The name of the Mongo value to store the field.
@@ -41,7 +44,7 @@ public @interface MongoEmbedded {
      *
      * @return the name of the Mongo value storing the field value
      */
-    String value() default "fieldName";
+    String value() default Mapper.IGNORED_FIELDNAME;
 
     /**
      * Specify the implementing class to user for List.

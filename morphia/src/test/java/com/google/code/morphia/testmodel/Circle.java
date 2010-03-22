@@ -17,15 +17,16 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.AbstractMongoEntity;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Property;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
 public class Circle extends AbstractMongoEntity implements Shape {
+	private static final long serialVersionUID = 1L;
 
-    @MongoValue
+    @Property
     private double radius;
 
     public Circle() {

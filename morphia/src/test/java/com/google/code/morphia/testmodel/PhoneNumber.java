@@ -16,23 +16,23 @@
 
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.annotations.MongoEmbedded;
-import com.google.code.morphia.annotations.MongoValue;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Property;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
-@MongoEmbedded
+@Embedded
 public class PhoneNumber {
 
     public enum Type { PHONE, FAX }
 
-    @MongoValue
+    @Property
     private int countryCode;
-    @MongoValue
+    @Property
     private int localExtension;
-    @MongoValue
+    @Property
     private Type type;
 
     public PhoneNumber() {
