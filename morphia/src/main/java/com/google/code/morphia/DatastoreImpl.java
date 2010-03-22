@@ -295,7 +295,6 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public void ensureSuggestedIndexes() {
 		//TODO loop over mappedClasses and call ensureIndex for each one on non-embedded objects (for now)
-		//MappedClass
 	}
 	
 	
