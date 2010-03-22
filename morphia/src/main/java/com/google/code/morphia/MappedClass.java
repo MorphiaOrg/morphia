@@ -5,6 +5,7 @@ package com.google.code.morphia;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,10 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
@@ -33,6 +38,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
  */
 @SuppressWarnings("unchecked")
 public class MappedClass {
+	/** index definition */
     public class SuggestedIndex {
 		String name;
 		IndexDirection dir;
@@ -41,7 +47,7 @@ public class MappedClass {
 		public IndexDirection getDirection() {return dir;}
 	}
 
-	private static final Logger logger = Logger.getLogger(MappedClass.class.getName());
+    private static final Logger logger = Logger.getLogger(MappedClass.class.getName());
 	
     /** special fields representing the Key of the object */
     public Field idField, collectionNameField;
@@ -50,9 +56,17 @@ public class MappedClass {
 	public Entity entityAn;
 	public Embedded embeddedAn;
 	
-	public Class[] interestingAnnotations = new Class[] {Embedded.class, Entity.class};
-	protected Map<Class<Annotation>,Annotation> relAnnotations = new HashMap<Class<Annotation>, Annotation>();
-
+	/** Annotations we are interested in looking for. */
+	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class};
+	/** Annotations we were interested in, and found. */
+	protected Map<Class<Annotation>,Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	
+	/** Annotations we are interested in looking for (related to an entity's lifecycle.  */
+	public Class[] lifecycleAnnotations = new Class[] {PrePersist.class, PostPersist.class, PreLoad.class, PostLoad.class};
+	/** Methods which are lifecycle events */
+	public Map<Class<Annotation>, List<Method>> lifecycleMethods = new HashMap<Class<Annotation>, List<Method>>();
+	
+	/** Annotated indexes which should be created */
 	public List<SuggestedIndex> suggestedIndexes = new ArrayList<SuggestedIndex>();
 	
     /** the collectionName based on the type and @Document value(); this can be overriden by the @CollectionName field on the instance*/
@@ -64,17 +78,35 @@ public class MappedClass {
 	/** the type we are mapping to/from */
 	public Class clazz;
 
+	/** constructor */
 	public MappedClass(Class clazz) {
         this.clazz = clazz;
 
-		for (Class<Annotation> c : interestingAnnotations) {
+		for (Class<Annotation> c : classAnnotations) {
 			addAnnotation(c);
 		}
 
+		for(Method m : ReflectionUtils.getDeclaredAndInheritedMethods(clazz)) {
+			Class<? extends Annotation> lifecycleType;
+			
+			if (m.isAnnotationPresent(PrePersist.class))
+				lifecycleType = PrePersist.class;
+			else if (m.isAnnotationPresent(PostPersist.class))
+				lifecycleType = PostPersist.class;
+			else if (m.isAnnotationPresent(PreLoad.class))
+				lifecycleType = PreLoad.class;
+			else if (m.isAnnotationPresent(PostLoad.class))
+				lifecycleType = PostLoad.class;
+			else
+				continue;
+			
+			addLifecycleEventMethod((Class<Annotation>)lifecycleType, m);
+		}
 
-        embeddedAn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
-        entityAn = ReflectionUtils.getClassEntityAnnotation(clazz);
+        embeddedAn = (Embedded)this.releventAnnotations.get(Embedded.class);
+        entityAn = (Entity)this.releventAnnotations.get(Entity.class);
 
+        
         defCollName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
         for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, false)) {
             if (field.isAnnotationPresent(Id.class)) {
@@ -97,13 +129,28 @@ public class MappedClass {
         }
         
 	}
+	
+	private void addLifecycleEventMethod(Class<Annotation> clazz, Method m) {
+		if (lifecycleMethods.containsKey(clazz))
+			lifecycleMethods.get(clazz).add(m);
+		else {
+			ArrayList<Method> methods = new ArrayList<Method>();
+			methods.add(m);
+			lifecycleMethods.put(clazz, methods);
+		}
+	}
+	
+	public List<Method> getLifecycleEvents(Class<Annotation> clazz) {
+		return lifecycleMethods.get(clazz);
+	}
+	
 	/**
 	 * Adds the annotation, if it exists on the field.
 	 * @param clazz
 	 */
 	private void addAnnotation(Class<Annotation> c) {
 		if (clazz.isAnnotationPresent(c))
-			this.relAnnotations.put(clazz, clazz.getAnnotation(c));
+			this.releventAnnotations.put(c, clazz.getAnnotation(c));
 	}
 
 	@Override

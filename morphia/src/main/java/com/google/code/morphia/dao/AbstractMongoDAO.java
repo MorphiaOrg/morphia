@@ -16,6 +16,7 @@
 
 package com.google.code.morphia.dao;
 
+import com.google.code.morphia.Mapper;
 import com.google.code.morphia.Morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -54,6 +55,7 @@ public abstract class AbstractMongoDAO<T> implements MongoDAO<T> {
     @Override
     public T save(T entity) {
         BasicDBObject obj = (BasicDBObject) morphia.toDBObject(entity);
+        obj.put(Mapper.COLLECTION_NAME_KEY, collection().getName());
         collection().save(obj);
         return get(obj.get("_id").toString());
     }

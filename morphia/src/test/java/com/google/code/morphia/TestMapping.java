@@ -146,7 +146,7 @@ public class TestMapping {
         } catch (MongoMappingException e) {
         	allGood = true;
         }
-        assertTrue("Validation: Missing @MongoId field not caught", allGood);
+        assertTrue("Validation: Missing @Id field not caught", allGood);
 
         allGood = false;
         try {
@@ -154,7 +154,7 @@ public class TestMapping {
         } catch (MongoMappingException e) {
         	allGood = true;
         }
-        assertTrue("Validation: @MongoId field on @MongoEmbedded not caught", allGood);
+        assertTrue("Validation: @Id field on @Embedded not caught", allGood);
 
         allGood = false;
         try {
@@ -162,7 +162,7 @@ public class TestMapping {
         } catch (MongoMappingException e) {
         	allGood = true;
         }
-        assertTrue("Validation: @MongoEmbedded(\"name\") not caught on Class", allGood);
+        assertTrue("Validation: @Embedded(\"name\") not caught on Class", allGood);
 
         allGood = false;
         try {
@@ -170,7 +170,7 @@ public class TestMapping {
         } catch (MongoMappingException e) {
         	allGood = true;
         }
-        assertTrue("Validation: Missing @MongoId field not not caught", allGood);
+        assertTrue("Validation: Missing @Id field not not caught", allGood);
 
         allGood = false;
         try {
@@ -178,7 +178,7 @@ public class TestMapping {
         } catch (MongoMappingException e) {
         	allGood = true;
         }
-        assertTrue("Validation: Missing @MongoId field not not caught", allGood);
+        assertTrue("Validation: Missing @Id field not not caught", allGood);
     }
     
     

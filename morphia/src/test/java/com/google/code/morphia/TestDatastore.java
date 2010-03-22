@@ -87,7 +87,7 @@ public class TestDatastore {
 	
 	@Test
     public void testCollectionNames() throws Exception {
-		assertTrue("facebook_users".equals(morphia.getMapper().getCollectionName(FacebookUser.class)));
+		assertEquals("facebook_users", morphia.getMapper().getCollectionName(FacebookUser.class));
 	}
 	@Test
     public void testGet() throws Exception {

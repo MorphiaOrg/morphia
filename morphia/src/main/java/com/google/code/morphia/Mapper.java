@@ -140,6 +140,7 @@ public class Mapper {
         history.set(new HashMap<String, Object>());
         
         Object entity = createEntityInstanceForDbObject(entityClass, dbObject);
+        
         mapDBObjectToEntity(dbObject, entity);
 
         history.remove();
@@ -150,12 +151,12 @@ public class Mapper {
         BasicDBObject dbObject = new BasicDBObject();
         dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
 
-        String collName = getCollectionName(entity);
-        if ( collName != null && collName.length() > 0 ) dbObject.put(COLLECTION_NAME_KEY, collName);
-
         MappedClass mc = getMappedClass(entity);
         if (mc == null) mc = new MappedClass(entity.getClass());
         
+        String collName = (mc.collectionNameField == null) ? null :  (String)mc.collectionNameField.get(entity);
+        if (collName != null && collName.length() > 0 ) dbObject.put(COLLECTION_NAME_KEY, collName);
+
         for (MappedField mf : mc.persistenceFields) {
             Field field = mf.field;
             Class fieldType = field.getType();

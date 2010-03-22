@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -39,8 +40,8 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
 import com.mongodb.DBRef;
 import com.mongodb.ObjectId;
 
@@ -71,6 +72,32 @@ public class ReflectionUtils {
         return allFields.toArray(new Field[allFields.size()]);
     }
 
+    /**
+     * Get a list of all methods declared in the supplied class,
+     * and all its superclasses (except java.lang.Object), recursively.
+     *
+     * @param type the class for which we want to retrieve the Methods
+     * @param methods the list to start from (can be null)
+     * @return an array of all declared and inherited fields
+     */
+	public static List<Method> getDeclaredAndInheritedMethods(Class type) {
+		return getDeclaredAndInheritedMethods(type, null);
+	}
+	
+	protected static List<Method> getDeclaredAndInheritedMethods(Class type, List<Method> methods) {
+	    if(type == null || type == Object.class) return methods;
+        if(methods == null) methods = new ArrayList<Method>();
+
+        Class parent = type.getSuperclass();
+		methods = getDeclaredAndInheritedMethods(parent, methods);
+           
+        for(Method m : type.getDeclaredMethods()) {
+        	if (!Modifier.isStatic(m.getModifiers())) methods.add(m);	
+        }
+
+        return methods;
+    }
+	
     public static List<Field> getValidFields(Field[] fields, boolean returnFinalFields) {
         List<Field> validFields = new ArrayList<Field>();
         // we ignore static and final fields

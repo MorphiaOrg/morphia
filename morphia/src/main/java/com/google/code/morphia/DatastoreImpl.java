@@ -201,7 +201,9 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T> void save(T entity) {
 		DBObject dbObj = morphia.toDBObject(entity);
-		getCollection(entity).save(dbObj);
+		DBCollection dbColl = getCollection(entity);
+		dbColl.save(dbObj);
+		dbObj.put(Mapper.COLLECTION_NAME_KEY, dbColl.getName());
 		updateKeyInfo(entity, dbObj);
     }
 
