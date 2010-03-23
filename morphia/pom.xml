@@ -4,7 +4,7 @@
     <groupId>com.google.code.morphia</groupId>
     <artifactId>morphia</artifactId>
     <packaging>jar</packaging>
-    <version>0.93</version>
+    <version>0.93-SNAPSHOT</version>
     <name>morphia</name>
     
     <url>http://code.google.com/p/morphia/</url>
@@ -76,5 +76,21 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.jvnet.wagon-svn</groupId>
+                <artifactId>wagon-svn</artifactId>
+                <version>1.9</version>
+            </extension>
+        </extensions>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>morphia-googlecode</id>
+            <url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
+        </repository>
+    </distributionManagement>
+
 </project>
