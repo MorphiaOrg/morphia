@@ -91,6 +91,11 @@
             <id>morphia-googlecode</id>
             <url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
         </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>morphia-googlecode</id>
+            <url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
