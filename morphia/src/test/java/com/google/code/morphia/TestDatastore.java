@@ -16,19 +16,29 @@
 
 package com.google.code.morphia;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
+import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
@@ -60,6 +70,74 @@ public class TestDatastore {
 		}
 	}
 	
+	public static class LifecycleTestObj {
+		@Id String id;
+		@CollectionName String collectionName;
+		@Transient boolean prePersist, postPersist, preLoad, postLoad, postLoadWithParam;
+		boolean prePersistWithParamAndReturn, prePersistWithParam;
+		boolean postPersistWithParam;
+		boolean preLoadWithParamAndReturn, preLoadWithParam;
+		
+		@PrePersist
+		void PrePersist() {
+			prePersist = true;
+		}
+		
+		@PrePersist
+		void PrePersistWithParam(DBObject dbObj) {
+			prePersistWithParam = true;
+		}
+		
+		@PrePersist
+		DBObject PrePersistWithParamAndReturn(DBObject dbObj) {
+			prePersistWithParamAndReturn = true;
+			return null;
+//			DBObject retObj = new BasicDBObject((Map)dbObj);
+//			retObj.put("prePersistWithParamAndReturn", true);
+//			return retObj;
+		}
+		
+		@PostPersist
+		void PostPersistPersist() {
+			postPersist = true;
+		}
+		
+		@PostPersist
+		void PostPersistWithParam(DBObject dbObj) {
+//			dbObj.put("postPersistWithParam", true);
+			postPersistWithParam = true;
+			if(!dbObj.containsField(Mapper.ID_KEY)) throw new RuntimeException("missing " + Mapper.ID_KEY);
+		}
+
+		@PreLoad
+		void PreLoad() {
+			preLoad = true;
+		}
+		
+		@PreLoad
+		void PreLoadWithParam(DBObject dbObj) {
+			dbObj.put("preLoadWithParam", true);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@PreLoad
+		DBObject PreLoadWithParamAndReturn(DBObject dbObj) {
+			DBObject retObj = new BasicDBObject((Map)dbObj);
+			retObj.put("preLoadWithParamAndReturn", true);
+			return retObj;
+		}
+
+		@PostLoad
+		void PostLoad() {
+			postLoad = true;
+		}
+		
+		@PreLoad
+		void PostLoadWithParam(DBObject dbObj) {
+			postLoadWithParam = true;
+//			dbObj.put("postLoadWithParam", true);
+		}
+	}
 	
 	public TestDatastore () {
 		try {
@@ -104,6 +182,25 @@ public class TestDatastore {
 	@Test
     public void testNonexistantFindGet() throws Exception {
 		assertNull(ds.find(Hotel.class,"_id", -1).get());
+	}
+
+	@Test
+    public void testLifecycle() throws Exception {
+		LifecycleTestObj life1 = new LifecycleTestObj();
+		ds.getMorphia().map(LifecycleTestObj.class);
+		ds.save(life1);
+		assertTrue(life1.prePersist);
+		assertTrue(life1.prePersistWithParam);
+		assertTrue(life1.prePersistWithParamAndReturn);
+		assertTrue(life1.postPersist);
+		assertTrue(life1.postPersistWithParam);
+		
+		LifecycleTestObj loaded = ds.get(life1);
+		assertTrue(loaded.preLoad);
+		assertTrue(loaded.preLoadWithParam);
+		assertTrue(loaded.preLoadWithParamAndReturn);
+		assertTrue(loaded.postLoad);
+		assertTrue(loaded.postLoadWithParam);
 	}
 	
 	@Test

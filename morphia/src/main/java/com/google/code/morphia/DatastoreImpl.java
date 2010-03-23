@@ -2,6 +2,7 @@ package com.google.code.morphia;
 
 import java.util.ArrayList;
 
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObject;
@@ -207,6 +208,8 @@ public class DatastoreImpl implements Datastore {
 		dbColl.save(dbObj);
 		dbObj.put(Mapper.COLLECTION_NAME_KEY, dbColl.getName());
 		updateKeyInfo(entity, dbObj);
+		
+        morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), dbObj.get(Mapper.ID_KEY));
     }
 

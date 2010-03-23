@@ -5,6 +5,7 @@ package com.google.code.morphia;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.ReflectionUtils;
+import com.mongodb.DBObject;
 
 /**
  * Represents a mapped class between the MongoDB DBObject and the java POJO.
@@ -139,7 +141,7 @@ public class MappedClass {
 		}
 	}
 	
-	public List<Method> getLifecycleEvents(Class<Annotation> clazz) {
+	public List<Method> getLifecycleMethods(Class<Annotation> clazz) {
 		return lifecycleMethods.get(clazz);
 	}
 	
@@ -390,5 +392,29 @@ public class MappedClass {
 			return bMap;
 		}
 
+	}
+
+	
+	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj) {
+		List<Method> methods = getLifecycleMethods((Class<Annotation>)event);
+		DBObject retDbObj = dbObj;
+		try
+		{
+			Object tempObj = null;
+			if (methods != null)
+				for (Method method: methods) {
+					if (method.getParameterTypes().length == 0)
+						tempObj = method.invoke(entity);
+					else
+						tempObj = method.invoke(entity, retDbObj);
+			
+					if (tempObj != null) 
+						retDbObj = (DBObject) tempObj;
+				}
+		}
+		catch (IllegalAccessException e) { throw new RuntimeException(e); }
+		catch (InvocationTargetException e) { throw new RuntimeException(e); }
+
+		return retDbObj;
 	}
 }

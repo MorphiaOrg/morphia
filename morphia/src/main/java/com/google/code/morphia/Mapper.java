@@ -35,6 +35,9 @@ import com.google.code.morphia.MappedClass.MappedField;
 import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.utils.ReflectionUtils;
@@ -61,7 +64,7 @@ public class Mapper {
     /** Set of classes that have been validated for mapping by this mapper */
     private final ConcurrentHashMap<String,MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
     
-    private final ThreadLocal<Map<String, Object>> history = new ThreadLocal<Map<String, Object>>();
+    private final ThreadLocal<Map<String, Object>> entityCache = new ThreadLocal<Map<String, Object>>();
 
 
     Mapper() {
@@ -92,7 +95,7 @@ public class Mapper {
 	}
 
     void clearHistory() {
-        history.remove();
+        entityCache.remove();
     }
 
     public String getCollectionName(Object object) throws IllegalAccessException {
@@ -138,13 +141,13 @@ public class Mapper {
     }
 
     Object fromDBObject(Class entityClass, BasicDBObject dbObject) throws Exception {
-        history.set(new HashMap<String, Object>());
+        entityCache.set(new HashMap<String, Object>());
         
         Object entity = createEntityInstanceForDbObject(entityClass, dbObject);
         
         mapDBObjectToEntity(dbObject, entity);
 
-        history.remove();
+        entityCache.remove();
         return entity;
     }
 
@@ -158,6 +161,8 @@ public class Mapper {
         String collName = (mc.collectionNameField == null) ? null :  (String)mc.collectionNameField.get(entity);
         if (collName != null && collName.length() > 0 ) dbObject.put(COLLECTION_NAME_KEY, collName);
 
+
+        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
         for (MappedField mf : mc.persistenceFields) {
             Field field = mf.field;
 
@@ -321,25 +326,23 @@ public class Mapper {
 
     Object mapDBObjectToEntity( BasicDBObject dbObject, Object entity ) throws Exception {
         // check the history key (a key is the namespace + id)
-        String key = (!dbObject.containsField(ID_KEY)) ? null : dbObject.getString(COLLECTION_NAME_KEY) + "[" + dbObject.getString(ID_KEY) + "]";
-        
-//        if (!dbObject.containsField(COLLECTIONNAME_KEY) || !dbObject.containsField(ID_KEY))
-//        	throw new RuntimeException("DBOject is missing _ns or _id; " + dbObject.toString());
-        
-        if (history.get() == null) {
-            history.set(new HashMap<String, Object>());
+        String cacheKey = (!dbObject.containsField(ID_KEY)) ? null : dbObject.getString(COLLECTION_NAME_KEY) + "[" + dbObject.getString(ID_KEY) + "]";
+        if (entityCache.get() == null) {
+            entityCache.set(new HashMap<String, Object>());
         }
-        if ( key != null ) {
-            if (history.get().containsKey(key)) {
-                return history.get().get(key);
+        if ( cacheKey != null ) {
+            if (entityCache.get().containsKey(cacheKey)) {
+                return entityCache.get().get(cacheKey);
             } else {
-                history.get().put(key, entity);
+                entityCache.get().put(cacheKey, entity);
             }
         }
 
         MappedClass mc = getMappedClass(entity);
         if (mc == null) mc = new MappedClass(entity.getClass());
-                
+
+        dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
+        
         for (MappedField mf : mc.persistenceFields) {
             Field field = mf.field;
 //            String name = mf.name;
@@ -366,6 +369,8 @@ public class Mapper {
             	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
             }
         }
+        
+        mc.callLifecycleMethods(PostLoad.class, entity, dbObject);
         return entity;
     }
 
