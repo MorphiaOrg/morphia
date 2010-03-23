@@ -3,6 +3,7 @@ package com.google.code.morphia;
 import java.util.ArrayList;
 
 import com.google.code.morphia.utils.IndexDirection;
+import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -66,7 +67,7 @@ public class DatastoreImpl implements Datastore {
 	}
 
 	protected Object fixupId(Object id) {
-		return Mapper.fixupId(id);
+		return Mapper.asObjectIdMaybe(id);
 	}
 
 	private Class getEntityClass(Object clazzOrEntity) {
@@ -116,7 +117,8 @@ public class DatastoreImpl implements Datastore {
 
 	@Override
 	public <T> T get(Object clazzOrEntity, Object id) {
-		DBObject obj =  getCollection(clazzOrEntity).findOne(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, fixupId(id)).get());
+		DBObject query = BasicDBObjectBuilder.start().add(Mapper.ID_KEY, fixupId(id)).get();
+		DBObject obj =  getCollection(clazzOrEntity).findOne(query);
 		if (obj == null) return null;
 		return (T)morphia.fromDBObject(getEntityClass(clazzOrEntity), (BasicDBObject) obj);
 	}
@@ -199,20 +201,23 @@ public class DatastoreImpl implements Datastore {
 	}
 	
 	@Override
-	public <T> void save(T entity) {
+	public <T> Key<T> save(T entity) {
 		DBObject dbObj = morphia.toDBObject(entity);
 		DBCollection dbColl = getCollection(entity);
 		dbColl.save(dbObj);
 		dbObj.put(Mapper.COLLECTION_NAME_KEY, dbColl.getName());
 		updateKeyInfo(entity, dbObj);
+		return new Key<T>(dbColl.getName(), dbObj.get(Mapper.ID_KEY));
     }
 
 	
 	@Override
-	public <T> void save(Iterable<T> entities) {
+	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
+		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
 		//for now, do it one at a time.
 		for(T ent : entities)
-			save(ent);
+			savedKeys.add(save(ent));
+		return savedKeys;
 
 	}
 

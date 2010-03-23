@@ -146,14 +146,6 @@ public class Morphia {
     }
     public Mapper getMapper() { return this.mapper; }
 
-    public DatastoreSimple createDatastore() {
-    	try {
-			return new DatastoreImpl(this, new Mongo());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-    }
-
     public Datastore createDatastore(String dbName) {
     	try {
 			return new DatastoreImpl(this, new Mongo(), dbName);

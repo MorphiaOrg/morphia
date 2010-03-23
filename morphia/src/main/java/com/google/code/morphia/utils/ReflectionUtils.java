@@ -28,9 +28,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -164,6 +162,8 @@ public class ReflectionUtils {
      * @return true if the class represents a valid property type
      */
     public static boolean isPropertyType(Class type) {
+    	if (type == null) return false;
+    	
         return type == String.class
                 || type == Date.class
                 || type == Integer.class
@@ -174,24 +174,13 @@ public class ReflectionUtils {
                 || type == double.class
                 || type == Boolean.class
                 || type == boolean.class
+                || type == Byte.class
+                || type == byte.class
                 || type == Locale.class
                 || type == DBRef.class
                 || type == ObjectId.class
                 || type.isEnum()
                 ;
-    }
-
-    public static boolean isValidMapValueType(Class type) {
-        return isPropertyType(type);
-    }
-
-    @SuppressWarnings("unused")
-	private static boolean isArrayOfType(Class c, Class type) {
-        return c.isArray() && c.getComponentType() == type;
-    }
-
-    public static boolean isDateType(Class type) {
-        return type == Date.class || type == Calendar.class || type == Timestamp.class;
     }
 
     /**

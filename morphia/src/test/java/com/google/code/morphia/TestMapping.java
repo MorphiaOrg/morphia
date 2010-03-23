@@ -21,14 +21,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
 
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.CollectionName;
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Article;
@@ -40,6 +42,7 @@ import com.google.code.morphia.testmodel.RecursiveChild;
 import com.google.code.morphia.testmodel.RecursiveParent;
 import com.google.code.morphia.testmodel.Translation;
 import com.google.code.morphia.testmodel.TravelAgency;
+import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -50,7 +53,9 @@ import com.mongodb.Mongo;
 
 /**
  *
+ *
  * @author Olafur Gauti Gudmundsson
+ * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
 public class TestMapping {
@@ -99,6 +104,61 @@ public class TestMapping {
 		public DBRef rect;
 	}
 	
+	public static class ContainsbyteArray {
+		@Id String id;
+		byte[] bytes = "Scott".getBytes();
+	}
+
+	public static class ContainsLongAndStringArray {
+		@Id String id;
+		Long[] longs = {0L, 1L, 2L};
+		String[] strings = {"Scott", "Rocks"};
+	}
+	
+	public static class ContainsCollection {
+		@Id String id;
+		Collection<String> coll = new ArrayList<String>();
+		
+		private ContainsCollection() {
+			coll.add("hi"); coll.add("Scott");
+		}
+	}
+
+	@Test
+    public void testCollectionMapping() throws Exception {
+		DatastoreService.setDatabase("morphia_test");
+		Datastore ds = (Datastore)DatastoreService.getDatastore();
+		DatastoreService.mapClass(ContainsCollection.class);
+		Key<ContainsCollection> savedKey = ds.save(new ContainsCollection());
+		ContainsCollection loaded = ds.<ContainsCollection>get(ContainsCollection.class, savedKey.getId());
+		assertEquals(loaded.coll, (new ContainsCollection()).coll);
+		assertNotNull(loaded.id);        
+	}
+	
+	@Test
+    public void testbyteArrayMapping() throws Exception {
+		DatastoreService.setDatabase("morphia_test");
+		Datastore ds = (Datastore)DatastoreService.getDatastore();
+		DatastoreService.mapClass(ContainsbyteArray.class);
+		Key<ContainsbyteArray> savedKey = ds.save(new ContainsbyteArray());
+		ContainsbyteArray loaded = ds.<ContainsbyteArray>get(ContainsbyteArray.class, savedKey.getId());
+		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
+		assertNotNull(loaded.id);        
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+    public void testLongArrayMapping() throws Exception {
+		DatastoreService.setDatabase("morphia_test");
+		Datastore ds = (Datastore)DatastoreService.getDatastore();
+		DatastoreService.mapClass(ContainsLongAndStringArray.class);
+		ds.save(new ContainsLongAndStringArray());
+		ContainsLongAndStringArray loaded = ds.<ContainsLongAndStringArray>find(ContainsLongAndStringArray.class).get();
+		assertEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
+		assertEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
+		assertNotNull(loaded.id);        
+	}
+
 	@Test
     public void testDbRefMapping() throws Exception {
         Morphia morphia = new Morphia();

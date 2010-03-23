@@ -16,6 +16,7 @@
 
 package com.google.code.morphia;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -109,11 +110,11 @@ public class Mapper {
     	return mc.defCollName;
   }
 
-    private String getID(Object object) throws IllegalAccessException {
-    	return (String)getMappedClass(object).idField.get(object);
+    private String getId(Object entity) throws IllegalAccessException {
+    	return (String)getMappedClass(entity).idField.get(entity);
     }
 
-    Class getClassForName( String className, Class defaultClass ) {
+    Class getClassForName(String className, Class defaultClass) {
     	if (mappedClasses.containsKey(className)) return mappedClasses.get(className).clazz;
         try {
             Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
@@ -159,23 +160,20 @@ public class Mapper {
 
         for (MappedField mf : mc.persistenceFields) {
             Field field = mf.field;
-            Class fieldType = field.getType();
-            
-        	field.setAccessible(true);
+
+            field.setAccessible(true);
 
             if ( mf.hasAnnotation(Id.class) ) {
                 Object value = field.get(entity);
                 if ( value != null ) {
-                    dbObject.put(ID_KEY, fixupId(value));
+                    dbObject.put(ID_KEY, asObjectIdMaybe(value));
                 }
             } else if ( mf.hasAnnotation(Reference.class) ) {
                 mapReferencesToDBObject(entity, mf, dbObject);
             } else  if (mf.hasAnnotation(Embedded.class)){
                 mapEmbeddedToDBObject(entity, mf, dbObject);
-            } else if ( mf.hasAnnotation(Property.class)
-                    || ReflectionUtils.isPropertyType(field.getType())
-                    || ReflectionUtils.implementsAnyInterface(fieldType, Map.class, List.class, Set.class) ) {
-                mapValuesToDBObject(entity, mf, dbObject);
+            } else if (mf.isMongoTypeCompatible()) {
+            	mapValuesToDBObject(entity, mf, dbObject);
             } else {
             	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
             }
@@ -188,34 +186,33 @@ public class Mapper {
     void mapReferencesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject) throws Exception {
         Reference mongoReference = (Reference)mf.getAnnotation(Reference.class);
         String name = mf.name;
-        Class fieldType = mf.field.getType();
         Object fieldValue = mf.field.get(entity);
-        if (ReflectionUtils.implementsAnyInterface(fieldType, List.class, Set.class)) {
-            Collection coll = (Collection) fieldValue;
-            if ( coll != null ) {
-                List values = new ArrayList();
-                for ( Object o : coll ) {
-                    values.add(new DBRef(null, getCollectionName(o), fixupId(getID(o))));
-                }
-                dbObject.put(name, values);
-            } else {
-                dbObject.removeField(name);
-            }
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
+        
+        if (mf.isMap()) {
             Map<Object,Object> map = (Map<Object,Object>) fieldValue;
             if ( map != null ) {
                 Map values = mongoReference.mapClass().newInstance();
                 for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), fixupId(getID(entry.getValue()))));
+                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
                 }
                 dbObject.put(name, values);
             } else {
                 dbObject.removeField(name);
             }
-
+    	} else if (mf.isMultipleValues()) {
+            Collection coll = (Collection) fieldValue;
+            if ( coll != null ) {
+                List values = new ArrayList();
+                for ( Object o : coll ) {
+                    values.add(new DBRef(null, getCollectionName(o), asObjectIdMaybe(getId(o))));
+                }
+                dbObject.put(name, values);
+            } else {
+                dbObject.removeField(name);
+            }
         } else {
             if ( fieldValue != null ) {
-                dbObject.put(name, new DBRef(null, getCollectionName(fieldValue), fixupId(getID(fieldValue))));
+                dbObject.put(name, new DBRef(null, getCollectionName(fieldValue), asObjectIdMaybe(getId(fieldValue))));
             } else {
                 dbObject.removeField(name);
             }
@@ -224,12 +221,22 @@ public class Mapper {
 
     void mapEmbeddedToDBObject( Object entity, MappedField mf, BasicDBObject dbObject ) throws Exception {
         String name = mf.name;
-        
-        Class fieldType = mf.field.getType();
         Object fieldValue = mf.field.get(entity);
 
-        if (ReflectionUtils.implementsAnyInterface(fieldType, List.class, Set.class)) {
-            Collection coll = (Collection)fieldValue;
+	    if (mf.isMap()) {
+	        Map<String, Object> map = (Map<String, Object>) fieldValue;
+	        if ( map != null ) {
+	            BasicDBObject mapObj = new BasicDBObject();
+	            for ( Map.Entry<String,Object> entry : map.entrySet() ) {
+	                mapObj.put(entry.getKey(), toDBObject(entry.getValue()));
+	            }
+	            dbObject.put(name, mapObj);
+	        } else {
+	            dbObject.removeField(name);
+	        }
+	
+	    } else if (mf.isMultipleValues()) {
+            Iterable coll = (Iterable)fieldValue;
             if ( coll != null ) {
                 List values = new ArrayList();
                 for ( Object o : coll ) {
@@ -239,19 +246,6 @@ public class Mapper {
             } else {
                 dbObject.removeField(name);
             }
-
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
-            Map<String, Object> map = (Map<String, Object>) fieldValue;
-            if ( map != null ) {
-                BasicDBObject mapObj = new BasicDBObject();
-                for ( Map.Entry<String,Object> entry : map.entrySet() ) {
-                    mapObj.put(entry.getKey(), toDBObject(entry.getValue()));
-                }
-                dbObject.put(name, mapObj);
-            } else {
-                dbObject.removeField(name);
-            }
-
         } else {
             if ( fieldValue != null ) {
                 dbObject.put(name, toDBObject(fieldValue));
@@ -267,26 +261,7 @@ public class Mapper {
         Object fieldValue = mf.field.get(entity);
 
         //sets and list are stored in mongodb as ArrayLists
-        if (ReflectionUtils.implementsAnyInterface(fieldType, Set.class, List.class)) {
-            Class paramClass = ReflectionUtils.getParameterizedClass(mf.field);
-            Collection coll = (Collection) fieldValue;
-            if ( coll != null ) {
-            	List values = (coll instanceof ArrayList) ? (List)coll : new ArrayList();
-                
-            	if ( paramClass != null ) {
-                    for ( Object o : coll ) {
-                    	values.add(objectToValue(paramClass, o));
-                    }
-                } else {
-                    for ( Object o : coll ) {
-                    	values.add(objectToValue(o));
-                    }
-                }
-                dbObject.put(name, values);
-            } else {
-                dbObject.removeField(name);
-            }
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
+        if (mf.isMap()) {
             Map<Object,Object> map = (Map<Object,Object>) mf.field.get(entity);
             if ( map != null ) {
                 Map mapForDb = new HashMap();
@@ -297,6 +272,44 @@ public class Mapper {
             } else {
                 dbObject.removeField(name);
             }
+        } else if (mf.isMultipleValues()) {
+        	Class paramClass = mf.subType;
+            if ( fieldValue != null ) {
+            	Iterable iterableValues = null;
+
+            	if (fieldType.isArray()) {
+            		Object[] objects = null;
+            		try {
+            			objects = (Object[]) fieldValue;
+            		} catch (ClassCastException e) {
+                		//store the primitive array.
+            			dbObject.put(name, fieldValue);
+            			return;
+            		}
+            		//convert array into arraylist
+            		iterableValues = new ArrayList(objects.length);
+            		for(Object obj :objects)
+            			((ArrayList)iterableValues).add(obj);
+            	} else {
+            		//cast value to a common interface
+            		iterableValues = (Iterable) fieldValue;
+            	}
+        	
+        		//cast value to a common interface
+        		List values = new ArrayList();
+                
+            	if ( paramClass != null ) {
+                    for ( Object o : iterableValues )
+                    	values.add(objectToValue(paramClass, o));
+                } else {
+                    for ( Object o : iterableValues )
+                    	values.add(objectToValue(o));
+                }
+        		dbObject.put(name, values);
+            } else {
+                dbObject.removeField(name);
+            }
+        
         } else {
             if ( fieldValue != null ) {
             	dbObject.put(name, objectToValue(fieldValue));
@@ -347,10 +360,8 @@ public class Mapper {
             } else if ( mf.hasAnnotation(Embedded.class) ) {
                 mapEmbeddedFromDBObject(dbObject, mf, entity);
                 
-            } else if ( mf.hasAnnotation(Property.class)
-                    || ReflectionUtils.isPropertyType(field.getType())
-                    || ReflectionUtils.implementsAnyInterface(field.getType(), List.class, Set.class, Map.class)) {
-                mapValuesFromDBObject(dbObject, mf, entity);
+            } else if ( mf.hasAnnotation(Property.class) || mf.isMongoTypeCompatible()) {
+            	mapValuesFromDBObject(dbObject, mf, entity);
             } else {
             	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
             }
@@ -359,91 +370,109 @@ public class Mapper {
     }
 
     void mapValuesFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) throws Exception {
-        Property mongoValue = (Property)mf.getAnnotation(Property.class);
+        Property propAnnotation = (Property)mf.getAnnotation(Property.class);
         String name = mf.name;
 
         Class fieldType = mf.field.getType();
         
-        boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
-        boolean bList = ReflectionUtils.implementsInterface(fieldType, List.class);
-        
-        if (bSet || bList ) {
+        if (mf.isMap()) {
+	        if ( dbObject.containsField(name) ) {
+	            Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
+	            Map values = propAnnotation != null ? propAnnotation.mapClass().newInstance() : new HashMap();
+	            for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
+	                if ( entry.getValue().getClass() == Locale.class ) {
+	                    values.put(entry.getKey(), parseLocale((String)entry.getValue()));
+	                } else if ( entry.getValue().getClass().isEnum() ) {
+	                    Class enumClass = entry.getValue().getClass();
+	                    values.put(entry.getKey(), Enum.valueOf(enumClass, (String)entry.getValue()));
+	                } else {
+	                    values.put(entry.getKey(), entry.getValue());
+	                }
+	            }
+	            mf.field.set(entity, values);
+	
+	        } else {
+	        	mf.field.set(entity, propAnnotation != null ? propAnnotation.mapClass().newInstance() : new HashMap());
+	        }
+    	}else if (mf.isMultipleValues()) {
+            boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
+
             if ( dbObject.containsField(name) ) {
-                Class paramClass = ReflectionUtils.getParameterizedClass(mf.field);
-   
+                Class subtype = mf.subType;
+                
+                //for byte[] don't treat it as a multiple values.
+                if (subtype == byte.class && fieldType.isArray()) {
+                	mf.field.set(entity, dbObject.get(name));
+                	return;
+                }
                 //List and Sets are stored as List in mongodb
                 List list = (List) dbObject.get(name);
                 
-                
-                Collection values;
-                //map back to the java datatype (List/Set)
-                if (bList)
-                	values = mongoValue != null ? mongoValue.listClass().newInstance() : new ArrayList();
-                else
-                	values = mongoValue != null ? mongoValue.setClass().newInstance() : new HashSet();
-                		
-                if ( paramClass != null ) {
-                    if (paramClass == Locale.class) {
-                        for ( Object o : list ) {
+                if ( subtype != null ) {
+                    //map back to the java datatype (List/Set/Array[])
+                    Collection values;
+                    if (!bSet)
+                    	values = propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList();
+                    else
+                    	values = propAnnotation != null ? propAnnotation.setClass().newInstance() : new HashSet();
+                    
+                    if (subtype == Locale.class) {
+                        for ( Object o : list )
                             values.add(parseLocale((String)o));
-                        }
-                        mf.field.set(entity, values);
-                    } else if (paramClass.isEnum()) {
-                        for ( Object o : list ) {
-                            values.add(Enum.valueOf(paramClass, (String)o));
-                        }
-                        mf.field.set(entity, values);
+                    } else if (subtype.isEnum()) {
+                        for ( Object o : list )
+                            values.add(Enum.valueOf(subtype, (String)o));
                     } else {
-                        for ( Object o : list ) {
+                        for ( Object o : list ) 
                             values.add(o);
-                        }
-                        mf.field.set(entity, values);
                     }
+                    if (fieldType.isArray()) {
+                    	Object exampleArray = Array.newInstance(subtype, 1);
+                    	
+                    	if (subtype == Long.class) {
+                    		Object[] array = ((ArrayList)values).toArray((Object[]) exampleArray);
+                    		mf.field.set(entity, array);
+                    	}
+                    }
+                    else
+                    	mf.field.set(entity, values);
                 } else {
                 	mf.field.set(entity, list);
                 }
 
             } else {
-            	mf.field.set(entity, mongoValue != null ? mongoValue.listClass().newInstance() : new ArrayList());
+            	mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList());
             }
-
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
-            if ( dbObject.containsField(name) ) {
-                Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
-                Map values = mongoValue != null ? mongoValue.mapClass().newInstance() : new HashMap();
-                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-                    if ( entry.getValue().getClass() == Locale.class ) {
-                        values.put(entry.getKey(), parseLocale((String)entry.getValue()));
-                    } else if ( entry.getValue().getClass().isEnum() ) {
-                        Class enumClass = entry.getValue().getClass();
-                        values.put(entry.getKey(), Enum.valueOf(enumClass, (String)entry.getValue()));
-                    } else {
-                        values.put(entry.getKey(), entry.getValue());
-                    }
-                }
-                mf.field.set(entity, values);
-
-            } else {
-            	mf.field.set(entity, mongoValue != null ? mongoValue.mapClass().newInstance() : new HashMap());
-            }
-
         } else {
             if ( dbObject.containsField(name) ) {
             	mf.field.set(entity, objectFromValue(mf.field.getType(), dbObject, name));
             }
         }
     }
-    void mapEmbeddedFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) throws Exception {
+
+	void mapEmbeddedFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) throws Exception {
         Embedded mongoEmbedded = (Embedded)mf.getAnnotation(Embedded.class);
         String name = mf.name;
 
         Class fieldType = mf.field.getType();
-        boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
-        boolean bList =ReflectionUtils.implementsInterface(fieldType, List.class);
-        if ( bSet || bList ) {
+
+        if (mf.isMap()) {
+            Class docObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
+            Map map = mongoEmbedded.mapClass().newInstance();
+            if ( dbObject.containsField(name) ) {
+                BasicDBObject value = (BasicDBObject) dbObject.get(name);
+                for ( Map.Entry entry : value.entrySet() ) {
+                    Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)entry.getValue());
+                    docObj = mapDBObjectToEntity((BasicDBObject)entry.getValue(), docObj);
+                    map.put(entry.getKey(), docObj);
+                }
+            }
+            mf.field.set(entity, map);
+        } else if (mf.isMultipleValues()) {
+            boolean bList = ReflectionUtils.implementsInterface(fieldType, List.class);
 
         	// multiple documents in a List
-            Class docObjClass = ReflectionUtils.getParameterizedClass(mf.field);
+            Class docObjClass = mf.subType;
             Collection docs = (bList) ? mongoEmbedded.listClass().newInstance() : mongoEmbedded.setClass().newInstance();
 
             if ( dbObject.containsField(name) ) {
@@ -463,20 +492,7 @@ public class Mapper {
                 }
             }
             mf.field.set(entity, docs);
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
-            Class docObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-            Map map = mongoEmbedded.mapClass().newInstance();
-            if ( dbObject.containsField(name) ) {
-                BasicDBObject value = (BasicDBObject) dbObject.get(name);
-                for ( Map.Entry entry : value.entrySet() ) {
-                    Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)entry.getValue());
-                    docObj = mapDBObjectToEntity((BasicDBObject)entry.getValue(), docObj);
-                    map.put(entry.getKey(), docObj);
-                }
-            }
-            mf.field.set(entity, map);
-
-        } else {
+        }  else {
             // single document
             Class docObjClass = fieldType;
             if ( dbObject.containsField(name) ) {
@@ -494,12 +510,28 @@ public class Mapper {
 
         
         Class fieldType = mf.field.getType();
-        boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
-        boolean bList = ReflectionUtils.implementsInterface(fieldType, List.class);
 
-        if (bSet || bList) {
+        if (mf.isMap()) {
+            Class referenceObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
+            Map map = mongoReference.mapClass().newInstance();
+            if ( dbObject.containsField(name) ) {
+                BasicDBObject value = (BasicDBObject) dbObject.get(name);
+                for ( Map.Entry entry : value.entrySet() ) {
+                    DBRef dbRef = (DBRef) entry.getValue();
+                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
+
+                    Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                    refObj = mapDBObjectToEntity(refDbObject, refObj);
+                    map.put(entry.getKey(), refObj);
+                }
+            }
+            mf.field.set(entity, map);
+            
+        } else if (mf.isMultipleValues()) {
+            boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
+
             // multiple references in a List
-            Class referenceObjClass = ReflectionUtils.getParameterizedClass(mf.field);
+            Class referenceObjClass = mf.subType;
             Collection references = bSet ? mongoReference.setClass().newInstance() : mongoReference.listClass().newInstance();
             
             if ( dbObject.containsField(name) ) {
@@ -524,22 +556,6 @@ public class Mapper {
             }
             mf.field.set(entity, references);
 
-        } else if (ReflectionUtils.implementsInterface(fieldType, Map.class)) {
-            Class referenceObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-            Map map = mongoReference.mapClass().newInstance();
-            if ( dbObject.containsField(name) ) {
-                BasicDBObject value = (BasicDBObject) dbObject.get(name);
-                for ( Map.Entry entry : value.entrySet() ) {
-                    DBRef dbRef = (DBRef) entry.getValue();
-                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-
-                    Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-                    refObj = mapDBObjectToEntity(refDbObject, refObj);
-                    map.put(entry.getKey(), refObj);
-                }
-            }
-            mf.field.set(entity, map);
-            
         } else {
         	
             // single reference
@@ -567,7 +583,7 @@ public class Mapper {
     }
     
     /** turns the object intto an ObjectId if it is/should-be one */
-	public static Object fixupId(Object id) {
+	public static Object asObjectIdMaybe(Object id) {
 		if ((id instanceof String) && ObjectId.isValid((String)id)) return new ObjectId((String)id);
 		return id;
 	}

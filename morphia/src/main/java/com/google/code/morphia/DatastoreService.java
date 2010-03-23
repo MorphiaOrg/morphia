@@ -12,12 +12,16 @@ public class DatastoreService {
 	
 	static {
 		mor = new Morphia();
-		ds = mor.createDatastore();
+		ds = mor.createDatastore("test");
 	}
-	
+	/** Connects to "test" database on localhost */
 	public static DatastoreSimple getDatastore() {
 		return ds;
 	}
+
+	public static void setDatabase(String dbName) {
+		if (!((Datastore)ds).getDB().getName().equals(dbName)) ds = mor.createDatastore(dbName);
+	} 
 	
 	@SuppressWarnings("unchecked")
 	public static void mapClass(Class c) {

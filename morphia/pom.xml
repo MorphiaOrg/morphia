@@ -49,6 +49,13 @@
     		<scope>test</scope>
     		<optional>false</optional>
     	</dependency>
+<!--    	<dependency>-->
+<!--    		<groupId>com.google.collections</groupId>-->
+<!--    		<artifactId>google-collections</artifactId>-->
+<!--    		<version>1.0</version>-->
+<!--    		<type>jar</type>-->
+<!--    		<optional>false</optional>-->
+<!--    	</dependency>-->
     </dependencies>
 
     <build>

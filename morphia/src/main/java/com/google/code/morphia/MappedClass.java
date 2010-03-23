@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,13 +122,11 @@ public class MappedClass {
         				field.isAnnotationPresent(Reference.class) || 
         				field.isAnnotationPresent(Embedded.class) || 
         				isSupportedType(field.getType())) {
-            
-            	persistenceFields.add(new MappedField(field));   	
+            	persistenceFields.add(new MappedField(field));
             } else {
             	logger.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [" + field.getType().getSimpleName() + "]");
             }
         }
-        
 	}
 	
 	private void addLifecycleEventMethod(Class<Annotation> clazz, Method m) {
@@ -176,8 +175,24 @@ public class MappedClass {
 	
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
 	public boolean isSupportedType(Class clazz) {
-		return  ReflectionUtils.isValidMapValueType(clazz) || 
-				ReflectionUtils.implementsAnyInterface(clazz, List.class, Map.class, Set.class);
+		if (ReflectionUtils.isPropertyType(clazz)) return true;
+		if (clazz.isArray() || ReflectionUtils.implementsAnyInterface(clazz, 	Iterable.class, 
+															Collection.class, 
+															List.class, 
+															Set.class,
+															Map.class)){
+			Class subType = null;
+			if (clazz.isArray()) subType = clazz.getComponentType();
+			else subType = ReflectionUtils.getParameterizedClass(clazz);
+			
+			//get component type, String.class from List<String>
+			if (subType != null && subType != Object.class && !ReflectionUtils.isPropertyType(subType))
+				return false;
+			
+			//either no componentType or it is an allowed type
+			return true;
+		}
+		return false;
 	}
 	
 	public void validate() {
@@ -201,7 +216,7 @@ public class MappedClass {
             //a field can be a Value, Reference, or Embedded
             if ( mf.hasAnnotation(Property.class) ) {
                 // make sure that the property type is supported
-                if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, List.class, Map.class, Set.class)
+                if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, Iterable.class, Collection.class, List.class, Map.class, Set.class)
                         && 	!ReflectionUtils.isPropertyType(field.getType())) {
                 	
                     throw new MongoMappingException("In [" + clazz.getName() + "]: Field [" + field.getName()
@@ -282,6 +297,10 @@ public class MappedClass {
 		protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 		public String name;
 		protected Class[] interestingAnnotations = new Class[] {Property.class, Reference.class, Embedded.class, Id.class, CollectionName.class};
+		protected Class subType = null;
+		protected boolean bSingleValue = true;
+		protected boolean bMongoType = false;
+		protected boolean bMap = false;
 		
 		public MappedField(Field f) {
 			this.field = f;
@@ -289,6 +308,18 @@ public class MappedClass {
 				addAnnotation(clazz);
 			}
 			this.name = getMappedFieldName(f);
+			Class type = f.getType();
+			if (type.isArray() || ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Collection.class, List.class, Set.class, Map.class)) {
+				bSingleValue = false;
+				// subtype of Long[], List<Long> is Long 
+				subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f);
+				bMap = ReflectionUtils.implementsInterface(type, Map.class);
+			}
+			//check the main type
+			bMongoType = ReflectionUtils.isPropertyType(type);
+			// if the main type isn't supported by the Mongo, see if the subtype is
+			// works for Long[], List<Long>, etc.
+			if (!bMongoType && subType != null) bMongoType = ReflectionUtils.isPropertyType(subType);
 		}
 
 		public Annotation getAnnotation(Class clazz) {
@@ -338,6 +369,25 @@ public class MappedClass {
 		@Override
 		public String toString() {
 			return name + "; " + this.mappingAnnotations.toString();
+		}
+
+		public Class getSubType() {
+			return subType;
+		}
+		
+		public boolean isSingleValue() {
+			return bSingleValue;
+		}
+
+		public boolean isMultipleValues() {
+			return !bSingleValue;
+		}
+		public boolean isMongoTypeCompatible() {
+			return bMongoType;
+		}
+
+		public boolean isMap() {
+			return bMap;
 		}
 
 	}

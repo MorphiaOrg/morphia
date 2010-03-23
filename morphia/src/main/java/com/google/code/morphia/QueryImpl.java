@@ -13,19 +13,19 @@ import com.mongodb.DBObject;
 @SuppressWarnings("unchecked")
 public class QueryImpl<T> implements Query<T> {
 
-	BasicDBObjectBuilder query;
-	BasicDBObjectBuilder fields;
-	BasicDBObjectBuilder sort;
-	Datastore ds;
-	DBCollection dbColl;
-	int offset = 0, limit = -1;
-	Class clazz;
+	BasicDBObjectBuilder query = null;
+	BasicDBObjectBuilder fields = null;
+	BasicDBObjectBuilder sort = null;
+	Datastore ds = null;
+	DBCollection dbColl = null;
+	int offset = 0;
+	int limit = -1;
+	Class clazz = null;
 	
 	public QueryImpl(Class clazz, DBCollection coll, Datastore ds) {
 		this.clazz = clazz;
 		this.ds = ds;
 		this.dbColl = coll;
-		this.query = BasicDBObjectBuilder.start();
 	}
 	public QueryImpl(Class clazz, DBCollection coll, Datastore ds, int offset, int limit) {
 		this(clazz, coll, ds);
@@ -48,9 +48,12 @@ public class QueryImpl<T> implements Query<T> {
 	@Override
 	public Iterable<T> fetch() {
 		DBCursor cursor;
-		if (offset > 0 || limit > 0)
-			return new MorphiaIterator<T>(dbColl.find(getQueryObject(), getFieldsObject(), offset, limit), ds.getMorphia(), clazz);
-		else
+		if (offset > 0 || limit > 0) {
+			DBObject query = getQueryObject();
+			DBObject fields = getFieldsObject();
+			Iterator<DBObject> it = dbColl.find(query, fields, offset, limit);
+			return new MorphiaIterator<T>(it, ds.getMorphia(), clazz);
+		} else
 			cursor = dbColl.find(getQueryObject());
 		
 		if (sort != null) cursor = cursor.sort(sort.get());
@@ -115,6 +118,7 @@ public class QueryImpl<T> implements Query<T> {
 		String prop = parts[0].trim();
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 
+		if (query == null) query = BasicDBObjectBuilder.start();
 		if (FilterOperator.EQUAL.equals(op))
 			query.add(prop, value);
 		else

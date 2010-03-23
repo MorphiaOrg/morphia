@@ -32,7 +32,11 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 /**
@@ -72,7 +76,24 @@ public class TestDatastore {
 		mongo.dropDatabase("morphia_test");
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
-        
+	}
+
+	@Test
+    public void testLowlevelbyteArray() throws Exception {
+	    Mongo m = new Mongo();
+		DBCollection c = m.getDB("test").getCollection( "testBinary" );
+	    c.drop();
+	    DBObject loaded;
+	    Iterator<DBObject> it = c.find(new BasicDBObject(), null, 0, 1);
+	    if (it != null && it.hasNext()) loaded = it.next();
+	    
+	    c.save( BasicDBObjectBuilder.start().add( "a" , "eliot".getBytes() ).get() );
+	    
+	    DBObject out = c.findOne();
+	    loaded = c.find(new BasicDBObject(), null, 0, 1).next();
+	    assertEquals(new String((byte[])out.get("a")), new String((byte[])loaded.get("a")));
+	    byte[] b = (byte[])(out.get( "a" ) );
+	    assertEquals( "eliot" , new String( b ) );
 	}
 	
 	@Test

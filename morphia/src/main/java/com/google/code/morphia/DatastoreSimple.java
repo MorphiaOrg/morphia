@@ -1,5 +1,7 @@
 package com.google.code.morphia;
 
+import com.google.code.morphia.utils.Key;
+
 /**
  * Datastore interface to get/delete/save objects with a Long/String id
  * @author Scott Hernandez
@@ -28,9 +30,9 @@ public interface DatastoreSimple {
 	<T> void delete(Object clazzOrEntity, String[] ids);
 
 	/** Saves the entity (Object) and updates the @MongoID, @MondoCollectionName fields */
-	<T> void save(T entity);
+	<T> Key<T> save(T entity);
 	/** Saves the entities (Objects) and updates the @MongoID, @MondoCollectionName fields */
-	<T> void save(Iterable<T> entities);
+	<T> Iterable<Key<T>> save(Iterable<T> entities);
 
 	/** 
 	 * <p>
