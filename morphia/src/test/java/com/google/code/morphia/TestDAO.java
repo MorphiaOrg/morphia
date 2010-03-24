@@ -167,4 +167,27 @@ public class TestDAO {
             db.dropDatabase();
         }
     }
+    @Test
+    public void testSaveEntityWithId() throws Exception {
+         Mongo mongo = new Mongo();
+         DB db = mongo.getDB("morphia_test");
+       
+         try {
+             Morphia morphia = new Morphia();
+             HotelDAO hotelDAO = new HotelDAO(morphia, mongo);
+            
+             Hotel borg = Hotel.create();
+             borg.setName("Hotel Borg");
+             borg.setStars(4);
+             hotelDAO.save(borg);
+            
+             Hotel hotelLoaded = hotelDAO.get(borg.getId());           
+             hotelLoaded.setStars(5);
+             hotelDAO.save(hotelLoaded);
+             Hotel hotelReloaded = hotelDAO.get(borg.getId());
+             assertEquals(5,hotelReloaded.getStars());
+         } finally {
+             db.dropDatabase();
+         }
+    }
 }
