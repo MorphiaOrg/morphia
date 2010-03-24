@@ -111,7 +111,7 @@ public class TestMapping {
 
 	public static class ContainsLongAndStringArray {
 		@Id String id;
-		Long[] longs = {0L, 1L, 2L};
+		private Long[] longs = {0L, 1L, 2L};
 		String[] strings = {"Scott", "Rocks"};
 	}
 	

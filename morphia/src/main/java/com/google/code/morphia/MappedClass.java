@@ -112,8 +112,9 @@ public class MappedClass {
         
         defCollName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
         for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, false)) {
+        	field.setAccessible(true);
             if (field.isAnnotationPresent(Id.class)) {
-                idField = field;
+            	idField = field;
             	persistenceFields.add(new MappedField(field));   	
             } else if (field.isAnnotationPresent(Transient.class)) {
             	continue;
@@ -306,6 +307,7 @@ public class MappedClass {
 		protected boolean bMap = false;
 		
 		public MappedField(Field f) {
+			f.setAccessible(true);
 			this.field = f;
 			for (Class<Annotation> clazz : interestingAnnotations) {
 				addAnnotation(clazz);
