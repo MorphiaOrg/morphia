@@ -48,21 +48,14 @@ public class DatastoreImpl implements Datastore {
 	}
 	public DBCollection getCollection(Class clazz) {
 		String collName;
-		try {
-			collName = morphia.getMapper().getCollectionName(clazz);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		collName = morphia.getMapper().getCollectionName(clazz);
+		
 		return mongo.getDB(dbName).getCollection(collName);
 	}
 	
 	public DBCollection getCollection(Object obj) {
 		String collName;
-		try {
-			collName = morphia.getMapper().getCollectionName(obj);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		collName = morphia.getMapper().getCollectionName(obj);
 		return mongo.getDB(dbName).getCollection(collName);
 	}
 
