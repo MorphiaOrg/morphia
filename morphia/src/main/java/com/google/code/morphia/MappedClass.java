@@ -150,8 +150,9 @@ public class MappedClass {
 	 * @param clazz
 	 */
 	private void addAnnotation(Class<Annotation> c) {
-		if (clazz.isAnnotationPresent(c))
-			this.releventAnnotations.put(c, clazz.getAnnotation(c));
+		Annotation ann = ReflectionUtils.getAnnotation(clazz, c);
+		if (ann != null)
+			this.releventAnnotations.put(c, ann);
 	}
 
 	@Override

@@ -304,7 +304,7 @@ public class ReflectionUtils {
     /**
      * Returns the (first) instance of the annotation, on the class (or any superclass, or interfaces implemented).
      */
-    protected static <T> T getAnnotation(Class c, Class<T> ann) {
+    public static <T> T getAnnotation(Class c, Class<T> ann) {
         if (c.isAnnotationPresent(ann)) {
             return (T) c.getAnnotation(ann);
         } else {
