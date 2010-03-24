@@ -104,7 +104,7 @@ public class Mapper {
     	
     	MappedClass mc = getMappedClass(object);
     	if (mc == null) mc = new MappedClass(object.getClass());
-    
+
     	try {
     		return (mc.collectionNameField != null && mc.collectionNameField.get(object) != null) ? (String)mc.collectionNameField.get(object) : mc.defCollName;
     	} catch (Exception e) {
@@ -116,10 +116,14 @@ public class Mapper {
 	  	MappedClass mc = getMappedClass(clazz);
     	if (mc == null) mc = new MappedClass(clazz);
     	return mc.defCollName;
-  }
+    }
 
-    private String getId(Object entity) throws IllegalAccessException {
-    	return (String)getMappedClass(entity).idField.get(entity);
+    private String getId(Object entity) {
+        try {
+            return (String)getMappedClass(entity).idField.get(entity);
+        } catch ( IllegalAccessException iae ) {
+            throw new RuntimeException(iae);
+        }
     }
 
 	void updateKeyInfo(Object entity, DBObject dbObj) {

@@ -23,7 +23,7 @@ public class DAO<T,K extends Serializable> {
     protected final Mongo mongo;
     protected final Morphia morphia;
 
-    public DAO( Class<T> entityClass, Mongo mongo, Morphia morphia, String dbName ) throws IllegalAccessException {
+    public DAO( Class<T> entityClass, Mongo mongo, Morphia morphia, String dbName ) {
         this(entityClass, mongo, morphia, dbName, morphia.getMapper().getCollectionName(entityClass));
     }
 
@@ -33,6 +33,7 @@ public class DAO<T,K extends Serializable> {
         this.morphia = morphia;
         this.dbName = dbName;
         this.collectionName = collectionName;
+        this.morphia.map(entityClass);
     }
 
     protected DBCollection collection() {

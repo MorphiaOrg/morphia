@@ -47,15 +47,12 @@ public class DatastoreImpl implements Datastore {
 		return (dbName == null) ? null : mongo.getDB(dbName);
 	}
 	public DBCollection getCollection(Class clazz) {
-		String collName;
-		collName = morphia.getMapper().getCollectionName(clazz);
-		
+		String collName = morphia.getMapper().getCollectionName(clazz);
 		return mongo.getDB(dbName).getCollection(collName);
 	}
 	
 	public DBCollection getCollection(Object obj) {
-		String collName;
-		collName = morphia.getMapper().getCollectionName(obj);
+		String collName = morphia.getMapper().getCollectionName(obj);
 		return mongo.getDB(dbName).getCollection(collName);
 	}
 
