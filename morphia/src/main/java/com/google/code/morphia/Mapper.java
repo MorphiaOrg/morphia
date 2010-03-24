@@ -136,7 +136,7 @@ public class Mapper {
 		    	Object dbId = dbObj.get(Mapper.ID_KEY);
 				if ( value != null ) {
 					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
-			    	if (!value.equals(dbId))
+			    	if (!dbId.equals(value))
 			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getSimpleName());
 				} else {
 					//set the id field with the "new" value
