@@ -16,27 +16,18 @@
 
 package com.google.code.morphia.testdaos;
 
+import com.google.code.morphia.DAO;
 import com.google.code.morphia.Morphia;
-import com.google.code.morphia.dao.AbstractMongoDAO;
 import com.google.code.morphia.testmodel.Hotel;
-import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
-public class HotelDAO extends AbstractMongoDAO<Hotel> {
-
-    private final Mongo mongo;
+public class HotelDAO extends DAO<Hotel,String> {
 
     public HotelDAO( Morphia morphia, Mongo mongo ) {
-        super(Hotel.class, morphia);
-        this.mongo = mongo;
-    }
-
-    @Override
-    protected DBCollection collection() {
-        return mongo.getDB("morphia_test").getCollection("hotels");
+        super(Hotel.class, mongo, morphia, "morphia_test", "hotels");
     }
 }

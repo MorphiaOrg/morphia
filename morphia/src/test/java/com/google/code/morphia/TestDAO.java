@@ -33,13 +33,14 @@ import static org.junit.Assert.*;
 public class TestDAO {
 
     @Test
-    public void testDAO() throws Exception {
+    public void testNewDAO() throws Exception {
         Mongo mongo = new Mongo();
         DB db = mongo.getDB("morphia_test");
         try {
-
             Morphia morphia = new Morphia();
             morphia.map(Hotel.class);
+
+            DAO<Hotel,String> hotelDAO = new DAO<Hotel,String>(Hotel.class, mongo, morphia, "morphia_test", "hotels");
 
             Hotel borg = Hotel.create();
             borg.setName("Hotel Borg");
@@ -52,8 +53,7 @@ public class TestDAO {
             borgAddr.setPostCode("101");
             borg.setAddress(borgAddr);
 
-            HotelDAO hotelDAO = new HotelDAO(morphia, mongo);
-            borg = hotelDAO.save(borg);
+            hotelDAO.save(borg);
             assertEquals(1, hotelDAO.getCount());
             assertNotNull(borg.getId());
             assertEquals("hotels", borg.getCollectionName());
@@ -62,7 +62,7 @@ public class TestDAO {
             assertEquals(borg.getName(), hotelLoaded.getName());
             assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
 
-            Hotel hotelByValue = hotelDAO.getByValue("name", "Hotel Borg");
+            Hotel hotelByValue = hotelDAO.findOne("name", "Hotel Borg");
             assertNotNull(hotelByValue);
             assertEquals(borg.getStartDate(), hotelByValue.getStartDate());
 
@@ -87,9 +87,77 @@ public class TestDAO {
             assertEquals(1, hotelDAO.findAll(1,10).size());
             assertEquals(1, hotelDAO.findAll(0,1).size());
             assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
-            assertNotNull(hotelDAO.getByValue("type", Hotel.Type.LEISURE));
+            assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
-            hotelDAO.removeById(borg.getId());
+            hotelDAO.deleteById(borg.getId());
+            assertEquals(1, hotelDAO.getCount());
+
+            hotelDAO.dropCollection();
+            assertEquals(0, hotelDAO.getCount());
+
+        } finally {
+            db.dropDatabase();
+        }
+    }
+
+    @Test
+    public void testDAO() throws Exception {
+        Mongo mongo = new Mongo();
+        DB db = mongo.getDB("morphia_test");
+        try {
+
+            Morphia morphia = new Morphia();
+            morphia.map(Hotel.class);
+
+            Hotel borg = Hotel.create();
+            borg.setName("Hotel Borg");
+            borg.setStars(4);
+            borg.setTakesCreditCards(true);
+            borg.setStartDate(new Date());
+            borg.setType(Hotel.Type.LEISURE);
+            Address borgAddr = new Address();
+            borgAddr.setStreet("Posthusstraeti 11");
+            borgAddr.setPostCode("101");
+            borg.setAddress(borgAddr);
+
+            HotelDAO hotelDAO = new HotelDAO(morphia, mongo);
+            hotelDAO.save(borg);
+            assertEquals(1, hotelDAO.getCount());
+            assertNotNull(borg.getId());
+            assertEquals("hotels", borg.getCollectionName());
+
+            Hotel hotelLoaded = hotelDAO.get(borg.getId());
+            assertEquals(borg.getName(), hotelLoaded.getName());
+            assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
+
+            Hotel hotelByValue = hotelDAO.findOne("name", "Hotel Borg");
+            assertNotNull(hotelByValue);
+            assertEquals(borg.getStartDate(), hotelByValue.getStartDate());
+
+            assertTrue(hotelDAO.exists("stars", 4));
+
+            Hotel hilton = Hotel.create();
+            hilton.setName("Hilton Hotel");
+            hilton.setStars(4);
+            hilton.setTakesCreditCards(true);
+            hilton.setStartDate(new Date());
+            hilton.setType(Hotel.Type.BUSINESS);
+            Address hiltonAddr = new Address();
+            hiltonAddr.setStreet("Some street 44");
+            hiltonAddr.setPostCode("101");
+            hilton.setAddress(hiltonAddr);
+
+            hotelDAO.save(hilton);
+
+            List<Hotel> allHotels = hotelDAO.findAll(0, 10);
+            assertEquals(2, allHotels.size());
+
+            assertEquals(1, hotelDAO.findAll(1,10).size());
+            assertEquals(1, hotelDAO.findAll(0,1).size());
+            assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
+            assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
+
+            hotelDAO.deleteById(borg.getId());
             assertEquals(1, hotelDAO.getCount());
 
             hotelDAO.dropCollection();

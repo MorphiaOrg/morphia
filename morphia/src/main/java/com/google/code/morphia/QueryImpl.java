@@ -71,7 +71,7 @@ public class QueryImpl<T> implements Query<T> {
 
 	@Override
 	public Iterable<T> fetchIdsOnly() {
-		fields = BasicDBObjectBuilder.start("_id", 1);
+		fields = BasicDBObjectBuilder.start(Mapper.ID_KEY, 1);
 		return fetch();
 	}
 

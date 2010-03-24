@@ -117,6 +117,46 @@ public class Mapper {
     	return (String)getMappedClass(entity).idField.get(entity);
     }
 
+	void updateKeyInfo(Object entity, DBObject dbObj) {
+		MappedClass mc = getMappedClass(entity);
+
+		//update id field, if there.
+		if (mc.idField != null) {
+			try {
+				Object value =  mc.idField.get(entity);
+		    	Object dbId = dbObj.get(Mapper.ID_KEY);
+				if ( value != null ) {
+			    	if (value != null && !value.equals(dbId))
+			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getSimpleName());
+				} else if (value == null)
+					if (dbId instanceof ObjectId && mc.idField.getType().isAssignableFrom(String.class)) dbId = dbId.toString();
+		    		mc.idField.set(entity, dbId);
+
+			} catch (Exception e) {
+				if (e.getClass().equals(RuntimeException.class)) throw (RuntimeException)e;
+
+				throw new RuntimeException(e);
+			}
+		}
+
+		//update ns (collectionName)
+		if (mc.collectionNameField != null) {
+			try {
+				String value = (String) mc.collectionNameField.get(entity);
+
+				String dbNs = dbObj.get("_ns").toString();
+				if ( value != null && value.length() > 0 ) {
+			    	if (value != null && !value.equals(dbNs))
+			    		throw new RuntimeException("ns mismatch: " + value + " != " + dbNs + " for " + entity.getClass().getSimpleName());
+				} else if (value == null)
+		    		mc.collectionNameField.set(entity, dbNs);
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
     Class getClassForName(String className, Class defaultClass) {
     	if (mappedClasses.containsKey(className)) return mappedClasses.get(className).clazz;
         try {

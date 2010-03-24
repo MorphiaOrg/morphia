@@ -12,7 +12,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
-import com.mongodb.ObjectId;
 
 /**
  * 
@@ -73,47 +72,6 @@ public class DatastoreImpl implements Datastore {
 
 	private Class getEntityClass(Object clazzOrEntity) {
 		return (clazzOrEntity instanceof Class) ? (Class) clazzOrEntity : clazzOrEntity.getClass();
-	}
-	
-	protected void updateKeyInfo(Object entity, DBObject dbObj) {
-		MappedClass mc = morphia.getMappedClasses().get(entity.getClass().getName());
-	
-		//update id field, if there.
-		if (mc.idField != null) {
-			try {
-				Object value =  mc.idField.get(entity);
-		    	Object dbId = dbObj.get(Mapper.ID_KEY);
-				if ( value != null ) {
-			    	if (value != null && !value.equals(dbId))
-			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getSimpleName());
-				} else if (value == null)
-					if (dbId instanceof ObjectId && mc.idField.getType().isAssignableFrom(String.class)) dbId = dbId.toString();
-		    		mc.idField.set(entity, dbId);
-
-			} catch (Exception e) {
-				if (e.getClass().equals(RuntimeException.class)) throw (RuntimeException)e;
-				
-				throw new RuntimeException(e);
-			}
-		}
-
-		//update ns (collectionName)
-		if (mc.collectionNameField != null) {
-			try {
-				String value = (String) mc.collectionNameField.get(entity);
-
-				String dbNs = dbObj.get("_ns").toString();
-				if ( value != null && value.length() > 0 ) {
-			    	if (value != null && !value.equals(dbNs))
-			    		throw new RuntimeException("ns mismatch: " + value + " != " + dbNs + " for " + entity.getClass().getSimpleName());
-				} else if (value == null) 
-		    		mc.collectionNameField.set(entity, dbNs);
-				
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
 	}
 
 	@Override
@@ -207,8 +165,7 @@ public class DatastoreImpl implements Datastore {
 		DBCollection dbColl = getCollection(entity);
 		dbColl.save(dbObj);
 		dbObj.put(Mapper.COLLECTION_NAME_KEY, dbColl.getName());
-		updateKeyInfo(entity, dbObj);
-		
+		morphia.getMapper().updateKeyInfo(entity, dbObj);
         morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), dbObj.get(Mapper.ID_KEY));
     }
