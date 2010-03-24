@@ -99,16 +99,20 @@ public class Mapper {
         entityCache.remove();
     }
 
-    public String getCollectionName(Object object) throws IllegalAccessException {
+    public String getCollectionName(Object object) {
     	if (object instanceof Class) return getCollectionName((Class) object);
     	
     	MappedClass mc = getMappedClass(object);
     	if (mc == null) mc = new MappedClass(object.getClass());
-    	
-    	return (mc.collectionNameField != null && mc.collectionNameField.get(object) != null) ? (String)mc.collectionNameField.get(object) : mc.defCollName;
+    
+    	try {
+    		return (mc.collectionNameField != null && mc.collectionNameField.get(object) != null) ? (String)mc.collectionNameField.get(object) : mc.defCollName;
+    	} catch (Exception e) {
+    		throw new RuntimeException(e);
+    	}
     }
     
-	public String getCollectionName(Class clazz) throws IllegalAccessException {
+	public String getCollectionName(Class clazz) {
 	  	MappedClass mc = getMappedClass(clazz);
     	if (mc == null) mc = new MappedClass(clazz);
     	return mc.defCollName;
