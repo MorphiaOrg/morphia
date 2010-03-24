@@ -66,7 +66,7 @@ public class DatastoreImpl implements Datastore {
 		return mongo.getDB(dbName).getCollection(collName);
 	}
 
-	protected Object fixupId(Object id) {
+	protected Object asObjectIdMaybe(Object id) {
 		return Mapper.asObjectIdMaybe(id);
 	}
 
@@ -76,7 +76,7 @@ public class DatastoreImpl implements Datastore {
 
 	@Override
 	public <T> T get(Object clazzOrEntity, Object id) {
-		DBObject query = BasicDBObjectBuilder.start().add(Mapper.ID_KEY, fixupId(id)).get();
+		DBObject query = BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get();
 		DBObject obj =  getCollection(clazzOrEntity).findOne(query);
 		if (obj == null) return null;
 		return (T)morphia.fromDBObject(getEntityClass(clazzOrEntity), (BasicDBObject) obj);
@@ -85,7 +85,7 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T> Query<T> get(Object clazzOrEntity, Object[] ids) {
 		for (int i = 0; i < ids.length; i++) {
-			ids[i] = fixupId(ids[i]);
+			ids[i] = asObjectIdMaybe(ids[i]);
 		}
 		return find(clazzOrEntity, Mapper.ID_KEY + " in", ids);
 	}
@@ -123,7 +123,7 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T> void delete(T entity) {
 		try {
-			String id = (String)morphia.getMappedClasses().get(entity.getClass().getName()).idField.get(entity);
+			Object id = morphia.getMappedClasses().get(entity.getClass().getName()).idField.get(entity);
 			delete(entity, id);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -143,7 +143,7 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T> void delete(Object clazzOrEntity, Object id) {
 		DBCollection dbColl = getCollection(clazzOrEntity);
-		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, fixupId(id)).get());
+		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
 	}
 	
 	@Override

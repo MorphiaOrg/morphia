@@ -178,6 +178,7 @@ public class ReflectionUtils {
                 || type == byte.class
                 || type == Locale.class
                 || type == DBRef.class
+                || type == Key.class
                 || type == ObjectId.class
                 || type.isEnum()
                 ;

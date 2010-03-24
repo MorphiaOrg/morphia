@@ -40,6 +40,7 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.utils.Key;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -126,11 +127,16 @@ public class Mapper {
 				Object value =  mc.idField.get(entity);
 		    	Object dbId = dbObj.get(Mapper.ID_KEY);
 				if ( value != null ) {
-			    	if (value != null && !value.equals(dbId))
+					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
+			    	if (!value.equals(dbId))
 			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getSimpleName());
-				} else if (value == null)
-					if (dbId instanceof ObjectId && mc.idField.getType().isAssignableFrom(String.class)) dbId = dbId.toString();
+				} else {
+					//set the id field with the "new" value
+					if (dbId instanceof ObjectId && mc.idField.getType().isAssignableFrom(String.class)) {
+						dbId = dbId.toString();
+					}
 		    		mc.idField.set(entity, dbId);
+				}
 
 			} catch (Exception e) {
 				if (e.getClass().equals(RuntimeException.class)) throw (RuntimeException)e;
@@ -486,7 +492,10 @@ public class Mapper {
                 }
 
             } else {
-            	mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList());
+                if (!bSet)
+            	    mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList());
+                else
+                    mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new HashSet());
             }
         } else {
             if ( dbObject.containsField(name) ) {
@@ -644,6 +653,8 @@ public class Mapper {
             return parseLocale(dbObject.getString(name));
         } else if (c.isEnum()) {
             return Enum.valueOf(c, dbObject.getString(name));
+        } else if (c == Key.class) {
+            return new Key((DBRef)dbObject.get(name));
         }
         return dbObject.get(name);
     }
@@ -656,6 +667,8 @@ public class Mapper {
             return ((Enum) obj).name();
         } else if ( clazz == Locale.class ) {
           	return ((Locale) obj).toString();
+        } else if ( clazz == Key.class ) {
+          	return ((Key) obj).toRef();
         } else {
             return obj;
         }

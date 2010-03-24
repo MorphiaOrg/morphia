@@ -84,12 +84,12 @@ public class TestDatastore {
 		}
 		
 		@PrePersist
-		void PrePersistWithParam(DBObject dbObj) {
+		protected void PrePersistWithParam(DBObject dbObj) {
 			prePersistWithParam = true;
 		}
 		
 		@PrePersist
-		DBObject PrePersistWithParamAndReturn(DBObject dbObj) {
+		public DBObject PrePersistWithParamAndReturn(DBObject dbObj) {
 			prePersistWithParamAndReturn = true;
 			return null;
 //			DBObject retObj = new BasicDBObject((Map)dbObj);
@@ -97,8 +97,9 @@ public class TestDatastore {
 //			return retObj;
 		}
 		
+		@SuppressWarnings("unused")
 		@PostPersist
-		void PostPersistPersist() {
+		private void PostPersistPersist() {
 			postPersist = true;
 		}
 		
@@ -224,7 +225,12 @@ public class TestDatastore {
 		assertNotNull(it.next());
 		assertTrue(!it.hasNext());
 	}
-	
+	public void testIdUpdatedOnSave() throws Exception {
+		Rectangle rect = new Rectangle(10, 10);
+		ds.save(rect);
+		assertNotNull(rect.getId());
+		assertNotNull(rect.getCollectionName());
+	}	
 	@Test
     public void testSaveAndDelete() throws Exception {
 		Rectangle rect = new Rectangle(10, 10);
@@ -303,4 +309,5 @@ public class TestDatastore {
         assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
         
     }
+    
 }

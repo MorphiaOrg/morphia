@@ -403,6 +403,7 @@ public class MappedClass {
 			Object tempObj = null;
 			if (methods != null)
 				for (Method method: methods) {
+					method.setAccessible(true);
 					if (method.getParameterTypes().length == 0)
 						tempObj = method.invoke(entity);
 					else
