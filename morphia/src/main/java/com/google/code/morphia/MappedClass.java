@@ -3,6 +3,7 @@
  */
 package com.google.code.morphia;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -62,7 +63,7 @@ public class MappedClass {
 	/** Annotations we are interested in looking for. */
 	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class};
 	/** Annotations we were interested in, and found. */
-	protected Map<Class<Annotation>,Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	protected Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	
 	/** Annotations we are interested in looking for (related to an entity's lifecycle.  */
 	public Class[] lifecycleAnnotations = new Class[] {PrePersist.class, PostPersist.class, PreLoad.class, PostLoad.class};
@@ -124,7 +125,8 @@ public class MappedClass {
             } else if (	field.isAnnotationPresent(Property.class) || 
         				field.isAnnotationPresent(Reference.class) || 
         				field.isAnnotationPresent(Embedded.class) || 
-        				isSupportedType(field.getType())) {
+        				isSupportedType(field.getType()) ||
+        				ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
             	persistenceFields.add(new MappedField(field));
             } else {
             	logger.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [" + field.getType().getSimpleName() + "]");
@@ -216,7 +218,13 @@ public class MappedClass {
             if (logger.isLoggable(Level.FINE)) {
                 logger.finer("In [" + clazz.getName() + "]: Processing field: " + field.getName());
             }
-
+            
+            //collect index annotations
+            if (mf.hasAnnotation(Indexed.class)) {
+    			Indexed index = field.getAnnotation(Indexed.class);
+            	suggestedIndexes.add(new SuggestedIndex(mappedName, index.value()));
+            }
+            
             //a field can be a Value, Reference, or Embedded
             if ( mf.hasAnnotation(Property.class) ) {
                 // make sure that the property type is supported
@@ -239,12 +247,7 @@ public class MappedClass {
                                     + field.getName()
                                     + "] which is annotated as @Reference is of type [" + field.getType().getName() + "] which cannot be referenced.");
                 }
-            }
-            if (mf.hasAnnotation(Indexed.class)) {
-    			Indexed index = field.getAnnotation(Indexed.class);
-            	suggestedIndexes.add(new SuggestedIndex(mappedName, index.value()));
-            }
-            
+            }            
         }
         
 

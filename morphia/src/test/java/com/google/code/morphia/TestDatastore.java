@@ -42,6 +42,7 @@ import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
+import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -140,13 +141,25 @@ public class TestDatastore {
 		}
 	}
 	
+	public static class KeysKeysKeys {
+		@Id String id;
+		List<Key<FacebookUser>> users;
+		Key<Rectangle> rect;
+		
+		protected KeysKeysKeys() {}
+		public KeysKeysKeys(Key<Rectangle> rectKey, List<Key<FacebookUser>> users) {
+			this.rect = rectKey;
+			this.users = users;
+		}
+	}
+	
 	public TestDatastore () {
 		try {
 			mongo = new Mongo();
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
-		morphia.map(Hotel.class).map(Rectangle.class).map(FacebookUser.class);
+		morphia.map(Hotel.class).map(KeysKeysKeys.class).map(Rectangle.class).map(FacebookUser.class);
 		//delete, and (re)create test db
 	}
 
@@ -157,6 +170,40 @@ public class TestDatastore {
         ds = morphia.createDatastore(mongo, db.getName());
 	}
 
+	@Test
+    public void testKeyList() throws Exception {
+		Rectangle rect = new Rectangle(1000, 1);
+		Key<Rectangle> rectKey = ds.save(rect);
+		
+		assertEquals(rectKey.getId(), rect.getId());
+		assertEquals(rectKey.getKind(), rect.getCollectionName());
+		
+		FacebookUser fbUser1 = new FacebookUser(1, "scott");
+		FacebookUser fbUser2 = new FacebookUser(2, "tom");
+		FacebookUser fbUser3 = new FacebookUser(3, "oli");
+		FacebookUser fbUser4 = new FacebookUser(4, "frank");
+		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
+		assertEquals(fbUser1.id, 1);
+
+		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+		for(Key<FacebookUser> key :fbKeys)
+			fbUserKeys.add(key);
+
+		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
+		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
+		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
+		assertEquals(fbUser4.id, fbUserKeys.get(3).getId());
+		
+		KeysKeysKeys k1 = new KeysKeysKeys(rectKey, fbUserKeys);
+		Key<KeysKeysKeys> k1Key = ds.save(k1);
+		assertEquals(k1.id, k1Key.getId());
+		
+		KeysKeysKeys k1Loaded = ds.get(k1);
+		for(Key<FacebookUser> key :k1Loaded.users)
+			assertNotNull(key.getId());
+		
+		assertNotNull(k1Loaded.rect.getId());	
+	}
 	@Test
     public void testLowlevelbyteArray() throws Exception {
 	    Mongo m = new Mongo();
@@ -219,11 +266,15 @@ public class TestDatastore {
 	
 		ds.save(fbUsers);
 		assertEquals(4, ds.getCount(FacebookUser.class));
-		assertNotNull(ds.get(fbUsers.get(0), 1));
-		Iterator<FacebookUser> it = ds.<FacebookUser>get(fbUsers.get(0), new long[] {1,2}).iterator();
-		assertNotNull(it.next());
-		assertNotNull(it.next());
-		assertTrue(!it.hasNext());
+		assertNotNull(ds.get(FacebookUser.class, 1));
+		List<Long> ids = new ArrayList<Long>(2);
+		ids.add(1L); ids.add(2L);
+		List<FacebookUser> res = ds.get(FacebookUser.class, ids).asList();
+		assertEquals(res.size(), 2);
+		assertNotNull(res.get(0));
+		assertNotNull(res.get(0).id);
+		assertNotNull(res.get(1));
+		assertNotNull(res.get(1).username);
 	}
 	public void testIdUpdatedOnSave() throws Exception {
 		Rectangle rect = new Rectangle(10, 10);
@@ -246,15 +297,17 @@ public class TestDatastore {
 		//test delete(entity, id)
 		ds.save(rect);
 		assertEquals(1, ds.getCount(rect));
-		ds.delete(rect, 1);
+		ds.delete(rect.getClass(), 1);
 		assertEquals(1, ds.getCount(rect));
-		ds.delete(rect, "1");
+		ds.delete(rect.getClass(), "1");
 		assertEquals(0, ds.getCount(rect));
 
 		//test delete(entity, {id})
 		ds.save(rect);
 		assertEquals(1, ds.getCount(rect));
-		ds.delete(rect, new String[]{"1"});
+		List<String> ids = new ArrayList<String>();
+		ids.add("1");
+		ds.delete(rect.getClass(), ids);
 		assertEquals(0, ds.getCount(rect));
 
 		//test delete(entity, {id,id})
@@ -263,7 +316,8 @@ public class TestDatastore {
 		rect.setId("2");
 		ds.save(rect);
 		assertEquals(2, ds.getCount(rect));
-		ds.delete(rect, new String[]{"1", "2"});
+		ids.clear(); ids.add("1"); ids.add("2");
+		ds.delete(rect.getClass(), ids);
 		assertEquals(0, ds.getCount(rect));
 
 		//test delete(entity, {id}) with one left
@@ -272,7 +326,8 @@ public class TestDatastore {
 		rect.setId("2");
 		ds.save(rect);
 		assertEquals(2, ds.getCount(rect));
-		ds.delete(rect, new String[]{"1"});
+		ids.clear(); ids.add("1");
+		ds.delete(rect.getClass(), ids);
 		assertEquals(1, ds.getCount(rect));
 
 		//test delete(Class, {id}) with one left
@@ -281,7 +336,8 @@ public class TestDatastore {
 		rect.setId("2");
 		ds.save(rect);
 		assertEquals(2, ds.getCount(rect));
-		ds.delete(Rectangle.class, new String[]{"1"});
+		ids.clear(); ids.add("1");
+		ds.delete(Rectangle.class, ids);
 		assertEquals(1, ds.getCount(rect));
 	}
 	

@@ -1,6 +1,7 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.utils.IndexDirection;
+import com.google.code.morphia.utils.Key;
 import com.mongodb.DB;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
@@ -8,37 +9,75 @@ import com.mongodb.Mongo;
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
  */
-public interface Datastore extends DatastoreSimple {	
+public interface Datastore {	
 	/** Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id) */
-	DBRef createRef(Object entity);
+	<T,V> DBRef createRef(Class<T> clazz, V id);
 	/** Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id) */
-	DBRef createRef(Object clazzOrEntity, Object id);
-
-	/** Find the given entity (by collectionName/id); think of this as refresh */
-	<T> T get(Object entityOrRef);
+	<T> DBRef createRef(T entity);
 
 	/** Deletes the given entity (by id) */
-	<T> T get(Object clazzOrEntity, Object id);
-
+	<T,V> void delete(Class<T> clazz, V id);
+	/** Deletes the given entities (by id) */
+	<T,V> void delete(Class<T> clazz, Iterable<V> ids);
 	/** Deletes the given entity (by id) */
-	<T> Query<T> get(Object clazzOrEntity, Object[] ids);
-
-	/** Find all instances by collectionName */
-	<T> Query<T> find(Object clazzOrEntity);
-
-	/** Deletes the given entity (by id) */
-	<T> void delete(Object clazzOrEntity, Object id);
-	
-	/** Gets the count of items returned by this query; same as {@code query.countAll()}*/
-	<T> long getCount(Query<T> query);
+	<T> void delete(T entity);
 
 	/** Ensures (creating if necessary) the index and direction */
-	void ensureIndex(Object clazzOrEntity, String name, IndexDirection dir);
+	<T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir);
+	/** Ensures (creating if necessary) the index and direction */
+	<T> void ensureIndex(T entity, String name, IndexDirection dir);
+
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
+	void ensureSuggestedIndexes();
+
+	/** Find all instances by type */
+	<T> Query<T> find(Class<T> clazz);
+
+	/** 
+	 * <p>
+	 * Find all instances by collectionName, and filter property.
+	 * </p><p>
+	 * This is the same as: {@code find(clazzOrEntity).filter(property, value); }
+	 * </p>
+	 */
+	<T, V> Query<T> find(Class<T> clazz, String property, V value);
+	
+	/** 
+	 * <p>
+	 * Find all instances by collectionName, and filter property.
+	 * </p><p>
+	 * This is the same as: {@code find(clazzOrEntity).filter(property, value).offset(offset).limit(size); }
+	 * </p>
+	 */
+	<T,V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
+
+	/** Find the given entity (by collectionName/id); think of this as refresh */
+	<T> T get(Class<T> clazz, DBRef ref);
+
+	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
+	<T,V> Query<T> get(Class<T> clazz, Iterable<V> ids);
+	/** Find the given entity (by id); shorthand for {@code find("_id ", id)} */
+	<T,V> T get(Class<T> clazz, V id);
+
+	<T> T get(Class<T> clazz, Key<T> key);
+	<T> T get(T entity);
+
+	/** Gets the count of the CollectionName */
+	<T> long getCount(Object clazzOrEntity);
+
+	/** Gets the count of items returned by this query; same as {@code query.countAll()}*/
+	<T> long getCount(Query<T> query); 
+	/** The instance this Datastore is using */
+	DB getDB();
+	/** The instance this Datastore is using */
+	Mongo getMongo();
 	
 	/** The instance this Datastore is using */
 	Morphia getMorphia();
-	/** The instance this Datastore is using */
-	Mongo getMongo();
-	/** The instance this Datastore is using */
-	DB getDB();
+	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
+	<T> Iterable<Key<T>> save(Iterable<T> entities);
+	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
+	<T> Iterable<Key<T>> save(T... entities);
+	/** Saves the entity (Object) and updates the @Id, @CollectionName fields */
+	<T> Key<T> save(T entity);
 }

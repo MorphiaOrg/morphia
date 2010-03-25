@@ -119,11 +119,12 @@ public class QueryImpl<T> implements Query<T> {
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 
 		if (query == null) query = BasicDBObjectBuilder.start();
+		Object mappedValue = this.ds.getMorphia().getMapper().objectToValue(value);
 		if (FilterOperator.EQUAL.equals(op))
-			query.add(prop, value);
+			query.add(prop, mappedValue);
 		else
-			query.push(prop).add(op.val(), value);
-		
+			query.push(prop).add(op.val(), mappedValue);
+
 		return this;
 	}
 	

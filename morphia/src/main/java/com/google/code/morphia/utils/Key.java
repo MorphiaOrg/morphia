@@ -2,6 +2,7 @@ package com.google.code.morphia.utils;
 
 import java.io.Serializable;
 
+import com.google.code.morphia.Mapper;
 import com.mongodb.DBRef;
 
 /**
@@ -25,7 +26,8 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	 * back to a Class for getKind() would then require a link to the
 	 * OFactory, making this object non-serializable.
 	 */
-	protected String kindClassName;
+	protected String kind;
+	protected Class<? extends T> kindClass;
 	
 	/** Null if there is no parent */
 	protected Key<?> parent;
@@ -46,7 +48,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	public Key(String kind, Object id)
 	{
 		this.parent = null;
-		this.kindClassName = kind;
+		this.kind = kind;
 		this.id = id;
 	}
 
@@ -54,18 +56,27 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	public Key(DBRef ref)
 	{
 		this.parent = null;
-		this.kindClassName = ref.getRef();
+		this.kind = ref.getRef();
 		this.id = ref.getId();
 	}
 
 	public DBRef toRef() {
-		return new DBRef(null, kindClassName, id);
+		if (kind == null) throw new IllegalStateException("missing collect-name; please call toRef(Mapper)");
+		return new DBRef(null, kind, id);
 	}
+	
+	public DBRef toRef(Mapper mapr) {
+		if (kind != null) return toRef();
+		if (kindClass == null && kind == null) throw new IllegalStateException("missing kindClass; please call toRef(Mapper)");
+		kind = mapr.getCollectionName(kindClass);
+		return new DBRef(null, kind, id);
+	}
+	
 	/** Create a key with a parent and a long id */
 	public Key(Key<?> parent, Class<? extends T> kind, Object id)
 	{
 		this.parent = parent;
-		this.kindClassName = kind.getName();
+		this.kindClass = kind;
 		this.id = id;
 	}
 	
@@ -78,11 +89,15 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	}
 	
 	/**
-	 * @return the name of the Class associated with this key.
+	 * @return the collection-name.
 	 */
-	public String getKindClassName()
+	public String getKind()
 	{
-		return this.kindClassName;
+		return this.kind;
+	}
+	
+	public Class<? extends T> getKindClass() {
+		return this.kindClass;
 	}
 	
 	/**
@@ -98,16 +113,23 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	/**
 	 * <p>Compares based on the following traits, in order:</p>
 	 * <ol>
-	 * <li>kind</li>
+	 * <li>kind/kindClass</li>
 	 * <li>parent</li>
 	 * <li>id or name</li>
 	 * </ol>
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public int compareTo(Key<?> other)
 	{
+		int cmp = 0;
 		// First kind
-		int cmp = this.kindClassName.compareTo(other.kindClassName);
+		if (other.kindClass != null && kindClass != null) {
+			cmp = this.kindClass.getName().compareTo(other.kindClass.getName());
+			if (cmp != 0)
+				return cmp;
+		}
+		cmp = compareNullable(this.kind, other.kind);
 		if (cmp != 0)
 			return cmp;
 
@@ -115,8 +137,15 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 		cmp = compareNullable(this.parent, other.parent);
 		if (cmp != 0)
 			return cmp;
-		
-		//TODO: do something with the ids.
+
+		try {
+			cmp = compareNullable((Comparable)this.id,(Comparable)other.id);
+			if (cmp != 0)
+				return cmp;
+		} catch (Exception e) {
+			//continue
+		}
+
 		return 0;
 	}
 
@@ -144,9 +173,15 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	@Override
 	public String toString()
 	{
-		StringBuilder bld = new StringBuilder();
-		bld.append("Key{kindClassName=");
-		bld.append(this.kindClassName);
+		StringBuilder bld = new StringBuilder("Key{");
+
+		if ( kind != null) {
+			bld.append("kind=");
+			bld.append(this.kind);
+		} else {
+			bld.append("kindClass=");
+			bld.append(this.kindClass.getName());			
+		}
 		bld.append(", parent=");
 		bld.append(this.parent);
 		bld.append(", id=");

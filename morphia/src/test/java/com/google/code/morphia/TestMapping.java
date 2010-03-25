@@ -130,7 +130,7 @@ public class TestMapping {
 		Datastore ds = (Datastore)DatastoreService.getDatastore();
 		DatastoreService.mapClass(ContainsCollection.class);
 		Key<ContainsCollection> savedKey = ds.save(new ContainsCollection());
-		ContainsCollection loaded = ds.<ContainsCollection>get(ContainsCollection.class, savedKey.getId());
+		ContainsCollection loaded = ds.get(ContainsCollection.class, savedKey.getId());
 		assertEquals(loaded.coll, (new ContainsCollection()).coll);
 		assertNotNull(loaded.id);        
 	}
@@ -141,7 +141,7 @@ public class TestMapping {
 		Datastore ds = (Datastore)DatastoreService.getDatastore();
 		DatastoreService.mapClass(ContainsbyteArray.class);
 		Key<ContainsbyteArray> savedKey = ds.save(new ContainsbyteArray());
-		ContainsbyteArray loaded = ds.<ContainsbyteArray>get(ContainsbyteArray.class, savedKey.getId());
+		ContainsbyteArray loaded = ds.get(ContainsbyteArray.class, savedKey.getId());
 		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
 		assertNotNull(loaded.id);        
 	}

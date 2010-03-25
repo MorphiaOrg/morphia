@@ -119,7 +119,7 @@ public class Morphia {
         return mapper.isMapped(entityClass);
     }
 
-    public <T> T fromDBObject(Class<T> entityClass, BasicDBObject dbObject) {
+    public <T> T fromDBObject(Class<T> entityClass, DBObject dbObject) {
         if ( !entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MongoMappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }

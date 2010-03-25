@@ -8,14 +8,14 @@ package com.google.code.morphia;
  */
 public class DatastoreService {
 	private static Morphia mor;
-	private static DatastoreSimple ds;
+	private static Datastore ds;
 	
 	static {
 		mor = new Morphia();
 		ds = mor.createDatastore("test");
 	}
 	/** Connects to "test" database on localhost */
-	public static DatastoreSimple getDatastore() {
+	public static Datastore getDatastore() {
 		return ds;
 	}
 
