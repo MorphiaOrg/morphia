@@ -126,14 +126,13 @@ public class Mapper {
         }
     }
 
-	void updateKeyInfo(Object entity, DBObject dbObj) {
+	void updateKeyInfo(Object entity, Object dbId, String dbNs) {
 		MappedClass mc = getMappedClass(entity);
 
 		//update id field, if there.
 		if (mc.idField != null) {
 			try {
-				Object value =  mc.idField.get(entity);
-		    	Object dbId = dbObj.get(Mapper.ID_KEY);
+				Object value = mc.idField.get(entity);
 				if ( value != null ) {
 					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
 			    	if (!dbId.equals(value))
@@ -157,8 +156,6 @@ public class Mapper {
 		if (mc.collectionNameField != null) {
 			try {
 				String value = (String) mc.collectionNameField.get(entity);
-
-				String dbNs = dbObj.get("_ns").toString();
 				if ( value != null && value.length() > 0 ) {
 			    	if (value != null && !value.equals(dbNs))
 			    		throw new RuntimeException("ns mismatch: " + value + " != " + dbNs + " for " + entity.getClass().getSimpleName());

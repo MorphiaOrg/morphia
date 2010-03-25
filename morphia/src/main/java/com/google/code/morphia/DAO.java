@@ -43,8 +43,7 @@ public class DAO<T,K extends Serializable> {
     public void save( T entity ) {
 		DBObject dbObj = morphia.toDBObject(entity);
 		collection().save(dbObj);
-		dbObj.put(Mapper.COLLECTION_NAME_KEY, collectionName);
-		morphia.getMapper().updateKeyInfo(entity, dbObj);
+		morphia.getMapper().updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY) ,collectionName);
         morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
     }
 

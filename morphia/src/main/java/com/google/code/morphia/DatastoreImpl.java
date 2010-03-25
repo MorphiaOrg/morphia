@@ -237,8 +237,7 @@ public class DatastoreImpl implements Datastore {
 		DBObject dbObj = mapr.toDBObject(entity);
 		DBCollection dbColl = getCollection(entity);
 		dbColl.save(dbObj);
-		dbObj.put(Mapper.COLLECTION_NAME_KEY, dbColl.getName());
-		mapr.updateKeyInfo(entity, dbObj);
+		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), getId(entity));
     }
