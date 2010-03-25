@@ -61,6 +61,10 @@ public class DAO<T,K extends Serializable> {
         collection().remove(new BasicDBObject(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
     }
 
+    public void delete( Constraints c ) {
+        deleteByQuery(new BasicDBObject(c.getQuery()));
+    }
+
     protected void deleteByQuery( DBObject query ) {
         collection().remove(query);
     }
