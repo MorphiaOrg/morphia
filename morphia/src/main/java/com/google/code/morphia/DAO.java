@@ -57,7 +57,7 @@ public class DAO<T,K extends Serializable> {
     }
 
     public void deleteById( K id ) {
-        collection().remove(new BasicDBObject(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
+        deleteByQuery(new BasicDBObject(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
     }
 
     public void delete( Constraints c ) {
@@ -82,19 +82,7 @@ public class DAO<T,K extends Serializable> {
     }
     public List<K> getIds( Constraints c ) {
         DBCursor cursor = collection().find(new BasicDBObject(c.getQuery()), new BasicDBObject(Mapper.ID_KEY, "1"));
-        if ( c.getSort() != null && !c.getSort().getFields().isEmpty() ) {
-            BasicDBObject orderBy = new BasicDBObject();
-            for ( Sort.SortField s : c.getSort().getFields() ) {
-                orderBy.put(s.getName(), s.isAscending() ? 1 : -1);
-            }
-            cursor.sort(orderBy);
-        }
-        if ( c.getStartIndex() > 0 ) {
-            cursor.skip(c.getStartIndex());
-        }
-        if ( c.getResultSize() > 0 ) {
-            cursor.limit(c.getResultSize());
-        }
+        applyToCursor(cursor, c.getStartIndex(), c.getResultSize(), c.getSort());
         List<K> ids = new ArrayList<K>();
         while ( cursor.hasNext() ) {
             ids.add((K)cursor.next().get(Mapper.ID_KEY));
@@ -127,7 +115,7 @@ public class DAO<T,K extends Serializable> {
         return getCount(new Constraints(key, value));
     }
     public long getCount(Constraints c) {
-        return collection().getCount(new BasicDBObject(c.getQuery()));
+        return getCount(c.getQuery());
     }
     public long getCount( Map<String,Object> query ) {
         return collection().getCount(new BasicDBObject(query));
@@ -137,15 +125,14 @@ public class DAO<T,K extends Serializable> {
         return findOne(new Constraints(key, value));
     }
     public T findOne( Constraints c ) {
-        return map((BasicDBObject)collection().findOne(new BasicDBObject(c.getQuery())));
+        return findOne(c.getQuery());
     }
     public T findOne( Map<String,Object> query ) {
         return map((BasicDBObject)collection().findOne(new BasicDBObject(query)));
     }
 
     public List<T> find( Constraints c ) {
-        return toList(collection().find(new BasicDBObject(c.getQuery())),
-                c.getStartIndex(), c.getResultSize(), c.getSort());
+        return find(c.getQuery(), c.getStartIndex(), c.getResultSize(), c.getSort());
     }
 
     public List<T> find(Map<String,Object> query) {
@@ -190,6 +177,15 @@ public class DAO<T,K extends Serializable> {
         return toList(cursor, startIndex, resultSize, null);
     }
     protected List<T> toList( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
+        applyToCursor(cursor, startIndex, resultSize, sort);
+        List<T> list = new ArrayList<T>();
+        while ( cursor.hasNext() ) {
+            list.add(map((BasicDBObject) cursor.next()));
+        }
+        return list;
+    }
+
+    private void applyToCursor( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
         if ( sort != null && !sort.getFields().isEmpty() ) {
             BasicDBObject orderBy = new BasicDBObject();
             for ( Sort.SortField s : sort.getFields() ) {
@@ -203,10 +199,5 @@ public class DAO<T,K extends Serializable> {
         if ( resultSize > 0 ) {
             cursor.limit(resultSize);
         }
-        List<T> list = new ArrayList<T>();
-        while ( cursor.hasNext() ) {
-            list.add(map((BasicDBObject) cursor.next()));
-        }
-        return list;
     }
 }
