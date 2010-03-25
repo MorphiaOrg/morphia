@@ -74,6 +74,30 @@ public class DAO<T,K extends Serializable> {
         }
     }
 
+    public List<K> getIds( String key, Object value ) {
+        return getIds(new Constraints(key, value));
+    }
+    public List<K> getIds( Constraints c ) {
+        DBCursor cursor = collection().find(new BasicDBObject(c.getQuery()), new BasicDBObject(Mapper.ID_KEY, "1"));
+        if ( c.getSort() != null && !c.getSort().getFields().isEmpty() ) {
+            BasicDBObject orderBy = new BasicDBObject();
+            for ( Sort.SortField s : c.getSort().getFields() ) {
+                orderBy.put(s.getName(), s.isAscending() ? 1 : -1);
+            }
+            cursor.sort(orderBy);
+        }
+        if ( c.getStartIndex() > 0 ) {
+            cursor.skip(c.getStartIndex());
+        }
+        if ( c.getResultSize() > 0 ) {
+            cursor.limit(c.getResultSize());
+        }
+        List<K> ids = new ArrayList<K>();
+        while ( cursor.hasNext() ) {
+            ids.add((K)cursor.next().get(Mapper.ID_KEY));
+        }
+        return ids;
+    }
     public List<K> getIds( Map<String,Object> query ) {
         DBCursor cursor = collection().find(new BasicDBObject(query), new BasicDBObject(Mapper.ID_KEY, "1"));
         List<K> ids = new ArrayList<K>();
@@ -83,23 +107,11 @@ public class DAO<T,K extends Serializable> {
         return ids;
     }
 
-    public boolean exists(String key, String value) {
-        return exists(new BasicDBObject(key, value));
+    public boolean exists(String key, Object value) {
+        return exists(new Constraints(key, value));
     }
-    public boolean exists(String key, int value) {
-        return exists(new BasicDBObject(key, value));
-    }
-    public boolean exists(String key, long value) {
-        return exists(new BasicDBObject(key, value));
-    }
-    public boolean exists(String key, double value) {
-        return exists(new BasicDBObject(key, value));
-    }
-    public boolean exists(String key, boolean value) {
-        return exists(new BasicDBObject(key, value));
-    }
-    public boolean exists(String key, Enum value) {
-        return exists(new BasicDBObject(key, value.name()));
+    public boolean exists(Constraints c) {
+        return getCount(c) > 0;
     }
     public boolean exists( Map<String,Object> query ) {
         return getCount(query) > 0;
@@ -108,100 +120,53 @@ public class DAO<T,K extends Serializable> {
     public long getCount() {
         return collection().getCount();
     }
-    public long getCount(String key, String value) {
-        return getCount(new BasicDBObject(key, value));
+    public long getCount(String key, Object value) {
+        return getCount(new Constraints(key, value));
     }
-    public long getCount(String key, int value) {
-        return getCount(new BasicDBObject(key, value));
-    }
-    public long getCount(String key, long value) {
-        return getCount(new BasicDBObject(key, value));
-    }
-    public long getCount(String key, double value) {
-        return getCount(new BasicDBObject(key, value));
-    }
-    public long getCount(String key, boolean value) {
-        return getCount(new BasicDBObject(key, value));
-    }
-    public long getCount(String key, Enum value) {
-        return getCount(new BasicDBObject(key, value.name()));
+    public long getCount(Constraints c) {
+        return collection().getCount(new BasicDBObject(c.getQuery()));
     }
     public long getCount( Map<String,Object> query ) {
         return collection().getCount(new BasicDBObject(query));
     }
 
-    public T findOne(String key, String value) {
-        return findOne(new BasicDBObject(key, value));
+    public T findOne(String key, Object value) {
+        return findOne(new Constraints(key, value));
     }
-    public T findOne(String key, int value) {
-        return findOne(new BasicDBObject(key, value));
-    }
-    public T findOne(String key, long value) {
-        return findOne(new BasicDBObject(key, value));
-    }
-    public T findOne(String key, double value) {
-        return findOne(new BasicDBObject(key, value));
-    }
-    public T findOne(String key, boolean value) {
-        return findOne(new BasicDBObject(key, value));
-    }
-    public T findOne(String key, Enum value) {
-        return findOne(new BasicDBObject(key, value.name()));
+    public T findOne( Constraints c ) {
+        return map((BasicDBObject)collection().findOne(new BasicDBObject(c.getQuery())));
     }
     public T findOne( Map<String,Object> query ) {
         return map((BasicDBObject)collection().findOne(new BasicDBObject(query)));
     }
 
-    public List<T> find(String key, String value) {
-        return find(new BasicDBObject(key, value));
-    }
-    public List<T> find(String key, int value) {
-        return find(new BasicDBObject(key, value));
-    }
-    public List<T> find(String key, long value) {
-        return find(new BasicDBObject(key, value));
-    }
-    public List<T> find(String key, double value) {
-        return find(new BasicDBObject(key, value));
-    }
-    public List<T> find(String key, boolean value) {
-        return find(new BasicDBObject(key, value));
-    }
-    public List<T> find(String key, Enum value) {
-        return find(new BasicDBObject(key, value.name()));
-    }
-
-    public List<T> find(String key, String value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value), startIndex, resultSize);
-    }
-    public List<T> find(String key, int value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value), startIndex, resultSize);
-    }
-    public List<T> find(String key, long value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value), startIndex, resultSize);
-    }
-    public List<T> find(String key, double value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value), startIndex, resultSize);
-    }
-    public List<T> find(String key, boolean value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value), startIndex, resultSize);
-    }
-    public List<T> find(String key, Enum value, int startIndex, int resultSize) {
-        return find(new BasicDBObject(key, value.name()), startIndex, resultSize);
+    public List<T> find( Constraints c ) {
+        return toList(collection().find(new BasicDBObject(c.getQuery())),
+                c.getStartIndex(), c.getResultSize(), c.getSort());
     }
 
     public List<T> find(Map<String,Object> query) {
         return find(query, -1, -1);
     }
+    public List<T> find(Map<String,Object> query, Sort sort) {
+        return find(query, -1, -1, sort);
+    }
     public List<T> find(Map<String,Object> query, int startIndex, int resultSize) {
-        return toList(collection().find(new BasicDBObject(query)), startIndex, resultSize);
+        return find(query, startIndex, resultSize, null);
+    }
+    public List<T> find(Map<String,Object> query, int startIndex, int resultSize, Sort sort) {
+        return toList(collection().find(new BasicDBObject(query)), startIndex, resultSize, sort);
     }
 
     public List<T> findAll() {
         return findAll(-1, -1);
     }
     public List<T> findAll(int startIndex, int resultSize) {
-        return toList(collection().find(), startIndex, resultSize);
+        return findAll(startIndex, resultSize, null);
+    }
+
+    public List<T> findAll(int startIndex, int resultSize, Sort sort) {
+        return toList(collection().find(), startIndex, resultSize, sort);
     }
 
     public void dropCollection() {
@@ -215,8 +180,20 @@ public class DAO<T,K extends Serializable> {
     protected List<T> toList( DBCursor cursor ) {
         return toList(cursor, -1, -1);
     }
-    
+    protected List<T> toList( DBCursor cursor, Sort sort ) {
+        return toList(cursor, -1, -1, sort);
+    }
     protected List<T> toList( DBCursor cursor, int startIndex, int resultSize ) {
+        return toList(cursor, startIndex, resultSize, null);
+    }
+    protected List<T> toList( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
+        if ( sort != null && !sort.getFields().isEmpty() ) {
+            BasicDBObject orderBy = new BasicDBObject();
+            for ( Sort.SortField s : sort.getFields() ) {
+                orderBy.put(s.getName(), s.isAscending() ? 1 : -1);
+            }
+            cursor.sort(orderBy);
+        }
         if ( startIndex > 0 ) {
             cursor.skip(startIndex);
         }

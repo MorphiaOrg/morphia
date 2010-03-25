@@ -19,6 +19,7 @@ package com.google.code.morphia;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
+import com.google.code.morphia.testmodel.PhoneNumber;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import java.util.Date;
@@ -78,6 +79,7 @@ public class TestDAO {
             hiltonAddr.setStreet("Some street 44");
             hiltonAddr.setPostCode("101");
             hilton.setAddress(hiltonAddr);
+            hilton.getPhoneNumbers().add(new PhoneNumber(354, 1234567, PhoneNumber.Type.PHONE));
 
             hotelDAO.save(hilton);
 
@@ -88,6 +90,16 @@ public class TestDAO {
             assertEquals(1, hotelDAO.findAll(0,1).size());
             assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
             assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
+
+            assertEquals(0, hotelDAO.find(new Constraints().field("stars").notEqualTo(4)).size());
+            assertEquals(2, hotelDAO.find(new Constraints().field("stars").lessThan(5)).size());
+            assertEquals(2, hotelDAO.find(new Constraints().field("stars").greaterThanOrEqualTo(4)).size());
+            assertEquals(2, hotelDAO.find(new Constraints().field("stars").lessThan(5)).size());
+            assertEquals(1, hotelDAO.find(new Constraints().field("phoneNumbers").size(1)).size());
+            assertEquals(2, hotelDAO.find(new Constraints("stars", 4).orderBy("address.address_street")).size());
+            assertEquals(borg.getName(), hotelDAO.find(new Constraints("stars", 4).orderBy("address.address_street")).get(0).getName());
+            assertEquals(hilton.getName(), hotelDAO.find(new Constraints("stars", 4).orderByDesc("address.address_street")).get(0).getName());
+            assertEquals(hilton.getName(), hotelDAO.find(new Constraints("stars", 4).orderBy("stars").orderByDesc("address.address_street")).get(0).getName());
 
             hotelDAO.deleteById(borg.getId());
             assertEquals(1, hotelDAO.getCount());
