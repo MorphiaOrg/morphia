@@ -514,7 +514,7 @@ public class Mapper {
 	            }
 	        } else {
 	            if ( dbObject.containsField(name) ) {
-	            	mf.field.set(entity, objectFromValue(mf.field.getType(), dbObject, name));
+	            	mf.field.set(entity, objectFromValue(fieldType, dbObject, name));
 	            }
 	        }
     	} catch (Exception e) {throw new RuntimeException(e);}
@@ -661,32 +661,56 @@ public class Mapper {
 		return id;
 	}
     /** Converts known types from mongodb -> java. Really it just converts enums and locales from strings */
-    public static Object objectFromValue( Class c, BasicDBObject dbObject, String name ) {
-        if (c == String.class) {
+    public static Object objectFromValue( Class javaType, BasicDBObject dbObject, String name ) {
+        if (javaType == String.class) {
             return dbObject.getString(name);
-        } else if (c == Integer.class || c == int.class) {
+        } else if (javaType == Integer.class || javaType == int.class) {
             return dbObject.getInt(name);
-        } else if (c == Long.class || c == long.class) {
+        } else if (javaType == Long.class || javaType == long.class) {
             return dbObject.getLong(name);
-        } else if (c == Locale.class) {
+        } else if (javaType == Byte.class || javaType == byte.class) {
+           	Object dbValue = dbObject.get(name);
+        	if (dbValue instanceof Byte) return dbValue;
+        	else if (dbValue instanceof Double) return ((Double)dbValue).byteValue();
+        	else if (dbValue instanceof Integer) return ((Integer)dbValue).byteValue();
+        	
+        	String sVal = dbObject.getString(name);
+            return Byte.parseByte(sVal);
+        } else if (javaType == short.class || javaType == Short.class) {
+           	Object dbValue = dbObject.get(name);
+        	if (dbValue instanceof Short) return dbValue;
+        	else if (dbValue instanceof Double) return ((Double)dbValue).shortValue();
+        	else if (dbValue instanceof Integer) return ((Integer)dbValue).shortValue();
+        	
+        	String sVal = dbObject.getString(name);
+            return Short.parseShort(sVal);
+        } else if (javaType == Float.class || javaType == float.class) {
+        	//check the db type and convert it.
+        	Object dbValue = dbObject.get(name);
+        	if (dbValue instanceof Double) return ((Double)dbValue).floatValue();
+        	String sVal = dbObject.getString(name);
+            return Float.parseFloat(sVal);
+        } else if (javaType == Locale.class) {
             return parseLocale(dbObject.getString(name));
-        } else if (c.isEnum()) {
-            return Enum.valueOf(c, dbObject.getString(name));
-        } else if (c == Key.class) {
+        } else if (javaType.isEnum()) {
+            return Enum.valueOf(javaType, dbObject.getString(name));
+        } else if (javaType == Key.class) {
             return new Key((DBRef)dbObject.get(name));
         }
         return dbObject.get(name);
     }
 
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */
-    public Object objectToValue(Class clazz, Object obj) {
+    public Object objectToValue(Class javaType, Object obj) {
 
-    	if(clazz == null) clazz = obj.getClass();
-        if ( clazz.isEnum() ) {
+    	if(javaType == null) javaType = obj.getClass();
+        if ( javaType.isEnum() ) {
             return ((Enum) obj).name();
-        } else if ( clazz == Locale.class ) {
+        } else if ( javaType == Locale.class ) {
           	return ((Locale) obj).toString();
-        } else if ( clazz == Key.class ) {
+        } else if ( javaType == Float.class ||  javaType == float.class ) {
+          	return ((Float)obj).doubleValue();
+        } else if ( javaType == Key.class ) {
           	return ((Key) obj).toRef(this);
         } else {
             return obj;
