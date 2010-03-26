@@ -189,9 +189,11 @@ public class Mapper {
         String className = (String) dbObject.get(CLASS_NAME_KEY);
         Class c = entityClass;
         if ( className != null ) {
+        	//try to Class.forName(className) as defined in the dbObject first, otherwise return the entityClass
             c = getClassForName(className, entityClass);
         }
         try {
+        	//allows private/protected constructors
 	        Constructor constructor = c.getDeclaredConstructor();
 	        constructor.setAccessible(true);
 	        return constructor.newInstance();
@@ -262,7 +264,7 @@ public class Mapper {
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 	                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
 	                }
-	                dbObject.put(name, values);
+	                if (values.size() > 0) dbObject.put(name, values);
 	            } else {
 	                dbObject.removeField(name);
 	            }
@@ -273,15 +275,11 @@ public class Mapper {
 	                for ( Object o : coll ) {
 	                    values.add(new DBRef(null, getCollectionName(o), asObjectIdMaybe(getId(o))));
 	                }
-	                dbObject.put(name, values);
-	            } else {
-	                dbObject.removeField(name);
+	                if (values.size() > 0) dbObject.put(name, values);
 	            }
 	        } else {
 	            if ( fieldValue != null ) {
 	                dbObject.put(name, new DBRef(null, getCollectionName(fieldValue), asObjectIdMaybe(getId(fieldValue))));
-	            } else {
-	                dbObject.removeField(name);
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
@@ -299,13 +297,11 @@ public class Mapper {
 	    if (mf.isMap()) {
 	        Map<String, Object> map = (Map<String, Object>) fieldValue;
 	        if ( map != null ) {
-	            BasicDBObject mapObj = new BasicDBObject();
+	            BasicDBObject values = new BasicDBObject();
 	            for ( Map.Entry<String,Object> entry : map.entrySet() ) {
-	                mapObj.put(entry.getKey(), toDBObject(entry.getValue()));
+	                values.put(entry.getKey(), toDBObject(entry.getValue()));
 	            }
-	            dbObject.put(name, mapObj);
-	        } else {
-	            dbObject.removeField(name);
+	            if (values.size()>0) dbObject.put(name, values);
 	        }
 	
 	    } else if (mf.isMultipleValues()) {
@@ -315,15 +311,11 @@ public class Mapper {
                 for ( Object o : coll ) {
                     values.add(toDBObject(o));
                 }
-                dbObject.put(name, values);
-            } else {
-                dbObject.removeField(name);
+                if (values.size()>0) dbObject.put(name, values);
             }
         } else {
             if ( fieldValue != null ) {
                 dbObject.put(name, toDBObject(fieldValue));
-            } else {
-                dbObject.removeField(name);
             }
         }
     }
@@ -343,8 +335,6 @@ public class Mapper {
 	                	mapForDb.put(entry.getKey(), objectToValue(entry.getValue()));
 	                }
 	                dbObject.put(name, mapForDb);
-	            } else {
-	                dbObject.removeField(name);
 	            }
 	        } else if (mf.isMultipleValues()) {
 	        	Class paramClass = mf.subType;
@@ -356,7 +346,8 @@ public class Mapper {
 	            		try {
 	            			objects = (Object[]) fieldValue;
 	            		} catch (ClassCastException e) {
-	                		//store the primitive array.
+	                		//store the primitive array without making it into a list.
+	            			if (Array.getLength(fieldValue) == 0) return;
 	            			dbObject.put(name, fieldValue);
 	            			return;
 	            		}
@@ -379,16 +370,12 @@ public class Mapper {
 	                    for ( Object o : iterableValues )
 	                    	values.add(objectToValue(o));
 	                }
-	        		dbObject.put(name, values);
-	            } else {
-	                dbObject.removeField(name);
+	        		if (values.size() > 0) dbObject.put(name, values);
 	            }
 	        
 	        } else {
 	            if ( fieldValue != null ) {
 	            	dbObject.put(name, objectToValue(fieldValue));
-	            } else {
-	                dbObject.removeField(name);
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
