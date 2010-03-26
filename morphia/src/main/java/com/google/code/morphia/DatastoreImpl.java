@@ -40,14 +40,14 @@ public class DatastoreImpl implements SuperDatastore {
 
 	@Override
 	public <T, V> DBRef createRef(Class<T> clazz, V id) {
-		if (id == null) throw new MongoMappingException("Could not get id for " + clazz.getName());
+		if (id == null) throw new MappingException("Could not get id for " + clazz.getName());
 		return new DBRef(getDB(), getCollection(clazz).getName(), id);
 	}
 
 	@Override
 	public <T> DBRef createRef(T entity) {
 		Object id = getId(entity);
-		if (id == null) throw new MongoMappingException("Could not get id for " + entity.getClass().getName());
+		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return createRef(entity.getClass(), id);
 	}
 	
@@ -184,7 +184,7 @@ public class DatastoreImpl implements SuperDatastore {
 	@Override
 	public <T> T get(T entity) {
 		Object id = getId(entity);
-		if (id == null) throw new MongoMappingException("Could not get id for " + entity.getClass().getName());
+		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return (T) get(entity.getClass(), id);
 	}
 

@@ -20,14 +20,14 @@ package com.google.code.morphia;
  *
  * @author Olafur Gauti Gudmundsson
  */
-public class MongoMappingException extends RuntimeException {
+public class MappingException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public MongoMappingException( String message ) {
+	public MappingException( String message ) {
             super(message);
     }
 
-    public MongoMappingException( String message, Throwable cause ) {
+    public MappingException( String message, Throwable cause ) {
             super(message, cause);
     }
 

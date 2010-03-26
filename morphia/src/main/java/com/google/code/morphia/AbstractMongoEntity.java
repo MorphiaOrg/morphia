@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia;
 
 import java.io.Serializable;
@@ -26,37 +27,30 @@ import com.google.code.morphia.annotations.Id;
  * @author Olafur Gauti Gudmundsson
  */
 
-public abstract class AbstractMongoEntity implements MongoEntity, Serializable {
+public abstract class AbstractMongoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-    protected String id;
-
-    @CollectionName
-    protected String collectionName;
+	/** The id for this instance */
+	@Id protected String id;
+	/** The collection this instance is stored in. You can use this for reference purposes.*/
+    @CollectionName protected String collectionName;
 
     public AbstractMongoEntity() {
     }
 
-    @Override
     public String getCollectionName() {
         return collectionName;
     }
 
-    @Override
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
     }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }
-
-
 }

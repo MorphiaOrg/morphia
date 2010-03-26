@@ -85,7 +85,7 @@ public class Morphia {
                     if ( classMongoDocument != null || classMongoEmbedded != null ) {
                         map(c);
                     }
-                } catch (MongoMappingException ex) {
+                } catch (MappingException ex) {
                     if (!ignoreInvalidClasses) {
                         throw ex;
                     }
@@ -93,9 +93,9 @@ public class Morphia {
             }
             return this;
         } catch (IOException ioex) {
-            throw new MongoMappingException("Could not get map classes from package " + packageName, ioex);
+            throw new MappingException("Could not get map classes from package " + packageName, ioex);
         } catch (ClassNotFoundException cnfex) {
-            throw new MongoMappingException("Could not get map classes from package " + packageName, cnfex);
+            throw new MappingException("Could not get map classes from package " + packageName, cnfex);
         }
     }
 
@@ -121,12 +121,12 @@ public class Morphia {
 
     public <T> T fromDBObject(Class<T> entityClass, DBObject dbObject) {
         if ( !entityClass.isInterface() && !mapper.isMapped(entityClass)) {
-            throw new MongoMappingException("Trying to map to an unmapped class: " + entityClass.getName());
+            throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
             return (T) mapper.fromDBObject(entityClass, (BasicDBObject) dbObject);
         } catch ( Exception e ) {
-            throw new MongoMappingException("Could not map from DBObject", e);
+            throw new MappingException("Could not map from DBObject", e);
         } finally {
             mapper.clearHistory();
         }
@@ -134,12 +134,12 @@ public class Morphia {
 
     public DBObject toDBObject( Object entity ) {
         if (!mapper.isMapped(entity.getClass())) {
-            throw new MongoMappingException("Trying to map an unmapped class: " + entity.getClass().getName());
+            throw new MappingException("Trying to map an unmapped class: " + entity.getClass().getName());
         }
         try {
             return mapper.toDBObject(entity);
         } catch ( Exception e ) {
-            throw new MongoMappingException("Could not map to DBObject", e);
+            throw new MappingException("Could not map to DBObject", e);
         } finally {
             mapper.clearHistory();
         }

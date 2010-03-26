@@ -664,6 +664,8 @@ public class Mapper {
     public static Object objectFromValue( Class javaType, BasicDBObject dbObject, String name ) {
         if (javaType == String.class) {
             return dbObject.getString(name);
+        } else if (javaType == Character.class || javaType == char.class) {
+            return dbObject.getString(name).charAt(0);
         } else if (javaType == Integer.class || javaType == int.class) {
             return dbObject.getInt(name);
         } else if (javaType == Long.class || javaType == long.class) {
@@ -673,19 +675,16 @@ public class Mapper {
         	if (dbValue instanceof Byte) return dbValue;
         	else if (dbValue instanceof Double) return ((Double)dbValue).byteValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).byteValue();
-        	
         	String sVal = dbObject.getString(name);
             return Byte.parseByte(sVal);
-        } else if (javaType == short.class || javaType == Short.class) {
+        } else if (javaType == Short.class || javaType == short.class) {
            	Object dbValue = dbObject.get(name);
         	if (dbValue instanceof Short) return dbValue;
         	else if (dbValue instanceof Double) return ((Double)dbValue).shortValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).shortValue();
-        	
         	String sVal = dbObject.getString(name);
             return Short.parseShort(sVal);
         } else if (javaType == Float.class || javaType == float.class) {
-        	//check the db type and convert it.
         	Object dbValue = dbObject.get(name);
         	if (dbValue instanceof Double) return ((Double)dbValue).floatValue();
         	String sVal = dbObject.getString(name);
@@ -702,14 +701,14 @@ public class Mapper {
 
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */
     public Object objectToValue(Class javaType, Object obj) {
-
     	if(javaType == null) javaType = obj.getClass();
-        if ( javaType.isEnum() ) {
+
+    	if ( javaType.isEnum() ) {
             return ((Enum) obj).name();
         } else if ( javaType == Locale.class ) {
           	return ((Locale) obj).toString();
-        } else if ( javaType == Float.class ||  javaType == float.class ) {
-          	return ((Float)obj).doubleValue();
+        } else if ( javaType == char.class ||  javaType == Character.class ) {
+        	return ((Character)obj).toString();
         } else if ( javaType == Key.class ) {
           	return ((Key) obj).toRef(this);
         } else {

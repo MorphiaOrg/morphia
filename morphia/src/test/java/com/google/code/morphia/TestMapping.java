@@ -203,7 +203,7 @@ public class TestMapping {
         boolean allGood=false;
         try {
         	morphia.map(MissingId.class);
-        } catch (MongoMappingException e) {
+        } catch (MappingException e) {
         	allGood = true;
         }
         assertTrue("Validation: Missing @Id field not caught", allGood);
@@ -211,7 +211,7 @@ public class TestMapping {
         allGood = false;
         try {
         	morphia.map(IdOnEmbedded.class);
-        } catch (MongoMappingException e) {
+        } catch (MappingException e) {
         	allGood = true;
         }
         assertTrue("Validation: @Id field on @Embedded not caught", allGood);
@@ -219,7 +219,7 @@ public class TestMapping {
         allGood = false;
         try {
         	morphia.map(RenamedEmbedded.class);
-        } catch (MongoMappingException e) {
+        } catch (MappingException e) {
         	allGood = true;
         }
         assertTrue("Validation: @Embedded(\"name\") not caught on Class", allGood);
@@ -227,7 +227,7 @@ public class TestMapping {
         allGood = false;
         try {
         	morphia.map(MissingIdStill.class);
-        } catch (MongoMappingException e) {
+        } catch (MappingException e) {
         	allGood = true;
         }
         assertTrue("Validation: Missing @Id field not not caught", allGood);
@@ -235,7 +235,7 @@ public class TestMapping {
         allGood = false;
         try {
         	morphia.map(MissingIdRenamed.class);
-        } catch (MongoMappingException e) {
+        } catch (MappingException e) {
         	allGood = true;
         }
         assertTrue("Validation: Missing @Id field not not caught", allGood);

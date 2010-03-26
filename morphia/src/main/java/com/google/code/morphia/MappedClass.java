@@ -204,7 +204,7 @@ public class MappedClass {
 	public void validate() {
 		// No @Document with @Embedded
         if (entityAn != null && embeddedAn != null ) {
-            throw new MongoMappingException(
+            throw new MappingException(
                     "In [" + clazz.getName()
                            + "]: Cannot have both @Document and @Embedded annotation at class level.");
         }
@@ -231,7 +231,7 @@ public class MappedClass {
                 if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, Iterable.class, Collection.class, List.class, Map.class, Set.class)
                         && 	!ReflectionUtils.isPropertyType(field.getType())) {
                 	
-                    throw new MongoMappingException("In [" + clazz.getName() + "]: Field [" + field.getName()
+                    throw new MappingException("In [" + clazz.getName() + "]: Field [" + field.getName()
                             + "] which is annotated as @Value is of type that cannot be mapped (type is "
                             + field.getType().getName() + ").");
                 }
@@ -240,7 +240,7 @@ public class MappedClass {
                         && 	!field.getType().isInterface() 
                         && 	ReflectionUtils.getClassEntityAnnotation(field.getType()) == null) {
 
-                    throw new MongoMappingException(
+                    throw new MappingException(
                             "In ["
                                     + clazz.getName()
                                     + "]: Field ["
@@ -253,30 +253,30 @@ public class MappedClass {
 
         // make sure @CollectionName field is a String
         if (collectionNameField != null && collectionNameField.getType() != String.class) {
-            throw new MongoMappingException("In [" + clazz.getName() + "]: Field [" + collectionNameField.getName()
+            throw new MappingException("In [" + clazz.getName() + "]: Field [" + collectionNameField.getName()
                     + "] which is annotated as @CollectionName must be of type java.lang.String, but is of type: "
                     + collectionNameField.getType().getName());
         }
         
         //Only embedded class can have no id field
         if (idField == null && embeddedAn == null) {
-            throw new MongoMappingException("In [" + clazz.getName() + "]: No field is annotated with @Id; but it is required");
+            throw new MappingException("In [" + clazz.getName() + "]: No field is annotated with @Id; but it is required");
         }
 
         
         //Embedded classes should not have an id
         if (embeddedAn != null && idField != null) {
-            throw new MongoMappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @Id field");
+            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @Id field");
         }
 
         //Embedded classes should not have a CollectionName
         if (embeddedAn != null && collectionNameField != null) {
-            throw new MongoMappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @CollectionName field");
+            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @CollectionName field");
         }
 
         //Embedded classes can not have a fieldName value() specified
         if (embeddedAn != null && !embeddedAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            throw new MongoMappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a fieldName value(); this is on applicable on fields");
+            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a fieldName value(); this is on applicable on fields");
         }
 	}
 	
