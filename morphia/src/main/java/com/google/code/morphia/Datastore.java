@@ -62,22 +62,25 @@ public interface Datastore {
 	<T> T get(Class<T> clazz, Key<T> key);
 	<T> T get(T entity);
 
-	/** Gets the count of the CollectionName */
-	<T> long getCount(Object clazzOrEntity);
+	/** Gets the count this kind of element*/
+	<T> long getCount(T entity);
+	/** Gets the count this kind of element*/
+	<T> long getCount(Class<T> clazz);
 
 	/** Gets the count of items returned by this query; same as {@code query.countAll()}*/
 	<T> long getCount(Query<T> query); 
-	/** The instance this Datastore is using */
-	DB getDB();
-	/** The instance this Datastore is using */
-	Mongo getMongo();
 	
-	/** The instance this Datastore is using */
-	Morphia getMorphia();
 	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
 	<T> Iterable<Key<T>> save(Iterable<T> entities);
 	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
 	<T> Iterable<Key<T>> save(T... entities);
 	/** Saves the entity (Object) and updates the @Id, @CollectionName fields */
 	<T> Key<T> save(T entity);
+
+	/** The instance this Datastore is using */
+	DB getDB();
+	/** The instance this Datastore is using */
+	Mongo getMongo();
+	/** The instance this Datastore is using */
+	Morphia getMorphia();
 }

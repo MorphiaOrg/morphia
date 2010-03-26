@@ -52,13 +52,13 @@ public class QueryImpl<T> implements Query<T> {
 			DBObject query = getQueryObject();
 			DBObject fields = getFieldsObject();
 			Iterator<DBObject> it = dbColl.find(query, fields, offset, limit);
-			return new MorphiaIterator<T>(it, ds.getMorphia(), clazz);
+			return new MorphiaIterator<T>(it, ds.getMorphia().getMapper(), clazz, dbColl.getName());
 		} else
 			cursor = dbColl.find(getQueryObject());
 		
 		if (sort != null) cursor = cursor.sort(sort.get());
 		
-		return new MorphiaIterator<T>(cursor, ds.getMorphia(), clazz);
+		return new MorphiaIterator<T>(cursor, ds.getMorphia().getMapper(), clazz, dbColl.getName());
 	}
 
 	@Override
@@ -119,7 +119,8 @@ public class QueryImpl<T> implements Query<T> {
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 
 		if (query == null) query = BasicDBObjectBuilder.start();
-		Object mappedValue = this.ds.getMorphia().getMapper().objectToValue(value);
+		Mapper mapr = this.ds.getMorphia().getMapper();
+		Object mappedValue = Mapper.asObjectIdMaybe(mapr.objectToValue(value));
 		if (FilterOperator.EQUAL.equals(op))
 			query.add(prop, mappedValue);
 		else

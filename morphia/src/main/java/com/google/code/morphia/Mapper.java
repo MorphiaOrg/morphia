@@ -126,11 +126,17 @@ public class Mapper {
         }
     }
 
+    /**
+     * Updates the {@code @Id} and {@code @CollectionName} fields.
+     * @param entity The object to update
+     * @param dbId Value to update with; null means skip
+     * @param dbNs Value to update with; null or empty means skip
+     */
 	void updateKeyInfo(Object entity, Object dbId, String dbNs) {
 		MappedClass mc = getMappedClass(entity);
 
 		//update id field, if there.
-		if (mc.idField != null) {
+		if (mc.idField != null && dbId != null) {
 			try {
 				Object value = mc.idField.get(entity);
 				if ( value != null ) {
@@ -153,7 +159,7 @@ public class Mapper {
 		}
 
 		//update ns (collectionName)
-		if (mc.collectionNameField != null) {
+		if (mc.collectionNameField != null && !(dbNs == null || dbNs.isEmpty())) {
 			try {
 				String value = (String) mc.collectionNameField.get(entity);
 				if ( value != null && value.length() > 0 ) {

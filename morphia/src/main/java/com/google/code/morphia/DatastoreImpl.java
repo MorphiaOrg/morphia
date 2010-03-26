@@ -7,7 +7,6 @@ import com.google.code.morphia.MappedClass.SuggestedIndex;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.Key;
-import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -16,11 +15,12 @@ import com.mongodb.DBRef;
 import com.mongodb.Mongo;
 
 /**
+ * A generic (type-safe) wrapper around mongodb collections
  * 
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class DatastoreImpl implements Datastore {
+public class DatastoreImpl implements SuperDatastore {
 
 	protected Morphia morphia;
 	protected Mongo mongo;
@@ -50,10 +50,21 @@ public class DatastoreImpl implements Datastore {
 		if (id == null) throw new MongoMappingException("Could not get id for " + entity.getClass().getName());
 		return createRef(entity.getClass(), id);
 	}
+	
+	protected <T,V> void delete(DBCollection dbColl, V id) {
+		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
+	}
+	
+	@Override
+	public <T,V> void delete(String kind, V id) {
+		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		delete(dbColl, id);
+	}
+
 	@Override
 	public <T,V> void delete(Class<T> clazz, V id) {
 		DBCollection dbColl = getCollection(clazz);
-		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
+		delete(dbColl, id);
 	}
 	
 	@Override
@@ -100,6 +111,11 @@ public class DatastoreImpl implements Datastore {
 	}
 
 	@Override
+	public <T> Query<T> find(String kind, Class<T> clazz){
+		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind), this);		
+	}
+
+	@Override
 	public <T> Query<T> find(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);
 	}
@@ -109,7 +125,14 @@ public class DatastoreImpl implements Datastore {
 		Query<T> query = find(clazz);
 		return query.filter(property, value);
 	}
-
+	
+	@Override
+	public <T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {		
+		Query<T> query = find(kind, clazz);
+		query.offset(offset); query.limit(size);
+		return query.filter(property, value);
+	}
+	
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size) {
 		Query<T> query = find(clazz);
@@ -121,7 +144,6 @@ public class DatastoreImpl implements Datastore {
 	public <T> T get(Class<T> clazz, DBRef ref) {
 		return morphia.fromDBObject(clazz, ref.fetch());
 	}
-
 	
 	@Override
 	public <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
@@ -133,11 +155,17 @@ public class DatastoreImpl implements Datastore {
 	}
 
 	@Override
+	public <T,V> T get(String kind, Class<T> clazz, V id) {
+		List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
+		if (results == null || results.size() == 0) return null;
+		return results.get(0);
+	}
+
+	@Override
 	public <T, V> T get(Class<T> clazz, V id) {
-		DBObject query = BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get();
-		DBObject obj =  getCollection(clazz).findOne(query);
-		if (obj == null) return null;
-		return (T)morphia.fromDBObject(getEntityClass(clazz), (BasicDBObject) obj);
+		List<T> results = find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).asList();
+		if (results == null || results.size() == 0) return null;
+		return results.get(0);
 	}
 
 	@Override
@@ -145,6 +173,7 @@ public class DatastoreImpl implements Datastore {
 		Mapper mapr = morphia.getMapper();
 		String kind = mapr.getCollectionName(clazz);
 		if (key.getKind() == null && key.getKindClass() == null) throw new IllegalStateException("Key is invalid! " + key.toString());
+
 		String keyKind = (key.getKind() != null) ? key.getKind() : mapr.getMappedClass(key.getKindClass()).defCollName;
 		if (!kind.equals(keyKind)) 
 			throw new RuntimeException("collection names doen't match for key and class: " + kind + " != " + keyKind);
@@ -167,9 +196,20 @@ public class DatastoreImpl implements Datastore {
 		String collName = morphia.getMapper().getCollectionName(obj);
 		return mongo.getDB(dbName).getCollection(collName);
 	}
+	
 	@Override
-	public <T> long getCount(Object clazzOrEntity) {
-		return getCollection(clazzOrEntity).getCount();
+	public <T> long getCount(T entity) {
+		return getCollection(entity).getCount();
+	}
+	
+	@Override
+	public <T> long getCount(Class<T> clazz) {
+		return getCollection(clazz).getCount();
+	}
+	
+	@Override
+	public long getCount(String kind) {
+		return mongo.getDB(dbName).getCollection(kind).getCount();
 	}
 
 	@Override
@@ -181,11 +221,6 @@ public class DatastoreImpl implements Datastore {
 	public DB getDB() {
 		return (dbName == null) ? null : mongo.getDB(dbName);
 	}
-
-	private Class getEntityClass(Object clazzOrEntity) {
-		return (clazzOrEntity instanceof Class) ? (Class) clazzOrEntity : clazzOrEntity.getClass();
-	}
-
 	protected Object getId(Object entity) {
 		MappedClass mc;
 		String keyClassName = entity.getClass().getName();
@@ -229,18 +264,26 @@ public class DatastoreImpl implements Datastore {
 			savedKeys.add(save(ent));
 		return savedKeys;
 	}
-
-	@Override
-	public <T> Key<T> save(T entity) {
+	
+	protected <T> Key<T> save(DBCollection dbColl, T entity) {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		DBObject dbObj = mapr.toDBObject(entity);
-		DBCollection dbColl = getCollection(entity);
 		dbColl.save(dbObj);
 		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj);
-		return new Key<T>(dbColl.getName(), getId(entity));
-    }
-	
-	
+		return new Key<T>(dbColl.getName(), getId(entity));		
+	}
+
+	@Override
+	public <T> Key<T> save(String kind, T entity) {	
+		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		return save(dbColl, entity);
+	}
+
+	@Override
+	public <T> Key<T> save(T entity) {
+		DBCollection dbColl = getCollection(entity);
+		return save(dbColl, entity);
+    }	
 }

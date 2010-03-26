@@ -12,11 +12,12 @@ import com.mongodb.BasicDBObject;
 @SuppressWarnings("unchecked")
 public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
 	Iterator wrapped;
-	Morphia m;
+	Mapper m;
 	Class<T> clazz;
+	String kind;
 
-	public MorphiaIterator(Iterator it, Morphia m, Class<T> clazz) {
-		this.wrapped = it; this.m = m; this.clazz = clazz;
+	public MorphiaIterator(Iterator it, Mapper m, Class<T> clazz, String kind) {
+		this.wrapped = it; this.m = m; this.clazz = clazz;this.kind = kind;
 	}
 	
 	@Override
@@ -33,7 +34,9 @@ public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
 	@Override
 	public T next() {
 		if(!hasNext()) throw new NoSuchElementException();
-		return (T) m.fromDBObject(clazz, (BasicDBObject) wrapped.next());
+		T entity = (T) m.fromDBObject(clazz, (BasicDBObject) wrapped.next());
+		m.updateKeyInfo(entity, null, kind);
+		return (T) entity;
 	}
 	
 	@Override
