@@ -249,7 +249,6 @@ public class Mapper {
 	            } else {
 	            	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
 	            }
-	            
 	        }	        
         } catch (Exception e) {throw new RuntimeException(e);}
         return dbObject;
@@ -265,22 +264,27 @@ public class Mapper {
 	        
 	        if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) fieldValue;
-	            if ( map != null ) {
+	            if ( map != null && map.size() > 0) {
 	                Map values = mongoReference.mapClass().newInstance();
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 	                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
 	                }
 	                if (values.size() > 0) dbObject.put(name, values);
-	            } else {
-	                dbObject.removeField(name);
 	            }
 	    	} else if (mf.isMultipleValues()) {
-	            Collection coll = (Collection) fieldValue;
-	            if ( coll != null ) {
+	    		if (fieldValue != null) {
 	                List values = new ArrayList();
-	                for ( Object o : coll ) {
-	                    values.add(new DBRef(null, getCollectionName(o), asObjectIdMaybe(getId(o))));
-	                }
+
+		            if (mf.field.getType().isArray()) {
+			            for (Object o : (Object[])fieldValue) {
+		                    values.add(new DBRef(null, getCollectionName(o), asObjectIdMaybe(getId(o))));
+		                }
+		            } else {
+			            for (Object o : (Iterable)fieldValue) {
+		                    values.add(new DBRef(null, getCollectionName(o), asObjectIdMaybe(getId(o))));
+		                }		            	
+		            }
+		            
 	                if (values.size() > 0) dbObject.put(name, values);
 	            }
 	        } else {
@@ -307,7 +311,7 @@ public class Mapper {
 	            for ( Map.Entry<String,Object> entry : map.entrySet() ) {
 	                values.put(entry.getKey(), toDBObject(entry.getValue()));
 	            }
-	            if (values.size()>0) dbObject.put(name, values);
+	            if (values.size() > 0) dbObject.put(name, values);
 	        }
 	
 	    } else if (mf.isMultipleValues()) {
@@ -320,9 +324,8 @@ public class Mapper {
                 if (values.size()>0) dbObject.put(name, values);
             }
         } else {
-            if ( fieldValue != null ) {
-                dbObject.put(name, toDBObject(fieldValue));
-            }
+        	DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue);
+            if ( dbObj != null && dbObj.keySet().size() > 0) dbObject.put(name, dbObj);
         }
     }
 
@@ -335,7 +338,7 @@ public class Mapper {
 	        //sets and list are stored in mongodb as ArrayLists
 	        if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) mf.field.get(entity);
-	            if ( map != null ) {
+	            if (map != null && map.size() > 0) {
 	                Map mapForDb = new HashMap();
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 	                	mapForDb.put(entry.getKey(), objectToValue(entry.getValue()));
@@ -344,7 +347,7 @@ public class Mapper {
 	            }
 	        } else if (mf.isMultipleValues()) {
 	        	Class paramClass = mf.subType;
-	            if ( fieldValue != null ) {
+	            if (fieldValue != null) {
 	            	Iterable iterableValues = null;
 	
 	            	if (fieldType.isArray()) {
@@ -380,8 +383,9 @@ public class Mapper {
 	            }
 	        
 	        } else {
-	            if ( fieldValue != null ) {
-	            	dbObject.put(name, objectToValue(fieldValue));
+	        	Object val = objectToValue(fieldValue);
+	            if ( val != null ) {
+	            	dbObject.put(name, val);
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
@@ -631,10 +635,9 @@ public class Mapper {
 	                    references.add(refObj);
 	                }
 	            }
+	            
 	            mf.field.set(entity, references);
-	
 	        } else {
-	        	
 	            // single reference
 	            Class referenceObjClass = fieldType;
 	            if ( dbObject.containsField(name) ) {
@@ -665,6 +668,7 @@ public class Mapper {
 		if ((id instanceof String) && ObjectId.isValid((String)id)) return new ObjectId((String)id);
 		return id;
 	}
+	
     /** Converts known types from mongodb -> java. Really it just converts enums and locales from strings */
     public static Object objectFromValue( Class javaType, BasicDBObject dbObject, String name ) {
         if (javaType == String.class) {
@@ -724,6 +728,7 @@ public class Mapper {
     
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */
     public Object objectToValue(Object obj) {
+    	if (obj == null) return null;
     	return objectToValue(obj.getClass(), obj);
     }
 }
