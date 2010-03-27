@@ -81,18 +81,27 @@ public class Mapper {
         mappedClasses.put(c.getName(), mc);
     }
 
-    void addMappedClass(MappedClass mc) {
+    MappedClass addMappedClass(MappedClass mc) {
     	mc.validate();
         mappedClasses.put(mc.clazz.getName(), mc);
+        return mc;
     }
 
     Map<String, MappedClass> getMappedClasses() {
         return mappedClasses;
     }
 
+    /** Gets the mapped class for the object (type). If it isn't mapped, create a new class and cache it (without validating).*/
     public MappedClass getMappedClass(Object obj) {
 		if (obj == null) return null;
-		return mappedClasses.get(obj.getClass().getName());
+		Class type = (obj instanceof Class) ? (Class)obj : obj.getClass();
+		MappedClass mc = mappedClasses.get(type.getName());
+		if (mc == null) {
+			//no validation
+			mc = new MappedClass(type);
+			this.mappedClasses.put(mc.clazz.getName(), mc);
+		}
+		return mc;
 	}
 
     void clearHistory() {
@@ -103,7 +112,6 @@ public class Mapper {
     	if (object instanceof Class) return getCollectionName((Class) object);
     	
     	MappedClass mc = getMappedClass(object);
-    	if (mc == null) mc = new MappedClass(object.getClass());
 
     	try {
     		return (mc.collectionNameField != null && mc.collectionNameField.get(object) != null) ? (String)mc.collectionNameField.get(object) : mc.defCollName;
@@ -114,7 +122,6 @@ public class Mapper {
     
 	public String getCollectionName(Class clazz) {
 	  	MappedClass mc = getMappedClass(clazz);
-    	if (mc == null) mc = new MappedClass(clazz);
     	return mc.defCollName;
     }
 
@@ -134,7 +141,7 @@ public class Mapper {
      */
 	void updateKeyInfo(Object entity, Object dbId, String dbNs) {
 		MappedClass mc = getMappedClass(entity);
-
+		
 		//update id field, if there.
 		if (mc.idField != null && dbId != null) {
 			try {
@@ -217,7 +224,6 @@ public class Mapper {
 	        dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
 	
 	        MappedClass mc = getMappedClass(entity);
-	        if (mc == null) mc = new MappedClass(entity.getClass());
 	        
 	        String collName = (mc.collectionNameField == null) ? null :  (String)mc.collectionNameField.get(entity);
 	        if (collName != null && collName.length() > 0 ) dbObject.put(COLLECTION_NAME_KEY, collName);
@@ -396,7 +402,6 @@ public class Mapper {
         }
 
         MappedClass mc = getMappedClass(entity);
-        if (mc == null) mc = new MappedClass(entity.getClass());
 
         dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
         try {
