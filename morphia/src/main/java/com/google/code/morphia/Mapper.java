@@ -710,7 +710,8 @@ public class Mapper {
 
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */
     public Object objectToValue(Class javaType, Object obj) {
-    	if(javaType == null) javaType = obj.getClass();
+    	if (obj == null) return null;
+    	if (javaType == null) javaType = obj.getClass();
 
     	if ( javaType.isEnum() ) {
             return ((Enum) obj).name();
