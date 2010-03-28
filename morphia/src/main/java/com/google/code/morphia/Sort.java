@@ -9,8 +9,9 @@ import java.util.List;
  * @author Olafur Gauti Gudmundsson
  */
 public class Sort implements Serializable {
-    
-    private List<SortField> fields;
+   	private static final long serialVersionUID = 1L;
+
+   	private List<SortField> fields;
     
     public Sort() {
         fields = new ArrayList<SortField>();
@@ -39,6 +40,7 @@ public class Sort implements Serializable {
     }
 
     public class SortField implements Serializable {
+       	private static final long serialVersionUID = 1L;
 
         private String name;
         private boolean ascending;

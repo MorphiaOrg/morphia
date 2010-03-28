@@ -204,6 +204,48 @@ public class TestDatastore {
 		
 		assertNotNull(k1Loaded.rect.getId());	
 	}
+
+	@Test
+    public void testKeyListLookups() throws Exception {
+		FacebookUser fbUser1 = new FacebookUser(1, "scott");
+		FacebookUser fbUser2 = new FacebookUser(2, "tom");
+		FacebookUser fbUser3 = new FacebookUser(3, "oli");
+		FacebookUser fbUser4 = new FacebookUser(4, "frank");
+		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
+		assertEquals(fbUser1.id, 1);
+
+		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+		for(Key<FacebookUser> key :fbKeys)
+			fbUserKeys.add(key);
+
+		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
+		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
+		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
+		assertEquals(fbUser4.id, fbUserKeys.get(3).getId());
+		
+		KeysKeysKeys k1 = new KeysKeysKeys(null, fbUserKeys);
+		Key<KeysKeysKeys> k1Key = ds.save(k1);
+		assertEquals(k1.id, k1Key.getId());
+		
+		KeysKeysKeys k1Reloaded = ds.get(k1);
+		KeysKeysKeys k1Loaded = ds.get(KeysKeysKeys.class, k1Key);
+		assertNotNull(k1Reloaded);
+		assertNotNull(k1Loaded);
+		for(Key<FacebookUser> key :k1Loaded.users)
+			assertNotNull(key.getId());
+		
+		assertEquals(k1Loaded.users.size(), 4);
+		
+		List<FacebookUser> fbUsers = ds.getByKeys(FacebookUser.class, k1Loaded.users).asList();
+		assertEquals(fbUsers.size(), 4);
+		for(FacebookUser fbUser : fbUsers) {
+			assertNotNull(fbUser);
+			assertNotNull(fbUser.id);
+			assertNotNull(fbUser.username);
+		}
+			
+		
+	}
 	@Test
     public void testLowlevelbyteArray() throws Exception {
 	    Mongo m = new Mongo();

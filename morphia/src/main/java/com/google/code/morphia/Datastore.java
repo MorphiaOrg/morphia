@@ -51,16 +51,21 @@ public interface Datastore {
 	 */
 	<T,V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
 
-	/** Find the given entity (by collectionName/id); think of this as refresh */
-	<T> T get(Class<T> clazz, DBRef ref);
-
 	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
 	<T,V> Query<T> get(Class<T> clazz, Iterable<V> ids);
+	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
+	<T> Query<T> getByKeys(Class<T> clazz, Iterable<Key<T>> ids);
 	/** Find the given entity (by id); shorthand for {@code find("_id ", id)} */
 	<T,V> T get(Class<T> clazz, V id);
 
-	<T> T get(Class<T> clazz, Key<T> key);
+	/** Find the given entity (by collectionName/id); think of this as refresh */
 	<T> T get(T entity);
+	
+	/** Find the given entity (by collectionName/id);*/
+	<T> T get(Class<T> clazz, DBRef ref);
+	/** Find the given entity (by collectionName/id);*/
+	<T> T get(Class<T> clazz, Key<T> key);
+
 
 	/** Gets the count this kind of element*/
 	<T> long getCount(T entity);

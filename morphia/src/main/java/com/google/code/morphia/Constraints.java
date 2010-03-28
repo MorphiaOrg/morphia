@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  * @author Olafur Gauti Gudmundsson
  */
 public class Constraints implements Serializable {
+   	private static final long serialVersionUID = 1L;
 
     private Sort sort;
     private int startIndex, resultSize;
@@ -112,14 +113,17 @@ public class Constraints implements Serializable {
         return addMapField(FilterOperator.MOD, value);
     }
 
+    @SuppressWarnings("unchecked")
     public Constraints hasAnyOf( List values ) {
         return addMapField(FilterOperator.IN, values);
     }
 
+    @SuppressWarnings("unchecked")
     public Constraints hasNoneOf( List values ) {
         return addMapField(FilterOperator.NOT_IN, values);
     }
 
+    @SuppressWarnings("unchecked")
     public Constraints hasAllOf( List values ) {
         return addMapField(FilterOperator.ALL, values);
     }
@@ -129,13 +133,15 @@ public class Constraints implements Serializable {
         return this;
     }
 
-    private Constraints addField( Object value ) {
+    @SuppressWarnings("unchecked")
+	private Constraints addField( Object value ) {
         validateField();
         query.put(currentKey, value.getClass().isEnum() ? ((Enum)value).name() : value);
         currentKey = null;
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     private Constraints addMapField( FilterOperator op, Object value ) {
         validateField();
         query.put(currentKey, map(op.val(), value.getClass().isEnum() ? ((Enum)value).name() : value));

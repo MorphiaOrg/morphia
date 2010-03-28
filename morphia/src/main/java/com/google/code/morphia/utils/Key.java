@@ -100,6 +100,14 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 		return this.kindClass;
 	}
 	
+	public String updateKind(Mapper mapr) {
+		if (kind == null && kindClass == null) 
+			throw new IllegalStateException("Key is invalid! " + toString());
+		else if (kind == null) 
+			kind = mapr.getMappedClass(kindClass).defCollName;
+		
+		return kind;
+	}
 	/**
 	 * @return the parent key, or null if there is no parent.  Note that
 	 *  the parent could potentially have any type. 

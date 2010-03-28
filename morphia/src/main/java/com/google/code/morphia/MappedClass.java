@@ -262,7 +262,6 @@ public class MappedClass {
         if (idField == null && embeddedAn == null) {
             throw new MappingException("In [" + clazz.getName() + "]: No field is annotated with @Id; but it is required");
         }
-
         
         //Embedded classes should not have an id
         if (embeddedAn != null && idField != null) {

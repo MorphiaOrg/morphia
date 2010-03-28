@@ -151,7 +151,21 @@ public class DatastoreImpl implements SuperDatastore {
 		for (V id : ids) {
 			objIds.add(asObjectIdMaybe(id));
 		}
-		return find(clazz, Mapper.ID_KEY + " in", ids);
+		return find(clazz, Mapper.ID_KEY + " in", objIds);
+	}
+	
+	@Override
+	public <T> Query<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
+		Mapper mapr = morphia.getMapper();
+		String kind = mapr.getCollectionName(clazz);
+		List objIds = new ArrayList();
+		for (Key<T> key : keys) {
+			if (!kind.equals(key.updateKind(mapr)))
+				throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + key.getKind());
+
+			objIds.add(asObjectIdMaybe(key.getId()));
+		}
+		return find(clazz, Mapper.ID_KEY + " in", objIds);
 	}
 
 	@Override
@@ -172,15 +186,13 @@ public class DatastoreImpl implements SuperDatastore {
 	public <T> T get(Class<T> clazz, Key<T> key) {
 		Mapper mapr = morphia.getMapper();
 		String kind = mapr.getCollectionName(clazz);
-		if (key.getKind() == null && key.getKindClass() == null) throw new IllegalStateException("Key is invalid! " + key.toString());
-
-		String keyKind = (key.getKind() != null) ? key.getKind() : mapr.getMappedClass(key.getKindClass()).defCollName;
+		String keyKind = key.updateKind(mapr);
 		if (!kind.equals(keyKind)) 
-			throw new RuntimeException("collection names doen't match for key and class: " + kind + " != " + keyKind);
+			throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + keyKind);
 		
 		return get(clazz, key.getId());
 	}
-
+	
 	@Override
 	public <T> T get(T entity) {
 		Object id = getId(entity);
