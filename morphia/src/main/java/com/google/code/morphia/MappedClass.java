@@ -44,10 +44,11 @@ import com.mongodb.DBObject;
 public class MappedClass {
 	/** index definition */
     public class SuggestedIndex {
-		String name;
+		String fieldName;
 		IndexDirection dir;
-		public SuggestedIndex(String n, IndexDirection d) {name = n; dir = d;}
-		public String getName() {return name;}
+		
+		public SuggestedIndex(String n, IndexDirection d) {fieldName = n; dir = d;}
+		public String getFieldName() {return fieldName;}
 		public IndexDirection getDirection() {return dir;}
 	}
 
@@ -69,10 +70,7 @@ public class MappedClass {
 	public Class[] lifecycleAnnotations = new Class[] {PrePersist.class, PostPersist.class, PreLoad.class, PostLoad.class};
 	/** Methods which are lifecycle events */
 	public Map<Class<Annotation>, List<Method>> lifecycleMethods = new HashMap<Class<Annotation>, List<Method>>();
-	
-	/** Annotated indexes which should be created */
-	public List<SuggestedIndex> suggestedIndexes = new ArrayList<SuggestedIndex>();
-	
+		
     /** the collectionName based on the type and @Document value(); this can be overriden by the @CollectionName field on the instance*/
 	public String defCollName;
 
@@ -211,18 +209,11 @@ public class MappedClass {
 
         for (MappedField mf : persistenceFields) {
             Field field = mf.field;
-            String mappedName = mf.name;
             Class fieldType = field.getType();
             
         	field.setAccessible(true);
             if (logger.isLoggable(Level.FINE)) {
                 logger.finer("In [" + clazz.getName() + "]: Processing field: " + field.getName());
-            }
-            
-            //collect index annotations
-            if (mf.hasAnnotation(Indexed.class)) {
-    			Indexed index = field.getAnnotation(Indexed.class);
-            	suggestedIndexes.add(new SuggestedIndex(mappedName, index.value()));
             }
             
             //a field can be a Value, Reference, or Embedded
@@ -329,8 +320,8 @@ public class MappedClass {
 			if (!bMongoType && subType != null) bMongoType = ReflectionUtils.isPropertyType(subType);
 		}
 
-		public Annotation getAnnotation(Class clazz) {
-			return mappingAnnotations.get(clazz);
+		public <T extends Annotation> T getAnnotation(Class<T> clazz) {
+			return (T)mappingAnnotations.get(clazz);
 		}
 
 		public boolean hasAnnotation(Class ann) {

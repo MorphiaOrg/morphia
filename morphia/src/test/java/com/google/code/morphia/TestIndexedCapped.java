@@ -59,6 +59,11 @@ public class TestIndexedCapped {
 		@Indexed long l=4;
 		
 	}
+
+	public static class NamedIndexClass{
+		@Id String id;
+		@Indexed(name="l_ascending") long l=4;	
+	}
 	
 	public TestIndexedCapped () {
 		try {
@@ -66,7 +71,7 @@ public class TestIndexedCapped {
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
-		morphia.map(CurrentStatus.class).map(IndexedClass.class);
+		morphia.map(CurrentStatus.class).map(IndexedClass.class).map(NamedIndexClass.class);
 	}
 
 	@Before
@@ -97,13 +102,32 @@ public class TestIndexedCapped {
     public void testIndexedEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(IndexedClass.class);
 		ds.ensureSuggestedIndexes();
-		assertTrue(isFieldIndexed("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 		ds.save(new IndexedClass());
 		ds.ensureSuggestedIndexes();
-		assertTrue(isFieldIndexed("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 	}
 	
-	protected boolean isFieldIndexed(String name, List<DBObject> indexes) {
+	@Test
+    public void testNamedIndexEntity() throws Exception {
+		MappedClass mc = morphia.getMapper().getMappedClass(NamedIndexClass.class);
+		ds.ensureSuggestedIndexes();
+		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		ds.save(new IndexedClass());
+		ds.ensureSuggestedIndexes();
+		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		
+		assertTrue(hasNamedIndex("l_ascending", db.getCollection(mc.defCollName).getIndexInfo()));
+	}
+
+	protected boolean hasNamedIndex(String name, List<DBObject> indexes) {
+		for(DBObject dbObj : indexes) {
+			if (dbObj.get("name").equals(name)) return true;
+		}
+		return false;
+	}
+
+	protected boolean hasIndexedField(String name, List<DBObject> indexes) {
 		for(DBObject dbObj : indexes) {
 			if (((DBObject)dbObj.get("key")).containsField(name)) return true;
 		}

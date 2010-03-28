@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.MappedClass.SuggestedIndex;
+import com.google.code.morphia.MappedClass.MappedField;
 import com.google.code.morphia.annotations.CappedAt;
+import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.Key;
-import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -88,24 +88,40 @@ public class DatastoreImpl implements SuperDatastore {
 		}
 	}
 
-	@Override
-	public <T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir) {
-		BasicDBObjectBuilder keyBuilder = BasicDBObjectBuilder.start();
+	protected <T> void ensureIndex(String name, Class<T> clazz, String fieldName, IndexDirection dir, boolean unique, boolean dropDupsOnCreate) {
+		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
+		BasicDBObjectBuilder keyOpts= null;
+		
 		if(dir == IndexDirection.BOTH)
-			keyBuilder.add(name, 1).add(name, -1);
+			keys.add(fieldName, 1).add(fieldName, -1);
 		else
-			keyBuilder.add(name, (dir == IndexDirection.ASC)? 1 : -1);
+			keys.add(fieldName, (dir == IndexDirection.ASC)? 1 : -1);
 
+		if (name != null && !name.isEmpty()) {
+			if (keyOpts == null) keyOpts = new BasicDBObjectBuilder();
+			keyOpts.add("name", name);
+		}
+		if (unique) {
+			if (keyOpts == null) keyOpts = new BasicDBObjectBuilder();
+			keyOpts.add("unique", true);
+			if (dropDupsOnCreate) keyOpts.add("dropDups", true);
+		}
+		
 		DBCollection dbColl = getCollection(clazz);
-//		DB db = mongo.getDB(dbName);
-//		if (!db.getCollectionNames().contains(dbColl.getName())) {
-//			log.finer("The DBCollection we are ensuring an index on doesn't exist; creating it ( "+ dbColl.getFullName() +" ) now...");
-//			db.createCollection(dbColl.getName(), new BasicDBObject());
-//		}
-		log.fine("Ensuring index for " + dbColl.getName() + "." + name + " with opts " + keyBuilder);
-		dbColl.ensureIndex(keyBuilder.get());
+		log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys);
+		if (keyOpts == null) {
+			log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys);
+			dbColl.ensureIndex(keys.get());
+		}else {
+			log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys + " and opts " + keyOpts);
+			dbColl.ensureIndex(keys.get(), keyOpts.get());
+		}
 	}
-
+	
+	@Override
+	public <T> void ensureIndex(Class<T> entity, String name, IndexDirection dir) {
+		ensureIndex(null, entity, name, dir, false, false);
+	}
 	@Override
 	public <T> void ensureIndex(T entity, String name, IndexDirection dir) {
 		ensureIndex(entity.getClass(), name, dir);
@@ -115,8 +131,11 @@ public class DatastoreImpl implements SuperDatastore {
 	public void ensureSuggestedIndexes() {
 		//TODO loop over mappedClasses and call ensureIndex for each one on non-embedded objects (for now)
 		for(MappedClass mc : morphia.getMappedClasses().values()){
-			for(SuggestedIndex si : mc.suggestedIndexes){
-				ensureIndex(mc.clazz, si.name, si.dir);
+			for(MappedField mf : mc.persistenceFields){
+				if(mf.hasAnnotation(Indexed.class)) {
+					Indexed index = mf.getAnnotation(Indexed.class);
+					ensureIndex(index.name(), mc.clazz, mf.name,index.value(), index.unique(), index.dropDups());
+				}
 			}
 		}
 	}
