@@ -2,11 +2,14 @@ package com.google.code.morphia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.code.morphia.MappedClass.SuggestedIndex;
+import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.Key;
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -21,6 +24,7 @@ import com.mongodb.Mongo;
  */
 @SuppressWarnings("unchecked")
 public class DatastoreImpl implements SuperDatastore {
+    private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
 
 	protected Morphia morphia;
 	protected Mongo mongo;
@@ -91,8 +95,15 @@ public class DatastoreImpl implements SuperDatastore {
 			keyBuilder.add(name, 1).add(name, -1);
 		else
 			keyBuilder.add(name, (dir == IndexDirection.ASC)? 1 : -1);
-		
-		getCollection(clazz).ensureIndex(keyBuilder.get());
+
+		DBCollection dbColl = getCollection(clazz);
+//		DB db = mongo.getDB(dbName);
+//		if (!db.getCollectionNames().contains(dbColl.getName())) {
+//			log.finer("The DBCollection we are ensuring an index on doesn't exist; creating it ( "+ dbColl.getFullName() +" ) now...");
+//			db.createCollection(dbColl.getName(), new BasicDBObject());
+//		}
+		log.fine("Ensuring index for " + dbColl.getName() + "." + name + " with opts " + keyBuilder);
+		dbColl.ensureIndex(keyBuilder.get());
 	}
 
 	@Override
@@ -108,6 +119,28 @@ public class DatastoreImpl implements SuperDatastore {
 				ensureIndex(mc.clazz, si.name, si.dir);
 			}
 		}
+	}
+
+	@Override
+	public void ensureCaps() {
+		Mapper mapr = morphia.getMapper();
+		for(MappedClass mc : mapr.getMappedClasses().values())
+			if (mc.entityAn != null && mc.entityAn.cap().value() > 0) {
+				CappedAt cap = mc.entityAn.cap();
+				String collName = mapr.getCollectionName(mc.clazz);
+				BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
+				if(cap.value() > 0) dbCapOpts.add("size", cap.value());
+				if(cap.count() > 0) dbCapOpts.add("max", cap.count());
+				DB db = mongo.getDB(dbName);
+				if (db.getCollectionNames().contains(collName)) {
+					//TODO: check if the dbCollection is already cap'd
+//					DBCollection dbColl = db.getCollection(collName);
+					log.warning("DBCollection already exists with same name(" + collName + "), not creating cap'd version!");
+				} else {
+					mongo.getDB(dbName).createCollection(collName, dbCapOpts.get());
+					log.fine("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
+				}
+			}	
 	}
 
 	@Override

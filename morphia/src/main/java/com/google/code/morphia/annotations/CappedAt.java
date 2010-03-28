@@ -17,21 +17,18 @@
 
 package com.google.code.morphia.annotations;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import com.google.code.morphia.Mapper;
 
 /**
- * Allows marking and naming the collectionName
- * @author Olafur Gauti Gudmundsson
+ * Properties for capped collections; used in {@link Entity}
+ * 
  * @author Scott Hernandez
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Entity {
-	String value() default Mapper.IGNORED_FIELDNAME;
-	CappedAt cap() default @CappedAt(0);
+public @interface CappedAt {
+	/** size to cap at (defaults to 1MB) */
+	long value() default 1024*1024;
+	/** count of items to cap at (defaults to unlimited) */
+	long count() default 0;
 }

@@ -302,7 +302,7 @@ public class MappedClass {
 		protected Field field;
 		protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 		public String name;
-		protected Class[] interestingAnnotations = new Class[] {Property.class, Reference.class, Embedded.class, Id.class, CollectionName.class};
+		protected Class[] interestingAnnotations = new Class[] {Indexed.class, Property.class, Reference.class, Embedded.class, Id.class, CollectionName.class};
 		protected Class subType = null;
 		protected boolean bSingleValue = true;
 		protected boolean bMongoType = false;

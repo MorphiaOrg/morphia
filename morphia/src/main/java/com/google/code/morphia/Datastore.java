@@ -1,5 +1,6 @@
 package com.google.code.morphia;
 
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.Key;
 import com.mongodb.DB;
@@ -88,4 +89,7 @@ public interface Datastore {
 	Mongo getMongo();
 	/** The instance this Datastore is using */
 	Morphia getMorphia();
+
+	/** ensure capped dbcollections for {@link Entity}s */
+	void ensureCaps();
 }
