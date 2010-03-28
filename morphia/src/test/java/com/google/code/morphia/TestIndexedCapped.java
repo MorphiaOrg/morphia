@@ -54,12 +54,13 @@ public class TestIndexedCapped {
 		public CurrentStatus(String msg) {message = msg;}
 	}
 
+	@Entity
 	public static class IndexedClass{
 		@Id String id;
 		@Indexed long l=4;
-		
 	}
 
+	@Entity
 	public static class NamedIndexClass{
 		@Id String id;
 		@Indexed(name="l_ascending") long l=4;	
@@ -101,20 +102,20 @@ public class TestIndexedCapped {
 	@Test
     public void testIndexedEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(IndexedClass.class);
-		ds.ensureSuggestedIndexes();
+		ds.ensureIndexes();
 		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 		ds.save(new IndexedClass());
-		ds.ensureSuggestedIndexes();
+		ds.ensureIndexes();
 		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 	}
 	
 	@Test
     public void testNamedIndexEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(NamedIndexClass.class);
-		ds.ensureSuggestedIndexes();
+		ds.ensureIndexes();
 		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 		ds.save(new IndexedClass());
-		ds.ensureSuggestedIndexes();
+		ds.ensureIndexes();
 		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
 		
 		assertTrue(hasNamedIndex("l_ascending", db.getCollection(mc.defCollName).getIndexInfo()));

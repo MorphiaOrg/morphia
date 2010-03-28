@@ -191,7 +191,7 @@ public class Mapper {
         }
     }
 
-    Object createEntityInstanceForDbObject( Class entityClass, BasicDBObject dbObject ) {
+    protected Object createEntityInstanceForDbObject( Class entityClass, BasicDBObject dbObject ) {
         // see if there is a className value
         String className = (String) dbObject.get(CLASS_NAME_KEY);
         Class c = entityClass;
@@ -199,14 +199,25 @@ public class Mapper {
         	//try to Class.forName(className) as defined in the dbObject first, otherwise return the entityClass
             c = getClassForName(className, entityClass);
         }
+        return createInstance(c);
+    }
+
+    /** Gets a no-arg constructor and calls it via reflection.*/
+    protected Object createInstance(Class type) {
         try {
         	//allows private/protected constructors
-	        Constructor constructor = c.getDeclaredConstructor();
+	        Constructor constructor = type.getDeclaredConstructor();
 	        constructor.setAccessible(true);
 	        return constructor.newInstance();
         } catch (Exception e) {throw new RuntimeException(e);}
     }
 
+    /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
+    protected Object notObjInst(Class fallbackType, Class testType) {
+    	if (testType != null && testType != Object.class) return createInstance(testType);
+    	return createInstance(fallbackType);
+    }
+    
     Object fromDBObject(Class entityClass, BasicDBObject dbObject) {
         entityCache.set(new HashMap<String, Object>());
         
@@ -257,7 +268,7 @@ public class Mapper {
 
     void mapReferencesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject) {
     	try {
-	    	Reference mongoReference = (Reference)mf.getAnnotation(Reference.class);
+	    	Reference refAnn = (Reference)mf.getAnnotation(Reference.class);
 	        String name = mf.name;
 	
 	        Object fieldValue = mf.field.get(entity);
@@ -265,7 +276,8 @@ public class Mapper {
 	        if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) fieldValue;
 	            if ( map != null && map.size() > 0) {
-	                Map values = mongoReference.mapClass().newInstance();
+	                Map values = (Map)notObjInst(HashMap.class, (refAnn == null) ? null : refAnn.concreteClass());
+
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 	                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
 	                }
@@ -450,21 +462,11 @@ public class Mapper {
 	        if (mf.isMap()) {
 		        if ( dbObject.containsField(name) ) {
 		            Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
-		            Map values = propAnnotation != null ? propAnnotation.mapClass().newInstance() : new HashMap();
+	                Map values = (Map)notObjInst(HashMap.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
 		            for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-		                if ( entry.getValue().getClass() == Locale.class ) {
-		                    values.put(entry.getKey(), parseLocale((String)entry.getValue()));
-		                } else if ( entry.getValue().getClass().isEnum() ) {
-		                    Class enumClass = entry.getValue().getClass();
-		                    values.put(entry.getKey(), Enum.valueOf(enumClass, (String)entry.getValue()));
-		                } else {
-		                    values.put(entry.getKey(), entry.getValue());
-		                }
+		            	values.put(entry.getKey(), objectFromValue(fieldType, entry.getValue()));
 		            }
 		            mf.field.set(entity, values);
-		
-		        } else {
-		        	mf.field.set(entity, propAnnotation != null ? propAnnotation.mapClass().newInstance() : new HashMap());
 		        }
 	    	}else if (mf.isMultipleValues()) {
 	            boolean bSet = ReflectionUtils.implementsInterface(fieldType, Set.class);
@@ -483,10 +485,11 @@ public class Mapper {
 	                if ( subtype != null ) {
 	                    //map back to the java datatype (List/Set/Array[])
 	                    Collection values;
+	                    
 	                    if (!bSet)
-	                    	values = propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList();
+	    	                values = (List)notObjInst(ArrayList.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
 	                    else
-	                    	values = propAnnotation != null ? propAnnotation.setClass().newInstance() : new HashSet();
+	    	                values = (Set)notObjInst(HashSet.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
 	                    
 	                    if (subtype == Locale.class) {
 	                        for ( Object o : list )
@@ -514,12 +517,6 @@ public class Mapper {
 	                } else {
 	                	mf.field.set(entity, list);
 	                }
-	
-	            } else {
-	                if (!bSet)
-	            	    mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new ArrayList());
-	                else
-	                    mf.field.set(entity, propAnnotation != null ? propAnnotation.listClass().newInstance() : new HashSet());
 	            }
 	        } else {
 	            if ( dbObject.containsField(name) ) {
@@ -530,14 +527,15 @@ public class Mapper {
     }
 
 	void mapEmbeddedFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
-        Embedded mongoEmbedded = (Embedded)mf.getAnnotation(Embedded.class);
+        Embedded embeddedAnn = (Embedded)mf.getAnnotation(Embedded.class);
         String name = mf.name;
 
         Class fieldType = mf.field.getType();
         try {
 	        if (mf.isMap()) {
 	            Class docObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-	            Map map = mongoEmbedded.mapClass().newInstance();
+	            Map map = (Map)notObjInst(HashMap.class, (embeddedAnn == null) ? null : embeddedAnn.concreteClass());
+
 	            if ( dbObject.containsField(name) ) {
 	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
 	                for ( Map.Entry entry : value.entrySet() ) {
@@ -552,7 +550,7 @@ public class Mapper {
 	
 	        	// multiple documents in a List
 	            Class docObjClass = mf.subType;
-	            Collection docs = (bList) ? mongoEmbedded.listClass().newInstance() : mongoEmbedded.setClass().newInstance();
+	            Collection docs = (Collection)notObjInst((bList) ? ArrayList.class : HashSet.class, embeddedAnn.concreteClass());
 	
 	            if ( dbObject.containsField(name) ) {
 	                Object value = dbObject.get(name);
@@ -585,22 +583,23 @@ public class Mapper {
     }
 
     void mapReferencesFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
-        Reference mongoReference = (Reference)mf.getAnnotation(Reference.class);
+        Reference refAnn = (Reference)mf.getAnnotation(Reference.class);
         String name = mf.name;
 
         
         Class fieldType = mf.field.getType();
 
-    	try {        
+    	try {
 	    	if (mf.isMap()) {
 	            Class referenceObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-	            Map map = mongoReference.mapClass().newInstance();
+	            Map map = (Map)notObjInst(HashMap.class, (refAnn == null) ? null : refAnn.concreteClass());
+
 	            if ( dbObject.containsField(name) ) {
 	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
 	                for ( Map.Entry entry : value.entrySet() ) {
 	                    DBRef dbRef = (DBRef) entry.getValue();
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-	
+
 	                    Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
 	                    refObj = mapDBObjectToEntity(refDbObject, refObj);
 	                    map.put(entry.getKey(), refObj);
@@ -613,8 +612,8 @@ public class Mapper {
 	
 	            // multiple references in a List
 	            Class referenceObjClass = mf.subType;
-	            Collection references = bSet ? mongoReference.setClass().newInstance() : mongoReference.listClass().newInstance();
-	            
+	            Collection references = (Collection) notObjInst((!bSet) ? ArrayList.class : HashSet.class, refAnn.concreteClass());
+	        	
 	            if ( dbObject.containsField(name) ) {
 	                Object value = dbObject.get(name);
 	                if ( value instanceof List ) {
@@ -671,41 +670,45 @@ public class Mapper {
 	
     /** Converts known types from mongodb -> java. Really it just converts enums and locales from strings */
     public static Object objectFromValue( Class javaType, BasicDBObject dbObject, String name ) {
+    	return objectFromValue(javaType, dbObject.get(name));
+    }
+
+    protected static Object objectFromValue( Class javaType, Object val) {
         if (javaType == String.class) {
-            return dbObject.getString(name);
+            return val.toString();
         } else if (javaType == Character.class || javaType == char.class) {
-            return dbObject.getString(name).charAt(0);
+            return val.toString().charAt(0);
         } else if (javaType == Integer.class || javaType == int.class) {
-            return dbObject.getInt(name);
+            return ((Number)val).intValue();
         } else if (javaType == Long.class || javaType == long.class) {
-            return dbObject.getLong(name);
+            return ((Number)val).longValue();
         } else if (javaType == Byte.class || javaType == byte.class) {
-           	Object dbValue = dbObject.get(name);
+           	Object dbValue = val;
         	if (dbValue instanceof Byte) return dbValue;
         	else if (dbValue instanceof Double) return ((Double)dbValue).byteValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).byteValue();
-        	String sVal = dbObject.getString(name);
+        	String sVal = val.toString();
             return Byte.parseByte(sVal);
         } else if (javaType == Short.class || javaType == short.class) {
-           	Object dbValue = dbObject.get(name);
+           	Object dbValue = val;
         	if (dbValue instanceof Short) return dbValue;
         	else if (dbValue instanceof Double) return ((Double)dbValue).shortValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).shortValue();
-        	String sVal = dbObject.getString(name);
+        	String sVal = val.toString();
             return Short.parseShort(sVal);
         } else if (javaType == Float.class || javaType == float.class) {
-        	Object dbValue = dbObject.get(name);
+        	Object dbValue = val;
         	if (dbValue instanceof Double) return ((Double)dbValue).floatValue();
-        	String sVal = dbObject.getString(name);
+        	String sVal = val.toString();
             return Float.parseFloat(sVal);
         } else if (javaType == Locale.class) {
-            return parseLocale(dbObject.getString(name));
+            return parseLocale(val.toString());
         } else if (javaType.isEnum()) {
-            return Enum.valueOf(javaType, dbObject.getString(name));
+            return Enum.valueOf(javaType, val.toString());
         } else if (javaType == Key.class) {
-            return new Key((DBRef)dbObject.get(name));
+            return new Key((DBRef)val);
         }
-        return dbObject.get(name);
+        return val;
     }
 
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */

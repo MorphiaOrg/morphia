@@ -23,14 +23,6 @@ public interface Datastore {
 	/** Deletes the given entity (by id) */
 	<T> void delete(T entity);
 
-	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir);
-	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(T entity, String name, IndexDirection dir);
-
-	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
-	void ensureSuggestedIndexes();
-
 	/** Find all instances by type */
 	<T> Query<T> find(Class<T> clazz);
 
@@ -90,6 +82,12 @@ public interface Datastore {
 	/** The instance this Datastore is using */
 	Morphia getMorphia();
 
+	/** Ensures (creating if necessary) the index and direction */
+	<T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir);
+	/** Ensures (creating if necessary) the index and direction */
+	<T> void ensureIndex(T entity, String name, IndexDirection dir);
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
+	void ensureIndexes();
 	/** ensure capped dbcollections for {@link Entity}s */
 	void ensureCaps();
 }

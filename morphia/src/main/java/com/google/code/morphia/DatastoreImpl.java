@@ -128,9 +128,10 @@ public class DatastoreImpl implements SuperDatastore {
 	}
 	
 	@Override
-	public void ensureSuggestedIndexes() {
+	public void ensureIndexes() {
 		//TODO loop over mappedClasses and call ensureIndex for each one on non-embedded objects (for now)
 		for(MappedClass mc : morphia.getMappedClasses().values()){
+			if (mc.entityAn == null) continue;
 			for(MappedField mf : mc.persistenceFields){
 				if(mf.hasAnnotation(Indexed.class)) {
 					Indexed index = mf.getAnnotation(Indexed.class);

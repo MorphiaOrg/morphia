@@ -53,7 +53,7 @@ public class Hotel extends AbstractMongoEntity {
     @Embedded
     private Address address;
 
-    @Embedded(listClass = Vector.class)
+    @Embedded(concreteClass = Vector.class)
     private List<PhoneNumber> phoneNumbers;
 
     private Hotel() {

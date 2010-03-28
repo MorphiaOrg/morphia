@@ -20,24 +20,17 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.google.code.morphia.Mapper;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
+ * @author Scott Hernandez
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@SuppressWarnings("unchecked")
 public @interface Reference {
-
     /**
      * The name of the Mongo value to store the field.
      * Defaults to the name of the field being annotated.
@@ -45,25 +38,7 @@ public @interface Reference {
      * @return the name of the Mongo value storing the field value
      */
     String value() default Mapper.IGNORED_FIELDNAME;
-
-    /**
-     * Specify the implementing class to user for List.
-     *
-     * @return The implementing class of the list
-     */
-    Class<? extends List> listClass() default ArrayList.class;
-
-    /**
-     * Specify the implementing class to user for Set.
-     *
-     * @return The implementing class of the set
-     */
-    Class<? extends Set> setClass() default HashSet.class;
-
-    /**
-     * Specify the implementing class to user for Map.
-     *
-     * @return The implementing class of the map
-     */
-    Class<? extends Map> mapClass() default HashMap.class;
+    /** Specify the concrete class to instantiate. */
+    Class<?> concreteClass() default Object.class;
+    
 }
