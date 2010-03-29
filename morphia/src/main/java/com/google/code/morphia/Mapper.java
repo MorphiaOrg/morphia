@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.MappedClass.MappedField;
@@ -197,7 +198,13 @@ public class Mapper {
     }
     
     Object fromDBObject(Class entityClass, BasicDBObject dbObject) {
-        entityCache.set(new HashMap<String, Object>());
+    	if (dbObject == null) {
+    		Throwable t = new Throwable();
+    		logger.log(Level.SEVERE, "Somebody passes in a null dbObject; bad client!", t);
+    		return null;
+    	}
+    	
+    	entityCache.set(new HashMap<String, Object>());
         
         Object entity = createEntityInstanceForDbObject(entityClass, dbObject);
         

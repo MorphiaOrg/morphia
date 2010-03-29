@@ -28,7 +28,6 @@ import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
-import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 
@@ -41,16 +40,6 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings("unchecked")
 public class MappedClass {
-	/** index definition */
-    public class SuggestedIndex {
-		String fieldName;
-		IndexDirection dir;
-		
-		public SuggestedIndex(String n, IndexDirection d) {fieldName = n; dir = d;}
-		public String getFieldName() {return fieldName;}
-		public IndexDirection getDirection() {return dir;}
-	}
-
     private static final Logger logger = Logger.getLogger(MappedClass.class.getName());
 	
     /** special fields representing the Key of the object */
