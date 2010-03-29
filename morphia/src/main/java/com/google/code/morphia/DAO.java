@@ -121,14 +121,22 @@ public class DAO<T,K extends Serializable> {
         return findOne(new Constraints(key, value));
     }
     public T findOne( Constraints c ) {
-        return findOne(c.getQuery());
+        return findOne(c.getQuery(), c.getFields());
     }
     public T findOne( Map<String,Object> query ) {
-        return map((BasicDBObject)collection().findOne(new BasicDBObject(query)));
+        return findOne(query, null);
+    }
+
+    public T findOne( Map<String,Object> query, Map<String,Integer> fields ) {
+        if ( fields != null && !fields.isEmpty() ) {
+            return map((BasicDBObject)collection().findOne(new BasicDBObject(query), new BasicDBObject(fields)));
+        } else {
+            return map((BasicDBObject)collection().findOne(new BasicDBObject(query)));
+        }
     }
 
     public List<T> find( Constraints c ) {
-        return find(c.getQuery(), c.getStartIndex(), c.getResultSize(), c.getSort());
+        return find(c.getQuery(), c.getFields(), c.getStartIndex(), c.getResultSize(), c.getSort());
     }
 
     public List<T> find(Map<String,Object> query) {
@@ -141,7 +149,14 @@ public class DAO<T,K extends Serializable> {
         return find(query, startIndex, resultSize, null);
     }
     public List<T> find(Map<String,Object> query, int startIndex, int resultSize, Sort sort) {
-        return toList(collection().find(new BasicDBObject(query)), startIndex, resultSize, sort);
+        return find(query, null, startIndex, resultSize, sort);
+    }
+    public List<T> find(Map<String,Object> query, Map<String,Integer> fields, int startIndex, int resultSize, Sort sort) {
+        if ( fields != null && !fields.isEmpty() ) {
+            return toList(collection().find(new BasicDBObject(query), new BasicDBObject(fields)), startIndex, resultSize, sort);
+        } else {
+            return toList(collection().find(new BasicDBObject(query)), startIndex, resultSize, sort);
+        }
     }
 
     public List<T> findAll() {

@@ -17,6 +17,7 @@ public class Constraints implements Serializable {
     private Sort sort;
     private int startIndex, resultSize;
     private Map<String,Object> query;
+    private Map<String,Integer> fields;
 
     private String currentKey;
 
@@ -24,6 +25,7 @@ public class Constraints implements Serializable {
         startIndex = -1;
         resultSize = -1;
         query = new HashMap<String,Object>();
+        fields = new HashMap<String,Integer>();
     }
     
     public Constraints( String name, Object value ) {
@@ -133,6 +135,30 @@ public class Constraints implements Serializable {
         return this;
     }
 
+    /**
+     * Specifiy that the field with the name supplied should be
+     * returned in the results.
+     *
+     * @param name
+     * @return
+     */
+    public Constraints include( String name ) {
+        fields.put(name, 1);
+        return this;
+    }
+
+    /**
+     * Specifiy that the field with the name supplied should NOT be
+     * returned in the results.
+     *
+     * @param name
+     * @return
+     */
+    public Constraints exclude( String name ) {
+        fields.put(name, 0);
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
 	private Constraints addField( Object value ) {
         validateField();
@@ -163,6 +189,10 @@ public class Constraints implements Serializable {
 
     Map<String, Object> getQuery() {
         return query;
+    }
+
+    Map<String, Integer> getFields() {
+        return fields;
     }
 
     int getResultSize() {
