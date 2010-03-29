@@ -32,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.MappedClass.MappedField;
-import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
@@ -59,7 +58,6 @@ public class Mapper {
 	private static final String CLASS_NAME_KEY = "className";
 	
 	public static final String ID_KEY = "_id";
-	public static final String COLLECTION_NAME_KEY = "_ns";	
 	public static final String IGNORED_FIELDNAME = ".";
 
     /** Set of classes that have been validated for mapping by this mapper */
@@ -112,12 +110,7 @@ public class Mapper {
     	if (object instanceof Class) return getCollectionName((Class) object);
     	
     	MappedClass mc = getMappedClass(object);
-
-    	try {
-    		return (mc.collectionNameField != null && mc.collectionNameField.get(object) != null) ? (String)mc.collectionNameField.get(object) : mc.defCollName;
-    	} catch (Exception e) {
-    		throw new RuntimeException(e);
-    	}
+        return mc.defCollName;
     }
     
 	public String getCollectionName(Class clazz) {
@@ -161,21 +154,6 @@ public class Mapper {
 			} catch (Exception e) {
 				if (e.getClass().equals(RuntimeException.class)) throw (RuntimeException)e;
 
-				throw new RuntimeException(e);
-			}
-		}
-
-		//update ns (collectionName)
-		if (mc.collectionNameField != null && !(dbNs == null || dbNs.isEmpty())) {
-			try {
-				String value = (String) mc.collectionNameField.get(entity);
-				if ( value != null && value.length() > 0 ) {
-			    	if (value != null && !value.equals(dbNs))
-			    		throw new RuntimeException("ns mismatch: " + value + " != " + dbNs + " for " + entity.getClass().getSimpleName());
-				} else if (value == null)
-		    		mc.collectionNameField.set(entity, dbNs);
-
-			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -235,11 +213,7 @@ public class Mapper {
 	        dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
 	
 	        MappedClass mc = getMappedClass(entity);
-	        
-	        String collName = (mc.collectionNameField == null) ? null :  (String)mc.collectionNameField.get(entity);
-	        if (collName != null && collName.length() > 0 ) dbObject.put(COLLECTION_NAME_KEY, collName);
-	
-	
+            
 	        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
 	        for (MappedField mf : mc.persistenceFields) {
 	            Field field = mf.field;
@@ -405,7 +379,7 @@ public class Mapper {
 
     Object mapDBObjectToEntity( BasicDBObject dbObject, Object entity ) {
         // check the history key (a key is the namespace + id)
-        String cacheKey = (!dbObject.containsField(ID_KEY)) ? null : dbObject.getString(COLLECTION_NAME_KEY) + "[" + dbObject.getString(ID_KEY) + "]";
+        String cacheKey = (!dbObject.containsField(ID_KEY)) ? null : "[" + dbObject.getString(ID_KEY) + "]";
         if (entityCache.get() == null) {
             entityCache.set(new HashMap<String, Object>());
         }
@@ -423,16 +397,11 @@ public class Mapper {
         try {
 	        for (MappedField mf : mc.persistenceFields) {
 	            Field field = mf.field;
-	//            String name = mf.name;
 	            field.setAccessible(true);
 	
 	            if ( mf.hasAnnotation(Id.class) ) {
 	                if ( dbObject.get(ID_KEY) != null ) {
 	                    field.set(entity, objectFromValue(field.getType(), dbObject, ID_KEY));
-	                }
-	            } else if ( mf.hasAnnotation(CollectionName.class) ) {
-	                if ( dbObject.get(COLLECTION_NAME_KEY) != null ) {
-	                    field.set(entity, dbObject.get(COLLECTION_NAME_KEY).toString());
 	                }
 	
 	            } else if ( mf.hasAnnotation(Reference.class) ) {

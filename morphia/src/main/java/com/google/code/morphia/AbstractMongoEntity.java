@@ -19,7 +19,6 @@ package com.google.code.morphia;
 
 import java.io.Serializable;
 
-import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Id;
 
 /**
@@ -32,18 +31,8 @@ public abstract class AbstractMongoEntity implements Serializable {
 
 	/** The id for this instance */
 	@Id protected String id;
-	/** The collection this instance is stored in. You can use this for reference purposes.*/
-    @CollectionName protected String collectionName;
 
     public AbstractMongoEntity() {
-    }
-
-    public String getCollectionName() {
-        return collectionName;
-    }
-
-    public void setCollectionName(String collectionName) {
-        this.collectionName = collectionName;
     }
 
     public String getId() {

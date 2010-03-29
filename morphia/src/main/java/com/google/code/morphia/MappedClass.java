@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -55,7 +54,7 @@ public class MappedClass {
     private static final Logger logger = Logger.getLogger(MappedClass.class.getName());
 	
     /** special fields representing the Key of the object */
-    public Field idField, collectionNameField;
+    public Field idField;
 	
     /** special annotations representing the type the object */
 	public Entity entityAn;
@@ -117,9 +116,6 @@ public class MappedClass {
             	persistenceFields.add(new MappedField(field));   	
             } else if (field.isAnnotationPresent(Transient.class)) {
             	continue;
-            } else if (field.isAnnotationPresent(CollectionName.class)) {
-            	collectionNameField = field;
-            	persistenceFields.add(new MappedField(field));
             } else if (	field.isAnnotationPresent(Property.class) || 
         				field.isAnnotationPresent(Reference.class) || 
         				field.isAnnotationPresent(Embedded.class) || 
@@ -241,14 +237,6 @@ public class MappedClass {
             }            
         }
         
-
-        // make sure @CollectionName field is a String
-        if (collectionNameField != null && collectionNameField.getType() != String.class) {
-            throw new MappingException("In [" + clazz.getName() + "]: Field [" + collectionNameField.getName()
-                    + "] which is annotated as @CollectionName must be of type java.lang.String, but is of type: "
-                    + collectionNameField.getType().getName());
-        }
-        
         //Only embedded class can have no id field
         if (idField == null && embeddedAn == null) {
             throw new MappingException("In [" + clazz.getName() + "]: No field is annotated with @Id; but it is required");
@@ -257,11 +245,6 @@ public class MappedClass {
         //Embedded classes should not have an id
         if (embeddedAn != null && idField != null) {
             throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @Id field");
-        }
-
-        //Embedded classes should not have a CollectionName
-        if (embeddedAn != null && collectionNameField != null) {
-            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @CollectionName field");
         }
 
         //Embedded classes can not have a fieldName value() specified
@@ -293,7 +276,7 @@ public class MappedClass {
 		protected Field field;
 		protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 		public String name;
-		protected Class[] interestingAnnotations = new Class[] {Indexed.class, Property.class, Reference.class, Embedded.class, Id.class, CollectionName.class};
+		protected Class[] interestingAnnotations = new Class[] {Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
 		protected Class subType = null;
 		protected boolean bSingleValue = true;
 		protected boolean bMongoType = false;

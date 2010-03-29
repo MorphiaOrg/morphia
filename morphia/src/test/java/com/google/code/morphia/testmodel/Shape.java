@@ -22,7 +22,7 @@ import com.google.code.morphia.annotations.Entity;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("shapes")
 public interface Shape {
 
     public double getArea();

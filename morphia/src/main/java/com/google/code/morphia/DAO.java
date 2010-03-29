@@ -24,15 +24,11 @@ public class DAO<T,K extends Serializable> {
     protected final Morphia morphia;
 
     public DAO( Class<T> entityClass, Mongo mongo, Morphia morphia, String dbName ) {
-        this(entityClass, mongo, morphia, dbName, morphia.getMapper().getCollectionName(entityClass));
-    }
-
-    public DAO( Class<T> entityClass, Mongo mongo, Morphia morphia, String dbName, String collectionName ) {
         this.entityClass = entityClass;
         this.mongo = mongo;
         this.morphia = morphia;
         this.dbName = dbName;
-        this.collectionName = collectionName;
+        this.collectionName = morphia.getMapper().getCollectionName(entityClass);
         this.morphia.map(entityClass);
     }
 

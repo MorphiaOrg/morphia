@@ -23,7 +23,7 @@ import com.mongodb.Mongo;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class DatastoreImpl implements SuperDatastore {
+public class DatastoreImpl implements Datastore {
     private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
 
 	protected Morphia morphia;
@@ -57,12 +57,6 @@ public class DatastoreImpl implements SuperDatastore {
 	
 	protected <T,V> void delete(DBCollection dbColl, V id) {
 		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
-	}
-	
-	@Override
-	public <T,V> void delete(String kind, V id) {
-		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
-		delete(dbColl, id);
 	}
 
 	@Override
@@ -164,11 +158,6 @@ public class DatastoreImpl implements SuperDatastore {
 	}
 
 	@Override
-	public <T> Query<T> find(String kind, Class<T> clazz){
-		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind), this);		
-	}
-
-	@Override
 	public <T> Query<T> find(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);
 	}
@@ -176,13 +165,6 @@ public class DatastoreImpl implements SuperDatastore {
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value) {
 		Query<T> query = find(clazz);
-		return query.filter(property, value);
-	}
-	
-	@Override
-	public <T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {		
-		Query<T> query = find(kind, clazz);
-		query.offset(offset); query.limit(size);
 		return query.filter(property, value);
 	}
 	
@@ -222,15 +204,8 @@ public class DatastoreImpl implements SuperDatastore {
 	}
 
 	@Override
-	public <T,V> T get(String kind, Class<T> clazz, V id) {
-		List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
-		if (results == null || results.size() == 0) return null;
-		return results.get(0);
-	}
-
-	@Override
 	public <T, V> T get(Class<T> clazz, V id) {
-		List<T> results = find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).asList();
+		List<T> results = find(clazz, Mapper.ID_KEY, id, 0, 1).asList();
 		if (results == null || results.size() == 0) return null;
 		return results.get(0);
 	}
@@ -270,11 +245,6 @@ public class DatastoreImpl implements SuperDatastore {
 	@Override
 	public <T> long getCount(Class<T> clazz) {
 		return getCollection(clazz).getCount();
-	}
-	
-	@Override
-	public long getCount(String kind) {
-		return mongo.getDB(dbName).getCollection(kind).getCount();
 	}
 
 	@Override
@@ -338,12 +308,6 @@ public class DatastoreImpl implements SuperDatastore {
 		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), getId(entity));		
-	}
-
-	@Override
-	public <T> Key<T> save(String kind, T entity) {	
-		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
-		return save(dbColl, entity);
 	}
 
 	@Override

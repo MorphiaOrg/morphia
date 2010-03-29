@@ -24,7 +24,7 @@ import com.google.code.morphia.annotations.Reference;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("stuff")
 public class RecursiveChild extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 

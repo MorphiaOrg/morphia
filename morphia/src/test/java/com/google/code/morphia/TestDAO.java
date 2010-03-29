@@ -41,7 +41,7 @@ public class TestDAO {
             Morphia morphia = new Morphia();
             morphia.map(Hotel.class);
 
-            DAO<Hotel,String> hotelDAO = new DAO<Hotel,String>(Hotel.class, mongo, morphia, "morphia_test", "hotels");
+            DAO<Hotel,String> hotelDAO = new DAO<Hotel,String>(Hotel.class, mongo, morphia, "morphia_test");
 
             Hotel borg = Hotel.create();
             borg.setName("Hotel Borg");
@@ -57,7 +57,6 @@ public class TestDAO {
             hotelDAO.save(borg);
             assertEquals(1, hotelDAO.getCount());
             assertNotNull(borg.getId());
-            assertEquals("hotels", borg.getCollectionName());
 
             Hotel hotelLoaded = hotelDAO.get(borg.getId());
             assertEquals(borg.getName(), hotelLoaded.getName());
@@ -136,7 +135,6 @@ public class TestDAO {
             hotelDAO.save(borg);
             assertEquals(1, hotelDAO.getCount());
             assertNotNull(borg.getId());
-            assertEquals("hotels", borg.getCollectionName());
 
             Hotel hotelLoaded = hotelDAO.get(borg.getId());
             assertEquals(borg.getName(), hotelLoaded.getName());

@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import org.junit.Test;
 
-import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -77,11 +76,6 @@ public class TestMapping {
 	@Embedded
 	public static class IdOnEmbedded {
 		@Id String id;
-	}
-
-	@Embedded
-	public static class CollectionNameOnEmbedded {
-		@CollectionName String collName;
 	}
 	
 	@Embedded("no-id")
@@ -271,7 +265,6 @@ public class TestMapping {
             borgAddr.setStreet("Posthusstraeti 11");
             borgAddr.setPostCode("101");
             borg.setAddress(borgAddr);
-            borg.setCollectionName(hotels.getName());
             
             BasicDBObject hotelDbObj = (BasicDBObject) morphia.toDBObject(borg);
             hotels.save(hotelDbObj);
@@ -294,7 +287,6 @@ public class TestMapping {
             TravelAgency agency = new TravelAgency();
             agency.setName("Lastminute.com");
             agency.getHotels().add(borgLoaded);
-            agency.setCollectionName(agencies.getName());
             
             BasicDBObject agencyDbObj = (BasicDBObject) morphia.toDBObject(agency);
             agencies.save(agencyDbObj);
@@ -320,7 +312,6 @@ public class TestMapping {
             morphia.map(Article.class).map(Translation.class).map(Circle.class);
 
             Article related = new Article();
-            related.setCollectionName(articles.getName());
             BasicDBObject relatedDbObj = (BasicDBObject) morphia.toDBObject(related);
             articles.save(relatedDbObj);
 
@@ -336,7 +327,6 @@ public class TestMapping {
 
             article.putRelated("test", relatedLoaded);
 
-            article.setCollectionName(articles.getName());
             BasicDBObject articleDbObj = (BasicDBObject) morphia.toDBObject(article);
             articles.save(articleDbObj);
 
@@ -368,12 +358,10 @@ public class TestMapping {
             morphia.map(RecursiveParent.class).map(RecursiveChild.class);
 
             RecursiveParent parent = new RecursiveParent();
-            parent.setCollectionName(stuff.getName());
             BasicDBObject parentDbObj = (BasicDBObject) morphia.toDBObject(parent);
             stuff.save(parentDbObj);
 
             RecursiveChild child = new RecursiveChild();
-            child.setCollectionName(stuff.getName());
             BasicDBObject childDbObj = (BasicDBObject) morphia.toDBObject(child);
             stuff.save(childDbObj);
 

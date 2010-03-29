@@ -28,6 +28,6 @@ import com.mongodb.Mongo;
 public class HotelDAO extends DAO<Hotel,String> {
 
     public HotelDAO( Morphia morphia, Mongo mongo ) {
-        super(Hotel.class, mongo, morphia, "morphia_test", "hotels");
+        super(Hotel.class, mongo, morphia, "morphia_test");
     }
 }

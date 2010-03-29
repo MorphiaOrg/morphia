@@ -28,7 +28,7 @@ import com.google.code.morphia.annotations.Reference;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("shapeshifters")
 public class ShapeShifter extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 

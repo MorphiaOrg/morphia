@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("articles")
 public class Article extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 

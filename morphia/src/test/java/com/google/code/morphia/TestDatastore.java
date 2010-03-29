@@ -31,7 +31,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.code.morphia.annotations.CollectionName;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
@@ -73,7 +72,6 @@ public class TestDatastore {
 	
 	public static class LifecycleTestObj {
 		@Id String id;
-		@CollectionName String collectionName;
 		@Transient boolean prePersist, postPersist, preLoad, postLoad, postLoadWithParam;
 		boolean prePersistWithParamAndReturn, prePersistWithParam;
 		boolean postPersistWithParam;
@@ -176,7 +174,6 @@ public class TestDatastore {
 		Key<Rectangle> rectKey = ds.save(rect);
 		
 		assertEquals(rectKey.getId(), rect.getId());
-		assertEquals(rectKey.getKind(), rect.getCollectionName());
 		
 		FacebookUser fbUser1 = new FacebookUser(1, "scott");
 		FacebookUser fbUser2 = new FacebookUser(2, "tom");
@@ -322,7 +319,6 @@ public class TestDatastore {
 		Rectangle rect = new Rectangle(10, 10);
 		ds.save(rect);
 		assertNotNull(rect.getId());
-		assertNotNull(rect.getCollectionName());
 	}	
 	@Test
     public void testSaveAndDelete() throws Exception {
@@ -400,7 +396,6 @@ public class TestDatastore {
         ds.save(borg);
         assertEquals(1, ds.getCount(Hotel.class));
         assertNotNull(borg.getId());
-        assertNotNull(borg.getCollectionName());
 
         Hotel hotelLoaded = ds.get(Hotel.class, borg.getId());
         assertEquals(borg.getName(), hotelLoaded.getName());

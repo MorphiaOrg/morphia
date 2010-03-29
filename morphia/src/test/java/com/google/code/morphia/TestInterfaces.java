@@ -48,7 +48,6 @@ public class TestInterfaces {
                     .map(ShapeShifter.class);
 
             Shape rectangle = new Rectangle(2,5);
-            ((Rectangle) rectangle).setCollectionName(shapes.getName());
             
             DBObject rectangleDbObj = morphia.toDBObject(rectangle);
             shapes.save(rectangleDbObj);
@@ -65,7 +64,6 @@ public class TestInterfaces {
             shifter.getAvailableShapes().add(new Rectangle(3,3));
             shifter.getAvailableShapes().add(new Circle(4.4));
 
-            shifter.setCollectionName(shapeshifters.getName());
             DBObject shifterDbObj = morphia.toDBObject(shifter);
             shapeshifters.save(shifterDbObj);
 

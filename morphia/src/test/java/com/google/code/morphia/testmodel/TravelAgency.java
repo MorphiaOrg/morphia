@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("agencies")
 public class TravelAgency extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 

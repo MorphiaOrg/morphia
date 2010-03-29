@@ -30,7 +30,7 @@ import java.util.Vector;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Entity
+@Entity("hotels")
 public class Hotel extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 
