@@ -23,7 +23,7 @@ import com.mongodb.Mongo;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class DatastoreImpl implements Datastore {
+public class DatastoreImpl implements SuperDatastore {
     private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
 
 	protected Morphia morphia;
@@ -57,6 +57,12 @@ public class DatastoreImpl implements Datastore {
 	
 	protected <T,V> void delete(DBCollection dbColl, V id) {
 		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
+	}
+	
+	@Override
+	public <T,V> void delete(String kind, V id) {
+		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		delete(dbColl, id);
 	}
 
 	@Override
@@ -147,14 +153,23 @@ public class DatastoreImpl implements Datastore {
 				if(cap.count() > 0) dbCapOpts.add("max", cap.count());
 				DB db = mongo.getDB(dbName);
 				if (db.getCollectionNames().contains(collName)) {
-					//TODO: check if the dbCollection is already cap'd
-//					DBCollection dbColl = db.getCollection(collName);
-					log.warning("DBCollection already exists with same name(" + collName + "), not creating cap'd version!");
+					DBObject dbResult = db.command(BasicDBObjectBuilder.start("collstats", collName).get());
+					if (dbResult.containsField("capped")) {
+						//TODO: check the cap options.
+						log.warning("DBCollection already exists is cap'd already; doing nothing. " + dbResult);						
+					} else {
+						log.warning("DBCollection already exists with same name(" + collName + ") and is not cap'd; not creating cap'd version!");
+					}
 				} else {
 					mongo.getDB(dbName).createCollection(collName, dbCapOpts.get());
 					log.fine("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
 				}
 			}	
+	}
+
+	@Override
+	public <T> Query<T> find(String kind, Class<T> clazz){
+		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind), this);		
 	}
 
 	@Override
@@ -165,6 +180,13 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value) {
 		Query<T> query = find(clazz);
+		return query.filter(property, value);
+	}
+	
+	@Override
+	public <T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {		
+		Query<T> query = find(kind, clazz);
+		query.offset(offset); query.limit(size);
 		return query.filter(property, value);
 	}
 	
@@ -204,8 +226,15 @@ public class DatastoreImpl implements Datastore {
 	}
 
 	@Override
+	public <T,V> T get(String kind, Class<T> clazz, V id) {
+		List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
+		if (results == null || results.size() == 0) return null;
+		return results.get(0);
+	}
+
+	@Override
 	public <T, V> T get(Class<T> clazz, V id) {
-		List<T> results = find(clazz, Mapper.ID_KEY, id, 0, 1).asList();
+		List<T> results = find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).asList();
 		if (results == null || results.size() == 0) return null;
 		return results.get(0);
 	}
@@ -245,6 +274,11 @@ public class DatastoreImpl implements Datastore {
 	@Override
 	public <T> long getCount(Class<T> clazz) {
 		return getCollection(clazz).getCount();
+	}
+	
+	@Override
+	public long getCount(String kind) {
+		return mongo.getDB(dbName).getCollection(kind).getCount();
 	}
 
 	@Override
@@ -308,6 +342,12 @@ public class DatastoreImpl implements Datastore {
 		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), getId(entity));		
+	}
+
+	@Override
+	public <T> Key<T> save(String kind, T entity) {	
+		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		return save(dbColl, entity);
 	}
 
 	@Override
