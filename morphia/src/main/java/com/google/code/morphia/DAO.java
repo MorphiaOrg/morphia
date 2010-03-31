@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,15 @@ public class DAO<T,K extends Serializable> {
 
     public DAO( Class<T> entityClass, Mongo mongo, Morphia morphia, String dbName ) {
         this.entityClass = entityClass;
+        this.mongo = mongo;
+        this.morphia = morphia;
+        this.dbName = dbName;
+        this.collectionName = morphia.getMapper().getCollectionName(entityClass);
+        this.morphia.map(entityClass);
+    }
+
+    protected DAO( Mongo mongo, Morphia morphia, String dbName ) {
+        this.entityClass = ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         this.mongo = mongo;
         this.morphia = morphia;
         this.dbName = dbName;
