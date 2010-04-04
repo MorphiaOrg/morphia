@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +32,7 @@ import org.junit.Test;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Article;
 import com.google.code.morphia.testmodel.Circle;
@@ -90,17 +92,40 @@ public class TestMapping {
 	}
 	
 	public static class NotEmbeddable {
-		String noImNot;
+		String noImNot = "no, I'm not";
+	}
+	public static class SerializableClass implements Serializable {
+		private static final long serialVersionUID = 1L;
+		String someString = "hi, from the ether.";
 	}
 
 	public static class ContainsRef {
 		public @Id String id;
 		public DBRef rect;
 	}
+
+	public static class ContainsFinalField{
+		public final @Id long id;
+		public String name;
+		
+		protected ContainsFinalField() {
+			//only called when loaded by the persistence framework.
+			id = -1;
+		}
+		
+		public ContainsFinalField(long id) {
+			this.id = id;
+		}
+	}
 	
 	public static class ContainsbyteArray {
 		@Id String id;
 		byte[] bytes = "Scott".getBytes();
+	}
+
+	public static class ContainsSerializedData{
+		@Id String id;
+		@Serialized SerializableClass data = new SerializableClass();
 	}
 
 	public static class ContainsLongAndStringArray {
@@ -116,6 +141,18 @@ public class TestMapping {
 		private ContainsCollection() {
 			coll.add("hi"); coll.add("Scott");
 		}
+	}
+
+	@Test
+    public void testFinalField() throws Exception {
+		DatastoreService.setDatabase("morphia_test");
+		Datastore ds = (Datastore)DatastoreService.getDatastore();
+		DatastoreService.mapClass(ContainsFinalField.class);
+		Key<ContainsFinalField> savedKey = ds.save(new ContainsFinalField(12));
+		ContainsFinalField loaded = ds.get(ContainsFinalField.class, savedKey.getId());
+		assertNotNull(loaded);        
+		assertEquals(loaded.id, 12);
+		assertNotNull(loaded.id);        
 	}
 
 	@Test
@@ -137,6 +174,18 @@ public class TestMapping {
 		Key<ContainsbyteArray> savedKey = ds.save(new ContainsbyteArray());
 		ContainsbyteArray loaded = ds.get(ContainsbyteArray.class, savedKey.getId());
 		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
+		assertNotNull(loaded.id);        
+	}
+	
+	@Test
+    public void testSerializedMapping() throws Exception {
+		DatastoreService.setDatabase("morphia_test");
+		Datastore ds = (Datastore)DatastoreService.getDatastore();
+		DatastoreService.mapClass(ContainsSerializedData.class);
+		Key<ContainsSerializedData> savedKey = ds.save(new ContainsSerializedData());
+		ContainsSerializedData loaded = ds.get(ContainsSerializedData.class, savedKey.getId());
+		assertNotNull(loaded.data);        		
+		assertEquals(loaded.data.someString, (new ContainsSerializedData()).data.someString);
 		assertNotNull(loaded.id);        
 	}
 

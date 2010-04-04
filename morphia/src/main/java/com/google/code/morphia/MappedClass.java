@@ -27,6 +27,7 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
@@ -265,7 +266,7 @@ public class MappedClass {
 		protected Field field;
 		protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 		public String name;
-		protected Class[] interestingAnnotations = new Class[] {Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
+		protected Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
 		protected Class subType = null;
 		protected boolean bSingleValue = true;
 		protected boolean bMongoType = false;
@@ -318,6 +319,12 @@ public class MappedClass {
 
 			if (mappingAnnotations.get(Reference.class) != null && mappingAnnotations.get(Embedded.class) != null)
 				throw new RuntimeException("@Refernce and @Embedded cannot be on the same Field: " + field.getName());
+
+			if (mappingAnnotations.get(Reference.class) != null && mappingAnnotations.get(Serialized.class) != null)
+				throw new RuntimeException("@Refernce and @Serialized cannot be on the same Field: " + field.getName());
+
+			if (mappingAnnotations.get(Embedded.class) != null && mappingAnnotations.get(Serialized.class) != null)
+				throw new RuntimeException("@Embedded and @Serialized cannot be on the same Field: " + field.getName());
 		}
 		/**
 		 * Returns the name of the field's key-name for mongodb 

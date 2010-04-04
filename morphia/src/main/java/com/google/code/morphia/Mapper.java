@@ -16,6 +16,11 @@
 
 package com.google.code.morphia;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -40,9 +45,11 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.utils.Key;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBBinary;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.ObjectId;
@@ -65,7 +72,6 @@ public class Mapper {
     private final ConcurrentHashMap<String,MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
     
     private final ThreadLocal<Map<String, Object>> entityCache = new ThreadLocal<Map<String, Object>>();
-
 
     Mapper() {
     }
@@ -236,7 +242,7 @@ public class Mapper {
 	                mapReferencesToDBObject(entity, mf, dbObject);
 	            } else  if (mf.hasAnnotation(Embedded.class)){
 	                mapEmbeddedToDBObject(entity, mf, dbObject);
-	            } else if (mf.isMongoTypeCompatible()) {
+	            } else if (mf.hasAnnotation(Serialized.class) || mf.isMongoTypeCompatible()) {
 	            	mapValuesToDBObject(entity, mf, dbObject);
 	            } else {
 	            	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
@@ -327,9 +333,16 @@ public class Mapper {
 	    	String name = mf.name;
 	        Class fieldType = mf.field.getType();
 	        Object fieldValue = mf.field.get(entity);
-	
+	        boolean isSerialized = mf.hasAnnotation(Serialized.class);
+	        
+	        if (isSerialized) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(baos);
+				oos.writeObject(fieldValue);
+				dbObject.put(name, baos.toByteArray());
+	        }
 	        //sets and list are stored in mongodb as ArrayLists
-	        if (mf.isMap()) {
+	        else if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) mf.field.get(entity);
 	            if (map != null && map.size() > 0) {
 	                Map mapForDb = new HashMap();
@@ -417,7 +430,7 @@ public class Mapper {
 	            } else if ( mf.hasAnnotation(Embedded.class) ) {
 	                mapEmbeddedFromDBObject(dbObject, mf, entity);
 	                
-	            } else if ( mf.hasAnnotation(Property.class) || mf.isMongoTypeCompatible()) {
+	            } else if ( mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isMongoTypeCompatible()) {
 	            	mapValuesFromDBObject(dbObject, mf, entity);
 	            } else {
 	            	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
@@ -434,8 +447,28 @@ public class Mapper {
         String name = mf.name;
         try {
 	        Class fieldType = mf.field.getType();
+	        boolean isSerialized = mf.hasAnnotation(Serialized.class);
 	        
-	        if (mf.isMap()) {
+	        if (isSerialized) {
+	        	Object data = dbObject.get(name);
+	        	if (!(data instanceof DBBinary || data instanceof byte[]))
+	        		throw new MappingException("The stored data is not a DBBinary or byte[] instance for " + mf.field + " ; it is a " + data.getClass().getName());
+
+				try
+				{
+					ByteArrayInputStream bais;
+					if (data instanceof DBBinary)
+						bais = new ByteArrayInputStream(((DBBinary)data).getData());
+					else 
+						bais = new ByteArrayInputStream((byte[])data);
+					
+					ObjectInputStream ois = new ObjectInputStream(bais);
+
+					mf.field.set(entity, ois.readObject());
+				}
+				catch (IOException ex) { throw new RuntimeException(ex); }
+				catch (ClassNotFoundException ex) { throw new IllegalStateException("Unable to deserialize " + data + " on field " + mf.field , ex); }
+	        } else if (mf.isMap()) {
 		        if ( dbObject.containsField(name) ) {
 		            Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
 	                Map values = (Map)notObjInst(HashMap.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
