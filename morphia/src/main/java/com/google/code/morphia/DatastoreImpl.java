@@ -73,7 +73,7 @@ public class DatastoreImpl implements SuperDatastore {
 	
 	@Override
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
-		//TODO: see about batching deletes
+		//TODO: see about batching deletes with remove({_id : {$in: [ids]}})
 		for(V id : ids)
 			delete(clazz, id);
 	}
@@ -129,7 +129,7 @@ public class DatastoreImpl implements SuperDatastore {
 	
 	@Override
 	public void ensureIndexes() {
-		//TODO loop over mappedClasses and call ensureIndex for each one on non-embedded objects (for now)
+		//loops over mappedClasses and call ensureIndex for each @Entity object (for now)
 		for(MappedClass mc : morphia.getMappedClasses().values()){
 			if (mc.entityAn == null) continue;
 			for(MappedField mf : mc.persistenceFields){
@@ -169,7 +169,7 @@ public class DatastoreImpl implements SuperDatastore {
 
 	@Override
 	public <T> Query<T> find(String kind, Class<T> clazz){
-		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind), this);		
+		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind),	 this);		
 	}
 
 	@Override

@@ -98,7 +98,7 @@ public class MappedClass {
 
         
         defCollName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
-        for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, false)) {
+        for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
         	field.setAccessible(true);
             if (field.isAnnotationPresent(Id.class)) {
             	idField = field;
