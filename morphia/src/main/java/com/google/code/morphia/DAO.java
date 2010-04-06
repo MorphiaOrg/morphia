@@ -76,11 +76,7 @@ public class DAO<T,K extends Serializable> {
 
     public T get( K id ) {
         BasicDBObject dbObject = (BasicDBObject) collection().findOne(Mapper.asObjectIdMaybe(id));
-        if ( dbObject == null ) {
-            return null;
-        } else {
-            return map(dbObject);
-        }
+        return dbObject != null ? map(dbObject) : null;
     }
 
     public List<K> getIds( String key, Object value ) {
@@ -139,9 +135,11 @@ public class DAO<T,K extends Serializable> {
 
     public T findOne( Map<String,Object> query, Map<String,Integer> fields ) {
         if ( fields != null && !fields.isEmpty() ) {
-            return map((BasicDBObject)collection().findOne(new BasicDBObject(query), new BasicDBObject(fields)));
+            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(query), new BasicDBObject(fields));
+            return dbObject != null ? map(dbObject) : null;
         } else {
-            return map((BasicDBObject)collection().findOne(new BasicDBObject(query)));
+            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(query));
+            return dbObject != null ? map(dbObject) : null;
         }
     }
 
