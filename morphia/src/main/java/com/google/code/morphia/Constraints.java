@@ -139,11 +139,13 @@ public class Constraints implements Serializable {
      * Specifiy that the field with the name supplied should be
      * returned in the results.
      *
-     * @param name
+     * @param names names of fields to include
      * @return
      */
-    public Constraints include( String name ) {
-        fields.put(name, 1);
+    public Constraints include( String... names ) {
+        for ( String name : names ) {
+            fields.put(name, 1);
+        }
         return this;
     }
 
@@ -151,11 +153,13 @@ public class Constraints implements Serializable {
      * Specifiy that the field with the name supplied should NOT be
      * returned in the results.
      *
-     * @param name
+     * @param names names of fields to exclude
      * @return
      */
-    public Constraints exclude( String name ) {
-        fields.put(name, 0);
+    public Constraints exclude( String... names ) {
+        for ( String name : names ) {
+            fields.put(name, 0);
+        }
         return this;
     }
 

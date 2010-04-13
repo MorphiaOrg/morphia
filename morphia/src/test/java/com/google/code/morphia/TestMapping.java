@@ -346,6 +346,21 @@ public class TestMapping {
             assertEquals(agency.getHotels().size(), 1);
             assertEquals(agency.getHotels().get(0).getName(), borg.getName());
 
+            // try clearing values
+            borgLoaded.setAddress(null);
+            borgLoaded.getPhoneNumbers().clear();
+            borgLoaded.setName(null);
+
+            hotelDbObj = (BasicDBObject) morphia.toDBObject(borgLoaded);
+            hotels.save(hotelDbObj);
+
+            hotelDbObj = (BasicDBObject)hotels.findOne(new BasicDBObject(Mapper.ID_KEY, hotelDbObj.get(Mapper.ID_KEY)));
+
+            borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj);
+            assertNull(borgLoaded.getAddress());
+            assertEquals(0, borgLoaded.getPhoneNumbers().size());
+            assertNull(borgLoaded.getName());
+
         } finally {
             db.dropDatabase();
         }
