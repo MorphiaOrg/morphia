@@ -609,9 +609,12 @@ public class Mapper {
 	                    DBRef dbRef = (DBRef) entry.getValue();
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
-	                    Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-	                    refObj = mapDBObjectToEntity(refDbObject, refObj);
-	                    map.put(entry.getKey(), refObj);
+                        // handle broken references with "no action"
+                        if (refDbObject != null) {
+                            Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                            refObj = mapDBObjectToEntity(refDbObject, refObj);
+                            map.put(entry.getKey(), refObj);
+                        }
 	                }
 	            }
 	            mf.field.set(entity, map);
@@ -630,17 +633,24 @@ public class Mapper {
 	                    for ( Object dbRefObj : refList ) {
 	                        DBRef dbRef = (DBRef) dbRefObj;
 	                        BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-	
-	                        Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-	                        refObj = mapDBObjectToEntity(refDbObject, refObj);
-	                        references.add(refObj);
+
+                            // handle broken references with "no action"
+                            if (refDbObject != null) {
+                                Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                                refObj = mapDBObjectToEntity(refDbObject, refObj);
+                                references.add(refObj);
+                            }
 	                    }
 	                } else {
 	                    DBRef dbRef = (DBRef) dbObject.get(name);
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-	                    Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-	                    refObj = mapDBObjectToEntity(refDbObject, refObj);
-	                    references.add(refObj);
+
+                        // handle broken references with "no action"
+                        if (refDbObject != null) {
+                            Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                            refObj = mapDBObjectToEntity(refDbObject, refObj);
+                            references.add(refObj);
+                        }
 	                }
 	            }
 	            
@@ -651,10 +661,13 @@ public class Mapper {
 	            if ( dbObject.containsField(name) ) {
 	                DBRef dbRef = (DBRef) dbObject.get(name);
 	                BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-	
-	                Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-	                refObj = mapDBObjectToEntity(refDbObject, refObj);
-	                mf.field.set(entity, refObj);
+
+                    // handle broken references with "no action"
+                    if (refDbObject != null) {
+                        Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                        refObj = mapDBObjectToEntity(refDbObject, refObj);
+                        mf.field.set(entity, refObj);
+                    }
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
