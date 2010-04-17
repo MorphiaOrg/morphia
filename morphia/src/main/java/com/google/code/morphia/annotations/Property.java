@@ -16,20 +16,22 @@
 
 package com.google.code.morphia.annotations;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.HashMap;
 
 import com.google.code.morphia.mapping.Mapper;
 
 /**
  * Optional annotation for specifying persistence behavior 
  * 
- * @author Scott Hernandez
  * @author Olafur Gauti Gudmundsson
+ * @author Scott Hernandez
  */
+@Documented @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Property {
@@ -38,5 +40,5 @@ public @interface Property {
     String value() default Mapper.IGNORED_FIELDNAME;
  
     /** Specify the concrete class to instantiate. */
-    Class<?> concreteClass() default HashMap.class;
+    Class<?> concreteClass() default Object.class;
 }

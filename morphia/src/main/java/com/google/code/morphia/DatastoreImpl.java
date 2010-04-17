@@ -8,9 +8,9 @@ import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.google.code.morphia.mapping.MappedClass.MappedField;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.UpdateOperations;
@@ -152,7 +152,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 		for(MappedField mf : mc.getPersistenceFields()){
 			if(mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
-				ensureIndex(index.name(), mc.getClazz(), mf.name,index.value(), index.unique(), index.dropDups());
+				ensureIndex(index.name(), mc.getClazz(), mf.getName(), index.value(), index.unique(), index.dropDups());
 			}
 		}
 	}

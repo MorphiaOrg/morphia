@@ -46,7 +46,6 @@ import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-import com.google.code.morphia.mapping.MappedClass.MappedField;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBBinary;
@@ -191,8 +190,14 @@ public class Mapper {
     }
 
     /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
-    protected Object notObjInst(Class fallbackType, Class testType) {
-    	if (testType != null && testType != Object.class) return createInstance(testType);
+    protected Object notObjInst(Class fallbackType, Constructor tryMe) {
+    	if (tryMe != null) {
+    		tryMe.setAccessible(true);
+    		try {
+				return tryMe.newInstance();}
+    		catch (Exception e) {
+				throw new RuntimeException(e);}
+    	}
     	return createInstance(fallbackType);
     }
     
@@ -281,7 +286,6 @@ public class Mapper {
 
     void mapReferencesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject) {
     	try {
-	    	Reference refAnn = (Reference)mf.getAnnotation(Reference.class);
 	        String name = mf.name;
 	
 	        Object fieldValue = mf.field.get(entity);
@@ -289,7 +293,7 @@ public class Mapper {
 	        if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) fieldValue;
 	            if ( map != null && map.size() > 0) {
-	                Map values = (Map)notObjInst(HashMap.class, (refAnn == null) ? null : refAnn.concreteClass());
+	                Map values = (Map)notObjInst(HashMap.class, mf.getCTor());
 
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 	                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
@@ -469,7 +473,6 @@ public class Mapper {
     }
 
     void mapValuesFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
-        Property propAnnotation = (Property)mf.getAnnotation(Property.class);
         String name = mf.name;
         try {
 	        Class fieldType = mf.field.getType();
@@ -497,7 +500,7 @@ public class Mapper {
 	        } else if (mf.isMap()) {
 		        if ( dbObject.containsField(name) ) {
 		            Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
-	                Map values = (Map)notObjInst(HashMap.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
+	                Map values = (Map)notObjInst(HashMap.class, mf.getCTor());
 		            for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
 		            	values.put(entry.getKey(), objectFromValue(fieldType, entry.getValue()));
 		            }
@@ -522,9 +525,9 @@ public class Mapper {
 	                    Collection values;
 	                    
 	                    if (!bSet)
-	    	                values = (List)notObjInst(ArrayList.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
+	    	                values = (List)notObjInst(ArrayList.class, mf.getCTor());
 	                    else
-	    	                values = (Set)notObjInst(HashSet.class, (propAnnotation == null) ? null : propAnnotation.concreteClass());
+	    	                values = (Set)notObjInst(HashSet.class, mf.getCTor());
 	                    
 	                    if (subtype == Locale.class) {
 	                        for ( Object o : list )
@@ -562,14 +565,13 @@ public class Mapper {
     }
 
 	void mapEmbeddedFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
-        Embedded embeddedAnn = (Embedded)mf.getAnnotation(Embedded.class);
         String name = mf.name;
 
         Class fieldType = mf.field.getType();
         try {
 	        if (mf.isMap()) {
 	            Class docObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-	            Map map = (Map)notObjInst(HashMap.class, (embeddedAnn == null) ? null : embeddedAnn.concreteClass());
+	            Map map = (Map)notObjInst(HashMap.class, mf.getCTor());
 
 	            if ( dbObject.containsField(name) ) {
 	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
@@ -585,7 +587,7 @@ public class Mapper {
 	
 	        	// multiple documents in a List
 	            Class docObjClass = mf.subType;
-	            Collection docs = (Collection)notObjInst((bList) ? ArrayList.class : HashSet.class, embeddedAnn.concreteClass());
+	            Collection docs = (Collection)notObjInst((bList) ? ArrayList.class : HashSet.class, mf.getCTor());
 	
 	            if ( dbObject.containsField(name) ) {
 	                Object value = dbObject.get(name);
@@ -618,16 +620,14 @@ public class Mapper {
     }
 
     void mapReferencesFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
-        Reference refAnn = (Reference)mf.getAnnotation(Reference.class);
-        String name = mf.name;
+        String name = mf.getName();
 
-        
-        Class fieldType = mf.field.getType();
+        Class fieldType = mf.getType();
 
     	try {
 	    	if (mf.isMap()) {
 	            Class referenceObjClass = ReflectionUtils.getParameterizedClass(mf.field, 1);
-	            Map map = (Map)notObjInst(HashMap.class, (refAnn == null) ? null : refAnn.concreteClass());
+	            Map map = (Map)notObjInst(HashMap.class, mf.getCTor());
 
 	            if ( dbObject.containsField(name) ) {
 	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
@@ -650,7 +650,7 @@ public class Mapper {
 	
 	            // multiple references in a List
 	            Class referenceObjClass = mf.subType;
-	            Collection references = (Collection) notObjInst((!bSet) ? ArrayList.class : HashSet.class, refAnn.concreteClass());
+	            Collection references = (Collection) notObjInst((!bSet) ? ArrayList.class : HashSet.class, mf.getCTor());
 	        	
 	            if ( dbObject.containsField(name) ) {
 	                Object value = dbObject.get(name);

@@ -3,7 +3,6 @@ package com.google.code.morphia.query;
 import java.util.List;
 
 import com.google.code.morphia.Key;
-import com.google.code.morphia.mapping.FieldPart;
 
 /**
  * @author Scott Hernandez

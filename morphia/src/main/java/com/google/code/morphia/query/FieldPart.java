@@ -1,6 +1,5 @@
-package com.google.code.morphia.mapping;
+package com.google.code.morphia.query;
 
-import com.google.code.morphia.query.Query;
 
 public interface FieldPart<T> {
 	
