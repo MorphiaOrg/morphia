@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.MappedClass.MappedField;
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.mapping.MappedClass.MappedField;
+import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryImpl;
+import com.google.code.morphia.query.UpdateOperations;
+import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.utils.IndexDirection;
-import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -23,7 +29,7 @@ import com.mongodb.Mongo;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class DatastoreImpl implements SuperDatastore {
+public class DatastoreImpl implements Datastore, SuperDatastore {
     private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
 
 	protected Morphia morphia;
@@ -54,13 +60,20 @@ public class DatastoreImpl implements SuperDatastore {
 		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return createRef(entity.getClass(), id);
 	}
+
+	@Override
+	public <T> Key<T> getKey(T entity) {
+		Object id = getId(entity);
+		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
+		return new Key<T>((Class<T>)entity.getClass(), id);
+	}
 	
 	protected <T,V> void delete(DBCollection dbColl, V id) {
 		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, asObjectIdMaybe(id)).get());
 	}
 	
 	@Override
-	public <T,V> void delete(String kind, V id) {
+	public <T> void delete(String kind, T id) {
 		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
 		delete(dbColl, id);
 	}
@@ -86,6 +99,13 @@ public class DatastoreImpl implements SuperDatastore {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public <T> void delete(Query<T> query) {
+		DBCollection dbColl = getCollection(query.getType());
+		QueryImpl<T> q = (QueryImpl<T>) query;
+		dbColl.remove(q.getQueryObject());
 	}
 
 	protected <T> void ensureIndex(String name, Class<T> clazz, String fieldName, IndexDirection dir, boolean unique, boolean dropDupsOnCreate) {
@@ -127,17 +147,27 @@ public class DatastoreImpl implements SuperDatastore {
 		ensureIndex(entity.getClass(), name, dir);
 	}
 	
+	protected void ensureIndexes(MappedClass mc) {
+		if (mc.getEntityAnnotation() == null) return;
+		for(MappedField mf : mc.getPersistenceFields()){
+			if(mf.hasAnnotation(Indexed.class)) {
+				Indexed index = mf.getAnnotation(Indexed.class);
+				ensureIndex(index.name(), mc.getClazz(), mf.name,index.value(), index.unique(), index.dropDups());
+			}
+		}
+	}
+	
+	@Override
+	public <T> void ensureIndexes(Class<T> clazz) {
+		MappedClass mc = morphia.getMapper().getMappedClass(clazz);
+		ensureIndexes(mc);
+	}
+
 	@Override
 	public void ensureIndexes() {
 		//loops over mappedClasses and call ensureIndex for each @Entity object (for now)
 		for(MappedClass mc : morphia.getMappedClasses().values()){
-			if (mc.entityAn == null) continue;
-			for(MappedField mf : mc.persistenceFields){
-				if(mf.hasAnnotation(Indexed.class)) {
-					Indexed index = mf.getAnnotation(Indexed.class);
-					ensureIndex(index.name(), mc.clazz, mf.name,index.value(), index.unique(), index.dropDups());
-				}
-			}
+			ensureIndexes(mc);
 		}
 	}
 
@@ -145,9 +175,9 @@ public class DatastoreImpl implements SuperDatastore {
 	public void ensureCaps() {
 		Mapper mapr = morphia.getMapper();
 		for(MappedClass mc : mapr.getMappedClasses().values())
-			if (mc.entityAn != null && mc.entityAn.cap().value() > 0) {
-				CappedAt cap = mc.entityAn.cap();
-				String collName = mapr.getCollectionName(mc.clazz);
+			if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
+				CappedAt cap = mc.getEntityAnnotation().cap();
+				String collName = mapr.getCollectionName(mc.getClazz());
 				BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
 				if(cap.value() > 0) dbCapOpts.add("size", cap.value());
 				if(cap.count() > 0) dbCapOpts.add("max", cap.count());
@@ -299,7 +329,7 @@ public class DatastoreImpl implements SuperDatastore {
 			mc = new MappedClass(entity.getClass());
 		
 		try {
-			return mc.idField.get(entity);
+			return mc.getIdField().get(entity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -311,8 +341,8 @@ public class DatastoreImpl implements SuperDatastore {
 	}
 
 	@Override
-	public Morphia getMorphia() {
-		return this.morphia;
+	public Mapper getMapper() {
+		return this.morphia.getMapper();
 	}
 
 	@Override
@@ -354,5 +384,32 @@ public class DatastoreImpl implements SuperDatastore {
 	public <T> Key<T> save(T entity) {
 		DBCollection dbColl = getCollection(entity);
 		return save(dbColl, entity);
-    }	
+    }
+
+
+	@Override
+	public UpdateOperations ops() {
+		return new UpdateOpsImpl(getMapper());
+	}
+
+	@Override
+	public <T> void update(Query<T> query, UpdateOperations ops) {
+		update(query, ops, false);
+	}
+
+	@Override
+	public <T> void update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
+		DBCollection dbColl = getCollection(query.getType());
+		DBObject q = ((QueryImpl<T>)query).getQueryObject();
+		DBObject u = ((UpdateOpsImpl)ops).getOps();
+		dbColl.update(q, u, createIfMissing, true);
+	}
+
+	@Override
+	public <T> void updateFirst(Query<T> query, UpdateOperations ops) {
+		DBCollection dbColl = getCollection(query.getType());
+		DBObject q = ((QueryImpl<T>)query).getQueryObject();
+		DBObject u = ((UpdateOpsImpl)ops).getOps();
+		dbColl.update(q, u);
+	}
 }

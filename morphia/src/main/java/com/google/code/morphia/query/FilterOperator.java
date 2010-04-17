@@ -1,4 +1,4 @@
-package com.google.code.morphia;
+package com.google.code.morphia.query;
 
 /**
  * 

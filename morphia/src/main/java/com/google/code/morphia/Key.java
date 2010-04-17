@@ -1,8 +1,8 @@
-package com.google.code.morphia.utils;
+package com.google.code.morphia;
 
 import java.io.Serializable;
 
-import com.google.code.morphia.Mapper;
+import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.DBRef;
 
 /**
@@ -13,8 +13,8 @@ import com.mongodb.DBRef;
  * <p>You may use normal DBRef objects as relationships in your entities if you
  * desire neither type safety nor GWTability.</p>
  * 
- * @author Jeff Schnitzer <jeff@infohazard.org> (from Objectify code-base)
- * @author Scott Hernandez
+ * @author Jeff Schnitzer <jeff@infohazard.org> (from Objectify codebase)
+ * @author Scott Hernandez (adapted to morphia/mongodb)
  */
 public class Key<T> implements Serializable, Comparable<Key<?>>
 {
@@ -29,9 +29,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	protected String kind;
 	protected Class<? extends T> kindClass;
 	
-	/** Null if there is no parent */
-	protected Key<?> parent;
-	
 	/** Either id or name will be valid */
 	protected Object id;
 
@@ -41,13 +38,13 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	/** Create a key with an id */
 	public Key(Class<? extends T> kind, Object id)
 	{
-		this(null, kind, id);
+		this.kindClass = kind;
+		this.id = id;
 	}
 	
 	/** Create a key with an id */
 	public Key(String kind, Object id)
 	{
-		this.parent = null;
 		this.kind = kind;
 		this.id = id;
 	}
@@ -55,7 +52,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	/** Create a key with a DBRef*/
 	public Key(DBRef ref)
 	{
-		this.parent = null;
 		this.kind = ref.getRef();
 		this.id = ref.getId();
 	}
@@ -70,14 +66,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 		if (kindClass == null && kind == null) throw new IllegalStateException("missing kindClass; please call toRef(Mapper)");
 		kind = mapr.getCollectionName(kindClass);
 		return new DBRef(null, kind, id);
-	}
-	
-	/** Create a key with a parent and a long id */
-	public Key(Key<?> parent, Class<? extends T> kind, Object id)
-	{
-		this.parent = parent;
-		this.kindClass = kind;
-		this.id = id;
 	}
 	
 	/**
@@ -104,18 +92,9 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 		if (kind == null && kindClass == null) 
 			throw new IllegalStateException("Key is invalid! " + toString());
 		else if (kind == null) 
-			kind = mapr.getMappedClass(kindClass).defCollName;
+			kind = mapr.getMappedClass(kindClass).getCollectionName();
 		
 		return kind;
-	}
-	/**
-	 * @return the parent key, or null if there is no parent.  Note that
-	 *  the parent could potentially have any type. 
-	 */
-	@SuppressWarnings("unchecked")
-	public <V> Key<V> getParent()
-	{
-		return (Key<V>)this.parent;
 	}
 
 	/**
@@ -138,11 +117,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 				return cmp;
 		}
 		cmp = compareNullable(this.kind, other.kind);
-		if (cmp != 0)
-			return cmp;
-
-		// Then parent
-		cmp = compareNullable(this.parent, other.parent);
 		if (cmp != 0)
 			return cmp;
 
@@ -190,8 +164,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 			bld.append("kindClass=");
 			bld.append(this.kindClass.getName());			
 		}
-		bld.append(", parent=");
-		bld.append(this.parent);
 		bld.append(", id=");
 		bld.append(this.id);
 		bld.append("}");

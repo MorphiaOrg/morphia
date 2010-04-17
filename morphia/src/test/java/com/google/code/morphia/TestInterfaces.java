@@ -16,6 +16,7 @@
 
 package com.google.code.morphia;
 
+import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testmodel.Shape;

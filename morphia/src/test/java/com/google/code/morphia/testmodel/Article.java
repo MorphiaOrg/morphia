@@ -13,13 +13,14 @@ import java.util.Map;
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("articles")
+@SuppressWarnings("unchecked")
 public class Article extends AbstractMongoEntity {
 	private static final long serialVersionUID = 1L;
 
     @Embedded
     private Map<String,Translation> translations;
-    @Property
-    private Map<String,Object> attributes;
+	@Property
+    private Map attributes;
     @Reference
     private Map<String,Article> related;
 

@@ -18,7 +18,6 @@ package com.google.code.morphia;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.UnknownHostException;
@@ -38,10 +37,10 @@ import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Transient;
+import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
-import com.google.code.morphia.utils.Key;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -169,81 +168,6 @@ public class TestDatastore {
 	}
 
 	@Test
-    public void testKeyList() throws Exception {
-		Rectangle rect = new Rectangle(1000, 1);
-		Key<Rectangle> rectKey = ds.save(rect);
-		
-		assertEquals(rectKey.getId(), rect.getId());
-		
-		FacebookUser fbUser1 = new FacebookUser(1, "scott");
-		FacebookUser fbUser2 = new FacebookUser(2, "tom");
-		FacebookUser fbUser3 = new FacebookUser(3, "oli");
-		FacebookUser fbUser4 = new FacebookUser(4, "frank");
-		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
-		assertEquals(fbUser1.id, 1);
-
-		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
-		for(Key<FacebookUser> key :fbKeys)
-			fbUserKeys.add(key);
-
-		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
-		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
-		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
-		assertEquals(fbUser4.id, fbUserKeys.get(3).getId());
-		
-		KeysKeysKeys k1 = new KeysKeysKeys(rectKey, fbUserKeys);
-		Key<KeysKeysKeys> k1Key = ds.save(k1);
-		assertEquals(k1.id, k1Key.getId());
-		
-		KeysKeysKeys k1Loaded = ds.get(k1);
-		for(Key<FacebookUser> key :k1Loaded.users)
-			assertNotNull(key.getId());
-		
-		assertNotNull(k1Loaded.rect.getId());	
-	}
-
-	@Test
-    public void testKeyListLookups() throws Exception {
-		FacebookUser fbUser1 = new FacebookUser(1, "scott");
-		FacebookUser fbUser2 = new FacebookUser(2, "tom");
-		FacebookUser fbUser3 = new FacebookUser(3, "oli");
-		FacebookUser fbUser4 = new FacebookUser(4, "frank");
-		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
-		assertEquals(fbUser1.id, 1);
-
-		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
-		for(Key<FacebookUser> key :fbKeys)
-			fbUserKeys.add(key);
-
-		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
-		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
-		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
-		assertEquals(fbUser4.id, fbUserKeys.get(3).getId());
-		
-		KeysKeysKeys k1 = new KeysKeysKeys(null, fbUserKeys);
-		Key<KeysKeysKeys> k1Key = ds.save(k1);
-		assertEquals(k1.id, k1Key.getId());
-		
-		KeysKeysKeys k1Reloaded = ds.get(k1);
-		KeysKeysKeys k1Loaded = ds.get(KeysKeysKeys.class, k1Key);
-		assertNotNull(k1Reloaded);
-		assertNotNull(k1Loaded);
-		for(Key<FacebookUser> key :k1Loaded.users)
-			assertNotNull(key.getId());
-		
-		assertEquals(k1Loaded.users.size(), 4);
-		
-		List<FacebookUser> fbUsers = ds.getByKeys(FacebookUser.class, k1Loaded.users).asList();
-		assertEquals(fbUsers.size(), 4);
-		for(FacebookUser fbUser : fbUsers) {
-			assertNotNull(fbUser);
-			assertNotNull(fbUser.id);
-			assertNotNull(fbUser.username);
-		}
-			
-		
-	}
-	@Test
     public void testLowlevelbyteArray() throws Exception {
 	    Mongo m = new Mongo();
 		DBCollection c = m.getDB("test").getCollection( "testBinary" );
@@ -262,19 +186,9 @@ public class TestDatastore {
 	}
 	
 	@Test
-    public void testNonexistantGet() throws Exception {
-		assertNull(ds.get(Hotel.class, -1));
-	}
-
-	@Test
-    public void testNonexistantFindGet() throws Exception {
-		assertNull(ds.find(Hotel.class,"_id", -1).get());
-	}
-
-	@Test
     public void testLifecycle() throws Exception {
 		LifecycleTestObj life1 = new LifecycleTestObj();
-		ds.getMorphia().map(LifecycleTestObj.class);
+		ds.getMapper().addMappedClass(LifecycleTestObj.class);
 		ds.save(life1);
 		assertTrue(life1.prePersist);
 		assertTrue(life1.prePersistWithParam);
@@ -319,7 +233,8 @@ public class TestDatastore {
 		Rectangle rect = new Rectangle(10, 10);
 		ds.save(rect);
 		assertNotNull(rect.getId());
-	}	
+	}
+
 	@Test
     public void testSaveAndDelete() throws Exception {
 		Rectangle rect = new Rectangle(10, 10);

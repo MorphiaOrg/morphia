@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.code.morphia;
+package com.google.code.morphia.mapping;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.MappedClass.MappedField;
+import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
@@ -46,7 +46,7 @@ import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-import com.google.code.morphia.utils.Key;
+import com.google.code.morphia.mapping.MappedClass.MappedField;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBBinary;
@@ -73,26 +73,26 @@ public class Mapper {
     
     private final ThreadLocal<Map<String, Object>> entityCache = new ThreadLocal<Map<String, Object>>();
 
-    Mapper() {
+    public Mapper() {
     }
 
-    boolean isMapped(Class c) {
+    public boolean isMapped(Class c) {
         return mappedClasses.containsKey(c.getName());
     }
 
-    void addMappedClass(Class c) {
+    public void addMappedClass(Class c) {
     	MappedClass mc = new MappedClass(c);
     	mc.validate();
         mappedClasses.put(c.getName(), mc);
     }
 
-    MappedClass addMappedClass(MappedClass mc) {
+    public MappedClass addMappedClass(MappedClass mc) {
     	mc.validate();
-        mappedClasses.put(mc.clazz.getName(), mc);
+        mappedClasses.put(mc.getClazz().getName(), mc);
         return mc;
     }
 
-    Map<String, MappedClass> getMappedClasses() {
+    public Map<String, MappedClass> getMappedClasses() {
         return mappedClasses;
     }
 
@@ -104,30 +104,23 @@ public class Mapper {
 		if (mc == null) {
 			//no validation
 			mc = new MappedClass(type);
-			this.mappedClasses.put(mc.clazz.getName(), mc);
+			this.mappedClasses.put(mc.getClazz().getName(), mc);
 		}
 		return mc;
 	}
 
-    void clearHistory() {
+    public void clearHistory() {
         entityCache.remove();
     }
 
     public String getCollectionName(Object object) {
-    	if (object instanceof Class) return getCollectionName((Class) object);
-    	
     	MappedClass mc = getMappedClass(object);
-        return mc.defCollName;
-    }
-    
-	public String getCollectionName(Class clazz) {
-	  	MappedClass mc = getMappedClass(clazz);
-    	return mc.defCollName;
+        return mc.getCollectionName();
     }
 
     private String getId(Object entity) {
         try {
-            return (String)getMappedClass(entity).idField.get(entity);
+            return (String)getMappedClass(entity).getIdField().get(entity);
         } catch ( IllegalAccessException iae ) {
             throw new RuntimeException(iae);
         }
@@ -139,23 +132,23 @@ public class Mapper {
      * @param dbId Value to update with; null means skip
      * @param dbNs Value to update with; null or empty means skip
      */
-	void updateKeyInfo(Object entity, Object dbId, String dbNs) {
+	public void updateKeyInfo(Object entity, Object dbId, String dbNs) {
 		MappedClass mc = getMappedClass(entity);
 		
 		//update id field, if there.
-		if (mc.idField != null && dbId != null) {
+		if (mc.getIdField() != null && dbId != null) {
 			try {
-				Object value = mc.idField.get(entity);
+				Object value = mc.getIdField().get(entity);
 				if ( value != null ) {
 					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
 			    	if (!dbId.equals(value))
-			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getSimpleName());
+			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getName());
 				} else {
 					//set the id field with the "new" value
-					if (dbId instanceof ObjectId && mc.idField.getType().isAssignableFrom(String.class)) {
+					if (dbId instanceof ObjectId && mc.getIdField().getType().isAssignableFrom(String.class)) {
 						dbId = dbId.toString();
 					}
-		    		mc.idField.set(entity, dbId);
+		    		mc.getIdField().set(entity, dbId);
 				}
 
 			} catch (Exception e) {
@@ -167,7 +160,7 @@ public class Mapper {
 	}
 
     Class getClassForName(String className, Class defaultClass) {
-    	if (mappedClasses.containsKey(className)) return mappedClasses.get(className).clazz;
+    	if (mappedClasses.containsKey(className)) return mappedClasses.get(className).getClazz();
         try {
             Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
             return c;
@@ -203,7 +196,8 @@ public class Mapper {
     	return createInstance(fallbackType);
     }
     
-    Object fromDBObject(Class entityClass, BasicDBObject dbObject) {
+    /** coverts a DBObject back to a type-safe java object*/
+    public Object fromDBObject(Class entityClass, BasicDBObject dbObject) {
     	if (dbObject == null) {
     		Throwable t = new Throwable();
     		logger.log(Level.SEVERE, "Somebody passes in a null dbObject; bad client!", t);
@@ -220,15 +214,47 @@ public class Mapper {
         return entity;
     }
 
-    DBObject toDBObject( Object entity ) {
+    /** converts from a java object to a mongo object (possibly a DBObject for complex mappings) */
+    public Object toMongoObject(Object javaObj) {
+    	Class origClass = javaObj.getClass();
+    	Object newObj = objectToValue(origClass, javaObj);
+    	Class type = newObj.getClass();
+    	boolean bSameType =origClass.equals(type);
+    	boolean bSingleValue = true;
+    	Class subType = null;
+    	
+		if (type.isArray() || ReflectionUtils.implementsAnyInterface(type, Iterable.class, Collection.class, List.class, Set.class, Map.class)) {
+			bSingleValue = false;
+			// subtype of Long[], List<Long> is Long 
+			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(type);
+		}
+
+    	if (bSameType && bSingleValue && !ReflectionUtils.isPropertyType(type))
+    		return toDBObject(javaObj);
+    	else if (bSameType && !bSingleValue && !ReflectionUtils.isPropertyType(subType)) {
+    		ArrayList<Object> vals = new ArrayList<Object>();
+    		if (type.isArray())
+	    		for(Object obj : (Object[])newObj)
+	    			vals.add(toMongoObject(obj));
+    		else
+	    		for(Object obj : (Iterable)newObj)
+	    			vals.add(toMongoObject(obj));
+    		return vals;
+    	} else 
+    		return newObj;
+    }
+    
+    /** coverts an entity to a DBObject */
+    public DBObject toDBObject( Object entity ) {
     	BasicDBObject dbObject = new BasicDBObject();
     	try {
-	        dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
 	
 	        MappedClass mc = getMappedClass(entity);
-            
+	        
+    		dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
+    		
 	        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
-	        for (MappedField mf : mc.persistenceFields) {
+	        for (MappedField mf : mc.getPersistenceFields()) {
 	            Field field = mf.field;
 	
 	            field.setAccessible(true);
@@ -245,9 +271,9 @@ public class Mapper {
 	            } else if (mf.hasAnnotation(Serialized.class) || mf.isMongoTypeCompatible()) {
 	            	mapValuesToDBObject(entity, mf, dbObject);
 	            } else {
-	            	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
+	            	logger.warning("Ignoring field: " + mc.getClazz().getName() + "." + field.getName() + " [type:" + field.getType().getSimpleName() + "]");
 	            }
-	        }	        
+	        }
         } catch (Exception e) {throw new RuntimeException(e);}
         return dbObject;
 
@@ -415,7 +441,7 @@ public class Mapper {
 
         dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
         try {
-	        for (MappedField mf : mc.persistenceFields) {
+	        for (MappedField mf : mc.getPersistenceFields()) {
 	            Field field = mf.field;
 	            field.setAccessible(true);
 	
@@ -433,7 +459,7 @@ public class Mapper {
 	            } else if ( mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isMongoTypeCompatible()) {
 	            	mapValuesFromDBObject(dbObject, mf, entity);
 	            } else {
-	            	logger.warning("Ignoring field: " + field.getName() + " [" + field.getType().getSimpleName() + "]");
+	            	logger.warning("Ignoring field: " + mc.getClazz().getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
@@ -684,9 +710,14 @@ public class Mapper {
         return null;
     }
     
-    /** turns the object intto an ObjectId if it is/should-be one */
+    /** turns the object into an ObjectId if it is/should-be one */
 	public static Object asObjectIdMaybe(Object id) {
-		if ((id instanceof String) && ObjectId.isValid((String)id)) return new ObjectId((String)id);
+		try {
+			if (id instanceof String && ObjectId.isValid((String)id))
+				return new ObjectId((String)id);
+		} catch (Exception e) {
+			//sometimes isValid throws exceptions... bad!
+		}
 		return id;
 	}
 	

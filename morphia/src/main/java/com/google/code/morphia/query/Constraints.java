@@ -1,4 +1,4 @@
-package com.google.code.morphia;
+package com.google.code.morphia.query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -191,23 +191,23 @@ public class Constraints implements Serializable {
         return map;
     }
 
-    Map<String, Object> getQuery() {
+    public Map<String, Object> getQuery() {
         return query;
     }
 
-    Map<String, Integer> getFields() {
+    public Map<String, Integer> getFields() {
         return fields;
     }
 
-    int getResultSize() {
+    public int getResultSize() {
         return resultSize;
     }
 
-    Sort getSort() {
+    public Sort getSort() {
         return sort;
     }
 
-    int getStartIndex() {
+    public int getStartIndex() {
         return startIndex;
     }
 }

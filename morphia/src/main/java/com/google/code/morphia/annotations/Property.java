@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.HashMap;
 
-import com.google.code.morphia.Mapper;
+import com.google.code.morphia.mapping.Mapper;
 
 /**
  * Optional annotation for specifying persistence behavior 

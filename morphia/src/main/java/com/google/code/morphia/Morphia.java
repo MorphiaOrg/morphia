@@ -24,6 +24,9 @@ import java.util.Set;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

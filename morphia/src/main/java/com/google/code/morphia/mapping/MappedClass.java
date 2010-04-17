@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.google.code.morphia;
+package com.google.code.morphia.mapping;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -44,30 +44,28 @@ public class MappedClass {
     private static final Logger logger = Logger.getLogger(MappedClass.class.getName());
 	
     /** special fields representing the Key of the object */
-    public Field idField;
+    private Field idField;
 	
     /** special annotations representing the type the object */
-	public Entity entityAn;
-	public Embedded embeddedAn;
+	private Entity entityAn;
+	private Embedded embeddedAn;
 	
 	/** Annotations we are interested in looking for. */
 	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class};
 	/** Annotations we were interested in, and found. */
-	protected Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	private Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	
-	/** Annotations we are interested in looking for (related to an entity's lifecycle.  */
-	public Class[] lifecycleAnnotations = new Class[] {PrePersist.class, PostPersist.class, PreLoad.class, PostLoad.class};
 	/** Methods which are lifecycle events */
-	public Map<Class<Annotation>, List<Method>> lifecycleMethods = new HashMap<Class<Annotation>, List<Method>>();
+	private Map<Class<Annotation>, List<Method>> lifecycleMethods = new HashMap<Class<Annotation>, List<Method>>();
 		
     /** the collectionName based on the type and @Document value(); this can be overriden by the @CollectionName field on the instance*/
-	public String defCollName;
+	private String defCollName;
 
 	/** a list of the fields to map */
-	public List<MappedField> persistenceFields = new ArrayList<MappedField>();
+	private List<MappedField> persistenceFields = new ArrayList<MappedField>();
 	
 	/** the type we are mapping to/from */
-	public Class clazz;
+	private Class clazz;
 
 	/** constructor */
 	public MappedClass(Class clazz) {
@@ -94,11 +92,10 @@ public class MappedClass {
 			addLifecycleEventMethod((Class<Annotation>)lifecycleType, m);
 		}
 
-        embeddedAn = (Embedded)this.releventAnnotations.get(Embedded.class);
-        entityAn = (Entity)this.releventAnnotations.get(Entity.class);
-
-        
+        embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
+        entityAn = (Entity)releventAnnotations.get(Entity.class);
         defCollName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
+
         for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
         	field.setAccessible(true);
             if (field.isAnnotationPresent(Id.class)) {
@@ -113,7 +110,7 @@ public class MappedClass {
         				ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
             	persistenceFields.add(new MappedField(field));
             } else {
-            	logger.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [" + field.getType().getSimpleName() + "]");
+            	logger.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");
             }
         }
 	}
@@ -137,30 +134,39 @@ public class MappedClass {
 	 * @param clazz
 	 */
 	private void addAnnotation(Class<Annotation> c) {
-		Annotation ann = ReflectionUtils.getAnnotation(clazz, c);
+		Annotation ann = ReflectionUtils.getAnnotation(getClazz(), c);
 		if (ann != null)
-			this.releventAnnotations.put(c, ann);
+			releventAnnotations.put(c, ann);
 	}
 
 	@Override
 	public String toString() {
-		return "MappedClass - kind:" + this.defCollName + " for " + this.clazz.getSimpleName() + " props:" + this.persistenceFields;
+		return "MappedClass - kind:" + this.getCollectionName() + " for " + this.getClazz().getName() + " fields:" + persistenceFields;
 	}
 
 	public <T> List<T> getFieldsAnnotatedWith(Class<T> clazz){
 		List<T> results = new ArrayList<T>();
-		for(MappedField mf : this.persistenceFields){
+		for(MappedField mf : persistenceFields){
 			if(mf.mappingAnnotations.containsKey(clazz))
 				results.add((T)mf.mappingAnnotations.get(clazz));
 		}
 		return results;
 	}
+
+	public MappedField getMappedField(String name) {
+		for(MappedField mf : persistenceFields)
+			if (name.equals(mf.getName())) return mf;
+	
+		return null;
+	}
+	
+	public Field getField(String name) {
+		MappedField mf = getMappedField(name);
+		return mf == null ? null : mf.field;
+	}
 	
 	public boolean containsFieldName(String name) {
-		for(MappedField mf : this.persistenceFields)
-			if (name.equals(mf.name)) return true;
-		
-		return false;
+		return getField(name)!=null;
 	}
 	
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
@@ -187,9 +193,9 @@ public class MappedClass {
 	
 	public void validate() {
 		// No @Document with @Embedded
-        if (entityAn != null && embeddedAn != null ) {
+        if (getEntityAnnotation() != null && getEmbeddedAnnotation() != null ) {
             throw new MappingException(
-                    "In [" + clazz.getName()
+                    "In [" + getClazz().getName()
                            + "]: Cannot have both @Document and @Embedded annotation at class level.");
         }
 
@@ -199,7 +205,7 @@ public class MappedClass {
             
         	field.setAccessible(true);
             if (logger.isLoggable(Level.FINE)) {
-                logger.finer("In [" + clazz.getName() + "]: Processing field: " + field.getName());
+                logger.finer("In [" + getClazz().getName() + "]: Processing field: " + field.getName());
             }
             
             //a field can be a Value, Reference, or Embedded
@@ -208,7 +214,7 @@ public class MappedClass {
                 if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, Iterable.class, Collection.class, List.class, Map.class, Set.class)
                         && 	!ReflectionUtils.isPropertyType(field.getType())) {
                 	
-                    throw new MappingException("In [" + clazz.getName() + "]: Field [" + field.getName()
+                    throw new MappingException("In [" + getClazz().getName() + "]: Field [" + field.getName()
                             + "] which is annotated as @Value is of type that cannot be mapped (type is "
                             + field.getType().getName() + ").");
                 }
@@ -219,7 +225,7 @@ public class MappedClass {
 
                     throw new MappingException(
                             "In ["
-                                    + clazz.getName()
+                                    + getClazz().getName()
                                     + "]: Field ["
                                     + field.getName()
                                     + "] which is annotated as @Reference is of type [" + field.getType().getName() + "] which cannot be referenced.");
@@ -228,18 +234,18 @@ public class MappedClass {
         }
         
         //Only embedded class can have no id field
-        if (idField == null && embeddedAn == null) {
-            throw new MappingException("In [" + clazz.getName() + "]: No field is annotated with @Id; but it is required");
+        if (getIdField() == null && getEmbeddedAnnotation() == null) {
+            throw new MappingException("In [" + getClazz().getName() + "]: No field is annotated with @Id; but it is required");
         }
         
         //Embedded classes should not have an id
-        if (embeddedAn != null && idField != null) {
-            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a @Id field");
+        if (getEmbeddedAnnotation() != null && getIdField() != null) {
+            throw new MappingException("In [" + getClazz().getName() + "]: @Embedded classes cannot specify a @Id field");
         }
 
         //Embedded classes can not have a fieldName value() specified
-        if (embeddedAn != null && !embeddedAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            throw new MappingException("In [" + clazz.getName() + "]: @Embedded classes cannot specify a fieldName value(); this is on applicable on fields");
+        if (getEmbeddedAnnotation() != null && !getEmbeddedAnnotation().value().equals(Mapper.IGNORED_FIELDNAME)) {
+            throw new MappingException("In [" + getClazz().getName() + "]: @Embedded classes cannot specify a fieldName value(); this is on applicable on fields");
         }
 	}
 	
@@ -251,11 +257,11 @@ public class MappedClass {
 	}
 
 	public boolean equals(MappedClass clazz) {
-		return this.clazz.equals(clazz);
+		return this.getClazz().equals(clazz);
 	}
 
 	public boolean equals(Class clazz) {
-		return this.clazz.equals(clazz);
+		return this.getClazz().equals(clazz);
 	}
 	
 	/**
@@ -274,23 +280,43 @@ public class MappedClass {
 		
 		public MappedField(Field f) {
 			f.setAccessible(true);
-			this.field = f;
+			field = f;
 			for (Class<Annotation> clazz : interestingAnnotations) {
 				addAnnotation(clazz);
 			}
-			this.name = getMappedFieldName(f);
+			this.name = getMappedFieldName();
 			Class type = f.getType();
 			if (type.isArray() || ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Collection.class, List.class, Set.class, Map.class)) {
 				bSingleValue = false;
 				// subtype of Long[], List<Long> is Long 
-				subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f);
 				bMap = ReflectionUtils.implementsInterface(type, Map.class);
+				
+				//get the subtype T, T[]/List<T>/Map<?,T>
+				subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f, (bMap) ? 1 : 0);
 			}
+			
 			//check the main type
 			bMongoType = ReflectionUtils.isPropertyType(type);
+			
 			// if the main type isn't supported by the Mongo, see if the subtype is
-			// works for Long[], List<Long>, etc.
-			if (!bMongoType && subType != null) bMongoType = ReflectionUtils.isPropertyType(subType);
+			// works for Long[], List<Long>, Map<?, Long>etc.
+			if (!bMongoType && subType != null) 
+				bMongoType = ReflectionUtils.isPropertyType(subType);
+			
+			if (!bMongoType && !bSingleValue && (subType == null || subType.equals(Object.class))) {
+				logger.warning("The multi-valued field '" + f.getDeclaringClass().getName() + "." + f.getName() + "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning.");
+				bMongoType = true;
+			}
+		}
+
+		/** Returns the name of the field's (key)name for mongodb */
+		public String getName() {
+			return name;
+		}
+
+		/**  Returns the name of the field, as declared on the class */
+		public String getClassFieldName() {
+			return field.getName();
 		}
 
 		public <T extends Annotation> T getAnnotation(Class<T> clazz) {
@@ -329,7 +355,7 @@ public class MappedClass {
 		/**
 		 * Returns the name of the field's key-name for mongodb 
 		 */
-		public String getMappedFieldName(Field field) {
+		private String getMappedFieldName() {
 			if (hasAnnotation(Property.class)){
 				Property mv = (Property)mappingAnnotations.get(Property.class);
 				if(!mv.value().equals(Mapper.IGNORED_FIELDNAME)) return mv.value();
@@ -340,12 +366,20 @@ public class MappedClass {
 				Embedded me = (Embedded)mappingAnnotations.get(Embedded.class);
 				if(!me.value().equals(Mapper.IGNORED_FIELDNAME)) return me.value();
 			}			
-			return field.getName();
+			return this.field.getName();
 		}
 
 		@Override
 		public String toString() {
 			return name + "; " + this.mappingAnnotations.toString();
+		}
+
+		public Class getType() {
+			return field.getType();
+		}
+				
+		public Class getDeclaringClass() {
+			return field.getDeclaringClass();
 		}
 
 		public Class getSubType() {
@@ -392,5 +426,54 @@ public class MappedClass {
 		catch (InvocationTargetException e) { throw new RuntimeException(e); }
 
 		return retDbObj;
+	}
+
+	/**
+	 * @return the idField
+	 */
+	public Field getIdField() {
+		return idField;
+	}
+
+	/**
+	 * @return the entityAn
+	 */
+	public Entity getEntityAnnotation() {
+		return entityAn;
+	}
+
+	/**
+	 * @return the embeddedAn
+	 */
+	public Embedded getEmbeddedAnnotation() {
+		return embeddedAn;
+	}
+
+	/**
+	 * @return the releventAnnotations
+	 */
+	public Map<Class<Annotation>, Annotation> getReleventAnnotations() {
+		return releventAnnotations;
+	}
+
+	/**
+	 * @return the persistenceFields
+	 */
+	public List<MappedField> getPersistenceFields() {
+		return persistenceFields;
+	}
+
+	/**
+	 * @return the defCollName
+	 */
+	public String getCollectionName() {
+		return defCollName;
+	}
+
+	/**
+	 * @return the clazz
+	 */
+	public Class getClazz() {
+		return clazz;
 	}
 }

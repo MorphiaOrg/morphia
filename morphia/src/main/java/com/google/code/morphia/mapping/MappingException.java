@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.code.morphia;
+package com.google.code.morphia.mapping;
 
 /**
  *

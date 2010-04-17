@@ -29,6 +29,7 @@ import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -103,22 +104,22 @@ public class TestIndexedCapped {
     public void testIndexedEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(IndexedClass.class);
 		ds.ensureIndexes();
-		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 		ds.save(new IndexedClass());
 		ds.ensureIndexes();
-		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 	
 	@Test
     public void testNamedIndexEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(NamedIndexClass.class);
 		ds.ensureIndexes();
-		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 		ds.save(new IndexedClass());
 		ds.ensureIndexes();
-		assertTrue(hasIndexedField("l",db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 		
-		assertTrue(hasNamedIndex("l_ascending", db.getCollection(mc.defCollName).getIndexInfo()));
+		assertTrue(hasNamedIndex("l_ascending", db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 
 	protected boolean hasNamedIndex(String name, List<DBObject> indexes) {

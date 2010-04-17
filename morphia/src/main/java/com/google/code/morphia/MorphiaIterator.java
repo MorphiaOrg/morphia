@@ -3,6 +3,7 @@ package com.google.code.morphia;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.BasicDBObject;
 
 /**

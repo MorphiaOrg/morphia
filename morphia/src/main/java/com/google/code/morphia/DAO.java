@@ -1,6 +1,9 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.query.Constraints;
+import com.google.code.morphia.query.Sort;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -55,7 +58,7 @@ public class DAO<T,K extends Serializable> {
 
     public void delete( T entity ) {
         try {
-            K id = (K) morphia.getMappedClasses().get(entity.getClass().getName()).idField.get(entity);
+            K id = (K) morphia.getMappedClasses().get(entity.getClass().getName()).getIdField().get(entity);
             deleteById(id);
         } catch ( Exception e ) {
             throw new RuntimeException(e);
