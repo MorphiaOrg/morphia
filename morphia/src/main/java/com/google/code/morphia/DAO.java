@@ -1,7 +1,6 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.annotations.PostPersist;
-import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.query.Sort;
 import com.mongodb.BasicDBObject;
@@ -44,6 +43,10 @@ public class DAO<T,K extends Serializable> {
 
     protected DBCollection collection() {
         return mongo.getDB(dbName).getCollection(collectionName);
+    }
+
+    public Class<T> getEntityClass() {
+        return entityClass;
     }
 
     public void save( T entity ) {
