@@ -1,8 +1,8 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.Mapper;
-import com.google.code.morphia.query.Constraints;
 import com.google.code.morphia.query.Sort;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -11,9 +11,6 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -56,6 +53,26 @@ public class DAO<T,K extends Serializable> {
         morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
     }
 
+    /**
+     * Updates the first object matched by the constraints with the modifiers supplied.
+     */
+    public void updateFirst( Constraints c, Modifiers m ) {
+        if ( m.getOperations().isEmpty() ) {
+            throw new IllegalArgumentException("No modifiers were specified");
+        }
+        collection().update(new BasicDBObject(c.getQuery()), new BasicDBObject(m.getOperations()));
+    }
+
+    /**
+     * Updates all objects matched by the constraints with the modifiers supplied.
+     */
+    public void update( Constraints c, Modifiers m ) {
+        if ( m.getOperations().isEmpty() ) {
+            throw new IllegalArgumentException("No modifiers were specified");
+        }
+        collection().update(new BasicDBObject(c.getQuery()), new BasicDBObject(m.getOperations()), false, true);
+    }
+
     public void delete( T entity ) {
         try {
             K id = (K) morphia.getMappedClasses().get(entity.getClass().getName()).getIdField().get(entity);
@@ -66,11 +83,11 @@ public class DAO<T,K extends Serializable> {
     }
 
     public void deleteById( K id ) {
-        deleteByQuery(new BasicDBObject(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
+        deleteMatching(new Constraints(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
     }
 
-    public void delete( Constraints c ) {
-        deleteByQuery(new BasicDBObject(c.getQuery()));
+    public void deleteMatching( Constraints c ) {
+        collection().remove(new BasicDBObject(c.getQuery()));
     }
 
     protected void deleteByQuery( DBObject query ) {
@@ -82,103 +99,61 @@ public class DAO<T,K extends Serializable> {
         return dbObject != null ? map(dbObject) : null;
     }
 
-    public List<K> getIds( String key, Object value ) {
-        return getIds(new Constraints(key, value));
+    public Results<K> findIds( String key, Object value ) {
+        return findIds(new Constraints(key, value));
     }
-    public List<K> getIds( Constraints c ) {
+    public Results<K> findIds() {
+        return findIds(new Constraints());
+    }
+    public Results<K> findIds( Constraints c ) {
         DBCursor cursor = collection().find(new BasicDBObject(c.getQuery()), new BasicDBObject(Mapper.ID_KEY, "1"));
         applyToCursor(cursor, c.getStartIndex(), c.getResultSize(), c.getSort());
-        List<K> ids = new ArrayList<K>();
-        while ( cursor.hasNext() ) {
-            ids.add((K)cursor.next().get(Mapper.ID_KEY));
-        }
-        return ids;
-    }
-    public List<K> getIds( Map<String,Object> query ) {
-        DBCursor cursor = collection().find(new BasicDBObject(query), new BasicDBObject(Mapper.ID_KEY, "1"));
-        List<K> ids = new ArrayList<K>();
-        while ( cursor.hasNext() ) {
-            ids.add((K)cursor.next().get(Mapper.ID_KEY));
-        }
-        return ids;
+        return new ResultsImpl<K>(null, cursor, morphia.getMapper(), true);
     }
 
     public boolean exists(String key, Object value) {
         return exists(new Constraints(key, value));
     }
     public boolean exists(Constraints c) {
-        return getCount(c) > 0;
-    }
-    public boolean exists( Map<String,Object> query ) {
-        return getCount(query) > 0;
+        return count(c) > 0;
     }
 
-    public long getCount() {
+    public long count() {
         return collection().getCount();
     }
-    public long getCount(String key, Object value) {
-        return getCount(new Constraints(key, value));
+    public long count(String key, Object value) {
+        return count(new Constraints(key, value));
     }
-    public long getCount(Constraints c) {
-        return getCount(c.getQuery());
-    }
-    public long getCount( Map<String,Object> query ) {
-        return collection().getCount(new BasicDBObject(query));
+    public long count(Constraints c) {
+        return collection().getCount(new BasicDBObject(c.getQuery()));
     }
 
     public T findOne(String key, Object value) {
         return findOne(new Constraints(key, value));
     }
     public T findOne( Constraints c ) {
-        return findOne(c.getQuery(), c.getFields());
-    }
-    public T findOne( Map<String,Object> query ) {
-        return findOne(query, null);
-    }
-
-    public T findOne( Map<String,Object> query, Map<String,Integer> fields ) {
-        if ( fields != null && !fields.isEmpty() ) {
-            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(query), new BasicDBObject(fields));
+        if ( c.getFields() != null && !c.getFields().isEmpty() ) {
+            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(c.getQuery()), new BasicDBObject(c.getFields()));
             return dbObject != null ? map(dbObject) : null;
         } else {
-            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(query));
+            BasicDBObject dbObject = (BasicDBObject)collection().findOne(new BasicDBObject(c.getQuery()));
             return dbObject != null ? map(dbObject) : null;
         }
     }
 
-    public List<T> find( Constraints c ) {
-        return find(c.getQuery(), c.getFields(), c.getStartIndex(), c.getResultSize(), c.getSort());
+    public Results<T> find() {
+        return find(new Constraints());
     }
 
-    public List<T> find(Map<String,Object> query) {
-        return find(query, -1, -1);
-    }
-    public List<T> find(Map<String,Object> query, Sort sort) {
-        return find(query, -1, -1, sort);
-    }
-    public List<T> find(Map<String,Object> query, int startIndex, int resultSize) {
-        return find(query, startIndex, resultSize, null);
-    }
-    public List<T> find(Map<String,Object> query, int startIndex, int resultSize, Sort sort) {
-        return find(query, null, startIndex, resultSize, sort);
-    }
-    public List<T> find(Map<String,Object> query, Map<String,Integer> fields, int startIndex, int resultSize, Sort sort) {
-        if ( fields != null && !fields.isEmpty() ) {
-            return toList(collection().find(new BasicDBObject(query), new BasicDBObject(fields)), startIndex, resultSize, sort);
+    public Results<T> find( Constraints c ) {
+        DBCursor cursor;
+        if ( c.getFields() != null && !c.getFields().isEmpty() ) {
+            cursor = collection().find(new BasicDBObject(c.getQuery()), new BasicDBObject(c.getFields()));
         } else {
-            return toList(collection().find(new BasicDBObject(query)), startIndex, resultSize, sort);
+            cursor = collection().find(new BasicDBObject(c.getQuery()));
         }
-    }
-
-    public List<T> findAll() {
-        return findAll(-1, -1);
-    }
-    public List<T> findAll(int startIndex, int resultSize) {
-        return findAll(startIndex, resultSize, null);
-    }
-
-    public List<T> findAll(int startIndex, int resultSize, Sort sort) {
-        return toList(collection().find(), startIndex, resultSize, sort);
+        applyToCursor(cursor, c.getStartIndex(), c.getResultSize(), c.getSort());
+        return new ResultsImpl<T>(entityClass, cursor, morphia.getMapper(), false);
     }
 
     public void dropCollection() {
@@ -189,25 +164,7 @@ public class DAO<T,K extends Serializable> {
         return morphia.fromDBObject(entityClass, dbObject);
     }
 
-    protected List<T> toList( DBCursor cursor ) {
-        return toList(cursor, -1, -1);
-    }
-    protected List<T> toList( DBCursor cursor, Sort sort ) {
-        return toList(cursor, -1, -1, sort);
-    }
-    protected List<T> toList( DBCursor cursor, int startIndex, int resultSize ) {
-        return toList(cursor, startIndex, resultSize, null);
-    }
-    protected List<T> toList( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
-        applyToCursor(cursor, startIndex, resultSize, sort);
-        List<T> list = new ArrayList<T>();
-        while ( cursor.hasNext() ) {
-            list.add(map((BasicDBObject) cursor.next()));
-        }
-        return list;
-    }
-
-    private void applyToCursor( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
+    protected void applyToCursor( DBCursor cursor, int startIndex, int resultSize, Sort sort ) {
         if ( sort != null && !sort.getFields().isEmpty() ) {
             BasicDBObject orderBy = new BasicDBObject();
             for ( Sort.SortField s : sort.getFields() ) {

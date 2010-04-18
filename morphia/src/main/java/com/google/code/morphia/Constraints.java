@@ -1,9 +1,12 @@
-package com.google.code.morphia.query;
+package com.google.code.morphia;
 
+import com.google.code.morphia.query.FilterOperator;
+import com.google.code.morphia.query.Sort;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -14,10 +17,11 @@ import java.util.regex.Pattern;
 public class Constraints implements Serializable {
    	private static final long serialVersionUID = 1L;
 
+    private final Map<String,Object> query;
+    private final Map<String,Integer> fields;
+
     private Sort sort;
     private int startIndex, resultSize;
-    private Map<String,Object> query;
-    private Map<String,Integer> fields;
 
     private String currentKey;
 
@@ -166,7 +170,7 @@ public class Constraints implements Serializable {
     @SuppressWarnings("unchecked")
 	private Constraints addField( Object value ) {
         validateField();
-        query.put(currentKey, value.getClass().isEnum() ? ((Enum)value).name() : value);
+        query.put(currentKey, valueOf(value));
         currentKey = null;
         return this;
     }
@@ -174,7 +178,7 @@ public class Constraints implements Serializable {
     @SuppressWarnings("unchecked")
     private Constraints addMapField( FilterOperator op, Object value ) {
         validateField();
-        query.put(currentKey, map(op.val(), value.getClass().isEnum() ? ((Enum)value).name() : value));
+        query.put(currentKey, map(op.val(), valueOf(value)));
         currentKey = null;
         return this;
     }
@@ -185,7 +189,17 @@ public class Constraints implements Serializable {
         }
     }
 
-    private Map<String,Object> map( String key, Object value ) {
+    static Object valueOf( Object obj ) {
+        if ( obj.getClass().isEnum() ) {
+            return ((Enum)obj).name();
+        } else if ( obj instanceof Locale ) {
+            return ((Locale)obj).toString();
+        } else {
+            return obj;
+        }
+    }
+
+    static Map<String,Object> map( String key, Object value ) {
         Map<String,Object> map = new HashMap<String,Object>();
         map.put(key, value);
         return map;
