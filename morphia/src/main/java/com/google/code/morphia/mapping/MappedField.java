@@ -28,17 +28,18 @@ import com.google.code.morphia.utils.ReflectionUtils;
 public class MappedField {
     static final Logger log = Logger.getLogger(MappedField.class.getName());
 
-	protected Field field;
-	protected Constructor ctor;
-	protected String name;
+    private Field field;
+    private Constructor ctor;
+    private String name;
 	
 	protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	private Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
 	
-	protected Class subType = null;
-	protected boolean bSingleValue = true;
-	protected boolean bMongoType = false;
-	protected boolean bMap = false;
+	private Class subType = null;
+	private boolean isSingleValue = true;
+	private boolean isMongoType = false;
+	private boolean isMap = false;
+	private boolean isSet = false;
 	
 	public MappedField(Field f) {
 		f.setAccessible(true);
@@ -79,25 +80,26 @@ public class MappedField {
 		this.name = getMappedFieldName();
 		Class type = f.getType();
 		if (type.isArray() || ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Collection.class, List.class, Set.class, Map.class)) {
-			bSingleValue = false;
+			isSingleValue = false;
 			// subtype of Long[], List<Long> is Long 
-			bMap = ReflectionUtils.implementsInterface(type, Map.class);
+			isMap = ReflectionUtils.implementsInterface(type, Map.class);
+			isSet = ReflectionUtils.implementsInterface(type, Set.class);
 			
 			//get the subtype T, T[]/List<T>/Map<?,T>
-			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f, (bMap) ? 1 : 0);
+			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f, (isMap) ? 1 : 0);
 		}
 		
 		//check the main type
-		bMongoType = ReflectionUtils.isPropertyType(type);
+		isMongoType = ReflectionUtils.isPropertyType(type);
 		
 		// if the main type isn't supported by the Mongo, see if the subtype is
 		// works for Long[], List<Long>, Map<?, Long>etc.
-		if (!bMongoType && subType != null) 
-			bMongoType = ReflectionUtils.isPropertyType(subType);
+		if (!isMongoType && subType != null) 
+			isMongoType = ReflectionUtils.isPropertyType(subType);
 		
-		if (!bMongoType && !bSingleValue && (subType == null || subType.equals(Object.class))) {
-			log.warning("The multi-valued field '" + f.getDeclaringClass().getName() + "." + f.getName() + "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning.");
-			bMongoType = true;
+		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
+			log.warning("The multi-valued field '" + getFullName() + "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning.");
+			isMongoType = true;
 		}
 	}
 
@@ -130,19 +132,25 @@ public class MappedField {
 
 	public void validate() {
 		if (mappingAnnotations.get(Property.class) != null && mappingAnnotations.get(Embedded.class) != null)
-			throw new RuntimeException("@Property and @Embedded cannot be on the same Field: " + field.getName());
+			throw new MappingException("@Property and @Embedded cannot be on the same Field: " + getFullName());
 		
 		if (mappingAnnotations.get(Property.class) != null && mappingAnnotations.get(Reference.class) != null)
-			throw new RuntimeException("@Property and @Reference cannot be on the same Field: " + field.getName());
+			throw new MappingException("@Property and @Reference cannot be on the same Field: " + getFullName());
 
 		if (mappingAnnotations.get(Reference.class) != null && mappingAnnotations.get(Embedded.class) != null)
-			throw new RuntimeException("@Refernce and @Embedded cannot be on the same Field: " + field.getName());
+			throw new MappingException("@Refernce and @Embedded cannot be on the same Field: " + getFullName());
 
 		if (mappingAnnotations.get(Reference.class) != null && mappingAnnotations.get(Serialized.class) != null)
-			throw new RuntimeException("@Refernce and @Serialized cannot be on the same Field: " + field.getName());
+			throw new MappingException("@Refernce and @Serialized cannot be on the same Field: " + getFullName());
 
 		if (mappingAnnotations.get(Embedded.class) != null && mappingAnnotations.get(Serialized.class) != null)
-			throw new RuntimeException("@Embedded and @Serialized cannot be on the same Field: " + field.getName());
+			throw new MappingException("@Embedded and @Serialized cannot be on the same Field: " + getFullName());
+		
+		if (isMap && !ReflectionUtils.getParameterizedClass(field,0).equals(String.class))
+			throw new MappingException("maps must keyed by type String (Map<String,?>); " + getFullName());
+	}
+	public String getFullName() {
+		return field.getDeclaringClass().getName() + "." + field.getName();
 	}
 	/**
 	 * Returns the name of the field's key-name for mongodb 
@@ -179,21 +187,36 @@ public class MappedField {
 	}
 	
 	public boolean isSingleValue() {
-		return bSingleValue;
+		return isSingleValue;
 	}
 
 	public boolean isMultipleValues() {
-		return !bSingleValue;
+		return !isSingleValue;
 	}
-	public boolean isMongoTypeCompatible() {
-		return bMongoType;
+	public boolean isTypeMongoCompatible() {
+		return isMongoType;
 	}
 
 	public boolean isMap() {
-		return bMap;
+		return isMap;
 	}
+	
+	public boolean isSet() {
+		return isSet;
+	}
+
 	public Constructor getCTor() {
 		return ctor;
+	}
+
+	public Object getFieldValue(Object classInst) throws IllegalArgumentException, IllegalAccessException {
+		field.setAccessible(true);
+		return field.get(classInst);
+	}
+
+	public void setFieldValue(Object classInst, Object value) throws IllegalArgumentException, IllegalAccessException {
+		field.setAccessible(true);
+		field.set(classInst, value);
 	}
 	
 }

@@ -326,7 +326,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 		if (morphia.getMappedClasses().containsKey(keyClassName))
 			mc = morphia.getMappedClasses().get(keyClassName);
 		else
-			mc = new MappedClass(entity.getClass());
+			mc = new MappedClass(entity.getClass(), getMapper());
 		
 		try {
 			return mc.getIdField().get(entity);

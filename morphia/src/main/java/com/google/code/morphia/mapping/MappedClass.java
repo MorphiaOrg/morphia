@@ -66,9 +66,11 @@ public class MappedClass {
 	/** the type we are mapping to/from */
 	private Class clazz;
 	private Constructor ctor;
+	Mapper mapr;
 	
 	/** constructor */
-	public MappedClass(Class clazz) {
+	public MappedClass(Class clazz, Mapper mapr) {
+		this.mapr = mapr;
         this.clazz = clazz;
         
 		for (Class<Annotation> c : classAnnotations) {
@@ -170,13 +172,8 @@ public class MappedClass {
 		return null;
 	}
 	
-	public Field getField(String name) {
-		MappedField mf = getMappedField(name);
-		return mf == null ? null : mf.field;
-	}
-	
 	public boolean containsFieldName(String name) {
-		return getField(name)!=null;
+		return getMappedField(name)!=null;
 	}
 	
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
@@ -210,35 +207,23 @@ public class MappedClass {
         }
 
         for (MappedField mf : persistenceFields) {
-            Field field = mf.field;
-            Class fieldType = field.getType();
-            
-        	field.setAccessible(true);
             if (log.isLoggable(Level.FINE)) {
-                log.finer("In [" + getClazz().getName() + "]: Processing field: " + field.getName());
+                log.finer("Processing field: " + mf.getFullName());
             }
             
             //a field can be a Value, Reference, or Embedded
             if ( mf.hasAnnotation(Property.class) ) {
                 // make sure that the property type is supported
-                if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, Iterable.class, Collection.class, List.class, Map.class, Set.class)
-                        && 	!ReflectionUtils.isPropertyType(field.getType())) {
-                	
-                    throw new MappingException("In [" + getClazz().getName() + "]: Field [" + field.getName()
-                            + "] which is annotated as @Value is of type that cannot be mapped (type is "
-                            + field.getType().getName() + ").");
+                if (mf.isSingleValue() && !mf.isTypeMongoCompatible()) {
+                    throw new MappingException(mf.getFullName()
+                            + " is annotated as @Property but is a type that cannot be mapped (type is "
+                            + mf.getType().getName() + ").");
                 }
             } else if (mf.hasAnnotation(Reference.class)) {
-                if ( 		!ReflectionUtils.implementsAnyInterface(fieldType, List.class, Map.class, Set.class)
-                        && 	!field.getType().isInterface() 
-                        && 	ReflectionUtils.getClassEntityAnnotation(field.getType()) == null) {
-
-                    throw new MappingException(
-                            "In ["
-                                    + getClazz().getName()
-                                    + "]: Field ["
-                                    + field.getName()
-                                    + "] which is annotated as @Reference is of type [" + field.getType().getName() + "] which cannot be referenced.");
+                if ((	mf.isSingleValue() && !mf.getType().isInterface() && (mapr.getMappedClass(mf.getType()).getEntityAnnotation()==null)) || 
+                	   (mf.isMultipleValues() && !mf.getSubType().isInterface() && (mapr.getMappedClass(mf.getSubType()).getEntityAnnotation()==null))) {
+                    throw new MappingException(mf.getFullName()
+                                    + " is annotated as @Reference but is of type (" + mf.getType().getName() + ") which cannot be referenced.");
                 }
             }            
         }

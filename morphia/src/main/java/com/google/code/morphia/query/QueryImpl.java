@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
-import com.google.code.morphia.MorphiaIterator;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -88,6 +87,22 @@ public class QueryImpl<T> implements Query<T> {
 	}
 
 	@Override
+	public Iterable<Key<T>> fetchKeys() {
+		DBCursor cursor;
+		if (offset > 0 || limit > 0) {
+			DBObject query = getQueryObject();
+			DBObject fields = getFieldsObject();
+			Iterator<DBObject> it = dbColl.find(query, fields, offset, limit);
+			return new MorphiaKeyIterator<T>(it, ds.getMapper(), clazz, dbColl.getName());
+		} else
+			cursor = dbColl.find(getQueryObject());
+		
+		if (sort != null) cursor = cursor.sort(getSortObject());
+		
+		return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
+	}
+
+	@Override
 	public List<T> asList() {
 		List<T> results = new ArrayList<T>(); 
 		for(T ent : fetch()) 
@@ -98,8 +113,8 @@ public class QueryImpl<T> implements Query<T> {
 	@Override
 	public List<Key<T>> asKeyList() {
 		List<Key<T>> results = new ArrayList<Key<T>>(); 
-		for(T ent : fetchIdsOnly()) 
-			results.add(ds.getKey(ent)); 
+		for(Key<T> key : fetchKeys()) 
+			results.add(key); 
 		return results;
 	}
 
@@ -108,7 +123,7 @@ public class QueryImpl<T> implements Query<T> {
 		fields = BasicDBObjectBuilder.start(Mapper.ID_KEY, 1);
 		return fetch();
 	}
-
+	
 	/**
 	 * Converts the textual operator (">", "<=", etc) into a FilterOperator.
 	 * Forgiving about the syntax; != and <> are NOT_EQUAL, = and == are EQUAL.

@@ -107,7 +107,12 @@ public interface Query<T> extends Iterable<T> {
 	 * fetching the actual results (transfers less data).
 	 */
 	Iterable<T> fetchIdsOnly();
-		
+
+	/**
+	 * Execute the query and get the keys for the objects. @see fetchIdsOnly 
+	 */
+	Iterable<Key<T>> fetchKeys();
+	
 	/**
 	 * <p>Count the total number of values in the result, <strong>ignoring <em>limit</em> and <em>offset</em>.</p>
 	 */
