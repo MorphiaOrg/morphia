@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Polymorphic;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
@@ -48,9 +49,10 @@ public class MappedClass {
     /** special annotations representing the type the object */
 	private Entity entityAn;
 	private Embedded embeddedAn;
+    private Polymorphic polymorphicAn;
 	
 	/** Annotations we are interested in looking for. */
-	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class};
+	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class};
 	/** Annotations we were interested in, and found. */
 	private Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	
@@ -106,6 +108,7 @@ public class MappedClass {
 
         embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
         entityAn = (Entity)releventAnnotations.get(Entity.class);
+        polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
         collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 
         for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
@@ -303,6 +306,10 @@ public class MappedClass {
 	public Embedded getEmbeddedAnnotation() {
 		return embeddedAn;
 	}
+
+    public Polymorphic getPolymorphicAnnotation() {
+        return polymorphicAn;
+    }
 
 	/**
 	 * @return the releventAnnotations

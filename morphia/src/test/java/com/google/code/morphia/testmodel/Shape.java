@@ -17,12 +17,14 @@
 package com.google.code.morphia.testmodel;
 
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Polymorphic;
 
 /**
  *
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("shapes")
+@Polymorphic
 public interface Shape {
 
     public double getArea();

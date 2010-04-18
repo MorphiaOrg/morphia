@@ -60,11 +60,10 @@ import com.mongodb.ObjectId;
 @SuppressWarnings("unchecked")
 public class Mapper {
     private static final Logger logger = Logger.getLogger(Mapper.class.getName());
-
-	private static final String CLASS_NAME_KEY = "className";
 	
 	public static final String ID_KEY = "_id";
 	public static final String IGNORED_FIELDNAME = ".";
+    public static final String CLASS_NAME_FIELDNAME = "className";
 
     /** Set of classes that have been validated for mapping by this mapper */
     private final ConcurrentHashMap<String,MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
@@ -169,7 +168,7 @@ public class Mapper {
 
     protected Object createEntityInstanceForDbObject( Class entityClass, BasicDBObject dbObject ) {
         // see if there is a className value
-        String className = (String) dbObject.get(CLASS_NAME_KEY);
+        String className = (String) dbObject.get(CLASS_NAME_FIELDNAME);
         Class c = entityClass;
         if ( className != null ) {
         	//try to Class.forName(className) as defined in the dbObject first, otherwise return the entityClass
@@ -235,7 +234,7 @@ public class Mapper {
 
     	if (bSameType && bSingleValue && !ReflectionUtils.isPropertyType(type)) {
     		DBObject dbObj = toDBObject(javaObj);
-    		dbObj.removeField(Mapper.CLASS_NAME_KEY);
+    		dbObj.removeField(CLASS_NAME_FIELDNAME);
     		return dbObj;
     	}
     	else if (bSameType && !bSingleValue && !ReflectionUtils.isPropertyType(subType)) {
@@ -257,8 +256,10 @@ public class Mapper {
     	try {
 	
 	        MappedClass mc = getMappedClass(entity);
-	        
-    		dbObject.put(CLASS_NAME_KEY, entity.getClass().getCanonicalName());
+
+            if ( mc.getPolymorphicAnnotation() != null ) {
+                dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
+            }
     		
 	        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
 	        for (MappedField mf : mc.getPersistenceFields()) {
@@ -340,7 +341,7 @@ public class Mapper {
 	            	Object meVal = entry.getValue();
 	            	DBObject dbObj = toDBObject(meVal);
 	            	if (mf.getSubType().equals(meVal.getClass())) 
-	            		dbObj.removeField(Mapper.CLASS_NAME_KEY);
+	            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 	                values.put(entry.getKey(), dbObj);
 	            }
 	            if (values.size() > 0) dbObject.put(name, values);
@@ -353,7 +354,7 @@ public class Mapper {
                 for ( Object o : coll ) {                	
 	            	DBObject dbObj = toDBObject(o);
 	            	if (mf.getSubType().equals(o.getClass())) 
-	            		dbObj.removeField(Mapper.CLASS_NAME_KEY);
+	            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
                     values.add(dbObj);
                 }
                 if (values.size()>0) dbObject.put(name, values);
@@ -362,7 +363,7 @@ public class Mapper {
         	DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue);
             if ( dbObj != null && dbObj.keySet().size() > 0) {
             	if (mf.getType().equals(fieldValue.getClass())) 
-            		dbObj.removeField(Mapper.CLASS_NAME_KEY);
+            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
             	dbObject.put(name, dbObj);
             }
         }
