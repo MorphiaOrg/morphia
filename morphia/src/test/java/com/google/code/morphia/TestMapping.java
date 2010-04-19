@@ -22,11 +22,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Embedded;
@@ -61,7 +63,28 @@ import com.mongodb.Mongo;
  */
 @SuppressWarnings("unchecked")
 public class TestMapping {
-
+	Mongo mongo;
+	Morphia morphia = new Morphia();
+	DB db;
+	Datastore ds;
+	
+//	@Embedded
+//	public static class CustomId {
+//		ObjectId id;
+//		String type;
+//	}
+	
+	@Entity
+	public static class KeyAsId {
+		@Id Key<?> id;
+		String name = "hello";
+		
+		protected KeyAsId() {}
+		public KeyAsId(Key<?> key) {
+			this.id = key;
+		}
+	}
+	
 	@Entity
 	public static class MissingId {
 		String id;
@@ -143,12 +166,24 @@ public class TestMapping {
 			coll.add("hi"); coll.add("Scott");
 		}
 	}
+	
+	public TestMapping() {
+		try {
+			mongo = new Mongo();
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	@Before
+	public void setUp() {
+		mongo.dropDatabase("morphia_test");
+		db = mongo.getDB("morphia_test");
+        ds = morphia.createDatastore(mongo, db.getName());
+	}
 
 	@Test
     public void testFinalField() throws Exception {
-		DatastoreService.setDatabase("morphia_test");
-		Datastore ds = (Datastore)DatastoreService.getDatastore();
-		DatastoreService.mapClass(ContainsFinalField.class);
+		morphia.map(ContainsFinalField.class);
 		Key<ContainsFinalField> savedKey = ds.save(new ContainsFinalField(12));
 		ContainsFinalField loaded = ds.get(ContainsFinalField.class, savedKey.getId());
 		assertNotNull(loaded);        
@@ -158,9 +193,7 @@ public class TestMapping {
 
 	@Test
     public void testCollectionMapping() throws Exception {
-		DatastoreService.setDatabase("morphia_test");
-		Datastore ds = (Datastore)DatastoreService.getDatastore();
-		DatastoreService.mapClass(ContainsCollection.class);
+		morphia.map(ContainsCollection.class);
 		Key<ContainsCollection> savedKey = ds.save(new ContainsCollection());
 		ContainsCollection loaded = ds.get(ContainsCollection.class, savedKey.getId());
 		assertEquals(loaded.coll, (new ContainsCollection()).coll);
@@ -169,9 +202,7 @@ public class TestMapping {
 	
 	@Test
     public void testbyteArrayMapping() throws Exception {
-		DatastoreService.setDatabase("morphia_test");
-		Datastore ds = (Datastore)DatastoreService.getDatastore();
-		DatastoreService.mapClass(ContainsbyteArray.class);
+		morphia.map(ContainsbyteArray.class);
 		Key<ContainsbyteArray> savedKey = ds.save(new ContainsbyteArray());
 		ContainsbyteArray loaded = ds.get(ContainsbyteArray.class, savedKey.getId());
 		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
@@ -180,9 +211,7 @@ public class TestMapping {
 	
 	@Test
     public void testSerializedMapping() throws Exception {
-		DatastoreService.setDatabase("morphia_test");
-		Datastore ds = (Datastore)DatastoreService.getDatastore();
-		DatastoreService.mapClass(ContainsSerializedData.class);
+		morphia.map(ContainsSerializedData.class);
 		Key<ContainsSerializedData> savedKey = ds.save(new ContainsSerializedData());
 		ContainsSerializedData loaded = ds.get(ContainsSerializedData.class, savedKey.getId());
 		assertNotNull(loaded.data);        		
@@ -193,22 +222,30 @@ public class TestMapping {
 	@SuppressWarnings("deprecation")
 	@Test
     public void testLongArrayMapping() throws Exception {
-		DatastoreService.setDatabase("morphia_test");
-		Datastore ds = (Datastore)DatastoreService.getDatastore();
-		DatastoreService.mapClass(ContainsLongAndStringArray.class);
+		morphia.map(ContainsLongAndStringArray.class);
 		ds.save(new ContainsLongAndStringArray());
 		ContainsLongAndStringArray loaded = ds.<ContainsLongAndStringArray>find(ContainsLongAndStringArray.class).get();
 		assertEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
 		assertEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
 		assertNotNull(loaded.id);        
 	}
-
+	@Test
+    public void testKeyAsId() throws Exception {
+        morphia.map(KeyAsId.class);
+        
+        Rectangle r = new Rectangle(1,1);
+//        Rectangle r2 = new Rectangle(11,11);
+        
+        Key<Rectangle> rKey = ds.save(r);
+//        Key<Rectangle> r2Key = ds.save(r2);
+        KeyAsId kai = new KeyAsId(rKey);
+        Key<KeyAsId> kaiKey = ds.save(kai);
+        KeyAsId kaiLoaded = ds.get(KeyAsId.class, rKey);
+        assertNotNull(kaiLoaded);
+        assertNotNull(kaiKey);
+	}
 	@Test
     public void testDbRefMapping() throws Exception {
-        Morphia morphia = new Morphia();
-        Mongo mongo = new Mongo();
-        DB db = mongo.getDB("morphia_test");
-        
         morphia.map(ContainsRef.class).map(Rectangle.class);
         DBCollection stuff = db.getCollection("stuff");
         DBCollection rectangles = db.getCollection("rectangles");
@@ -238,7 +275,6 @@ public class TestMapping {
 	
 	@Test
     public void testBadMappings() throws Exception {
-        Morphia morphia = new Morphia();
         morphia.map(IPrintAWarning.class);
         
         assertTrue("'ne' field should not be persisted!",
@@ -288,14 +324,10 @@ public class TestMapping {
     
     @Test
     public void testBasicMapping() throws Exception {
-        Mongo mongo = new Mongo();
-        DB db = mongo.getDB("morphia_test");
         try {
-
             DBCollection hotels = db.getCollection("hotels");
             DBCollection agencies = db.getCollection("agencies");
 
-            Morphia morphia = new Morphia();
             morphia.map(Hotel.class);
             morphia.map(TravelAgency.class);
 
@@ -369,11 +401,8 @@ public class TestMapping {
 
     @Test
     public void testMaps() throws Exception {
-        Mongo mongo = new Mongo();
-        DB db = mongo.getDB("morphia_test");
         try {
             DBCollection articles = db.getCollection("articles");
-            Morphia morphia = new Morphia();
             morphia.map(Article.class).map(Translation.class).map(Circle.class);
 
             Article related = new Article();
@@ -414,39 +443,31 @@ public class TestMapping {
 
     @Test
     public void testRecursiveReference() throws Exception {
-        Mongo mongo = new Mongo();
-        DB db = mongo.getDB("morphia_test");
-        try {
-            DBCollection stuff = db.getCollection("stuff");
+        DBCollection stuff = db.getCollection("stuff");
 
-            Morphia morphia = new Morphia();
-            morphia.map(RecursiveParent.class).map(RecursiveChild.class);
+        morphia.map(RecursiveParent.class).map(RecursiveChild.class);
 
-            RecursiveParent parent = new RecursiveParent();
-            BasicDBObject parentDbObj = (BasicDBObject) morphia.toDBObject(parent);
-            stuff.save(parentDbObj);
+        RecursiveParent parent = new RecursiveParent();
+        BasicDBObject parentDbObj = (BasicDBObject) morphia.toDBObject(parent);
+        stuff.save(parentDbObj);
 
-            RecursiveChild child = new RecursiveChild();
-            BasicDBObject childDbObj = (BasicDBObject) morphia.toDBObject(child);
-            stuff.save(childDbObj);
+        RecursiveChild child = new RecursiveChild();
+        BasicDBObject childDbObj = (BasicDBObject) morphia.toDBObject(child);
+        stuff.save(childDbObj);
 
-            RecursiveParent parentLoaded = morphia.fromDBObject(RecursiveParent.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, parentDbObj.get(Mapper.ID_KEY))));
-            RecursiveChild childLoaded = morphia.fromDBObject(RecursiveChild.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, childDbObj.get(Mapper.ID_KEY))));
+        RecursiveParent parentLoaded = morphia.fromDBObject(RecursiveParent.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, parentDbObj.get(Mapper.ID_KEY))));
+        RecursiveChild childLoaded = morphia.fromDBObject(RecursiveChild.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, childDbObj.get(Mapper.ID_KEY))));
 
-            parentLoaded.setChild(childLoaded);
-            childLoaded.setParent(parentLoaded);
+        parentLoaded.setChild(childLoaded);
+        childLoaded.setParent(parentLoaded);
 
-            stuff.save(morphia.toDBObject(parentLoaded));
-            stuff.save(morphia.toDBObject(childLoaded));
+        stuff.save(morphia.toDBObject(parentLoaded));
+        stuff.save(morphia.toDBObject(childLoaded));
 
-            RecursiveParent finalParentLoaded = morphia.fromDBObject(RecursiveParent.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, parentDbObj.get(Mapper.ID_KEY))));
-            RecursiveChild finalChildLoaded = morphia.fromDBObject(RecursiveChild.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, childDbObj.get(Mapper.ID_KEY))));
+        RecursiveParent finalParentLoaded = morphia.fromDBObject(RecursiveParent.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, parentDbObj.get(Mapper.ID_KEY))));
+        RecursiveChild finalChildLoaded = morphia.fromDBObject(RecursiveChild.class, (BasicDBObject)stuff.findOne(new BasicDBObject(Mapper.ID_KEY, childDbObj.get(Mapper.ID_KEY))));
 
-            assertNotNull(finalParentLoaded.getChild());
-            assertNotNull(finalChildLoaded.getParent());
-
-        } finally {
-            db.dropDatabase();
-        }
+        assertNotNull(finalParentLoaded.getChild());
+        assertNotNull(finalChildLoaded.getParent());
     }
 }

@@ -131,23 +131,18 @@ public class Mapper {
      */
 	public void updateKeyInfo(Object entity, Object dbId, String dbNs) {
 		MappedClass mc = getMappedClass(entity);
-		
 		//update id field, if there.
 		if (mc.getIdField() != null && dbId != null) {
-			try {
+			try {				
+				Object dbIdValue = objectFromValue(mc.getIdField().getType(), dbId);
 				Object value = mc.getIdField().get(entity);
 				if ( value != null ) {
 					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
-			    	if (!dbId.equals(value))
-			    		throw new RuntimeException("id mismatch: " + value + " != " + dbId + " for " + entity.getClass().getName());
+			    	if (!dbIdValue.equals(value))
+			    		throw new RuntimeException("id mismatch: " + value + " != " + dbIdValue + " for " + entity.getClass().getName());
 				} else {
-					//set the id field with the "new" value
-					if (dbId instanceof ObjectId && mc.getIdField().getType().isAssignableFrom(String.class)) {
-						dbId = dbId.toString();
-					}
-		    		mc.getIdField().set(entity, dbId);
+		    		mc.getIdField().set(entity, dbIdValue);
 				}
-
 			} catch (Exception e) {
 				if (e.getClass().equals(RuntimeException.class)) throw (RuntimeException)e;
 
@@ -267,7 +262,7 @@ public class Mapper {
 	            if ( mf.hasAnnotation(Id.class) ) {
 	                Object value = mf.getFieldValue(entity);
 	                if ( value != null ) {
-	                    dbObject.put(ID_KEY, asObjectIdMaybe(value));
+	                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(value)));
 	                }
 	            } else if ( mf.hasAnnotation(Reference.class) ) {
 	                mapReferencesToDBObject(entity, mf, dbObject);
