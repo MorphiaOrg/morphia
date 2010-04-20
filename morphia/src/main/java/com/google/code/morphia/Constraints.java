@@ -68,6 +68,11 @@ public class Constraints implements Serializable {
         return this;
     }
 
+    public Constraints id() {
+        currentKey = "_id";
+        return this;
+    }
+
     public Constraints equalTo( Object value ) {
         return addField(value);
     }
