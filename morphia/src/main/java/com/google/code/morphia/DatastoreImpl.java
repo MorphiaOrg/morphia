@@ -243,6 +243,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 	
 	@Override
 	public <T> Query<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
+		//TODO add method that doesn't restrict based on clazz (for more than one type of Key)
 		Mapper mapr = morphia.getMapper();
 		String kind = mapr.getCollectionName(clazz);
 		List objIds = new ArrayList();

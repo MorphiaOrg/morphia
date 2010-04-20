@@ -231,8 +231,8 @@ public class QueryImpl<T> implements Query<T> {
 
 	@Override
 	public Key<T> getKey() {
-		Iterable<T> it = fetchIdsOnly();
-		return (it.iterator().hasNext()) ? new Key<T>(clazz, clazz) : null;
+		Iterator<Key<T>> it = fetchKeys().iterator();
+		return (it.hasNext()) ?  it.next() : null;
 	}
 
 	@Override
