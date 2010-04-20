@@ -223,15 +223,18 @@ public class QueryImpl<T> implements Query<T> {
 	@Override
 	public T get() {
 		int oldLimit = limit;
-		limit=1;
-		Iterable<T> it = fetch();
+		limit = 1;
+		Iterator<T> it = fetch().iterator();
 		limit = oldLimit;		
-		return (it.iterator().hasNext()) ? it.iterator().next() : null ;
+		return (it.hasNext()) ? it.next() : null ;
 	}
 
 	@Override
 	public Key<T> getKey() {
+		int oldLimit = limit;
+		limit = 1;
 		Iterator<Key<T>> it = fetchKeys().iterator();
+		limit = oldLimit;		
 		return (it.hasNext()) ?  it.next() : null;
 	}
 

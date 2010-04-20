@@ -77,6 +77,13 @@ public interface Query<T> extends Iterable<T> {
 	 * @return the only instance in the result, or null if the result set is empty.
 	 */
 	T get();
+
+	/**
+	 * Get the key of the first entity in the result set.  Obeys the offset value.
+	 * 
+	 * @return the key of the first instance in the result, or null if the result set is empty.
+	 */
+	Key<T> getKey();
 	
 	/**
 	 * Execute the query and get the results (as a {@code List<T>}  This method is provided as a convenience;
@@ -89,13 +96,6 @@ public interface Query<T> extends Iterable<T> {
 	 */
 	List<Key<T>> asKeyList();	
 
-	/**
-	 * Get the key of the first entity in the result set.  Obeys the offset value.
-	 * 
-	 * @return the key of the first instance in the result, or null if the result set is empty.
-	 */
-	Key<T> getKey();
-	
 	/**
 	 * Execute the query and get the results.  This method is provided for orthogonality;
 	 * Query.fetch().iterator() is identical to Query.iterator().
