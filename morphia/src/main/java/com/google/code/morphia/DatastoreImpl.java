@@ -16,6 +16,7 @@ import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.utils.IndexDirection;
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -105,7 +106,10 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 	public <T> void delete(Query<T> query) {
 		DBCollection dbColl = getCollection(query.getType());
 		QueryImpl<T> q = (QueryImpl<T>) query;
-		dbColl.remove(q.getQueryObject());
+		if (q.getQueryObject() != null)
+			dbColl.remove(q.getQueryObject());
+		else
+			dbColl.remove(new BasicDBObject());
 	}
 
 	protected <T> void ensureIndex(String name, Class<T> clazz, String fieldName, IndexDirection dir, boolean unique, boolean dropDupsOnCreate) {
