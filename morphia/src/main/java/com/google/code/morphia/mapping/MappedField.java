@@ -28,17 +28,31 @@ import com.google.code.morphia.utils.ReflectionUtils;
 public class MappedField {
     static final Logger log = Logger.getLogger(MappedField.class.getName());
 
+    
+    //the field :)
     private Field field;
+    //the constructor for the type
     private Constructor ctor;
+    //the name to store in mongodb {name:value}
     private String name;
 	
+    //Annotations that have been found relevent to mapping
 	protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	//The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
 	private Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
 	
+	//the type (T) for the Collection<T>/T[]/Map<?,T>
 	private Class subType = null;
+	//the type (T) for the Map<T,?>
+	private Class keyType = null;
+	
+	//indicates the field is a single value
 	private boolean isSingleValue = true;
+	//indicated the type is a mongo compatible type (our version of value-type)
 	private boolean isMongoType = false;
+	//indicated if it implements Map interface
 	private boolean isMap = false;
+	//indicated if the collection is a set (or list)
 	private boolean isSet = false;
 	
 	public MappedField(Field f) {
@@ -73,7 +87,7 @@ public class MappedField {
 		        ctor = ctorType.getDeclaredConstructor();
 		        ctor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
-				throw new MappingException("no usable constructor.", e);
+				throw new MappingException("No usable constructor for " + field.getType().getName(), e);
 			}
 
 		
@@ -87,6 +101,7 @@ public class MappedField {
 			
 			//get the subtype T, T[]/List<T>/Map<?,T>
 			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f, (isMap) ? 1 : 0);
+			if (isMap) keyType = ReflectionUtils.getParameterizedClass(f, 0);
 		}
 		
 		//check the main type
@@ -176,6 +191,10 @@ public class MappedField {
 
 	public Class getType() {
 		return field.getType();
+	}
+
+	public Class getMapKeyType() {
+		return keyType;
 	}
 			
 	public Class getDeclaringClass() {

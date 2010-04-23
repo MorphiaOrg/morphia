@@ -133,13 +133,13 @@ public class Mapper {
 		MappedClass mc = getMappedClass(entity);
 		//update id field, if there.
 		if (mc.getIdField() != null && dbId != null) {
-			try {				
+			try {
 				Object dbIdValue = objectFromValue(mc.getIdField().getType(), dbId);
-				Object value = mc.getIdField().get(entity);
-				if ( value != null ) {
+				Object idValue = mc.getIdField().get(entity);
+				if ( idValue != null ) {
 					//The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could indicate a bad state.
-			    	if (!dbIdValue.equals(value))
-			    		throw new RuntimeException("id mismatch: " + value + " != " + dbIdValue + " for " + entity.getClass().getName());
+			    	if (!dbIdValue.equals(idValue))
+			    		throw new RuntimeException("id mismatch: " + idValue + " != " + dbIdValue + " for " + entity.getClass().getName());
 				} else {
 		    		mc.getIdField().set(entity, dbIdValue);
 				}
@@ -161,7 +161,7 @@ public class Mapper {
         }
     }
 
-    protected Object createEntityInstanceForDbObject( Class entityClass, BasicDBObject dbObject ) {
+    protected Object createInstance( Class entityClass, BasicDBObject dbObject ) {
         // see if there is a className value
         String className = (String) dbObject.get(CLASS_NAME_FIELDNAME);
         Class c = entityClass;
@@ -183,7 +183,7 @@ public class Mapper {
     }
 
     /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
-    protected Object notObjInst(Class fallbackType, Constructor tryMe) {
+    protected Object tryConstructor(Class fallbackType, Constructor tryMe) {
     	if (tryMe != null) {
     		tryMe.setAccessible(true);
     		try {
@@ -198,13 +198,13 @@ public class Mapper {
     public Object fromDBObject(Class entityClass, BasicDBObject dbObject) {
     	if (dbObject == null) {
     		Throwable t = new Throwable();
-    		logger.log(Level.SEVERE, "Somebody passes in a null dbObject; bad client!", t);
+    		logger.log(Level.SEVERE, "Somebody passed in a null dbObject; bad client!", t);
     		return null;
     	}
     	
     	entityCache.set(new HashMap<String, Object>());
         
-        Object entity = createEntityInstanceForDbObject(entityClass, dbObject);
+        Object entity = createInstance(entityClass, dbObject);
         
         mapDBObjectToEntity(dbObject, entity);
 
@@ -212,7 +212,7 @@ public class Mapper {
         return entity;
     }
 
-    /** converts from a java object to a mongo object (possibly a DBObject for complex mappings) */
+    /** converts a java object to a mongo object (possibly a DBObject for complex mappings) */
     public Object toMongoObject(Object javaObj) {
     	Class origClass = javaObj.getClass();
     	Object newObj = objectToValue(origClass, javaObj);
@@ -245,7 +245,7 @@ public class Mapper {
     		return newObj;
     }
     
-    /** coverts an entity to a DBObject */
+    /** converts an entity to a DBObject */
     public DBObject toDBObject( Object entity ) {
     	BasicDBObject dbObject = new BasicDBObject();
  	
@@ -259,9 +259,9 @@ public class Mapper {
 	        for (MappedField mf : mc.getPersistenceFields()) {
 	           	try {	
 		            if ( mf.hasAnnotation(Id.class) ) {
-		                Object value = mf.getFieldValue(entity);
-		                if ( value != null ) {
-		                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(value)));
+		                Object dbVal = mf.getFieldValue(entity);
+		                if ( dbVal != null ) {
+		                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(dbVal)));
 		                }
 		            } else if ( mf.hasAnnotation(Reference.class) ) {
 		                mapReferencesToDBObject(entity, mf, dbObject);
@@ -287,12 +287,14 @@ public class Mapper {
 	        if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) fieldValue;
 	            if ( map != null && map.size() > 0) {
-	                Map values = (Map)notObjInst(HashMap.class, mf.getCTor());
+	                Map values = (Map)tryConstructor(HashMap.class, mf.getCTor());
 
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-	                    values.put(entry.getKey(), new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
+	                	String strKey = objectToValue(entry.getKey()).toString();
+	                    values.put(strKey, new DBRef(null, getCollectionName(entry.getValue()), asObjectIdMaybe(getId(entry.getValue()))));
 	                }
-	                if (values.size() > 0) dbObject.put(name, values);
+	                if (values.size() > 0)
+	                	dbObject.put(name, values);
 	            }
 	    	} else if (mf.isMultipleValues()) {
 	    		if (fieldValue != null) {
@@ -337,10 +339,12 @@ public class Mapper {
 	            	
 	            	if (mf.getSubType().equals(entryVal.getClass())) 
 	            		convertedVal.removeField(Mapper.CLASS_NAME_FIELDNAME);
-	                
-	            	values.put(entry.getKey(), convertedVal);
+                	
+	            	String strKey = objectToValue(entry.getKey()).toString();
+	            	values.put(strKey, convertedVal);
 	            }
-	            if (values.size() > 0) dbObject.put(name, values);
+	            if (values.size() > 0) 
+	            	dbObject.put(name, values);
 	        }
 	
 	    } else if (mf.isMultipleValues()) {
@@ -353,13 +357,16 @@ public class Mapper {
 	            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
                     values.add(dbObj);
                 }
-                if (values.size()>0) dbObject.put(name, values);
+                if (values.size()>0) 
+                	dbObject.put(name, values);
             }
         } else {
         	DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue);
             if ( dbObj != null && dbObj.keySet().size() > 0) {
+
             	if (mf.getType().equals(fieldValue.getClass())) 
             		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
+            	
             	dbObject.put(name, dbObj);
             }
         }
@@ -384,12 +391,12 @@ public class Mapper {
 	            if (map != null && map.size() > 0) {
 	                Map mapForDb = new HashMap();
 	                for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-	                	mapForDb.put(entry.getKey(), objectToValue(entry.getValue()));
+	                	String strKey = objectToValue(entry.getKey()).toString();
+	                	mapForDb.put(strKey, objectToValue(entry.getValue()));
 	                }
 	                dbObject.put(name, mapForDb);
 	            }
 	        } else if (mf.isMultipleValues()) {
-	        	Class paramClass = mf.getSubType();
 	            if (fieldValue != null) {
 	            	Iterable iterableValues = null;
 	
@@ -412,19 +419,18 @@ public class Mapper {
 	            		iterableValues = (Iterable) fieldValue;
 	            	}
 	        	
-	        		//cast value to a common interface
 	        		List values = new ArrayList();
 	                
-	            	if ( paramClass != null ) {
+	            	if ( mf.getSubType() != null ) {
 	                    for ( Object o : iterableValues )
-	                    	values.add(objectToValue(paramClass, o));
+	                    	values.add(objectToValue(mf.getSubType(), o));
 	                } else {
 	                    for ( Object o : iterableValues )
 	                    	values.add(objectToValue(o));
 	                }
-	        		if (values.size() > 0) dbObject.put(name, values);
+	        		if (values.size() > 0) 
+	        			dbObject.put(name, values);
 	            }
-	        
 	        } else {
 	        	Object val = objectToValue(fieldValue);
 	            if ( val != null ) {
@@ -504,9 +510,10 @@ public class Mapper {
 	        } else if (mf.isMap()) {
 		        if ( dbObject.containsField(name) ) {
 		            Map<Object,Object> map = (Map<Object,Object>) dbObject.get(name);
-	                Map values = (Map)notObjInst(HashMap.class, mf.getCTor());
+	                Map values = (Map)tryConstructor(HashMap.class, mf.getCTor());
 		            for ( Map.Entry<Object,Object> entry : map.entrySet() ) {
-		            	values.put(entry.getKey(), objectFromValue(fieldType, entry.getValue()));
+		            	Object objKey = objectFromValue(mf.getMapKeyType(), entry.getKey());
+		            	values.put(objKey, objectFromValue(mf.getSubType(), entry.getValue()));
 		            }
 		            mf.setFieldValue(entity, values);
 		        }
@@ -527,9 +534,9 @@ public class Mapper {
 	                    Collection values;
 	                    
 	                    if (!mf.isSet())
-	    	                values = (List)notObjInst(ArrayList.class, mf.getCTor());
+	    	                values = (List)tryConstructor(ArrayList.class, mf.getCTor());
 	                    else
-	    	                values = (Set)notObjInst(HashSet.class, mf.getCTor());
+	    	                values = (Set)tryConstructor(HashSet.class, mf.getCTor());
 	                    
 	                    if (subtype == Locale.class) {
 	                        for ( Object o : list )
@@ -571,16 +578,17 @@ public class Mapper {
 
         Class fieldType = mf.getType();
         try {
+        	
 	        if (mf.isMap()) {
-	            Class docObjClass = mf.getSubType();
-	            Map map = (Map)notObjInst(HashMap.class, mf.getCTor());
+	            Map map = (Map)tryConstructor(HashMap.class, mf.getCTor());
 
 	            if ( dbObject.containsField(name) ) {
-	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
-	                for ( Map.Entry entry : value.entrySet() ) {
-	                	Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)entry.getValue());
-	                    docObj = mapDBObjectToEntity((BasicDBObject)entry.getValue(), docObj);
-	                    map.put(entry.getKey(), docObj);
+	                BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
+	                for ( Map.Entry entry : dbVal.entrySet() ) {
+	                	Object newEntity = createInstance(mf.getSubType(), (BasicDBObject)entry.getValue());
+	                    newEntity = mapDBObjectToEntity((BasicDBObject)entry.getValue(), newEntity);
+	                    Object objKey = objectFromValue(mf.getMapKeyType(), entry.getKey());
+	                    map.put(objKey, newEntity);
 	                }
 	            }
 	            
@@ -588,34 +596,33 @@ public class Mapper {
 	            	mf.setFieldValue(entity, map);
 	        } else if (mf.isMultipleValues()) {
 	        	// multiple documents in a List
-	            Class docObjClass = mf.getSubType();
-	            Collection docs = (Collection)notObjInst((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
+	            Class newEntityType = mf.getSubType();
+	            Collection entities = (Collection)tryConstructor((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
 	
 	            if ( dbObject.containsField(name) ) {
-	                Object value = dbObject.get(name);
-	                if ( value instanceof List ) {
-	                    List refList = (List) value;
+	                Object dbVal = dbObject.get(name);
+	                if ( dbVal instanceof List ) {
+	                    List refList = (List) dbVal;
 	                    for ( Object docDbObject : refList ) {
-	                        Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)docDbObject);
-	                        docObj = mapDBObjectToEntity((BasicDBObject)docDbObject, docObj);
-	                        docs.add(docObj);
+	                        Object newEntity = createInstance(newEntityType, (BasicDBObject)docDbObject);
+	                        newEntity = mapDBObjectToEntity((BasicDBObject)docDbObject, newEntity);
+	                        entities.add(newEntity);
 	                    }
 	                } else {
-	                    BasicDBObject docDbObject = (BasicDBObject) dbObject.get(name);
-	                    Object docObj = createEntityInstanceForDbObject(docObjClass, docDbObject);
-	                    docObj = mapDBObjectToEntity(docDbObject, docObj);
-	                    docs.add(docObj);
+	                    BasicDBObject dbObj = (BasicDBObject) dbObject.get(name);
+	                    Object newEntity = createInstance(newEntityType, dbObj);
+	                    newEntity = mapDBObjectToEntity(dbObj, newEntity);
+	                    entities.add(newEntity);
 	                }
 	            }
-	            if (docs.size() > 0)
-	            	mf.setFieldValue(entity, docs);
+	            if (entities.size() > 0)
+	            	mf.setFieldValue(entity, entities);
 	        }  else {
 	            // single document
-	            Class docObjClass = fieldType;
 	            if ( dbObject.containsField(name) ) {
-	                BasicDBObject docDbObject = (BasicDBObject) dbObject.get(name);
-	                Object refObj = createEntityInstanceForDbObject(docObjClass, docDbObject);
-	                refObj = mapDBObjectToEntity(docDbObject, refObj);
+	                BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
+	                Object refObj = createInstance(fieldType, dbVal);
+	                refObj = mapDBObjectToEntity(dbVal, refObj);
 	                if(refObj != null)
 	                	mf.setFieldValue(entity, refObj);
 	            }
@@ -631,17 +638,17 @@ public class Mapper {
     	try {
 	    	if (mf.isMap()) {
 	            Class referenceObjClass = mf.getSubType();
-	            Map map = (Map)notObjInst(HashMap.class, mf.getCTor());
+	            Map map = (Map)tryConstructor(HashMap.class, mf.getCTor());
 
 	            if ( dbObject.containsField(name) ) {
-	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
-	                for ( Map.Entry entry : value.entrySet() ) {
+	                BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
+	                for ( Map.Entry entry : dbVal.entrySet() ) {
 	                    DBRef dbRef = (DBRef) entry.getValue();
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
                         // handle broken references with "no action"
                         if (refDbObject != null) {
-                            Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                            Object refObj = createInstance(referenceObjClass, refDbObject);
                             refObj = mapDBObjectToEntity(refDbObject, refObj);
                             map.put(entry.getKey(), refObj);
                         }
@@ -652,19 +659,19 @@ public class Mapper {
 	        } else if (mf.isMultipleValues()) {
 	            // multiple references in a List
 	            Class referenceObjClass = mf.getSubType();
-	            Collection references = (Collection) notObjInst((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
+	            Collection references = (Collection) tryConstructor((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
 	        	
 	            if ( dbObject.containsField(name) ) {
-	                Object value = dbObject.get(name);
-	                if ( value instanceof List ) {
-	                    List refList = (List) value;
+	                Object dbVal = dbObject.get(name);
+	                if ( dbVal instanceof List ) {
+	                    List refList = (List) dbVal;
 	                    for ( Object dbRefObj : refList ) {
 	                        DBRef dbRef = (DBRef) dbRefObj;
 	                        BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
                             // handle broken references with "no action"
                             if (refDbObject != null) {
-                                Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                                Object refObj = createInstance(referenceObjClass, refDbObject);
                                 refObj = mapDBObjectToEntity(refDbObject, refObj);
                                 references.add(refObj);
                             }
@@ -675,9 +682,9 @@ public class Mapper {
 
                         // handle broken references with "no action"
                         if (refDbObject != null) {
-                            Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
-                            refObj = mapDBObjectToEntity(refDbObject, refObj);
-                            references.add(refObj);
+                            Object newEntity = createInstance(referenceObjClass, refDbObject);
+                            newEntity = mapDBObjectToEntity(refDbObject, newEntity);
+                            references.add(newEntity);
                         }
 	                }
 	            }
@@ -692,7 +699,7 @@ public class Mapper {
 
                     // handle broken references with "no action"
                     if (refDbObject != null) {
-                        Object refObj = createEntityInstanceForDbObject(referenceObjClass, refDbObject);
+                        Object refObj = createInstance(referenceObjClass, refDbObject);
                         refObj = mapDBObjectToEntity(refDbObject, refObj);
                         mf.setFieldValue(entity, refObj);
                     }
@@ -723,14 +730,20 @@ public class Mapper {
 		return id;
 	}
 	
-    /** Converts known types from mongodb -> java. Really it just converts enums and locales from strings */
+    /** Converts known types from mongodb -> java.*/
     public static Object objectFromValue( Class javaType, BasicDBObject dbObject, String name ) {
     	return objectFromValue(javaType, dbObject.get(name));
     }
 
-    /** converts from java value to something we can store in mongodb */
+    /** Converts known types from mongodb -> java.*/
     protected static Object objectFromValue( Class javaType, Object val) {
-        if (javaType == String.class) {
+    	
+    	if (val == null) 
+    		return null;
+    	if (javaType == null) 
+    		return val;
+        
+    	if (javaType == String.class) {
             return val.toString();
         } else if (javaType == Character.class || javaType == char.class) {
             return val.toString().charAt(0);
@@ -764,6 +777,7 @@ public class Mapper {
         } else if (javaType == Key.class) {
             return new Key((DBRef)val);
         }
+        
         return val;
     }
 

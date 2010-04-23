@@ -170,12 +170,15 @@ public class TestMapping {
 	}
 	
 	public static class ContainsPrimitiveMap{
+		@Id String id;
 		@Embedded public Map<String, Long> embeddedValues = new HashMap();
 		public Map<String, Long> values = new HashMap();
-		
+	}
+
+	public enum Enum1 { A, B }
+	public static class ContainsEnumKeyMap{
 		@Id String id;
-		public ContainsPrimitiveMap() {
-		}
+		public Map<Enum1, String> values = new HashMap();
 	}
 	
 	public TestMapping() {
@@ -191,6 +194,25 @@ public class TestMapping {
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
 	}
+	@Test
+    public void testEnumKeyedMap() throws Exception {
+		ContainsEnumKeyMap map = new ContainsEnumKeyMap();
+		map.values.put(Enum1.A,"I'm a");
+		map.values.put(Enum1.B,"I'm b");
+		
+		Key<?> mapKey = ds.save(map);
+		
+		ContainsEnumKeyMap mapLoaded = ds.get(ContainsEnumKeyMap.class, mapKey.getId());
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2,mapLoaded.values.size());
+		assertNotNull(mapLoaded.values.get(Enum1.A));
+		assertNotNull(mapLoaded.values.get(Enum1.B));
+		
+		
+		
+	}
+
 	@Test
     public void testPrimMap() throws Exception {
 		ContainsPrimitiveMap primMap = new ContainsPrimitiveMap();
