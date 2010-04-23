@@ -248,8 +248,7 @@ public class Mapper {
     /** coverts an entity to a DBObject */
     public DBObject toDBObject( Object entity ) {
     	BasicDBObject dbObject = new BasicDBObject();
-    	try {
-	
+ 	
 	        MappedClass mc = getMappedClass(entity);
 
             if ( mc.getPolymorphicAnnotation() != null ) {
@@ -258,23 +257,23 @@ public class Mapper {
     		
 	        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
 	        for (MappedField mf : mc.getPersistenceFields()) {
-	
-	            if ( mf.hasAnnotation(Id.class) ) {
-	                Object value = mf.getFieldValue(entity);
-	                if ( value != null ) {
-	                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(value)));
-	                }
-	            } else if ( mf.hasAnnotation(Reference.class) ) {
-	                mapReferencesToDBObject(entity, mf, dbObject);
-	            } else  if (mf.hasAnnotation(Embedded.class)){
-	                mapEmbeddedToDBObject(entity, mf, dbObject);
-	            } else if (mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
-	            	mapValuesToDBObject(entity, mf, dbObject);
-	            } else {
-	            	logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName() + "]");
-	            }
+	           	try {	
+		            if ( mf.hasAnnotation(Id.class) ) {
+		                Object value = mf.getFieldValue(entity);
+		                if ( value != null ) {
+		                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(value)));
+		                }
+		            } else if ( mf.hasAnnotation(Reference.class) ) {
+		                mapReferencesToDBObject(entity, mf, dbObject);
+		            } else  if (mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible()){
+		                mapEmbeddedToDBObject(entity, mf, dbObject);
+		            } else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
+		            	mapValuesToDBObject(entity, mf, dbObject);
+		            } else {
+		            	logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName() + "]");
+		            }
+	            } catch (Exception e) {throw new MappingException("Error mapping field:" + mf.getFullName(), e);}
 	        }
-        } catch (Exception e) {throw new RuntimeException(e);}
         return dbObject;
 
     }
@@ -333,11 +332,13 @@ public class Mapper {
 	        if ( map != null ) {
 	            BasicDBObject values = new BasicDBObject();
 	            for ( Map.Entry<String,Object> entry : map.entrySet() ) {
-	            	Object meVal = entry.getValue();
-	            	DBObject dbObj = toDBObject(meVal);
-	            	if (mf.getSubType().equals(meVal.getClass())) 
-	            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
-	                values.put(entry.getKey(), dbObj);
+	            	Object entryVal = entry.getValue();
+	            	DBObject convertedVal = toDBObject(entryVal);
+	            	
+	            	if (mf.getSubType().equals(entryVal.getClass())) 
+	            		convertedVal.removeField(Mapper.CLASS_NAME_FIELDNAME);
+	                
+	            	values.put(entry.getKey(), convertedVal);
 	            }
 	            if (values.size() > 0) dbObject.put(name, values);
 	        }
@@ -460,7 +461,7 @@ public class Mapper {
 	            } else if ( mf.hasAnnotation(Reference.class) ) {
 	                mapReferencesFromDBObject(dbObject, mf, entity);
 	
-	            } else if ( mf.hasAnnotation(Embedded.class) ) {
+	            } else if ( mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible() ) {
 	                mapEmbeddedFromDBObject(dbObject, mf, entity);
 	                
 	            } else if ( mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
@@ -577,12 +578,14 @@ public class Mapper {
 	            if ( dbObject.containsField(name) ) {
 	                BasicDBObject value = (BasicDBObject) dbObject.get(name);
 	                for ( Map.Entry entry : value.entrySet() ) {
-	                    Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)entry.getValue());
+	                	Object docObj = createEntityInstanceForDbObject(docObjClass, (BasicDBObject)entry.getValue());
 	                    docObj = mapDBObjectToEntity((BasicDBObject)entry.getValue(), docObj);
 	                    map.put(entry.getKey(), docObj);
 	                }
 	            }
-	            mf.setFieldValue(entity, map);
+	            
+	            if (map.size() > 0)
+	            	mf.setFieldValue(entity, map);
 	        } else if (mf.isMultipleValues()) {
 	        	// multiple documents in a List
 	            Class docObjClass = mf.getSubType();
@@ -604,7 +607,8 @@ public class Mapper {
 	                    docs.add(docObj);
 	                }
 	            }
-	            mf.setFieldValue(entity, docs);
+	            if (docs.size() > 0)
+	            	mf.setFieldValue(entity, docs);
 	        }  else {
 	            // single document
 	            Class docObjClass = fieldType;
@@ -612,7 +616,8 @@ public class Mapper {
 	                BasicDBObject docDbObject = (BasicDBObject) dbObject.get(name);
 	                Object refObj = createEntityInstanceForDbObject(docObjClass, docDbObject);
 	                refObj = mapDBObjectToEntity(docDbObject, refObj);
-	                mf.setFieldValue(entity, refObj);
+	                if(refObj != null)
+	                	mf.setFieldValue(entity, refObj);
 	            }
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
@@ -723,6 +728,7 @@ public class Mapper {
     	return objectFromValue(javaType, dbObject.get(name));
     }
 
+    /** converts from java value to something we can store in mongodb */
     protected static Object objectFromValue( Class javaType, Object val) {
         if (javaType == String.class) {
             return val.toString();

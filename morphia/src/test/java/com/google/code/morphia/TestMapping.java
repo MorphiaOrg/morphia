@@ -26,6 +26,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.junit.Before;
@@ -167,6 +169,15 @@ public class TestMapping {
 		}
 	}
 	
+	public static class ContainsPrimitiveMap{
+		@Embedded public Map<String, Long> embeddedValues = new HashMap();
+		public Map<String, Long> values = new HashMap();
+		
+		@Id String id;
+		public ContainsPrimitiveMap() {
+		}
+	}
+	
 	public TestMapping() {
 		try {
 			mongo = new Mongo();
@@ -180,7 +191,25 @@ public class TestMapping {
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
 	}
-
+	@Test
+    public void testPrimMap() throws Exception {
+		ContainsPrimitiveMap primMap = new ContainsPrimitiveMap();
+		primMap.embeddedValues.put("first",1L);
+		primMap.embeddedValues.put("second",2L);
+		primMap.values.put("first",1L);
+		primMap.values.put("second",2L);
+		Key<ContainsPrimitiveMap> primMapKey = ds.save(primMap);
+		
+		ContainsPrimitiveMap primMapLoaded = ds.get(ContainsPrimitiveMap.class, primMapKey.getId());
+		
+		assertNotNull(primMapLoaded);
+		assertEquals(2,primMapLoaded.embeddedValues.size());
+		assertEquals(2,primMapLoaded.values.size());
+		
+		
+		
+	}
+		
 	@Test
     public void testFinalField() throws Exception {
 		morphia.map(ContainsFinalField.class);

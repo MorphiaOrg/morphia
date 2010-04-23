@@ -86,7 +86,7 @@ public class MappedClass {
 	        ctor = type.getDeclaredConstructor();
 	        ctor.setAccessible(true);
 		} catch (NoSuchMethodException e) {
-			throw new MappingException("no usable constructor.", e);
+			throw new MappingException("No usable constructor for " + type.getName(), e);
 		}
 		
 		for(Method m : ReflectionUtils.getDeclaredAndInheritedMethods(clazz)) {
