@@ -748,9 +748,17 @@ public class Mapper {
         } else if (javaType == Character.class || javaType == char.class) {
             return val.toString().charAt(0);
         } else if (javaType == Integer.class || javaType == int.class) {
-            return ((Number)val).intValue();
+            if ( val instanceof String ) {
+                return Integer.parseInt((String)val);
+            } else {
+                return ((Number)val).intValue();
+            }
         } else if (javaType == Long.class || javaType == long.class) {
-            return ((Number)val).longValue();
+            if ( val instanceof String ) {
+                return Long.parseLong((String)val);
+            } else {
+                return ((Number)val).longValue();
+            }
         } else if (javaType == Byte.class || javaType == byte.class) {
            	Object dbValue = val;
         	if (dbValue instanceof Byte) return dbValue;

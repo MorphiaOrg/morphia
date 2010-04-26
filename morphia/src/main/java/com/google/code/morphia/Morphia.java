@@ -18,7 +18,6 @@ package com.google.code.morphia;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -108,7 +107,7 @@ public class Morphia {
      * @return all classes that are mapped by this instance
      */
     public Map<String, MappedClass> getMappedClasses() {
-        return new HashMap(mapper.getMappedClasses());
+        return Collections.unmodifiableMap(mapper.getMappedClasses());
     }
 
     /**
