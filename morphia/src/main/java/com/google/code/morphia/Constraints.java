@@ -1,7 +1,5 @@
 package com.google.code.morphia;
 
-import com.google.code.morphia.query.FilterOperator;
-import com.google.code.morphia.query.Sort;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +7,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.google.code.morphia.query.FilterOperator;
+import com.google.code.morphia.query.Sort;
 
 /**
  *
@@ -172,7 +173,6 @@ public class Constraints implements Serializable {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
 	private Constraints addField( Object value ) {
         validateField();
         query.put(currentKey, valueOf(value));
@@ -180,7 +180,6 @@ public class Constraints implements Serializable {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     private Constraints addMapField( FilterOperator op, Object value ) {
         validateField();
         query.put(currentKey, map(op.val(), valueOf(value)));
@@ -194,7 +193,9 @@ public class Constraints implements Serializable {
         }
     }
 
-    static Object valueOf( Object obj ) {
+    
+    @SuppressWarnings("unchecked")
+	static Object valueOf( Object obj ) {
         if ( obj.getClass().isEnum() ) {
             return ((Enum)obj).name();
         } else if ( obj instanceof Locale ) {

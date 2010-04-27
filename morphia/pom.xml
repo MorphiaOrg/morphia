@@ -9,7 +9,9 @@
     
     <url>http://code.google.com/p/morphia/</url>
     <description>A lightweight library for mapping Java objects to/from MongoDB (see mongodb.org).</description>
-
+    <properties>
+       <gwt.version>2.0.3</gwt.version>
+    </properties>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -27,15 +29,28 @@
             <name>Olafur Gauti Gudmundsson</name>
         </developer>
         <developer>
-            <id>scotthernandez</id>
-            <name>Scott Hernandez</name>
+        	<id>scotthernandez</id>
+        	<name>Scott Hernandez</name>
+        	<email>scotthernandez (hot/g mail)</email>
+        	<timezone>(GMT-08:00) Pacific Time(US &amp; Canada)</timezone>
         </developer>
     </developers>
 
-    <dependencies>
-        
-    	<dependency>
-    		<groupId>org.mongodb</groupId>
+	<dependencies>
+<!--		<dependency>-->
+<!--			<groupId>com.google.gwt</groupId>-->
+<!--			<artifactId>gwt-servlet</artifactId>-->
+<!--			<version>${gwt.version}</version>-->
+<!--			<scope>compile</scope>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.google.gwt</groupId>-->
+<!--			<artifactId>gwt-user</artifactId>-->
+<!--			<version>${gwt.version}</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>org.mongodb</groupId>
     		<artifactId>mongo-java-driver</artifactId>
     		<version>1.4</version>
     		<type>jar</type>
@@ -82,6 +97,18 @@
                     <header>src/etc/header.txt</header>
                 </configuration>
             </plugin>
+            <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
         <extensions>
             <extension>
