@@ -374,6 +374,13 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 		MappedClass mc = mapr.getMappedClass(entity);
 		DBObject dbObj = mapr.toDBObject(entity);
 		dbColl.save(dbObj);
+		if (dbObj.get(Mapper.ID_KEY) == null) 
+			throw new MappingException("Missing _id after save!");
+		
+		DBObject lastErr = dbColl.getDB().getLastError();
+		if (lastErr.get("err") != null)
+			throw new MappingException("Error: " + lastErr.toString());
+			
 		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj);
 		return new Key<T>(dbColl.getName(), getId(entity));		

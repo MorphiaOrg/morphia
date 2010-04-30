@@ -30,6 +30,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -66,6 +67,15 @@ public class TestIndexedCapped {
 		@Id String id;
 		@Indexed(name="l_ascending") long l=4;	
 	}
+
+	@Entity
+	public static class UniqueIndexClass{
+		@Id String id;
+		@Indexed(name="l_ascending", unique=true) long l=4;
+		String name;
+		UniqueIndexClass(){}
+		UniqueIndexClass(String name){this.name = name;}
+	}
 	
 	public TestIndexedCapped () {
 		try {
@@ -73,7 +83,7 @@ public class TestIndexedCapped {
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
-		morphia.map(CurrentStatus.class).map(IndexedClass.class).map(NamedIndexClass.class);
+		morphia.map(CurrentStatus.class).map(UniqueIndexClass.class).map(IndexedClass.class).map(NamedIndexClass.class);
 	}
 
 	@Before
@@ -110,6 +120,23 @@ public class TestIndexedCapped {
 		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 	
+	@Test
+    public void testUniqueIndexedEntity() throws Exception {
+		MappedClass mc = morphia.getMapper().getMappedClass(UniqueIndexClass.class);
+		ds.ensureIndexes();		
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+		ds.save(new UniqueIndexClass("a"));
+		
+		try {
+			//this should throw...
+			ds.save(new UniqueIndexClass("v"));
+			assertTrue(false);
+		} catch (MappingException me) {}
+		
+		ds.ensureIndexes();
+		assertTrue(hasIndexedField("l",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+	}
+
 	@Test
     public void testNamedIndexEntity() throws Exception {
 		MappedClass mc = morphia.getMapper().getMappedClass(NamedIndexClass.class);
