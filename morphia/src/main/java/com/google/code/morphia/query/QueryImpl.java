@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
@@ -32,11 +33,12 @@ import com.mongodb.DBObject;
 public class QueryImpl<T> implements Query<T> {
     private static final Logger log = Logger.getLogger(Mapper.class.getName());
 
-	boolean validate = true;
+    
+	boolean validating = true;
 	BasicDBObjectBuilder query = null;
 	BasicDBObjectBuilder fields = null;
 	BasicDBObjectBuilder sort = null;
-	Datastore ds = null;
+	DatastoreImpl ds = null;
 	DBCollection dbColl = null;
 	int offset = 0;
 	int limit = -1;
@@ -44,7 +46,7 @@ public class QueryImpl<T> implements Query<T> {
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds) {
 		this.clazz = clazz;
-		this.ds = ds;
+		this.ds = ((DatastoreImpl)ds);
 		this.dbColl = coll;
 	}
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
@@ -167,9 +169,9 @@ public class QueryImpl<T> implements Query<T> {
 		String prop = parts[0].trim();
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 
-		if( validate ) validate(prop, value);
+		if( validating ) validate(prop, value);
 		if (query == null) query = BasicDBObjectBuilder.start();
-		Mapper mapr = this.ds.getMapper();
+		Mapper mapr = ds.getMapper();
 		Object mappedValue = Mapper.asObjectIdMaybe(mapr.toMongoObject(value));
 		Class<?> type = mappedValue.getClass();
 		
@@ -186,6 +188,12 @@ public class QueryImpl<T> implements Query<T> {
 
 		return this;
 	}
+	
+	@Override
+	public Query<T> enableValidation(){ validating = true; return this; }
+	@Override
+	public Query<T> disableValidation(){ validating = false; return this; }
+
 	
 	private void validate(String prop, Object value) {
 		String[] parts = prop.split("\\.");
@@ -278,11 +286,10 @@ public class QueryImpl<T> implements Query<T> {
 	public Iterator<T> iterator() {
 		return fetch().iterator();
 	}
-	@Override
-	public Class<T> getType() {
+	
+	public Class<T> getEntityType() {
 		return this.clazz;
 	}	
-	
 	
 	public static class FieldPartImpl<T> implements FieldPart<T>{
 		
@@ -352,7 +359,6 @@ public class QueryImpl<T> implements Query<T> {
 	}
 
 
-	@Override
 	public FieldPart<T> field(String fieldExpr) {
 		return new FieldPartImpl<T>(fieldExpr, this);
 	}

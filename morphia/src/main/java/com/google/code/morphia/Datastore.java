@@ -1,24 +1,15 @@
 package com.google.code.morphia;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.utils.IndexDirection;
-import com.mongodb.DB;
-import com.mongodb.DBRef;
-import com.mongodb.Mongo;
+import com.mongodb.DBCollection;
 /**
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
  */
 public interface Datastore {	
-	/** Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id) */
-	<T,V> DBRef createRef(Class<T> clazz, V id);
-	/** Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id) */
-	<T> DBRef createRef(T entity);
-	
-	/** Creates a (type-safe) reference to the entity */
+	/** Creates a (type-safe) reference to the entity; if stored this will become a {@link DBRef} */
 	<T> Key<T> getKey(T entity);
 	
 	/** Deletes the given entity (by id) */
@@ -62,14 +53,11 @@ public interface Datastore {
 	<T> T get(T entity);
 	
 	/** Find the given entity (by collectionName/id);*/
-	<T> T get(Class<T> clazz, DBRef ref);
-	/** Find the given entity (by collectionName/id);*/
-	<T> T get(Class<T> clazz, Key<T> key);
+	<T> T getByKey(Class<T> clazz, Key<T> key);
 
-
-	/** Gets the count this kind of element*/
+	/** Gets the count this kind ({@link DBCollection})*/
 	<T> long getCount(T entity);
-	/** Gets the count this kind of element*/
+	/** Gets the count this kind ({@link DBCollection})*/
 	<T> long getCount(Class<T> clazz);
 
 	/** Gets the count of items returned by this query; same as {@code query.countAll()}*/
@@ -90,15 +78,11 @@ public interface Datastore {
 	<T> void updateFirst(Query<T> query, UpdateOperations ops);
 	
 	/** The builder for all update operations */
-	UpdateOperations ops();
+	UpdateOperations createUpdateOperation();
 	
-	/** The instance this Datastore is using */
-	DB getDB();
-	/** The instance this Datastore is using */
-	Mongo getMongo();
-	/** The instance this Datastore is using */
-	Mapper getMapper();
-
+	/** Returns a new query bound to the kind (a specific {@link DBCollection})  */
+	<T> Query<T> createQuery(Class<T> kind);
+	
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir);
 	/** Ensures (creating if necessary) the index and direction */
@@ -107,6 +91,6 @@ public interface Datastore {
 	void ensureIndexes();
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
 	<T> void ensureIndexes(Class<T>  clazz);
-	/** ensure capped dbcollections for {@link Entity}s */
+	/** ensure capped DBCollections for {@code Entity}(s) */
 	void ensureCaps();
 }

@@ -37,7 +37,7 @@ public class TestSuperDatastore {
 	Mongo mongo;
 	Morphia morphia = new Morphia();
 	DB db;
-	SuperDatastore ds;
+	AdvancedDatastore ds;
 	
 	public TestSuperDatastore () {
 		try {
@@ -53,7 +53,7 @@ public class TestSuperDatastore {
 	public void setUp() {
 		mongo.dropDatabase("morphia_test");
 		db = mongo.getDB("morphia_test");
-        ds = (SuperDatastore)morphia.createDatastore(mongo, db.getName());
+        ds = (AdvancedDatastore)morphia.createDatastore(mongo, db.getName());
 	}
 
 	@Test

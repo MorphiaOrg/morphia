@@ -92,7 +92,7 @@ public class TestPerf {
     
     public void insertAddresses(int count, boolean raw) {
     	Address template = new Address();
-    	DBCollection dbColl = db.getCollection(ds.getMapper().getCollectionName(Address.class));
+    	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
     	for(int i=0;i<count;i++) {
     		if(raw) {
     			DBObject addr = new BasicDBObject();

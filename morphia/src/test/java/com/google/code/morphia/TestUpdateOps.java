@@ -72,18 +72,18 @@ public class TestUpdateOps {
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 		
-		ds.update(q1, ds.ops().inc("height"));
+		ds.update(q1, ds.createUpdateOperation().inc("height"));
 		assertEquals(0, ds.getCount(q1));
 		assertEquals(3, ds.getCount(q2));
 
-		ds.update(q2, ds.ops().dec("height"));
+		ds.update(q2, ds.createUpdateOperation().dec("height"));
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.ops().add("height",1D).add("width", 1D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperation().add("height",1D).add("width", 1D), true);		
 		assertNotNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNull(ds.find(Rectangle.class, "width", 2D).get());
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.ops().add("height",2D).add("width", 2D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperation().add("height",2D).add("width", 2D), true);		
 		assertNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNotNull(ds.find(Rectangle.class, "width", 2D).get());
 		

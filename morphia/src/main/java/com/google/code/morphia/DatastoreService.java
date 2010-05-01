@@ -20,7 +20,7 @@ public class DatastoreService {
 	}
 
 	public static void setDatabase(String dbName) {
-		if (!((Datastore)ds).getDB().getName().equals(dbName)) ds = mor.createDatastore(dbName);
+		if (!((DatastoreImpl)ds).getDB().getName().equals(dbName)) ds = mor.createDatastore(dbName);
 	} 
 	
 	@SuppressWarnings("unchecked")

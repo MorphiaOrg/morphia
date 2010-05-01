@@ -167,7 +167,7 @@ public class TestQuery {
 		assertEquals(k1.id, k1Key.getId());
 		
 		KeysKeysKeys k1Reloaded = ds.get(k1);
-		KeysKeysKeys k1Loaded = ds.get(KeysKeysKeys.class, k1Key);
+		KeysKeysKeys k1Loaded = ds.getByKey(KeysKeysKeys.class, k1Key);
 		assertNotNull(k1Reloaded);
 		assertNotNull(k1Loaded);
 		for(Key<FacebookUser> key :k1Loaded.users)

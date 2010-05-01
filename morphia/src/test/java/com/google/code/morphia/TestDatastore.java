@@ -188,7 +188,7 @@ public class TestDatastore {
 	@Test
     public void testLifecycle() throws Exception {
 		LifecycleTestObj life1 = new LifecycleTestObj();
-		ds.getMapper().addMappedClass(LifecycleTestObj.class);
+		((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
 		ds.save(life1);
 		assertTrue(life1.prePersist);
 		assertTrue(life1.prePersistWithParam);

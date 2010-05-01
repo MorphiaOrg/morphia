@@ -49,7 +49,8 @@ public class ResultsImpl<T> implements Results<T> {
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public T next() {
         if ( !hasNext() ) {
             throw new NoSuchElementException();

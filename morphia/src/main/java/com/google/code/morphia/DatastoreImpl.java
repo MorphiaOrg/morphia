@@ -30,7 +30,7 @@ import com.mongodb.Mongo;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class DatastoreImpl implements Datastore, SuperDatastore {
+public class DatastoreImpl implements Datastore, AdvancedDatastore {
     private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
 
 	protected Morphia morphia;
@@ -104,8 +104,8 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 
 	@Override
 	public <T> void delete(Query<T> query) {
-		DBCollection dbColl = getCollection(query.getType());
 		QueryImpl<T> q = (QueryImpl<T>) query;
+		DBCollection dbColl = getCollection(q.getEntityType());
 		if (q.getQueryObject() != null)
 			dbColl.remove(q.getQueryObject());
 		else
@@ -202,18 +202,24 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 	}
 
 	@Override
+	public <T> Query<T> createQuery(Class<T> clazz) {
+		return new QueryImpl<T>(clazz, getCollection(clazz), this);
+	}
+	
+	
+	@Override
 	public <T> Query<T> find(String kind, Class<T> clazz){
 		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind),	 this);		
 	}
 
 	@Override
 	public <T> Query<T> find(Class<T> clazz) {
-		return new QueryImpl<T>(clazz, getCollection(clazz), this);
+		return createQuery(clazz);
 	}
 
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value) {
-		Query<T> query = find(clazz);
+		Query<T> query = createQuery(clazz);
 		return query.filter(property, value);
 	}
 	
@@ -226,7 +232,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 	
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size) {
-		Query<T> query = find(clazz);
+		Query<T> query = createQuery(clazz);
 		query.offset(offset); query.limit(size);
 		return query.filter(property, value);
 	}
@@ -275,7 +281,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 	}
 
 	@Override
-	public <T> T get(Class<T> clazz, Key<T> key) {
+	public <T> T getByKey(Class<T> clazz, Key<T> key) {
 		Mapper mapr = morphia.getMapper();
 		String kind = mapr.getCollectionName(clazz);
 		String keyKind = key.updateKind(mapr);
@@ -321,7 +327,6 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 		return query.countAll();
 	}
 
-	@Override
 	public DB getDB() {
 		return (dbName == null) ? null : mongo.getDB(dbName);
 	}
@@ -340,12 +345,10 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 		}
 	}
 
-	@Override
 	public Mongo getMongo() {
 		return this.mongo;
 	}
 
-	@Override
 	public Mapper getMapper() {
 		return this.morphia.getMapper();
 	}
@@ -400,7 +403,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 
 
 	@Override
-	public UpdateOperations ops() {
+	public UpdateOperations createUpdateOperation() {
 		return new UpdateOpsImpl(getMapper());
 	}
 
@@ -411,7 +414,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 
 	@Override
 	public <T> void update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
-		DBCollection dbColl = getCollection(query.getType());
+		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
 		DBObject q = ((QueryImpl<T>)query).getQueryObject();
 		DBObject u = ((UpdateOpsImpl)ops).getOps();
 		dbColl.update(q, u, createIfMissing, true);
@@ -419,7 +422,7 @@ public class DatastoreImpl implements Datastore, SuperDatastore {
 
 	@Override
 	public <T> void updateFirst(Query<T> query, UpdateOperations ops) {
-		DBCollection dbColl = getCollection(query.getType());
+		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
 		DBObject q = ((QueryImpl<T>)query).getQueryObject();
 		DBObject u = ((UpdateOpsImpl)ops).getOps();
 		dbColl.update(q, u);

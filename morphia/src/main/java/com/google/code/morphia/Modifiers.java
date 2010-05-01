@@ -10,8 +10,8 @@ import java.util.Map;
  * @author Olafur Gauti Gudmundsson
  */
 public class Modifiers implements Serializable {
-
-    private final Map<String,Map<String,Object>> operations;
+	private static final long serialVersionUID = 1L;
+	private final Map<String,Map<String,Object>> operations;
 
     public Modifiers() {
         this.operations = new HashMap<String,Map<String,Object>>();
@@ -53,6 +53,7 @@ public class Modifiers implements Serializable {
      * otherwise sets field to the array values if field is not present.
      * If field is present but is not an array, an error condition is raised.
      */
+    @SuppressWarnings("unchecked")
     public Modifiers pushAll( String field, List values ) {
         return addOperation("$pushAll", field, values);
     }
@@ -67,6 +68,7 @@ public class Modifiers implements Serializable {
     /**
      * Adds values to the array only if they're not in the array already.
      */
+    @SuppressWarnings("unchecked")
     public Modifiers addToSet( String field, List values ) {
         return addOperation("$addToSet", field, Constraints.map("$each", values));
     }
@@ -97,7 +99,8 @@ public class Modifiers implements Serializable {
      * Removes all occurrences of each value in value_array from field, if field
      * is an array. If field is present but is not an array, an error condition is raised.
      */
-    public Modifiers pullAll( String field, List values ) {
+    @SuppressWarnings("unchecked")
+	public Modifiers pullAll( String field, List values ) {
         return addOperation("$pullAll", field, values);
     }
 
