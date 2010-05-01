@@ -41,6 +41,7 @@ import java.util.jar.JarInputStream;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.DBRef;
 import com.mongodb.ObjectId;
 
@@ -227,7 +228,13 @@ public class ReflectionUtils {
                     ParameterizedType paramPType = (ParameterizedType) paramType;
                     return (Class) paramPType.getRawType();
                 } else {
-                    return (Class) paramType;
+                	if (paramType instanceof TypeVariable) {
+                		//TODO: Figure out what to do... Walk back up the to the parent class and try to get the variable type from the T/V/X
+                		throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable)paramType).getName() + "> = " +  ((TypeVariable)paramType).getBounds()[0]);
+                	} else if (paramType instanceof Class)
+            			return (Class) paramType;
+                	else
+                		throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
                 }
             }
         }

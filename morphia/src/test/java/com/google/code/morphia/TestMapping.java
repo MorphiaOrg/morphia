@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Embedded;
@@ -176,11 +178,28 @@ public class TestMapping {
 	}
 
 	public enum Enum1 { A, B }
-	public static class ContainsEnumKeyMap{
+
+	public static class ContainsEnum1KeyMap{
 		@Id String id;
-		public Map<Enum1, String> values = new HashMap();
+		public Map<Enum1, String> values = new HashMap<Enum1,String>();
+	}
+
+	public static class ContainsIntKeyMap{
+		@Id String id;
+		public Map<Integer, String> values = new HashMap<Integer,String>();
 	}
 	
+	public static class ContainsXKeyMap<T>{
+		@Id String id;
+		public Map<T, String> values = new HashMap<T,String>();
+	}
+	
+
+	public static class MapSubclass extends LinkedHashMap<String, Object> {
+		private static final long serialVersionUID = 1L;
+		@Id String id;
+	}
+
 	public TestMapping() {
 		try {
 			mongo = new Mongo();
@@ -194,25 +213,58 @@ public class TestMapping {
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
 	}
+
 	@Test
     public void testEnumKeyedMap() throws Exception {
-		ContainsEnumKeyMap map = new ContainsEnumKeyMap();
+		ContainsEnum1KeyMap map = new ContainsEnum1KeyMap();
 		map.values.put(Enum1.A,"I'm a");
 		map.values.put(Enum1.B,"I'm b");
 		
 		Key<?> mapKey = ds.save(map);
 		
-		ContainsEnumKeyMap mapLoaded = ds.get(ContainsEnumKeyMap.class, mapKey.getId());
+		ContainsEnum1KeyMap mapLoaded = ds.get(ContainsEnum1KeyMap.class, mapKey.getId());
 		
 		assertNotNull(mapLoaded);
 		assertEquals(2,mapLoaded.values.size());
 		assertNotNull(mapLoaded.values.get(Enum1.A));
 		assertNotNull(mapLoaded.values.get(Enum1.B));
-		
-		
-		
 	}
 
+	@Test
+    public void testIntKeyedMap() throws Exception {
+		ContainsIntKeyMap map = new ContainsIntKeyMap ();
+		map.values.put(1,"I'm 1");
+		map.values.put(2,"I'm 2");
+		
+		Key<?> mapKey = ds.save(map);
+		
+		ContainsIntKeyMap  mapLoaded = ds.get(ContainsIntKeyMap.class, mapKey.getId());
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2,mapLoaded.values.size());
+		assertNotNull(mapLoaded.values.get(1));
+		assertNotNull(mapLoaded.values.get(2));
+		
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.2").exists());
+	}
+
+	@Test @Ignore
+    public void testGenericKeyedMap() throws Exception {
+		ContainsXKeyMap<Integer> map = new ContainsXKeyMap<Integer>();
+		map.values.put(1,"I'm 1");
+		map.values.put(2,"I'm 2");
+		
+		Key<?> mapKey = ds.save(map);
+		
+		ContainsXKeyMap<Integer> mapLoaded = ds.get(ContainsXKeyMap.class, mapKey.getId());
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2,mapLoaded.values.size());
+		assertNotNull(mapLoaded.values.get(1));
+		assertNotNull(mapLoaded.values.get(2));
+	}
+
+	
 	@Test
     public void testPrimMap() throws Exception {
 		ContainsPrimitiveMap primMap = new ContainsPrimitiveMap();

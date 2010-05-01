@@ -199,7 +199,11 @@ public class QueryImpl<T> implements Query<T> {
 				throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
 			
 			i++;
-			if (i == parts.length) break;
+			if (mf.isMap()) {
+				//skip the map key validation, and move to the next part 
+				i++;
+			}
+			if (i >= parts.length) break;
 			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 		}
 		
@@ -287,7 +291,7 @@ public class QueryImpl<T> implements Query<T> {
 		public FieldPartImpl(String fe, QueryImpl<T> q) {this.fieldExpr = fe; this.query=q;}
 		@Override
 		public Query<T> doesNotExist() {
-			query.filter(fieldExpr + " exists", 0);
+			query.filter("" + fieldExpr + " exists", 0);
 			return query;
 		}
 		@Override
@@ -297,7 +301,7 @@ public class QueryImpl<T> implements Query<T> {
 		}
 		@Override
 		public Query<T> exists() {
-			query.filter(fieldExpr + " exists", true);
+			query.filter("" + fieldExpr + " exists", true);
 			return query;
 		}
 		@Override
