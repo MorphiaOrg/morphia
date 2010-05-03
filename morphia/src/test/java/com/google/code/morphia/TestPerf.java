@@ -37,7 +37,6 @@ import com.mongodb.Mongo;
  *
  * @author Scott Hernandez
  */
-@Ignore
 public class TestPerf {
 
 	Mongo mongo;
@@ -71,7 +70,7 @@ public class TestPerf {
         ds = morphia.createDatastore(mongo, db.getName());
 	}
 
-    @Test
+    @Test @Ignore
     public void testAddressInsertPerf() throws Exception {
     	int count = 10000;
     	long startTicks = new Date().getTime();
@@ -80,6 +79,27 @@ public class TestPerf {
     	long rawInsertTime = endTicks - startTicks;
     	
     	ds.delete(ds.find(Address.class));
+    	startTicks = new Date().getTime();
+    	insertAddresses(count, false);
+    	endTicks = new Date().getTime();
+    	long insertTime = endTicks - startTicks;
+    	
+    	Assert.assertTrue("Insert(" + count + " addresses) performance is too slow: " + 
+    				String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 5) + "X slower", 
+    			insertTime < (rawInsertTime * 1.1));
+    }
+
+    @Test @Ignore
+    public void testAddressInsertThreadedPerf() throws Exception {
+    	int count = 10000;
+
+//    	ThreadPool<>
+    	//TODO add thread pool here to test concurrency
+    	long startTicks = new Date().getTime();
+    	insertAddresses(count, true);
+    	long endTicks = new Date().getTime();
+    	long rawInsertTime = endTicks - startTicks;
+    	
     	startTicks = new Date().getTime();
     	insertAddresses(count, false);
     	endTicks = new Date().getTime();

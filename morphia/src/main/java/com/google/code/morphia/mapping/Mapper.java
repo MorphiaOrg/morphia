@@ -367,24 +367,43 @@ public class Mapper {
             	if (mf.getType().equals(fieldValue.getClass())) 
             		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
             	
+            	
             	dbObject.put(name, dbObj);
             }
         }
     }
 
+    /** serializes object to byte[] */
+    public byte[] serialize(Object o) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(o);
+		return baos.toByteArray();
+    }
+    
+    /** deserializes DBBinary/byte[] to object */
+    public Object deserialize(Object data) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream bais;
+		if (data instanceof DBBinary)
+			bais = new ByteArrayInputStream(((DBBinary)data).getData());
+		else 
+			bais = new ByteArrayInputStream((byte[])data);
+		
+		ObjectInputStream ois = new ObjectInputStream(bais);
+
+		return ois.readObject();    	
+    }
+    
     void mapValuesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject ) {
         try {
 	    	String name = mf.getName();
 	        Class fieldType = mf.getType();
 	        Object fieldValue = mf.getFieldValue(entity);
-	        boolean isSerialized = mf.hasAnnotation(Serialized.class);
 	        
-	        if (isSerialized) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(baos);
-				oos.writeObject(fieldValue);
-				dbObject.put(name, baos.toByteArray());
+	        if (mf.hasAnnotation(Serialized.class)) {
+				dbObject.put(name, serialize(fieldValue));
 	        }
+	        
 	        //sets and list are stored in mongodb as ArrayLists
 	        else if (mf.isMap()) {
 	            Map<Object,Object> map = (Map<Object,Object>) mf.getFieldValue(entity);
@@ -486,24 +505,15 @@ public class Mapper {
         String name = mf.getName();
         try {
 	        Class fieldType = mf.getType();
-	        boolean isSerialized = mf.hasAnnotation(Serialized.class);
 	        
-	        if (isSerialized) {
+	        if (mf.hasAnnotation(Serialized.class)) {
 	        	Object data = dbObject.get(name);
 	        	if (!(data instanceof DBBinary || data instanceof byte[]))
 	        		throw new MappingException("The stored data is not a DBBinary or byte[] instance for " + mf.getFullName()+ " ; it is a " + data.getClass().getName());
 
 				try
 				{
-					ByteArrayInputStream bais;
-					if (data instanceof DBBinary)
-						bais = new ByteArrayInputStream(((DBBinary)data).getData());
-					else 
-						bais = new ByteArrayInputStream((byte[])data);
-					
-					ObjectInputStream ois = new ObjectInputStream(bais);
-
-					mf.setFieldValue(entity, ois.readObject());
+					mf.setFieldValue(entity, deserialize(data));
 				}
 				catch (IOException ex) { throw new RuntimeException(ex); }
 				catch (ClassNotFoundException ex) { throw new IllegalStateException("Unable to deserialize " + data + " on field " + mf.getFullName() , ex); }

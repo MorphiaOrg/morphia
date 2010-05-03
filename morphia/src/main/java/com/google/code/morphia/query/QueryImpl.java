@@ -1,5 +1,6 @@
 package com.google.code.morphia.query;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +14,8 @@ import java.util.logging.Logger;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -160,6 +163,7 @@ public class QueryImpl<T> implements Query<T> {
 			throw new IllegalArgumentException("Unknown operator '" + operator + "'");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Query<T> filter(String condition, Object value) {
 		String[] parts = condition.trim().split(" ");
@@ -169,10 +173,45 @@ public class QueryImpl<T> implements Query<T> {
 		String prop = parts[0].trim();
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 
-		if( validating ) validate(prop, value);
+		//The field we are filtering on, in the java object
+		MappedField mf = null;
+		if (validating)
+			mf = validate(prop, value);
+		
+		//TODO differentiate between the key/value for maps; we will just get the mf for the field, not which part we are looking for
+		
 		if (query == null) query = BasicDBObjectBuilder.start();
 		Mapper mapr = ds.getMapper();
-		Object mappedValue = Mapper.asObjectIdMaybe(mapr.toMongoObject(value));
+		Object mappedValue;
+		MappedClass mc = null;
+		try {
+			if (!ReflectionUtils.isPropertyType(value.getClass()))
+				if (mf!=null && !mf.isTypeMongoCompatible())
+					mc=mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+				else
+					mc = mapr.getMappedClass(value);
+		} catch (Exception e) {
+			//Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will fail/return-empty anyway)
+			log.log(Level.FINEST, "Error during mapping filter criteria: " , e);
+		}
+		
+		//convert the value to Key (DBRef) if it is a entity/@Reference of the field type is Key
+		if ((mf!=null && (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class)))  
+				|| (mc != null && mc.getEntityAnnotation() != null)) {
+			try {
+				Key<?> k = (value instanceof Key) ? (Key<?>)value : ds.getKey(value);
+				mappedValue = k.toRef(mapr);
+			} catch (Exception e) {
+				log.log(Level.WARNING, "Error converting value(" + value + ") to reference.", e);
+				mappedValue = mapr.toMongoObject(value);
+			}
+		}
+		else if (mf!=null && mf.hasAnnotation(Serialized.class))
+			try {
+				mappedValue = mapr.serialize(value); } catch (IOException e) { throw new RuntimeException(e); }
+		else
+			mappedValue = Mapper.asObjectIdMaybe(mapr.toMongoObject(value));
+		
 		Class<?> type = mappedValue.getClass();
 		
 		//convert single values into lists for $in/$nin
@@ -194,8 +233,8 @@ public class QueryImpl<T> implements Query<T> {
 	@Override
 	public Query<T> disableValidation(){ validating = false; return this; }
 
-	
-	private void validate(String prop, Object value) {
+	/** Validate the path, and value type, returning the mappedfield for the field at the path */
+	private MappedField validate(String prop, Object value) {
 		String[] parts = prop.split("\\.");
 //		if (parts.length == 0) parts = new String[]{prop};
 		MappedClass mc = ds.getMapper().getMappedClass(this.clazz);
@@ -229,7 +268,9 @@ public class QueryImpl<T> implements Query<T> {
 				log.log(Level.FINE, "Location of warning:", t);
 			}
 		}
-			
+		
+		return mf;
+		
 	}
 	
 	@Override

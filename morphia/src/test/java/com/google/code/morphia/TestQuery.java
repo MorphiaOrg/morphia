@@ -65,6 +65,11 @@ public class TestQuery {
 		protected Keyword() {}
 		public Keyword(String k) { this.keyword = k;}
 	}
+
+	public static class ContainsPhotoKey {
+		@Id String id;
+		Key<Photo> photo;
+	}
 	
 	public TestQuery() {
 		try {
@@ -93,6 +98,20 @@ public class TestQuery {
 		assertNotNull(ds.find(PhotoWithKeywords.class, "keywords in", new Keyword("california")).get());
 		assertNull(ds.find(PhotoWithKeywords.class, "keywords in", new Keyword("not")).get());
 	}
+
+	@Test
+    public void testReferenceQuery() throws Exception {
+		Photo p = new Photo();
+		ContainsPhotoKey cpk = new ContainsPhotoKey();
+		cpk.photo = ds.save(p);
+		ds.save(cpk);
+		
+		assertNotNull(ds.find(ContainsPhotoKey.class, "photo", p).get());
+		assertNotNull(ds.find(ContainsPhotoKey.class, "photo", cpk.photo).get());
+		assertNull(ds.find(ContainsPhotoKey.class, "photo", 1).get());
+	}
+
+	
 	@Test
     public void testDeepQuery() throws Exception {
 		ds.save(new PhotoWithKeywords());

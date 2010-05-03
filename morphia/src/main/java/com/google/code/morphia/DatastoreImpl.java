@@ -64,8 +64,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	@Override
 	public <T> Key<T> getKey(T entity) {
+		if (entity instanceof Key) return (Key<T>) entity;
+		
 		Object id = getId(entity);
-		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
+		if (id == null)
+			throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return new Key<T>((Class<T>)entity.getClass(), id);
 	}
 	
