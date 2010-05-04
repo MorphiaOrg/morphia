@@ -32,7 +32,10 @@ public class DAO<T,K extends Serializable> {
         this.collectionName = morphia.getMapper().getCollectionName(entityClass);
         this.morphia.map(entityClass);
     }
-
+    /** 
+     * <p>Only calls this from your derived class when you explicitly declare the generic types with concrete classes </p>
+     * <p>{@code class MyDao extends DAO<MyEntity, String>}</p> 
+     * */
     protected DAO( Mongo mongo, Morphia morphia, String dbName ) {
         this.entityClass = ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         this.mongo = mongo;

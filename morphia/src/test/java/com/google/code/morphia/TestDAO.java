@@ -206,4 +206,14 @@ public class TestDAO {
              db.dropDatabase();
          }
     }
+    
+    @Test
+    public void testErasureDao() throws Exception {
+        Morphia morphia = new Morphia();
+        Mongo mongo = new Mongo();
+        DB db = mongo.getDB("morphia_test");
+        //broken, you must subclass DAO to use this constructor.
+        DAO<Hotel, String> hotelDAO = new DAO<Hotel, String>(mongo, morphia, db.getName());
+        hotelDAO.find();
+    }    
 }
