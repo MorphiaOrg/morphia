@@ -68,7 +68,7 @@ public class UpdateOpsImpl implements UpdateOperations {
 	}
 
 	@Override
-	public UpdateOperations inc(String fieldExpr, int value) {
+	public UpdateOperations inc(String fieldExpr, Number value) {
 		add("$inc", fieldExpr, value);
 		return this;
 	}

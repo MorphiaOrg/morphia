@@ -15,6 +15,7 @@ import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
+import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -411,23 +412,29 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	@Override
-	public <T> void update(Query<T> query, UpdateOperations ops) {
-		update(query, ops, false);
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops) {
+		return update(query, ops, false);
 	}
 
 	@Override
-	public <T> void update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
 		DBObject q = ((QueryImpl<T>)query).getQueryObject();
 		DBObject u = ((UpdateOpsImpl)ops).getOps();
+		if (q == null) q = new BasicDBObject();
 		dbColl.update(q, u, createIfMissing, true);
+		DBObject dbObj = dbColl.getDB().getLastError();
+		return new UpdateResults<T>(dbObj);		
 	}
 
 	@Override
-	public <T> void updateFirst(Query<T> query, UpdateOperations ops) {
+	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
 		DBObject q = ((QueryImpl<T>)query).getQueryObject();
 		DBObject u = ((UpdateOpsImpl)ops).getOps();
+		if (q == null) q = new BasicDBObject();
 		dbColl.update(q, u);
+		DBObject dbObj = dbColl.getDB().getLastError();
+		return new UpdateResults<T>(dbObj);
 	}
 }

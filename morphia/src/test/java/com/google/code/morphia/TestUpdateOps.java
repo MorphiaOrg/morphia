@@ -26,6 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateResults;
+import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
@@ -55,6 +57,7 @@ public class TestUpdateOps {
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
 	}
+	
 	@Test
     public void testUpdateSingleField() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),
@@ -72,7 +75,10 @@ public class TestUpdateOps {
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 		
-		ds.update(q1, ds.createUpdateOperation().inc("height"));
+		UpdateResults<Rectangle> results = ds.update(q1, ds.createUpdateOperation().inc("height"));
+		assertEquals(results.getUpdatedCount(), 3);
+		assertEquals(results.getUpdatedExisting(), true);
+		
 		assertEquals(0, ds.getCount(q1));
 		assertEquals(3, ds.getCount(q2));
 
@@ -86,9 +92,30 @@ public class TestUpdateOps {
 		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperation().add("height",2D).add("width", 2D), true);		
 		assertNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNotNull(ds.find(Rectangle.class, "width", 2D).get());
-		
-		
 	}
 
+	@Test
+    public void testSingleExistingUpdate() throws Exception {
+		Circle c  = new Circle(100D);
+		ds.save(c);
+		c = new Circle(12D);
+		ds.save(c);
+		UpdateResults<Circle> res = ds.updateFirst(ds.createQuery(Circle.class), ds.createUpdateOperation().inc("radius",1D));
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		res = ds.update(ds.createQuery(Circle.class), ds.createUpdateOperation().inc("radius",1D));
+		assertEquals(2, res.getUpdatedCount());
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(true, res.getUpdatedExisting());
+
+		res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperation().inc("radius",1D), true);
+		assertEquals(1, res.getInsertedCount());
+		assertEquals(0, res.getUpdatedCount());
+		
+		assertEquals(false, res.getUpdatedExisting());
+
+	}
     
 }

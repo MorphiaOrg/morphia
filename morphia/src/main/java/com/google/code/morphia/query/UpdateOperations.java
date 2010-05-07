@@ -17,5 +17,5 @@ public interface UpdateOperations {
 
 	UpdateOperations dec(String fieldExpr);
 	UpdateOperations inc(String fieldExpr);
-	UpdateOperations inc(String fieldExpr, int value);
+	UpdateOperations inc(String fieldExpr, Number value);
 }

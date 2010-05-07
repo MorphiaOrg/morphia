@@ -24,6 +24,8 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import java.util.Date;
 import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -207,7 +209,7 @@ public class TestDAO {
          }
     }
     
-    @Test
+    @Test @Ignore
     public void testErasureDao() throws Exception {
         Morphia morphia = new Morphia();
         Mongo mongo = new Mongo();

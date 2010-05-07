@@ -223,11 +223,11 @@ public class MappedClass {
                             + mf.getType().getName() + ").");
                 }
             } else if (mf.hasAnnotation(Reference.class)) {
-                if ((	mf.isSingleValue() && !mf.getType().isInterface() && (mapr.getMappedClass(mf.getType()).getEntityAnnotation()==null)) || 
-                	   (mf.isMultipleValues() && !mf.getSubType().isInterface() && (mapr.getMappedClass(mf.getSubType()).getEntityAnnotation()==null))) {
+            	
+            	Class realType = (mf.isSingleValue()) ? mf.getType() : mf.getSubType();
+            	if ((!realType.isInterface() && mapr.getMappedClass(realType).getIdField()==null))
                     throw new MappingException(mf.getFullName()
-                                    + " is annotated as @Reference but is of type (" + mf.getType().getName() + ") which cannot be referenced.");
-                }
+                            + " is annotated as a @Reference but the " + mf.getType().getName() + " class is missing the @Id annotation");
             }            
         }
         

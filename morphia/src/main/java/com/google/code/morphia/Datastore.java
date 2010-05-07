@@ -2,8 +2,10 @@ package com.google.code.morphia;
 
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
+import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
 import com.mongodb.DBCollection;
+import com.mongodb.DBRef;
 /**
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
@@ -71,11 +73,11 @@ public interface Datastore {
 	<T> Key<T> save(T entity);
 
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
-	<T> void update(Query<T> query, UpdateOperations ops);
+	<T> UpdateResults<T> update(Query<T> query, UpdateOperations ops);
 	/** updates all entities found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
-	<T> void update(Query<T> query, UpdateOperations ops, boolean createIfMissing);
+	<T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing);
 	/** updates the first entity found with the operations; this is an atomic operation*/
-	<T> void updateFirst(Query<T> query, UpdateOperations ops);
+	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops);
 	
 	/** The builder for all update operations */
 	UpdateOperations createUpdateOperation();
