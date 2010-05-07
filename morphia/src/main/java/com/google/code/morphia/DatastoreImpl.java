@@ -405,36 +405,36 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return save(dbColl, entity);
     }
 
-
 	@Override
 	public UpdateOperations createUpdateOperation() {
 		return new UpdateOpsImpl(getMapper());
 	}
-
-	@Override
-	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops) {
-		return update(query, ops, false);
-	}
-
 	@Override
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
-		DBObject q = ((QueryImpl<T>)query).getQueryObject();
-		DBObject u = ((UpdateOpsImpl)ops).getOps();
-		if (q == null) q = new BasicDBObject();
-		dbColl.update(q, u, createIfMissing, true);
-		DBObject dbObj = dbColl.getDB().getLastError();
-		return new UpdateResults<T>(dbObj);		
+		return update(query, ops, createIfMissing, false);
+	}
+	@Override
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops) {
+		return update(query, ops, false, true);
 	}
 
 	@Override
 	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops) {
+		return update(query, ops, false, false);
+	}
+	@Override
+	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
+		return update(query, ops, createIfMissing, false);
+	}
+	
+	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
 		DBObject q = ((QueryImpl<T>)query).getQueryObject();
 		DBObject u = ((UpdateOpsImpl)ops).getOps();
 		if (q == null) q = new BasicDBObject();
-		dbColl.update(q, u);
+		dbColl.update(q, u, createIfMissing, multi);
 		DBObject dbObj = dbColl.getDB().getLastError();
-		return new UpdateResults<T>(dbObj);
+		return new UpdateResults<T>(dbObj);		
 	}
+
 }

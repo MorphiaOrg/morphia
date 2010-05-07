@@ -25,6 +25,7 @@ import java.net.UnknownHostException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.testmodel.Circle;
@@ -43,6 +44,11 @@ public class TestUpdateOps {
 	DB db;
 	Datastore ds;
 
+	public static class ContainsInt{
+		private @Id String id;
+		public int val;
+	}
+	
 	public TestUpdateOps() {
 		try {
 			mongo = new Mongo();
@@ -93,9 +99,33 @@ public class TestUpdateOps {
 		assertNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNotNull(ds.find(Rectangle.class, "width", 2D).get());
 	}
+	
+	@Test
+    public void testInsertUpdates() throws Exception {
+		UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperation().inc("radius",1D), true);
+		assertEquals(1, res.getInsertedCount());
+		assertEquals(0, res.getUpdatedCount());
+		
+		assertEquals(false, res.getUpdatedExisting());
+	}
 
 	@Test
-    public void testSingleExistingUpdate() throws Exception {
+    public void testUpdateTypeChange() throws Exception {
+		ContainsInt cInt = new ContainsInt();
+		cInt.val = 21;
+		ds.save(cInt);
+		
+		UpdateResults<ContainsInt> res = ds.updateFirst(ds.createQuery(ContainsInt.class), ds.createUpdateOperation().inc("val",1.1D));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());		
+		assertEquals(true, res.getUpdatedExisting());
+		
+		ContainsInt ciLoaded = ds.find(ContainsInt.class).limit(1).get();
+		assertEquals(22, ciLoaded.val);
+	}
+	
+	@Test
+    public void testExistingUpdates() throws Exception {
 		Circle c  = new Circle(100D);
 		ds.save(c);
 		c = new Circle(12D);
@@ -105,17 +135,14 @@ public class TestUpdateOps {
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(true, res.getUpdatedExisting());
 		
-		res = ds.update(ds.createQuery(Circle.class), ds.createUpdateOperation().inc("radius",1D));
+		res = ds.update(ds.createQuery(Circle.class), ds.createUpdateOperation().inc("radius"));
 		assertEquals(2, res.getUpdatedCount());
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(true, res.getUpdatedExisting());
-
-		res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperation().inc("radius",1D), true);
-		assertEquals(1, res.getInsertedCount());
-		assertEquals(0, res.getUpdatedCount());
-		
-		assertEquals(false, res.getUpdatedExisting());
-
+	
+		//test possible datatype change.
+		Circle cLoaded = ds.find(Circle.class, "radius", 13).get();
+		assertNotNull(cLoaded);		
+		assertEquals(13D, cLoaded.getRadius(), 0D);
 	}
-    
 }

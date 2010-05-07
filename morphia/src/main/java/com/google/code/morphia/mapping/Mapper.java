@@ -745,6 +745,15 @@ public class Mapper {
     	return objectFromValue(javaType, dbObject.get(name));
     }
 
+    private static boolean compatibleTypes(Class type1, Class type2) {
+       	if (type1.equals(type2)) return true;
+    	return (type1.isAssignableFrom(type2) || 
+    			((type1.isPrimitive() || type2.isPrimitive()) && 
+    					type2.getSimpleName().toLowerCase().equals(type1.getSimpleName().toLowerCase())));//&&
+    					//valType.getName().startsWith("java.lang") && javaType.getName().startsWith("java.lang") ));
+    	
+    	
+    }
     /** Converts known types from mongodb -> java.*/
     protected static Object objectFromValue( Class javaType, Object val) {
     	
@@ -752,51 +761,72 @@ public class Mapper {
     		return null;
     	if (javaType == null) 
     		return val;
-        
+    	
+    	Class valType = val.getClass(); 
+
+    	if (compatibleTypes(javaType, valType))
+    		return val;
+   
     	if (javaType == String.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             return val.toString();
         } else if (javaType == Character.class || javaType == char.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             return val.toString().charAt(0);
         } else if (javaType == Integer.class || javaType == int.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             if ( val instanceof String ) {
                 return Integer.parseInt((String)val);
             } else {
                 return ((Number)val).intValue();
             }
         } else if (javaType == Long.class || javaType == long.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             if ( val instanceof String ) {
                 return Long.parseLong((String)val);
             } else {
                 return ((Number)val).longValue();
             }
         } else if (javaType == Byte.class || javaType == byte.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
            	Object dbValue = val;
-        	if (dbValue instanceof Byte) return dbValue;
-        	else if (dbValue instanceof Double) return ((Double)dbValue).byteValue();
+        	if (dbValue instanceof Double) return ((Double)dbValue).byteValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).byteValue();
         	String sVal = val.toString();
             return Byte.parseByte(sVal);
         } else if (javaType == Short.class || javaType == short.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
            	Object dbValue = val;
-        	if (dbValue instanceof Short) return dbValue;
-        	else if (dbValue instanceof Double) return ((Double)dbValue).shortValue();
+        	if (dbValue instanceof Double) return ((Double)dbValue).shortValue();
         	else if (dbValue instanceof Integer) return ((Integer)dbValue).shortValue();
         	String sVal = val.toString();
             return Short.parseShort(sVal);
         } else if (javaType == Float.class || javaType == float.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
         	Object dbValue = val;
         	if (dbValue instanceof Double) return ((Double)dbValue).floatValue();
         	String sVal = val.toString();
             return Float.parseFloat(sVal);
+        } else if (javaType == Double.class || javaType == double.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
+        	if (val instanceof Double) return val;
+        	Object dbValue = val;
+        	if (dbValue instanceof Number) return ((Number)dbValue).doubleValue();
+        	String sVal = val.toString();
+            return Double.parseDouble(sVal);
         } else if (javaType == Locale.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             return parseLocale(val.toString());
         } else if (javaType.isEnum()) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             return Enum.valueOf(javaType, val.toString());
         } else if (javaType == Key.class) {
+        	logger.finer("Converting from " + val.getClass().getSimpleName() + " to " + javaType.getSimpleName());
             return new Key((DBRef)val);
+        } else {
+	    	//Not a known convertible type.
+	        return val;
         }
-        
-        return val;
     }
 
     /** Converts known types from java -> mongodb. Really it just converts enums and locales to strings */
@@ -805,12 +835,16 @@ public class Mapper {
     	if (javaType == null) javaType = obj.getClass();
 
     	if ( javaType.isEnum() ) {
+        	logger.finer("Converting from " + javaType.getSimpleName() + " to String");
             return ((Enum) obj).name();
         } else if ( javaType == Locale.class ) {
+        	logger.finer("Converting from " + javaType.getSimpleName() + " to String");
           	return ((Locale) obj).toString();
         } else if ( javaType == char.class ||  javaType == Character.class ) {
+        	logger.finer("Converting from " + javaType.getSimpleName() + " to String");
         	return ((Character)obj).toString();
         } else if ( javaType == Key.class ) {
+        	logger.finer("Converting from " + javaType.getSimpleName() + " to DBRef");
           	return ((Key) obj).toRef(this);
         } else {
             return obj;
