@@ -72,9 +72,18 @@ public class TestDatastore {
 	
 	public static class LifecycleListener {
 		static boolean prePersist = false;
+		static boolean prePersistWithEntity = false;
+		
 		@PrePersist
 		void PrePersist() {
 			prePersist = true;
+		}
+		
+		@PrePersist
+		void PrePersist(LifecycleTestObj obj) {
+			if(obj == null) throw new RuntimeException();
+			prePersistWithEntity = true;
+			
 		}
 	}
 	
@@ -220,6 +229,7 @@ public class TestDatastore {
 		((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
 		ds.save(life1);
 		assertTrue(LifecycleListener.prePersist);
+		assertTrue(LifecycleListener.prePersistWithEntity);
 	}
 	@Test
     public void testCollectionNames() throws Exception {

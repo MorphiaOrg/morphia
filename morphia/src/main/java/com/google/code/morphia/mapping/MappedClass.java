@@ -308,14 +308,21 @@ public class MappedClass {
 					Class<?> type = cm.clazz;
 					
 					Object inst = toCall.get(type);
-					if (inst == null) inst = entity;
 					method.setAccessible(true);
 					log.fine("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
-					if (method.getParameterTypes().length == 0)
-						tempObj = method.invoke(inst);
+					if (inst == null) 
+						if (method.getParameterTypes().length == 0)
+							tempObj = method.invoke(entity);
+						else
+							tempObj = method.invoke(entity, retDbObj);
 					else
-						tempObj = method.invoke(inst, retDbObj);
-			
+						if (method.getParameterTypes().length == 0)
+							tempObj = method.invoke(inst);
+						else if (method.getParameterTypes().length == 1)
+							tempObj = method.invoke(inst, entity);
+						else
+							tempObj = method.invoke(inst, entity, retDbObj);
+					
 					if (tempObj != null) 
 						retDbObj = (DBObject) tempObj;
 				}
