@@ -32,6 +32,7 @@ import com.google.code.morphia.TestDatastore.FacebookUser;
 import com.google.code.morphia.TestDatastore.KeysKeysKeys;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
@@ -71,6 +72,14 @@ public class TestQuery {
 		Key<Photo> photo;
 	}
 	
+	public static class ContainsRenamedFields{
+		@Id String id;
+		@Property("first_name")
+		String firstName = "Scott";
+		@Property("last_name")
+		String lastName = "Hernandez";
+	}
+	
 	public TestQuery() {
 		try {
 			mongo = new Mongo();
@@ -85,6 +94,23 @@ public class TestQuery {
 		db = mongo.getDB("morphia_test");
         ds = morphia.createDatastore(mongo, db.getName());
 	}
+
+	@Test
+    public void testRenamedFieldQuery() throws Exception {
+		ds.save(new ContainsRenamedFields());
+
+		ContainsRenamedFields ent = null;
+		try {
+			//validation will cause an exception
+			ent = ds.find(ContainsRenamedFields.class).field("firstName").equal("Scott").get();
+		} catch (Exception e) {
+		} finally {
+			assertNull(ent);
+		}
+		ent = ds.find(ContainsRenamedFields.class).field("first_name").equal("Scott").get();
+		assertNotNull(ent);
+	}
+
 	
 	@Test
     public void testItemInListQuery() throws Exception {

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.EntityListeners;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Polymorphic;
 import com.google.code.morphia.annotations.PostLoad;
@@ -43,6 +44,13 @@ import com.mongodb.DBObject;
 public class MappedClass {
     private static final Logger log = Logger.getLogger(MappedClass.class.getName());
 	
+	private static class ClassMethodPair {
+		Class<?> clazz;
+		Method method;
+
+		public ClassMethodPair(Class<?> c, Method m) { clazz = c; method =m ; } 
+	}
+	
     /** special fields representing the Key of the object */
     private Field idField;
 	
@@ -52,12 +60,12 @@ public class MappedClass {
     private Polymorphic polymorphicAn;
 	
 	/** Annotations we are interested in looking for. */
-	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class};
+	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class};
 	/** Annotations we were interested in, and found. */
 	private Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	
 	/** Methods which are lifecycle events */
-	private Map<Class<Annotation>, List<Method>> lifecycleMethods = new HashMap<Class<Annotation>, List<Method>>();
+	private Map<Class<Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<Annotation>, List<ClassMethodPair>>();
 		
     /** the collectionName based on the type and @Entity value(); this can be overriden by the @CollectionName field on the instance*/
 	private String collName;
@@ -88,24 +96,33 @@ public class MappedClass {
 		} catch (NoSuchMethodException e) {
 			throw new MappingException("No usable constructor for " + type.getName(), e);
 		}
+		List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();
+		lifecycleClasses.add(clazz);
 		
-		for(Method m : ReflectionUtils.getDeclaredAndInheritedMethods(clazz)) {
-			Class<? extends Annotation> lifecycleType;
-			
-			if (m.isAnnotationPresent(PrePersist.class))
-				lifecycleType = PrePersist.class;
-			else if (m.isAnnotationPresent(PostPersist.class))
-				lifecycleType = PostPersist.class;
-			else if (m.isAnnotationPresent(PreLoad.class))
-				lifecycleType = PreLoad.class;
-			else if (m.isAnnotationPresent(PostLoad.class))
-				lifecycleType = PostLoad.class;
-			else
-				continue;
-			
-			addLifecycleEventMethod((Class<Annotation>)lifecycleType, m);
+		EntityListeners entityLisAnn = (EntityListeners) releventAnnotations.get(EntityListeners.class);
+		if (entityLisAnn != null && entityLisAnn.value() != null && entityLisAnn.value().length != 0)
+			for (Class<?> c : entityLisAnn.value())
+				lifecycleClasses.add(c);
+		
+		for (Class<?> cls : lifecycleClasses) {
+			for (Method m : ReflectionUtils.getDeclaredAndInheritedMethods(cls)) {
+				Class<? extends Annotation> lifecycleType;
+				
+				if (m.isAnnotationPresent(PrePersist.class))
+					lifecycleType = PrePersist.class;
+				else if (m.isAnnotationPresent(PostPersist.class))
+					lifecycleType = PostPersist.class;
+				else if (m.isAnnotationPresent(PreLoad.class))
+					lifecycleType = PreLoad.class;
+				else if (m.isAnnotationPresent(PostLoad.class))
+					lifecycleType = PostLoad.class;
+				else
+					continue;
+				
+				addLifecycleEventMethod((Class<Annotation>)lifecycleType, m, cls.equals(clazz) ? null : cls);
+			}
 		}
-
+		
         embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
         entityAn = (Entity)releventAnnotations.get(Entity.class);
         polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
@@ -130,17 +147,18 @@ public class MappedClass {
         }
 	}
 	
-	private void addLifecycleEventMethod(Class<Annotation> clazz, Method m) {
-		if (lifecycleMethods.containsKey(clazz))
-			lifecycleMethods.get(clazz).add(m);
+	private void addLifecycleEventMethod(Class<Annotation> lceClazz, Method m, Class<?> clazz) {
+		ClassMethodPair cm = new ClassMethodPair(clazz, m);
+		if (lifecycleMethods.containsKey(lceClazz))
+			lifecycleMethods.get(lceClazz).add(cm);
 		else {
-			ArrayList<Method> methods = new ArrayList<Method>();
-			methods.add(m);
-			lifecycleMethods.put(clazz, methods);
+			ArrayList<ClassMethodPair> methods = new ArrayList<ClassMethodPair>();
+			methods.add(cm);
+			lifecycleMethods.put(lceClazz, methods);
 		}
 	}
 	
-	public List<Method> getLifecycleMethods(Class<Annotation> clazz) {
+	public List<ClassMethodPair> getLifecycleMethods(Class<Annotation> clazz) {
 		return lifecycleMethods.get(clazz);
 	}
 	
@@ -168,6 +186,7 @@ public class MappedClass {
 		return results;
 	}
 
+	/** Returns the MappedField by the name that will stored in mongodb */
 	public MappedField getMappedField(String name) {
 		for(MappedField mf : persistenceFields)
 			if (name.equals(mf.getName())) return mf;
@@ -175,10 +194,17 @@ public class MappedClass {
 		return null;
 	}
 	
+	/** Check by the name that will stored in mongodb */
 	public boolean containsFieldName(String name) {
 		return getMappedField(name)!=null;
 	}
 	
+	public MappedField getMappedFieldByClassField(String name) {
+		for(MappedField mf : persistenceFields)
+			if (name.equals(mf.getClassFieldName())) return mf;
+	
+		return null;
+	}
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
 	public boolean isSupportedType(Class clazz) {
 		if (ReflectionUtils.isPropertyType(clazz)) return true;
@@ -263,22 +289,37 @@ public class MappedClass {
 	}
 	
 	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj) {
-		List<Method> methods = getLifecycleMethods((Class<Annotation>)event);
+		List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>)event);
+		
 		DBObject retDbObj = dbObj;
 		try
 		{
 			Object tempObj = null;
-			if (methods != null)
-				for (Method method: methods) {
+			if (methodPairs != null) {
+				HashMap<Class<?>, Object> toCall = new HashMap<Class<?>, Object>((int) (methodPairs.size()*1.3));
+				for (ClassMethodPair cm : methodPairs)
+					toCall.put(cm.clazz, null);
+				for (Class<?> c : toCall.keySet())
+					if (c != null)
+						toCall.put(c, mapr.createInstance(c));
+
+				for (ClassMethodPair cm: methodPairs) {
+					Method method = cm.method;
+					Class<?> type = cm.clazz;
+					
+					Object inst = toCall.get(type);
+					if (inst == null) inst = entity;
 					method.setAccessible(true);
+					log.fine("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
 					if (method.getParameterTypes().length == 0)
-						tempObj = method.invoke(entity);
+						tempObj = method.invoke(inst);
 					else
-						tempObj = method.invoke(entity, retDbObj);
+						tempObj = method.invoke(inst, retDbObj);
 			
 					if (tempObj != null) 
 						retDbObj = (DBObject) tempObj;
 				}
+			}
 		}
 		catch (IllegalAccessException e) { throw new RuntimeException(e); }
 		catch (InvocationTargetException e) { throw new RuntimeException(e); }

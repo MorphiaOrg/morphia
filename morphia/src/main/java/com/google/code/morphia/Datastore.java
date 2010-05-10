@@ -4,8 +4,10 @@ import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
+import com.mongodb.Mongo;
 /**
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
@@ -97,4 +99,7 @@ public interface Datastore {
 	<T> void ensureIndexes(Class<T>  clazz);
 	/** ensure capped DBCollections for {@code Entity}(s) */
 	void ensureCaps();
+	
+	DB getDB();
+	Mongo getMongo();
 }

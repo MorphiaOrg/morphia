@@ -241,10 +241,19 @@ public class QueryImpl<T> implements Query<T> {
 		MappedField mf;
 		for(int i=0; ; ) {
 			String part = parts[i];
-			mf = part.equals("_id") ? mc.getMappedField(mc.getIdField().getName()) : mc.getMappedField(part);
-			if (mf == null) 
-				throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+			if(part.equals(Mapper.ID_KEY)) 
+				mf = mc.getMappedField(mc.getIdField().getName());
+			else
+				mf = mc.getMappedField(part);
 			
+			if (mf == null) {
+				mf = mc.getMappedFieldByClassField(part);
+				if (mf != null)
+					throw new MappingException("The field '" + part + "' is named '" + mf.getName() + "' in '" + this.clazz.getName()+ "' " +
+							"(while validating - '" + prop + "'); Please use '" + mf.getName() + "' in your query.");
+				else
+					throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+			}
 			i++;
 			if (mf.isMap()) {
 				//skip the map key validation, and move to the next part 
@@ -398,7 +407,6 @@ public class QueryImpl<T> implements Query<T> {
 			return query;
 		}
 	}
-
 
 	public FieldPart<T> field(String fieldExpr) {
 		return new FieldPartImpl<T>(fieldExpr, this);

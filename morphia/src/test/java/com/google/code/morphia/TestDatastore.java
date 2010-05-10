@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.EntityListeners;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
@@ -69,6 +70,15 @@ public class TestDatastore {
 		}
 	}
 	
+	public static class LifecycleListener {
+		static boolean prePersist = false;
+		@PrePersist
+		void PrePersist() {
+			prePersist = true;
+		}
+	}
+	
+	@EntityListeners(LifecycleListener.class)
 	public static class LifecycleTestObj {
 		@Id String id;
 		@Transient boolean prePersist, postPersist, preLoad, postLoad, postLoadWithParam;
@@ -204,6 +214,13 @@ public class TestDatastore {
 		assertTrue(loaded.postLoadWithParam);
 	}
 	
+	@Test
+    public void testLifecycleListeners() throws Exception {
+		LifecycleTestObj life1 = new LifecycleTestObj();
+		((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
+		ds.save(life1);
+		assertTrue(LifecycleListener.prePersist);
+	}
 	@Test
     public void testCollectionNames() throws Exception {
 		assertEquals("facebook_users", morphia.getMapper().getCollectionName(FacebookUser.class));

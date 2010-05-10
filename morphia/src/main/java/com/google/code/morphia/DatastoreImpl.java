@@ -331,9 +331,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return query.countAll();
 	}
 
+	@Override
+	public Mongo getMongo() {
+		return this.mongo;
+	}
+
+	@Override
 	public DB getDB() {
 		return (dbName == null) ? null : mongo.getDB(dbName);
 	}
+
 	protected Object getId(Object entity) {
 		MappedClass mc;
 		String keyClassName = entity.getClass().getName();
@@ -347,10 +354,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		} catch (Exception e) {
 			return null;
 		}
-	}
-
-	public Mongo getMongo() {
-		return this.mongo;
 	}
 
 	public Mapper getMapper() {

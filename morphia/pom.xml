@@ -49,21 +49,6 @@
 <!--			<version>${gwt.version}</version>-->
 <!--			<scope>provided</scope>-->
 <!--		</dependency>-->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-    		<artifactId>mongo-java-driver</artifactId>
-    		<version>1.4</version>
-    		<type>jar</type>
-    		<optional>false</optional>
-    	</dependency>
-    	<dependency>
-    		<groupId>junit</groupId>
-    		<artifactId>junit</artifactId>
-    		<version>4.4</version>
-    		<type>jar</type>
-    		<scope>test</scope>
-    		<optional>false</optional>
-    	</dependency>
 <!--    	<dependency>-->
 <!--    		<groupId>com.google.collections</groupId>-->
 <!--    		<artifactId>google-collections</artifactId>-->
@@ -71,7 +56,22 @@
 <!--    		<type>jar</type>-->
 <!--    		<optional>false</optional>-->
 <!--    	</dependency>-->
-    </dependencies>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>1.4</version>
+			<type>jar</type>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<type>jar</type>
+			<scope>test</scope>
+			<optional>false</optional>
+		</dependency>
+	</dependencies>
 
     <build>
         <plugins>
