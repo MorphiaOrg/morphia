@@ -1,8 +1,11 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.annotations.PreSave;
+import com.google.code.morphia.mapping.Constraints;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.mapping.Modifiers;
 import com.google.code.morphia.query.Sort;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -54,7 +57,9 @@ public class DAO<T,K extends Serializable> {
     }
 
     public void save( T entity ) {
-		DBObject dbObj = morphia.getMapper().toDBObject(entity, false);
+		DBObject dbObj = morphia.getMapper().toDBObject(entity);
+		
+        morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PreSave.class, entity, dbObj, morphia.getMapper());
 		collection().save(dbObj);
 
 		DBObject lastErr = collection().getDB().getLastError();
@@ -63,7 +68,7 @@ public class DAO<T,K extends Serializable> {
 
 		
 		morphia.getMapper().updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY) ,collectionName);
-        morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
+        morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj, morphia.getMapper());
     }
 
     /**

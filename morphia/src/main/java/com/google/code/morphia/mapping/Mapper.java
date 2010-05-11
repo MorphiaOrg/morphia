@@ -33,16 +33,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
-import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
+import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -68,12 +70,18 @@ public class Mapper {
 
     /** Set of classes that have been validated for mapping by this mapper */
     private final ConcurrentHashMap<String,MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
-    
     private final ThreadLocal<Map<String, Object>> entityCache = new ThreadLocal<Map<String, Object>>();
+    private final ConcurrentLinkedQueue<EntityInterceptor> interceptors = new ConcurrentLinkedQueue<EntityInterceptor>();
 
     public Mapper() {
     }
 
+    public void addInterceptor(EntityInterceptor ei) {
+    	interceptors.add(ei);
+    }
+    
+    public Collection<EntityInterceptor> getInterceptors() { return interceptors;}
+    
     public boolean isMapped(Class c) {
         return mappedClasses.containsKey(c.getName());
     }
@@ -248,19 +256,17 @@ public class Mapper {
     }
     /** converts an entity to a DBObject */
     public DBObject toDBObject( Object entity ) {
-    	return toDBObject(entity, true);
-    }    
-
-    public DBObject toDBObject( Object entity, boolean callPostPersist) {
-    	BasicDBObject dbObject = new BasicDBObject();
+     	BasicDBObject dbObject = new BasicDBObject();
  	
         MappedClass mc = getMappedClass(entity);
-        
-        if ( mc.getPolymorphicAnnotation() != null ) {
-            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
-        }
+
+        dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
+
+//        if ( mc.getPolymorphicAnnotation() != null ) {
+//            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
+//        }
 		
-        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
+        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
         for (MappedField mf : mc.getPersistenceFields()) {
            	try {	
 	            if ( mf.hasAnnotation(Id.class) ) {
@@ -279,7 +285,7 @@ public class Mapper {
 	            }
             } catch (Exception e) {throw new MappingException("Error mapping field:" + mf.getFullName(), e);}
         }
-	    if (callPostPersist) mc.callLifecycleMethods(PostPersist.class, entity, dbObject);
+	    mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
 		return dbObject;
     }
 
@@ -348,7 +354,7 @@ public class Mapper {
 	            	String strKey = objectToValue(entry.getKey()).toString();
 	            	values.put(strKey, convertedVal);
 	            }
-	            if (values.size() > 0) 
+	            if (values.size() > 0)
 	            	dbObject.put(name, values);
 	        }
 	
@@ -367,13 +373,13 @@ public class Mapper {
             }
         } else {
         	DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue);
-            if ( dbObj != null && dbObj.keySet().size() > 0) {
+            if ( dbObj != null ) {
 
             	if (mf.getType().equals(fieldValue.getClass())) 
             		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
             	
             	
-            	dbObject.put(name, dbObj);
+            	if (dbObj.keySet().size() > 0) dbObject.put(name, dbObj);
             }
         }
     }
@@ -480,7 +486,7 @@ public class Mapper {
 
         MappedClass mc = getMappedClass(entity);
 
-        dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
+        dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
         try {
 	        for (MappedField mf : mc.getPersistenceFields()) {
 	            if ( mf.hasAnnotation(Id.class) ) {
@@ -502,7 +508,7 @@ public class Mapper {
 	        }
         } catch (Exception e) {throw new RuntimeException(e);}
 
-        mc.callLifecycleMethods(PostLoad.class, entity, dbObject);
+        mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);
         return entity;
     }
 

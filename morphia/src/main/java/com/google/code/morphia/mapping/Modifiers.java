@@ -1,9 +1,10 @@
-package com.google.code.morphia;
+package com.google.code.morphia.mapping;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  *

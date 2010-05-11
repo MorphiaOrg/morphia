@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.EntityListeners;
@@ -27,6 +29,7 @@ import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
+import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
@@ -57,15 +60,15 @@ public class MappedClass {
     /** special annotations representing the type the object */
 	private Entity entityAn;
 	private Embedded embeddedAn;
-    private Polymorphic polymorphicAn;
+//    private Polymorphic polymorphicAn;
 	
 	/** Annotations we are interested in looking for. */
-	public static Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class};
+	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class));
 	/** Annotations we were interested in, and found. */
-	private Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	private Map<Class<? extends Annotation>, Annotation> releventAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
 	
 	/** Methods which are lifecycle events */
-	private Map<Class<Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<Annotation>, List<ClassMethodPair>>();
+	private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 		
     /** the collectionName based on the type and @Entity value(); this can be overriden by the @CollectionName field on the instance*/
 	private String collName;
@@ -83,7 +86,7 @@ public class MappedClass {
 		this.mapr = mapr;
         this.clazz = clazz;
         
-		for (Class<Annotation> c : classAnnotations) {
+		for (Class<? extends Annotation> c : interestingAnnotations) {
 			addAnnotation(c);
 		}
 		
@@ -104,28 +107,26 @@ public class MappedClass {
 			for (Class<?> c : entityLisAnn.value())
 				lifecycleClasses.add(c);
 		
+		Class<? extends Annotation>[] lifecycleAnnotations = new Class[] {PrePersist.class, PreSave.class, PostPersist.class, PreLoad.class, PostLoad.class};
 		for (Class<?> cls : lifecycleClasses) {
 			for (Method m : ReflectionUtils.getDeclaredAndInheritedMethods(cls)) {
-				Class<? extends Annotation> lifecycleType;
+				Class<? extends Annotation> lifecycleType = null;
 				
-				if (m.isAnnotationPresent(PrePersist.class))
-					lifecycleType = PrePersist.class;
-				else if (m.isAnnotationPresent(PostPersist.class))
-					lifecycleType = PostPersist.class;
-				else if (m.isAnnotationPresent(PreLoad.class))
-					lifecycleType = PreLoad.class;
-				else if (m.isAnnotationPresent(PostLoad.class))
-					lifecycleType = PostLoad.class;
-				else
-					continue;
+				for(Class<? extends Annotation> c : lifecycleAnnotations) {
+					if (m.isAnnotationPresent(c)) {
+						lifecycleType = c;
+						break;
+					}
+				}
 				
-				addLifecycleEventMethod((Class<Annotation>)lifecycleType, m, cls.equals(clazz) ? null : cls);
+				if (lifecycleType != null)
+					addLifecycleEventMethod((Class<Annotation>)lifecycleType, m, cls.equals(clazz) ? null : cls);
 			}
 		}
 		
         embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
         entityAn = (Entity)releventAnnotations.get(Entity.class);
-        polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
+//        polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
         collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 
         for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
@@ -166,7 +167,7 @@ public class MappedClass {
 	 * Adds the annotation, if it exists on the field.
 	 * @param clazz
 	 */
-	private void addAnnotation(Class<Annotation> c) {
+	private void addAnnotation(Class<? extends Annotation> c) {
 		Annotation ann = ReflectionUtils.getAnnotation(getClazz(), c);
 		if (ann != null)
 			releventAnnotations.put(c, ann);
@@ -177,11 +178,11 @@ public class MappedClass {
 		return "MappedClass - kind:" + this.getCollectionName() + " for " + this.getClazz().getName() + " fields:" + persistenceFields;
 	}
 
-	public <T> List<T> getFieldsAnnotatedWith(Class<T> clazz){
-		List<T> results = new ArrayList<T>();
+	public List<MappedField> getFieldsAnnotatedWith(Class<? extends Annotation> clazz){
+		List<MappedField> results = new ArrayList<MappedField>();
 		for(MappedField mf : persistenceFields){
 			if(mf.mappingAnnotations.containsKey(clazz))
-				results.add((T)mf.mappingAnnotations.get(clazz));
+				results.add(mf);
 		}
 		return results;
 	}
@@ -288,12 +289,24 @@ public class MappedClass {
 		return this.getClazz().equals(clazz);
 	}
 	
-	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj) {
+	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr) {
 		List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>)event);
+		Collection<EntityInterceptor> interceptors = mapr.getInterceptors();
 		
 		DBObject retDbObj = dbObj;
 		try
 		{
+			//call interceptors first, then lifecycle events on the @Entity and @EntityListeners
+			for (EntityInterceptor ei : interceptors) {
+				log.fine("Calling interceptor method " + event.getSimpleName() + " on " + ei );
+
+				if 		(event.equals(PreLoad.class)) 		ei.PreLoad(entity, dbObj, mapr);
+				else if (event.equals(PostLoad.class)) 		ei.PostLoad(entity, dbObj, mapr);
+				else if	(event.equals(PrePersist.class)) 	ei.PrePersist(entity, dbObj, mapr);
+				else if	(event.equals(PreSave.class)) 		ei.PreSave(entity, dbObj, mapr);
+				else if (event.equals(PostPersist.class))	ei.PostPersist(entity, dbObj, mapr);					
+			}
+			
 			Object tempObj = null;
 			if (methodPairs != null) {
 				HashMap<Class<?>, Object> toCall = new HashMap<Class<?>, Object>((int) (methodPairs.size()*1.3));
@@ -355,14 +368,14 @@ public class MappedClass {
 		return embeddedAn;
 	}
 
-    public Polymorphic getPolymorphicAnnotation() {
-        return polymorphicAn;
-    }
+//    public Polymorphic getPolymorphicAnnotation() {
+//        return polymorphicAn;
+//    }
 
 	/**
 	 * @return the releventAnnotations
 	 */
-	public Map<Class<Annotation>, Annotation> getReleventAnnotations() {
+	public Map<Class<? extends Annotation>, Annotation> getReleventAnnotations() {
 		return releventAnnotations;
 	}
 

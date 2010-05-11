@@ -15,7 +15,7 @@
  */
 
 
-package com.google.code.morphia;
+package com.google.code.morphia.utils;
 
 import java.io.Serializable;
 

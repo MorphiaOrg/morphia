@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +39,9 @@ public class MappedField {
     private String name;
 	
     //Annotations that have been found relevent to mapping
-	protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
+	protected Map<Class<? extends Annotation>, Annotation> mappingAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
 	//The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-	public static Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
+	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class));
 	
 	//the type (T) for the Collection<T>/T[]/Map<?,T>
 	private Class subType = null;
@@ -59,7 +61,7 @@ public class MappedField {
 		f.setAccessible(true);
 		field = f;
 		
-		for (Class<Annotation> clazz : interestingAnnotations)
+		for (Class<? extends Annotation> clazz : interestingAnnotations)
 			addAnnotation(clazz);
 		
 		Class ctorType = null;
@@ -140,7 +142,7 @@ public class MappedField {
 	 * Adds the annotation, if it exists on the field.
 	 * @param clazz
 	 */
-	public void addAnnotation(Class<Annotation> clazz) {
+	public void addAnnotation(Class<? extends Annotation> clazz) {
 		if (field.isAnnotationPresent(clazz))
 			this.mappingAnnotations.put(clazz, field.getAnnotation(clazz));
 	}
