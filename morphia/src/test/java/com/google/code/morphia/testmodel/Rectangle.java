@@ -16,8 +16,8 @@
 
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.AbstractMongoEntity;
 import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.utils.AbstractMongoEntity;
 
 /**
  *

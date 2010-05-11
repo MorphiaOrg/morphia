@@ -16,6 +16,8 @@
 
 package com.google.code.morphia;
 
+import com.google.code.morphia.mapping.Constraints;
+import com.google.code.morphia.mapping.Modifiers;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;

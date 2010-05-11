@@ -16,10 +16,11 @@
 
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.AbstractMongoEntity;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Transient;
+import com.google.code.morphia.utils.AbstractMongoEntity;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;

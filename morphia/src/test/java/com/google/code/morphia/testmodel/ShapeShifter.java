@@ -19,10 +19,10 @@ package com.google.code.morphia.testmodel;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.code.morphia.AbstractMongoEntity;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.utils.AbstractMongoEntity;
 
 /**
  *
