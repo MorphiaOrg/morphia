@@ -60,7 +60,7 @@ public class MappedClass {
     private Polymorphic polymorphicAn;
 	
 	/** Annotations we are interested in looking for. */
-	protected Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class};
+	public static Class[] classAnnotations = new Class[] {Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class};
 	/** Annotations we were interested in, and found. */
 	private Map<Class<Annotation>, Annotation> releventAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	

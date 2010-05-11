@@ -597,6 +597,7 @@ public class Mapper {
 	                for ( Map.Entry entry : dbVal.entrySet() ) {
 	                	Object newEntity = createInstance(mf.getSubType(), (BasicDBObject)entry.getValue());
 	                    newEntity = mapDBObjectToEntity((BasicDBObject)entry.getValue(), newEntity);
+	                    //TODO Add Lifecycle call for newEntity
 	                    Object objKey = objectFromValue(mf.getMapKeyType(), entry.getKey());
 	                    map.put(objKey, newEntity);
 	                }
@@ -616,12 +617,14 @@ public class Mapper {
 	                    for ( Object docDbObject : refList ) {
 	                        Object newEntity = createInstance(newEntityType, (BasicDBObject)docDbObject);
 	                        newEntity = mapDBObjectToEntity((BasicDBObject)docDbObject, newEntity);
+		                    //TODO Add Lifecycle call for newEntity
 	                        entities.add(newEntity);
 	                    }
 	                } else {
 	                    BasicDBObject dbObj = (BasicDBObject) dbObject.get(name);
 	                    Object newEntity = createInstance(newEntityType, dbObj);
 	                    newEntity = mapDBObjectToEntity(dbObj, newEntity);
+	                    //TODO Add Lifecycle call for newEntity
 	                    entities.add(newEntity);
 	                }
 	            }
@@ -646,6 +649,8 @@ public class Mapper {
         Class fieldType = mf.getType();
 
     	try {
+
+            Reference refAnn = mf.getAnnotation(Reference.class);
 	    	if (mf.isMap()) {
 	            Class referenceObjClass = mf.getSubType();
 	            Map map = (Map)tryConstructor(HashMap.class, mf.getCTor());
@@ -656,8 +661,10 @@ public class Mapper {
 	                    DBRef dbRef = (DBRef) entry.getValue();
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
-                        // handle broken references with "no action"
-                        if (refDbObject != null) {
+	                    if (refDbObject == null) {
+	                    	if (!refAnn.ignoreMissing()) 
+	                    		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
+	                    } else {
                             Object refObj = createInstance(referenceObjClass, refDbObject);
                             refObj = mapDBObjectToEntity(refDbObject, refObj);
                             map.put(entry.getKey(), refObj);
@@ -679,8 +686,10 @@ public class Mapper {
 	                        DBRef dbRef = (DBRef) dbRefObj;
 	                        BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
-                            // handle broken references with "no action"
-                            if (refDbObject != null) {
+	                        if (refDbObject == null) {
+	                        	if (!refAnn.ignoreMissing()) 
+	                        		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
+	                        } else {
                                 Object refObj = createInstance(referenceObjClass, refDbObject);
                                 refObj = mapDBObjectToEntity(refDbObject, refObj);
                                 references.add(refObj);
@@ -689,11 +698,13 @@ public class Mapper {
 	                } else {
 	                    DBRef dbRef = (DBRef) dbObject.get(name);
 	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-
-                        // handle broken references with "no action"
-                        if (refDbObject != null) {
+	                    if (refDbObject == null) {
+	                    	if (!refAnn.ignoreMissing()) 
+	                    		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
+	                    } else {
                             Object newEntity = createInstance(referenceObjClass, refDbObject);
                             newEntity = mapDBObjectToEntity(refDbObject, newEntity);
+    	                    //TODO Add Lifecycle call for newEntity
                             references.add(newEntity);
                         }
 	                }
@@ -707,8 +718,10 @@ public class Mapper {
 	                DBRef dbRef = (DBRef) dbObject.get(name);
 	                BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 
-                    // handle broken references with "no action"
-                    if (refDbObject != null) {
+                    if (refDbObject == null) {
+                    	if (!refAnn.ignoreMissing()) 
+                    		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
+                    } else {
                         Object refObj = createInstance(referenceObjClass, refDbObject);
                         refObj = mapDBObjectToEntity(refDbObject, refObj);
                         mf.setFieldValue(entity, refObj);

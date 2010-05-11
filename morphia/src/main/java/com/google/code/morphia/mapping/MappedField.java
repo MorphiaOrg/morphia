@@ -39,7 +39,7 @@ public class MappedField {
     //Annotations that have been found relevent to mapping
 	protected Map<Class<Annotation>,Annotation> mappingAnnotations = new HashMap<Class<Annotation>, Annotation>();
 	//The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-	private Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
+	public static Class[] interestingAnnotations = new Class[] {Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class};
 	
 	//the type (T) for the Collection<T>/T[]/Map<?,T>
 	private Class subType = null;

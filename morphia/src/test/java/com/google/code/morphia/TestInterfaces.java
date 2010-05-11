@@ -71,6 +71,12 @@ public class TestInterfaces {
             BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Mapper.ID_KEY, shifterDbObj.get(Mapper.ID_KEY)));
             ShapeShifter shifterLoaded = morphia.fromDBObject(ShapeShifter.class, shifterDbObjLoaded);
 
+            assertNotNull(shifterLoaded);
+            assertNotNull(shifterLoaded.getReferencedShape());
+            assertNotNull(shifterLoaded.getReferencedShape().getArea());
+            assertNotNull(rectangle);
+            assertNotNull(rectangle.getArea());
+
             assertTrue(rectangle.getArea() == shifterLoaded.getReferencedShape().getArea());
             assertTrue(shifterLoaded.getReferencedShape() instanceof Rectangle);
             assertTrue(shifter.getMainShape().getArea() == shifterLoaded.getMainShape().getArea());

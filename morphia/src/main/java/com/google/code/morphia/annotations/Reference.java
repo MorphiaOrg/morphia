@@ -43,5 +43,5 @@ public @interface Reference {
     String value() default Mapper.IGNORED_FIELDNAME;
     /** Specify the concrete class to instantiate. */
     Class<?> concreteClass() default Object.class;
-    
+    boolean ignoreMissing() default false;
 }
