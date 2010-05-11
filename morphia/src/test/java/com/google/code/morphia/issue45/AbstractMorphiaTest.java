@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.google.code.morphia.suggestions;
+package com.google.code.morphia.issue45;
 
 import java.net.UnknownHostException;
 
