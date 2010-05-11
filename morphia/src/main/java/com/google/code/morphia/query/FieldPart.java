@@ -16,4 +16,7 @@ public interface FieldPart<T> {
 	Query<T> hasAllOf(Iterable<?> vals);
 	Query<T> hasAnyOf(Iterable<?> vals);
 	Query<T> hasNoneOf(Iterable<?> vals);
+
+	Query<T> hasThisElement(Object val);
+	
 }

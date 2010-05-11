@@ -19,6 +19,7 @@ public enum FilterOperator {
 	IN("$in"),
 	NOT_IN("$nin"),
 	ALL("$all"),
+	ELEMENT_MATCH("$elemMatch"),
 	NOT_EQUAL("$ne");
 	
 	private String value;

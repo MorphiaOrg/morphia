@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,12 +58,19 @@ public class TestQuery {
 	
 	public static class PhotoWithKeywords {
 		@Id String id;
-		@Embedded List<Keyword> keywords = Collections.singletonList(new Keyword("california"));
+		@Embedded List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("neveda"), new Keyword("arizona"));
+		public PhotoWithKeywords() {}
+		public PhotoWithKeywords(String... words) {
+			this.keywords = new ArrayList<Keyword>((int) (words.length*1.3));
+			for(String word : words)
+				keywords.add(new Keyword(word));
+		}
 	}
 	
 	@Embedded
 	public static class Keyword {
 		String keyword;
+		int score = 12;
 		protected Keyword() {}
 		public Keyword(String k) { this.keyword = k;}
 	}
@@ -155,6 +163,21 @@ public class TestQuery {
 	}
 
 	
+	@Test
+    public void testElemMatchQuery() throws Exception {
+		PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+		PhotoWithKeywords pwk2 = new PhotoWithKeywords("Scott","Joe","Sarah");
+		
+		ds.save(pwk1, pwk2);
+		PhotoWithKeywords pwkScott = ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new Keyword("Scott"), new Keyword("Joe")}).get();
+		assertNotNull(pwkScott);
+		PhotoWithKeywords pwkScottSarah= ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new Keyword("Scott"), new Keyword("Joe")}).get();
+		assertNotNull(pwkScottSarah);
+		PhotoWithKeywords pwkBad = ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
+		assertNull(pwkBad);
+		
+	}
+
 	@Test
     public void testKeyList() throws Exception {
 		Rectangle rect = new Rectangle(1000, 1);

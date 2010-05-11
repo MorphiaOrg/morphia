@@ -81,11 +81,19 @@ public class QueryImpl<T> implements Query<T> {
 		if (offset > 0 || limit > 0) {
 			DBObject query = getQueryObject();
 			DBObject fields = getFieldsObject();
+			
+			if (log.isLoggable(Level.FINE))
+				log.fine("Running query: " + query + ", " + fields + ",off:" + offset + ",limit:" + limit);
+			
 			Iterator<DBObject> it = dbColl.find(query, fields, offset, limit);
 			return new MorphiaIterator<T>(it, ds.getMapper(), clazz, dbColl.getName());
-		} else
-			cursor = dbColl.find(getQueryObject());
-		
+		} else {			
+			DBObject query = getQueryObject();
+			if (log.isLoggable(Level.FINE))
+				log.fine("Running query: " + query);
+
+			cursor = dbColl.find(query);
+		}
 		if (sort != null) cursor = cursor.sort(getSortObject());
 		
 		return new MorphiaIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
@@ -97,6 +105,10 @@ public class QueryImpl<T> implements Query<T> {
 		if (offset > 0 || limit > 0) {
 			DBObject query = getQueryObject();
 			DBObject fields = getFieldsObject();
+
+			if (log.isLoggable(Level.FINE))
+				log.fine("Running query: " + query + ", " + fields + ",off:" + offset + ",limit:" + limit);
+			
 			Iterator<DBObject> it = dbColl.find(query, fields, offset, limit);
 			return new MorphiaKeyIterator<T>(it, ds.getMapper(), clazz, dbColl.getName());
 		} else
@@ -157,6 +169,8 @@ public class QueryImpl<T> implements Query<T> {
 			return FilterOperator.ALL;
 		else if (operator.toLowerCase().equals("exists"))
 			return FilterOperator.EXISTS;
+		else if (operator.toLowerCase().equals("elem"))
+			return FilterOperator.ELEMENT_MATCH;
 		else if (operator.toLowerCase().equals("size"))
 			return FilterOperator.SIZE;
 		else
@@ -384,6 +398,11 @@ public class QueryImpl<T> implements Query<T> {
 		@Override
 		public Query<T> hasAnyOf(Iterable<?> vals) {
 			query.filter(fieldExpr + " in", vals);
+			return query;
+		}
+		@Override
+		public Query<T> hasThisElement(Object val) {
+			query.filter(fieldExpr + " elem", val);
 			return query;
 		}
 		@Override
