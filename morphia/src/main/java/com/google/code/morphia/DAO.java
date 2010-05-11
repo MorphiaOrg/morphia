@@ -54,7 +54,7 @@ public class DAO<T,K extends Serializable> {
     }
 
     public void save( T entity ) {
-		DBObject dbObj = morphia.toDBObject(entity);
+		DBObject dbObj = morphia.getMapper().toDBObject(entity, false);
 		collection().save(dbObj);
 
 		DBObject lastErr = collection().getDB().getLastError();

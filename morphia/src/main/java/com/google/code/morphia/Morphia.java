@@ -128,24 +128,16 @@ public class Morphia {
         try {
             return (T) mapper.fromDBObject(entityClass, (BasicDBObject) dbObject);
         } catch ( Exception e ) {
-            throw new MappingException("Could not map from DBObject", e);
-        } finally {
-            mapper.clearHistory();
-        }
+            throw new MappingException("Could not map entity from DBObject", e); }
     }
 
     public DBObject toDBObject( Object entity ) {
-        if (!mapper.isMapped(entity.getClass())) {
-            throw new MappingException("Trying to map an unmapped class: " + entity.getClass().getName());
-        }
         try {
             return mapper.toDBObject(entity);
         } catch ( Exception e ) {
-            throw new MappingException("Could not map to DBObject", e);
-        } finally {
-            mapper.clearHistory();
-        }
+            throw new MappingException("Could not map entity to DBObject", e); }
     }
+
     public Mapper getMapper() { return this.mapper; }
 
     public Datastore createDatastore(String dbName) {

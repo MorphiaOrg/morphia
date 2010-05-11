@@ -382,7 +382,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	protected <T> Key<T> save(DBCollection dbColl, T entity) {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
-		DBObject dbObj = mapr.toDBObject(entity);
+		DBObject dbObj = mapr.toDBObject(entity, false);
 		dbColl.save(dbObj);
 		if (dbObj.get(Mapper.ID_KEY) == null) 
 			throw new MappingException("Missing _id after save!");

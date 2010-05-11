@@ -40,6 +40,7 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Property;
@@ -203,12 +204,13 @@ public class Mapper {
     	}
     	
     	entityCache.set(new HashMap<String, Object>());
-        
-        Object entity = createInstance(entityClass, dbObject);
-        
-        mapDBObjectToEntity(dbObject, entity);
-
-        entityCache.remove();
+    	Object entity = null;
+    	try {
+    		entity = createInstance(entityClass, dbObject);
+	        mapDBObjectToEntity(dbObject, entity);
+        } finally {
+        	entityCache.remove();
+        }
         return entity;
     }
 
@@ -244,38 +246,41 @@ public class Mapper {
     	} else 
     		return newObj;
     }
-    
     /** converts an entity to a DBObject */
     public DBObject toDBObject( Object entity ) {
+    	return toDBObject(entity, true);
+    }    
+
+    public DBObject toDBObject( Object entity, boolean callPostPersist) {
     	BasicDBObject dbObject = new BasicDBObject();
  	
-	        MappedClass mc = getMappedClass(entity);
-
-            if ( mc.getPolymorphicAnnotation() != null ) {
-                dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
-            }
-    		
-	        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
-	        for (MappedField mf : mc.getPersistenceFields()) {
-	           	try {	
-		            if ( mf.hasAnnotation(Id.class) ) {
-		                Object dbVal = mf.getFieldValue(entity);
-		                if ( dbVal != null ) {
-		                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(dbVal)));
-		                }
-		            } else if ( mf.hasAnnotation(Reference.class) ) {
-		                mapReferencesToDBObject(entity, mf, dbObject);
-		            } else  if (mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible()){
-		                mapEmbeddedToDBObject(entity, mf, dbObject);
-		            } else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
-		            	mapValuesToDBObject(entity, mf, dbObject);
-		            } else {
-		            	logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName() + "]");
-		            }
-	            } catch (Exception e) {throw new MappingException("Error mapping field:" + mf.getFullName(), e);}
-	        }
-        return dbObject;
-
+        MappedClass mc = getMappedClass(entity);
+        
+        if ( mc.getPolymorphicAnnotation() != null ) {
+            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getCanonicalName());
+        }
+		
+        dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
+        for (MappedField mf : mc.getPersistenceFields()) {
+           	try {	
+	            if ( mf.hasAnnotation(Id.class) ) {
+	                Object dbVal = mf.getFieldValue(entity);
+	                if ( dbVal != null ) {
+	                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(dbVal)));
+	                }
+	            } else if ( mf.hasAnnotation(Reference.class) ) {
+	                mapReferencesToDBObject(entity, mf, dbObject);
+	            } else  if (mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible()){
+	                mapEmbeddedToDBObject(entity, mf, dbObject);
+	            } else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
+	            	mapValuesToDBObject(entity, mf, dbObject);
+	            } else {
+	            	logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName() + "]");
+	            }
+            } catch (Exception e) {throw new MappingException("Error mapping field:" + mf.getFullName(), e);}
+        }
+	    if (callPostPersist) mc.callLifecycleMethods(PostPersist.class, entity, dbObject);
+		return dbObject;
     }
 
     void mapReferencesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject) {
@@ -596,7 +601,8 @@ public class Mapper {
 	                BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
 	                for ( Map.Entry entry : dbVal.entrySet() ) {
 	                	Object newEntity = createInstance(mf.getSubType(), (BasicDBObject)entry.getValue());
-	                    newEntity = mapDBObjectToEntity((BasicDBObject)entry.getValue(), newEntity);
+	                    
+	                	newEntity = mapDBObjectToEntity((BasicDBObject)entry.getValue(), newEntity);
 	                    //TODO Add Lifecycle call for newEntity
 	                    Object objKey = objectFromValue(mf.getMapKeyType(), entry.getKey());
 	                    map.put(objKey, newEntity);
