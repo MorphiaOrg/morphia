@@ -244,7 +244,7 @@ public class TestQuery {
 		
 		assertEquals(k1Loaded.users.size(), 4);
 		
-		List<FacebookUser> fbUsers = ds.getByKeys(FacebookUser.class, k1Loaded.users).asList();
+		List<FacebookUser> fbUsers = ds.getByKeys(FacebookUser.class, k1Loaded.users);
 		assertEquals(fbUsers.size(), 4);
 		for(FacebookUser fbUser : fbUsers) {
 			assertNotNull(fbUser);
@@ -252,6 +252,25 @@ public class TestQuery {
 			assertNotNull(fbUser.username);
 		}
 	}
+	
+	@Test
+    public void testGetByKeysHetro() throws Exception {
+		FacebookUser fbU= new FacebookUser(1, "scott");
+		Rectangle r = new Rectangle(1,1);
+		Iterable<Key<Object>> keys = ds.save(fbU, r);
+		List<Object> entities = ds.getByKeys(keys);
+		assertNotNull(entities);
+		assertEquals(2, entities.size());
+		int userCount=0, rectCount=0;
+		for (Object o: entities) {
+			if (o instanceof Rectangle)
+				rectCount++;
+			else if(o instanceof FacebookUser)
+				userCount++;
+		}
+		assertEquals(1, rectCount);
+		assertEquals(1, userCount);
+	}	
 	
 	@Test
     public void testNonexistantGet() throws Exception {

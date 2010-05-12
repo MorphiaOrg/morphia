@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
-    
 	<source path="">
+<!--		Provide super-source for DBObject/DBRef to get Key working -->
+<!--		<include name="Key.java" />-->
+	</source>    
+	<source path="query">
 <!--		Provide super-source for DBObject/DBRef to get Key working -->
 <!--		<include name="Key.java" />-->
 		<include name="Constraints.java" />

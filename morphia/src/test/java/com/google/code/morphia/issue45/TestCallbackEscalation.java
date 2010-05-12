@@ -17,6 +17,7 @@ import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
+import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Transient;
 
 public class TestCallbackEscalation extends AbstractMorphiaTest
@@ -52,7 +53,7 @@ public class TestCallbackEscalation extends AbstractMorphiaTest
     static class Callbacks
     {
         @Transient
-        boolean prePersist, postPersist, preLoad, postLoad;
+        boolean prePersist, postPersist, preLoad, postLoad, preSave;
 
         @PrePersist
         void prePersist()
@@ -76,6 +77,11 @@ public class TestCallbackEscalation extends AbstractMorphiaTest
         void postLoad()
         {
             this.postLoad = true;
+        }
+        @PreSave
+        void preSave()
+        {
+            this.preSave = true;
         }
     }
 
@@ -110,9 +116,12 @@ public class TestCallbackEscalation extends AbstractMorphiaTest
 
         this.ds.save(a);
 
+        Assert.assertTrue(a.preSave);
         Assert.assertTrue(a.postPersist);
-        Assert.assertTrue(a.b.postPersist); // fails here
-        Assert.assertTrue(a.bs.get(0).postPersist); // and here
+        Assert.assertTrue(a.b.preSave);
+        Assert.assertFalse(a.b.postPersist); //PostPersist in only called on entities
+        Assert.assertTrue(a.bs.get(0).preSave);
+        Assert.assertFalse(a.bs.get(0).postPersist); //PostPersist in only called on entities
     }
 
     @Test

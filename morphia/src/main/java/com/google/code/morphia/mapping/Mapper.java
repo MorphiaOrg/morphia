@@ -83,18 +83,18 @@ public class Mapper {
     public Collection<EntityInterceptor> getInterceptors() { return interceptors;}
     
     public boolean isMapped(Class c) {
-        return mappedClasses.containsKey(c.getName());
+        return mappedClasses.containsKey(c.getCanonicalName());
     }
 
     public void addMappedClass(Class c) {
     	MappedClass mc = new MappedClass(c, this);
     	mc.validate();
-        mappedClasses.put(c.getName(), mc);
+        mappedClasses.put(c.getCanonicalName(), mc);
     }
 
     public MappedClass addMappedClass(MappedClass mc) {
     	mc.validate();
-        mappedClasses.put(mc.getClazz().getName(), mc);
+        mappedClasses.put(mc.getClazz().getCanonicalName(), mc);
         return mc;
     }
 
@@ -106,11 +106,11 @@ public class Mapper {
     public MappedClass getMappedClass(Object obj) {
 		if (obj == null) return null;
 		Class type = (obj instanceof Class) ? (Class)obj : obj.getClass();
-		MappedClass mc = mappedClasses.get(type.getName());
+		MappedClass mc = mappedClasses.get(type.getCanonicalName());
 		if (mc == null) {
 			//no validation
 			mc = new MappedClass(type, this);
-			this.mappedClasses.put(mc.getClazz().getName(), mc);
+			this.mappedClasses.put(mc.getClazz().getCanonicalName(), mc);
 		}
 		return mc;
 	}

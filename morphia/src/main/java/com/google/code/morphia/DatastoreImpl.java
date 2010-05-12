@@ -1,7 +1,10 @@
 package com.google.code.morphia;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.CappedAt;
@@ -255,20 +258,37 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		return find(clazz, Mapper.ID_KEY + " in", objIds);
 	}
+	@Override
+	public <T> List<T> getByKeys(Iterable<Key<T>> keys) {
+		return this.getByKeys((Class<T>)null, keys);
+	}
 	
 	@Override
-	public <T> Query<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
-		//TODO add method that doesn't restrict based on clazz (for more than one type of Key)
-		Mapper mapr = morphia.getMapper();
-		String kind = mapr.getCollectionName(clazz);
-		List objIds = new ArrayList();
-		for (Key<T> key : keys) {
-			if (!kind.equals(key.updateKind(mapr)))
-				throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + key.getKind());
-
-			objIds.add(asObjectIdMaybe(key.getId()));
+	public <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
+		Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
+		List<T> results = new ArrayList<T>();
+//		String clazzKind = (clazz==null) ? null : getMapper().getCollectionName(clazz);
+		for(Key<?> key : keys) {
+			key.updateKind(getMapper());
+			
+//			if (clazzKind != null && !key.getKind().equals(clazzKind))
+//				throw new IllegalArgumentException("Types are not equal (" + clazz + "!=" + key.getKindClass() + ") for key and method parameter clazz");
+//			
+			if(kindMap.containsKey(key.getKind()))
+				kindMap.get(key.getKind()).add(key);
+			else
+				kindMap.put(key.getKind(), new ArrayList<Key>(Collections.singletonList((Key)key)));
 		}
-		return find(clazz, Mapper.ID_KEY + " in", objIds);
+		for(String kind : kindMap.keySet()) {
+			List objIds = new ArrayList();
+			List<Key> kindKeys = kindMap.get(kind);
+			for (Key key : kindKeys) {
+				objIds.add(asObjectIdMaybe(key.getId()));
+			}
+			List kindResults = find(kind, null).filter( "_id in", objIds).asList();
+			results.addAll(kindResults);
+		}
+		return results;
 	}
 
 	@Override
@@ -442,5 +462,4 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBObject dbObj = dbColl.getDB().getLastError();
 		return new UpdateResults<T>(dbObj);		
 	}
-
 }

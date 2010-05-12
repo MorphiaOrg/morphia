@@ -251,6 +251,7 @@ public class QueryImpl<T> implements Query<T> {
 	private MappedField validate(String prop, Object value) {
 		String[] parts = prop.split("\\.");
 //		if (parts.length == 0) parts = new String[]{prop};
+		if (this.clazz == null) return null;
 		MappedClass mc = ds.getMapper().getMappedClass(this.clazz);
 		MappedField mf;
 		for(int i=0; ; ) {

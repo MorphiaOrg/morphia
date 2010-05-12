@@ -1,5 +1,7 @@
 package com.google.code.morphia;
 
+import java.util.List;
+
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
@@ -48,14 +50,17 @@ public interface Datastore {
 
 	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
 	<T,V> Query<T> get(Class<T> clazz, Iterable<V> ids);
-	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
-	<T> Query<T> getByKeys(Class<T> clazz, Iterable<Key<T>> ids);
 	/** Find the given entity (by id); shorthand for {@code find("_id ", id)} */
 	<T,V> T get(Class<T> clazz, V id);
 
 	/** Find the given entity (by collectionName/id); think of this as refresh */
 	<T> T get(T entity);
 	
+	/** Find the given entities (by id), verifying they are of the correct type; shorthand for {@code find("_id in", ids)} */
+	<T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys);
+	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
+//	@SuppressWarnings("unchecked")
+	<T> List<T> getByKeys(Iterable<Key<T>> keys);
 	/** Find the given entity (by collectionName/id);*/
 	<T> T getByKey(Class<T> clazz, Key<T> key);
 
