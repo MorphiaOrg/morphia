@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -20,7 +21,7 @@ import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Transient;
 
-public class TestCallbackEscalation extends AbstractMorphiaTest
+public class TestCallbackEscalation extends TestBase
 {
     @Entity
     static class A extends Callbacks

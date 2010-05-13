@@ -20,9 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.net.UnknownHostException;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Id;
@@ -30,40 +27,18 @@ import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestUpdateOps {
+public class TestUpdateOps  extends TestBase {
 
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
 
 	public static class ContainsInt{
 		private @Id String id;
 		public int val;
 	}
-	
-	public TestUpdateOps() {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
-	}
-	
 	@Test
     public void testUpdateSingleField() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),

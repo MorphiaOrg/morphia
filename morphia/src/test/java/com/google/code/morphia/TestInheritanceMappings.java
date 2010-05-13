@@ -19,26 +19,17 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.net.UnknownHostException;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestInheritanceMappings {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
+public class TestInheritanceMappings  extends TestBase {
 
 	public static enum VehicleClass {
 		Bicycle, Moped, MiniCar, Car, Truck;
@@ -82,20 +73,11 @@ public class TestInheritanceMappings {
 		}
 	}
 	
-	public TestInheritanceMappings () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(Car.class).map(AbstractVehicle.class).map(FlyingCar.class);
-	}
 
-	@Before
+	@Before @Override
 	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
+		super.setUp();
+		morphia.map(Car.class).map(AbstractVehicle.class).map(FlyingCar.class);
 	}
 
     @Test

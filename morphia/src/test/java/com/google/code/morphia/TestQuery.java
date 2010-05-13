@@ -20,13 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.TestDatastore.FacebookUser;
@@ -37,19 +35,12 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestQuery {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
+public class TestQuery  extends TestBase {
 
 	public static class Photo {
 		@Id String id;
@@ -88,21 +79,6 @@ public class TestQuery {
 		String lastName = "Hernandez";
 	}
 	
-	public TestQuery() {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
-	}
-
 	@Test
     public void testRenamedFieldQuery() throws Exception {
 		ds.save(new ContainsRenamedFields());

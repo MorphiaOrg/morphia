@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -53,11 +51,9 @@ import com.google.code.morphia.testmodel.Translation;
 import com.google.code.morphia.testmodel.TravelAgency;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.Mongo;
 
 /**
  *
@@ -66,11 +62,7 @@ import com.mongodb.Mongo;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class TestMapping {
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
+public class TestMapping  extends TestBase {
 	
 //	@Embedded
 //	public static class CustomId {
@@ -198,20 +190,6 @@ public class TestMapping {
 	public static class MapSubclass extends LinkedHashMap<String, Object> {
 		private static final long serialVersionUID = 1L;
 		@Id String id;
-	}
-
-	public TestMapping() {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
 	}
 
 	@Test

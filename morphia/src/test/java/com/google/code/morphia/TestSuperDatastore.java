@@ -18,42 +18,25 @@ package com.google.code.morphia;
 
 import static org.junit.Assert.assertEquals;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.testmodel.Rectangle;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestSuperDatastore {
+public class TestSuperDatastore  extends TestBase {
 
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	AdvancedDatastore ds;
-	
-	public TestSuperDatastore () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(Rectangle.class);
-		//delete, and (re)create test db
-	}
+	AdvancedDatastore ads;
 
-	@Before
+	@Before @Override
 	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = (AdvancedDatastore)morphia.createDatastore(mongo, db.getName());
+		super.setUp();
+        ads = (AdvancedDatastore)ds;
 	}
 
 	@Test
@@ -64,12 +47,12 @@ public class TestSuperDatastore {
 		
 		
 		//test delete(entity, id)
-		ds.save(ns, rect);
-		assertEquals(1, ds.getCount(ns));
-		ds.delete(ns, 1);
-		assertEquals(1, ds.getCount(ns));
-		ds.delete(ns, "1");
-		assertEquals(0, ds.getCount(ns));
+		ads.save(ns, rect);
+		assertEquals(1, ads.getCount(ns));
+		ads.delete(ns, 1);
+		assertEquals(1, ads.getCount(ns));
+		ads.delete(ns, "1");
+		assertEquals(0, ads.getCount(ns));
 	}
 	
 	@Test
@@ -80,9 +63,9 @@ public class TestSuperDatastore {
 		
 		
 		//test delete(entity, id)
-		ds.save(ns, rect);
-		assertEquals(1, ds.getCount(ns));
-		Rectangle rectLoaded = ds.get(ns, Rectangle.class, rect.getId());
+		ads.save(ns, rect);
+		assertEquals(1, ads.getCount(ns));
+		Rectangle rectLoaded = ads.get(ns, Rectangle.class, rect.getId());
 		assertEquals(rect.getId(), rectLoaded.getId());
 		assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 	}	
@@ -94,32 +77,32 @@ public class TestSuperDatastore {
 		rect.setId("1");
 		
 		//test delete(entity, id)
-		ds.save(ns, rect);
-		assertEquals(1, ds.getCount(ns));
-		Rectangle rectLoaded = ds.find(ns, Rectangle.class).get();
+		ads.save(ns, rect);
+		assertEquals(1, ads.getCount(ns));
+		Rectangle rectLoaded = ads.find(ns, Rectangle.class).get();
 		assertEquals(rect.getId(), rectLoaded.getId());
 		assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 		
 		rect = new Rectangle(2, 1);
 		rect.setId("2");
-		ds.save(rect); //saved to default collection name (kind)
-		assertEquals(1, ds.getCount(rect));
+		ads.save(rect); //saved to default collection name (kind)
+		assertEquals(1, ads.getCount(rect));
 		
 		rect.setId("3");
-		ds.save(rect); //saved to default collection name (kind)
-		assertEquals(2, ds.getCount(rect));
+		ads.save(rect); //saved to default collection name (kind)
+		assertEquals(2, ads.getCount(rect));
 		
 		rect = new Rectangle(4, 3);
 		rect.setId("3");
-		ds.save(ns, rect);
-		assertEquals(2, ds.getCount(ns));
-		List<Rectangle> rects = ds.find(ns, Rectangle.class).asList();
+		ads.save(ns, rect);
+		assertEquals(2, ads.getCount(ns));
+		List<Rectangle> rects = ads.find(ns, Rectangle.class).asList();
 		
 		rectLoaded = rects.get(1);
 		assertEquals(rect.getId(), rectLoaded.getId());
 		assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 		
-		rectLoaded = ds.find(ns, Rectangle.class, "_id !=", "-1", 1, 1).get();	
+		rectLoaded = ads.find(ns, Rectangle.class, "_id !=", "-1", 1, 1).get();	
 		
 	}	
 }

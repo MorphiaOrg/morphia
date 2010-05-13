@@ -16,34 +16,24 @@
 
 package com.google.code.morphia;
 
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestPerf {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
-
+public class TestPerf  extends TestBase{
 	@Entity
 	public static class Address {
 		@Id String id;
@@ -53,24 +43,8 @@ public class TestPerf {
 		String state = "CA";
 		int zip = 94114;
 	}
-	
-	public TestPerf () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(Address.class);
-	}
 
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
-	}
-
-    @Test @Ignore
+	@Test @Ignore
     public void testAddressInsertPerf() throws Exception {
     	int count = 10000;
     	long startTicks = new Date().getTime();

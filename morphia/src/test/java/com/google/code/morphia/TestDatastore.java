@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -44,7 +43,6 @@ import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -53,12 +51,7 @@ import com.mongodb.Mongo;
  *
  * @author Scott Hernandez
  */
-public class TestDatastore {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
+public class TestDatastore  extends TestBase{
 
 	@Entity("facebook_users")
 	public static class FacebookUser {
@@ -177,13 +170,6 @@ public class TestDatastore {
 		}
 		morphia.map(Hotel.class).map(KeysKeysKeys.class).map(Rectangle.class).map(FacebookUser.class);
 		//delete, and (re)create test db
-	}
-
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
 	}
 
 	@Test

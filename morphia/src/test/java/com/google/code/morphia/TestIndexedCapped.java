@@ -19,7 +19,6 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.junit.Before;
@@ -31,21 +30,13 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappingException;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestIndexedCapped {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
-
+public class TestIndexedCapped  extends TestBase{
 	@Entity(cap=@CappedAt(count=1))
 	public static class CurrentStatus{
 		@Id String id;
@@ -76,21 +67,11 @@ public class TestIndexedCapped {
 		UniqueIndexClass(){}
 		UniqueIndexClass(String name){this.name = name;}
 	}
-	
-	public TestIndexedCapped () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(CurrentStatus.class).map(UniqueIndexClass.class).map(IndexedClass.class).map(NamedIndexClass.class);
-	}
 
-	@Before
+	@Before @Override
 	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
+		super.setUp();
+		morphia.map(CurrentStatus.class).map(UniqueIndexClass.class).map(IndexedClass.class).map(NamedIndexClass.class);
 	}
 
 	@Test

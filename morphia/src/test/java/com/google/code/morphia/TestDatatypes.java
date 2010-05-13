@@ -16,20 +16,18 @@
 
 package com.google.code.morphia;
 
-import static org.junit.Assert.*;
-
-import java.net.UnknownHostException;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import com.google.code.morphia.annotations.Id;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  * @author Scott Hernandez
  */
-public class TestDatatypes {
+public class TestDatatypes  extends TestBase {
 	
 	public static class ContainsFloat{
 		@Id String id;
@@ -54,29 +52,12 @@ public class TestDatatypes {
 		byte val0 = 1;
 		Byte val1 = 1;
     }
-	
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
-	
-	public TestDatatypes() {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(ContainsByte.class).map(ContainsDouble.class).map(ContainsFloat.class).map(ContainsShort.class);
-		//delete, and (re)create test db
-	}
 
-	@Before
+	@Before @Override
 	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
+		super.setUp();
+		morphia.map(ContainsByte.class).map(ContainsDouble.class).map(ContainsFloat.class).map(ContainsShort.class);
 	}
-
 	@Test
 	public void testByte() throws Exception {
 		ContainsByte cb = new ContainsByte();

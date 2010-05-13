@@ -7,12 +7,13 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.utils.AbstractMongoEntity;
 
-public class TestEmptyEntityMapping extends AbstractMorphiaTest
+public class TestEmptyEntityMapping extends TestBase
 {
     @Entity
     static class A extends AbstractMongoEntity{
