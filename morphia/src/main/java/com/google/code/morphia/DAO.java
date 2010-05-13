@@ -1,7 +1,9 @@
 package com.google.code.morphia;
 
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+
 import com.google.code.morphia.annotations.PostPersist;
-import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.mapping.Constraints;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
@@ -12,8 +14,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 
 /**
  *
@@ -58,8 +58,6 @@ public class DAO<T,K extends Serializable> {
 
     public void save( T entity ) {
 		DBObject dbObj = morphia.getMapper().toDBObject(entity);
-		
-        morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PreSave.class, entity, dbObj, morphia.getMapper());
 		collection().save(dbObj);
 
 		DBObject lastErr = collection().getDB().getLastError();

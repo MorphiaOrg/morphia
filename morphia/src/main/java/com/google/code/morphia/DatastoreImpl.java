@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
-import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -403,9 +402,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	protected <T> Key<T> save(DBCollection dbColl, T entity) {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
-		DBObject dbObj = mapr.toDBObject(entity);
-		
-		mc.callLifecycleMethods(PreSave.class, entity, dbObj, mapr);
+		DBObject dbObj = mapr.toDBObject(entity);		
 		dbColl.save(dbObj);
 		if (dbObj.get(Mapper.ID_KEY) == null) 
 			throw new MappingException("Missing _id after save!");

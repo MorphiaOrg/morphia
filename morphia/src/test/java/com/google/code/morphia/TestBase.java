@@ -3,13 +3,10 @@
  */
 package com.google.code.morphia;
 
-import java.net.UnknownHostException;
-
 import org.junit.Before;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 
 public abstract class TestBase
 {
