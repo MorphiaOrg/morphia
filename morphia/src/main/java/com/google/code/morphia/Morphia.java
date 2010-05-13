@@ -58,6 +58,10 @@ public class Morphia {
         return this;
     }
 
+    public synchronized Morphia mapPackageFromClass(Class clazz) {
+        return mapPackage(clazz.getPackage().getName(), false);
+    }
+
     /**
      * Tries to map all classes in the package specified. Fails if one of the classes is not valid for mapping.
      *
@@ -82,9 +86,9 @@ public class Morphia {
         try {
             for (Class c : ReflectionUtils.getClasses(packageName)) {
                 try {
-                    Embedded classMongoEmbedded = ReflectionUtils.getClassEmbeddedAnnotation(c);
-                    Entity classMongoDocument = ReflectionUtils.getClassEntityAnnotation(c);
-                    if ( classMongoDocument != null || classMongoEmbedded != null ) {
+                    Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(c);
+                    Entity enityAnn = ReflectionUtils.getClassEntityAnnotation(c);
+                    if ( enityAnn != null || embeddedAnn != null ) {
                         map(c);
                     }
                 } catch (MappingException ex) {
