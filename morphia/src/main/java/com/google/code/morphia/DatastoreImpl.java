@@ -39,14 +39,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	protected Morphia morphia;
 	protected Mongo mongo;
-	protected String dbName;
+	protected DB db;
 
 	public DatastoreImpl(Morphia morphia, Mongo mongo) {
 		this(morphia, mongo, null);
 	}
 	
 	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName) {
-		this.morphia = morphia; this.mongo = mongo; this.dbName = dbName;
+		this.morphia = morphia; this.mongo = mongo; this.db = mongo.getDB(dbName);
 	}
 
 	protected Object asObjectIdMaybe(Object id) {
@@ -82,7 +82,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@Override
 	public <T> void delete(String kind, T id) {
-		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		DBCollection dbColl = getDB().getCollection(kind);
 		delete(dbColl, id);
 	}
 
@@ -192,7 +192,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
 				if(cap.value() > 0) dbCapOpts.add("size", cap.value());
 				if(cap.count() > 0) dbCapOpts.add("max", cap.count());
-				DB db = mongo.getDB(dbName);
+				DB db = getDB();
 				if (db.getCollectionNames().contains(collName)) {
 					DBObject dbResult = db.command(BasicDBObjectBuilder.start("collstats", collName).get());
 					if (dbResult.containsField("capped")) {
@@ -202,7 +202,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 						log.warning("DBCollection already exists with same name(" + collName + ") and is not cap'd; not creating cap'd version!");
 					}
 				} else {
-					mongo.getDB(dbName).createCollection(collName, dbCapOpts.get());
+					getDB().createCollection(collName, dbCapOpts.get());
 					log.fine("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
 				}
 			}	
@@ -216,7 +216,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@Override
 	public <T> Query<T> find(String kind, Class<T> clazz){
-		return new QueryImpl<T>(clazz, mongo.getDB(dbName).getCollection(kind),	 this);		
+		return new QueryImpl<T>(clazz, getDB().getCollection(kind),	 this);		
 	}
 
 	@Override
@@ -324,11 +324,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public DBCollection getCollection(Class clazz) {
 		String collName = morphia.getMapper().getCollectionName(clazz);
-		return mongo.getDB(dbName).getCollection(collName);
+		return getDB().getCollection(collName);
 	}
 	public DBCollection getCollection(Object obj) {
 		String collName = morphia.getMapper().getCollectionName(obj);
-		return mongo.getDB(dbName).getCollection(collName);
+		return getDB().getCollection(collName);
 	}
 	
 	@Override
@@ -343,7 +343,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@Override
 	public long getCount(String kind) {
-		return mongo.getDB(dbName).getCollection(kind).getCount();
+		return getDB().getCollection(kind).getCount();
 	}
 
 	@Override
@@ -358,7 +358,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	@Override
 	public DB getDB() {
-		return (dbName == null) ? null : mongo.getDB(dbName);
+		return db;
 	}
 
 	protected Object getId(Object entity) {
@@ -418,7 +418,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	@Override
 	public <T> Key<T> save(String kind, T entity) {	
-		DBCollection dbColl = mongo.getDB(dbName).getCollection(kind);
+		DBCollection dbColl = getDB().getCollection(kind);
 		return save(dbColl, entity);
 	}
 
