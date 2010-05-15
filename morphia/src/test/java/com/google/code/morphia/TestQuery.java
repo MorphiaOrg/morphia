@@ -136,6 +136,8 @@ public class TestQuery  extends TestBase {
 		assertNull(p);
 		p = ds.find(PhotoWithKeywords.class, "keywords.keyword", "california".getBytes()).get();
 		assertNull(p);
+		p = ds.find(PhotoWithKeywords.class, "keywords.keyword", null).get();
+		assertNull(p);
 	}
 
 	

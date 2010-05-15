@@ -199,7 +199,7 @@ public class QueryImpl<T> implements Query<T> {
 		Object mappedValue;
 		MappedClass mc = null;
 		try {
-			if (!ReflectionUtils.isPropertyType(value.getClass()))
+			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()))
 				if (mf!=null && !mf.isTypeMongoCompatible())
 					mc=mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 				else
@@ -226,14 +226,14 @@ public class QueryImpl<T> implements Query<T> {
 		else
 			mappedValue = Mapper.asObjectIdMaybe(mapr.toMongoObject(value));
 		
-		Class<?> type = mappedValue.getClass();
+		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;
 		
 		//convert single values into lists for $in/$nin
-		if ((op == FilterOperator.IN || op == FilterOperator.NOT_IN) && 
+		if (type != null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN) && 
 			!type.isArray() && !ReflectionUtils.implementsAnyInterface(type, Iterable.class, Collection.class, List.class, Set.class, Map.class)) {
 			mappedValue = Collections.singletonList(mappedValue);
 		}
-		
+
 		if (FilterOperator.EQUAL.equals(op))
 			query.add(prop, mappedValue);
 		else
@@ -278,8 +278,7 @@ public class QueryImpl<T> implements Query<T> {
 			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 		}
 		
-		//TODO Do better validation of the data. Maybe check map/list/array types as well.
-		if (mf.isSingleValue() && 
+		if (mf.isSingleValue() && value != null &&
 			!value.getClass().isAssignableFrom(mf.getType()) &&
 			//hack to let Long match long, and so on
 			!value.getClass().getSimpleName().toLowerCase().equals(mf.getType().getSimpleName().toLowerCase())) {

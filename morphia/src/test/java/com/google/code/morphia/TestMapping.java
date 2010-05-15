@@ -308,6 +308,15 @@ public class TestMapping  extends TestBase {
 		ContainsLongAndStringArray loaded = ds.<ContainsLongAndStringArray>find(ContainsLongAndStringArray.class).get();
 		assertEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
 		assertEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
+		
+		ContainsLongAndStringArray clasa = new ContainsLongAndStringArray();
+		clasa.strings = new String[] {"a", "B","c"};
+		clasa.longs = new Long[] {4L, 5L, 4L};
+		Key<ContainsLongAndStringArray> k1 = ds.save(clasa);
+		loaded = ds.getByKey(ContainsLongAndStringArray.class, k1);
+		assertEquals(loaded.longs, clasa.longs);
+		assertEquals(loaded.strings, clasa.strings);
+		
 		assertNotNull(loaded.id);        
 	}
 	@Test

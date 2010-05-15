@@ -224,6 +224,7 @@ public class Mapper {
 
     /** converts a java object to a mongo object (possibly a DBObject for complex mappings) */
     public Object toMongoObject(Object javaObj) {
+    	if(javaObj == null) return null;
     	Class origClass = javaObj.getClass();
     	Object newObj = objectToValue(origClass, javaObj);
     	Class type = newObj.getClass();
@@ -574,11 +575,9 @@ public class Mapper {
 	                    }
 	                    if (fieldType.isArray()) {
 	                    	Object exampleArray = Array.newInstance(subtype, 1);
-	                    	
-	                    	if (subtype == Long.class) {
-	                    		Object[] array = ((ArrayList)values).toArray((Object[]) exampleArray);
-	                    		mf.setFieldValue(entity, array);
-	                    	}
+                    	
+                    		Object[] array = ((ArrayList)values).toArray((Object[]) exampleArray);
+                    		mf.setFieldValue(entity, array);
 	                    }
 	                    else
 	                    	mf.setFieldValue(entity, values);
