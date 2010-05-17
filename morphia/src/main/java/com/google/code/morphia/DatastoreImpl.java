@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.CappedAt;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.mapping.MappedClass;
@@ -423,9 +424,81 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			throw new MappingException("Error: " + lastErr.toString());
 			
 		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
-		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
-		return new Key<T>(dbColl.getName(), getId(entity));		
-	}
+        mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
+        firePostPersistForChildren(entity, dbObj, mapr);
+        return new Key<T>(dbColl.getName(), getId(entity));
+    }
+
+    private void firePostPersistForChildren(Object entity, DBObject dbObj, Mapper mapr)
+    {
+        MappedClass mc = mapr.getMappedClass(entity);
+        for (MappedField mf : mc.getPersistenceFields())
+        {
+            try
+            {
+                if (mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible())
+                {
+                    Object embedded = mf.getFieldValue(entity);
+                    if (embedded != null)
+                    {
+
+                        if (mf.isMap())
+                        {
+                            Map<?, ?> map = (Map<?, ?>) embedded;
+
+                            for (Map.Entry<?, ?> entry : map.entrySet())
+                            {
+                                Object key = entry.getKey();
+                                Object value = entry.getValue();
+
+                                Class<? extends Object> keyClass = entry.getKey().getClass();
+                                Class<? extends Object> valueClass = entry.getValue().getClass();
+
+                                if (mapr.isMapped(keyClass))
+                                {
+                                    mapr.getMappedClass(keyClass).callLifecycleMethods(PostPersist.class, key, dbObj,
+                                            mapr);
+                                    firePostPersistForChildren(key, dbObj, mapr);
+                                }
+                                if (mapr.isMapped(valueClass))
+                                {
+                                    mapr.getMappedClass(valueClass).callLifecycleMethods(PostPersist.class, value,
+                                            dbObj, mapr);
+                                    firePostPersistForChildren(value, dbObj, mapr);
+                                }
+                            }
+                        }
+                        else
+                            if (mf.isMultipleValues())
+                            {
+                                Iterable col = (Iterable) embedded;
+                                for (Object o : col)
+                                {
+                                    Class<? extends Object> clazz = o.getClass();
+                                    if (mapr.isMapped(clazz))
+                                    {
+                                        mapr.getMappedClass(clazz).callLifecycleMethods(PostPersist.class, o, dbObj,
+                                                mapr);
+                                        firePostPersistForChildren(o, dbObj, mapr);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // if embedded entity:
+                                MappedClass embedClass = mapr.getMappedClass(embedded);
+                                embedClass.callLifecycleMethods(PostPersist.class, embedded, dbObj, mapr);
+                                firePostPersistForChildren(embedded, dbObj, mapr);
+                            }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new MappingException("Error mapping field:" + mf.getFullName(), e);
+            }
+        }
+    }
 
 	@Override
 	public <T> Key<T> save(String kind, T entity) {	
