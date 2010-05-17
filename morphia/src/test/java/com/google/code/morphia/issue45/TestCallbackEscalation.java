@@ -120,9 +120,9 @@ public class TestCallbackEscalation extends TestBase
         Assert.assertTrue(a.preSave);
         Assert.assertTrue(a.postPersist);
         Assert.assertTrue(a.b.preSave);
-        Assert.assertFalse(a.b.postPersist); //PostPersist in only called on entities
+        Assert.assertTrue(a.b.postPersist); //PostPersist in not only called on entities
         Assert.assertTrue(a.bs.get(0).preSave);
-        Assert.assertFalse(a.bs.get(0).postPersist); //PostPersist in only called on entities
+        Assert.assertTrue(a.bs.get(0).postPersist); //PostPersist is not only called on entities
     }
 
     @Test

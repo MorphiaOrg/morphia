@@ -5,6 +5,7 @@ package com.google.code.morphia.issue47;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -33,7 +34,7 @@ public class TestEmbedLoop extends TestBase {
 		A a;
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testCircularRefs() throws Exception {
 		
 		morphia.map(A.class);
