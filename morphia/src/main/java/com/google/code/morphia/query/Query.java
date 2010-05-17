@@ -1,6 +1,7 @@
 package com.google.code.morphia.query;
 
 
+
 /**
  * @author Scott Hernandez
  */
@@ -65,6 +66,9 @@ public interface Query<T> extends QueryResults<T> {
 	Query<T> enableValidation();
 	/** Turns off validation (for all calls made after)*/
 	Query<T> disableValidation();
+	
+	/** Hints as to which index should be used.*/
+	Query<T> hintIndex(String idx, boolean ascending);
 	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There

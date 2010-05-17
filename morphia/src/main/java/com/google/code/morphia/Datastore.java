@@ -1,11 +1,13 @@
 package com.google.code.morphia;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
+import com.google.code.morphia.utils.IndexFieldDef;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
@@ -95,9 +97,14 @@ public interface Datastore {
 	<T> Query<T> createQuery(Class<T> kind);
 	
 	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(Class<T> clazz, String name, IndexDirection dir);
+	<T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
+
 	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(T entity, String name, IndexDirection dir);
+	<T> void ensureIndex(Class<T> clazz, Set<IndexFieldDef> fields);
+
+	/** Ensures (creating if necessary) the index and direction */
+	<T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> fields, boolean unique, boolean dropDupsOnCreate);
+	
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
 	void ensureIndexes();
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/

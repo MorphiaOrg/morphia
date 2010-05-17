@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.CappedAt;
@@ -20,6 +21,7 @@ import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
+import com.google.code.morphia.utils.IndexFieldDef;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -119,14 +121,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			dbColl.remove(new BasicDBObject());
 	}
 
-	protected <T> void ensureIndex(String name, Class<T> clazz, String fieldName, IndexDirection dir, boolean unique, boolean dropDupsOnCreate) {
+	@Override 
+	public <T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> defs, boolean unique, boolean dropDupsOnCreate) {
 		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
 		BasicDBObjectBuilder keyOpts= null;
-		
-		if(dir == IndexDirection.BOTH)
-			keys.add(fieldName, 1).add(fieldName, -1);
-		else
-			keys.add(fieldName, (dir == IndexDirection.ASC)? 1 : -1);
+		for (IndexFieldDef def : defs) {
+			String fieldName = def.getField();
+			IndexDirection dir = def.getDirection();
+			if(dir == IndexDirection.BOTH)
+				keys.add(fieldName, 1).add(fieldName, -1);
+			else
+				keys.add(fieldName, (dir == IndexDirection.ASC)? 1 : -1);
+		}
 
 		if (name != null && !name.isEmpty()) {
 			if (keyOpts == null) keyOpts = new BasicDBObjectBuilder();
@@ -139,31 +145,36 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		
 		DBCollection dbColl = getCollection(clazz);
-		log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys);
+		log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 		if (keyOpts == null) {
-			log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys);
+			log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 			dbColl.ensureIndex(keys.get());
 		}else {
-			log.fine("Ensuring index for " + dbColl.getName() + "." + fieldName + " with keys " + keys + " and opts " + keyOpts);
+			log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys + " and opts " + keyOpts);
 			dbColl.ensureIndex(keys.get(), keyOpts.get());
 		}
 	}
 	
 	@Override
-	public <T> void ensureIndex(Class<T> entity, String name, IndexDirection dir) {
-		ensureIndex(null, entity, name, dir, false, false);
+	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
+		ensureIndex(type, null, Collections.singleton(new IndexFieldDef(name, dir)), false, false);
 	}
+
 	@Override
-	public <T> void ensureIndex(T entity, String name, IndexDirection dir) {
-		ensureIndex(entity.getClass(), name, dir);
+	public <T> void ensureIndex(Class<T> type, Set<IndexFieldDef> fields) {
+		ensureIndex(type, fields);
 	}
 	
 	protected void ensureIndexes(MappedClass mc) {
 		if (mc.getEntityAnnotation() == null) return;
-		for(MappedField mf : mc.getPersistenceFields()){
+		for(MappedField mf : mc.getPersistenceFields()) {
 			if(mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
-				ensureIndex(index.name(), mc.getClazz(), mf.getName(), index.value(), index.unique(), index.dropDups());
+				ensureIndex(mc.getClazz(),
+							index.name(),
+							Collections.singleton(new IndexFieldDef(mf.getName(), index.value())), 
+							index.unique(), 
+							index.dropDups());
 			}
 		}
 	}

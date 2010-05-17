@@ -36,7 +36,6 @@ import com.mongodb.DBObject;
 public class QueryImpl<T> implements Query<T> {
     private static final Logger log = Logger.getLogger(Mapper.class.getName());
 
-    
 	boolean validating = true;
 	BasicDBObjectBuilder query = null;
 	BasicDBObjectBuilder fields = null;
@@ -429,6 +428,10 @@ public class QueryImpl<T> implements Query<T> {
 
 	public FieldPart<T> field(String fieldExpr) {
 		return new FieldPartImpl<T>(fieldExpr, this);
+	}
+	@Override
+	public Query<T> hintIndex(String idx, boolean asc) {
+		return null;
 	}
 
 }
