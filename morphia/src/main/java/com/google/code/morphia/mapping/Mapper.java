@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -239,7 +240,7 @@ public class Mapper {
 		}
 
     	if (bSameType && bSingleValue && !ReflectionUtils.isPropertyType(type)) {
-    		DBObject dbObj = toDBObject(javaObj);
+            DBObject dbObj = toDBObject(javaObj);
     		dbObj.removeField(CLASS_NAME_FIELDNAME);
     		return dbObj;
     	}
@@ -255,8 +256,17 @@ public class Mapper {
     	} else 
     		return newObj;
     }
-    /** converts an entity to a DBObject */
-    public DBObject toDBObject( Object entity ) {
+
+    public DBObject toDBObject(Object entity)
+    {
+        return toDBObject(entity, null);
+    }
+
+    /**
+     * converts an entity to a DBObject
+     */
+    public DBObject toDBObject(Object entity, LinkedHashMap<Object, DBObject> involvedObjects)
+    {
      	BasicDBObject dbObject = new BasicDBObject();
  	
         MappedClass mc = getMappedClass(entity);
@@ -276,21 +286,23 @@ public class Mapper {
 	                    dbObject.put(ID_KEY, objectToValue(asObjectIdMaybe(dbVal)));
 	                }
 	            } else if ( mf.hasAnnotation(Reference.class) ) {
-	                mapReferencesToDBObject(entity, mf, dbObject);
+                        mapReferencesToDBObject(entity, mf, dbObject);
 	            } else  if (mf.hasAnnotation(Embedded.class) && !mf.isTypeMongoCompatible()){
-	                mapEmbeddedToDBObject(entity, mf, dbObject);
+                            mapEmbeddedToDBObject(entity, mf, dbObject, involvedObjects);
 	            } else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class) || mf.isTypeMongoCompatible()) {
-	            	mapValuesToDBObject(entity, mf, dbObject);
+                                mapValuesToDBObject(entity, mf, dbObject);
 	            } else {
 	            	logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName() + "]");
 	            }
             } catch (Exception e) {throw new MappingException("Error mapping field:" + mf.getFullName(), e);}
         }
+        if (involvedObjects != null) involvedObjects.put(entity, dbObject);
 	    mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
 		return dbObject;
     }
 
-    void mapReferencesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject) {
+    void mapReferencesToDBObject(Object entity, MappedField mf, BasicDBObject dbObject)
+    {
     	try {
 	        String name = mf.getName();
 	
@@ -332,7 +344,9 @@ public class Mapper {
         } catch (Exception e) {throw new RuntimeException(e);}
     }
 
-    void mapEmbeddedToDBObject( Object entity, MappedField mf, BasicDBObject dbObject ) {
+    void mapEmbeddedToDBObject(Object entity, MappedField mf, BasicDBObject dbObject,
+            LinkedHashMap<Object, DBObject> involvedObjects)
+    {
         String name = mf.getName();
 
         Object fieldValue = null;
@@ -347,7 +361,7 @@ public class Mapper {
 	            BasicDBObject values = new BasicDBObject();
 	            for ( Map.Entry<String,Object> entry : map.entrySet() ) {
 	            	Object entryVal = entry.getValue();
-	            	DBObject convertedVal = toDBObject(entryVal);
+                    DBObject convertedVal = toDBObject(entryVal, involvedObjects);
 	            	
 	            	if (mf.getSubType().equals(entryVal.getClass())) 
 	            		convertedVal.removeField(Mapper.CLASS_NAME_FIELDNAME);
@@ -364,7 +378,7 @@ public class Mapper {
             if ( coll != null ) {
                 List values = new ArrayList();
                 for ( Object o : coll ) {                	
-	            	DBObject dbObj = toDBObject(o);
+                        DBObject dbObj = toDBObject(o, involvedObjects);
 	            	if (mf.getSubType().equals(o.getClass())) 
 	            		dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
                     values.add(dbObj);
@@ -373,7 +387,7 @@ public class Mapper {
                 	dbObject.put(name, values);
             }
         } else {
-        	DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue);
+                DBObject dbObj = fieldValue == null ? null : toDBObject(fieldValue, involvedObjects);
             if ( dbObj != null ) {
 
             	if (mf.getType().equals(fieldValue.getClass())) 
@@ -406,7 +420,8 @@ public class Mapper {
 		return ois.readObject();    	
     }
     
-    void mapValuesToDBObject( Object entity, MappedField mf, BasicDBObject dbObject ) {
+    void mapValuesToDBObject(Object entity, MappedField mf, BasicDBObject dbObject)
+    {
         try {
 	    	String name = mf.getName();
 	        Class fieldType = mf.getType();
