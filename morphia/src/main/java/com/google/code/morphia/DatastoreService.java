@@ -1,6 +1,5 @@
 package com.google.code.morphia;
 
-
 /**
  * 
  * @author Scott Hernnadez
@@ -14,7 +13,7 @@ public class DatastoreService {
 		mor = new Morphia();
 		ds = mor.createDatastore("test");
 	}
-	/** Connects to "test" database on localhost */
+	/** Connects to "test" database on localhost by default */
 	public static Datastore getDatastore() {
 		return ds;
 	}

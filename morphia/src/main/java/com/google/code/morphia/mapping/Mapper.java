@@ -25,6 +25,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -589,10 +590,8 @@ public class Mapper {
 	                            values.add(o);
 	                    }
 	                    if (fieldType.isArray()) {
-	                    	Object exampleArray = Array.newInstance(subtype, 1);
-                    	
-                    		Object[] array = ((ArrayList)values).toArray((Object[]) exampleArray);
-                    		mf.setFieldValue(entity, array);
+	                    	Object[] array = convertToArray(subtype, values);
+	                    	mf.setFieldValue(entity, array);
 	                    }
 	                    else
 	                    	mf.setFieldValue(entity, values);
@@ -607,6 +606,12 @@ public class Mapper {
 	        }
     	} catch (Exception e) {throw new RuntimeException(e);}
     }
+
+	private Object[] convertToArray(Class type, Collection values) {
+    	Object exampleArray = Array.newInstance(type, 1);
+		Object[] array = ((ArrayList)values).toArray((Object[]) exampleArray);
+		return array;
+	}
 
 	void mapEmbeddedFromDBObject( BasicDBObject dbObject, MappedField mf, Object entity ) {
         String name = mf.getName();
@@ -634,28 +639,26 @@ public class Mapper {
 	        } else if (mf.isMultipleValues()) {
 	        	// multiple documents in a List
 	            Class newEntityType = mf.getSubType();
-	            Collection entities = (Collection)tryConstructor((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
+	            Collection values = (Collection)tryConstructor((!mf.isSet()) ? ArrayList.class : HashSet.class, mf.getCTor());
 	
 	            if ( dbObject.containsField(name) ) {
 	                Object dbVal = dbObject.get(name);
-	                if ( dbVal instanceof List ) {
-	                    List refList = (List) dbVal;
-	                    for ( Object docDbObject : refList ) {
-	                        Object newEntity = createInstance(newEntityType, (BasicDBObject)docDbObject);
-	                        newEntity = mapDBObjectToEntity((BasicDBObject)docDbObject, newEntity);
-		                    //TODO Add Lifecycle call for newEntity
-	                        entities.add(newEntity);
-	                    }
-	                } else {
-	                    BasicDBObject dbObj = (BasicDBObject) dbObject.get(name);
-	                    Object newEntity = createInstance(newEntityType, dbObj);
-	                    newEntity = mapDBObjectToEntity(dbObj, newEntity);
+	                
+	                List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections.singletonList((BasicDBObject)dbVal) ;
+
+	                for (BasicDBObject dbObj : dbVals ) {
+                        Object newEntity = createInstance(newEntityType, dbObj);
+                        newEntity = mapDBObjectToEntity(dbObj, newEntity);
 	                    //TODO Add Lifecycle call for newEntity
-	                    entities.add(newEntity);
-	                }
+                        values.add(newEntity);
+                    }
 	            }
-	            if (entities.size() > 0)
-	            	mf.setFieldValue(entity, entities);
+	            if (values.size() > 0)
+		            if (mf.getType().isArray()) {
+	                	Object[] array = convertToArray(mf.getSubType(), values);
+		            	mf.setFieldValue(entity, array);
+		            } else
+		            	mf.setFieldValue(entity, values);
 	        }  else {
 	            // single document
 	            if ( dbObject.containsField(name) ) {
@@ -706,37 +709,28 @@ public class Mapper {
 	        	
 	            if ( dbObject.containsField(name) ) {
 	                Object dbVal = dbObject.get(name);
-	                if ( dbVal instanceof List ) {
-	                    List refList = (List) dbVal;
-	                    for ( Object dbRefObj : refList ) {
-	                        DBRef dbRef = (DBRef) dbRefObj;
-	                        BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
+	                List<DBRef> dbVals = (dbVal instanceof List) ? (List<DBRef>) dbVal : Collections.singletonList((DBRef)dbVal) ;
+	                
+                    for ( DBRef dbRef : dbVals) {
+                        BasicDBObject dbRefObj = (BasicDBObject) dbRef.fetch();
 
-	                        if (refDbObject == null) {
-	                        	if (!refAnn.ignoreMissing()) 
-	                        		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
-	                        } else {
-                                Object refObj = createInstance(referenceObjClass, refDbObject);
-                                refObj = mapDBObjectToEntity(refDbObject, refObj);
-                                references.add(refObj);
-                            }
-	                    }
-	                } else {
-	                    DBRef dbRef = (DBRef) dbObject.get(name);
-	                    BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-	                    if (refDbObject == null) {
-	                    	if (!refAnn.ignoreMissing()) 
-	                    		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
-	                    } else {
-                            Object newEntity = createInstance(referenceObjClass, refDbObject);
-                            newEntity = mapDBObjectToEntity(refDbObject, newEntity);
-    	                    //TODO Add Lifecycle call for newEntity
-                            references.add(newEntity);
+                        if (dbRefObj == null) {
+                        	if (!refAnn.ignoreMissing()) 
+                        		throw new MappingException("The reference("+ dbRef.toString()  + ") could not be fetched for " + mf.getFullName());
+                        } else {
+                            Object refObj = createInstance(referenceObjClass, dbRefObj);
+                            refObj = mapDBObjectToEntity(dbRefObj, refObj);
+                            references.add(refObj);
                         }
 	                }
 	            }
 	            
-	            mf.setFieldValue(entity, references);
+	            if (references.size() > 0)
+		            if (mf.getType().isArray()) {
+	                	Object[] array = convertToArray(mf.getSubType(), references);
+		            	mf.setFieldValue(entity, array);
+		            } else
+		            	mf.setFieldValue(entity, references);
 	        } else {
 	            // single reference
 	            Class referenceObjClass = fieldType;

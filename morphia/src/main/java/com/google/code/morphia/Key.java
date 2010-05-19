@@ -29,7 +29,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>>
 	protected String kind;
 	protected Class<? extends T> kindClass;
 	
-	/** Either id or name will be valid */
+	/** Id value */
 	protected Object id;
 
 	/** For GWT serialization */
