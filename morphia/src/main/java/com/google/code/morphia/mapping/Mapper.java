@@ -628,7 +628,6 @@ public class Mapper {
 	                	Object newEntity = createInstance(mf.getSubType(), (BasicDBObject)entry.getValue());
 	                    
 	                	newEntity = mapDBObjectToEntity((BasicDBObject)entry.getValue(), newEntity);
-	                    //TODO Add Lifecycle call for newEntity
 	                    Object objKey = objectFromValue(mf.getMapKeyType(), entry.getKey());
 	                    map.put(objKey, newEntity);
 	                }
@@ -649,7 +648,6 @@ public class Mapper {
 	                for (BasicDBObject dbObj : dbVals ) {
                         Object newEntity = createInstance(newEntityType, dbObj);
                         newEntity = mapDBObjectToEntity(dbObj, newEntity);
-	                    //TODO Add Lifecycle call for newEntity
                         values.add(newEntity);
                     }
 	            }
