@@ -414,22 +414,29 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 
 	protected <T> Key<T> save(DBCollection dbColl, T entity) {
-		Mapper mapr = morphia.getMapper();
-		MappedClass mc = mapr.getMappedClass(entity);
-        LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
-		dbColl.save(dbObj);
-		if (dbObj.get(Mapper.ID_KEY) == null) 
-			throw new MappingException("Missing _id after save!");
-		
-		DBObject lastErr = dbColl.getDB().getLastError();
-		if (lastErr.get("err") != null)
-			throw new MappingException("Error: " + lastErr.toString());
+		try {
+			getDB().requestStart();
 			
-		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
-        mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
-        firePostPersistForChildren(involvedObjects, mapr);
-        return new Key<T>(dbColl.getName(), getId(entity));
+			Mapper mapr = morphia.getMapper();
+			MappedClass mc = mapr.getMappedClass(entity);
+	        LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+	        DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+			dbColl.save(dbObj);
+			if (dbObj.get(Mapper.ID_KEY) == null) 
+				throw new MappingException("Missing _id after save!");
+			
+			DBObject lastErr = dbColl.getDB().getLastError();
+			if (lastErr.get("err") != null)
+				throw new MappingException("Error: " + lastErr.toString());
+				
+			mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
+	        mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
+	        firePostPersistForChildren(involvedObjects, mapr);
+	        return new Key<T>(dbColl.getName(), getId(entity));
+		} finally {
+			//return the socket
+			getDB().requestDone();
+		}
     }
 
     private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr)
@@ -479,12 +486,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
-		DBObject q = ((QueryImpl<T>)query).getQueryObject();
-		DBObject u = ((UpdateOpsImpl)ops).getOps();
-		if (q == null) q = new BasicDBObject();
-		dbColl.update(q, u, createIfMissing, multi);
-		DBObject dbObj = dbColl.getDB().getLastError();
-		return new UpdateResults<T>(dbObj);		
+		try {
+			getDB().requestStart();
+			DBCollection dbColl = getCollection(((QueryImpl<T>)query).getEntityType());
+			DBObject q = ((QueryImpl<T>)query).getQueryObject();
+			DBObject u = ((UpdateOpsImpl)ops).getOps();
+			if (q == null) q = new BasicDBObject();
+			dbColl.update(q, u, createIfMissing, multi);
+			DBObject dbObj = dbColl.getDB().getLastError();
+			return new UpdateResults<T>(dbObj);		
+		} finally {
+			//return the socket
+			getDB().requestDone();
+		}
 	}
 }
