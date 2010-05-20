@@ -38,12 +38,12 @@ import com.mongodb.Mongo;
  */
 @SuppressWarnings("unchecked")
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
-    private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
-
+	private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
+	
 	protected Morphia morphia;
 	protected Mongo mongo;
 	protected DB db;
-
+	
 	public DatastoreImpl(Morphia morphia, Mongo mongo) {
 		this(morphia, mongo, null);
 	}
@@ -51,24 +51,24 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName) {
 		this.morphia = morphia; this.mongo = mongo; this.db = mongo.getDB(dbName);
 	}
-
+	
 	protected Object asObjectIdMaybe(Object id) {
 		return Mapper.asObjectIdMaybe(id);
 	}
-
+	
 	@Override
 	public <T, V> DBRef createRef(Class<T> clazz, V id) {
 		if (id == null) throw new MappingException("Could not get id for " + clazz.getName());
 		return new DBRef(getDB(), getCollection(clazz).getName(), id);
 	}
-
+	
 	@Override
 	public <T> DBRef createRef(T entity) {
 		Object id = getId(entity);
 		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return createRef(entity.getClass(), id);
 	}
-
+	
 	@Override
 	public <T> Key<T> getKey(T entity) {
 		if (entity instanceof Key) return (Key<T>) entity;
@@ -88,7 +88,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getDB().getCollection(kind);
 		delete(dbColl, id);
 	}
-
+	
 	@Override
 	public <T,V> void delete(Class<T> clazz, V id) {
 		DBCollection dbColl = getCollection(clazz);
@@ -101,7 +101,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for(V id : ids)
 			delete(clazz, id);
 	}
-
+	
 	@Override
 	public <T> void delete(T entity) {
 		try {
@@ -111,7 +111,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	@Override
 	public <T> void delete(Query<T> query) {
 		QueryImpl<T> q = (QueryImpl<T>) query;
@@ -121,8 +121,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		else
 			dbColl.remove(new BasicDBObject());
 	}
-
-	@Override 
+	
+	@Override
 	public <T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> defs, boolean unique, boolean dropDupsOnCreate) {
 		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
 		BasicDBObjectBuilder keyOpts= null;
@@ -134,7 +134,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			else
 				keys.add(fieldName, (dir == IndexDirection.ASC)? 1 : -1);
 		}
-
+		
 		if (name != null && !name.isEmpty()) {
 			if (keyOpts == null) keyOpts = new BasicDBObjectBuilder();
 			keyOpts.add("name", name);
@@ -160,7 +160,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
 		ensureIndex(type, null, Collections.singleton(new IndexFieldDef(name, dir)), false, false);
 	}
-
+	
 	@Override
 	public <T> void ensureIndex(Class<T> type, Set<IndexFieldDef> fields) {
 		ensureIndex(type, fields);
@@ -172,10 +172,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if(mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
 				ensureIndex(mc.getClazz(),
-							index.name(),
-							Collections.singleton(new IndexFieldDef(mf.getName(), index.value())), 
-							index.unique(), 
-							index.dropDups());
+						index.name(),
+						Collections.singleton(new IndexFieldDef(mf.getName(), index.value())),
+						index.unique(),
+						index.dropDups());
 			}
 		}
 	}
@@ -185,7 +185,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		MappedClass mc = morphia.getMapper().getMappedClass(clazz);
 		ensureIndexes(mc);
 	}
-
+	
 	@Override
 	public void ensureIndexes() {
 		//loops over mappedClasses and call ensureIndex for each @Entity object (for now)
@@ -193,7 +193,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			ensureIndexes(mc);
 		}
 	}
-
+	
 	@Override
 	public void ensureCaps() {
 		Mapper mapr = morphia.getMapper();
@@ -209,7 +209,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					DBObject dbResult = db.command(BasicDBObjectBuilder.start("collstats", collName).get());
 					if (dbResult.containsField("capped")) {
 						//TODO: check the cap options.
-						log.warning("DBCollection already exists is cap'd already; doing nothing. " + dbResult);						
+						log.warning("DBCollection already exists is cap'd already; doing nothing. " + dbResult);
 					} else {
 						log.warning("DBCollection already exists with same name(" + collName + ") and is not cap'd; not creating cap'd version!");
 					}
@@ -217,9 +217,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					getDB().createCollection(collName, dbCapOpts.get());
 					log.fine("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
 				}
-			}	
+			}
 	}
-
+	
 	@Override
 	public <T> Query<T> createQuery(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);
@@ -228,14 +228,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@Override
 	public <T> Query<T> find(String kind, Class<T> clazz){
-		return new QueryImpl<T>(clazz, getDB().getCollection(kind),	 this);		
+		return new QueryImpl<T>(clazz, getDB().getCollection(kind),	 this);
 	}
-
+	
 	@Override
 	public <T> Query<T> find(Class<T> clazz) {
 		return createQuery(clazz);
 	}
-
+	
 	@Override
 	public <T,V> Query<T> find(Class<T> clazz, String property, V value) {
 		Query<T> query = createQuery(clazz);
@@ -243,7 +243,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	@Override
-	public <T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {		
+	public <T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {
 		Query<T> query = find(kind, clazz);
 		query.offset(offset); query.limit(size);
 		return query.filter(property, value);
@@ -278,13 +278,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
 		Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
 		List<T> results = new ArrayList<T>();
-//		String clazzKind = (clazz==null) ? null : getMapper().getCollectionName(clazz);
+		//		String clazzKind = (clazz==null) ? null : getMapper().getCollectionName(clazz);
 		for(Key<?> key : keys) {
 			key.updateKind(getMapper());
 			
-//			if (clazzKind != null && !key.getKind().equals(clazzKind))
-//				throw new IllegalArgumentException("Types are not equal (" + clazz + "!=" + key.getKindClass() + ") for key and method parameter clazz");
-//			
+			//			if (clazzKind != null && !key.getKind().equals(clazzKind))
+			//				throw new IllegalArgumentException("Types are not equal (" + clazz + "!=" + key.getKindClass() + ") for key and method parameter clazz");
+			//
 			if(kindMap.containsKey(key.getKind()))
 				kindMap.get(key.getKind()).add(key);
 			else
@@ -301,27 +301,27 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		return results;
 	}
-
+	
 	@Override
 	public <T,V> T get(String kind, Class<T> clazz, V id) {
 		List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
 		if (results == null || results.size() == 0) return null;
 		return results.get(0);
 	}
-
+	
 	@Override
 	public <T, V> T get(Class<T> clazz, V id) {
 		List<T> results = find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).asList();
 		if (results == null || results.size() == 0) return null;
 		return results.get(0);
 	}
-
+	
 	@Override
 	public <T> T getByKey(Class<T> clazz, Key<T> key) {
 		Mapper mapr = morphia.getMapper();
 		String kind = mapr.getCollectionName(clazz);
 		String keyKind = key.updateKind(mapr);
-		if (!kind.equals(keyKind)) 
+		if (!kind.equals(keyKind))
 			throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + keyKind);
 		
 		return get(clazz, key.getId());
@@ -333,7 +333,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (id == null) throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return (T) get(entity.getClass(), id);
 	}
-
+	
 	public DBCollection getCollection(Class clazz) {
 		String collName = morphia.getMapper().getCollectionName(clazz);
 		return getDB().getCollection(collName);
@@ -357,22 +357,22 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public long getCount(String kind) {
 		return getDB().getCollection(kind).getCount();
 	}
-
+	
 	@Override
 	public <T> long getCount(Query<T> query) {
 		return query.countAll();
 	}
-
+	
 	@Override
 	public Mongo getMongo() {
 		return this.mongo;
 	}
-
+	
 	@Override
 	public DB getDB() {
 		return db;
 	}
-
+	
 	protected Object getId(Object entity) {
 		MappedClass mc;
 		String keyClassName = entity.getClass().getName();
@@ -387,11 +387,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			return null;
 		}
 	}
-
+	
 	public Mapper getMapper() {
 		return this.morphia.getMapper();
 	}
-
+	
 	@Override
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
@@ -399,9 +399,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for(T ent : entities)
 			savedKeys.add(save(ent));
 		return savedKeys;
-
+		
 	}
-
+	
 	@Override
 	public <T> Iterable<Key<T>> save(T...entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
@@ -411,58 +411,58 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return savedKeys;
 	}
 	
-
-
 	protected <T> Key<T> save(DBCollection dbColl, T entity) {
+		if (entity == null)
+			return null;
 		try {
 			getDB().requestStart();
 			
 			Mapper mapr = morphia.getMapper();
 			MappedClass mc = mapr.getMappedClass(entity);
-	        LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-	        DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 			dbColl.save(dbObj);
-			if (dbObj.get(Mapper.ID_KEY) == null) 
+			if (dbObj.get(Mapper.ID_KEY) == null)
 				throw new MappingException("Missing _id after save!");
 			
 			DBObject lastErr = dbColl.getDB().getLastError();
 			if (lastErr.get("err") != null)
 				throw new MappingException("Error: " + lastErr.toString());
-				
+			
 			mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY), dbColl.getName());
-	        mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
-	        firePostPersistForChildren(involvedObjects, mapr);
-	        return new Key<T>(dbColl.getName(), getId(entity));
+			mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
+			firePostPersistForChildren(involvedObjects, mapr);
+			return new Key<T>(dbColl.getName(), getId(entity));
 		} finally {
 			//return the socket
 			getDB().requestDone();
 		}
-    }
-
-    private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr)
-    {
-        for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet())
-        {
-            Object entity = e.getKey();
-            DBObject dbObj = e.getValue();
-            MappedClass mc = mapr.getMappedClass(entity);
-
-            mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
-        }
-    }
-
+	}
+	
+	private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr)
+	{
+		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet())
+		{
+			Object entity = e.getKey();
+			DBObject dbObj = e.getValue();
+			MappedClass mc = mapr.getMappedClass(entity);
+			
+			mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
+		}
+	}
+	
 	@Override
-	public <T> Key<T> save(String kind, T entity) {	
+	public <T> Key<T> save(String kind, T entity) {
 		DBCollection dbColl = getDB().getCollection(kind);
 		return save(dbColl, entity);
 	}
-
+	
 	@Override
 	public <T> Key<T> save(T entity) {
 		DBCollection dbColl = getCollection(entity);
 		return save(dbColl, entity);
-    }
-
+	}
+	
 	@Override
 	public UpdateOperations createUpdateOperation() {
 		return new UpdateOpsImpl(getMapper());
@@ -475,7 +475,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops) {
 		return update(query, ops, false, true);
 	}
-
+	
 	@Override
 	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops) {
 		return update(query, ops, false, false);
@@ -494,7 +494,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if (q == null) q = new BasicDBObject();
 			dbColl.update(q, u, createIfMissing, multi);
 			DBObject dbObj = dbColl.getDB().getLastError();
-			return new UpdateResults<T>(dbObj);		
+			return new UpdateResults<T>(dbObj);
 		} finally {
 			//return the socket
 			getDB().requestDone();
