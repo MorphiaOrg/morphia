@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ import com.google.code.morphia.testmodel.Rectangle;
  * @author Scott Hernandez
  */
 public class TestQuery  extends TestBase {
-
+	
 	public static class Photo {
 		@Id String id;
 		List<String> keywords = Collections.singletonList("amazing");
@@ -65,7 +66,7 @@ public class TestQuery  extends TestBase {
 		protected Keyword() {}
 		public Keyword(String k) { this.keyword = k;}
 	}
-
+	
 	public static class ContainsPhotoKey {
 		@Id String id;
 		Key<Photo> photo;
@@ -80,9 +81,9 @@ public class TestQuery  extends TestBase {
 	}
 	
 	@Test
-    public void testRenamedFieldQuery() throws Exception {
+	public void testRenamedFieldQuery() throws Exception {
 		ds.save(new ContainsRenamedFields());
-
+		
 		ContainsRenamedFields ent = null;
 		try {
 			//validation will cause an exception
@@ -94,10 +95,10 @@ public class TestQuery  extends TestBase {
 		ent = ds.find(ContainsRenamedFields.class).field("first_name").equal("Scott").get();
 		assertNotNull(ent);
 	}
-
+	
 	
 	@Test
-    public void testItemInListQuery() throws Exception {
+	public void testItemInListQuery() throws Exception {
 		ds.save(new Photo());
 		Photo p = ds.find(Photo.class).field("keywords").hasThisOne("amazing").get();
 		assertNotNull(p);
@@ -108,9 +109,9 @@ public class TestQuery  extends TestBase {
 		assertNotNull(ds.find(PhotoWithKeywords.class, "keywords in", new Keyword("california")).get());
 		assertNull(ds.find(PhotoWithKeywords.class, "keywords in", new Keyword("not")).get());
 	}
-
+	
 	@Test
-    public void testReferenceQuery() throws Exception {
+	public void testReferenceQuery() throws Exception {
 		Photo p = new Photo();
 		ContainsPhotoKey cpk = new ContainsPhotoKey();
 		cpk.photo = ds.save(p);
@@ -120,17 +121,23 @@ public class TestQuery  extends TestBase {
 		assertNotNull(ds.find(ContainsPhotoKey.class, "photo", cpk.photo).get());
 		assertNull(ds.find(ContainsPhotoKey.class, "photo", 1).get());
 	}
-
 	
 	@Test
-    public void testDeepQuery() throws Exception {
+	public void testRegexQuery() throws Exception {
+		ds.save(new PhotoWithKeywords());
+		assertNotNull(ds.find(PhotoWithKeywords.class).disableValidation().filter("keywords.keyword", Pattern.compile("california")).get());
+		assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword",  Pattern.compile("blah")).get());
+	}
+	
+	@Test
+	public void testDeepQuery() throws Exception {
 		ds.save(new PhotoWithKeywords());
 		assertNotNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
 		assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
 	}
-
+	
 	@Test
-    public void testDeepQueryWithBadArgs() throws Exception {
+	public void testDeepQueryWithBadArgs() throws Exception {
 		ds.save(new PhotoWithKeywords());
 		PhotoWithKeywords p = ds.find(PhotoWithKeywords.class, "keywords.keyword", 1).get();
 		assertNull(p);
@@ -139,10 +146,10 @@ public class TestQuery  extends TestBase {
 		p = ds.find(PhotoWithKeywords.class, "keywords.keyword", null).get();
 		assertNull(p);
 	}
-
+	
 	
 	@Test
-    public void testElemMatchQuery() throws Exception {
+	public void testElemMatchQuery() throws Exception {
 		PhotoWithKeywords pwk1 = new PhotoWithKeywords();
 		PhotoWithKeywords pwk2 = new PhotoWithKeywords("Scott","Joe","Sarah");
 		
@@ -150,15 +157,15 @@ public class TestQuery  extends TestBase {
 		PhotoWithKeywords pwkScott = ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Scott")).get();
 		assertNotNull(pwkScott);
 		//TODO add back when $and is done (> 1.5)
-//		PhotoWithKeywords pwkScottSarah= ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new Keyword("Scott"), new Keyword("Joe")}).get();
-//		assertNotNull(pwkScottSarah);
+		//		PhotoWithKeywords pwkScottSarah= ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new Keyword("Scott"), new Keyword("Joe")}).get();
+		//		assertNotNull(pwkScottSarah);
 		PhotoWithKeywords pwkBad = ds.find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
 		assertNull(pwkBad);
 		
 	}
-
+	
 	@Test
-    public void testKeyList() throws Exception {
+	public void testKeyList() throws Exception {
 		Rectangle rect = new Rectangle(1000, 1);
 		Key<Rectangle> rectKey = ds.save(rect);
 		
@@ -170,11 +177,11 @@ public class TestQuery  extends TestBase {
 		FacebookUser fbUser4 = new FacebookUser(4, "frank");
 		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
 		assertEquals(fbUser1.id, 1);
-
+		
 		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
 		for(Key<FacebookUser> key :fbKeys)
 			fbUserKeys.add(key);
-
+		
 		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
 		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
 		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
@@ -188,22 +195,22 @@ public class TestQuery  extends TestBase {
 		for(Key<FacebookUser> key :k1Loaded.users)
 			assertNotNull(key.getId());
 		
-		assertNotNull(k1Loaded.rect.getId());	
+		assertNotNull(k1Loaded.rect.getId());
 	}
-
+	
 	@Test
-    public void testKeyListLookups() throws Exception {
+	public void testKeyListLookups() throws Exception {
 		FacebookUser fbUser1 = new FacebookUser(1, "scott");
 		FacebookUser fbUser2 = new FacebookUser(2, "tom");
 		FacebookUser fbUser3 = new FacebookUser(3, "oli");
 		FacebookUser fbUser4 = new FacebookUser(4, "frank");
 		Iterable<Key<FacebookUser>> fbKeys = ds.save(fbUser1, fbUser2, fbUser3, fbUser4);
 		assertEquals(fbUser1.id, 1);
-
+		
 		List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
 		for(Key<FacebookUser> key :fbKeys)
 			fbUserKeys.add(key);
-
+		
 		assertEquals(fbUser1.id, fbUserKeys.get(0).getId());
 		assertEquals(fbUser2.id, fbUserKeys.get(1).getId());
 		assertEquals(fbUser3.id, fbUserKeys.get(2).getId());
@@ -232,7 +239,7 @@ public class TestQuery  extends TestBase {
 	}
 	
 	@Test
-    public void testGetByKeysHetro() throws Exception {
+	public void testGetByKeysHetro() throws Exception {
 		FacebookUser fbU= new FacebookUser(1, "scott");
 		Rectangle r = new Rectangle(1,1);
 		Iterable<Key<Object>> keys = ds.save(fbU, r);
@@ -248,26 +255,26 @@ public class TestQuery  extends TestBase {
 		}
 		assertEquals(1, rectCount);
 		assertEquals(1, userCount);
-	}	
+	}
 	
 	@Test
-    public void testNonexistantGet() throws Exception {
+	public void testNonexistantGet() throws Exception {
 		assertNull(ds.get(Hotel.class, -1));
 	}
-
+	
 	@Test
-    public void testNonexistantFindGet() throws Exception {
+	public void testNonexistantFindGet() throws Exception {
 		assertNull(ds.find(Hotel.class,"_id", -1).get());
 	}
-
+	
 	@Test
-    public void testQueryCount() throws Exception {
+	public void testQueryCount() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),
-								new Rectangle(1, 10),
-								new Rectangle(1, 10),
-								new Rectangle(10, 10),
-								new Rectangle(10, 10),
-								};
+				new Rectangle(1, 10),
+				new Rectangle(1, 10),
+				new Rectangle(10, 10),
+				new Rectangle(10, 10),
+		};
 		for(Rectangle rect: rects)
 			ds.save(rect);
 		
@@ -280,20 +287,20 @@ public class TestQuery  extends TestBase {
 		assertEquals(5, ds.getCount(q3));
 		
 	}
-
+	
 	@Test
-    public void testDeleteQuery() throws Exception {
+	public void testDeleteQuery() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),
-								new Rectangle(1, 10),
-								new Rectangle(1, 10),
-								new Rectangle(10, 10),
-								new Rectangle(10, 10),
-								};
+				new Rectangle(1, 10),
+				new Rectangle(1, 10),
+				new Rectangle(10, 10),
+				new Rectangle(10, 10),
+		};
 		for(Rectangle rect: rects)
 			ds.save(rect);
-
+		
 		assertEquals(5, ds.getCount(Rectangle.class));
 		ds.delete(ds.find(Rectangle.class, "height", 1D));
 		assertEquals(2, ds.getCount(Rectangle.class));
-	}	
+	}
 }
