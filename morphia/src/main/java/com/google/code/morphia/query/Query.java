@@ -72,6 +72,9 @@ public interface Query<T> extends QueryResults<T> {
 	/** Hints as to which index should be used.*/
 	Query<T> hintIndex(String idxName);
 	
+	/** Limits the fields retrieved */
+	Query<T> retrievedFields(boolean include, String...fields);
+	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There
 	 * is no way to convert this string back into a query and there is no guarantee that

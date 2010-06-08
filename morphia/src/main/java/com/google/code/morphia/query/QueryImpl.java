@@ -41,7 +41,8 @@ public class QueryImpl<T> implements Query<T> {
 	
 	boolean validating = true;
 	Map<String, Object> query =null;
-	BasicDBObjectBuilder fields = null;
+	String[] fields = null;
+	Boolean includeFields = true;
 	BasicDBObjectBuilder sort = null;
 	DatastoreImpl ds = null;
 	DBCollection dbColl = null;
@@ -66,7 +67,14 @@ public class QueryImpl<T> implements Query<T> {
 	}
 	
 	public DBObject getFieldsObject() {
-		return (fields == null) ? null : fields.get();
+		if (fields == null || fields.length == 0) 
+			return null;
+		
+		Map<String, Boolean> fieldsFilter = new HashMap<String, Boolean>();
+		for(String field : this.fields)
+			fieldsFilter.put(field, (includeFields));
+		
+		return new BasicDBObject(fieldsFilter);
 	}
 	
 	public DBObject getSortObject() {
@@ -106,10 +114,13 @@ public class QueryImpl<T> implements Query<T> {
 	
 
 	public Iterable<Key<T>> fetchKeys() {
-		BasicDBObjectBuilder oldFields = fields;
-		fields = new BasicDBObjectBuilder().add(Mapper.ID_KEY, true);
+		String[] oldFields = fields;
+		Boolean oldInclude = includeFields;
+		fields = new String[] {Mapper.ID_KEY};
+		includeFields = true;
 		DBCursor cursor = prepareCursor();
 		fields = oldFields;
+		includeFields = oldInclude;
 		return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
 	}
 	
@@ -130,9 +141,15 @@ public class QueryImpl<T> implements Query<T> {
 	}
 	
 
-	public Iterable<T> fetchIdsOnly() {
-		fields = BasicDBObjectBuilder.start(Mapper.ID_KEY, 1);
-		return fetch();
+	public Iterable<T> fetchEmptyEntities() {
+		String[] oldFields = fields;
+		Boolean oldInclude = includeFields;
+		fields = new String[] {Mapper.ID_KEY};
+		includeFields = true;
+		Iterable<T> res = fetch();
+		fields = oldFields;
+		includeFields = oldInclude;
+		return res;
 	}
 	
 	/**
@@ -441,10 +458,17 @@ public class QueryImpl<T> implements Query<T> {
 	public QueryFieldEnd<T> field(String fieldExpr) {
 		return new QueryFieldEndImpl<T>(fieldExpr, this);
 	}
-	
 
 	public Query<T> hintIndex(String idxName) {
 		return null;
+	}
+
+	public Query<T> retrievedFields(boolean include, String...fields){
+		if (includeFields != null && include != includeFields)
+			throw new IllegalStateException("You cannot mix include and excluded fields together!");
+		this.includeFields = include;
+		this.fields = fields;
+		return this;
 	}
 	
 }

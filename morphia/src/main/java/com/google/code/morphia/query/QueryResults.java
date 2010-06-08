@@ -39,13 +39,13 @@ public interface QueryResults<T>  extends Iterable<T> {
 	Iterable<T> fetch();
 	
 	/**
-	 * Execute the query and get the ids of the results.  This is more efficient than
+	 * Execute the query and get only the ids of the results.  This is more efficient than
 	 * fetching the actual results (transfers less data).
 	 */
-	Iterable<T> fetchIdsOnly();
+	Iterable<T> fetchEmptyEntities();
 
 	/**
-	 * Execute the query and get the keys for the objects. @see fetchIdsOnly 
+	 * Execute the query and get the keys for the objects. @see fetchEmptyEntities 
 	 */
 	Iterable<Key<T>> fetchKeys();
 	

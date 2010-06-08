@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 
 /**
  * 
@@ -12,12 +13,12 @@ import com.mongodb.BasicDBObject;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
-	Iterator wrapped;
+	DBCursor wrapped;
 	Mapper m;
 	Class<T> clazz;
 	String kind;
 
-	public MorphiaIterator(Iterator it, Mapper m, Class<T> clazz, String kind) {
+	public MorphiaIterator(DBCursor it, Mapper m, Class<T> clazz, String kind) {
 		this.wrapped = it; this.m = m; this.clazz = clazz;this.kind = kind;
 	}
 	

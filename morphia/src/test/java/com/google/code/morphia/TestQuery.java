@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.code.morphia.TestDatastore.FacebookUser;
@@ -184,6 +185,19 @@ public class TestQuery  extends TestBase {
         assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
     }
 
+    @Test
+    public void testIdOnlyQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+        
+        PhotoWithKeywords pwkLoaded = ds.find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(true, "_id").get();
+        assertNotNull(pwkLoaded);
+        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
+        Assert.assertEquals(3, pwkLoaded.keywords.size());
+        
+    }
+
+    
     @Test
     public void testDeepQueryWithBadArgs() throws Exception {
         ds.save(new PhotoWithKeywords());
