@@ -1,7 +1,7 @@
 package com.google.code.morphia.query;
 
 
-public interface FieldPart<T> {
+public interface QueryFieldEnd<T> {
 	
 	Query<T> exists();
 	Query<T> doesNotExist();
@@ -18,5 +18,5 @@ public interface FieldPart<T> {
 	Query<T> hasNoneOf(Iterable<?> vals);
 
 	Query<T> hasThisElement(Object val);
-	
+	Query<T> sizeEq(int val);
 }

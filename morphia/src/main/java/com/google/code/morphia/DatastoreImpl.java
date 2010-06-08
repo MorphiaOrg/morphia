@@ -563,7 +563,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 
-	public UpdateOperations createUpdateOperation() {
+	public UpdateOperations createUpdateOperations() {
 		return new UpdateOpsImpl(getMapper());
 	}
 

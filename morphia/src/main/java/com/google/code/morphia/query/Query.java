@@ -34,7 +34,7 @@ public interface Query<T> extends QueryResults<T> {
 	Query<T> filter(String condition, Object value);
 	
 	/** Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...} */
-	FieldPart<T> field(String fieldExpr);
+	QueryFieldEnd<T> field(String fieldExpr);
 	
 	/**
 	 * <p>Sorts based on a property.  Examples:</p>
@@ -61,6 +61,8 @@ public interface Query<T> extends QueryResults<T> {
 	 * @param value must be >= 0
 	 */
 	Query<T> offset(int value);
+	@Deprecated
+	Query<T> skip(int value);
 	
 	/** Turns on validation (for all calls made after); by default validation is on*/
 	Query<T> enableValidation();

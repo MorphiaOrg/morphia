@@ -26,8 +26,7 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.code.morphia.mapping.Constraints;
-import com.google.code.morphia.mapping.Modifiers;
+import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
@@ -86,22 +85,22 @@ public class TestDAO extends TestBase {
 
         List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
-        assertEquals(2, hotelDAO.findIds().asList().size());
+        assertEquals(2, hotelDAO.findIds().size());
 
-        assertEquals(1, hotelDAO.find(new Constraints().skip(1).limit(10)).asList().size());
-        assertEquals(1, hotelDAO.find(new Constraints().limit(1)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().skip(1).limit(10)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
-        assertEquals(0, hotelDAO.count(new Constraints().field("stars").notEqualTo(4)));
-        assertEquals(2, hotelDAO.count(new Constraints().field("stars").lessThan(5)));
-        assertEquals(2, hotelDAO.count(new Constraints().field("stars").greaterThanOrEqualTo(4)));
-        assertEquals(2, hotelDAO.count(new Constraints().field("stars").lessThan(5)));
-        assertEquals(1, hotelDAO.count(new Constraints().field("phoneNumbers").size(1)));
-        assertEquals(2, hotelDAO.count(new Constraints("stars", 4).orderBy("address.address_street")));
-        assertEquals(borg.getName(), hotelDAO.find(new Constraints("stars", 4).orderBy("address.address_street")).next().getName());
-        assertEquals(hilton.getName(), hotelDAO.find(new Constraints("stars", 4).orderByDesc("address.address_street")).next().getName());
-        assertEquals(hilton.getName(), hotelDAO.find(new Constraints("stars", 4).orderBy("stars").orderByDesc("address.address_street")).next().getName());
+        assertEquals(0, hotelDAO.count(hotelDAO.createQuery().field("stars").notEqual(4)));
+        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").lessThan(5)));
+        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").greaterThanOrEq(4)));
+        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").lessThan(5)));
+        assertEquals(1, hotelDAO.count(hotelDAO.createQuery().field("phoneNumbers").sizeEq(1)));
+        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().filter("stars", 4).order("address.address_street")));
+        assertEquals(borg.getName(), hotelDAO.find(hotelDAO.createQuery().filter("stars", 4).order("address.address_street")).iterator().next().getName());
+        assertEquals(hilton.getName(), hotelDAO.find(hotelDAO.createQuery().filter("stars", 4).order("-address.address_street")).iterator().next().getName());
+        assertEquals(hilton.getName(), hotelDAO.find(hotelDAO.createQuery().filter("stars", 4).order("stars, -address.address_street")).iterator().next().getName());
 
         hotelDAO.deleteById(borg.getId());
         assertEquals(1, hotelDAO.count());
@@ -156,15 +155,15 @@ public class TestDAO extends TestBase {
         List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.find(new Constraints().skip(1).limit(10)).asList().size());
-        assertEquals(1, hotelDAO.find(new Constraints().limit(1)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().skip(1).limit(10)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
         // try updating
-        Modifiers mods = new Modifiers().inc("stars", 1);
-        hotelDAO.update(new Constraints("stars", 4), mods);
-        assertEquals(2, hotelDAO.count(new Constraints("stars", 5)));
+        UpdateOperations mods = hotelDAO.createUpdateOperations().inc("stars", 1);
+        hotelDAO.update(hotelDAO.createQuery().filter("stars", 4), mods);
+        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().filter("stars", 5)));
 
         hotelDAO.deleteById(borg.getId());
         assertEquals(1, hotelDAO.count());

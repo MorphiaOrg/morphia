@@ -323,6 +323,11 @@ public class QueryImpl<T> implements Query<T> {
 	}
 	
 
+	public Query<T> skip(int value) {
+		this.offset = value;
+		return this;
+	}
+
 	public Query<T> offset(int value) {
 		this.offset = value;
 		return this;
@@ -356,11 +361,11 @@ public class QueryImpl<T> implements Query<T> {
 		return this.clazz;
 	}
 	
-	public static class FieldPartImpl<T> implements FieldPart<T>{
+	public static class QueryFieldEndImpl<T> implements QueryFieldEnd<T>{
 		
 		protected final String fieldExpr;
 		protected final QueryImpl<T> query;
-		public FieldPartImpl(String fe, QueryImpl<T> q) {this.fieldExpr = fe; this.query=q;}
+		public QueryFieldEndImpl(String fe, QueryImpl<T> q) {this.fieldExpr = fe; this.query=q;}
 
 		public Query<T> doesNotExist() {
 			query.filter("" + fieldExpr + " exists", 0);
@@ -426,10 +431,15 @@ public class QueryImpl<T> implements Query<T> {
 			query.filter(fieldExpr + " <>", val);
 			return query;
 		}
+
+		public Query<T> sizeEq(int val) {
+			query.filter(fieldExpr + " size", val);
+			return query;
+		}
 	}
 	
-	public FieldPart<T> field(String fieldExpr) {
-		return new FieldPartImpl<T>(fieldExpr, this);
+	public QueryFieldEnd<T> field(String fieldExpr) {
+		return new QueryFieldEndImpl<T>(fieldExpr, this);
 	}
 	
 

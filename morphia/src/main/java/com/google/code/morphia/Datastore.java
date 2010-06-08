@@ -93,7 +93,7 @@ public interface Datastore {
 	<T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing);
 	
 	/** The builder for all update operations */
-	UpdateOperations createUpdateOperation();
+	UpdateOperations createUpdateOperations();
 	
 	/** Returns a new query bound to the kind (a specific {@link DBCollection})  */
 	<T> Query<T> createQuery(Class<T> kind);
