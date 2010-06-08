@@ -14,8 +14,6 @@ import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.converters.DefaultConverters;
-import com.google.code.morphia.mapping.cache.EntityCacheKey;
-import com.google.code.morphia.mapping.cache.ProxyCacheKey;
 import com.google.code.morphia.mapping.cache.first.FirstLevelEntityCache;
 import com.google.code.morphia.mapping.cache.first.FirstLevelProxyCache;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -255,8 +253,8 @@ class ReferenceMapper {
 			final MappedField mf) {
 		
 		FirstLevelEntityCache entityCache = mapper.getFirstLevelCacheProvider().getEntityCache();
-		EntityCacheKey ck = new EntityCacheKey(referenceObjClass, dbRef.getId().toString());
-		Object cached = entityCache.get(ck);
+		Key key = new Key(referenceObjClass, dbRef.getId());
+		Object cached = entityCache.get(key);
 		if (cached != null)
 			return cached;
 		
@@ -265,7 +263,7 @@ class ReferenceMapper {
 		if (refDbObject != null) {
 			Object refObj = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
 			refObj = mapper.fromDb(refDbObject, refObj);
-			entityCache.put(ck, refObj);
+			entityCache.put(key, refObj);
 			return refObj;
 		}
 		
@@ -320,14 +318,14 @@ class ReferenceMapper {
 	private Object createOrReuseProxy(final Class referenceObjClass, final DBRef dbRef) {
 		
 		FirstLevelProxyCache proxyCache = mapper.getFirstLevelCacheProvider().getProxyCache();
-		ProxyCacheKey cacheKey = new ProxyCacheKey(dbRef);
-		Object proxyAlreadyCreated = proxyCache.get(cacheKey);
+		Key key = new Key(dbRef);
+		Object proxyAlreadyCreated = proxyCache.get(key);
 		if (proxyAlreadyCreated != null) {
 			return proxyAlreadyCreated;
 		}
 		
 		Object newProxy = mapper.proxyFactory.createProxy(referenceObjClass, new Key(dbRef), mapper.datastoreProvider);
-		proxyCache.put(cacheKey, newProxy);
+		proxyCache.put(key, newProxy);
 		return newProxy;
 	}
 	

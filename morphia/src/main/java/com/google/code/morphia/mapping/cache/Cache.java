@@ -3,17 +3,19 @@
  */
 package com.google.code.morphia.mapping.cache;
 
+import com.google.code.morphia.Key;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  *
  */
 public interface Cache {
-	Object put(CacheKey key, Object entity);
+	Object put(Key<?> key, Object entity);
 	
-	Object get(CacheKey key);
+	Object get(Key<?> key);
 	
-	Object removeByKey(CacheKey key);
+	Object removeByKey(Key<?> key);
 	
 	// Object remove(Object o);
 	

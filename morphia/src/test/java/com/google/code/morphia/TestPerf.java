@@ -87,6 +87,7 @@ public class TestPerf  extends TestBase{
     public void insertAddresses(int count, boolean raw) {
     	Address template = new Address();
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
+//    	dbColl.setWriteConcern(WriteConcern.STRICT);
     	for(int i=0;i<count;i++) {
     		if(raw) {
     			DBObject addr = new BasicDBObject();

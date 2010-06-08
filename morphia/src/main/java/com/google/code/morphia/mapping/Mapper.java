@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.EntityInterceptor;
+import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
@@ -34,8 +35,6 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
-import com.google.code.morphia.mapping.cache.CacheKey;
-import com.google.code.morphia.mapping.cache.EntityCacheKey;
 import com.google.code.morphia.mapping.cache.first.DefaultFirstLevelCacheProvider;
 import com.google.code.morphia.mapping.cache.first.FirstLevelCacheProvider;
 import com.google.code.morphia.mapping.cache.first.FirstLevelEntityCache;
@@ -339,13 +338,13 @@ public class Mapper {
 			if (getMappedClass(entity).getIdField() != null) {
 				
 				String id = dbObject.get(ID_KEY).toString();
-				CacheKey ck = new EntityCacheKey(entity.getClass(), id);
+				Key key = new Key(entity.getClass(), id);
 				FirstLevelEntityCache entityCache = firstLevelCacheProvider.getEntityCache();
-				Object cachedInstance = entityCache.get(ck);
+				Object cachedInstance = entityCache.get(key);
 				if (cachedInstance != null)
 					return cachedInstance;
 				else
-					entityCache.put(ck, entity); // to avoid stackOverflow in
+					entityCache.put(key, entity); // to avoid stackOverflow in
 													// Recursive refs
 
 			}
@@ -391,10 +390,10 @@ public class Mapper {
 			if (getMappedClass(entity).getIdField() != null) {
 				
 				String id = dbObject.get(ID_KEY).toString();
-				CacheKey ck = new EntityCacheKey(entity.getClass(), id);
+				Key key = new Key(entity.getClass(), id);
 				FirstLevelEntityCache entityCache = firstLevelCacheProvider.getEntityCache();
 
-					entityCache.put(ck, entity);
+					entityCache.put(key, entity);
 			}
 		}
 		mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);

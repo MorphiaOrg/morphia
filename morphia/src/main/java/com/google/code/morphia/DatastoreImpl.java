@@ -18,7 +18,6 @@ import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.google.code.morphia.mapping.cache.EntityCacheKey;
 import com.google.code.morphia.mapping.cache.first.FirstLevelEntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
@@ -38,6 +37,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
+import com.mongodb.DB.WriteConcern;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -106,8 +106,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T, V> void delete(Class<T> clazz, V id) {
 		
 		FirstLevelEntityCache ec = morphia.getMapper().getFirstLevelCacheProvider().getEntityCache();
-		EntityCacheKey ck = new EntityCacheKey(clazz, id.toString());
-		ec.removeByKey(ck);
+		Key key = new Key(clazz, id);
+		ec.removeByKey(key);
 
 		DBCollection dbColl = getCollection(clazz);
 		delete(dbColl, id);
@@ -370,8 +370,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		//		
 		// TODO us experimental
 		FirstLevelEntityCache ec = mapr.getFirstLevelCacheProvider().getEntityCache();
-		EntityCacheKey ck = new EntityCacheKey(clazz, key.getId().toString());
-		Object cached = ec.get(ck);
+		Object cached = ec.get(key);
 		if (cached != null) {
 			return (T) cached;
 		}
@@ -517,21 +516,20 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if (dbObj.get(Mapper.ID_KEY) == null)
 				throw new MappingException("Missing _id after save!");
 			
-			DBObject lastErr = db.getLastError();
-			if (lastErr.get("err") != null)
-				throw new MappingException("Error: " + lastErr.toString());
-			
+			if (dbColl.getWriteConcern() == WriteConcern.STRICT) {
+				DBObject lastErr = db.getLastError();
+				if (lastErr.get("err") != null)
+					throw new MappingException("Error: " + lastErr.toString());
+			}
 			postSaveOperations(entity, dbObj, dbColl, involvedObjects);
+			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
+			key.setKindClass((Class<? extends T>) entity.getClass());
 			
 			//			
 			// TODO us experimental
 			FirstLevelEntityCache ec = mapr.getFirstLevelCacheProvider().getEntityCache();
-			EntityCacheKey ck = new EntityCacheKey(entity.getClass(), mc.getMappedIdField().getFieldValue(entity)
-					.toString());
-			ec.removeByKey(ck);
+			ec.removeByKey(key);
 
-			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
-			key.setKindClass((Class<? extends T>) entity.getClass());
 			return key;
 		} finally {
 			// TODO scary message from driver ... db.requestDone();
