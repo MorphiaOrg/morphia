@@ -36,38 +36,38 @@ public class UpdateOpsImpl implements UpdateOperations {
 		ops.get(op).put(f,val);
 		
 	}
-	@Override
+
 	public UpdateOperations add(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$set", fieldExpr, dbObj);
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations add(String fieldExpr, Object value, boolean addDups) {
 		Object dbObj = mapr.toMongoObject(value);
 		add((addDups) ? "$push" : "$addToSet", fieldExpr, dbObj);
 		return this;
 	}
 	
-	@Override
+
 	public UpdateOperations add(String fieldExpr, List<?> values, boolean addDups) {
 		List<Object> vals = toDBObjList(values);
 		add((addDups) ? "$pushAll" : "$addToSet", fieldExpr, vals);
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations dec(String fieldExpr) {
 		return inc(fieldExpr, -1);
 	}
 
-	@Override
+
 	public UpdateOperations inc(String fieldExpr) {
 		return inc(fieldExpr, 1);
 	}
 
-	@Override
+
 	public UpdateOperations inc(String fieldExpr, Number value) {
 		add("$inc", fieldExpr, value);
 		return this;
@@ -79,38 +79,38 @@ public class UpdateOpsImpl implements UpdateOperations {
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations removeAll(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$pull", fieldExpr, dbObj);
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations removeAll(String fieldExpr, List<?> values) {
 		List<Object> vals = toDBObjList(values);
 		add("$pullAll", fieldExpr, vals);
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations removeFirst(String fieldExpr) {
 		return remove(fieldExpr, true);
 	}
 
-	@Override
+
 	public UpdateOperations removeLast(String fieldExpr) {
 		return remove(fieldExpr, false);
 	}
 
-	@Override
+
 	public UpdateOperations set(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$set", fieldExpr, dbObj);
 		return this;
 	}
 
-	@Override
+
 	public UpdateOperations unset(String fieldExpr) {
 		add("$unset", fieldExpr, 1);
 		return this;

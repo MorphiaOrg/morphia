@@ -11,19 +11,19 @@ import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.utils.AbstractMongoEntity;
+import com.google.code.morphia.testutil.TestEntity;
 
 public class TestEmbedLoop extends TestBase {
 	
 	@Entity
-	static class A extends AbstractMongoEntity {
+	static class A extends TestEntity {
 		private static final long serialVersionUID = 1L;
 		@Embedded
 		B b;
 	}
 	
 	@Embedded
-	static class B extends AbstractMongoEntity {
+	static class B extends TestEntity {
 		private static final long serialVersionUID = 1L;
 		String someProperty = "someThing";
 		

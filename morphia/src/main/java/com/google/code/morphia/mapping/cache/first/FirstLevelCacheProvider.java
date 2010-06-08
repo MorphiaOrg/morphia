@@ -1,0 +1,14 @@
+/**
+ * 
+ */
+package com.google.code.morphia.mapping.cache.first;
+
+/**
+ * @author Uwe Schaefer, (us@thomas-daily.de)
+ *
+ */
+public interface FirstLevelCacheProvider {
+	FirstLevelEntityCache getEntityCache();
+	
+	FirstLevelProxyCache getProxyCache();
+}

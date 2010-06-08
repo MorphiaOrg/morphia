@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.google.code.morphia.issue45;
+package com.google.code.morphia.callbacks;
 
 import java.util.LinkedList;
 import java.util.List;

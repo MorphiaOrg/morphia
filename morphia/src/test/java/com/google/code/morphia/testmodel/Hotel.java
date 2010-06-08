@@ -19,7 +19,7 @@ package com.google.code.morphia.testmodel;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Transient;
-import com.google.code.morphia.utils.AbstractMongoEntity;
+import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ import java.util.Vector;
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("hotels")
-public class Hotel extends AbstractMongoEntity {
+public class Hotel extends TestEntity {
 	private static final long serialVersionUID = 1L;
 
 	public static Hotel create() {

@@ -26,7 +26,7 @@ public class ResultsImpl<T> implements Results<T> {
         this.idsOnly = idsOnly;
     }
 
-    @Override
+
     public List<T> asList() {
         List<T> list = new ArrayList<T>();
         while ( hasNext() ) {
@@ -35,12 +35,11 @@ public class ResultsImpl<T> implements Results<T> {
         return list;
     }
 
-    @Override
+
     public Iterator<T> iterator() {
         return this;
     }
 
-    @Override
     public boolean hasNext() {
 		if ( cursor == null ) {
             return false;
@@ -50,7 +49,6 @@ public class ResultsImpl<T> implements Results<T> {
     }
 
     @SuppressWarnings("unchecked")
-	@Override
     public T next() {
         if ( !hasNext() ) {
             throw new NoSuchElementException();
@@ -62,7 +60,6 @@ public class ResultsImpl<T> implements Results<T> {
         }
     }
 
-    @Override
     public void remove() {
         cursor.remove();
     }

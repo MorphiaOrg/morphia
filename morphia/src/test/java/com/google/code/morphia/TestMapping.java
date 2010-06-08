@@ -104,13 +104,7 @@ public class TestMapping  extends TestBase {
 	public static class RenamedEmbedded {
 		String name;
 	}
-	
-	public static class IPrintAWarning {
-		@Id String id;
-		NotEmbeddable ne= new NotEmbeddable();
-		String sValue = "not empty";
-	}
-	
+		
 	public static class NotEmbeddable {
 		String noImNot = "no, I'm not";
 	}
@@ -124,17 +118,30 @@ public class TestMapping  extends TestBase {
 		public DBRef rect;
 	}
 
-	public static class ContainsFinalField{
+	public static class HasFinalFieldId{
 		public final @Id long id;
-		public String name;
+		public String name = "some string";
 		
-		protected ContainsFinalField() {
-			//only called when loaded by the persistence framework.
+		//only called when loaded by the persistence framework.
+		protected HasFinalFieldId() {
 			id = -1;
 		}
 		
-		public ContainsFinalField(long id) {
+		public HasFinalFieldId(long id) {
 			this.id = id;
+		}
+	}
+
+	public static class ContainsFinalField{
+		public @Id String id;
+		public final String name;
+		
+		protected ContainsFinalField() {
+			name = "foo";
+		}
+		
+		public ContainsFinalField(String name) {
+			this.name = name;
 		}
 	}
 	
@@ -261,15 +268,36 @@ public class TestMapping  extends TestBase {
 		
 		
 	}
-		
+
+	@Test
+    public void testFinalIdField() throws Exception {
+		morphia.map(HasFinalFieldId.class);
+		Key<HasFinalFieldId> savedKey = ds.save(new HasFinalFieldId(12));
+		HasFinalFieldId loaded = ds.get(HasFinalFieldId.class, savedKey.getId());
+		assertNotNull(loaded);        
+		assertNotNull(loaded.id);        
+		assertEquals(loaded.id, 12);
+	}
+
 	@Test
     public void testFinalField() throws Exception {
 		morphia.map(ContainsFinalField.class);
-		Key<ContainsFinalField> savedKey = ds.save(new ContainsFinalField(12));
+		Key<ContainsFinalField> savedKey = ds.save(new ContainsFinalField("blah"));
 		ContainsFinalField loaded = ds.get(ContainsFinalField.class, savedKey.getId());
 		assertNotNull(loaded);        
-		assertEquals(loaded.id, 12);
-		assertNotNull(loaded.id);        
+		assertNotNull(loaded.name);        
+		assertEquals("blah",loaded.name);
+	}
+
+	@Test
+    public void testFinalFieldNotPersisted() throws Exception {
+		((DatastoreImpl)ds).getMapper().getOptions().ignoreFinals = true;
+		morphia.map(ContainsFinalField.class);
+		Key<ContainsFinalField> savedKey = ds.save(new ContainsFinalField("blah"));
+		ContainsFinalField loaded = ds.get(ContainsFinalField.class, savedKey.getId());
+		assertNotNull(loaded);        
+		assertNotNull(loaded.name);        
+		assertEquals("foo", loaded.name);
 	}
 
 	@Test
@@ -341,7 +369,8 @@ public class TestMapping  extends TestBase {
         DBCollection rectangles = db.getCollection("rectangles");
         
         assertTrue("'ne' field should not be persisted!",
-        		!morphia.getMappedClasses().get(ContainsRef.class.getCanonicalName()).containsFieldName("ne"));
+ !morphia.getMappedClasses().get(ContainsRef.class.getName())
+				.containsFieldName("ne"));
 
         Rectangle r = new Rectangle(1,1);
         DBObject rDbObject = morphia.toDBObject(r);
@@ -362,14 +391,8 @@ public class TestMapping  extends TestBase {
         assertEquals(cRefLoaded.rect.getRef(), cRef.rect.getRef());    
 	}
 	
-	
 	@Test
     public void testBadMappings() throws Exception {
-        morphia.map(IPrintAWarning.class);
-        
-        assertTrue("'ne' field should not be persisted!",
-        		!morphia.getMappedClasses().get(IPrintAWarning.class.getCanonicalName()).containsFieldName("ne"));
-        
         boolean allGood=false;
         try {
         	morphia.map(MissingId.class);

@@ -61,19 +61,15 @@ public class NewAnnoationTest {
 	}
 
 	public static class ToLowercaseHelper implements EntityInterceptor {
-		@Override
-		public void PostLoad(Object ent, DBObject dbObj, Mapper mapr) {}
+		public void PostLoad(Object ent, DBObject dbObj, Mapper mapr) {
+		}
 
-		@Override
 		public void PostPersist(Object ent, DBObject dbObj, Mapper mapr) {}
 
-		@Override
 		public void PreSave(Object ent, DBObject dbObj, Mapper mapr) {}
 
-		@Override
 		public void PreLoad(Object ent, DBObject dbObj, Mapper mapr) {}
 
-		@Override
 		public void PrePersist(Object ent, DBObject dbObj, Mapper mapr) {
 			MappedClass mc = mapr.getMappedClass(ent);
 			List<MappedField> toLowercase = mc.getFieldsAnnotatedWith(Lowercase.class);

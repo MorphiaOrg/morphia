@@ -32,10 +32,10 @@ public interface Query<T> extends QueryResults<T> {
 	 * restricted to a Class<T>.
 	 */
 	Query<T> filter(String condition, Object value);
-
+	
 	/** Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...} */
 	FieldPart<T> field(String fieldExpr);
-
+	
 	/**
 	 * <p>Sorts based on a property.  Examples:</p>
 	 * 
@@ -61,21 +61,21 @@ public interface Query<T> extends QueryResults<T> {
 	 * @param value must be >= 0
 	 */
 	Query<T> offset(int value);
-
+	
 	/** Turns on validation (for all calls made after); by default validation is on*/
 	Query<T> enableValidation();
 	/** Turns off validation (for all calls made after)*/
 	Query<T> disableValidation();
 	
 	/** Hints as to which index should be used.*/
-	Query<T> hintIndex(String idx, boolean ascending);
+	Query<T> hintIndex(String idxName);
 	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There
 	 * is no way to convert this string back into a query and there is no guarantee that
 	 * the string will be consistent across versions.</p>
 	 * 
-	 * <p>In particular, this value is useful as a key for a simple memcache query cache.</p> 
+	 * <p>In particular, this value is useful as a key for a simple memcache query cache.</p>
 	 */
 	String toString();
 }

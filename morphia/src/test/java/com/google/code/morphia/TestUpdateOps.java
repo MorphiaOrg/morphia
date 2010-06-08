@@ -21,12 +21,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
+import com.google.code.morphia.testutil.StandardTests;
 
 /**
  *
@@ -36,10 +38,10 @@ public class TestUpdateOps  extends TestBase {
 
 
 	public static class ContainsInt{
-		private @Id String id;
+		protected @Id String id;
 		public int val;
 	}
-	@Test
+	@Test @Category(StandardTests.class)
     public void testUpdateSingleField() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),
 								new Rectangle(1, 10),

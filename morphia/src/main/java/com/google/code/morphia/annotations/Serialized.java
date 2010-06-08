@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 package com.google.code.morphia.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.code.morphia.mapping.Mapper;
+
 /**
  * Marker for fields that should be (java) serialized
+ * 
  * @author Scott Hernandez
  */
-@Documented @Inherited
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Serialized {}
+public @interface Serialized {
+
+	boolean disableCompression() default false;
+	
+	String value() default Mapper.IGNORED_FIELDNAME;
+}

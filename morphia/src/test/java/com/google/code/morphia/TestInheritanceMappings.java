@@ -43,31 +43,26 @@ public class TestInheritanceMappings  extends TestBase {
 	@Entity("vehicles")
 	public static abstract class AbstractVehicle implements Vehicle{
 		@Id String id;
-		@Override
 		public String getId() {
 			return this.id;
 		}
 	}
 	
 	public static class Car extends AbstractVehicle{
-		@Override
 		public VehicleClass getVehicleClass() {
 			return VehicleClass.Car;
 		}
 
-		@Override
 		public int getWheelCount() {
 			return 4;
 		}
 	}
 
 	public static class FlyingCar extends AbstractVehicle{
-		@Override
 		public VehicleClass getVehicleClass() {
 			return VehicleClass.Car;
 		}
 
-		@Override
 		public int getWheelCount() {
 			return 0;
 		}

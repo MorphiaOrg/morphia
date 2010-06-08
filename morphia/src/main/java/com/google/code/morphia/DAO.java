@@ -9,6 +9,7 @@ import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.Modifiers;
 import com.google.code.morphia.query.Sort;
+import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -64,8 +65,7 @@ public class DAO<T,K extends Serializable> {
 		if (lastErr.get("err") != null)
 			throw new MappingException("Error: " + lastErr.toString());
 
-		
-		morphia.getMapper().updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY) ,collectionName);
+		morphia.getMapper().updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY));
         morphia.getMapper().getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj, morphia.getMapper());
     }
 
@@ -99,7 +99,7 @@ public class DAO<T,K extends Serializable> {
     }
 
     public void deleteById( K id ) {
-        deleteMatching(new Constraints(Mapper.ID_KEY, Mapper.asObjectIdMaybe(id)));
+		deleteMatching(new Constraints(Mapper.ID_KEY, ReflectionUtils.asObjectIdMaybe(id)));
     }
 
     public void deleteMatching( Constraints c ) {
@@ -111,7 +111,7 @@ public class DAO<T,K extends Serializable> {
     }
 
     public T get( K id ) {
-        BasicDBObject dbObject = (BasicDBObject) collection().findOne(Mapper.asObjectIdMaybe(id));
+		BasicDBObject dbObject = (BasicDBObject) collection().findOne(ReflectionUtils.asObjectIdMaybe(id));
         return dbObject != null ? map(dbObject) : null;
     }
 

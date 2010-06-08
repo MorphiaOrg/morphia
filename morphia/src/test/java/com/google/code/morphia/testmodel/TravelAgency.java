@@ -19,7 +19,7 @@ package com.google.code.morphia.testmodel;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.utils.AbstractMongoEntity;
+import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("agencies")
-public class TravelAgency extends AbstractMongoEntity {
+public class TravelAgency extends TestEntity {
 	private static final long serialVersionUID = 1L;
 
     @Property

@@ -44,4 +44,6 @@ public @interface Reference {
     /** Specify the concrete class to instantiate. */
     Class<?> concreteClass() default Object.class;
     boolean ignoreMissing() default false;
+
+    boolean lazy() default false;
 }

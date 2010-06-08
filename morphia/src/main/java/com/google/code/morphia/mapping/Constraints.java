@@ -70,7 +70,7 @@ public class Constraints implements Serializable {
     }
 
     public Constraints id() {
-        currentKey = "_id";
+        currentKey = Mapper.ID_KEY;
         return this;
     }
 

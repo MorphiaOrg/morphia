@@ -26,5 +26,4 @@ public class UpdateResults<T> {
 	public boolean getUpdatedExisting() {return updatedExisting;}
 	public int getUpdatedCount() {return updateCount;}
 	public int getInsertedCount() {return insertCount;}
-	
 } 

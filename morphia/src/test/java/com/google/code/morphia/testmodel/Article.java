@@ -4,7 +4,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.utils.AbstractMongoEntity;
+import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Entity("articles")
 @SuppressWarnings("unchecked")
-public class Article extends AbstractMongoEntity {
+public class Article extends TestEntity {
 	private static final long serialVersionUID = 1L;
 
     @Embedded

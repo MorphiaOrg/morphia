@@ -3,8 +3,10 @@
  */
 package com.google.code.morphia;
 
+import org.junit.After;
 import org.junit.Before;
 
+import com.google.code.morphia.mapping.cache.first.ScopedFirstLevelCacheProvider;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 
@@ -30,4 +32,9 @@ public abstract class TestBase
         this.db = this.mongo.getDB("morphia_test");
         this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
     }
+	
+	@After
+	public void tearDown() {
+		new ScopedFirstLevelCacheProvider().release();
+	}
 }
