@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -178,6 +179,11 @@ public class TestMapping  extends TestBase {
 
 	public enum Enum1 { A, B }
 
+	public static class ContainsIntegerList {
+		@Id String id;
+		List<Integer> intList = new ArrayList<Integer>();
+	}
+
 	public static class ContainsEnum1KeyMap{
 		@Id String id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
@@ -233,7 +239,26 @@ public class TestMapping  extends TestBase {
 		assertNotNull(mapLoaded.values.get(Enum1.A));
 		assertNotNull(mapLoaded.values.get(Enum1.B));
 	}
+	
+	@Test
+    public void testIntLists() throws Exception {
+		ContainsIntegerList cil = new ContainsIntegerList();
+		ds.save(cil);
+		ContainsIntegerList cilLoaded = ds.get(cil);
+		assertNotNull(cilLoaded);
+		assertNotNull(cilLoaded.intList);
+		assertEquals(cilLoaded.intList.size(), cil.intList.size());
 
+		
+		cil = new ContainsIntegerList();
+		cil.intList = null;
+		ds.save(cil);
+		cilLoaded = ds.get(cil);
+		assertNotNull(cilLoaded);
+		assertNotNull(cilLoaded.intList);
+		assertEquals(cilLoaded.intList.size(), 0);
+	}
+	
 	@Test
     public void testIntKeyedMap() throws Exception {
 		ContainsIntKeyMap map = new ContainsIntKeyMap ();

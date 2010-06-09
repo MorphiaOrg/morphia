@@ -87,9 +87,7 @@ public class DefaultConverters {
 		TypeConverter enc = getEncoder(mf);
 		Object fieldValue = mf.getFieldValue(containingObject);
 		Object encoded = enc.encode(fieldValue, mf);
-		if (encoded == null && opts.storeNulls) {
-			dbObj.put(mf.getMappedFieldName(), null);
-		} else {
+		if (encoded != null || opts.storeNulls) {
 			dbObj.put(mf.getMappedFieldName(), encoded);
 		}
 	}
