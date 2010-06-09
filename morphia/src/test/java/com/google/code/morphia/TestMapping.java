@@ -193,6 +193,25 @@ public class TestMapping  extends TestBase {
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
+	public static abstract class BaseEntity implements Serializable{
+		private static final long serialVersionUID = 1L;
+
+		public BaseEntity() {}
+	
+		@Id String id;
+		public String getId() {
+			return id;
+		}
+	
+       public void setId(String id) {
+    	   this.id = id;
+       }
+	}
+	@Entity
+	public static class UsesBaseEntity extends BaseEntity{
+		private static final long serialVersionUID = 1L;
+		
+	}
 
 	public static class MapSubclass extends LinkedHashMap<String, Object> {
 		private static final long serialVersionUID = 1L;
@@ -317,7 +336,10 @@ public class TestMapping  extends TestBase {
 		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
 		assertNotNull(loaded.id);        
 	}
-	
+	@Test
+    public void testBaseEntityValidity() throws Exception {
+		morphia.map(UsesBaseEntity.class);
+	}	
 	@Test
     public void testSerializedMapping() throws Exception {
 		morphia.map(ContainsSerializedData.class);
