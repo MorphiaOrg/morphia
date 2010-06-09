@@ -29,7 +29,7 @@ import com.google.code.morphia.annotations.Id;
  *
  * @author Scott Hernandez
  */
-public class TestInheritanceMappings  extends TestBase {
+public class TestInheritanceMappings extends TestBase {
 
 	public static enum VehicleClass {
 		Bicycle, Moped, MiniCar, Car, Truck;

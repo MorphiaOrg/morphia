@@ -107,7 +107,7 @@ class EmbeddedMapper {
 				if (dbObject.containsField(name)) {
 					BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
 					Object refObj = ReflectionUtils.createInstance(fieldType, dbVal);
-					refObj = mapper.fromDb(dbVal, refObj);
+					refObj = mapper.fromDb(dbVal, refObj, null);
 					if (refObj != null) {
 						mf.setFieldValue(entity, refObj);
 					}
@@ -133,7 +133,7 @@ class EmbeddedMapper {
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
-				newEntity = mapper.fromDb(dbObj, newEntity);
+				newEntity = mapper.fromDb(dbObj, newEntity, null);
 				values.add(newEntity);
 			}
 		}
@@ -156,7 +156,7 @@ class EmbeddedMapper {
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object newEntity = ReflectionUtils.createInstance(mf.getSubType(), (BasicDBObject) entry.getValue());
 				
-				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity);
+				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, null);
 				Object objKey = converters.decode(mf.getMapKeyType(), entry.getKey());
 				map.put(objKey, newEntity);
 			}

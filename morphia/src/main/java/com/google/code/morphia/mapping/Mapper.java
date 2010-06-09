@@ -14,6 +14,7 @@ package com.google.code.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,6 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
-import com.google.code.morphia.mapping.cache.first.DefaultFirstLevelCacheProvider;
-import com.google.code.morphia.mapping.cache.first.FirstLevelCacheProvider;
-import com.google.code.morphia.mapping.cache.first.FirstLevelEntityCache;
 import com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
@@ -62,7 +60,7 @@ public class Mapper {
 	public static final String IGNORED_FIELDNAME = ".";
 	public static final String CLASS_NAME_FIELDNAME = "className";
 
-	/** Set of classes that have been validated for mapping by this mapper */
+	/** Set of classes that registered by this mapper */
 	private final ConcurrentHashMap<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
 	private final ConcurrentLinkedQueue<EntityInterceptor> interceptors = new ConcurrentLinkedQueue<EntityInterceptor>();
 	
@@ -75,8 +73,6 @@ public class Mapper {
 			: null;
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 	MapperOptions opts = new MapperOptions();
-	// TODO make configurable
-	private FirstLevelCacheProvider firstLevelCacheProvider = new DefaultFirstLevelCacheProvider();
 	
 	/**
 	 * <p>
@@ -204,16 +200,9 @@ public class Mapper {
 		}
 
 		Object entity = null;
-		try {
-			entity = ReflectionUtils.createInstance(entityClass, dbObject);
-			fromDb(dbObject, entity);
-		} finally {
-			// TODO ugly, but tmp. here to keep compatibility
-			if (this.firstLevelCacheProvider instanceof DefaultFirstLevelCacheProvider) {
-				DefaultFirstLevelCacheProvider d = (DefaultFirstLevelCacheProvider) this.firstLevelCacheProvider;
-				d.release();
-			}
-		}
+		Map<Key, Object> retrieved = new HashMap<Key, Object>();
+		entity = ReflectionUtils.createInstance(entityClass, dbObject);
+		fromDb(dbObject, entity, retrieved);
 		return entity;
 	}
 
@@ -331,37 +320,17 @@ public class Mapper {
 		return dbObject;
 	}
 	
-	Object fromDb(DBObject dbObject, final Object entity) {
+	Object fromDb(DBObject dbObject, final Object entity, Map<Key, Object> retrieved) {
 		// check the history key (a key is the namespace + id)
 		
-		if (dbObject.containsField(ID_KEY)) {
-			if (getMappedClass(entity).getIdField() != null) {
-				
-				String id = dbObject.get(ID_KEY).toString();
-				Key key = new Key(entity.getClass(), id);
-				FirstLevelEntityCache entityCache = firstLevelCacheProvider.getEntityCache();
-				Object cachedInstance = entityCache.get(key);
-				if (cachedInstance != null)
-					return cachedInstance;
-				else
-					entityCache.put(key, entity); // to avoid stackOverflow in
-													// Recursive refs
-
-			}
+		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
+			Key key = new Key(entity.getClass(), dbObject.get(ID_KEY));
+			Object cachedInstance = retrieved.get(key);
+			if (cachedInstance != null)
+				return cachedInstance;
+			else
+				retrieved.put(key, entity); // to avoid stackOverflow in recursive refs
 		}
-
-		// String cacheKey = (!dbObject.containsField(ID_KEY)) ? null : "[" +
-		// dbObject.getString(ID_KEY) + "]";
-		// if (entityCache.get() == null) {
-		// entityCache.set(new HashMap<String, Object>());
-		// }
-		// if (cacheKey != null) {
-		// if (entityCache.get().containsKey(cacheKey)) {
-		// return entityCache.get().get(cacheKey);
-		// } else {
-		// entityCache.get().put(cacheKey, entity);
-		// }
-		// }
 
 		MappedClass mc = getMappedClass(entity);
 		
@@ -378,7 +347,7 @@ public class Mapper {
 				else if (mf.hasAnnotation(Embedded.class))
 					embeddedMapper.fromDBObject(dbObject, mf, entity);
 				else if (mf.hasAnnotation(Reference.class))
-					referenceMapper.fromDBObject(dbObject, mf, entity);
+					referenceMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				else
 					logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getName() + "]");
 			}
@@ -386,21 +355,12 @@ public class Mapper {
 			throw new RuntimeException(e);
 		}
 
-		if (dbObject.containsField(ID_KEY)) {
-			if (getMappedClass(entity).getIdField() != null) {
-				
-				String id = dbObject.get(ID_KEY).toString();
-				Key key = new Key(entity.getClass(), id);
-				FirstLevelEntityCache entityCache = firstLevelCacheProvider.getEntityCache();
-
-					entityCache.put(key, entity);
-			}
+		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
+			String id = dbObject.get(ID_KEY).toString();
+			Key key = new Key(entity.getClass(), id);
+			retrieved.put(key, entity);
 		}
 		mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);
 		return entity;
-	}
-	
-	public FirstLevelCacheProvider getFirstLevelCacheProvider() {
-		return firstLevelCacheProvider;
 	}
 }

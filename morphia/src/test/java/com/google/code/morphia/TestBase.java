@@ -6,7 +6,6 @@ package com.google.code.morphia;
 import org.junit.After;
 import org.junit.Before;
 
-import com.google.code.morphia.mapping.cache.first.ScopedFirstLevelCacheProvider;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 
@@ -35,6 +34,6 @@ public abstract class TestBase
 	
 	@After
 	public void tearDown() {
-		new ScopedFirstLevelCacheProvider().release();
+//		new ScopedFirstLevelCacheProvider().release();
 	}
 }

@@ -18,7 +18,6 @@ import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.google.code.morphia.mapping.cache.first.FirstLevelEntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.Query;
@@ -104,11 +103,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T, V> void delete(Class<T> clazz, V id) {
-		
-		FirstLevelEntityCache ec = morphia.getMapper().getFirstLevelCacheProvider().getEntityCache();
-		Key key = new Key(clazz, id);
-		ec.removeByKey(key);
-
 		DBCollection dbColl = getCollection(clazz);
 		delete(dbColl, id);
 	}
@@ -367,13 +361,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> T getByKey(Class<T> clazz, Key<T> key) {
 		Mapper mapr = morphia.getMapper();
-		//		
-		// TODO us experimental
-		FirstLevelEntityCache ec = mapr.getFirstLevelCacheProvider().getEntityCache();
-		Object cached = ec.get(key);
-		if (cached != null) {
-			return (T) cached;
-		}
 
 		String kind = mapr.getCollectionName(clazz);
 		String keyKind = key.updateKind(mapr);
@@ -525,11 +512,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
 			key.setKindClass((Class<? extends T>) entity.getClass());
 			
-			//			
-			// TODO us experimental
-			FirstLevelEntityCache ec = mapr.getFirstLevelCacheProvider().getEntityCache();
-			ec.removeByKey(key);
-
 			return key;
 		} finally {
 			// TODO scary message from driver ... db.requestDone();
