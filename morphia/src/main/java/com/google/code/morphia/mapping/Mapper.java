@@ -345,7 +345,7 @@ public class Mapper {
 						|| mf.isTypeMongoCompatible())
 					valueMapper.fromDBObject(dbObject, mf, entity);
 				else if (mf.hasAnnotation(Embedded.class))
-					embeddedMapper.fromDBObject(dbObject, mf, entity);
+					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				else if (mf.hasAnnotation(Reference.class))
 					referenceMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				else

@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
@@ -92,16 +93,16 @@ class EmbeddedMapper {
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity) {
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key, Object> retrieved) {
 		String name = mf.getName();
 		
 		Class fieldType = mf.getType();
 		try {
 			
 			if (mf.isMap()) {
-				readMap(dbObject, mf, entity, name);
+				readMap(dbObject, mf, entity, name, retrieved);
 			} else if (mf.isMultipleValues()) {
-				readCollection(dbObject, mf, entity, name);
+				readCollection(dbObject, mf, entity, name, retrieved);
 			} else {
 				// single document
 				if (dbObject.containsField(name)) {
@@ -119,7 +120,7 @@ class EmbeddedMapper {
 	}
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
-			String name) {
+			String name, final Map<Key, Object> retrieved) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
 		Collection values = (Collection) ReflectionUtils.newInstance(
@@ -133,7 +134,7 @@ class EmbeddedMapper {
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
-				newEntity = mapper.fromDb(dbObj, newEntity, null);
+				newEntity = mapper.fromDb(dbObj, newEntity, retrieved);
 				values.add(newEntity);
 			}
 		}
@@ -148,7 +149,7 @@ class EmbeddedMapper {
 	}
 
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
-			String name) {
+			String name, Map<Key, Object> retrieved) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		if (dbObject.containsField(name)) {
@@ -156,7 +157,7 @@ class EmbeddedMapper {
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object newEntity = ReflectionUtils.createInstance(mf.getSubType(), (BasicDBObject) entry.getValue());
 				
-				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, null);
+				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, retrieved);
 				Object objKey = converters.decode(mf.getMapKeyType(), entry.getKey());
 				map.put(objKey, newEntity);
 			}

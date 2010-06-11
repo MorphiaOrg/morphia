@@ -129,20 +129,24 @@ public class MappedClass {
 		
 		for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
 			field.setAccessible(true);
-			if (field.isAnnotationPresent(Id.class)) {
-				idField = field;
-				MappedField mf = new MappedField(idField);
-				persistenceFields.add(mf);
-			} else if (field.isAnnotationPresent(Transient.class) || 
-					(mapr.getOptions().actLikeSerializer && ((field.getModifiers() & Modifier.TRANSIENT) == Modifier.TRANSIENT))) {
+			int fieldMods = field.getModifiers();
+			if (field.isAnnotationPresent(Transient.class))
 				continue;
-			} else if (mapr.getOptions().ignoreFinals && ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL)) {
+			else if ( field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT )
 				continue;
+			else if (mapr.getOptions().actLikeSerializer && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT))
+				continue;
+			else if (mapr.getOptions().ignoreFinals && ((fieldMods & Modifier.FINAL) == Modifier.FINAL))
+				continue;
+			else if (field.isAnnotationPresent(Id.class)) {
+					idField = field;
+					MappedField mf = new MappedField(idField);
+					persistenceFields.add(mf);
 			} else if (	field.isAnnotationPresent(Property.class) ||
-					field.isAnnotationPresent(Reference.class) ||
-					field.isAnnotationPresent(Embedded.class) ||
-					isSupportedType(field.getType()) ||
-					ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
+						field.isAnnotationPresent(Reference.class) ||
+						field.isAnnotationPresent(Embedded.class) ||
+						isSupportedType(field.getType()) ||
+						ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
 				persistenceFields.add(new MappedField(field));
 			} else {
 				if(mapr.getOptions().defaultFieldAnnotation != null)
