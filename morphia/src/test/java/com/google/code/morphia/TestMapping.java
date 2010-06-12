@@ -177,6 +177,11 @@ public class TestMapping  extends TestBase {
 		public Map<String, Long> values = new HashMap();
 	}
 
+	public static class ContainsEmbeddedEntity{
+		@Id String id;
+		@Embedded ContainsIntegerList cil = new ContainsIntegerList();
+	}
+
 	public enum Enum1 { A, B }
 
 	public static class ContainsIntegerList {
@@ -225,6 +230,18 @@ public class TestMapping  extends TestBase {
 	}
 
 	@Test
+    public void testEmbeddedEntity() throws Exception {
+		morphia.map(ContainsEmbeddedEntity.class);
+		ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
+		ds.save(cee);
+		ContainsEmbeddedEntity ceeLoaded = ds.find(ContainsEmbeddedEntity.class).get();
+		assertNotNull(ceeLoaded);
+		assertNotNull(ceeLoaded.id);
+		assertNotNull(ceeLoaded.cil);
+		assertNull(ceeLoaded.cil.id);
+	}
+
+	@Test
     public void testEnumKeyedMap() throws Exception {
 		ContainsEnum1KeyMap map = new ContainsEnum1KeyMap();
 		map.values.put(Enum1.A,"I'm a");
@@ -239,7 +256,7 @@ public class TestMapping  extends TestBase {
 		assertNotNull(mapLoaded.values.get(Enum1.A));
 		assertNotNull(mapLoaded.values.get(Enum1.B));
 	}
-	
+
 	@Test
     public void testIntLists() throws Exception {
 		ContainsIntegerList cil = new ContainsIntegerList();
