@@ -24,8 +24,8 @@ public class LazyReferenceOnArray extends FieldConstraint {
 		if (ref != null && ref.lazy()) {
 			Class type = mf.getType();
 			if (type.isArray())
-				ve.add(new ConstraintViolation(Level.FATAL, mc, mf,
-						"You cannot use lazy references on Arrays. If you need it lazy, use an ArrayList instead."));
+				ve.add(new ConstraintViolation(Level.FATAL, mc, mf, this.getClass(),
+						"The lazy attribute cannot be used for an Array. If you need a lazy array please use ArrayList instead."));
 		}
 	}
 	

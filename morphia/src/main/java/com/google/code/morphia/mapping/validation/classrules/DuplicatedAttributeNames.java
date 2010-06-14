@@ -23,8 +23,8 @@ public class DuplicatedAttributeNames implements ClassConstraint {
 				continue;
 			}
 			if (!foundNames.add(currentName)) {
-				ve.add(new ConstraintViolation(Level.FATAL, mc, mappedField, "Attribute name '" + currentName
-						+ "' is present more than once."));
+				ve.add(new ConstraintViolation(Level.FATAL, mc, mappedField, this.getClass(), "MongoDB field name '" + currentName
+						+ "' is duplicated; you cannot map different java fields to the same MongoDB field."));
 				duplicates.add(currentName);
 			}
 		}

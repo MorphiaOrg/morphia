@@ -24,7 +24,7 @@ public class ReferenceToUnidentifiable extends FieldConstraint {
 		if (mf.hasAnnotation(Reference.class)) {
 			Class realType = (mf.isSingleValue()) ? mf.getType() : mf.getSubType();
 			if ((!realType.isInterface() && mc.getMapper().getMappedClass(realType).getIdField() == null))
-				ve.add(new ConstraintViolation(Level.FATAL, mc, mf, mf.getFullName() + " is annotated as a @"
+				ve.add(new ConstraintViolation(Level.FATAL, mc, mf, this.getClass(), mf.getFullName() + " is annotated as a @"
 						+ Reference.class.getSimpleName() + " but the " + mf.getType().getName()
 						+ " class is missing the @" + Id.class.getSimpleName() + " annotation"));
 		}

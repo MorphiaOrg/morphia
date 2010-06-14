@@ -19,7 +19,7 @@ public class EmbeddedAndId implements ClassConstraint {
 
 	public void check(MappedClass mc, Set<ConstraintViolation> ve) {
         if (mc.getEmbeddedAnnotation() != null && mc.getIdField() != null) {
-			ve.add(new ConstraintViolation(Level.FATAL, mc, "@" + Embedded.class.getSimpleName()
+			ve.add(new ConstraintViolation(Level.FATAL, mc, this.getClass(), "@" + Embedded.class.getSimpleName()
 					+ " classes cannot specify a @Id field"));
         }
 	}

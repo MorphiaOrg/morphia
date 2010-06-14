@@ -13,22 +13,27 @@ public class ConstraintViolation {
 
 	private final MappedClass clazz;
 	private MappedField field = null;
+	private Class<? extends ClassConstraint> validator;
 	private final String message;
 	private final Level level;
 
-	public ConstraintViolation(Level level, MappedClass clazz, MappedField field, String message) {
-		this(level, clazz, message);
+	public ConstraintViolation(Level level, MappedClass clazz, MappedField field, Class<? extends ClassConstraint> validator, String message) {
+		this(level, clazz, validator, message);
 		this.field = field;
 	}
 	
-	public ConstraintViolation(Level level, MappedClass clazz, String message) {
+	public ConstraintViolation(Level level, MappedClass clazz, Class<? extends ClassConstraint> validator, String message) {
 		this.level = level;
 		this.clazz = clazz;
 		this.message = message;
+		this.validator = validator;
 	}
 	
 	public String render() {
-		return clazz.getClazz().getName() + ((field != null) ? "." + field.getClassFieldName() : "") + ": " + message;
+		return String.format("%s complained about %s : %s",
+				validator.getSimpleName(),
+				getPrefix(),
+				message);
 	}
 
 	public Level getLevel() {
@@ -39,5 +44,4 @@ public class ConstraintViolation {
 		String fn = (field != null) ? field.getClassFieldName() : "";
 		return clazz.getClazz().getName() + "." + fn;
 	}
-
 }

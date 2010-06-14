@@ -3,6 +3,7 @@
  */
 package com.google.code.morphia.mapping.validation.fieldrules;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class MapKeyDifferentFromStringTest extends TestBase {
 	public static class MapWithWrongKeyType3 extends TestEntity {
 		private static final long serialVersionUID = 1L;
 		@Embedded
-		Map<Integer, Integer> shouldBeOk = new HashMap();
+		Map<BigDecimal, Integer> shouldBeOk = new HashMap();
 		
 	}
 	

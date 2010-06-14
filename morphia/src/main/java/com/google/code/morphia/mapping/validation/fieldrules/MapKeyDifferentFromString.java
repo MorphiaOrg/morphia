@@ -18,17 +18,18 @@ import com.google.code.morphia.utils.ReflectionUtils;
  */
 @SuppressWarnings("unchecked")
 public class MapKeyDifferentFromString extends FieldConstraint {
+	final private static String supportedExample = "(Map<String/Enum/Long/..., ?>)";
 	@Override
 	protected void check(MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
 		if (mf.isMap() && (!mf.hasAnnotation(Serialized.class))) {
 			Class parameterizedClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
 			if (parameterizedClass == null) {
-				ve.add(new ConstraintViolation(Level.WARNING, mc, mf,
-						"Maps must be keyed by type String (Map<String,?>). Use parametrized types if possible."));
-			} else if (!parameterizedClass.equals(String.class))
+				ve.add(new ConstraintViolation(Level.WARNING, mc, mf, this.getClass(),
+						"Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported " + supportedExample));
+			} else if (!parameterizedClass.equals(String.class) && !ReflectionUtils.isPrimitiveLike(parameterizedClass))
 				ve
-						.add(new ConstraintViolation(Level.FATAL, mc, mf,
-								"Maps must be keyed by type String (Map<String,?>)"));
+						.add(new ConstraintViolation(Level.FATAL, mc, mf, this.getClass(),
+								"Maps must be keyed by a simple type " + supportedExample + "; " + parameterizedClass + " is not supported as a map key type."));
 		}
 	}
 }

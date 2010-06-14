@@ -21,7 +21,7 @@ public class EntityAndEmbed implements ClassConstraint {
 	public void check(MappedClass mc, Set<ConstraintViolation> ve) {
 		
 		if (mc.getEntityAnnotation() != null && mc.getEmbeddedAnnotation() != null) {
-			new ConstraintViolation(Level.FATAL, mc, "Cannot have both @" + Entity.class.getSimpleName() + " and @"
+			new ConstraintViolation(Level.FATAL, mc, this.getClass(), "Cannot have both @" + Entity.class.getSimpleName() + " and @"
 					+ Embedded.class.getSimpleName() + " annotation at class level.");
 		}
 		

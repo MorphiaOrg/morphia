@@ -23,7 +23,7 @@ public class MultipleId implements ClassConstraint {
 		List<MappedField> idFields = mc.getFieldsAnnotatedWith(Id.class);
 		
 		if (idFields.size() > 1) {
-			ve.add(new ConstraintViolation(Level.FATAL, mc, "More than one @" + Id.class.getSimpleName()
+			ve.add(new ConstraintViolation(Level.FATAL, mc, this.getClass(), "More than one @" + Id.class.getSimpleName()
 					+ " Field found (" + new FieldEnumString(idFields)
 					+ ")."));
 		}

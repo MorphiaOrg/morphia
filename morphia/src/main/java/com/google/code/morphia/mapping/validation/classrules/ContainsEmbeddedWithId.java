@@ -60,7 +60,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint
             }
             if (hasTypeFieldAnnotation(clazz, Id.class))
             {
-                ve.add(new ConstraintViolation(Level.FATAL, mc,
+                ve.add(new ConstraintViolation(Level.FATAL, mc, this.getClass(),
                         "You cannot use @Id on any field of an Embedded/Property object"));
             }
             alreadyInspectedClasses.add(clazz);

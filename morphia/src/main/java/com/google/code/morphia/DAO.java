@@ -25,6 +25,12 @@ public class DAO<T,K extends Serializable> {
     	initDS(mongo, morphia, dbName);
     	initType(entityClass);
     }
+    
+    public DAO( Class<T> entityClass, Datastore ds) {
+    	this.ds = (DatastoreImpl) ds;
+    	initType(entityClass);
+    }
+    
     /** 
      * <p>Only calls this from your derived class when you explicitly declare the generic types with concrete classes </p>
      * <p>{@code class MyDao extends DAO<MyEntity, String>}</p> 
@@ -33,11 +39,16 @@ public class DAO<T,K extends Serializable> {
     	initDS(mongo, morphia, dbName);
     	initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
+    protected DAO( Datastore ds) {
+    	this.ds = (DatastoreImpl)ds;
+    	initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
+    }
     
     protected void initType(Class<T> type) {
         this.entityClazz = type;
         ds.getMapper().addMappedClass(type);	
     }
+    
     protected void initDS(Mongo mon, Morphia mor, String db) {
         ds = new DatastoreImpl(mor, mon, db);
     }
