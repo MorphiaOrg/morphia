@@ -46,7 +46,7 @@ public class TestPerf  extends TestBase{
 
 	@Test @Ignore
     public void testAddressInsertPerf() throws Exception {
-    	int count = 10000;
+    	int count = 100000;
     	long startTicks = new Date().getTime();
     	insertAddresses(count, true);
     	long endTicks = new Date().getTime();
@@ -65,7 +65,7 @@ public class TestPerf  extends TestBase{
 
     @Test @Ignore
     public void testAddressInsertThreadedPerf() throws Exception {
-    	int count = 10000;
+    	int count = 100000;
 
 //    	ThreadPool<>
     	//TODO add thread pool here to test concurrency

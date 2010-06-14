@@ -237,7 +237,7 @@ public class QueryImpl<T> implements Query<T> {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			else
+		else
 			mappedValue = ReflectionUtils.asObjectIdMaybe(mapr.toMongoObject(value));
 		
 		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;

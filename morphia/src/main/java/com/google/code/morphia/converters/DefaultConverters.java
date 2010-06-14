@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.code.morphia.mapping.MappedField;
+import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
 import com.mongodb.DBObject;
 
@@ -103,5 +104,10 @@ public class DefaultConverters {
 	
 	public Object encode(Class c, Object o) {
 		return getEncoder(c).encode(o);
+	}
+
+	public void setMapper(Mapper mapr) {
+		for(TypeConverter tc : knownEncoders)
+			tc.setMapper(mapr);
 	}
 }

@@ -4,6 +4,7 @@
 package com.google.code.morphia.converters;
 
 import com.google.code.morphia.mapping.MappedField;
+import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 
 /**
@@ -11,6 +12,8 @@ import com.google.code.morphia.mapping.MappingException;
  */
 @SuppressWarnings("unchecked")
 public abstract class TypeConverter {
+	protected Mapper mapr;
+
 	abstract boolean canHandle(Class c, MappedField optionalExtraInfo);
 	
 	final boolean canHandle(Class c) {
@@ -42,5 +45,9 @@ public abstract class TypeConverter {
 	
 	final boolean canHandle(MappedField mf) {
 		return canHandle(mf.getType(), mf);
+	}
+
+	public void setMapper(Mapper mapr) {
+		this.mapr = mapr;
 	}
 }

@@ -239,75 +239,7 @@ public class MappedClass {
 	
 	@SuppressWarnings("deprecation")
 	public void validate() {
-		
 		new MappingValidator().validate(this);
-		
-		// No @Entity with @Embedded
-		//
-		// moved to EntityOrEmbed
-		//
-		// if (getEntityAnnotation() != null && getEmbeddedAnnotation() != null
-		// ) {
-		// throw new MappingException(
-		// "In [" + getClazz().getName()
-		// +
-		// "]: Cannot have both @Entity and @Embedded annotation at class level.");
-		// }
-		
-		
-		// for (MappedField mf : persistenceFields) {
-		// if (log.isLoggable(Level.FINE)) {
-		// log.finer("Processing field: " + mf.getFullName());
-		// }
-		//
-		// //a field can be a Value, Reference, or Embedded
-		// if ( mf.hasAnnotation(Property.class) ) {
-		// // make sure that the property type is supported
-		// if (mf.isSingleValue() && !mf.isTypeMongoCompatible()) {
-		// throw new MappingException(mf.getFullName()
-		// +
-		// " is annotated as @Property but is a type that cannot be mapped (type is "
-		// + mf.getType().getName() + ").");
-		// }
-		// } else if (mf.hasAnnotation(Reference.class)) {
-		//
-		// Class realType = (mf.isSingleValue()) ? mf.getType() :
-		// mf.getSubType();
-		// if ((!realType.isInterface() &&
-		// mapr.getMappedClass(realType).getIdField()==null))
-		// throw new MappingException(mf.getFullName()
-		// + " is annotated as a @Reference but the " + mf.getType().getName() +
-		// " class is missing the @Id annotation");
-		// }
-		// }
-		
-		//Only embedded class can have no id field
-		//
-		// moved to NoId
-		//
-		// if (getIdField() == null && getEmbeddedAnnotation() == null) {
-		// throw new MappingException("In [" + getClazz().getName() +
-		// "]: No field is annotated with @Id; but it is required");
-		// }
-		
-		//Embedded classes should not have an id
-		//
-		// moved to EmbeddedAndId
-		//
-		// if (getEmbeddedAnnotation() != null && getIdField() != null) {
-		// throw new MappingException("In [" + getClazz().getName() +
-		// "]: @Embedded classes cannot specify a @Id field");
-		// }
-		
-		//Embedded classes can not have a fieldName value() specified
-		//
-		// moved to EmbeddedAndValue
-		//
-		// if (getEmbeddedAnnotation() != null &&
-		// !getEmbeddedAnnotation().value().equals(Mapper.IGNORED_FIELDNAME)) {
-		// throw new MappingException("In [" + getClazz().getName() +
-		// "]: @Embedded classes cannot specify a fieldName value(); this is on applicable on fields");
-		// }
 	}
 	
 	@Override

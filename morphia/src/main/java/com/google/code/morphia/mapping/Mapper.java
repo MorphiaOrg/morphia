@@ -74,6 +74,9 @@ public class Mapper {
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 	MapperOptions opts = new MapperOptions();
 	
+	public Mapper() {
+		converters.setMapper(this);
+	}
 	/**
 	 * <p>
 	 * Adds an {@link EntityInterceptor}
@@ -221,6 +224,10 @@ public class Mapper {
 		}
 		Class origClass = javaObj.getClass();
 		Object newObj = converters.encode(origClass, javaObj);
+		if (newObj == null) {
+			logger.warning("converted " + javaObj + " to null");
+			return newObj;
+		}
 		Class type = newObj.getClass();
 		boolean bSameType = origClass.equals(type);
 		boolean bSingleValue = true;

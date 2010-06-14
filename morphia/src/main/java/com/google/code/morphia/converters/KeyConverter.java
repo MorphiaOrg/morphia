@@ -25,12 +25,11 @@ public class KeyConverter extends TypeConverter {
 		return new Key((DBRef) o);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	Object encode(Object t, MappedField optionalExtraInfo) {
 		if (t == null)
 			return null;
-		return ((Key) t).toRef();
+		return ((Key) t).toRef(mapr);
 	}
 	
 }
