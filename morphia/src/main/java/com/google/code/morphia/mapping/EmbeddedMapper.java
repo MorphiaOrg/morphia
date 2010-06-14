@@ -108,7 +108,7 @@ class EmbeddedMapper {
 				if (dbObject.containsField(name)) {
 					BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
 					Object refObj = ReflectionUtils.createInstance(fieldType, dbVal);
-					refObj = mapper.fromDb(dbVal, refObj, null);
+					refObj = mapper.fromDb(dbVal, refObj, retrieved);
 					if (refObj != null) {
 						mf.setFieldValue(entity, refObj);
 					}
