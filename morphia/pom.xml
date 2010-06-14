@@ -4,7 +4,7 @@
     <groupId>com.google.code.morphia</groupId>
     <artifactId>morphia</artifactId>
     <packaging>jar</packaging>
-    <version>0.93-SNAPSHOT</version>
+    <version>0.94-SNAPSHOT</version>
     <name>morphia</name>
     
     <url>http://code.google.com/p/morphia/</url>
@@ -33,6 +33,10 @@
         	<name>Scott Hernandez</name>
         	<email>scotthernandez (hot/g mail)</email>
         	<timezone>(GMT-08:00) Pacific Time(US &amp; Canada)</timezone>
+        </developer>
+        <developer>
+        	<id>us@thomas-daily.de</id>
+        	<name>Uwe Schäfer</name>
         </developer>
     </developers>
 

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -50,6 +51,7 @@ import com.google.code.morphia.testmodel.RecursiveChild;
 import com.google.code.morphia.testmodel.RecursiveParent;
 import com.google.code.morphia.testmodel.Translation;
 import com.google.code.morphia.testmodel.TravelAgency;
+import com.google.code.morphia.testutil.AssertedFailure;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -57,19 +59,17 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /**
- *
- *
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
 public class TestMapping  extends TestBase {
 	
-//	@Embedded
-//	public static class CustomId {
-//		ObjectId id;
-//		String type;
-//	}
+	@Embedded
+	public static class CustomId {
+		ObjectId id;
+		String type;
+	}
 	
 	@Entity
 	public static class KeyAsId {
@@ -623,6 +623,18 @@ public class TestMapping  extends TestBase {
         } finally {
             db.dropDatabase();
         }
+    }
+    @Test
+    public void testReferenceWithoutIdValue() throws Exception {
+		new AssertedFailure(MappingException.class) {
+			public void thisMustFail() throws Throwable {
+		        RecursiveParent parent = new RecursiveParent();
+		        RecursiveChild child = new RecursiveChild();
+		        parent.setChild(child);
+		        ds.save(parent);
+			}
+		};
+
     }
 
     @Test

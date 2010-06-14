@@ -41,6 +41,9 @@ class ReferenceMapper {
 		
 		Object fieldValue = mf.getFieldValue(entity);
 		
+		if (fieldValue == null && !opts.storeNulls)
+			return;
+		
 		if (mf.isMap()) {
 			writeMap(mf, dbObject, name, fieldValue, opts);
 		} else if (mf.isMultipleValues()) {
@@ -52,11 +55,8 @@ class ReferenceMapper {
 	}
 	
 	private void writeSingle(final BasicDBObject dbObject, String name, Object fieldValue) {
-		if (fieldValue != null) {
-			DBRef dbrefFromKey = getKey(fieldValue).toRef(mapper);
-			dbObject.put(name, dbrefFromKey);
-
-		}
+		DBRef dbrefFromKey = getKey(fieldValue).toRef(mapper);
+		dbObject.put(name, dbrefFromKey);
 	}
 	
 	private void writeCollection(final MappedField mf, final BasicDBObject dbObject, String name, Object fieldValue, MapperOptions opts) {
@@ -120,6 +120,8 @@ class ReferenceMapper {
 			}
 			MappedClass mappedClass = mapper.getMappedClass(entity);
 			Object id = mappedClass.getIdField().get(entity);
+			if (id == null) 
+				throw new MappingException("@Id field cannot be null!");
 			Key key = new Key(mappedClass.getCollectionName(), ReflectionUtils.asObjectIdMaybe(id));
 			return key;
 		} catch (IllegalAccessException iae) {
