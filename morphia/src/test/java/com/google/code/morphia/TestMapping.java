@@ -192,6 +192,8 @@ public class TestMapping  extends TestBase {
 	public static class ContainsEnum1KeyMap{
 		@Id String id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
+		@Embedded
+		public Map<Enum1, String> embeddedValues = new HashMap<Enum1,String>();
 	}
 
 	public static class ContainsIntKeyMap{
@@ -246,6 +248,8 @@ public class TestMapping  extends TestBase {
 		ContainsEnum1KeyMap map = new ContainsEnum1KeyMap();
 		map.values.put(Enum1.A,"I'm a");
 		map.values.put(Enum1.B,"I'm b");
+		map.embeddedValues.put(Enum1.A,"I'm a");
+		map.embeddedValues.put(Enum1.B,"I'm b");
 		
 		Key<?> mapKey = ds.save(map);
 		
@@ -255,6 +259,9 @@ public class TestMapping  extends TestBase {
 		assertEquals(2,mapLoaded.values.size());
 		assertNotNull(mapLoaded.values.get(Enum1.A));
 		assertNotNull(mapLoaded.values.get(Enum1.B));
+		assertEquals(2,mapLoaded.embeddedValues.size());
+		assertNotNull(mapLoaded.embeddedValues.get(Enum1.A));
+		assertNotNull(mapLoaded.embeddedValues.get(Enum1.B));
 	}
 
 	@Test
