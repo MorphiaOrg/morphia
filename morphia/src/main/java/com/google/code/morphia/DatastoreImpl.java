@@ -381,12 +381,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public DBCollection getCollection(Class clazz) {
 		String collName = morphia.getMapper().getCollectionName(clazz);
-		return getDB().getCollection(collName);
+		DBCollection dbC = getDB().getCollection(collName);
+		dbC.setWriteConcern(WriteConcern.STRICT);
+		return dbC;
 	}
 
 	public DBCollection getCollection(Object obj) {
-		String collName = morphia.getMapper().getCollectionName(obj);
-		return getDB().getCollection(collName);
+		if (obj == null) return null;
+		return getCollection(obj.getClass());
 	}
 	
 
@@ -440,10 +442,66 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return this.morphia.getMapper();
 	}
 	
+	public <T> Iterable<Key<T>> insert(Iterable<T> entities) {
+		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
+		for (T ent : entities)
+			savedKeys.add(insert(ent));
+		return savedKeys;
+	}
 
+	public <T> Iterable<Key<T>> insert(T...entities) {
+		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
+		for (T ent : entities)
+			savedKeys.add(insert(ent));
+		return savedKeys;
+	}
+	
+	public <T> Key<T> insert(T entity) {
+		entity = ProxyHelper.unwrap(entity);
+		DBCollection dbColl = getCollection(entity);
+		return insert(dbColl, entity);
+	}
+
+	public <T> Key<T> insert(String kind, T entity) {
+		entity = ProxyHelper.unwrap(entity);
+		DBCollection dbColl = getDB().getCollection(kind);
+		return insert(dbColl, entity);
+	}
+	
+	protected <T> Key<T> insert(DBCollection dbColl, T entity) {
+		entity = ProxyHelper.unwrap(entity);
+		Mapper mapr = morphia.getMapper();
+		
+		DB db = dbColl.getDB();
+		// TODO scary message from driver ... db.requestStart();
+		try {
+			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+			
+			dbColl.insert(dbObj);
+			
+			if (dbObj.get(Mapper.ID_KEY) == null)
+				throw new MappingException("Missing _id after save!");
+			
+			if (dbColl.getWriteConcern() == WriteConcern.STRICT) {
+				DBObject lastErr = db.getLastError();
+				if (lastErr.get("err") != null)
+					throw new MappingException("Error: " + lastErr.toString());
+			}
+			postSaveOperations(entity, dbObj, dbColl, involvedObjects);
+			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
+			key.setKindClass((Class<? extends T>) entity.getClass());
+			
+			return key;
+		} finally {
+			// TODO scary message from driver ... db.requestDone();
+		}
+		
+	}
+
+	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
-		// for now, do it one at a time.
 		for (T ent : entities)
 			savedKeys.add(save(ent));
 		return savedKeys;
@@ -453,7 +511,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> Iterable<Key<T>> save(T... entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
-		// for now, do it one at a time.
 		for (T ent : entities)
 			savedKeys.add(save(ent));
 		return savedKeys;
@@ -465,13 +522,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
-
-
 		DB db = dbColl.getDB();
 		// TODO scary message from driver ... db.requestStart();
 		try {
-			
-
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 			

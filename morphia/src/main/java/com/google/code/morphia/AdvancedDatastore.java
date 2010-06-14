@@ -29,4 +29,11 @@ public interface AdvancedDatastore extends Datastore {
 	<T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size);
 	<T> Key<T> save(String kind, T entity);
 	<T> void delete(String kind, T id);
+	
+	<T> Key<T> insert(String kind, T entity);
+	
+	<T> Key<T> insert(T entity);
+	<T> Iterable<Key<T>> insert(T... entities);
+	<T> Iterable<Key<T>> insert(Iterable<T>entities);
+
 }
