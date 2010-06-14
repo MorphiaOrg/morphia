@@ -47,7 +47,6 @@ public class DefaultConverters {
 		
 		// TODO discuss: maybe a config parameter? last resort
 		knownEncoders.add(new PassthroughConverter());
-		
 	}
 	
 	public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {

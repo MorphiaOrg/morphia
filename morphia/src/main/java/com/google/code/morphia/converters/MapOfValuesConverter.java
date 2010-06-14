@@ -24,6 +24,7 @@ public class MapOfValuesConverter extends TypeConverter {
 	
 	@Override
 	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+		//TODO See about removing extra reflection and checking type.
 		return ReflectionUtils.isMap(c);
 	}
 	

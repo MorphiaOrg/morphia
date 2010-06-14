@@ -21,6 +21,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 @SuppressWarnings("unchecked")
 public class CollectionConverter extends TypeConverter {
 	private final DefaultConverters chain;
+	//TODO: should this be Iterable<T>, not a Collection<T> converter?
 	
 	public CollectionConverter(DefaultConverters chain) {
 		this.chain = chain;
