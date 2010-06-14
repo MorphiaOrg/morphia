@@ -1,6 +1,5 @@
 package com.google.code.morphia;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
@@ -110,15 +109,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
 		DBCollection dbColl = getCollection(clazz);			
 		DBObject q = null;
-		//TODO: replace with cursor.getQuery() in next update of the driver (pull request in).
-		try {
-			DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY, ids)).prepareCursor();
-			Field f = cursor.getClass().getField("_query");
-			f.setAccessible(true);
-			q = (DBObject) f.get(cursor);
-		} catch (Exception e) {
-			//do nothing, fall back to less efficient method below
-		}
+
+		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY, ids)).prepareCursor();
+		q = cursor.getQuery();
 		
 		if ( q!=null )
 			dbColl.remove(q);
