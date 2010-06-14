@@ -110,7 +110,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(clazz);			
 		DBObject q = null;
 
-		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY, ids)).prepareCursor();
+		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY + " in", ids)).prepareCursor();
 		q = cursor.getQuery();
 		
 		if ( q!=null )
