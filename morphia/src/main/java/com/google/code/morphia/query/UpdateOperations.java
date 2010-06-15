@@ -8,7 +8,7 @@ public interface UpdateOperations {
 
 	UpdateOperations add(String fieldExpr, Object value);
 	UpdateOperations add(String fieldExpr, Object value, boolean addDups);
-	UpdateOperations add(String fieldExpr, List<?> values, boolean addDups);
+	UpdateOperations addAll(String fieldExpr, List<?> values, boolean addDups);
 	
 	UpdateOperations removeFirst(String fieldExpr);
 	UpdateOperations removeLast(String fieldExpr);

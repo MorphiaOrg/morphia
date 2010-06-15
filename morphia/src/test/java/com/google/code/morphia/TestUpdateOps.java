@@ -16,9 +16,13 @@
 
 package com.google.code.morphia;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,6 +40,10 @@ import com.google.code.morphia.testutil.StandardTests;
  */
 public class TestUpdateOps  extends TestBase {
 
+	public static class ContainsIntArray{
+		protected @Id String id;
+		public Integer[] vals = {1,2,3};
+	}
 
 	public static class ContainsInt{
 		protected @Id String id;
@@ -99,6 +107,76 @@ public class TestUpdateOps  extends TestBase {
 		
 		ContainsInt ciLoaded = ds.find(ContainsInt.class).limit(1).get();
 		assertEquals(22, ciLoaded.val);
+	}
+
+	@Test
+    public void testAdd() throws Exception {
+		ContainsIntArray cIntArray = new ContainsIntArray();
+		ds.save(cIntArray);
+		ContainsIntArray cIALoaded = ds.get(cIntArray);
+		assertEquals(3, cIALoaded.vals.length);
+		assertArrayEquals((new ContainsIntArray()).vals, cIALoaded.vals);
+		
+		//add 4 to array
+		UpdateResults<ContainsIntArray > res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, false));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4}, cIALoaded.vals);
+
+		//add unique (4) -- noop
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, false));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4}, cIALoaded.vals);
+
+		//add dup 4
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, true));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4,4}, cIALoaded.vals);
+
+		//cleanup for next tests
+		ds.delete(ds.find(ContainsIntArray.class));
+		cIntArray = ds.getByKey(ContainsIntArray.class, ds.save(new ContainsIntArray()));
+		
+		//add [4,5]
+		List<Integer> newVals = new ArrayList<Integer>();
+		newVals.add(4);newVals.add(5);
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, false));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4,5}, cIALoaded.vals);
+		
+		//add them again... noop
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, false));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4,5}, cIALoaded.vals);
+
+		//add dups [4,5]
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, true));
+		assertEquals(0, res.getInsertedCount());
+		assertEquals(1, res.getUpdatedCount());
+		assertEquals(true, res.getUpdatedExisting());
+		
+		cIALoaded = ds.get(cIntArray);
+		assertArrayEquals(new Integer[]{1,2,3,4,5,4,5}, cIALoaded.vals);
+
 	}
 	
 	@Test

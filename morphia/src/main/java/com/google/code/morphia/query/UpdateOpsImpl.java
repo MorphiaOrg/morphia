@@ -49,14 +49,15 @@ public class UpdateOpsImpl implements UpdateOperations {
 		add((addDups) ? "$push" : "$addToSet", fieldExpr, dbObj);
 		return this;
 	}
-	
 
-	public UpdateOperations add(String fieldExpr, List<?> values, boolean addDups) {
-		List<Object> vals = toDBObjList(values);
-		add((addDups) ? "$pushAll" : "$addToSet", fieldExpr, vals);
+	public UpdateOperations addAll(String fieldExpr, List<?> values, boolean addDups) {
+		List<?> convertedValues = (List<?>)mapr.toMongoObject(values);
+		if(addDups)
+			add("$pushAll", fieldExpr, convertedValues);
+		else
+			add("$addToSet", fieldExpr, new BasicDBObject("$each", convertedValues));
 		return this;
 	}
-
 
 	public UpdateOperations dec(String fieldExpr) {
 		return inc(fieldExpr, -1);
