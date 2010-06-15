@@ -110,13 +110,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(clazz);			
 		DBObject q = null;
 
-		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY + " in", ids)).prepareCursor();
+		List objIds = new ArrayList();
+		for (V id : ids) {
+			objIds.add(ReflectionUtils.asObjectIdMaybe(id));
+		}
+		
+		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY + " in", objIds)).prepareCursor();
 		q = cursor.getQuery();
 		
 		if ( q!=null )
 			dbColl.remove(q);
 		else
-			for (V id : ids)
+			for (Object id : objIds)
 				delete(clazz, id);
 	}
 	
