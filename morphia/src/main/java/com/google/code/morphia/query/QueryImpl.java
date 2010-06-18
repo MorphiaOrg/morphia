@@ -282,8 +282,8 @@ public class QueryImpl<T> implements Query<T> {
 			if (mf == null) {
 				mf = mc.getMappedFieldByClassField(part);
 				if (mf != null)
-					throw new MappingException("The field '" + part + "' is named '" + mf.getName() + "' in '" + this.clazz.getName()+ "' " +
-							"(while validating - '" + prop + "'); Please use '" + mf.getName() + "' in your query.");
+					throw new MappingException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
+							"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
 				else
 					throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
 			}

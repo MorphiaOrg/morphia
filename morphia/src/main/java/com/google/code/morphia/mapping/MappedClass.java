@@ -199,7 +199,9 @@ public class MappedClass {
 	/** Returns the MappedField by the name that will stored in mongodb */
 	public MappedField getMappedField(String name) {
 		for(MappedField mf : persistenceFields)
-			if (name.equals(mf.getName())) return mf;
+			for(String n : mf.getLoadNames())
+				if (name.equals(n)) 
+					return mf;
 		
 		return null;
 	}

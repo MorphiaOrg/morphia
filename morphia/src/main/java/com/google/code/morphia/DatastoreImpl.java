@@ -201,7 +201,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
-				ensureIndex(mc.getClazz(), index.name(), Collections.singleton(new IndexFieldDef(mf.getName(), index
+				ensureIndex(mc.getClazz(), index.name(), Collections.singleton(new IndexFieldDef(mf.getNameToStore(), index
 						.value())), index.unique(), index.dropDups());
 			}
 		}
@@ -477,6 +477,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 			
 			dbColl.insert(dbObj);
+			List<? extends DBObject> obj = new ArrayList();
+			dbColl.insert((List<DBObject>)obj);
 			
 			if (dbObj.get(Mapper.ID_KEY) == null)
 				throw new MappingException("Missing _id after save!");

@@ -37,7 +37,7 @@ class ReferenceMapper {
 	
 	void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject, MapperOptions opts) {
 		
-		String name = mf.getName();
+		String name = mf.getNameToStore();
 		
 		Object fieldValue = mf.getFieldValue(entity);
 		
@@ -130,7 +130,7 @@ class ReferenceMapper {
 	}
 	
 	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key,Object> retrieved) {
-		String name = mf.getName();
+		String name = mf.getNameToStore();
 		
 		Class fieldType = mf.getType();
 		

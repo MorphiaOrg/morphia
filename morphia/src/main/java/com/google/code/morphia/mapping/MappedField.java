@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.code.morphia.annotations.AlsoLoad;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -45,7 +46,7 @@ public class MappedField {
 	// mappingAnnotations)
 	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
 			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
-					Version.class));
+					Version.class, AlsoLoad.class));
 	
 	// the type (T) for the Collection<T>/T[]/Map<?,T>
 	private Class subType = null;
@@ -143,8 +144,19 @@ public class MappedField {
 	}
 	
 	/** Returns the name of the field's (key)name for mongodb */
-	public String getName() {
+	public String getNameToStore() {
 		return name;
+	}
+	/** Returns the name of the field's (key)name for mongodb */
+	public List<String> getLoadNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		names.add(name);
+		
+		AlsoLoad al = (AlsoLoad)this.mappingAnnotations.get(AlsoLoad.class);
+		if (al != null && al.value() != null && al.value().length > 0)
+			names.addAll( Arrays.asList(al.value()));
+		
+		return names;
 	}
 	
 	/** Returns the name of the field, as declared on the class */

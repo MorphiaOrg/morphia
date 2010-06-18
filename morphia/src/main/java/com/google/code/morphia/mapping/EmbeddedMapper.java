@@ -30,7 +30,7 @@ class EmbeddedMapper {
 	
 	void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject,
 			final LinkedHashMap<Object, DBObject> involvedObjects, MapperOptions opts) {
-		String name = mf.getName();
+		String name = mf.getNameToStore();
 		
 		Object fieldValue = mf.getFieldValue(entity);
 		
@@ -94,15 +94,15 @@ class EmbeddedMapper {
 	}
 	
 	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key, Object> retrieved) {
-		String name = mf.getName();
+		String name = mf.getNameToStore();
 		
 		Class fieldType = mf.getType();
 		try {
 			
 			if (mf.isMap()) {
-				readMap(dbObject, mf, entity, name, retrieved);
+				readMap(dbObject, mf, entity, retrieved);
 			} else if (mf.isMultipleValues()) {
-				readCollection(dbObject, mf, entity, name, retrieved);
+				readCollection(dbObject, mf, entity, retrieved);
 			} else {
 				// single document
 				if (dbObject.containsField(name)) {
@@ -120,12 +120,13 @@ class EmbeddedMapper {
 	}
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
-			String name, final Map<Key, Object> retrieved) {
+			final Map<Key, Object> retrieved) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
 		Collection values = (Collection) ReflectionUtils.newInstance(
 				mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
 		
+		String name = mf.getNameToStore();
 		if (dbObject.containsField(name)) {
 			Object dbVal = dbObject.get(name);
 			
@@ -149,9 +150,10 @@ class EmbeddedMapper {
 	}
 
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
-			String name, Map<Key, Object> retrieved) {
+			Map<Key, Object> retrieved) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
+		String name = mf.getNameToStore();
 		if (dbObject.containsField(name)) {
 			BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
 			for (Map.Entry entry : dbVal.entrySet()) {

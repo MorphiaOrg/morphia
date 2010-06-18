@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.bson.types.CodeWScope;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,6 +40,7 @@ import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
+import com.mongodb.BasicDBObject;
 
 /**
  *
@@ -170,6 +172,14 @@ public class TestQuery  extends TestBase {
 		assertEquals(1, query.field("lazyPic").equal(p).asList().size());
     }
 
+
+    @Test
+    public void testWhereCodeWScopeQuery() throws Exception {
+        ds.save(new PhotoWithKeywords());
+//        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;", new BasicDBObject("kwd","california"));
+        CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
+        assertNotNull(ds.find(PhotoWithKeywords.class).disableValidation().filter("$where", hasKeyword).get());
+    }
 
     @Test
     public void testRegexQuery() throws Exception {

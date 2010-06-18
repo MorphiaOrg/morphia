@@ -76,7 +76,7 @@ public class NewAnnoationTest {
 			for (MappedField mf : toLowercase) {
 				try {
 					Object fieldValue = mf.getFieldValue(ent);
-					dbObj.put(mf.getName() + "_lowercase", fieldValue.toString().toLowerCase());
+					dbObj.put(mf.getNameToStore() + "_lowercase", fieldValue.toString().toLowerCase());
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

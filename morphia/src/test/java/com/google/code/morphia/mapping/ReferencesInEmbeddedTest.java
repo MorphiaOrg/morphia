@@ -16,9 +16,9 @@ import com.google.code.morphia.testutil.TestEntity;
 public class ReferencesInEmbeddedTest extends TestBase
 {
     @Entity
-    static class Container extends TestEntity
-    {
-        String name ;
+    static class Container extends TestEntity {
+		private static final long serialVersionUID = 1L;
+		String name ;
         @Embedded
         private EmbedContainingReference embed;
     }
@@ -26,15 +26,16 @@ public class ReferencesInEmbeddedTest extends TestBase
     static class EmbedContainingReference {
         String name ;
         @Reference
-        private ReferencedEntity ref;
+        protected ReferencedEntity ref;
         
         @Reference(lazy=true)
-        private ReferencedEntity lazyRef;
+        protected ReferencedEntity lazyRef;
     }
     
     @Entity
     static class ReferencedEntity extends TestEntity{
-        String foo;
+		private static final long serialVersionUID = 1L;
+		String foo;
     }
     @Test
     public void testMapping() throws Exception {
