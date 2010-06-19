@@ -35,6 +35,8 @@ public interface Query<T> extends QueryResults<T> {
 	
 	/** Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...} */
 	QueryFieldEnd<T> field(String fieldExpr);
+
+    Query<T> where( String clause );
 	
 	/**
 	 * <p>Sorts based on a property.  Examples:</p>

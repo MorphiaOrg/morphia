@@ -42,7 +42,7 @@ public class QueryImpl<T> implements Query<T> {
 	boolean validating = true;
 	Map<String, Object> query =null;
 	String[] fields = null;
-	Boolean includeFields = true;
+	Boolean includeFields = null;
 	BasicDBObjectBuilder sort = null;
 	DatastoreImpl ds = null;
 	DBCollection dbColl = null;
@@ -205,7 +205,9 @@ public class QueryImpl<T> implements Query<T> {
 		
 		//TODO differentiate between the key/value for maps; we will just get the mf for the field, not which part we are looking for
 		
-		if (query == null) query = new HashMap<String, Object>();
+		if (query == null) {
+            query = new HashMap<String, Object>();
+        }
 		Mapper mapr = ds.getMapper();
 		Object mappedValue;
 		MappedClass mc = null;
@@ -259,6 +261,14 @@ public class QueryImpl<T> implements Query<T> {
 		}
 		return this;	
 	}
+
+    public Query<T> where( String clause ) {
+		if (query == null) {
+            query = new HashMap<String, Object>();
+        }
+        query.put("$where", clause);
+        return this;
+    }
 	
 
 	public Query<T> enableValidation(){ validating = true; return this; }
@@ -269,49 +279,63 @@ public class QueryImpl<T> implements Query<T> {
 	private MappedField validate(String prop, Object value) {
 		String[] parts = prop.split("\\.");
 		//		if (parts.length == 0) parts = new String[]{prop};
-		if (this.clazz == null) return null;
-		MappedClass mc = ds.getMapper().getMappedClass(this.clazz);
-		MappedField mf;
+		if (this.clazz == null) {
+            return null;
+        }
+		MappedClass mClass = ds.getMapper().getMappedClass(this.clazz);
+		MappedField field;
+        boolean specialField = false;
 		for(int i=0; ; ) {
 			String part = parts[i];
-			if(part.equals(Mapper.ID_KEY))
-				mf = mc.getMappedField(mc.getIdField().getName());
-			else
-				mf = mc.getMappedField(part);
+			if ( part.equals(Mapper.ID_KEY) ) {
+				field = mClass.getMappedField(mClass.getIdField().getName());
+            } else {
+				field = mClass.getMappedField(part);
+            }
 			
-			if (mf == null) {
-				mf = mc.getMappedFieldByClassField(part);
-				if (mf != null)
-					throw new MappingException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
-							"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
-				else
-					throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+			if (field == null) {
+                // we ignore special fields that start with '$'
+                if ( part.startsWith("$") ) {
+                    specialField = true;
+                    break;
+                }
+                field = mClass.getMappedFieldByClassField(part);
+                if (field != null) {
+                    throw new MappingException("The field '" + part + "' is named '" + field.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
+                            "(while validating - '" + prop + "'); Please use '" + field.getNameToStore() + "' in your query.");
+                } else {
+                    throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+                }
 			}
 			i++;
-			if (mf.isMap()) {
+			if ( field.isMap() ) {
 				//skip the map key validation, and move to the next part
 				i++;
 			}
-			if (i >= parts.length) break;
-			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+			if ( i >= parts.length ) {
+                break;
+            }
+			mClass = ds.getMapper().getMappedClass((field.isSingleValue()) ? field.getType() : field.getSubType());
 		}
 		
-		if (mf.isSingleValue() && value != null &&
-				!value.getClass().isAssignableFrom(mf.getType()) &&
+		if ( !specialField
+                && field.isSingleValue()
+                && value != null
+                && !value.getClass().isAssignableFrom(field.getType())
 				//hack to let Long match long, and so on
-				!value.getClass().getSimpleName().toLowerCase().equals(mf.getType().getSimpleName().toLowerCase())) {
+				&& !value.getClass().getSimpleName().toLowerCase().equals(field.getType().getSimpleName().toLowerCase())) {
 			
-			if ((mf.getSubType() == null || !value.getClass().isAssignableFrom(mf.getSubType())) && 
-					!(mf.getType().equals(String.class) && value.getClass().equals(ObjectId.class))) {
+			if ((field.getSubType() == null || !value.getClass().isAssignableFrom(field.getSubType())) &&
+					!(field.getType().equals(String.class) && value.getClass().equals(ObjectId.class))) {
 				Throwable t = new Throwable();
 				log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
-						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getClassFieldName()
-						+ " is a " + mf.getType().getName());
+						+ value.getClass().getName() + " when the field " + field.getDeclaringClass().getName()+ "." + field.getClassFieldName()
+						+ " is a " + field.getType().getName());
 				log.log(Level.FINE, "Location of warning:", t);
 			}
 		}
 		
-		return mf;
+		return field;
 		
 	}
 	
