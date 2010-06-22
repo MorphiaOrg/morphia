@@ -24,7 +24,7 @@ public class FieldEnumString {
 		for (MappedField mappedField : fields) {
 			if (sb.length() > 0)
 				sb.append(", ");
-			sb.append(mappedField.getClassFieldName());
+			sb.append(mappedField.getNameToStore());
 		}
 		this.display = sb.toString();
 	}

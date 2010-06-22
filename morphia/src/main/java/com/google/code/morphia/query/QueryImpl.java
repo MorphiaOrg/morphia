@@ -321,7 +321,7 @@ public class QueryImpl<T> implements Query<T> {
 					!(mf.getType().equals(String.class) && value.getClass().equals(ObjectId.class))) {
 				Throwable t = new Throwable();
 				log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
-						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getClassFieldName()
+						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
 						+ " is a " + mf.getType().getName());
 				log.log(Level.FINE, "Location of warning:", t);
 			}

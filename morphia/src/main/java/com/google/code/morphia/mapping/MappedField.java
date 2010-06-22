@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,24 +47,22 @@ public class MappedField {
 			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
 					Version.class, AlsoLoad.class));
 	
-	// the type (T) for the Collection<T>/T[]/Map<?,T>
-	private Class subType = null;
-	// the type (T) for the Map<T,?>
-	private Class keyType = null;
+	private Class subType = null; // the type (T) for the Collection<T>/T[]/Map<?,T>
+	private Class keyType = null; // the type (T) for the Map<T,?>
+	private boolean isSingleValue = true; // indicates the field is a single value
+	private boolean isMongoType = false; // indicated the type is a mongo compatible type (our version of value-type)
+	private boolean isMap = false; // indicated if it implements Map interface
+	private boolean isSet = false; // indicated if the collection is a set (or list)
 	
-	// indicates the field is a single value
-	private boolean isSingleValue = true;
-	// indicated the type is a mongo compatible type (our version of value-type)
-	private boolean isMongoType = false;
-	// indicated if it implements Map interface
-	private boolean isMap = false;
-	// indicated if the collection is a set (or list)
-	private boolean isSet = false;
-	
-	public MappedField(Field f) {
+	/** the constructor*/
+	protected MappedField(Field f) {
 		f.setAccessible(true);
 		field = f;
-		
+		discover();
+	}
+	
+	/** Discovers interesting (that we care about) things about the field. */
+	protected void discover() {
 		for (Class<? extends Annotation> clazz : interestingAnnotations)
 			addAnnotation(clazz);
 		
@@ -108,35 +105,31 @@ public class MappedField {
 		}
 		
 		this.name = getMappedFieldName();
-		Class type = f.getType();
-		if (type.isArray()
-				|| ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Collection.class,
-						List.class, Set.class, Map.class)) {
+		Class type = field.getType();
+		if (type.isArray() || ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Map.class)) {
+			
 			isSingleValue = false;
+			
 			// subtype of Long[], List<Long> is Long
 			isMap = ReflectionUtils.implementsInterface(type, Map.class);
 			isSet = ReflectionUtils.implementsInterface(type, Set.class);
 			
 			// get the subtype T, T[]/List<T>/Map<?,T>
-			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(f, (isMap) ? 1
-					: 0);
+			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(field, (isMap) ? 1 : 0);
 			if (isMap)
-				keyType = ReflectionUtils.getParameterizedClass(f, 0);
+				keyType = ReflectionUtils.getParameterizedClass(field, 0);
 		}
 		
 		// check the main type
 		isMongoType = ReflectionUtils.isPropertyType(type);
 		
-		// if the main type isn't supported by the Mongo, see if the subtype is
-		// works for Long[], List<Long>, Map<?, Long>etc.
+		// if the main type isn't supported by the Mongo, see if the subtype is.
+		// works for T[], List<T>, Map<?, T>, where T is Long/String/etc.
 		if (!isMongoType && subType != null)
 			isMongoType = ReflectionUtils.isPropertyType(subType);
 		
-		// TODO isn´t that actual validation?
-		
 		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
-			log
-					.warning("The multi-valued field '"
+			log.warning("The multi-valued field '"
 							+ getFullName()
 							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning.");
 			isMongoType = true;
@@ -159,34 +152,28 @@ public class MappedField {
 		return names;
 	}
 	
-	/** Returns the name of the field, as declared on the class */
-	public String getClassFieldName() {
+	/** Returns the name of the java field, as declared on the class */
+	public String getJavaFieldName() {
 		return field.getName();
 	}
 	
+	/** returns the annotation instance if it exists on this field*/
 	public <T extends Annotation> T getAnnotation(Class<T> clazz) {
 		return (T) mappingAnnotations.get(clazz);
 	}
 	
+	/** Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered) */
 	public boolean hasAnnotation(Class ann) {
 		return mappingAnnotations.containsKey(ann);
 	}
 	
-	/**
-	 * Adds the annotation, if it exists on the field.
-	 * 
-	 * @param clazz
-	 */
+	/** Adds the annotation, if it exists on the field. */
 	public void addAnnotation(Class<? extends Annotation> clazz) {
 		if (field.isAnnotationPresent(clazz))
 			this.mappingAnnotations.put(clazz, field.getAnnotation(clazz));
 	}
-	
-	public void validate() {
-		// moved to ContradictingFieldAnnotation, EmbeddedAndSerializable,
-		// MapKeyDifferentFromString (this is CHANGED A BIT)
-	}
-	
+
+	/** returns the full name of the class plus java field name */
 	public String getFullName() {
 		return field.getDeclaringClass().getName() + "." + field.getName();
 	}
@@ -194,7 +181,7 @@ public class MappedField {
 	/**
 	 * Returns the name of the field's key-name for mongodb
 	 */
-	public String getMappedFieldName() {
+	private String getMappedFieldName() {
 		if (hasAnnotation(Property.class)) {
 			Property mv = (Property) mappingAnnotations.get(Property.class);
 			if (!mv.value().equals(Mapper.IGNORED_FIELDNAME))
@@ -220,18 +207,22 @@ public class MappedField {
 		return name + "; " + this.mappingAnnotations.toString();
 	}
 	
+	/** returns the type of the underlying java field*/
 	public Class getType() {
 		return field.getType();
 	}
 	
+	/** If the underlying java type is a map then it returns T from Map<T,V> */
 	public Class getMapKeyType() {
 		return keyType;
 	}
 	
+	/** returns the declaring class of the java field */
 	public Class getDeclaringClass() {
 		return field.getDeclaringClass();
 	}
 	
+	/** If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>*/
 	public Class getSubType() {
 		return subType;
 	}
@@ -255,13 +246,12 @@ public class MappedField {
 	public boolean isSet() {
 		return isSet;
 	}
-	
+	/** returns a constructor for the type represented by the field */
 	public Constructor getCTor() {
 		return ctor;
 	}
-	
-	// every time this is called, the error was just wrapped in a RTE, so that i
-	// took the liberty of doing the try/catch inside
+
+	/** Returns the value stored in the java field */
 	public Object getFieldValue(Object classInst) throws IllegalArgumentException {
 		try {
 			field.setAccessible(true);
@@ -271,6 +261,7 @@ public class MappedField {
 		}
 	}
 	
+	/** Sets the value for the java field */	
 	public void setFieldValue(Object classInst, Object value) throws IllegalArgumentException {
 		try {
 			field.setAccessible(true);
@@ -280,6 +271,7 @@ public class MappedField {
 		}
 	}
 	
+	/** returned the underlying java field */
 	public Field getField() {
 		return field;
 	}

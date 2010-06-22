@@ -88,7 +88,11 @@ public class MappedClass {
 	public MappedClass(Class clazz, Mapper mapr) {
 		this.mapr = mapr;
 		this.clazz = clazz;
-		
+		discover();
+	}
+	
+	/** Discovers interesting (that we care about) things about the class. */
+	protected void discover() {
 		for (Class<? extends Annotation> c : interestingAnnotations) {
 			addAnnotation(c);
 		}
@@ -187,6 +191,7 @@ public class MappedClass {
 		return "MappedClass - kind:" + this.getCollectionName() + " for " + this.getClazz().getName() + " fields:" + persistenceFields;
 	}
 	
+	/** Returns fields annotated with the clazz */
 	public List<MappedField> getFieldsAnnotatedWith(Class<? extends Annotation> clazz){
 		List<MappedField> results = new ArrayList<MappedField>();
 		for(MappedField mf : persistenceFields){
@@ -196,31 +201,33 @@ public class MappedClass {
 		return results;
 	}
 	
-	/** Returns the MappedField by the name that will stored in mongodb */
-	public MappedField getMappedField(String name) {
+	/** Returns the MappedField by the name that it will stored in mongodb as*/
+	public MappedField getMappedField(String storedName) {
 		for(MappedField mf : persistenceFields)
 			for(String n : mf.getLoadNames())
-				if (name.equals(n)) 
+				if (storedName.equals(n)) 
 					return mf;
 		
 		return null;
 	}
 	
-	/** Check by the name that will stored in mongodb */
-	public boolean containsFieldName(String name) {
+	/** Check java field name that will stored in mongodb */
+	public boolean containsJavaFieldName(String name) {
 		return getMappedField(name)!=null;
 	}
-	
+	/** Returns MappedField for a given java field name on the this MappedClass */
 	public MappedField getMappedFieldByClassField(String name) {
 		for(MappedField mf : persistenceFields)
-			if (name.equals(mf.getClassFieldName())) return mf;
+			if (name.equals(mf.getJavaFieldName())) return mf;
 		
 		return null;
 	}
+	
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
-	public boolean isSupportedType(Class clazz) {
+	public static boolean isSupportedType(Class clazz) {
 		if (ReflectionUtils.isPropertyType(clazz)) return true;
-		if (clazz.isArray() || ReflectionUtils.implementsAnyInterface(clazz, 	Iterable.class,
+		if (clazz.isArray() || ReflectionUtils.implementsAnyInterface(clazz, 	
+				Iterable.class,
 				Collection.class,
 				List.class,
 				Set.class,
@@ -259,6 +266,7 @@ public class MappedClass {
 		return this.getClazz().equals(clazz);
 	}
 	
+	/** Call the lifcycle methods */
 	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr) {
 		List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>)event);
 		Collection<EntityInterceptor> interceptors = mapr.getInterceptors();
@@ -317,9 +325,7 @@ public class MappedClass {
 		return retDbObj;
 	}
 	
-	/**
-	 * @return the idField
-	 */
+	/** @return the idField */
 	public Field getIdField() {
 		return idField;
 	}
@@ -357,7 +363,7 @@ public class MappedClass {
 	}
 	
 	/**
-	 * @return the defCollName
+	 * @return the collName
 	 */
 	public String getCollectionName() {
 		return collName;
@@ -370,22 +376,16 @@ public class MappedClass {
 		return clazz;
 	}
 	
+	/** @return the constructor for this mapped class */
 	public Constructor getCTor() {
 		return ctor;
 	}
 	
+	/** @return the Mapper this class is bound to */
 	public Mapper getMapper(){
 		return mapr;
 	}
-	
-	public boolean hasVersionField() {
-		return getFieldsAnnotatedWith(Version.class).size() > 0;
-	}
-	
-	public MappedField getMappedVersionField() {
-		return getFieldsAnnotatedWith(Version.class).get(0);
-	}
-	
+
 	public MappedField getMappedIdField() {
 		return getFieldsAnnotatedWith(Id.class).get(0);
 	}

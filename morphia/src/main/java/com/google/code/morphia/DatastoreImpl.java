@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -499,15 +500,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		
 	}
 
-	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
 		for (T ent : entities)
 			savedKeys.add(save(ent));
 		return savedKeys;
 		
-	}
-	
+	}	
 
 	public <T> Iterable<Key<T>> save(T... entities) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
@@ -527,10 +526,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+			MappedField mfVersion= null;
+			if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty())
+				mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
 			
-			if (mc.hasVersionField()) {
-				String versionKeyName = mc.getMappedVersionField().getMappedFieldName();
-				Long oldVersion = (Long) mc.getMappedVersionField().getFieldValue(entity);
+			if (mfVersion != null) {
+				String versionKeyName = mfVersion.getNameToStore();
+				Long oldVersion = (Long) mfVersion.getFieldValue(entity);
 				long newVersion = VersionHelper.nextValue(oldVersion);
 				dbObj.put(versionKeyName, newVersion);
 				if (oldVersion != null && oldVersion > 0) {
@@ -549,7 +551,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					dbColl.save(dbObj);
 				}
 				
-				mc.getMappedVersionField().setFieldValue(entity, newVersion);
+				mfVersion.setFieldValue(entity, newVersion);
 			} else
 				dbColl.save(dbObj);
 			

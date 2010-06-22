@@ -51,7 +51,7 @@ public class DefaultConverters {
 	}
 	
 	public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
-		Object object = dbObj.get(mf.getMappedFieldName());
+		Object object = dbObj.get(mf.getNameToStore());
 		if (object == null) {
 			processMissingField(mf);
 		} else {
@@ -88,7 +88,7 @@ public class DefaultConverters {
 		Object fieldValue = mf.getFieldValue(containingObject);
 		Object encoded = enc.encode(fieldValue, mf);
 		if (encoded != null || opts.storeNulls) {
-			dbObj.put(mf.getMappedFieldName(), encoded);
+			dbObj.put(mf.getNameToStore(), encoded);
 		}
 	}
 	
