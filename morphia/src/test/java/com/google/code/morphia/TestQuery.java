@@ -41,6 +41,7 @@ import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoInternalException;
 
 /**
  *
@@ -178,9 +179,30 @@ public class TestQuery  extends TestBase {
         ds.save(new PhotoWithKeywords());
 //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;", new BasicDBObject("kwd","california"));
         CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
-        assertNotNull(ds.find(PhotoWithKeywords.class).disableValidation().filter("$where", hasKeyword).get());
+        assertNotNull(ds.find(PhotoWithKeywords.class).where(hasKeyword).get());
     }
 
+    @Test
+    public void testWhereStringQuery() throws Exception {
+        ds.save(new PhotoWithKeywords());
+        CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
+        assertNotNull(ds.find(PhotoWithKeywords.class).where(hasKeyword.getCode()).get());
+    }
+
+    @Test
+    public void testWhereWithInvalidStringQuery() throws Exception {
+        ds.save(new PhotoWithKeywords());
+        CodeWScope hasKeyword = new CodeWScope("keywords != null", new BasicDBObject());
+		try {
+			// must fail
+	        assertNotNull(ds.find(PhotoWithKeywords.class).where(hasKeyword.getCode()).get());
+			Assert.fail("Invalid javascript magically isn't invalid anymore?");
+		} catch (MongoInternalException e) {
+			// fine
+		}
+
+    }
+    
     @Test
     public void testRegexQuery() throws Exception {
         ds.save(new PhotoWithKeywords());
@@ -205,8 +227,11 @@ public class TestQuery  extends TestBase {
         Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
         Assert.assertEquals(3, pwkLoaded.keywords.size());
         
+        pwkLoaded = ds.find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(false, "keywords").get();
+        assertNotNull(pwkLoaded);
+        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
+        Assert.assertEquals(3, pwkLoaded.keywords.size());
     }
-
     
     @Test
     public void testDeepQueryWithBadArgs() throws Exception {

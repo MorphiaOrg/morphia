@@ -20,7 +20,8 @@ public enum FilterOperator {
 	NOT_IN("$nin"),
 	ALL("$all"),
 	ELEMENT_MATCH("$elemMatch"),
-	NOT_EQUAL("$ne");
+	NOT_EQUAL("$ne"), 
+	WHERE("$where");
 	
 	private String value;
 	private FilterOperator(String val) {
