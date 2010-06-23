@@ -130,26 +130,25 @@ class ReferenceMapper {
 	}
 	
 	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key,Object> retrieved) {
-		String name = mf.getNameToStore();
-		
 		Class fieldType = mf.getType();
 		
 		Reference refAnn = mf.getAnnotation(Reference.class);
 		if (mf.isMap()) {
-			readMap(dbObject, mf, entity, name, refAnn, retrieved);
+			readMap(dbObject, mf, entity, refAnn, retrieved);
 		} else if (mf.isMultipleValues()) {
-			readCollection(dbObject, mf, entity, name, refAnn, retrieved);
+			readCollection(dbObject, mf, entity, refAnn, retrieved);
 		} else {
-			readSingle(dbObject, mf, entity, name, fieldType, refAnn, retrieved);
+			readSingle(dbObject, mf, entity, fieldType, refAnn, retrieved);
 		}
 		
 	}
 	
 	private void readSingle(final DBObject dbObject, final MappedField mf,
-			final Object entity, String name, Class fieldType, Reference refAnn, final Map<Key,Object> retrieved) {
+			final Object entity, Class fieldType, Reference refAnn, final Map<Key,Object> retrieved) {
 		Class referenceObjClass = fieldType;
-		if (dbObject.containsField(name)) {
-			DBRef dbRef = (DBRef) dbObject.get(name);
+
+		DBRef dbRef = (DBRef) mf.getDbObjectValue(dbObject);
+		if (dbRef!=null) {
 			
 			Object resolvedObject = null;
 			if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
@@ -171,14 +170,15 @@ class ReferenceMapper {
 	}
 	
 	private void readCollection(final DBObject dbObject, final MappedField mf,
-			final Object entity, String name, Reference refAnn, final Map<Key,Object> retrieved) {
+			final Object entity, Reference refAnn, final Map<Key,Object> retrieved) {
 		// multiple references in a List
 		Class referenceObjClass = mf.getSubType();
 		Collection references = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class
                 		: HashSet.class);
 		
 		if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-			if (dbObject.containsField(name)) {
+			Object dbVal = mf.getDbObjectValue(dbObject);
+			if (dbVal!=null) {
 				references = mapper.proxyFactory.createListProxy(references, referenceObjClass, refAnn.ignoreMissing(),
 						mapper.datastoreProvider);
 				ProxiedEntityReferenceList referencesAsProxy = (ProxiedEntityReferenceList) references;
@@ -186,7 +186,6 @@ class ReferenceMapper {
 				// FIXME us test for existence could be done in one go
 				// instead of one-by-one lookups.
 				
-				Object dbVal = dbObject.get(name);
 				if (dbVal instanceof List) {
 					List refList = (List) dbVal;
 					for (Object dbRefObj : refList) {
@@ -194,14 +193,14 @@ class ReferenceMapper {
 						addToReferenceList(mf, refAnn, referencesAsProxy, dbRef);
 					}
 				} else {
-					DBRef dbRef = (DBRef) dbObject.get(name);
+					DBRef dbRef = (DBRef) dbVal;
 					addToReferenceList(mf, refAnn, referencesAsProxy, dbRef);
 				}
 			}
 		} else {
 			
-			if (dbObject.containsField(name)) {
-				Object dbVal = dbObject.get(name);
+			Object dbVal = mf.getDbObjectValue(dbObject);
+			if (dbVal!=null) {
 				if (dbVal instanceof List) {
 					List refList = (List) dbVal;
 					for (Object dbRefObj : refList) {
@@ -220,7 +219,7 @@ class ReferenceMapper {
 						}
 					}
 				} else {
-					DBRef dbRef = (DBRef) dbObject.get(name);
+					DBRef dbRef = (DBRef) dbVal;
 					BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 					if (refDbObject == null) {
 						if (!refAnn.ignoreMissing()) {
@@ -290,19 +289,18 @@ class ReferenceMapper {
 	}
 	
 	private void readMap(final DBObject dbObject, final MappedField mf,
-			final Object entity,
-			final String name, final Reference refAnn, final Map<Key,Object> retrieved) {
+			final Object entity,final Reference refAnn, final Map<Key,Object> retrieved) {
 		Class referenceObjClass = mf.getSubType();
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
-		if (dbObject.containsField(name)) {
+		
+		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
+		if (dbVal!=null) {
 			if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
 				// replace map by proxy to it.
 				map = mapper.proxyFactory.createMapProxy(map, referenceObjClass, refAnn.ignoreMissing(),
 						mapper.datastoreProvider);
 			}
-			
-			BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
 			for (Map.Entry<String, ?> entry : dbVal.entrySet()) {
 				DBRef dbRef = (DBRef) entry.getValue();
 				

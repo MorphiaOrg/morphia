@@ -35,6 +35,7 @@ import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.code.morphia.annotations.AlsoLoad;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -184,11 +185,24 @@ public class TestMapping  extends TestBase {
 
 	public enum Enum1 { A, B }
 
-	public static class ContainsIntegerList {
+	@Entity(value="cil", noClasnameStored=true)
+ 	public static class ContainsIntegerList {
 		@Id String id;
 		List<Integer> intList = new ArrayList<Integer>();
 	}
 
+ 	public static class ContainsIntegerListNewAndOld {
+		@Id String id;
+		List<Integer> intList = new ArrayList<Integer>();
+		List<Integer> ints = new ArrayList<Integer>();
+	}
+
+	@Entity(value="cil", noClasnameStored=true)
+	public static class ContainsIntegerListNew {
+		@Id String id;
+		@AlsoLoad("intList") List<Integer> ints = new ArrayList<Integer>();
+	}
+	
 	public static class ContainsEnum1KeyMap{
 		@Id String id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
@@ -265,6 +279,24 @@ public class TestMapping  extends TestBase {
 	}
 
 	@Test
+    public void testAlsoLoad() throws Exception {
+		ContainsIntegerList cil = new ContainsIntegerList();
+		cil.intList.add(1);
+		ds.save(cil);
+		ContainsIntegerList cilLoaded = ds.get(cil);
+		assertNotNull(cilLoaded);
+		assertNotNull(cilLoaded.intList);
+		assertEquals(cilLoaded.intList.size(), cil.intList.size());
+		assertEquals(cilLoaded.intList.get(0), cil.intList.get(0));
+		
+		ContainsIntegerListNew cilNew = ds.get(ContainsIntegerListNew.class, cil.id);
+		assertNotNull(cilNew);
+		assertNotNull(cilNew.ints);
+		assertEquals(cilNew.ints.size(), 1);
+		assertEquals(1, (int)cil.intList.get(0));
+	}
+
+	@Test
     public void testIntLists() throws Exception {
 		ContainsIntegerList cil = new ContainsIntegerList();
 		ds.save(cil);
@@ -281,6 +313,15 @@ public class TestMapping  extends TestBase {
 		assertNotNull(cilLoaded);
 		assertNotNull(cilLoaded.intList);
 		assertEquals(cilLoaded.intList.size(), 0);
+
+		cil = new ContainsIntegerList();
+		cil.intList.add(1);
+		ds.save(cil);
+		cilLoaded = ds.get(cil);
+		assertNotNull(cilLoaded);
+		assertNotNull(cilLoaded.intList);
+		assertEquals(cilLoaded.intList.size(), 1);
+		assertEquals(1,(int)cilLoaded.intList.get(0));
 	}
 	
 	@Test

@@ -51,7 +51,7 @@ public class DefaultConverters {
 	}
 	
 	public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
-		Object object = dbObj.get(mf.getNameToStore());
+		Object object = mf.getDbObjectValue(dbObj);
 		if (object == null) {
 			processMissingField(mf);
 		} else {

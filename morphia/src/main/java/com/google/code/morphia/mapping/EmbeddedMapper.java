@@ -94,8 +94,6 @@ class EmbeddedMapper {
 	}
 	
 	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key, Object> retrieved) {
-		String name = mf.getNameToStore();
-		
 		Class fieldType = mf.getType();
 		try {
 			
@@ -105,8 +103,8 @@ class EmbeddedMapper {
 				readCollection(dbObject, mf, entity, retrieved);
 			} else {
 				// single document
-				if (dbObject.containsField(name)) {
-					BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
+				BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
+				if (dbVal != null) {
 					Object refObj = ReflectionUtils.createInstance(fieldType, dbVal);
 					refObj = mapper.fromDb(dbVal, refObj, retrieved);
 					if (refObj != null) {
@@ -123,15 +121,12 @@ class EmbeddedMapper {
 			final Map<Key, Object> retrieved) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
-		Collection values = (Collection) ReflectionUtils.newInstance(
-				mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
+		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
 		
-		String name = mf.getNameToStore();
-		if (dbObject.containsField(name)) {
-			Object dbVal = dbObject.get(name);
+		Object dbVal = mf.getDbObjectValue(dbObject);
+		if (dbVal != null) {
 			
-			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections
-					.singletonList((BasicDBObject) dbVal);
+			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections.singletonList((BasicDBObject) dbVal);
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
@@ -153,9 +148,8 @@ class EmbeddedMapper {
 			Map<Key, Object> retrieved) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
-		String name = mf.getNameToStore();
-		if (dbObject.containsField(name)) {
-			BasicDBObject dbVal = (BasicDBObject) dbObject.get(name);
+		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
+		if (dbVal != null) {
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object newEntity = ReflectionUtils.createInstance(mf.getSubType(), (BasicDBObject) entry.getValue());
 				

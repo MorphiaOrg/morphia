@@ -22,6 +22,7 @@ import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.utils.ReflectionUtils;
+import com.mongodb.DBObject;
 
 /**
  * Represents the mapping of this field to/from mongodb (name, annotations)
@@ -140,6 +141,7 @@ public class MappedField {
 	public String getNameToStore() {
 		return name;
 	}
+	
 	/** Returns the name of the field's (key)name for mongodb */
 	public List<String> getLoadNames() {
 		ArrayList<String> names = new ArrayList<String>();
@@ -150,6 +152,26 @@ public class MappedField {
 			names.addAll( Arrays.asList(al.value()));
 		
 		return names;
+	}
+	
+	/** @return the value of this field mapped from the DBObject */
+	public String getFirstFieldName(DBObject dbObj) {
+		String fieldName = getNameToStore();
+		boolean foundField = false;
+		for (String n : getLoadNames()) {
+			if (dbObj.containsField(n))
+				if (!foundField) {
+					foundField = true;
+					fieldName = n;
+				} else
+					throw new MappingException(String.format("Found more than one field from @AlsoLoad %s", getLoadNames()));
+		}
+		return fieldName;
+	}
+	
+	/** @return the value from best mapping of this field*/
+	public Object getDbObjectValue(DBObject dbObj) {
+		return dbObj.get(getFirstFieldName(dbObj));
 	}
 	
 	/** Returns the name of the java field, as declared on the class */

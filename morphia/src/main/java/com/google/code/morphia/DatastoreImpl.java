@@ -522,7 +522,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		DB db = dbColl.getDB();
-		// TODO scary message from driver ... db.requestStart();
+		db.requestStart();
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
@@ -569,7 +569,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			
 			return key;
 		} finally {
-			// TODO scary message from driver ... db.requestDone();
+			db.requestDone();
 		}
 	}
 	
