@@ -30,13 +30,14 @@ import com.google.code.morphia.utils.IndexFieldDef;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
+import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
-import com.mongodb.DB.WriteConcern;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -106,7 +107,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(clazz);
 		delete(dbColl, id);
 	}
-
+	@SuppressWarnings("rawtypes")
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
 		DBCollection dbColl = getCollection(clazz);			
 		DBObject q = null;
@@ -295,6 +296,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 
+	@SuppressWarnings("rawtypes")
 	public <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
 		List objIds = new ArrayList();
 		for (V id : ids) {
@@ -310,6 +312,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	// TODO scott: should return a collection, to make obvious, that it has no
 	// predefined order?
+	@SuppressWarnings("rawtypes")
 	public <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
 		
 		Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
@@ -369,7 +372,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return get(clazz, key.getId());
 	}
 	
-
 	public <T> T get(T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		Object id = getId(entity);
@@ -378,6 +380,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return (T) get(entity.getClass(), id);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public DBCollection getCollection(Class clazz) {
 		String collName = morphia.getMapper().getCollectionName(clazz);
 		DBCollection dbC = getDB().getCollection(collName);
@@ -467,6 +470,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return insert(dbColl, entity);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	protected <T> Key<T> insert(DBCollection dbColl, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
@@ -655,7 +659,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (q == null)
 			q = new BasicDBObject();
 		dbColl.update(q, u, createIfMissing, multi);
-		DBObject dbObj = dbColl.getDB().getLastError();
-		return new UpdateResults<T>(dbObj);
+		CommandResult opRes = dbColl.getDB().getLastError();
+		return new UpdateResults<T>(opRes);
 	}
 }

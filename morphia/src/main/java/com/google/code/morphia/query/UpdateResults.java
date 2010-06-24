@@ -1,6 +1,6 @@
 package com.google.code.morphia.query;
 
-import com.mongodb.DBObject;
+import com.mongodb.CommandResult;
 
 public class UpdateResults<T> {
 	private boolean hadError;
@@ -8,17 +8,21 @@ public class UpdateResults<T> {
 	private boolean updatedExisting;
 	private int updateCount;
 	private int insertCount;
+	private Object newId;
 	
-	public UpdateResults(DBObject dbObj) {
-		updatedExisting = (dbObj.containsField("updatedExisting") && (Boolean)dbObj.get("updatedExisting"));
-		error = (String)dbObj.get("err");
-		hadError = error != null && !error.isEmpty();
-		if (dbObj.containsField("n")) {
+	public UpdateResults(CommandResult opRes) {
+		updatedExisting = (opRes.containsField("updatedExisting") && (Boolean)opRes.get("updatedExisting"));
+		error = (String)opRes.getErrorMessage();
+		hadError = !opRes.ok();
+		if (opRes.containsField("n")) {
 			if(updatedExisting) 
-				updateCount = ((Number)dbObj.get("n")).intValue();
+				updateCount = ((Number)opRes.get("n")).intValue();
 			else
-				insertCount = ((Number)dbObj.get("n")).intValue();
+				insertCount = ((Number)opRes.get("n")).intValue();
 		}
+		
+		if (insertCount > 0 && opRes.containsField("upserted"))
+			newId = opRes.get("upserted");
 	}
 	
 	public String getError() {return error;}
@@ -26,4 +30,5 @@ public class UpdateResults<T> {
 	public boolean getUpdatedExisting() {return updatedExisting;}
 	public int getUpdatedCount() {return updateCount;}
 	public int getInsertedCount() {return insertCount;}
+	public Object getNewId() {return newId;}
 } 

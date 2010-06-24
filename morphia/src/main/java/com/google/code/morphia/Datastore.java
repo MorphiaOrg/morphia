@@ -117,6 +117,6 @@ public interface Datastore {
 	DB getDB();
 	Mongo getMongo();
 	
-	DBCollection getCollection(Class c);
+	DBCollection getCollection(Class<?> c);
 
 }
