@@ -18,15 +18,15 @@ import com.google.code.morphia.mapping.Serializer;
 @SuppressWarnings("unchecked")
 public class SerializedObjectConverter extends TypeConverter {
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		if (optionalExtraInfo == null)
+	protected boolean isSupported(Class c, MappedField optionalExtraInfo) {
+		if (optionalExtraInfo != null)
+			return (optionalExtraInfo.hasAnnotation(Serialized.class));
+		else 
 			return false;
-		
-		return (optionalExtraInfo.hasAnnotation(Serialized.class));
 	}
 	
 	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
 		
 		if (!((fromDBObject instanceof Binary) || (fromDBObject instanceof byte[]))) {
 			throw new MappingException("The stored data is not a DBBinary or byte[] instance for " + f.getFullName()
@@ -44,7 +44,7 @@ public class SerializedObjectConverter extends TypeConverter {
 	}
 	
 	@Override
-	Object encode(Object value, MappedField f) {
+	public Object encode(Object value, MappedField f) {
 		if (value == null)
 			return null;
 		try {

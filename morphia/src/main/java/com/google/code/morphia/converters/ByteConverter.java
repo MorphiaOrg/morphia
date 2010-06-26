@@ -13,11 +13,13 @@ import com.google.code.morphia.mapping.MappingException;
 @SuppressWarnings("unchecked")
 public class ByteConverter extends TypeConverter {
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+	protected
+	boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		return oneOf(c, Byte.class, byte.class);
 	}
 	
 	@Override
+	public
 	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
 		Object dbValue = val;
 		if (dbValue instanceof Double) {

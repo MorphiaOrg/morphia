@@ -14,11 +14,13 @@ import com.google.code.morphia.mapping.MappingException;
 public class DoubleConverter extends TypeConverter {
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+	protected
+	boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		return oneOf(c, double.class, Double.class);
 	}
 	
 	@Override
+	public
 	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
 		if (val instanceof Double) {
 			return (Double) val;

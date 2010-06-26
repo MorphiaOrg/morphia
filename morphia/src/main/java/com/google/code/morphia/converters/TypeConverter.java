@@ -10,28 +10,50 @@ import com.google.code.morphia.mapping.MappingException;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public abstract class TypeConverter {
 	protected Mapper mapr;
+	protected Class[] supportTypes = null;
 
-	abstract boolean canHandle(Class c, MappedField optionalExtraInfo);
-	
-	final boolean canHandle(Class c) {
-		return canHandle(c, null);
+	protected TypeConverter() {}
+	protected TypeConverter(Class...types) {
+		supportTypes = types;
 	}
 	
-	abstract Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo)
+	/** returns list of supported convertable types */
+	final Class[] getSupportedTypes() {
+		return supportTypes;
+	}
+	
+	/** checks if the class is supported for this converter. */
+	final boolean canHandle(Class c) {
+		return isSupported(c, null);
+	}
+	
+	/** checks if the class is supported for this converter. */
+	protected boolean isSupported(Class<?> c, MappedField optionalExtraInfo) { return false; }
+
+	/** checks if the MappedField is supported for this converter. */
+	final boolean canHandle(MappedField mf) {
+		return isSupported(mf.getType(), mf);
+	}
+
+	public abstract Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo)
 			throws MappingException;
 	
-	final Object decode(Class targetClass, Object fromDBObject) throws MappingException {
+	public final Object decode(Class targetClass, Object fromDBObject) throws MappingException {
 		return decode(targetClass, fromDBObject, null);
 	}
 	
-	final Object encode(Object value) throws MappingException {
+	public final Object encode(Object value) throws MappingException {
 		return encode(value, null);
 	}
 	
-	boolean oneOf(Class f, Class... classes) {
+	protected boolean oneOf(Class f, Class... classes) {
+		return oneOfClases(f, classes);
+	}
+
+	protected boolean oneOfClases(Class f, Class[] classes) {
 		for (Class c : classes) {
 			if (c.equals(f))
 				return true;
@@ -39,14 +61,10 @@ public abstract class TypeConverter {
 		return false;
 	}
 	
-	Object encode(Object value, MappedField optionalExtraInfo) {
+	public Object encode(Object value, MappedField optionalExtraInfo) {
 		return value; // as a default impl
 	}
 	
-	final boolean canHandle(MappedField mf) {
-		return canHandle(mf.getType(), mf);
-	}
-
 	public void setMapper(Mapper mapr) {
 		this.mapr = mapr;
 	}

@@ -13,13 +13,12 @@ import com.google.code.morphia.mapping.MappingException;
 @SuppressWarnings("unchecked")
 public class LongConverter extends TypeConverter {
 	
-	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, long.class, Long.class);
+	public LongConverter() {
+		super(long.class, Long.class);
 	}
 	
 	@Override
-	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
 		if (val instanceof String) {
 			return Long.parseLong((String) val);
 		} else {

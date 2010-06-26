@@ -30,13 +30,11 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -58,7 +56,7 @@ import com.mongodb.DBRef;
  * 
  * @author Olafur Gauti Gudmundsson
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class ReflectionUtils
 {
 
@@ -567,8 +565,7 @@ public class ReflectionUtils
      * creates an instance of testType (if it isn't Object.class or null) or
      * fallbackType
      */
-    public static Object newInstance(final Constructor tryMe, final Class fallbackType)
-    {
+    public static Object newInstance(final Constructor tryMe, final Class fallbackType) {
         if (tryMe != null)
         {
             tryMe.setAccessible(true);
@@ -584,8 +581,8 @@ public class ReflectionUtils
         return createInstance(fallbackType);
     }
 
-    public static Class getClassForName(final String className, final Class defaultClass)
-    {
+    /** gets the Class for some classname, or if the className is not found, return the defaultClass instance */
+    public static Class getClassForName(final String className, final Class defaultClass) {
         try
         {
             Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
@@ -597,8 +594,8 @@ public class ReflectionUtils
         }
     }
 
-	public static Object createInstance(final Class entityClass, final DBObject dbObject)
-    {
+    /** create a new instance of the entity, first using the dbObject field, then by calling createInstence based on the type*/
+	public static Object createInstance(final Class entityClass, final DBObject dbObject) {
         // see if there is a className value
         String className = (String) dbObject.get(Mapper.CLASS_NAME_FIELDNAME);
         Class c = entityClass;
@@ -630,29 +627,25 @@ public class ReflectionUtils
         }
     }
 
-    public static boolean isSet(final Class<?> c)
-    {
-        return Set.class.isAssignableFrom(c);
-    }
-	
-	public static boolean isMap(Class c) {
-		return implementsInterface(c, Map.class);
-	}
-	
-	public static boolean isCollection(Class c) {
-		return implementsInterface(c, Collection.class);
+	public static ArrayList iterToList (Iterable it) {
+		if (it instanceof ArrayList) return (ArrayList) it;
+		if (it == null) return null;
+		
+		ArrayList ar = new ArrayList();
+		for(Object o : it)
+			ar.add(o);
+		
+		return ar;
 	}
 
-	public static Object[] convertToArray(final Class type, final Collection values)
-	{
+	public static Object[] convertToArray(final Class type, final ArrayList<?> values) {
 		Object exampleArray = Array.newInstance(type, 1);
-		Object[] array = ((ArrayList) values).toArray((Object[]) exampleArray);
+		Object[] array = values.toArray((Object[]) exampleArray);
 		return array;
 	}
 
 	/** turns the object into an ObjectId if it is/should-be one */
-	public static Object asObjectIdMaybe(final Object id)
-	{
+	public static Object asObjectIdMaybe(final Object id) {
 		try
 		{
 			if ((id instanceof String) && ObjectId.isValid((String) id))

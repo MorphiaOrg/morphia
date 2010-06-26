@@ -3,12 +3,17 @@
  */
 package com.google.code.morphia.converters;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
+import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.DBObject;
 
 /**
@@ -16,47 +21,73 @@ import com.mongodb.DBObject;
  * 
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultConverters {
+	private static final Logger log = Logger.getLogger(DefaultConverters.class.getName());
 	
-	private List<TypeConverter> knownEncoders = new LinkedList<TypeConverter>();
+	private List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
+	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();
 	
-	// constr. will change
 	public DefaultConverters() {
+		// some converters are commented out since the passthrough converter is enabled.
 		
-		knownEncoders.add(new EnumSetConverter());
-		knownEncoders.add(new ObjectIdConverter());
-		knownEncoders.add(new EnumConverter());
-		knownEncoders.add(new StringConverter());
-		knownEncoders.add(new CharacterConverter());
-		knownEncoders.add(new ByteConverter());
-		knownEncoders.add(new BooleanConverter());
-		knownEncoders.add(new DoubleConverter());
-		knownEncoders.add(new FloatConverter());
-		knownEncoders.add(new LongConverter());
-		knownEncoders.add(new LocaleConverter());
-		knownEncoders.add(new ShortConverter());
-		knownEncoders.add(new IntegerConverter());
-		knownEncoders.add(new SerializedObjectConverter());
-		knownEncoders.add(new PrimitiveByteArrayConverter());
-		knownEncoders.add(new CharArrayConverter());
-		knownEncoders.add(new DateConverter());
-		knownEncoders.add(new KeyConverter());
-		knownEncoders.add(new DBRefConverter());
-		knownEncoders.add(new MapOfValuesConverter(this));
-		knownEncoders.add(new CollectionConverter(this));
-		
-		// TODO discuss: maybe a config parameter? last resort
-		knownEncoders.add(new PassthroughConverter());
+//		addConverter(new PassthroughConverter(ObjectId.class));
+//		addConverter(new PassthroughConverter(DBRef.class));
+		addConverter(new PassthroughConverter(byte[].class));
+		addConverter(new EnumSetConverter());
+		addConverter(new EnumConverter());
+		addConverter(new StringConverter());
+		addConverter(new CharacterConverter());
+		addConverter(new ByteConverter());
+		addConverter(new BooleanConverter());
+		addConverter(new DoubleConverter());
+		addConverter(new FloatConverter());
+		addConverter(new LongConverter());
+		addConverter(new LocaleConverter());
+		addConverter(new ShortConverter());
+		addConverter(new IntegerConverter());
+		addConverter(new SerializedObjectConverter());
+		addConverter(new CharArrayConverter());
+		addConverter(new DateConverter());
+		addConverter(new KeyConverter());
+		addConverter(new MapOfValuesConverter(this));
+		addConverter(new IterableConverter(this));
+
+		//generic converter that will just pass things through.
+		addConverter(new PassthroughConverter());
 	}
 	
+	public void addConverter(TypeConverter tc) {
+		if (tc.getSupportedTypes() != null)
+			for(Class c : tc.getSupportedTypes())
+				addTypedConverter(c, tc);
+		else
+			untypedTypeEncoders.add(tc);
+	}
+	
+	private void addTypedConverter(Class type, TypeConverter tc) {
+		if (tcMap.containsKey(type)) { 
+			tcMap.get(type).add(tc);
+			log.warning("Added duplicate converter for " + type + " ; " + tcMap.get(type));
+		} else {
+			ArrayList<TypeConverter> vals = new ArrayList<TypeConverter>();
+			vals.add(tc);
+			tcMap.put(type, vals);
+		}
+	}
 	public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
 		Object object = mf.getDbObjectValue(dbObj);
 		if (object == null) {
 			processMissingField(mf);
 		} else {
 			TypeConverter enc = getEncoder(mf);
-			mf.setFieldValue(targetEntity, enc.decode(mf.getType(), object, mf));
+			Object decodedValue = enc.decode(mf.getType(), object, mf);
+			try { 
+				mf.setFieldValue(targetEntity, decodedValue);
+			} catch (IllegalArgumentException e) {
+				throw new MappingException("Error setting value from converter (" + 
+						enc.getClass().getSimpleName() + ") for " + mf.getFullName() + " to " + decodedValue);
+			}
 		}
 	}
 	
@@ -65,21 +96,33 @@ public class DefaultConverters {
 	}
 	
 	private TypeConverter getEncoder(final MappedField mf) {
-		for (TypeConverter e : knownEncoders) {
-			if (e.canHandle(mf)) {
-				return e;
-			}
+		List<TypeConverter> tcs = tcMap.get(mf.getType());
+		if(tcs != null) {
+			if (tcs.size() > 1)
+				log.warning("Duplicate converter for " + mf.getType() + ", returning first one from " + tcs);
+			return tcs.get(0);
 		}
+		
+		for (TypeConverter tc : untypedTypeEncoders)
+			if(tc.canHandle(mf))
+				return tc;
+		
 		throw new ConverterNotFoundException("Cannot find encoder for " + mf.getType() + " as need for "
 				+ mf.getFullName());
 	}
 	
 	private TypeConverter getEncoder(final Class c) {
-		for (TypeConverter e : knownEncoders) {
-			if (e.canHandle(c)) {
-				return e;
-			}
+		List<TypeConverter> tcs = tcMap.get(c);
+		if(tcs != null) {
+			if (tcs.size() > 1)
+				log.warning("Duplicate converter for " + c + ", returning first one from " + tcs);
+			return tcs.get(0);
 		}
+		
+		for (TypeConverter tc : untypedTypeEncoders)
+			if(tc.canHandle(c))
+				return tc;
+		
 		throw new ConverterNotFoundException("Cannot find encoder for " + c.getName());
 	}
 	
@@ -107,7 +150,10 @@ public class DefaultConverters {
 	}
 
 	public void setMapper(Mapper mapr) {
-		for(TypeConverter tc : knownEncoders)
+		for(List<TypeConverter> tcs : tcMap.values())
+			for(TypeConverter tc : tcs)
+				tc.setMapper(mapr);
+		for(TypeConverter tc : untypedTypeEncoders)
 			tc.setMapper(mapr);
 	}
 }

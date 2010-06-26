@@ -24,7 +24,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 class ReferenceMapper {
 	
 	private final Mapper mapper;
@@ -236,7 +236,7 @@ class ReferenceMapper {
 		}
 		
 		if (mf.getType().isArray()) {
-			Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), references);
+			Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), ReflectionUtils.iterToList(references));
 			mf.setFieldValue(entity, array);
 		} else {
 			mf.setFieldValue(entity, references);

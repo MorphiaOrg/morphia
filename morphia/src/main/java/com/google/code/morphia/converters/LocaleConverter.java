@@ -16,18 +16,15 @@ import com.google.code.morphia.mapping.MappingException;
 @SuppressWarnings("unchecked")
 public class LocaleConverter extends TypeConverter {
 
-	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, Locale.class);
-	}
+	public LocaleConverter() { super(Locale.class); }
 	
 	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		return parseLocale(fromDBObject.toString());
 	}
 	
 	@Override
-	Object encode(Object value, MappedField optionalExtraInfo) {
+	public Object encode(Object value, MappedField optionalExtraInfo) {
 		if (value == null)
 			return null;
 		return value.toString();

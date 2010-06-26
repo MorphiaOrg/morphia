@@ -14,16 +14,19 @@ import com.google.code.morphia.mapping.MappingException;
 public class EnumConverter extends TypeConverter {
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+	protected
+	boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		return c.isEnum();
 	}
 	
 	@Override
+	public
 	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		return Enum.valueOf(targetClass, fromDBObject.toString());
 	}
 	
 	@Override
+	public
 	Object encode(Object value, MappedField optionalExtraInfo) {
 		if (value == null)
 			return null;

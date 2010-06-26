@@ -18,7 +18,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 class EmbeddedMapper {
 	private final Mapper mapper;
 	private final DefaultConverters converters;
@@ -136,7 +136,7 @@ class EmbeddedMapper {
 		}
 		if (values.size() > 0) {
 			if (mf.getType().isArray()) {
-				Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), values);
+				Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), ReflectionUtils.iterToList(values));
 				mf.setFieldValue(entity, array);
 			} else {
 				mf.setFieldValue(entity, values);

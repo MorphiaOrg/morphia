@@ -14,7 +14,7 @@ import com.thoughtworks.proxy.kit.ObjectReference;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public abstract class AbstractReference implements Serializable, ObjectReference, ProxiedReference {
 
 	/**

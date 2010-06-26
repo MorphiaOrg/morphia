@@ -13,9 +13,8 @@ import com.google.code.morphia.utils.ReflectionUtils;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class MapOfValuesConverter extends TypeConverter {
-	
 	private final DefaultConverters converters;
 	
 	public MapOfValuesConverter(DefaultConverters converters) {
@@ -23,13 +22,15 @@ public class MapOfValuesConverter extends TypeConverter {
 	}
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		//TODO See about removing extra reflection and checking type.
-		return ReflectionUtils.isMap(c);
+	protected boolean isSupported(Class<?> c, MappedField optionalExtraInfo) {
+		if (optionalExtraInfo != null)
+			return optionalExtraInfo.isMap();
+		else
+			return ReflectionUtils.implementsInterface(c, Map.class);
 	}
 	
 	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
 		Map<Object, Object> map = (Map<Object, Object>) fromDBObject;
 		Map values = (Map) ReflectionUtils.newInstance(f.getCTor(), HashMap.class);
 		for (Map.Entry<Object, Object> entry : map.entrySet()) {
@@ -40,7 +41,7 @@ public class MapOfValuesConverter extends TypeConverter {
 	}
 	
 	@Override
-	Object encode(Object value, MappedField f) {
+	public Object encode(Object value, MappedField f) {
 		if (value == null)
 			return null;
 		
@@ -54,6 +55,5 @@ public class MapOfValuesConverter extends TypeConverter {
 			return mapForDb;
 		}
 		return null;
-	}
-	
+	}	
 }

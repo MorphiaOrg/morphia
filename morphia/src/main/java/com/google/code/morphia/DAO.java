@@ -15,7 +15,7 @@ import com.mongodb.Mongo;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class DAO<T,K extends Serializable> {
 
     protected Class<T> entityClazz;

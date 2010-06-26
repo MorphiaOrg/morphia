@@ -14,18 +14,14 @@ import com.google.code.morphia.mapping.MappingException;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * 
  */
-@SuppressWarnings("unchecked")
-public class EnumSetConverter extends TypeConverter {
-	
+@SuppressWarnings({"unchecked","rawtypes"})
+public class EnumSetConverter extends TypeConverter {	
 	private EnumConverter ec = new EnumConverter();
+
+	public EnumSetConverter() { super(EnumSet.class); }
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, EnumSet.class);
-	}
-	
-	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		if (fromDBObject == null)
 			return null;
 		
@@ -44,7 +40,7 @@ public class EnumSetConverter extends TypeConverter {
 	}
 	
 	@Override
-	Object encode(Object value, MappedField optionalExtraInfo) {
+	public Object encode(Object value, MappedField optionalExtraInfo) {
 		if (value == null)
 			return null;
 		
@@ -58,5 +54,4 @@ public class EnumSetConverter extends TypeConverter {
 		
 		return values;
 	}
-	
 }

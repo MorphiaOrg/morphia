@@ -19,64 +19,73 @@ import com.google.code.morphia.utils.ReflectionUtils;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 @SuppressWarnings("unchecked")
-public class CollectionConverter extends TypeConverter {
+public class IterableConverter extends TypeConverter {
 	private final DefaultConverters chain;
-	//TODO: should this be Iterable<T>, not a Collection<T> converter?
 	
-	public CollectionConverter(DefaultConverters chain) {
+	public IterableConverter(DefaultConverters chain) {
 		this.chain = chain;
 	}
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return c.isArray() || ReflectionUtils.isCollection(c);
+	@SuppressWarnings("rawtypes")
+	protected
+	boolean isSupported(Class c, MappedField optionalExtraInfo) {
+		if (optionalExtraInfo != null)
+			return optionalExtraInfo.isMultipleValues() && !optionalExtraInfo.isMap();
+		else
+			return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
+	public
 	Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
-		Collection list = (Collection) fromDBObject;
 		if (mf == null)
-			return list;
+			return fromDBObject;
 		
-		// FIXME we rely on subtype here... is this possible without?
-
-		Class subtype = mf.getSubType();
-		if (subtype != null) {
+		if (fromDBObject == null) return null;
+		
+		Class subtypeDest = mf.getSubType();
+		Collection vals = null;
+		
+		if (fromDBObject.getClass().isArray()) {
+			vals = new ArrayList();
+			for(Object o : (Object[])fromDBObject)
+				vals.add(chain.decode( (subtypeDest != null) ? subtypeDest : o.getClass(), o));
+		} else if (fromDBObject instanceof Iterable) {
 			// map back to the java datatype
 			// (List/Set/Array[])
-			Collection values = createCollection(mf);
-			for (Object o : list) {
-				values.add(chain.decode(subtype, o));
-			}
-			list = values;
+			vals = createNewCollection(mf);
+			for (Object o : (Iterable) fromDBObject)
+				vals.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
 		}
-		
-		if (mf.getType().isArray()) {
-			return ReflectionUtils.convertToArray(subtype, list);
-		}
-		
-		return list;
 
+		if (mf.getType().isArray()) {
+			Object[] retArray = ReflectionUtils.convertToArray(subtypeDest, (ArrayList)vals);
+			return retArray;
+		} else
+			return vals;
 	}
 	
-	private Collection createCollection(final MappedField mf) {
-		Collection values;
+	private Collection<?> createNewCollection(final MappedField mf) {
+		Collection<?> values;
 		
 		if (!mf.isSet()) {
-			values = (List) ReflectionUtils.newInstance(mf.getCTor(), ArrayList.class);
+			values = (List<?>) ReflectionUtils.newInstance(mf.getCTor(), ArrayList.class);
 		} else {
-			values = (Set) ReflectionUtils.newInstance(mf.getCTor(), HashSet.class);
+			values = (Set<?>) ReflectionUtils.newInstance(mf.getCTor(), HashSet.class);
 		}
 		return values;
 	}
 	
 	@Override
+	public
 	Object encode(Object value, MappedField f) {
 		
 		if (value == null)
 			return null;
 		
-		Iterable iterableValues = null;
+		Iterable<?> iterableValues = null;
 		
 		if (value.getClass().isArray()) {
 			
@@ -90,7 +99,7 @@ public class CollectionConverter extends TypeConverter {
 			iterableValues = Arrays.asList((Object[]) value);
 		} else {
 			// cast value to a common interface
-			iterableValues = (Iterable) value;
+			iterableValues = (Iterable<?>) value;
 		}
 		
 		List values = new ArrayList();

@@ -12,14 +12,12 @@ import com.google.code.morphia.mapping.MappingException;
  */
 @SuppressWarnings("unchecked")
 public class IntegerConverter extends TypeConverter {
-	
-	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, int.class, Integer.class);
+	public IntegerConverter() {
+		super(int.class, Integer.class);
 	}
 	
 	@Override
-	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
 		if (val instanceof String) {
 			return Integer.parseInt((String) val);
 		} else {
@@ -27,5 +25,4 @@ public class IntegerConverter extends TypeConverter {
 		}
 		
 	}
-	
 }

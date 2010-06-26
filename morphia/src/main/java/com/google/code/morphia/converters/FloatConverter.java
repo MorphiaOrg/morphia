@@ -12,13 +12,11 @@ import com.google.code.morphia.mapping.MappingException;
  */
 @SuppressWarnings("unchecked")
 public class FloatConverter extends TypeConverter {
-	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, Float.class, float.class);
-	}
+	
+	public FloatConverter() { super(Float.class, float.class); }
 	
 	@Override
-	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
 		Object dbValue = val;
 		if (dbValue instanceof Double) {
 			return ((Double) dbValue).floatValue();
@@ -26,5 +24,4 @@ public class FloatConverter extends TypeConverter {
 		String sVal = val.toString();
 		return Float.parseFloat(sVal);
 	}
-	
 }

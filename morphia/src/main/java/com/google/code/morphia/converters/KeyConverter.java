@@ -14,18 +14,16 @@ import com.mongodb.DBRef;
  */
 @SuppressWarnings("unchecked")
 public class KeyConverter extends TypeConverter {
+
+	public KeyConverter() { super(Key.class); }
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, Key.class);
-	}
-	
-	@Override
-	Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
 		return new Key((DBRef) o);
 	}
 	
 	@Override
+	public
 	Object encode(Object t, MappedField optionalExtraInfo) {
 		if (t == null)
 			return null;

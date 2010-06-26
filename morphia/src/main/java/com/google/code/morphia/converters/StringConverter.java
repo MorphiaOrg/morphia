@@ -12,14 +12,11 @@ import com.google.code.morphia.mapping.MappingException;
  */
 @SuppressWarnings("unchecked")
 public class StringConverter extends TypeConverter {
-	
-	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, String.class);
+	public StringConverter() {
+		super(String.class);
 	}
-	
 	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		if (fromDBObject instanceof String) {
 			return (String) fromDBObject;
 		}

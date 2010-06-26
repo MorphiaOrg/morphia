@@ -14,12 +14,14 @@ import com.google.code.morphia.mapping.MappingException;
 @SuppressWarnings("unchecked")
 public class DateConverter extends TypeConverter {
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+	protected
+	boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		return oneOf(c, Date.class);
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
+	public
 	Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
 		if (o instanceof Date) {
 			Date d = (Date) o;

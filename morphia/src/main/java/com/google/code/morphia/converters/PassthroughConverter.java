@@ -10,16 +10,18 @@ import com.google.code.morphia.mapping.MappingException;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class PassthroughConverter extends TypeConverter {
+	public PassthroughConverter() {}
+	public PassthroughConverter(Class...types) { super(types);}
 	
 	@Override
-	boolean canHandle(Class c, MappedField optionalExtraInfo) {
+	protected boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		return true;
 	}
 	
 	@Override
-	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		return fromDBObject;
 	}
 	
