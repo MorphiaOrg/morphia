@@ -163,4 +163,8 @@ public class Morphia {
     public Datastore createDatastore(Mongo mon, String dbName, String user, char[] pw) {
     	return new DatastoreImpl(this, mon, dbName, user, pw);
     }
+
+	public Datastore createDatastore(Mongo mongo, String dbName) {
+		return createDatastore(mongo, dbName, null, null);
+	}
 }
