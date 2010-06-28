@@ -13,7 +13,7 @@ public class UpdateResults<T> {
 	public UpdateResults(CommandResult opRes) {
 		updatedExisting = (opRes.containsField("updatedExisting") && (Boolean)opRes.get("updatedExisting"));
 		error = (String)opRes.getErrorMessage();
-		hadError = !opRes.ok();
+		hadError = error != null && !error.isEmpty();
 		if (opRes.containsField("n")) {
 			if(updatedExisting) 
 				updateCount = ((Number)opRes.get("n")).intValue();

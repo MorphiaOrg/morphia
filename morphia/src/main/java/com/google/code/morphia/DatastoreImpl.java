@@ -56,13 +56,19 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		this(morphia, mongo, null);
 	}
 	
-	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName) {
+	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName, String username, char[] password) {
 		this.morphia = morphia;
 		this.mongo = mongo;
 		this.db = mongo.getDB(dbName);
+		if (username != null) 
+			this.db.authenticate(username, password);
 		
 		// VERY discussable
 		DatastoreHolder.getInstance().set(this);
+	}
+
+	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName) {
+		this(morphia, mongo, dbName, null, null);
 	}
 	
 	public <T, V> DBRef createRef(Class<T> clazz, V id) {

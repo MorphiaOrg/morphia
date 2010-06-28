@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
@@ -144,9 +144,13 @@ public class Morphia {
 
     public Mapper getMapper() { return this.mapper; }
 
-    public Datastore createDatastore(String dbName) {
+    public Datastore createDatastore(String dbName) { 
+    	return createDatastore(dbName, null, null);
+	}
+    
+    public Datastore createDatastore(String dbName, String user, char[] pw) {
     	try {
-			return new DatastoreImpl(this, new Mongo(), dbName);
+			return createDatastore(new Mongo(), dbName, user, pw);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -156,7 +160,7 @@ public class Morphia {
     	return new DatastoreImpl(this, mon);
     }
 
-    public Datastore createDatastore(Mongo mon, String dbName) {
-    	return new DatastoreImpl(this, mon, dbName);
+    public Datastore createDatastore(Mongo mon, String dbName, String user, char[] pw) {
+    	return new DatastoreImpl(this, mon, dbName, user, pw);
     }
 }
