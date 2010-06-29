@@ -26,6 +26,7 @@ import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
@@ -34,6 +35,8 @@ import com.mongodb.DBObject;
  * @author Scott Hernandez
  */
 public class TestPerf  extends TestBase{
+	static double FailFactor = 1.05;
+	
 	@Entity
 	public static class Address {
 		@Id String id;
@@ -42,63 +45,97 @@ public class TestPerf  extends TestBase{
 		String city = "Manhattan Beach";
 		String state = "CA";
 		int zip = 94114;
+		Date added = new Date();
 	}
 
 	@Test @Ignore
     public void testAddressInsertPerf() throws Exception {
-    	int count = 100000;
+    	int count = 5000;
+    	boolean strict = true;
     	long startTicks = new Date().getTime();
-    	insertAddresses(count, true);
+    	insertAddresses(count, true, strict);
     	long endTicks = new Date().getTime();
     	long rawInsertTime = endTicks - startTicks;
     	
     	ds.delete(ds.find(Address.class));
     	startTicks = new Date().getTime();
-    	insertAddresses(count, false);
+    	insertAddresses(count, false, strict);
     	endTicks = new Date().getTime();
     	long insertTime = endTicks - startTicks;
     	
-    	Assert.assertTrue("Insert(" + count + " addresses) performance is too slow: " + 
-    				String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 5) + "X slower", 
-    			insertTime < (rawInsertTime * 1.1));
+    	String msg = String.format("Insert (%s) performance is too slow: %sX slower (%s/%s)", 
+    							count,
+    							String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 4),
+    							insertTime,
+    							rawInsertTime);
+    	Assert.assertTrue(msg, 
+    			insertTime < (rawInsertTime * FailFactor ));
     }
 
-    @Test @Ignore
-    public void testAddressInsertThreadedPerf() throws Exception {
-    	int count = 100000;
-
-//    	ThreadPool<>
-    	//TODO add thread pool here to test concurrency
+	@Test @Ignore
+    public void testAddressLoadPerf() throws Exception {
+    	insertAddresses(10, false, false);
+    	
+		int count = 5000;
+    	boolean strict = true;
     	long startTicks = new Date().getTime();
-    	insertAddresses(count, true);
+    	loadAddresses(count, true, strict);
     	long endTicks = new Date().getTime();
     	long rawInsertTime = endTicks - startTicks;
     	
     	startTicks = new Date().getTime();
-    	insertAddresses(count, false);
+    	loadAddresses(count, false, strict);
     	endTicks = new Date().getTime();
     	long insertTime = endTicks - startTicks;
     	
-    	Assert.assertTrue("Insert(" + count + " addresses) performance is too slow: " + 
-    				String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 5) + "X slower", 
-    			insertTime < (rawInsertTime * 1.1));
+    	String msg = String.format("Load (%s) performance is too slow: %sX slower (%s/%s)", 
+    							count,
+    							String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 4),
+    							insertTime,
+    							rawInsertTime);
+    	Assert.assertTrue(msg, 
+    			insertTime < (rawInsertTime * FailFactor ));
     }
-    
-    public void insertAddresses(int count, boolean raw) {
-    	Address template = new Address();
+	
+	public void loadAddresses(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
-//    	dbColl.setWriteConcern(WriteConcern.STRICT);
+    	if (strict) 
+    		dbColl.setWriteConcern(WriteConcern.STRICT);
+    	
     	for(int i=0;i<count;i++) {
     		if(raw) {
-    			DBObject addr = new BasicDBObject();
-    			addr.put("name", template.name);
-    			addr.put("street", template.street);
-    			addr.put("city", template.city);
-    			addr.put("state", template.state);
-    			addr.put("zip", template.zip);
-    			dbColl.save(addr);
-    		}else {
     			Address addr = new Address();
+    			BasicDBObject dbObj = (BasicDBObject) dbColl.findOne();
+    			addr.name = dbObj.getString("name");
+    			addr.street = dbObj.getString("street");
+    			addr.city = dbObj.getString("city");
+    			addr.state = dbObj.getString("state");
+    			addr.zip = dbObj.getInt("zip");
+    			addr.added = (Date) dbObj.get("added");
+    			dbColl.save(dbObj);
+    		}else {
+    			ds.find(Address.class).get();
+    		}
+    	}
+    }
+
+	public void insertAddresses(int count, boolean raw, boolean strict) {
+    	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
+    	if (strict) 
+    		dbColl.setWriteConcern(WriteConcern.STRICT);
+    	
+    	for(int i=0;i<count;i++) {
+			Address addr = new Address();
+    		if(raw) {
+    			DBObject dbObj = new BasicDBObject();
+    			dbObj.put("name", addr.name);
+    			dbObj.put("street", addr.street);
+    			dbObj.put("city", addr.city);
+    			dbObj.put("state", addr.state);
+    			dbObj.put("zip", addr.zip);
+    			dbObj.put("added", new Date());
+    			dbColl.save(dbObj);
+    		}else {
     			ds.save(addr);
     		}
     	}
