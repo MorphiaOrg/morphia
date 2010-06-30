@@ -102,6 +102,8 @@ public class MappedField {
 				ctor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
 				// never mind.
+			} catch (SecurityException e) {
+				// never mind.
 			}
 		}
 		
