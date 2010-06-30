@@ -68,8 +68,4 @@ public abstract class TypeConverter {
 	public void setMapper(Mapper mapr) {
 		this.mapr = mapr;
 	}
-	
-	public boolean isSimpleValue() {
-		return false;
-	}
 }

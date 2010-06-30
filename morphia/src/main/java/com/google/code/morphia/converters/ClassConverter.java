@@ -8,10 +8,10 @@ import com.google.code.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- *
+ * @author scotthernandez
  */
 @SuppressWarnings({"unchecked","rawtypes"})
-public class ClassConverter extends TypeConverter {
+public class ClassConverter extends TypeConverter implements SimpleValueConverter {
 
 	public ClassConverter() { super(Class.class); }
 
@@ -36,14 +36,8 @@ public class ClassConverter extends TypeConverter {
 	@Override
 	public Object encode(Object value, MappedField optionalExtraInfo) {
 		if (value == null)
-        {
             return null;
-        }
-		return ((Class)value).getName();
-	}
-	
-	@Override
-	public boolean isSimpleValue() {
-		return true;
+		else 
+			return ((Class)value).getName();
 	}
 }

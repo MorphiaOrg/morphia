@@ -12,10 +12,11 @@ import com.google.code.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- * 
+ * @author scotthernandez
  */
 @SuppressWarnings({"unchecked","rawtypes"})
-public class EnumSetConverter extends TypeConverter {	
+public class EnumSetConverter extends TypeConverter implements SimpleValueConverter{	
+
 	private EnumConverter ec = new EnumConverter();
 
 	public EnumSetConverter() { super(EnumSet.class); }
@@ -54,9 +55,4 @@ public class EnumSetConverter extends TypeConverter {
 		
 		return values;
 	}
-	
-	public boolean isSimpleValue() {
-		return true;
-	}
-
 }

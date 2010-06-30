@@ -5,13 +5,12 @@ package com.google.code.morphia.converters;
 
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
-
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- * 
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
-public class EnumConverter extends TypeConverter {
+@SuppressWarnings({"unchecked","rawtypes"})
+public class EnumConverter extends TypeConverter implements SimpleValueConverter{
 	
 	@Override
 	protected
@@ -37,9 +36,4 @@ public class EnumConverter extends TypeConverter {
 	private <T extends Enum> String getName(T value) {
 		return value.name();
 	}
-	
-	public boolean isSimpleValue() {
-		return true;
-	}
-
 }

@@ -11,10 +11,10 @@ import com.google.code.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- * 
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
-public class LocaleConverter extends TypeConverter {
+@SuppressWarnings({"unchecked","rawtypes"})
+public class LocaleConverter extends TypeConverter implements SimpleValueConverter {
 
 	public LocaleConverter() { super(Locale.class); }
 	
@@ -40,9 +40,4 @@ public class LocaleConverter extends TypeConverter {
 		}
 		return null;
 	}
-	
-	public boolean isSimpleValue() {
-		return true;
-	}
-
 }

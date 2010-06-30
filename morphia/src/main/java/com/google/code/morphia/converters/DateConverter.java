@@ -10,28 +10,20 @@ import com.google.code.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
-public class DateConverter extends TypeConverter {
-	@Override
-	protected
-	boolean isSupported(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, Date.class);
-	}
+@SuppressWarnings({"unchecked","rawtypes"})
+public class DateConverter extends TypeConverter implements SimpleValueConverter{
+	
+	public DateConverter() { super(Date.class); };
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public
-	Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
-		if (o instanceof Date) {
-			Date d = (Date) o;
-			return d;
+	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+		if (val instanceof Date) {
+			return val;
 		}
-		return new Date(Date.parse(o.toString())); // good luck
+		return new Date(Date.parse(val.toString())); // good luck
 	}
-	
-	public boolean isSimpleValue() {
-		return true;
-	}
-
 }

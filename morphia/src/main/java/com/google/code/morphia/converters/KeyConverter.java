@@ -10,9 +10,9 @@ import com.mongodb.DBRef;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- * 
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class KeyConverter extends TypeConverter {
 
 	public KeyConverter() { super(Key.class); }
@@ -23,15 +23,10 @@ public class KeyConverter extends TypeConverter {
 	}
 	
 	@Override
-	public
-	Object encode(Object t, MappedField optionalExtraInfo) {
+	public Object encode(Object t, MappedField optionalExtraInfo) {
 		if (t == null)
 			return null;
 		return ((Key) t).toRef(mapr);
-	}
-	
-	public boolean isSimpleValue() {
-		return true;
 	}
 
 }

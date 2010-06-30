@@ -303,7 +303,7 @@ public class Mapper {
 					if (dbVal != null)
 						dbObject.put(ID_KEY, converters.encode(ReflectionUtils.asObjectIdMaybe(dbVal)));
 				} else if (Property.class.equals(annType) || Serialized.class.equals(annType)
-						|| mf.isTypeMongoCompatible() || (converters.hasDedicatedConverter(mf)))
+						|| mf.isTypeMongoCompatible() || (converters.hasSimpleValueConverter(mf)))
 					valueMapper.toDBObject(entity, mf, dbObject, opts);
 				else if (Reference.class.equals(annType))
 					referenceMapper.toDBObject(entity, mf, dbObject, opts);
@@ -353,7 +353,7 @@ public class Mapper {
 						mf.setFieldValue(entity, converters.decode(mf.getType(), dbObject.get(ID_KEY)));
 					}
 				} else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
-						|| mf.isTypeMongoCompatible() || converters.hasDedicatedConverter(mf))
+						|| mf.isTypeMongoCompatible() || converters.hasSimpleValueConverter(mf))
 					valueMapper.fromDBObject(dbObject, mf, entity);
 				else if (mf.hasAnnotation(Embedded.class))
 					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);

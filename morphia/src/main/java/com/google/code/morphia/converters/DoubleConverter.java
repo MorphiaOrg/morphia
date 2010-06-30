@@ -8,16 +8,12 @@ import com.google.code.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- * 
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
-public class DoubleConverter extends TypeConverter {
-	
-	@Override
-	protected
-	boolean isSupported(Class c, MappedField optionalExtraInfo) {
-		return oneOf(c, double.class, Double.class);
-	}
+@SuppressWarnings({"unchecked","rawtypes"})
+public class DoubleConverter extends TypeConverter implements SimpleValueConverter{
+
+	public DoubleConverter() { super(double.class, Double.class); }
 	
 	@Override
 	public
@@ -25,16 +21,10 @@ public class DoubleConverter extends TypeConverter {
 		if (val instanceof Double) {
 			return (Double) val;
 		}
-		Object dbValue = val;
-		if (dbValue instanceof Number) {
-			return ((Number) dbValue).doubleValue();
+		if (val instanceof Number) {
+			return ((Number) val).doubleValue();
 		}
 		String sVal = val.toString();
 		return Double.parseDouble(sVal);
 	}
-	
-	public boolean isSimpleValue() {
-		return true;
-	}
-
 }

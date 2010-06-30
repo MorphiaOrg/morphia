@@ -17,8 +17,9 @@ import com.google.code.morphia.utils.ReflectionUtils;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
+ * @author scotthernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class IterableConverter extends TypeConverter {
 	private final DefaultConverters chain;
 	
@@ -116,7 +117,5 @@ public class IterableConverter extends TypeConverter {
 			return values;
 		} else
 			return null;
-		
 	}
-	
 }

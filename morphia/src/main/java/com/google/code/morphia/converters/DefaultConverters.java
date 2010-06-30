@@ -17,9 +17,10 @@ import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.DBObject;
 
 /**
- * implements chain of responsibility for encoders
+ * Default encoders
  * 
  * @author Uwe Schaefer, (us@thomas-daily.de)
+ * @author scotthernandez
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultConverters {
@@ -158,11 +159,8 @@ public class DefaultConverters {
 			tc.setMapper(mapr);
 	}
 	
-	public boolean hasDedicatedConverter(MappedField c) {
+	public boolean hasSimpleValueConverter(MappedField c) {
 		TypeConverter conv = getEncoder(c);
-		if (conv instanceof PassthroughConverter)
-			return false;
-		
-		return conv.isSimpleValue();
+		return (conv instanceof SimpleValueConverter);
 	}
 }

@@ -202,11 +202,11 @@ public class ReflectionUtils
             return false;
         }
 
-        return (type == String.class) || (type == char.class) || (type == Character.class) || (type == short.class)
-                || (type == Short.class) || (type == Integer.class) || (type == int.class) || (type == Long.class)
-                || (type == long.class) || (type == Double.class) || (type == double.class) || (type == float.class)
-                || (type == Float.class) || (type == Boolean.class) || (type == boolean.class) || (type == Byte.class)
-                || (type == byte.class) || (type == Date.class) || (type == Locale.class) || type.isEnum();
+        return (	type == String.class) 	|| (type == char.class) 	|| (type == Character.class)|| (type == short.class)
+                || (type == Short.class) 	|| (type == Integer.class) 	|| (type == int.class) 		|| (type == Long.class)
+                || (type == long.class) 	|| (type == Double.class) 	|| (type == double.class) 	|| (type == float.class)
+                || (type == Float.class) 	|| (type == Boolean.class) 	|| (type == boolean.class) 	|| (type == Byte.class)
+                || (type == byte.class) 	|| (type == Date.class) 	|| (type == Locale.class) 	|| (type == Class.class) || type.isEnum();
     }
 
     /**
