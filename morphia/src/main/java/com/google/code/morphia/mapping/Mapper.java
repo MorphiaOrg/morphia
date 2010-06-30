@@ -277,7 +277,7 @@ public class Mapper {
 		BasicDBObject dbObject = new BasicDBObject();
 		MappedClass mc = getMappedClass(entity);
 		
-		if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClasnameStored())
+		if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored())
 			dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
 
 		// if ( mc.getPolymorphicAnnotation() != null ) {

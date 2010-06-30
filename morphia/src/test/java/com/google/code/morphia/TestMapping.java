@@ -185,7 +185,7 @@ public class TestMapping  extends TestBase {
 
 	public enum Enum1 { A, B }
 
-	@Entity(value="cil", noClasnameStored=true)
+	@Entity(value="cil", noClassnameStored=true)
  	public static class ContainsIntegerList {
 		@Id String id;
 		List<Integer> intList = new ArrayList<Integer>();
@@ -197,7 +197,7 @@ public class TestMapping  extends TestBase {
 		List<Integer> ints = new ArrayList<Integer>();
 	}
 
-	@Entity(value="cil", noClasnameStored=true)
+	@Entity(value="cil", noClassnameStored=true)
 	public static class ContainsIntegerListNew {
 		@Id String id;
 		@AlsoLoad("intList") List<Integer> ints = new ArrayList<Integer>();
