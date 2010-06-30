@@ -30,4 +30,8 @@ public class KeyConverter extends TypeConverter {
 		return ((Key) t).toRef(mapr);
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

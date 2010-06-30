@@ -288,7 +288,7 @@ public class Mapper {
 		dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
-				Class<? extends Annotation> annType = opts.defaultFieldAnnotation;
+				Class<? extends Annotation> annType = null;
 				boolean foundAnnotation = false;
 				// get the annotation from the field.
 				for (Class<? extends Annotation> testType : new Class[] { Id.class, Property.class, Embedded.class,
@@ -303,18 +303,21 @@ public class Mapper {
 					if (dbVal != null)
 						dbObject.put(ID_KEY, converters.encode(ReflectionUtils.asObjectIdMaybe(dbVal)));
 				} else if (Property.class.equals(annType) || Serialized.class.equals(annType)
-						|| mf.isTypeMongoCompatible())
+						|| mf.isTypeMongoCompatible() || (converters.hasDedicatedConverter(mf)))
 					valueMapper.toDBObject(entity, mf, dbObject, opts);
 				else if (Reference.class.equals(annType))
 					referenceMapper.toDBObject(entity, mf, dbObject, opts);
 				else if (Embedded.class.equals(annType)) {
 					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
-					if (!foundAnnotation)
-						logger.fine("No annotation was found, embedding " + mf);
 					
 				} else {
-					logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getSimpleName()
-							+ "]");
+					// maybe act according to some default!?
+					logger.fine("No annotation was found, embedding " + mf);
+					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
+					
+// logger.warning("Ignoring field: " + mf.getFullName() +
+					// " [type:" + mf.getType().getSimpleName()
+					// + "]");
 				}
 
 			} catch (Exception e) {
@@ -350,14 +353,21 @@ public class Mapper {
 						mf.setFieldValue(entity, converters.decode(mf.getType(), dbObject.get(ID_KEY)));
 					}
 				} else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
-						|| mf.isTypeMongoCompatible())
+						|| mf.isTypeMongoCompatible() || converters.hasDedicatedConverter(mf))
 					valueMapper.fromDBObject(dbObject, mf, entity);
 				else if (mf.hasAnnotation(Embedded.class))
 					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				else if (mf.hasAnnotation(Reference.class))
 					referenceMapper.fromDBObject(dbObject, mf, entity, retrieved);
-				else
-					logger.warning("Ignoring field: " + mf.getFullName() + " [type:" + mf.getType().getName() + "]");
+				else {
+					// that was broken before because not being in sync with
+					// toDBObject
+					// logger.warning("Ignoring field: " + mf.getFullName() +
+					// " [type:" + mf.getType().getName() + "]");
+					
+					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
+				}
+
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);

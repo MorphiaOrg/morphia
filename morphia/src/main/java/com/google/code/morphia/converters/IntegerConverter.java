@@ -25,4 +25,9 @@ public class IntegerConverter extends TypeConverter {
 		}
 		
 	}
+	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

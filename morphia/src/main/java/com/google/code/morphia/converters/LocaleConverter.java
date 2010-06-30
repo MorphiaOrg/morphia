@@ -40,4 +40,9 @@ public class LocaleConverter extends TypeConverter {
 		}
 		return null;
 	}
+	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

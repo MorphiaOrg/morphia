@@ -54,4 +54,9 @@ public class EnumSetConverter extends TypeConverter {
 		
 		return values;
 	}
+	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

@@ -38,4 +38,8 @@ public class EnumConverter extends TypeConverter {
 		return value.name();
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

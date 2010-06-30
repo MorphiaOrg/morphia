@@ -33,4 +33,8 @@ public class DoubleConverter extends TypeConverter {
 		return Double.parseDouble(sVal);
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

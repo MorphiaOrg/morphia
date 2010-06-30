@@ -16,29 +16,46 @@ import com.google.code.morphia.annotations.Property;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- *
  */
-public class ClassMappingTest extends TestBase{
+public class ClassMappingTest extends TestBase
+{
+
+    @SuppressWarnings("unchecked")
+    public static class E
+    {
+        @Id
+        String id;
+
+        @Property
+        Class<? extends Collection> testClass;
 
 
-	@SuppressWarnings("unchecked")
-	public static class E {
-		@Id
-		String id;
-@Property
-		Class<? extends Collection> testClass;
+        Class<? extends Collection> testClass2;
 
+    }
 
-	}
-	@Test
-	public void testMapping() throws Exception {
-		E e = new E();
+    @Test
+    public void testMapping() throws Exception
+    {
+        E e = new E();
 
-		    e.testClass=LinkedList.class;
-		ds.save(e);
+        e.testClass = LinkedList.class;
+        ds.save(e);
 
-		e = ds.get(e);
-		Assert.assertEquals(LinkedList.class, e.testClass);
-	}
+        e = ds.get(e);
+        Assert.assertEquals(LinkedList.class, e.testClass);
+    }
+
+    @Test
+    public void testMappingWithoutAnnotation() throws Exception
+    {
+        E e = new E();
+
+        e.testClass2 = LinkedList.class;
+        ds.save(e);
+
+        e = ds.get(e);
+        Assert.assertEquals(LinkedList.class, e.testClass2);
+    }
 
 }

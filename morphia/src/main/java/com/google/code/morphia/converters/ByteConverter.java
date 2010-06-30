@@ -31,4 +31,8 @@ public class ByteConverter extends TypeConverter {
 		return Byte.parseByte(sVal);
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

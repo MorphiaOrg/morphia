@@ -157,4 +157,12 @@ public class DefaultConverters {
 		for(TypeConverter tc : untypedTypeEncoders)
 			tc.setMapper(mapr);
 	}
+	
+	public boolean hasDedicatedConverter(MappedField c) {
+		TypeConverter conv = getEncoder(c);
+		if (conv instanceof PassthroughConverter)
+			return false;
+		
+		return conv.isSimpleValue();
+	}
 }

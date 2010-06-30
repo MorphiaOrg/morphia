@@ -23,4 +23,8 @@ public class StringConverter extends TypeConverter {
 		return fromDBObject.toString();
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

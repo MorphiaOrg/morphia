@@ -28,4 +28,7 @@ public class BooleanConverter extends TypeConverter {
 		return Boolean.parseBoolean(sVal);
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
 }

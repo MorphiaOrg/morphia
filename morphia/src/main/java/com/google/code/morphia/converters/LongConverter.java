@@ -27,4 +27,8 @@ public class LongConverter extends TypeConverter {
 		
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

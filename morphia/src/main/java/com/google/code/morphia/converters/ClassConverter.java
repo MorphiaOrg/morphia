@@ -41,4 +41,9 @@ public class ClassConverter extends TypeConverter {
         }
 		return ((Class)value).getName();
 	}
+	
+	@Override
+	public boolean isSimpleValue() {
+		return true;
+	}
 }

@@ -25,4 +25,8 @@ public class ShortConverter extends TypeConverter {
 		return Short.parseShort(sVal);
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

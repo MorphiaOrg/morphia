@@ -30,4 +30,8 @@ public class DateConverter extends TypeConverter {
 		return new Date(Date.parse(o.toString())); // good luck
 	}
 	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }

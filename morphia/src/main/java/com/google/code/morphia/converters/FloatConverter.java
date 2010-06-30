@@ -24,4 +24,9 @@ public class FloatConverter extends TypeConverter {
 		String sVal = val.toString();
 		return Float.parseFloat(sVal);
 	}
+	
+	public boolean isSimpleValue() {
+		return true;
+	}
+
 }
