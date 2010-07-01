@@ -16,14 +16,14 @@ import com.mongodb.DBObject;
  * 
  * @author Scott Hernandez
  */
-public class UpdateOpsImpl implements UpdateOperations {
+public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 	Map<String, Map<String, Object>> ops = new HashMap<String, Map<String, Object>>();
-	
-//	List<DBObject> ops = new ArrayList<DBObject>();
 	Mapper mapr;
+	Class<T> clazz;
 	
-	public UpdateOpsImpl(Mapper mapper) {
+	public UpdateOpsImpl(Class<T> type, Mapper mapper) {
 		this.mapr = mapper;
+		this.clazz = type;
 	}
 		
 	public DBObject getOps() {
@@ -37,20 +37,20 @@ public class UpdateOpsImpl implements UpdateOperations {
 		
 	}
 
-	public UpdateOperations add(String fieldExpr, Object value) {
+	public UpdateOperations<T> add(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$set", fieldExpr, dbObj);
 		return this;
 	}
 
 
-	public UpdateOperations add(String fieldExpr, Object value, boolean addDups) {
+	public UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups) {
 		Object dbObj = mapr.toMongoObject(value);
 		add((addDups) ? "$push" : "$addToSet", fieldExpr, dbObj);
 		return this;
 	}
 
-	public UpdateOperations addAll(String fieldExpr, List<?> values, boolean addDups) {
+	public UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups) {
 		List<?> convertedValues = (List<?>)mapr.toMongoObject(values);
 		if(addDups)
 			add("$pushAll", fieldExpr, convertedValues);
@@ -59,60 +59,59 @@ public class UpdateOpsImpl implements UpdateOperations {
 		return this;
 	}
 
-	public UpdateOperations dec(String fieldExpr) {
+	public UpdateOperations<T> dec(String fieldExpr) {
 		return inc(fieldExpr, -1);
 	}
 
 
-	public UpdateOperations inc(String fieldExpr) {
+	public UpdateOperations<T> inc(String fieldExpr) {
 		return inc(fieldExpr, 1);
 	}
 
 
-	public UpdateOperations inc(String fieldExpr, Number value) {
+	public UpdateOperations<T> inc(String fieldExpr, Number value) {
 		add("$inc", fieldExpr, value);
 		return this;
 	}
 
 
-	protected UpdateOperations remove(String fieldExpr, boolean firstNotLast) {
+	protected UpdateOperations<T> remove(String fieldExpr, boolean firstNotLast) {
 		add("$pop", fieldExpr, (firstNotLast) ? -1 : 1 );
 		return this;
 	}
 
 
-	public UpdateOperations removeAll(String fieldExpr, Object value) {
+	public UpdateOperations<T> removeAll(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$pull", fieldExpr, dbObj);
 		return this;
 	}
 
 
-	public UpdateOperations removeAll(String fieldExpr, List<?> values) {
+	public UpdateOperations<T> removeAll(String fieldExpr, List<?> values) {
 		List<Object> vals = toDBObjList(values);
 		add("$pullAll", fieldExpr, vals);
 		return this;
 	}
 
 
-	public UpdateOperations removeFirst(String fieldExpr) {
+	public UpdateOperations<T> removeFirst(String fieldExpr) {
 		return remove(fieldExpr, true);
 	}
 
 
-	public UpdateOperations removeLast(String fieldExpr) {
+	public UpdateOperations<T> removeLast(String fieldExpr) {
 		return remove(fieldExpr, false);
 	}
 
-
-	public UpdateOperations set(String fieldExpr, Object value) {
+	public UpdateOperations<T> set(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
 		add("$set", fieldExpr, dbObj);
 		return this;
 	}
 
 
-	public UpdateOperations unset(String fieldExpr) {
+	public UpdateOperations<T> unset(String fieldExpr) {
 		add("$unset", fieldExpr, 1);
 		return this;
 	}

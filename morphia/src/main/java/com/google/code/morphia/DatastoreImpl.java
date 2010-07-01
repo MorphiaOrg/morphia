@@ -147,7 +147,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> void delete(Query<T> query) {
 		QueryImpl<T> q = (QueryImpl<T>) query;
-		DBCollection dbColl = getCollection(q.getEntityType());
+		DBCollection dbColl = getCollection(q.getEntityClass());
 		if (q.getQueryObject() != null)
 			dbColl.remove(q.getQueryObject());
 		else
@@ -606,29 +606,27 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(entity);
 		return save(dbColl, entity);
 	}
-	
 
-	public UpdateOperations createUpdateOperations() {
-		return new UpdateOpsImpl(getMapper());
+	public <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
+		return new UpdateOpsImpl<T>(clazz, getMapper());
 	}
 
-
-	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
 		return update(query, ops, createIfMissing, false);
 	}
 
 
-	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops) {
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops) {
 		return update(query, ops, false, true);
 	}
 	
 
-	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops) {
+	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops) {
 		return update(query, ops, false, false);
 	}
 	
 
-	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops, boolean createIfMissing) {
+	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
 		return update(query, ops, createIfMissing, false);
 	}
 	
@@ -660,7 +658,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityType());
+		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		DBObject q = ((QueryImpl<T>) query).getQueryObject();
 		if (q == null)
 			q = new BasicDBObject();
@@ -668,4 +666,44 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		CommandResult opRes = dbColl.getDB().getLastError();
 		return new UpdateResults<T>(opRes);
 	}
+
+	public <T> T findAndDelete(Query<T> query) {
+		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
+		QueryImpl<T> qi = ((QueryImpl<T>) query);
+		DBObject q = qi.getQueryObject();
+		DBObject s = qi.getSortObject();
+        //TODO replace with 2.1 driver, once that is ready.
+		
+		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
+        if (q != null && !q.keySet().isEmpty())
+        	cmd.append( "query", q );
+        if (s != null && !s.keySet().isEmpty())
+        	cmd.append( "sort", s );
+        
+        cmd.append( "remove", true);
+		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command( cmd ).get( "value" ));
+        return entity;
+	}
+
+	public <T> T findAndModify(Query<T> q, UpdateOperations<T> ops) {
+		return findAndModify(q, ops, false);
+	}
+
+	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion) {
+		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
+		QueryImpl<T> qi = ((QueryImpl<T>) query);
+		DBObject q = qi.getQueryObject();
+		DBObject s = qi.getSortObject();
+        //TODO replace with 2.1 driver, once that is ready.
+		
+		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
+        if (q != null && !q.keySet().isEmpty())
+        	cmd.append( "query", q );
+        if (s != null && !s.keySet().isEmpty())
+        	cmd.append( "sort", s );
+        if (oldVersion)
+        	cmd.append( "new", false);
+		
+        T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command( cmd ).get( "value" ));
+        return entity;	}
 }

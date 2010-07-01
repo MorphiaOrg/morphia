@@ -66,28 +66,28 @@ public class TestUpdateOps  extends TestBase {
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 		
-		UpdateResults<Rectangle> results = ds.update(q1, ds.createUpdateOperations().inc("height"));
+		UpdateResults<Rectangle> results = ds.update(q1, ds.createUpdateOperations(Rectangle.class).inc("height"));
 		assertEquals(results.getUpdatedCount(), 3);
 		assertEquals(results.getUpdatedExisting(), true);
 		
 		assertEquals(0, ds.getCount(q1));
 		assertEquals(3, ds.getCount(q2));
 
-		ds.update(q2, ds.createUpdateOperations().dec("height"));
+		ds.update(q2, ds.createUpdateOperations(Rectangle.class).dec("height"));
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations().add("height",1D).add("width", 1D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).add("height",1D).add("width", 1D), true);		
 		assertNotNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNull(ds.find(Rectangle.class, "width", 2D).get());
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations().add("height",2D).add("width", 2D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).add("height",2D).add("width", 2D), true);		
 		assertNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNotNull(ds.find(Rectangle.class, "width", 2D).get());
 	}
 	
 	@Test
     public void testInsertUpdates() throws Exception {
-		UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperations().inc("radius",1D), true);
+		UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperations(Circle.class).inc("radius",1D), true);
 		assertEquals(1, res.getInsertedCount());
 		assertEquals(0, res.getUpdatedCount());
 		
@@ -100,7 +100,7 @@ public class TestUpdateOps  extends TestBase {
 		cInt.val = 21;
 		ds.save(cInt);
 		
-		UpdateResults<ContainsInt> res = ds.updateFirst(ds.createQuery(ContainsInt.class), ds.createUpdateOperations().inc("val",1.1D));
+		UpdateResults<ContainsInt> res = ds.updateFirst(ds.createQuery(ContainsInt.class), ds.createUpdateOperations(ContainsInt.class).inc("val",1.1D));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());		
 		assertEquals(true, res.getUpdatedExisting());
@@ -118,7 +118,7 @@ public class TestUpdateOps  extends TestBase {
 		assertArrayEquals((new ContainsIntArray()).vals, cIALoaded.vals);
 		
 		//add 4 to array
-		UpdateResults<ContainsIntArray > res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, false));
+		UpdateResults<ContainsIntArray> res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations(ContainsIntArray.class).add("vals",4, false));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -127,7 +127,7 @@ public class TestUpdateOps  extends TestBase {
 		assertArrayEquals(new Integer[]{1,2,3,4}, cIALoaded.vals);
 
 		//add unique (4) -- noop
-		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, false));
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray.class), ds.createUpdateOperations(ContainsIntArray.class).add("vals",4, false));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -136,7 +136,7 @@ public class TestUpdateOps  extends TestBase {
 		assertArrayEquals(new Integer[]{1,2,3,4}, cIALoaded.vals);
 
 		//add dup 4
-		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().add("vals",4, true));
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray.class), ds.createUpdateOperations(ContainsIntArray.class).add("vals",4, true));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -151,7 +151,7 @@ public class TestUpdateOps  extends TestBase {
 		//add [4,5]
 		List<Integer> newVals = new ArrayList<Integer>();
 		newVals.add(4);newVals.add(5);
-		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, false));
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray.class), ds.createUpdateOperations(ContainsIntArray.class).addAll("vals", newVals, false));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -160,7 +160,7 @@ public class TestUpdateOps  extends TestBase {
 		assertArrayEquals(new Integer[]{1,2,3,4,5}, cIALoaded.vals);
 		
 		//add them again... noop
-		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, false));
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray.class), ds.createUpdateOperations(ContainsIntArray.class).addAll("vals", newVals, false));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -169,7 +169,7 @@ public class TestUpdateOps  extends TestBase {
 		assertArrayEquals(new Integer[]{1,2,3,4,5}, cIALoaded.vals);
 
 		//add dups [4,5]
-		res = ds.updateFirst(ds.createQuery(ContainsIntArray .class), ds.createUpdateOperations().addAll("vals", newVals, true));
+		res = ds.updateFirst(ds.createQuery(ContainsIntArray.class), ds.createUpdateOperations(ContainsIntArray.class).addAll("vals", newVals, true));
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(true, res.getUpdatedExisting());
@@ -185,12 +185,12 @@ public class TestUpdateOps  extends TestBase {
 		ds.save(c);
 		c = new Circle(12D);
 		ds.save(c);
-		UpdateResults<Circle> res = ds.updateFirst(ds.createQuery(Circle.class), ds.createUpdateOperations().inc("radius",1D));
+		UpdateResults<Circle> res = ds.updateFirst(ds.createQuery(Circle.class), ds.createUpdateOperations(Circle.class).inc("radius",1D));
 		assertEquals(1, res.getUpdatedCount());
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(true, res.getUpdatedExisting());
 		
-		res = ds.update(ds.createQuery(Circle.class), ds.createUpdateOperations().inc("radius"));
+		res = ds.update(ds.createQuery(Circle.class), ds.createUpdateOperations(Circle.class).inc("radius"));
 		assertEquals(2, res.getUpdatedCount());
 		assertEquals(0, res.getInsertedCount());
 		assertEquals(true, res.getUpdatedExisting());

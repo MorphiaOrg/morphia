@@ -82,18 +82,39 @@ public interface Datastore {
 	<T> Key<T> save(T entity);
 
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
-	<T> UpdateResults<T> update(Query<T> query, UpdateOperations ops);
+	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
 	/** updates all entities found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
-	<T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing);
+	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
 	/** updates the first entity found with the operations; this is an atomic operation*/
-	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops);
+	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops);
 	/** updates the first entity found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
-	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations ops, boolean createIfMissing);
+	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
 	/** updates the first entity found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing);
+
 	
+	/** 
+	 * Deletes the given entities based on the query (first item only). 
+	 * @return the deleted Entity
+	 */
+	<T> T findAndDelete(Query<T> q);
+
+	/** 
+	 * Find the first Entity from the Query, and modify it.  
+	 * @return The modified Entity (the result of the update)
+	 */
+	<T> T findAndModify(Query<T> q, UpdateOperations<T> ops);
+
+	/** 
+	 * Find the first Entity from the Query, and modify it.
+	 * @param q the query to find the Entity with; You are not allowed to offset/skip in the query.
+	 * @param oldVersion indicated the old version of the Entity should be returned
+	 * @return The Entity (the result of the update if oldVersion is false)
+	 */
+	<T> T findAndModify(Query<T> q, UpdateOperations<T> ops, boolean oldVersion);
+
 	/** The builder for all update operations */
-	UpdateOperations createUpdateOperations();
+	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind);
 	
 	/** Returns a new query bound to the kind (a specific {@link DBCollection})  */
 	<T> Query<T> createQuery(Class<T> kind);

@@ -389,7 +389,7 @@ public class QueryImpl<T> implements Query<T> {
 		return fetch().iterator();
 	}
 	
-	public Class<T> getEntityType() {
+	public Class<T> getEntityClass() {
 		return this.clazz;
 	}
 	
@@ -484,10 +484,5 @@ public class QueryImpl<T> implements Query<T> {
 		this.includeFields = include;
 		this.fields = fields;
 		return this;
-	}
-	
-	public Class<T> getEntityClass() {
-		return clazz;
-	}
-	
+	}	
 }

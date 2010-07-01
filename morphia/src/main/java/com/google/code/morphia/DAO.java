@@ -72,8 +72,8 @@ public class DAO<T,K extends Serializable> {
     public Query<T> createQuery() {
     	return ds.createQuery(entityClazz);
     }
-    public UpdateOperations createUpdateOperations() {
-    	return ds.createUpdateOperations();
+    public UpdateOperations<T> createUpdateOperations() {
+    	return ds.createUpdateOperations(entityClazz);
     }
     
     public Class<T> getEntityClass() {
