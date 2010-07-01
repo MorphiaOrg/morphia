@@ -381,4 +381,9 @@ public class Mapper {
 		mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);
 		return entity;
 	}
+	
+	// TODO might be better to expose via some "options" object?
+	public DefaultConverters getConverters() {
+		return converters;
+	}
 }
