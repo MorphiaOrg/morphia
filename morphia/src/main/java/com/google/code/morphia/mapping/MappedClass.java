@@ -275,15 +275,7 @@ public class MappedClass {
 		try
 		{
 			//call interceptors first, then lifecycle events on the @Entity and @EntityListeners
-			for (EntityInterceptor ei : interceptors) {
-				log.fine("Calling interceptor method " + event.getSimpleName() + " on " + ei );
-				
-				if 		(event.equals(PreLoad.class)) 		ei.PreLoad(entity, dbObj, mapr);
-				else if (event.equals(PostLoad.class)) 		ei.PostLoad(entity, dbObj, mapr);
-				else if	(event.equals(PrePersist.class)) 	ei.PrePersist(entity, dbObj, mapr);
-				else if	(event.equals(PreSave.class)) 		ei.PreSave(entity, dbObj, mapr);
-				else if (event.equals(PostPersist.class))	ei.PostPersist(entity, dbObj, mapr);
-			}
+			callGlobalInterceptors(event, entity, dbObj, mapr, mapr.getEarlyInterceptors());
 			
 			Object tempObj = null;
 			if (methodPairs != null) {
@@ -318,11 +310,26 @@ public class MappedClass {
 						retDbObj = (DBObject) tempObj;
 				}
 			}
+
+			callGlobalInterceptors(event, entity, dbObj, mapr, mapr.getLateInterceptors());
 		}
 		catch (IllegalAccessException e) { throw new RuntimeException(e); }
 		catch (InvocationTargetException e) { throw new RuntimeException(e); }
 		
 		return retDbObj;
+	}
+
+	private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr,
+			Collection<EntityInterceptor> interceptors) {
+		for (EntityInterceptor ei : interceptors) {
+			log.fine("Calling interceptor method " + event.getSimpleName() + " on " + ei );
+			
+			if 		(event.equals(PreLoad.class)) 		ei.PreLoad(entity, dbObj, mapr);
+			else if (event.equals(PostLoad.class)) 		ei.PostLoad(entity, dbObj, mapr);
+			else if	(event.equals(PrePersist.class)) 	ei.PrePersist(entity, dbObj, mapr);
+			else if	(event.equals(PreSave.class)) 		ei.PreSave(entity, dbObj, mapr);
+			else if (event.equals(PostPersist.class))	ei.PostPersist(entity, dbObj, mapr);
+		}
 	}
 	
 	/** @return the idField */
