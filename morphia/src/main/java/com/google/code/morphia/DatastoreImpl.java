@@ -19,6 +19,7 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
+import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryImpl;
@@ -32,12 +33,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
-import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
+import com.mongodb.DB.WriteConcern;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -88,6 +89,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> Key<T> getKey(T entity) {
+		
+		if (entity instanceof ProxiedEntityReference) {
+			ProxiedEntityReference proxy = (ProxiedEntityReference) entity;
+			return (Key<T>) proxy.__getKey();
+		}
+		
 		entity = ProxyHelper.unwrap(entity);
 		if (entity instanceof Key)
 			return (Key<T>) entity;
