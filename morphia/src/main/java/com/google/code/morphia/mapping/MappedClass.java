@@ -269,14 +269,9 @@ public class MappedClass {
 	/** Call the lifcycle methods */
 	public DBObject callLifecycleMethods(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr) {
 		List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>)event);
-		Collection<EntityInterceptor> interceptors = mapr.getInterceptors();
-		
 		DBObject retDbObj = dbObj;
 		try
 		{
-			//call interceptors first, then lifecycle events on the @Entity and @EntityListeners
-			callGlobalInterceptors(event, entity, dbObj, mapr, mapr.getEarlyInterceptors());
-			
 			Object tempObj = null;
 			if (methodPairs != null) {
 				HashMap<Class<?>, Object> toCall = new HashMap<Class<?>, Object>((int) (methodPairs.size()*1.3));
@@ -311,7 +306,7 @@ public class MappedClass {
 				}
 			}
 
-			callGlobalInterceptors(event, entity, dbObj, mapr, mapr.getLateInterceptors());
+			callGlobalInterceptors(event, entity, dbObj, mapr, mapr.getInterceptors());
 		}
 		catch (IllegalAccessException e) { throw new RuntimeException(e); }
 		catch (InvocationTargetException e) { throw new RuntimeException(e); }

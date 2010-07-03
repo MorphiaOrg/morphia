@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
-import com.google.code.morphia.LateEntityInterceptor;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
@@ -387,25 +386,5 @@ public class Mapper {
 	public DefaultConverters getConverters() {
 		return converters;
 	}
-	
-	// TODO might be done in a nicer way with a predicate...
-	public List<EntityInterceptor> getEarlyInterceptors() {
-		List<EntityInterceptor> l = new ArrayList(interceptors.size());
-		for (EntityInterceptor entityInterceptor : interceptors) {
-			if (!(entityInterceptor instanceof LateEntityInterceptor)) {
-				l.add(entityInterceptor);
-			}
-		}
-		return l;
-	}
-	
-	public List<EntityInterceptor> getLateInterceptors() {
-		List<EntityInterceptor> l = new ArrayList(interceptors.size());
-		for (EntityInterceptor entityInterceptor : interceptors) {
-			if (entityInterceptor instanceof LateEntityInterceptor) {
-				l.add(entityInterceptor);
-			}
-		}
-		return l;
-	}
+
 }
