@@ -11,13 +11,13 @@ import com.mongodb.DBObject;
 /** Interface for intercepting @Entity lifecycle events */
 public interface EntityInterceptor {
 	/** see {@link PrePersist} */
-	void PrePersist(Object ent, DBObject dbObj, Mapper mapr);
+	void prePersist(Object ent, DBObject dbObj, Mapper mapr);
 	/** see {@link PreSave} */
-	void PreSave(Object ent, DBObject dbObj, Mapper mapr);
+	void preSave(Object ent, DBObject dbObj, Mapper mapr);
 	/** see {@link PostPersist} */
-	void PostPersist(Object ent, DBObject dbObj, Mapper mapr);
+	void postPersist(Object ent, DBObject dbObj, Mapper mapr);
 	/** see {@link PreLoad} */
-	void PreLoad(Object ent, DBObject dbObj, Mapper mapr);
+	void preLoad(Object ent, DBObject dbObj, Mapper mapr);
 	/** see {@link PostLoad} */
-	void PostLoad(Object ent, DBObject dbObj, Mapper mapr);
+	void postLoad(Object ent, DBObject dbObj, Mapper mapr);
 }

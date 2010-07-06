@@ -319,11 +319,11 @@ public class MappedClass {
 		for (EntityInterceptor ei : interceptors) {
 			log.fine("Calling interceptor method " + event.getSimpleName() + " on " + ei );
 			
-			if 		(event.equals(PreLoad.class)) 		ei.PreLoad(entity, dbObj, mapr);
-			else if (event.equals(PostLoad.class)) 		ei.PostLoad(entity, dbObj, mapr);
-			else if	(event.equals(PrePersist.class)) 	ei.PrePersist(entity, dbObj, mapr);
-			else if	(event.equals(PreSave.class)) 		ei.PreSave(entity, dbObj, mapr);
-			else if (event.equals(PostPersist.class))	ei.PostPersist(entity, dbObj, mapr);
+			if 		(event.equals(PreLoad.class)) 		ei.preLoad(entity, dbObj, mapr);
+			else if (event.equals(PostLoad.class)) 		ei.postLoad(entity, dbObj, mapr);
+			else if	(event.equals(PrePersist.class)) 	ei.prePersist(entity, dbObj, mapr);
+			else if	(event.equals(PreSave.class)) 		ei.preSave(entity, dbObj, mapr);
+			else if (event.equals(PostPersist.class))	ei.postPersist(entity, dbObj, mapr);
 		}
 	}
 	
