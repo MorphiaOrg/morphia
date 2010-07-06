@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -65,12 +64,6 @@ import com.mongodb.DBRef;
  */
 @SuppressWarnings("unchecked")
 public class TestMapping  extends TestBase {
-	
-	@Embedded
-	public static class CustomId {
-		ObjectId id;
-		String type;
-	}
 	
 	@Entity
 	public static class KeyAsId {

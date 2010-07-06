@@ -1,7 +1,11 @@
 package com.google.code.morphia;
 
+import java.io.Serializable;
+
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -46,7 +50,20 @@ public class TestMapper extends TestBase {
 		@Reference A a2;
 		@Reference(lazy=true) A a3;
 	}
+
 	
+	public static class CustomId implements Serializable {
+		private static final long serialVersionUID = 1L;
+		ObjectId id;
+		String type;
+	}
+	
+	public static class UsesCustomIdObject {
+		@Id CustomId id;
+		String text;
+	}
+	
+
     @Test
     public void SingleLookup() throws Exception {
     	A a = new A();
@@ -76,4 +93,19 @@ public class TestMapper extends TestBase {
 //    	Assert.assertEquals(holder.a1.getId(), holder.a2.getId());
     	
     }
+    
+    //ignored till issue 37 is done.
+    @Test @Ignore
+    public void SerializableId() throws Exception {
+    	CustomId cId = new CustomId();
+    	cId.id = new ObjectId();
+    	cId.type = "banker";
+    	
+    	UsesCustomIdObject ucio = new UsesCustomIdObject();
+    	ucio.id = cId;
+    	ucio.text = "hllo";
+    	this.ds.save(ucio);
+    }
+
+    	
 }
