@@ -51,7 +51,7 @@ import com.mongodb.DBObject;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
 
 	public static final Logger logger = Logger.getLogger(Mapper.class.getName());
@@ -166,19 +166,24 @@ public class Mapper {
 	 * @param rawIdValue
 	 *            Value to update with; null means skip
 	 */
-	public void updateKeyInfo(final Object entity, final Object rawIdValue) {
+	public void updateKeyInfo(final Object entity, final DBObject dbObj) {
 		MappedClass mc = getMappedClass(entity);
-		// update id field, if there.
-		if ((mc.getIdField() != null) && (rawIdValue != null)) {
+
+		// update id field, if there.		
+		if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get(ID_KEY) != null)) {
 			try {
-				Object dbIdValue = converters.decode(mc.getIdField().getType(), rawIdValue);
-				Object idValue = mc.getIdField().get(entity);
-				if (idValue != null) {
+				MappedField mf = mc.getMappedField(ID_KEY);
+				Object oldIdValue = mc.getIdField().get(entity);
+				setIdValue(entity, mf, dbObj, new HashMap<Key, Object>());
+				Object dbIdValue = mc.getIdField().get(entity);
+				if (oldIdValue != null) {
 					// The entity already had an id set. Check to make sure it
 					// hasn't changed. That would be unexpected, and could
 					// indicate a bad state.
-					if (!dbIdValue.equals(idValue)) {
-						throw new RuntimeException("id mismatch: " + idValue + " != " + dbIdValue + " for "
+					if (!dbIdValue.equals(oldIdValue)) {
+						mf.setFieldValue(entity, oldIdValue);//put the value back...
+						
+						throw new RuntimeException("id mismatch: " + oldIdValue + " != " + dbIdValue + " for "
 								+ entity.getClass().getName());
 					}
 				} else {
@@ -289,19 +294,23 @@ public class Mapper {
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
 				Class<? extends Annotation> annType = null;
-				boolean foundAnnotation = false;
 				// get the annotation from the field.
 				for (Class<? extends Annotation> testType : new Class[] { Id.class, Property.class, Embedded.class,
 						Serialized.class, Reference.class })
 					if (mf.hasAnnotation(testType)) {
 						annType = testType;
-						foundAnnotation = true;
 						break;
 					}
 				if (Id.class.equals(annType)) {
-					Object dbVal = mf.getFieldValue(entity);
-					if (dbVal != null)
-						dbObject.put(ID_KEY, converters.encode(ReflectionUtils.asObjectIdMaybe(dbVal)));
+					Object idVal = mf.getFieldValue(entity);
+					if (idVal != null) {
+						if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
+							embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
+						} else {
+							Object dbVal = converters.encode(ReflectionUtils.asObjectIdMaybe(idVal));							
+							dbObject.put(ID_KEY, dbVal);
+						}
+					}
 				} else if (Property.class.equals(annType) || Serialized.class.equals(annType)
 						|| mf.isTypeMongoCompatible() || (converters.hasSimpleValueConverter(mf)))
 					valueMapper.toDBObject(entity, mf, dbObject, opts);
@@ -349,9 +358,7 @@ public class Mapper {
 		try {
 			for (MappedField mf : mc.getPersistenceFields()) {
 				if (mf.hasAnnotation(Id.class)) {
-					if (dbObject.get(ID_KEY) != null) {
-						mf.setFieldValue(entity, converters.decode(mf.getType(), dbObject.get(ID_KEY)));
-					}
+					setIdValue(entity, mf, dbObject, retrieved);
 				} else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
 						|| mf.isTypeMongoCompatible() || converters.hasSimpleValueConverter(mf))
 					valueMapper.fromDBObject(dbObject, mf, entity);
@@ -382,6 +389,23 @@ public class Mapper {
 		return entity;
 	}
 	
+	private void setIdValue(Object entity, MappedField mf, DBObject dbObject, Map<Key, Object> retrieved) {
+		if (dbObject.get(ID_KEY) != null) {
+			Object dbVal = dbObject.get(ID_KEY);
+			Object idVal = null;
+			
+			if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
+				embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
+				idVal = mf.getFieldValue(entity);
+			} else {
+				idVal = converters.decode(mf.getType(), dbObject.get(ID_KEY));							
+				mf.setFieldValue(entity, idVal);
+			}
+			
+			if (idVal == null)
+				throw new MappingException(String.format("@Id field (_id='" + dbVal +"') was converted to null"));
+		}
+	}
 	// TODO might be better to expose via some "options" object?
 	public DefaultConverters getConverters() {
 		return converters;

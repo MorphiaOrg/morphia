@@ -33,12 +33,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
+import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
-import com.mongodb.DB.WriteConcern;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -653,7 +653,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
-		mapr.updateKeyInfo(entity, dbObj.get(Mapper.ID_KEY));
+		
+		mapr.updateKeyInfo(entity, dbObj);
 		
 		firePostPersistForChildren(involvedObjects, mapr);
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);

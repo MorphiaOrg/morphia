@@ -29,7 +29,7 @@ import com.mongodb.DBObject;
  * 
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
 	static final Logger log = Logger.getLogger(MappedField.class.getName());
 	
@@ -222,7 +222,9 @@ public class MappedField {
 			Serialized me = (Serialized) mappingAnnotations.get(Serialized.class);
 			if (!me.value().equals(Mapper.IGNORED_FIELDNAME))
 				return me.value();
-		}
+		} else if (hasAnnotation(Id.class))
+			return Mapper.ID_KEY;
+		
 		return this.field.getName();
 	}
 	

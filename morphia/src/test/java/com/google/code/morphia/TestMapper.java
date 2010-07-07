@@ -5,7 +5,6 @@ import java.io.Serializable;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -53,6 +52,55 @@ public class TestMapper extends TestBase {
 
 	
 	public static class CustomId implements Serializable {
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((id == null) ? 0 : id.hashCode());
+			result = prime * result + ((type == null) ? 0 : type.hashCode());
+			return result;
+		}
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (!(obj instanceof CustomId))
+				return false;
+			CustomId other = (CustomId) obj;
+			if (id == null) {
+				if (other.id != null)
+					return false;
+			} else if (!id.equals(other.id))
+				return false;
+			if (type == null) {
+				if (other.type != null)
+					return false;
+			} else if (!type.equals(other.type))
+				return false;
+			return true;
+		}
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("CustomId [");
+			if (id != null)
+				builder.append("id=").append(id).append(", ");
+			if (type != null)
+				builder.append("type=").append(type);
+			builder.append("]");
+			return builder.toString();
+		}
 		private static final long serialVersionUID = 1L;
 		ObjectId id;
 		String type;
@@ -94,8 +142,7 @@ public class TestMapper extends TestBase {
     	
     }
     
-    //ignored till issue 37 is done.
-    @Test @Ignore
+    @Test
     public void SerializableId() throws Exception {
     	CustomId cId = new CustomId();
     	cId.id = new ObjectId();
