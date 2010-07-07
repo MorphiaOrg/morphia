@@ -27,12 +27,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestDatastore.FacebookUser;
 import com.google.code.morphia.TestDatastore.KeysKeysKeys;
+import com.google.code.morphia.TestMapper.CustomId;
+import com.google.code.morphia.TestMapper.UsesCustomIdObject;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -241,6 +244,21 @@ public class TestQuery  extends TestBase {
                 
         PhotoWithKeywords pwkLoaded = ds.find(PhotoWithKeywords.class, "id !=", "scott").get();
         assertNotNull(pwkLoaded);
+    }
+
+    @Test @Ignore
+    public void testComplexIdQuery() throws Exception {
+    	CustomId cId = new CustomId();
+    	cId.id = new ObjectId();
+    	cId.type = "banker";
+    	
+    	UsesCustomIdObject ucio = new UsesCustomIdObject();
+    	ucio.id = cId;
+    	ucio.text = "hllo";
+    	this.ds.save(ucio);
+                
+    	UsesCustomIdObject ucioLoaded = ds.find(UsesCustomIdObject.class, "_id.type", "banker").get();
+        assertNotNull(ucioLoaded);
     }
     
     @Test
