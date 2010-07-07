@@ -713,7 +713,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         	cmd.append( "update", ((UpdateOpsImpl<T>) ops).getOps() );
         if (!oldVersion)
         	cmd.append( "new", true);
+        
+		DBObject res = (DBObject) db.command( cmd ).get( "value" );
 		
-        T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command( cmd ).get( "value" ));
-        return entity;	}
+		if (res == null) 
+			return null;
+		else
+			return (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), res);
+	}
 }
