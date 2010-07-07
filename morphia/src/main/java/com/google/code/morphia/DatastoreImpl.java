@@ -539,7 +539,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		DB db = dbColl.getDB();
-		db.requestStart();
+//		db.requestStart();
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
@@ -586,7 +586,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			
 			return key;
 		} finally {
-			db.requestDone();
+//			db.requestDone();
 		}
 	}
 	
@@ -709,8 +709,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         	cmd.append( "query", q );
         if (s != null && !s.keySet().isEmpty())
         	cmd.append( "sort", s );
-        if (oldVersion)
-        	cmd.append( "new", false);
+        if (ops != null && ((UpdateOpsImpl<T>) ops).getOps() != null)
+        	cmd.append( "update", ((UpdateOpsImpl<T>) ops).getOps() );
+        if (!oldVersion)
+        	cmd.append( "new", true);
 		
         T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command( cmd ).get( "value" ));
         return entity;	}

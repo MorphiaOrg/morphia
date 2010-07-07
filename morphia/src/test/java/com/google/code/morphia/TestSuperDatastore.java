@@ -29,7 +29,7 @@ import com.google.code.morphia.testmodel.Rectangle;
  *
  * @author Scott Hernandez
  */
-public class TestSuperDatastore  extends TestBase {
+public class TestSuperDatastore extends TestBase {
 
 	AdvancedDatastore ads;
 

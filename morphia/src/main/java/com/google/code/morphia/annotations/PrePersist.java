@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Called before the data has been persisted to the datastore.
+ * Called before the data has been persisted to the datastore (before mapping is done).
  * @author Scott Hernandez
  */
 @Documented @Inherited
