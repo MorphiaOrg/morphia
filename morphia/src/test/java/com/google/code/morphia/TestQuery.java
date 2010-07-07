@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestDatastore.FacebookUser;
@@ -231,6 +232,15 @@ public class TestQuery  extends TestBase {
         assertNotNull(pwkLoaded);
         Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
         Assert.assertEquals(3, pwkLoaded.keywords.size());
+    }
+
+    @Test @Ignore
+    public void testIdFieldNameQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+                
+        PhotoWithKeywords pwkLoaded = ds.find(PhotoWithKeywords.class, "id !=", "scott").get();
+        assertNotNull(pwkLoaded);
     }
     
     @Test

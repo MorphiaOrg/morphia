@@ -216,7 +216,7 @@ public class MappedClass {
 		return getMappedField(name)!=null;
 	}
 	/** Returns MappedField for a given java field name on the this MappedClass */
-	public MappedField getMappedFieldByClassField(String name) {
+	public MappedField getMappedFieldByJavaField(String name) {
 		for(MappedField mf : persistenceFields)
 			if (name.equals(mf.getJavaFieldName())) return mf;
 		

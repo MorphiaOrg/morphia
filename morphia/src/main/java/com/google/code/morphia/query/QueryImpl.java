@@ -290,13 +290,10 @@ public class QueryImpl<T> implements Query<T> {
 		MappedField mf;
 		for(int i=0; ; ) {
 			String part = parts[i];
-			if(part.equals(Mapper.ID_KEY))
-				mf = mc.getMappedField(mc.getIdField().getName());
-			else
-				mf = mc.getMappedField(part);
+			mf = mc.getMappedField(part);
 			
 			if (mf == null) {
-				mf = mc.getMappedFieldByClassField(part);
+				mf = mc.getMappedFieldByJavaField(part);
 				if (mf != null)
 					throw new MappingException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
 							"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
