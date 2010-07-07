@@ -110,7 +110,7 @@ public class TestMapper extends TestBase {
 		@Id CustomId id;
 		String text;
 	}
-	
+
 
     @Test
     public void SingleLookup() throws Exception {
