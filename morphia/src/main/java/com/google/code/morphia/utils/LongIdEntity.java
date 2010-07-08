@@ -18,11 +18,12 @@ public abstract class LongIdEntity {
 	
 	@PrePersist void prePersist(){
 		if (myLongId == null) {
-		    Query<StoredId> q = ds.find(StoredId.class, "_id", getClass().getSimpleName());
+			String collName = ds.getCollection(getClass()).getName();
+		    Query<StoredId> q = ds.find(StoredId.class, "_id", collName);
 		    UpdateOperations<StoredId> uOps = ds.createUpdateOperations(StoredId.class).inc("value");
 		    StoredId newId = ds.findAndModify(q, uOps);
 		    if (newId == null) {
-		       newId = new StoredId(this.getClass().getSimpleName());
+		       newId = new StoredId(collName);
 		       ds.save(newId);
 		    }
 		    
