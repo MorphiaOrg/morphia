@@ -1,6 +1,8 @@
 package com.google.code.morphia;
 
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateOperations;
+import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /**
@@ -35,5 +37,10 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Key<T> insert(T entity);
 	<T> Iterable<Key<T>> insert(T... entities);
 	<T> Iterable<Key<T>> insert(Iterable<T>entities);
+
+
+	//DBObject implementations; incase we don't have features impl'd yet
+	<T> Query<T> createQuery(Class<T> kind, DBObject q);
+	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind, DBObject ops);
 
 }

@@ -57,11 +57,18 @@ public class QueryImpl<T> implements Query<T> {
 		this.ds = ((DatastoreImpl)ds);
 		this.dbColl = coll;
 	}
+	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
 		this(clazz, coll, ds);
 		this.offset = offset;
 		this.limit = limit;
 	}
+
+	@SuppressWarnings("unchecked")
+	public void setQueryObject(DBObject query) {
+		this.query = (Map<String, Object>) query;
+	}
+	
 	
 	public DBObject getQueryObject() {
 		return (query == null) ? null : new BasicDBObject(query);

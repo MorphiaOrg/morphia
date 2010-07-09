@@ -25,7 +25,11 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 		this.mapr = mapper;
 		this.clazz = type;
 	}
-		
+	
+	@SuppressWarnings("unchecked")
+	public void setOps(DBObject ops) {
+		this.ops = (Map<String, Map<String, Object>>) ops;
+	}
 	public DBObject getOps() {
 		return new BasicDBObject(ops);
 	}

@@ -270,7 +270,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> Query<T> createQuery(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);
 	}
-	
+
+	public <T> Query<T> createQuery(Class<T> kind, DBObject q) {
+		QueryImpl<T> ret = (QueryImpl<T>) createQuery(kind);
+		ret.setQueryObject(q);
+		return ret;
+	}
 
 	public <T> Query<T> find(String kind, Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getDB().getCollection(kind), this);
@@ -616,6 +621,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
 		return new UpdateOpsImpl<T>(clazz, getMapper());
+	}
+
+	public <T> UpdateOperations<T> createUpdateOperations(Class<T> kind, DBObject ops) {
+		UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(kind);
+		upOps.setOps(ops);
+		return upOps;
 	}
 
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
