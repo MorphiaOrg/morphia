@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
@@ -316,23 +317,38 @@ public class QueryImpl<T> implements Query<T> {
 			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 		}
 		
-		if (mf.isSingleValue() && value != null &&
-				!value.getClass().isAssignableFrom(mf.getType()) &&
-				//hack to let Long match long, and so on
-				!value.getClass().getSimpleName().toLowerCase().equals(mf.getType().getSimpleName().toLowerCase())) {
-			
-			if ((mf.getSubType() == null || !value.getClass().isAssignableFrom(mf.getSubType())) && 
-					!(mf.getType().equals(String.class) && value.getClass().equals(ObjectId.class))) {
-				Throwable t = new Throwable();
-				log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
-						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
-						+ " is a " + mf.getType().getName());
-				log.log(Level.FINE, "Location of warning:", t);
-			}
+		if (	 (mf.isSingleValue() && !isCompatibleForQuery(mf.getType(), value)) || 
+				((mf.isMultipleValues() && !isCompatibleForQuery(mf.getSubType(), value)))) {
+				
+			Throwable t = new Throwable();
+			log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
+					+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
+					+ " is a " + mf.getType().getName());
+			log.log(Level.FINE, "Location of warning:\r\n", t);
 		}
 		
 		return mf;
-		
+	}
+	
+	public static boolean isCompatibleForQuery(Class<?> type, Object value) {
+		if (value == null || type == null) 
+			return true;
+		else if (value instanceof Integer && (int.class.equals(type) || long.class.equals(type) || Long.class.equals(type)))
+			return true;
+		else if ((value instanceof Integer || value instanceof Long) && (double.class.equals(type) || Double.class.equals(type)))
+			return true;
+		else if (value instanceof Pattern && String.class.equals(type))
+			return true;
+		else if (value instanceof List)
+			return true;
+		else if (value instanceof ObjectId && String.class.equals(type))
+			return true;
+		else if (!value.getClass().isAssignableFrom(type) &&
+				//hack to let Long match long, and so on
+				!value.getClass().getSimpleName().toLowerCase().equals(type.getSimpleName().toLowerCase())) {
+			return false;
+		}
+		return true;
 	}
 
 	public T get() {
@@ -403,6 +419,11 @@ public class QueryImpl<T> implements Query<T> {
 		protected final QueryImpl<T> query;
 		public QueryFieldEndImpl(String fe, QueryImpl<T> q) {this.fieldExpr = fe; this.query=q;}
 
+		public Query<T> startsWith(String prefix) {
+			query.filter("" + fieldExpr, Pattern.compile("^" + prefix));
+			return query;
+		}
+		
 		public Query<T> doesNotExist() {
 			query.filter("" + fieldExpr + " exists", 0);
 			return query;
@@ -488,5 +509,5 @@ public class QueryImpl<T> implements Query<T> {
 		this.includeFields = include;
 		this.fields = fields;
 		return this;
-	}	
+	}
 }

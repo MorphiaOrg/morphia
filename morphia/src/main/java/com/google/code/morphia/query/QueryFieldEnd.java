@@ -12,6 +12,8 @@ public interface QueryFieldEnd<T> {
 	Query<T> equal(Object val);
 	Query<T> notEqual(Object val);
 
+	Query<T> startsWith(String prefix);
+	
 	Query<T> hasThisOne(Object val);
 	Query<T> hasAllOf(Iterable<?> vals);
 	Query<T> hasAnyOf(Iterable<?> vals);

@@ -138,6 +138,16 @@ public class TestQuery  extends TestBase {
     }
 
     @Test
+    public void testStartsWithQuery() throws Exception {
+        ds.save(new Photo());
+        Photo p = ds.find(Photo.class).field("keywords").startsWith("amaz").get();
+        assertNotNull(p);
+        p = ds.find(Photo.class).field("keywords").startsWith("notareal").get();
+        assertNull(p);
+        
+    }
+
+    @Test
     public void testReferenceQuery() throws Exception {
         Photo p = new Photo();
         ContainsPhotoKey cpk = new ContainsPhotoKey();
