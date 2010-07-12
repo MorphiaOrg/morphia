@@ -58,7 +58,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 	}
 	
 	public static class NonNullValidation extends AbstractEntityInterceptor {
-		public void PrePersist(Object ent, DBObject dbObj, Mapper mapr) {
+		public void prePersist(Object ent, DBObject dbObj, Mapper mapr) {
 			MappedClass mc = mapr.getMappedClass(ent);
 			List<MappedField> fieldsToTest = mc.getFieldsAnnotatedWith(NonNull.class);
 			for (MappedField mf : fieldsToTest) {
