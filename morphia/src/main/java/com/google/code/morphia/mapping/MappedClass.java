@@ -104,7 +104,7 @@ public class MappedClass {
 			ctor = type.getDeclaredConstructor();
 			ctor.setAccessible(true);
 		} catch (NoSuchMethodException e) {
-			throw new MappingException("No usable constructor for " + type.getName(), e);
+			throw new MappingException("" + type.getName() + " cannot be used; It does not have a no-args constructor.", e);
 		}
 		List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();
 		lifecycleClasses.add(clazz);
