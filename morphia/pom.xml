@@ -4,7 +4,7 @@
     <groupId>com.google.code.morphia</groupId>
     <artifactId>morphia</artifactId>
     <packaging>jar</packaging>
-    <version>0.94-SNAPSHOT</version>
+    <version>0.95-SNAPSHOT</version>
     <name>morphia</name>
     
     <url>http://code.google.com/p/morphia/</url>
