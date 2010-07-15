@@ -17,11 +17,10 @@
 package com.google.code.morphia;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -109,12 +108,16 @@ public class TestIndexedCapped  extends TestBase{
 
 	@Test
 	public void testMultipleIndexedFields() {
+		MappedClass mc = morphia.getMapper().getMappedClass(Ad.class);
 		this.morphia.map(Ad.class);
-		
-		Set<IndexFieldDef> fields = new HashSet<IndexFieldDef>();
-		fields.add(new IndexFieldDef("lastMod", IndexDirection.ASC));
-		fields.add(new IndexFieldDef("active", IndexDirection.ASC));
-		ds.ensureIndex(Ad.class, fields);
+
+		IndexFieldDef[] defs = {
+				new IndexFieldDef("lastMod", IndexDirection.ASC), 
+				new IndexFieldDef("active", IndexDirection.ASC)
+		};
+		assertFalse(hasNamedIndex("lastMod_1_active_1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+		ds.ensureIndex(Ad.class, defs);
+		assertTrue(hasNamedIndex("lastMod_1_active_1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 	
 	

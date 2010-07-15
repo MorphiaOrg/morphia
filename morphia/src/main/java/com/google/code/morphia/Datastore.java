@@ -1,7 +1,6 @@
 package com.google.code.morphia;
 
 import java.util.List;
-import java.util.Set;
 
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
@@ -123,13 +122,10 @@ public interface Datastore {
 	<T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
 
 	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(Class<T> clazz, Set<IndexFieldDef> fields);
-
-	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, IndexFieldDef...fields);
 
 	/** Ensures (creating if necessary) the index and direction */
-	<T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> fields, boolean unique, boolean dropDupsOnCreate);
+	<T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
 	
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
 	void ensureIndexes();

@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.CappedAt;
@@ -163,7 +161,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 
-	public <T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> defs, boolean unique,
+	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique,
 			boolean dropDupsOnCreate) {
 		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
 		BasicDBObjectBuilder keyOpts = null;
@@ -202,19 +200,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
-		ensureIndex(type, null, Collections.singleton(new IndexFieldDef(name, dir)), false, false);
+		ensureIndex(type, new IndexFieldDef(name, dir));
 	}
 	
 	public <T> void ensureIndex(Class<T> type, IndexFieldDef... fields) {
-		if (fields == null || fields.length == 0) 
-			throw new IllegalArgumentException("Fields must be specified");
-		
-		Set<IndexFieldDef> fieldSet = new HashSet<IndexFieldDef>(fields.length*2);
-		Collections.addAll(fieldSet, fields);
-		ensureIndex(type, null, fieldSet, false, false);
-	}
-
-	public <T> void ensureIndex(Class<T> type, Set<IndexFieldDef> fields) {
 		ensureIndex(type, null, fields, false, false);
 	}
 	
@@ -224,8 +213,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
-				ensureIndex(mc.getClazz(), index.name(), Collections.singleton(new IndexFieldDef(mf.getNameToStore(), index
-						.value())), index.unique(), index.dropDups());
+				ensureIndex(mc.getClazz(), index.name(), new IndexFieldDef[] {new IndexFieldDef(mf.getNameToStore(), index
+						.value())}, index.unique(), index.dropDups());
 			}
 		}
 	}
