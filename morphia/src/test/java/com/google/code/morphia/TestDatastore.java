@@ -171,7 +171,13 @@ public class TestDatastore  extends TestBase{
 		morphia.map(Hotel.class).map(KeysKeysKeys.class).map(Rectangle.class).map(FacebookUser.class);
 		//delete, and (re)create test db
 	}
-
+	@SuppressWarnings("unused")
+	@Test
+    public void testMorphiaDS() throws Exception {
+		Mongo m = new Mongo();
+//		Datastore ds = new Morphia().createDatastore(m);
+		Datastore ds = new Morphia().createDatastore(m, "test");
+	}
 	@Test
     public void testLowlevelbyteArray() throws Exception {
 	    Mongo m = new Mongo();

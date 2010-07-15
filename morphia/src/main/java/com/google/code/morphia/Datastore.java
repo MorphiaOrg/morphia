@@ -126,6 +126,9 @@ public interface Datastore {
 	<T> void ensureIndex(Class<T> clazz, Set<IndexFieldDef> fields);
 
 	/** Ensures (creating if necessary) the index and direction */
+	<T> void ensureIndex(Class<T> clazz, IndexFieldDef...fields);
+
+	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String name, Set<IndexFieldDef> fields, boolean unique, boolean dropDupsOnCreate);
 	
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/

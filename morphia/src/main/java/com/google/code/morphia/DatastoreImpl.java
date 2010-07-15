@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,7 +158,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(q.getEntityClass());
 		if (q.getQueryObject() != null)
 			dbColl.remove(q.getQueryObject());
-		else
+		else	
 			dbColl.remove(new BasicDBObject());
 	}
 	
@@ -200,14 +201,21 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 	}
 	
-
 	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
 		ensureIndex(type, null, Collections.singleton(new IndexFieldDef(name, dir)), false, false);
 	}
 	
+	public <T> void ensureIndex(Class<T> type, IndexFieldDef... fields) {
+		if (fields == null || fields.length == 0) 
+			throw new IllegalArgumentException("Fields must be specified");
+		
+		Set<IndexFieldDef> fieldSet = new HashSet<IndexFieldDef>(fields.length*2);
+		Collections.addAll(fieldSet, fields);
+		ensureIndex(type, null, fieldSet, false, false);
+	}
 
 	public <T> void ensureIndex(Class<T> type, Set<IndexFieldDef> fields) {
-		ensureIndex(type, fields);
+		ensureIndex(type, null, fields, false, false);
 	}
 	
 	protected void ensureIndexes(MappedClass mc) {

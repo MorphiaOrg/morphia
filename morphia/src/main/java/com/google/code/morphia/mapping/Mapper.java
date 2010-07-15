@@ -163,7 +163,7 @@ public class Mapper {
 	 * 
 	 * @param entity
 	 *            The object to update
-	 * @param rawIdValue
+	 * @param dbObj
 	 *            Value to update with; null means skip
 	 */
 	public void updateKeyInfo(final Object entity, final DBObject dbObj) {

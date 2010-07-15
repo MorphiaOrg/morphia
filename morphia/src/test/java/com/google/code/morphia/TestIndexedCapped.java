@@ -19,7 +19,9 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +30,10 @@ import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.utils.IndexDirection;
+import com.google.code.morphia.utils.IndexFieldDef;
 import com.mongodb.DBObject;
 
 /**
@@ -66,6 +71,18 @@ public class TestIndexedCapped  extends TestBase{
 		UniqueIndexClass(){}
 		UniqueIndexClass(String name){this.name = name;}
 	}
+	
+	public static class Ad {
+		@Id
+		public long id;
+
+		@Property("lastMod")
+		@Indexed
+		public long lastModified;
+
+		@Indexed
+		public boolean active;
+	}
 
 	@Before @Override
 	public void setUp() {
@@ -89,6 +106,17 @@ public class TestIndexedCapped  extends TestBase{
 		ds.save( new CurrentStatus("Kinda Bad4"));
 		assertEquals(ds.getCount(CurrentStatus.class), 1);
 	}
+
+	@Test
+	public void testMultipleIndexedFields() {
+		this.morphia.map(Ad.class);
+		
+		Set<IndexFieldDef> fields = new HashSet<IndexFieldDef>();
+		fields.add(new IndexFieldDef("lastMod", IndexDirection.ASC));
+		fields.add(new IndexFieldDef("active", IndexDirection.ASC));
+		ds.ensureIndex(Ad.class, fields);
+	}
+	
 	
 	@Test
     public void testIndexedEntity() throws Exception {

@@ -155,10 +155,6 @@ public class Morphia {
 			throw new RuntimeException(e);
 		}
     }
-   
-    public Datastore createDatastore(Mongo mon) {
-    	return new DatastoreImpl(this, mon);
-    }
 
     public Datastore createDatastore(Mongo mon, String dbName, String user, char[] pw) {
     	return new DatastoreImpl(this, mon, dbName, user, pw);
