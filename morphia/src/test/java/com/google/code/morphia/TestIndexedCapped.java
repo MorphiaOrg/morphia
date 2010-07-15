@@ -112,7 +112,7 @@ public class TestIndexedCapped  extends TestBase{
 		this.morphia.map(Ad.class);
 
 		IndexFieldDef[] defs = {
-				new IndexFieldDef("lastMod", IndexDirection.ASC), 
+				new IndexFieldDef("lastMod"),
 				new IndexFieldDef("active", IndexDirection.ASC)
 		};
 		assertFalse(hasNamedIndex("lastMod_1_active_1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
