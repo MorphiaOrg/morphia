@@ -245,7 +245,8 @@ class ReferenceMapper {
 	
 	boolean exists(Class c, final DBRef dbRef) {
 		Datastore ds = mapper.datastoreProvider.get();
-		return ds.createQuery(c).filter(Mapper.ID_KEY, dbRef.getId()).countAll() == 1;
+		// TODO sh can be improved?
+		return dbRef.fetch() != null;
 	}
 	
 	Object resolveObject(final DBRef dbRef, final Class referenceObjClass, final boolean ignoreMissing,

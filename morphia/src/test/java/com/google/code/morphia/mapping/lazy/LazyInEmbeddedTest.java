@@ -6,7 +6,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -35,14 +34,14 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Entity
-    static class ContainerWithRefList extends TestEntity
+	public static class ContainerWithRefList extends TestEntity
     {
         @Embedded
         private final List<EmbedWithRef> embedWithRef = new ArrayList<EmbedWithRef>();
     }
 
     @Entity
-    static class OtherEntity extends TestEntity
+	public static class OtherEntity extends TestEntity
     {
         @Property(value = "some")
         private SomeEnum someEnum;
@@ -59,7 +58,7 @@ public class LazyInEmbeddedTest extends TestBase
         }
     }
     @Entity
-    static class OtherEntityChild extends OtherEntity
+	public static class OtherEntityChild extends OtherEntity
     {
         public OtherEntityChild()
         {
@@ -73,11 +72,11 @@ public class LazyInEmbeddedTest extends TestBase
     static class EmbedWithRef implements Serializable
     {
 
-        @Reference(lazy = true)
+		@Reference(lazy = true)
         private OtherEntity otherEntity;
     }
 
-    @Test
+	@Test
     public void testLoadingOfRefInField() throws Exception
     {
         morphia.map(ContainerWithRefInField.class);
@@ -105,7 +104,6 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Test
-    @Ignore
 	// FIXME us
     public void testLoadingOfRefThroughInheritanceInField() throws Exception
     {
@@ -134,8 +132,6 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Test
-	@Ignore
-	// FIXME us
     public void testLoadingOfRefInList() throws Exception
     {
         morphia.map(ContainerWithRefList.class);
@@ -167,7 +163,6 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Test
-    @Ignore // FIXME
     public void testLoadingOfRefThroughInheritanceInList() throws Exception
     {
         morphia.map(ContainerWithRefList.class);
