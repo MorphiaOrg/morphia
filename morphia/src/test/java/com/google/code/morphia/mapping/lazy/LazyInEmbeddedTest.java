@@ -27,7 +27,7 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Entity
-    static class ContainerWithRefInField extends TestEntity
+	public static class ContainerWithRefInField extends TestEntity
     {
         @Embedded
         private EmbedWithRef embedWithRef;
@@ -47,7 +47,7 @@ public class LazyInEmbeddedTest extends TestBase
         private SomeEnum someEnum;
 
         @SuppressWarnings("unused")
-        private OtherEntity()
+		protected OtherEntity()
         {
         }
 
@@ -69,7 +69,7 @@ public class LazyInEmbeddedTest extends TestBase
         private String name;
     }
 
-    static class EmbedWithRef implements Serializable
+    public static class EmbedWithRef implements Serializable
     {
 
 		@Reference(lazy = true)
@@ -104,7 +104,6 @@ public class LazyInEmbeddedTest extends TestBase
     }
 
     @Test
-	// FIXME us
     public void testLoadingOfRefThroughInheritanceInField() throws Exception
     {
         morphia.map(ContainerWithRefInField.class);
