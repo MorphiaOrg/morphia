@@ -1,17 +1,12 @@
 /**
- * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2010 Olafur Gauti Gudmundsson Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 package com.google.code.morphia.utils;
 
@@ -33,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -46,6 +42,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.DBObject;
@@ -56,7 +53,8 @@ import com.mongodb.DBRef;
  * 
  * @author Olafur Gauti Gudmundsson
  */
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings(
+{ "unchecked", "rawtypes" })
 public class ReflectionUtils
 {
 
@@ -95,7 +93,7 @@ public class ReflectionUtils
      */
     public static List<Method> getDeclaredAndInheritedMethods(final Class type)
     {
-        return getDeclaredAndInheritedMethods(type, null);
+        return getDeclaredAndInheritedMethods(type, new LinkedList());
     }
 
     protected static List<Method> getDeclaredAndInheritedMethods(final Class type, List<Method> methods)
@@ -192,21 +190,23 @@ public class ReflectionUtils
             return false;
         }
 
-        return  isPrimitiveLike(type) || (type == DBRef.class) || (type == Pattern.class) || 
-        		(type == CodeWScope.class) || (type == ObjectId.class) || (type == Key.class) ;
+        return isPrimitiveLike(type) || (type == DBRef.class) || (type == Pattern.class) || (type == CodeWScope.class)
+                || (type == ObjectId.class) || (type == Key.class);
     }
-    
-    public static boolean isPrimitiveLike(final Class type) {
+
+    public static boolean isPrimitiveLike(final Class type)
+    {
         if (type == null)
         {
             return false;
         }
 
-        return (	type == String.class) 	|| (type == char.class) 	|| (type == Character.class)|| (type == short.class)
-                || (type == Short.class) 	|| (type == Integer.class) 	|| (type == int.class) 		|| (type == Long.class)
-                || (type == long.class) 	|| (type == Double.class) 	|| (type == double.class) 	|| (type == float.class)
-                || (type == Float.class) 	|| (type == Boolean.class) 	|| (type == boolean.class) 	|| (type == Byte.class)
-                || (type == byte.class) 	|| (type == Date.class) 	|| (type == Locale.class) 	|| (type == Class.class) || type.isEnum();
+        return (type == String.class) || (type == char.class) || (type == Character.class) || (type == short.class)
+                || (type == Short.class) || (type == Integer.class) || (type == int.class) || (type == Long.class)
+                || (type == long.class) || (type == Double.class) || (type == double.class) || (type == float.class)
+                || (type == Float.class) || (type == Boolean.class) || (type == boolean.class) || (type == Byte.class)
+                || (type == byte.class) || (type == Date.class) || (type == Locale.class) || (type == Class.class)
+                || type.isEnum();
     }
 
     /**
@@ -315,15 +315,18 @@ public class ReflectionUtils
         if (typeVars.length > 0)
         {
             TypeVariable typeVariable = typeVars[index];
-			Type[] bounds = typeVariable.getBounds();
-			
-			Type type = bounds[0];
-			if (type instanceof Class) {
-				return (Class) type;// broke for enumset, cause bounds contain
-									// type instead of class
-			}
-			else
-				return null;
+            Type[] bounds = typeVariable.getBounds();
+
+            Type type = bounds[0];
+            if (type instanceof Class)
+            {
+                return (Class) type;// broke for enumset, cause bounds contain
+                                    // type instead of class
+            }
+            else
+            {
+                return null;
+            }
         }
         else
         {
@@ -565,7 +568,8 @@ public class ReflectionUtils
      * creates an instance of testType (if it isn't Object.class or null) or
      * fallbackType
      */
-    public static Object newInstance(final Constructor tryMe, final Class fallbackType) {
+    public static Object newInstance(final Constructor tryMe, final Class fallbackType)
+    {
         if (tryMe != null)
         {
             tryMe.setAccessible(true);
@@ -581,8 +585,12 @@ public class ReflectionUtils
         return createInstance(fallbackType);
     }
 
-    /** gets the Class for some classname, or if the className is not found, return the defaultClass instance */
-    public static Class getClassForName(final String className, final Class defaultClass) {
+    /**
+     * gets the Class for some classname, or if the className is not found,
+     * return the defaultClass instance
+     */
+    public static Class getClassForName(final String className, final Class defaultClass)
+    {
         try
         {
             Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
@@ -594,16 +602,27 @@ public class ReflectionUtils
         }
     }
 
-    /** create a new instance of the entity, first using the dbObject field, then by calling createInstence based on the type*/
-	public static Object createInstance(final Class entityClass, final DBObject dbObject) {
+    /**
+     * create a new instance of the entity, first using the dbObject field, then
+     * by calling createInstence based on the type
+     */
+    public static Object createInstance(final MappedField mf, final DBObject dbObject)
+    {
         // see if there is a className value
-        String className = (String) dbObject.get(Mapper.CLASS_NAME_FIELDNAME);
-        Class c = entityClass;
+        return createInstance(mf.getConcreteType(), dbObject);
+    }
+
+    public static Object createInstance(Class newEntityType, DBObject dbObj)
+    {
+        // see if there is a className value
+        String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
+        Class c = newEntityType;
         if (className != null)
         {
             // try to Class.forName(className) as defined in the dbObject first,
             // otherwise return the entityClass
-            c = getClassForName(className, entityClass);
+
+            c = getClassForName(className, c);
         }
         return createInstance(c);
     }
@@ -627,36 +646,48 @@ public class ReflectionUtils
         }
     }
 
-	public static ArrayList iterToList (Iterable it) {
-		if (it instanceof ArrayList) return (ArrayList) it;
-		if (it == null) return null;
-		
-		ArrayList ar = new ArrayList();
-		for(Object o : it)
-			ar.add(o);
-		
-		return ar;
-	}
+    public static ArrayList iterToList(Iterable it)
+    {
+        if (it instanceof ArrayList)
+        {
+            return (ArrayList) it;
+        }
+        if (it == null)
+        {
+            return null;
+        }
 
-	public static Object[] convertToArray(final Class type, final ArrayList<?> values) {
-		Object exampleArray = Array.newInstance(type, 1);
-		Object[] array = values.toArray((Object[]) exampleArray);
-		return array;
-	}
+        ArrayList ar = new ArrayList();
+        for (Object o : it)
+        {
+            ar.add(o);
+        }
 
-	/** turns the object into an ObjectId if it is/should-be one */
-	public static Object asObjectIdMaybe(final Object id) {
-		try
-		{
-			if ((id instanceof String) && ObjectId.isValid((String) id))
-			{
-				return new ObjectId((String) id);
-			}
-		}
-		catch (Exception e)
-		{
-			// sometimes isValid throws exceptions... bad!
-		}
-		return id;
-	}
+        return ar;
+    }
+
+    public static Object[] convertToArray(final Class type, final ArrayList<?> values)
+    {
+        Object exampleArray = Array.newInstance(type, 1);
+        Object[] array = values.toArray((Object[]) exampleArray);
+        return array;
+    }
+
+    /** turns the object into an ObjectId if it is/should-be one */
+    public static Object asObjectIdMaybe(final Object id)
+    {
+        try
+        {
+            if ((id instanceof String) && ObjectId.isValid((String) id))
+            {
+                return new ObjectId((String) id);
+            }
+        }
+        catch (Exception e)
+        {
+            // sometimes isValid throws exceptions... bad!
+        }
+        return id;
+    }
+
 }
