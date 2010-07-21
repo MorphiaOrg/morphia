@@ -90,6 +90,13 @@
 			<type>jar</type>
 			<optional>true</optional>
 		</dependency>
+		<!--  temporary, do not commit! shold go to module 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+		-->
 	</dependencies>
 
     <build>
@@ -164,6 +171,11 @@
                 <artifactId>wagon-svn</artifactId>
                 <version>1.9</version>
             </extension>
+	        <extension>
+      			<groupId>org.apache.maven.wagon</groupId>
+         		<artifactId>wagon-ftp</artifactId>
+         		<version>1.0-beta-6</version>
+      		</extension>
         </extensions>
     </build>
 	<reporting>
