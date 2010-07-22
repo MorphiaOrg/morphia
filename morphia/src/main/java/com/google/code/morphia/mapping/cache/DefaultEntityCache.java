@@ -42,7 +42,7 @@ public class DefaultEntityCache implements EntityCache {
 		if (o == null) {
 			// TODO opt: maybe we see if we have a proxy for that, that was
 			// already fetched...
-			System.out.println("miss entity " + k + ":" + this);
+			// System.out.println("miss entity " + k + ":" + this);
 			stats.misses++;
 		} else {
 			stats.hits++;
@@ -53,7 +53,7 @@ public class DefaultEntityCache implements EntityCache {
 	public <T> T getProxy(Key<T> k) {
 		Object o = proxyMap.get(k);
 		if (o == null) {
-			System.out.println("miss proxy " + k);
+			// System.out.println("miss proxy " + k);
 			stats.misses++;
 		} else {
 			stats.hits++;
