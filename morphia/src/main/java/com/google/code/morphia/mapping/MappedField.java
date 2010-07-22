@@ -95,7 +95,7 @@ public class MappedField {
 				throw new MappingException("No usable constructor for " + field.getType().getName(), e);
 			}
 		else {
-			// see if we can create intances of the type used for declaration
+			// see if we can create instances of the type used for declaration
 			
 			try {
 				ctor = field.getType().getDeclaredConstructor();
