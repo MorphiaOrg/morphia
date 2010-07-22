@@ -144,6 +144,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> void delete(T entity) {
 		entity = ProxyHelper.unwrap(entity);
+		if (entity instanceof Class<?>)
+			throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
 		try {
 			Object id = getId(entity);
 			delete(entity.getClass(), id);

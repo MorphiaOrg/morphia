@@ -24,9 +24,12 @@ import static org.junit.Assert.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import com.google.code.morphia.TestQuery.ContainsPic;
+import com.google.code.morphia.TestQuery.Pic;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
@@ -200,4 +203,41 @@ public class TestUpdateOps  extends TestBase {
 		assertNotNull(cLoaded);		
 		assertEquals(13D, cLoaded.getRadius(), 0D);
 	}
+	
+	@Test @Ignore //ignore until SERVER-1470 is fixed.
+    public void testInsertWithRef() throws Exception {
+		Pic pic = new Pic();
+		pic.name = "fist";
+		Key<Pic> picKey = ds.save(pic);
+
+
+		//test with Key<Pic>
+		UpdateResults<ContainsPic> res = ds.updateFirst(
+				ds.find(ContainsPic.class, "name", "first").filter("pic", picKey), 
+				ds.createUpdateOperations(ContainsPic.class).set("name", "A"), 
+				true);
+
+		assertEquals(1, res.getInsertedCount());
+		assertEquals(1, ds.find(ContainsPic.class).countAll());
+		
+		ds.delete(ds.find(ContainsPic.class));
+		//test with pic object
+		res = ds.updateFirst(
+				ds.find(ContainsPic.class, "name", "first").filter("pic", pic), 
+				ds.createUpdateOperations(ContainsPic.class).set("name", "second"), 
+				true);
+
+		assertEquals(1, res.getInsertedCount());
+		assertEquals(1, ds.find(ContainsPic.class).countAll());
+
+		//test reading the object.
+		ContainsPic cp = ds.find(ContainsPic.class).get();
+		assertNotNull(cp);
+		assertEquals(cp.name, "second");
+		assertNotNull(cp.pic);
+		assertNotNull(cp.pic.name);
+		assertEquals(cp.pic.name, "fist");
+		
+	}
+	
 }

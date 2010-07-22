@@ -88,6 +88,7 @@ public class TestQuery  extends TestBase {
     @Entity
     public static class ContainsPic {
         @Id String id;
+        String name = "test";
         @Reference
 		Pic pic;
         @Reference(lazy=true)

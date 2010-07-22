@@ -236,7 +236,7 @@ public class QueryImpl<T> implements Query<T> {
 			log.debug("Error during mapping filter criteria: ", e);
 		}
 		
-		//convert the value to Key (DBRef) if it is a entity/@Reference of the field type is Key
+		//convert the value to Key (DBRef) if it is a entity/@Reference or the field type is Key
 		if ((mf!=null && (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class)))
 				|| (mc != null && mc.getEntityAnnotation() != null)) {
 			try {
