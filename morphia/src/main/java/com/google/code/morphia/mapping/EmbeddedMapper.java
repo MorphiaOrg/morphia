@@ -18,7 +18,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked","rawtypes"})
 class EmbeddedMapper {
 	private final Mapper mapper;
 	private final DefaultConverters converters;
@@ -46,13 +46,13 @@ class EmbeddedMapper {
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
-				if ((dbObj.keySet().size() > 0) || opts.storeEmpties) {
+				if (dbObj.keySet().size() > 0 || opts.storeEmpties) {
 					dbObject.put(name, dbObj);
 				}
 			}
 		}
 	}
-	
+
 	private void writeCollection(final MappedField mf, final BasicDBObject dbObject,
 			final LinkedHashMap<Object, DBObject> involvedObjects, String name, Object fieldValue, MapperOptions opts) {
 		Iterable coll = (Iterable) fieldValue;
@@ -65,12 +65,12 @@ class EmbeddedMapper {
 				}
 				values.add(dbObj);
 			}
-			if ((values.size() > 0) || opts.storeEmpties) {
+			if (values.size() > 0 || opts.storeEmpties) {
 				dbObject.put(name, values);
 			}
 		}
 	}
-	
+
 	private void writeMap(final MappedField mf, final BasicDBObject dbObject,
 			final LinkedHashMap<Object, DBObject> involvedObjects, String name, Object fieldValue, MapperOptions opts) {
 		Map<String, Object> map = (Map<String, Object>) fieldValue;
@@ -87,17 +87,14 @@ class EmbeddedMapper {
 				String strKey = converters.encode(entry.getKey()).toString();
 				values.put(strKey, convertedVal);
 			}
-			if ((values.size() > 0) || opts.storeEmpties) {
+			if (values.size() > 0 || opts.storeEmpties) {
 				dbObject.put(name, values);
 			}
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity,
-			final Map<Key, Object> retrieved) {
-		Class fieldType = mf.getType();
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key, Object> retrieved) {
 		try {
-			
 			if (mf.isMap()) {
 				readMap(dbObject, mf, entity, retrieved);
 			} else if (mf.isMultipleValues()) {
@@ -117,19 +114,17 @@ class EmbeddedMapper {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
 			final Map<Key, Object> retrieved) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
-		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class
-				: HashSet.class);
+		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
 		
 		Object dbVal = mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {
 			
-			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections
-					.singletonList((BasicDBObject) dbVal);
+			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections.singletonList((BasicDBObject) dbVal);
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
@@ -146,8 +141,9 @@ class EmbeddedMapper {
 			}
 		}
 	}
-	
-	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, Map<Key, Object> retrieved) {
+
+	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
+			Map<Key, Object> retrieved) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);

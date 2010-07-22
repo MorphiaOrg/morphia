@@ -90,13 +90,6 @@
 			<type>jar</type>
 			<optional>true</optional>
 		</dependency>
-		<!--  temporary, do not commit! shold go to module 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.4.2</version>
-		</dependency>
-		-->
 	</dependencies>
 
     <build>

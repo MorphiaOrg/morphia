@@ -320,18 +320,47 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return find(clazz, Mapper.ID_KEY + " in", objIds);
 	}
 
+	/** Queries the server to check for each DBRef */
+	@SuppressWarnings("rawtypes")
+	public <T> List<Key<T>> getKeysByRefs(List<DBRef> refs) {
+		ArrayList<Key<T>> tempKeys = new ArrayList<Key<T>>(refs.size());
+		
+		Map<String, List<DBRef>> kindMap = new HashMap<String, List<DBRef>>();
+		for (DBRef ref : refs) {
+			if (kindMap.containsKey(ref.getRef()))
+				kindMap.get(ref.getRef()).add(ref);
+			else
+				kindMap.put(ref.getRef(), new ArrayList<DBRef>(Collections.singletonList((DBRef) ref)));
+		}
+		for (String kind : kindMap.keySet()) {
+			List objIds = new ArrayList();
+			List<DBRef> kindRefs = kindMap.get(kind);
+			for (DBRef key : kindRefs) {
+				objIds.add(key.getId());
+			}
+			List<Key<T>> kindResults = this.<T>find(kind, null).disableValidation().filter("_id in", objIds).asKeyList();
+			tempKeys.addAll(kindResults);
+		}
+		
+		//put them back in order, minus the missing ones.
+		ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+		for (DBRef ref : refs) {
+			Key<T> testKey = new Key<T>(ref);
+			if (tempKeys.contains(testKey))
+				keys.add(testKey);
+		}
+		return keys;
+	}
 
 	public <T> List<T> getByKeys(Iterable<Key<T>> keys) {
 		return this.getByKeys((Class<T>) null, keys);
 	}
-	
-	// TODO scott: should return a collection, to make obvious, that it has no
-	// predefined order?
+
 	@SuppressWarnings("rawtypes")
 	public <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
 		
 		Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
-		List<T> results = new ArrayList<T>();
+		List<T> entities = new ArrayList<T>();
 		// String clazzKind = (clazz==null) ? null :
 		// getMapper().getCollectionName(clazz);
 		for (Key<?> key : keys) {
@@ -354,9 +383,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				objIds.add(ReflectionUtils.asObjectIdMaybe(key.getId()));
 			}
 			List kindResults = find(kind, null).filter("_id in", objIds).asList();
-			results.addAll(kindResults);
+			entities.addAll(kindResults);
 		}
-		return results;
+		
+		//TODO: order them based on the incoming Keys.
+		return entities;
 	}
 	
 
@@ -668,6 +699,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi) {
 		DBObject u = ((UpdateOpsImpl) ops).getOps();
 		return update(query, u, createIfMissing, multi);
@@ -729,4 +761,23 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		else
 			return (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), res);
 	}
+	
+	/** Converts a list of keys to refs */
+	public static <T> List<DBRef> keysAsRefs(List<Key<T>> keys, Mapper mapr){
+		ArrayList<DBRef> refs = new ArrayList<DBRef>(keys.size());
+		for(Key<T> key : keys)
+			refs.add(key.toRef(mapr));
+		return refs;
+	}
+	
+	/** Converts a list of refs to keys */
+	@SuppressWarnings("rawtypes")
+	public static <T> List<Key<T>> refsToKeys(List<DBRef> refs, Class<T> c) {
+		ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+		for(DBRef ref : refs) {
+			keys.add(new Key(ref));
+		}
+		return keys;
+	}
+
 }

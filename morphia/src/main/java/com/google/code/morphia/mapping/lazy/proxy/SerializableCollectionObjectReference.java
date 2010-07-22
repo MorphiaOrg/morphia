@@ -64,6 +64,10 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
 	public void __add(final Key key) {
 		listOfKeys.add(key);
 	}
+
+	public void __addAll(final Collection<? extends Key<?>> keys) {
+		listOfKeys.addAll(keys);
+	}
 	
 	@Override
 	protected void beforeWriteObject() {
