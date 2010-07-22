@@ -41,8 +41,6 @@ import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.LazyProxyFactory;
-import com.google.code.morphia.mapping.lazy.proxy.ProxiedReference;
-import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -69,8 +67,7 @@ public class Mapper {
 	private final ReferenceMapper referenceMapper = new ReferenceMapper(this, converters);
 	private final EmbeddedMapper embeddedMapper = new EmbeddedMapper(this, converters);
 	private final ValueMapper valueMapper = new ValueMapper(converters);
-	final LazyProxyFactory proxyFactory = LazyFeatureDependencies.testDependencyFullFilled() ? new CGLibLazyProxyFactory()
-			: null;
+	final LazyProxyFactory proxyFactory = LazyFeatureDependencies.testDependencyFullFilled() ? new CGLibLazyProxyFactory() : null;
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 	MapperOptions opts = new MapperOptions();
 	
@@ -136,9 +133,6 @@ public class Mapper {
 		
 		Class type = (obj instanceof Class) ? (Class) obj : obj.getClass();
 		
-		if (ProxyHelper.isProxy(obj))
-			type = ProxyHelper.getReferentClass(obj);
-		
 		MappedClass mc = mappedClasses.get(type.getName());
 		if (mc == null) {
 			// no validation
@@ -149,9 +143,6 @@ public class Mapper {
 	}
 
 	public String getCollectionName(Object object) {
-		if (ProxyHelper.isProxy(object))
-			return getCollectionName(((ProxiedReference) object).__getReferenceObjClass());
-
 		MappedClass mc = getMappedClass(object);
 		return mc.getCollectionName();
 	}
@@ -278,18 +269,12 @@ public class Mapper {
 	 */
 	public DBObject toDBObject(Object entity, final LinkedHashMap<Object, DBObject> involvedObjects) {
 		
-		entity = ProxyHelper.unwrap(entity);
 		BasicDBObject dbObject = new BasicDBObject();
 		MappedClass mc = getMappedClass(entity);
 		
 		if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored())
 			dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
 
-		// if ( mc.getPolymorphicAnnotation() != null ) {
-		// dbObject.put(CLASS_NAME_FIELDNAME,
-		// entity.getClass().getCanonicalName());
-		// }
-		
 		dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
