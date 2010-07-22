@@ -2,7 +2,7 @@ package com.google.code.morphia.mapping.cache;
 
 import com.google.code.morphia.Key;
 
-public interface Cache {
+public interface EntityCache {
 	Boolean exists(Key<?> k);
 	
 	void notifyExists(Key<?> k, boolean exists);
@@ -17,5 +17,5 @@ public interface Cache {
 	
 	void flush();
 	
-	CacheStatistics stats();
+	EntityCacheStatistics stats();
 }

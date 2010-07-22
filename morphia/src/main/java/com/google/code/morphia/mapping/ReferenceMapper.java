@@ -16,7 +16,7 @@ import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.mapping.cache.Cache;
+import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReferenceList;
@@ -136,7 +136,17 @@ class ReferenceMapper {
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, Cache cache) {
+	/**
+	 * @deprecated use void fromDBObject(final DBObject dbObject, final
+	 *             MappedField mf, final Object entity, EntityCache cache)
+	 *             instead.
+	 */
+	@Deprecated
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity) {
+		fromDBObject(dbObject, mf, entity, mapper.createEntityCache());
+	}
+
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache) {
 		Class fieldType = mf.getType();
 		
 		Reference refAnn = mf.getAnnotation(Reference.class);
@@ -151,7 +161,7 @@ class ReferenceMapper {
 	}
 	
 	private void readSingle(final DBObject dbObject, final MappedField mf, final Object entity, Class fieldType,
-			Reference refAnn, Cache cache) {
+			Reference refAnn, EntityCache cache) {
 		Class referenceObjClass = fieldType;
 
 		DBRef dbRef = (DBRef) mf.getDbObjectValue(dbObject);
@@ -159,7 +169,7 @@ class ReferenceMapper {
 			
 			Object resolvedObject = null;
 			if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-				if (exists(referenceObjClass, dbRef)) {
+				if (exists(referenceObjClass, dbRef, cache)) {
 					resolvedObject = createOrReuseProxy(referenceObjClass, dbRef, cache);
 				} else {
 					if (!refAnn.ignoreMissing()) {
@@ -177,7 +187,7 @@ class ReferenceMapper {
 	}
 	
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, Reference refAnn,
-			Cache cache) {
+			EntityCache cache) {
 		// multiple references in a List
 		Class referenceObjClass = mf.getSubType();
 		Collection references = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class
@@ -207,7 +217,7 @@ class ReferenceMapper {
 					referencesAsProxy.__addAll(keys);
 				} else {
 					DBRef dbRef = (DBRef) dbVal;
-					if (!exists(mf.getSubType(), dbRef)) {
+					if (!exists(mf.getSubType(), dbRef, cache)) {
 						String msg = "The reference(" + dbRef.toString() + ") could not be fetched for "
 								+ mf.getFullName();
 						if (!refAnn.ignoreMissing())
@@ -227,31 +237,45 @@ class ReferenceMapper {
 					List refList = (List) dbVal;
 					for (Object dbRefObj : refList) {
 						DBRef dbRef = (DBRef) dbRefObj;
-						BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 						
+						Key k = new Key(dbRef);
+						Object cachedEntity = cache.getEntity(k);
+						if (cachedEntity != null) {
+							references.add(cachedEntity);
+						} else {
+							BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
+							
+							if (refDbObject == null) {
+								if (!refAnn.ignoreMissing()) {
+									throw new MappingException("The reference(" + dbRef.toString()
+											+ ") could not be fetched for " + mf.getFullName());
+								}
+							} else {
+								Object refObj = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
+								refObj = mapper.fromDb(refDbObject, refObj, cache);
+								references.add(refObj);
+								cache.putEntity(k, refObj);
+							}
+						}
+					}
+				} else {
+					DBRef dbRef = (DBRef) dbVal;
+					Key k = new Key(dbRef);
+					Object cachedEntity = cache.getEntity(k);
+					if (cachedEntity != null) {
+						references.add(cachedEntity);
+					} else {
+						BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 						if (refDbObject == null) {
 							if (!refAnn.ignoreMissing()) {
 								throw new MappingException("The reference(" + dbRef.toString()
 										+ ") could not be fetched for " + mf.getFullName());
 							}
 						} else {
-							Object refObj = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
-							refObj = mapper.fromDb(refDbObject, refObj, cache);
-							references.add(refObj);
+							Object newEntity = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
+							newEntity = mapper.fromDb(refDbObject, newEntity, cache);
+							references.add(newEntity);
 						}
-					}
-				} else {
-					DBRef dbRef = (DBRef) dbVal;
-					BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-					if (refDbObject == null) {
-						if (!refAnn.ignoreMissing()) {
-							throw new MappingException("The reference(" + dbRef.toString()
-									+ ") could not be fetched for " + mf.getFullName());
-						}
-					} else {
-						Object newEntity = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
-						newEntity = mapper.fromDb(refDbObject, newEntity, cache);
-						references.add(newEntity);
 					}
 				}
 			}
@@ -265,25 +289,34 @@ class ReferenceMapper {
 		}
 	}
 	
-	boolean exists(Class c, final DBRef dbRef) {
+	boolean exists(Class c, final DBRef dbRef, EntityCache cache) {
+		Key key = new Key(dbRef);
+		Boolean cached = cache.exists(key);
+		if (cached != null)
+			return cached;
+
 		DatastoreImpl dsi = (DatastoreImpl) mapper.datastoreProvider.get();
+
 		DBCollection dbColl = dsi.getCollection(c);
 		if (!dbColl.getName().equals(dbRef.getRef()))
 			log.warning("Class " + c.getName() + " is stored in the '" + dbColl.getName()
 					+ "' collection but a reference was found for this type to another collection, '" + dbRef.getRef()
 					+ "'. The reference will be loaded using the class anyway. " + dbRef);
-		return (dsi.find(dbRef.getRef(), c).disableValidation().filter("_id", dbRef.getId()).asKeyList().size() == 1);
+		boolean exists = (dsi.find(dbRef.getRef(), c).disableValidation().filter("_id", dbRef.getId()).asKeyList()
+				.size() == 1);
+		cache.notifyExists(key, exists);
+		return exists;
 	}
 	
 	Object resolveObject(final DBRef dbRef, final Class referenceObjClass, final boolean ignoreMissing,
-			final MappedField mf, Cache cache) {
+			final MappedField mf, EntityCache cache) {
 		
 		Key key = new Key(referenceObjClass, dbRef.getId());
 		// key.updateKind(mapper);
 		
 		Object cached = cache.getEntity(key);
-			if (cached != null && !ProxyHelper.isProxied(cached.getClass()))
-				return cached;
+		if (cached != null)
+			return cached;
 		
 		BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 		
@@ -303,7 +336,7 @@ class ReferenceMapper {
 	}
 	
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final Reference refAnn,
-			Cache cache) {
+			EntityCache cache) {
 		Class referenceObjClass = mf.getSubType();
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
@@ -321,8 +354,7 @@ class ReferenceMapper {
 					ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
 					proxiedMap.__put(entry.getKey(), new Key(dbRef));
 				} else {
-					Object resolvedObject = resolveObject(dbRef, referenceObjClass, refAnn.ignoreMissing(), mf,
- cache);
+					Object resolvedObject = resolveObject(dbRef, referenceObjClass, refAnn.ignoreMissing(), mf, cache);
 					map.put(entry.getKey(), resolvedObject);
 				}
 			}
@@ -330,14 +362,13 @@ class ReferenceMapper {
 		mf.setFieldValue(entity, map);
 	}
 	
-	private Object createOrReuseProxy(final Class referenceObjClass, final DBRef dbRef, Cache cache) {
-		
+	private Object createOrReuseProxy(final Class referenceObjClass, final DBRef dbRef, EntityCache cache) {
 		Key key = new Key(dbRef);
 		Object proxyAlreadyCreated = cache.getProxy(key);
 		if (proxyAlreadyCreated != null) {
 			return proxyAlreadyCreated;
 		}
-		Object newProxy = mapper.proxyFactory.createProxy(referenceObjClass, new Key(dbRef), mapper.datastoreProvider);
+		Object newProxy = mapper.proxyFactory.createProxy(referenceObjClass, key, mapper.datastoreProvider);
 		cache.putProxy(key, newProxy);
 		return newProxy;
 	}

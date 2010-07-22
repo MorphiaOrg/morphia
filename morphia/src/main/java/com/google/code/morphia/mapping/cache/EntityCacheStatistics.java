@@ -1,14 +1,15 @@
 package com.google.code.morphia.mapping.cache;
 
 // note that it is not threadsafe, currently it does not need to be.
-public class CacheStatistics {
+public class EntityCacheStatistics {
 	int writes;
 	int hits;
 	int misses;
 	
 	@Override
 	public String toString() {
-		return this.getClass().getName() + ": " + writes + " writes, " + hits + " hits, " + misses + " misses";
+		return this.getClass().getSimpleName() + ": " + writes + " writes, " + hits + " hits, " + misses
+ + " misses.";
 	}
 	
 	public void reset() {
@@ -17,8 +18,8 @@ public class CacheStatistics {
 		misses = 0;
 	}
 	
-	public CacheStatistics copy() {
-		CacheStatistics copy = new CacheStatistics();
+	public EntityCacheStatistics copy() {
+		EntityCacheStatistics copy = new EntityCacheStatistics();
 		copy.writes = writes;
 		copy.hits = hits;
 		copy.misses = misses;

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.code.morphia.converters.DefaultConverters;
-import com.google.code.morphia.mapping.cache.Cache;
+import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -93,7 +93,7 @@ class EmbeddedMapper {
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, Cache cache) {
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache) {
 		try {
 			if (mf.isMap()) {
 				readMap(dbObject, mf, entity, cache);
@@ -116,7 +116,7 @@ class EmbeddedMapper {
 	}
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
- Cache cache) {
+ EntityCache cache) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
 		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
@@ -143,7 +143,7 @@ class EmbeddedMapper {
 	}
 
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
- Cache cache) {
+ EntityCache cache) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);

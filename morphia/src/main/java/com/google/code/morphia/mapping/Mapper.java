@@ -36,12 +36,14 @@ import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.mapping.cache.Cache;
+import com.google.code.morphia.mapping.cache.DefaultEntityCache;
+import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.LazyProxyFactory;
+import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -133,7 +135,10 @@ public class Mapper {
 		}
 		
 		Class type = (obj instanceof Class) ? (Class) obj : obj.getClass();
-		
+		if (ProxyHelper.isProxy(obj)) {
+			type = ProxyHelper.getReferentClass(obj);
+		}
+
 		MappedClass mc = mappedClasses.get(type.getName());
 		if (mc == null) {
 			// no validation
@@ -158,7 +163,7 @@ public class Mapper {
 	 * @param dbObj
 	 *            Value to update with; null means skip
 	 */
-	public void updateKeyInfo(final Object entity, final DBObject dbObj, Cache cache) {
+	public void updateKeyInfo(final Object entity, final DBObject dbObj, EntityCache cache) {
 		MappedClass mc = getMappedClass(entity);
 
 		// update id field, if there.		
@@ -192,7 +197,7 @@ public class Mapper {
 	}
 
 	/** coverts a DBObject back to a type-safe java object */
-	public Object fromDBObject(final Class entityClass, final DBObject dbObject, Cache cache) {
+	public Object fromDBObject(final Class entityClass, final DBObject dbObject, EntityCache cache) {
 		if (dbObject == null) {
 			Throwable t = new Throwable();
 			logger.error("Somebody passed in a null dbObject; bad client!", t);
@@ -325,10 +330,11 @@ public class Mapper {
 		return dbObject;
 	}
 	
-	Object fromDb(DBObject dbObject, final Object entity, Cache cache) {
+	Object fromDb(DBObject dbObject, final Object entity, EntityCache cache) {
 		// check the history key (a key is the namespace + id)
 		
-		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
+		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
+				&& getMappedClass(entity).getEntityAnnotation() != null) {
 			Key key = new Key(entity.getClass(), dbObject.get(ID_KEY));
 			Object cachedInstance = cache.getEntity(key);
 			if (cachedInstance != null)
@@ -369,7 +375,7 @@ public class Mapper {
 		return entity;
 	}
 	
-	private void setIdValue(Object entity, MappedField mf, DBObject dbObject, Cache cache) {
+	private void setIdValue(Object entity, MappedField mf, DBObject dbObject, EntityCache cache) {
 		if (dbObject.get(ID_KEY) != null) {
 			Object dbVal = dbObject.get(ID_KEY);
 			Object idVal = null;
@@ -390,5 +396,9 @@ public class Mapper {
 	// TODO might be better to expose via some "options" object?
 	public DefaultConverters getConverters() {
 		return converters;
+	}
+	
+	public EntityCache createEntityCache() {
+		return new DefaultEntityCache();// TODO choose impl
 	}
 }

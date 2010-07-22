@@ -8,17 +8,28 @@ import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class DefaultCache implements Cache {
+public class DefaultEntityCache implements EntityCache {
 	
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultCache.class);
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultEntityCache.class);
 	
 	private final Map<Key, Object> entityMap = new HashMap<Key, Object>();
 	private final Map<Key, Object> proxyMap = new HashMap<Key, Object>();
 	private final Map<Key, Boolean> existenceMap = new HashMap<Key, Boolean>();
-	private final CacheStatistics stats = new CacheStatistics();
+	private final EntityCacheStatistics stats = new EntityCacheStatistics();
 	
 	public Boolean exists(Key<?> k) {
-		return existenceMap.get(k);
+		if (entityMap.containsKey(k)) {
+			stats.hits++;
+			return true;
+		}
+		
+		Boolean b = existenceMap.get(k);
+		if (b == null) {
+			stats.misses++;
+		} else {
+			stats.hits++;
+		}
+		return b;
 	}
 	
 	public void notifyExists(Key<?> k, boolean exists) {
@@ -31,6 +42,7 @@ public class DefaultCache implements Cache {
 		if (o == null) {
 			// TODO opt: maybe we see if we have a proxy for that, that was
 			// already fetched...
+			System.out.println("miss entity " + k + ":" + this);
 			stats.misses++;
 		} else {
 			stats.hits++;
@@ -41,8 +53,7 @@ public class DefaultCache implements Cache {
 	public <T> T getProxy(Key<T> k) {
 		Object o = proxyMap.get(k);
 		if (o == null) {
-			// TODO opt: maybe we see if we have a proxy for that, that was
-			// already fetched...
+			System.out.println("miss proxy " + k);
 			stats.misses++;
 		} else {
 			stats.hits++;
@@ -68,7 +79,7 @@ public class DefaultCache implements Cache {
 		stats.reset();
 	}
 	
-	public CacheStatistics stats() {
+	public EntityCacheStatistics stats() {
 		return stats.copy();
 	}
 	

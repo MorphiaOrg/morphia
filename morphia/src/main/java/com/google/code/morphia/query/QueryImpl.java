@@ -24,8 +24,7 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.Serializer;
-import com.google.code.morphia.mapping.cache.Cache;
-import com.google.code.morphia.mapping.cache.DefaultCache;
+import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -43,27 +42,24 @@ import com.mongodb.DBObject;
 public class QueryImpl<T> implements Query<T> {
 	private static final MorphiaLogger log = MorphiaLoggerFactory.get(Mapper.class);
 	
-	// TODO us see where to properly get an instance from
-	private final Cache cache = new DefaultCache();
-
-	// is there a reason for those fields not to be private?
-
-	boolean validating = true;
-	Map<String, Object> query =null;
-	String[] fields = null;
-	Boolean includeFields = null;
-	BasicDBObjectBuilder sort = null;
-	DatastoreImpl ds = null;
-	DBCollection dbColl = null;
-	int offset = 0;
-	int limit = -1;
-	String indexHint;
-	Class<T> clazz = null;
+	private final EntityCache cache;
+	private boolean validating = true;
+	private Map<String, Object> query = null;
+	private String[] fields = null;
+	private Boolean includeFields = null;
+	private BasicDBObjectBuilder sort = null;
+	private DatastoreImpl ds = null;
+	private DBCollection dbColl = null;
+	private int offset = 0;
+	private int limit = -1;
+	private String indexHint;
+	private Class<T> clazz = null;
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds) {
 		this.clazz = clazz;
 		this.ds = ((DatastoreImpl)ds);
 		this.dbColl = coll;
+		this.cache = this.ds.getMapper().createEntityCache();
 	}
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
@@ -145,6 +141,11 @@ public class QueryImpl<T> implements Query<T> {
 		List<T> results = new ArrayList<T>();
 		for(T ent : fetch())
 			results.add(ent);
+
+		if (log.isTraceEnabled())
+			log.trace("\nasList: " + dbColl.getName() + "\n result size " + results.size() + "\n cache: "
+				+ (cache.stats()) + "\n for " + ((query != null) ? new BasicDBObject(query) : "{}"));
+
 		return results;
 	}
 	

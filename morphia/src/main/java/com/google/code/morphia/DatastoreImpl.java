@@ -18,8 +18,7 @@ import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.google.code.morphia.mapping.cache.Cache;
-import com.google.code.morphia.mapping.cache.DefaultCache;
+import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
@@ -723,7 +722,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
 		DBObject q = qi.getQueryObject();
 		DBObject s = qi.getSortObject();
-		Cache cache = createCache();
+		EntityCache cache = createCache();
         //TODO replace with 2.1 driver, once that is ready.
 		
 		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
@@ -738,9 +737,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         return entity;
 	}
 
-	private Cache createCache() {
-		// TODO us see where to get cache instance from
-		return new DefaultCache();
+	private EntityCache createCache() {
+		Mapper mapper = morphia.getMapper();
+		return mapper.createEntityCache();
 	}
 
 	public <T> T findAndModify(Query<T> q, UpdateOperations<T> ops) {
