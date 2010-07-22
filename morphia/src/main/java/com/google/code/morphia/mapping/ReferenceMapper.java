@@ -9,12 +9,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.converters.DefaultConverters;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReferenceList;
@@ -28,7 +29,7 @@ import com.mongodb.DBRef;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 class ReferenceMapper {
-	public static final Logger log = Logger.getLogger(ReferenceMapper.class.getName());
+	public static final MorphiaLogger log = MorphiaLoggerFactory.get(ReferenceMapper.class);
 
 	private final Mapper mapper;
 	private final DefaultConverters converters;

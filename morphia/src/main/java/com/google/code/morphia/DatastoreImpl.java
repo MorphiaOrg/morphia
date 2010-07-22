@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Version;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -46,7 +47,7 @@ import com.mongodb.Mongo;
  */
 @SuppressWarnings("unchecked")
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
-	private static final Logger log = Logger.getLogger(DatastoreImpl.class.getName());
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
 	protected Morphia morphia;
 	protected Mongo mongo;
@@ -188,12 +189,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		
 		DBCollection dbColl = getCollection(clazz);
-		log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
+		log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 		if (keyOpts == null) {
-			log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
+			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 			dbColl.ensureIndex(keys.get());
 		} else {
-			log.fine("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys + " and opts "
+			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys + " and opts "
 					+ keyOpts);
 			dbColl.ensureIndex(keys.get(), keyOpts.get());
 		}
@@ -258,7 +259,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					}
 				} else {
 					getDB().createCollection(collName, dbCapOpts.get());
-					log.fine("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
+					log.debug("Created cap'd DBCollection (" + collName + ") with opts " + dbCapOpts);
 				}
 			}
 	}

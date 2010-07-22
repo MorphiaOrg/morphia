@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
@@ -36,6 +34,8 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
@@ -52,7 +52,7 @@ import com.mongodb.DBObject;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
 
-	public static final Logger logger = Logger.getLogger(Mapper.class.getName());
+	public static final MorphiaLogger logger = MorphiaLoggerFactory.get(Mapper.class);
 
 	public static final String ID_KEY = "_id";
 	public static final String IGNORED_FIELDNAME = ".";
@@ -194,7 +194,7 @@ public class Mapper {
 	public Object fromDBObject(final Class entityClass, final DBObject dbObject) {
 		if (dbObject == null) {
 			Throwable t = new Throwable();
-			logger.log(Level.SEVERE, "Somebody passed in a null dbObject; bad client!", t);
+			logger.error("Somebody passed in a null dbObject; bad client!", t);
 			return null;
 		}
 
@@ -309,7 +309,7 @@ public class Mapper {
 				else if (Embedded.class.equals(annType)) {
 					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
 				} else {
-					logger.fine("No annotation was found, embedding " + mf);
+					logger.debug("No annotation was found, embedding " + mf);
 					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
 				}
 

@@ -11,12 +11,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.validation.ConstraintViolation.Level;
 import com.google.code.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
@@ -40,8 +41,8 @@ import com.google.code.morphia.mapping.validation.fieldrules.VersionMisuse;
  */
 public class MappingValidator {
 	
-	static final Logger logger = Logger.getLogger(MappingValidator.class.getName());
-
+	private static final MorphiaLogger logger = MorphiaLoggerFactory.get(MappingValidator.class);
+	
 	public void validate(List<MappedClass> classes) {
 		Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
 			
@@ -72,11 +73,11 @@ public class MappingValidator {
 			Collections.sort(l);
 
 			for (LogLine line : l) {
-				line.log(logger);
+				line.log(MappingValidator.logger);
 			}
 		}
 	}
-
+	
 	private List<ClassConstraint> getConstraints() {
 		List<ClassConstraint> constraints = new ArrayList<ClassConstraint>(32);
 		
@@ -120,19 +121,19 @@ public class MappingValidator {
 			this.v = v;
 		}
 		
-		void log(Logger logger) {
+		void log(MorphiaLogger logger) {
 			switch (v.getLevel()) {
 				case SEVERE:
-					logger.log(java.util.logging.Level.SEVERE, v.render());
+					logger.error(v.render());
 				case WARNING:
-					logger.log(java.util.logging.Level.WARNING, v.render());
+					logger.warning(v.render());
 				case INFO:
-					logger.log(java.util.logging.Level.INFO, v.render());
+					logger.info(v.render());
 					break;
 				case MINOR:
-					logger.log(java.util.logging.Level.FINE, v.render());
+					logger.debug(v.render());
 					break;
-				
+					
 				default:
 					throw new IllegalStateException("Cannot log " + ConstraintViolation.class.getSimpleName()
 							+ " of Level " + v.getLevel());

@@ -27,12 +27,13 @@ import com.thoughtworks.proxy.toys.hotswap.HotSwappingInvoker;
  */
 @SuppressWarnings("unchecked")
 public class CGLibLazyProxyFactory implements LazyProxyFactory {
+	private final CglibProxyFactory factory = new CglibProxyFactory();
 	public CGLibLazyProxyFactory() {
 	}
 
 	public <T> T createProxy(final Class<T> targetClass, final Key<T> key,
 			final DatastoreProvider p) {
-		CglibProxyFactory factory = new CglibProxyFactory();
+
 		SerializableEntityObjectReference objectReference = new SerializableEntityObjectReference(
 				targetClass, p, key);
 		
@@ -52,7 +53,6 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
 	public <T extends Collection> T createListProxy(final T listToProxy,
 			final Class referenceObjClass, final boolean ignoreMissing,
 			final DatastoreProvider p) {
-		CglibProxyFactory factory = new CglibProxyFactory();
 		Class<? extends Collection> targetClass = listToProxy.getClass();
 		SerializableCollectionObjectReference objectReference = new SerializableCollectionObjectReference(
 				listToProxy, referenceObjClass, ignoreMissing, p);
@@ -70,7 +70,6 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
 	public <T extends Map> T createMapProxy(final T mapToProxy,
 			final Class referenceObjClass, final boolean ignoreMissing,
 			final DatastoreProvider p) {
-		CglibProxyFactory factory = new CglibProxyFactory();
 		Class<? extends Map> targetClass = mapToProxy.getClass();
 		SerializableMapObjectReference objectReference = new SerializableMapObjectReference(
 				mapToProxy, referenceObjClass, ignoreMissing, p);

@@ -8,8 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
@@ -24,7 +25,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultConverters {
-	private static final Logger log = Logger.getLogger(DefaultConverters.class.getName());
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultConverters.class);
 	
 	private List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
 	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();
@@ -32,8 +33,8 @@ public class DefaultConverters {
 	public DefaultConverters() {
 		// some converters are commented out since the passthrough converter is enabled.
 		
-//		addConverter(new PassthroughConverter(ObjectId.class));
-//		addConverter(new PassthroughConverter(DBRef.class));
+		//		addConverter(new PassthroughConverter(ObjectId.class));
+		//		addConverter(new PassthroughConverter(DBRef.class));
 		addConverter(new PassthroughConverter(byte[].class));
 		addConverter(new EnumSetConverter());
 		addConverter(new EnumConverter());
@@ -68,7 +69,7 @@ public class DefaultConverters {
 	}
 	
 	private void addTypedConverter(Class type, TypeConverter tc) {
-		if (tcMap.containsKey(type)) { 
+		if (tcMap.containsKey(type)) {
 			tcMap.get(type).add(tc);
 			log.warning("Added duplicate converter for " + type + " ; " + tcMap.get(type));
 		} else {
@@ -84,10 +85,10 @@ public class DefaultConverters {
 		} else {
 			TypeConverter enc = getEncoder(mf);
 			Object decodedValue = enc.decode(mf.getType(), object, mf);
-			try { 
+			try {
 				mf.setFieldValue(targetEntity, decodedValue);
 			} catch (IllegalArgumentException e) {
-				throw new MappingException("Error setting value from converter (" + 
+				throw new MappingException("Error setting value from converter (" +
 						enc.getClass().getSimpleName() + ") for " + mf.getFullName() + " to " + decodedValue);
 			}
 		}

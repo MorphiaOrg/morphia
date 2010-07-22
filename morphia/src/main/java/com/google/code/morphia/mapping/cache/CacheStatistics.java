@@ -1,0 +1,27 @@
+package com.google.code.morphia.mapping.cache;
+
+// note that it is not threadsafe, currently it does not need to be.
+public class CacheStatistics {
+	int writes;
+	int hits;
+	int misses;
+	
+	@Override
+	public String toString() {
+		return this.getClass().getName() + ": " + writes + " writes, " + hits + " hits, " + misses + " misses";
+	}
+	
+	public void reset() {
+		writes = 0;
+		hits = 0;
+		misses = 0;
+	}
+	
+	public CacheStatistics copy() {
+		CacheStatistics copy = new CacheStatistics();
+		copy.writes = writes;
+		copy.hits = hits;
+		copy.misses = misses;
+		return copy;
+	}
+}

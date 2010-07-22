@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.annotations.AlsoLoad;
 import com.google.code.morphia.annotations.Embedded;
@@ -21,6 +19,8 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Version;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 
@@ -31,7 +31,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
-	static final Logger log = Logger.getLogger(MappedField.class.getName());
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(MappedField.class);
 	
 	// the field :)
 	private Field field;
@@ -81,9 +81,9 @@ public class MappedField {
 			} catch (NoSuchMethodException e) {
 				// do nothing
 			} catch (IllegalArgumentException e) {
-				log.log(Level.WARNING, "There should not be an argument", e);
+				log.warning("There should not be an argument", e);
 			} catch (Exception e) {
-				log.log(Level.WARNING, "", e);
+				log.warning("", e);
 			}
 		}
 		

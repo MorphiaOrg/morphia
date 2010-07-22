@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
@@ -19,6 +17,8 @@ import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -39,8 +39,10 @@ import com.mongodb.DBObject;
  * @param <T> The type we will be querying for, and returning.
  */
 public class QueryImpl<T> implements Query<T> {
-	private static final Logger log = Logger.getLogger(Mapper.class.getName());
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(Mapper.class);
 	
+	// is there a reason for those fields not to be private?
+
 	boolean validating = true;
 	Map<String, Object> query =null;
 	String[] fields = null;
@@ -99,8 +101,8 @@ public class QueryImpl<T> implements Query<T> {
 		DBObject query = getQueryObject();
 		DBObject fields = getFieldsObject();
 		
-		if (log.isLoggable(Level.FINE))
-			log.fine("Running query: " + query + ", " + fields + ",off:" + offset + ",limit:" + limit);
+		if (log.isDebugEnabled())
+			log.debug("Running query: " + query + ", " + fields + ",off:" + offset + ",limit:" + limit);
 		
 		DBCursor cursor = dbColl.find(query, fields);
 		if (offset > 0)
@@ -225,7 +227,7 @@ public class QueryImpl<T> implements Query<T> {
 					mc = mapr.getMappedClass(value);
 		} catch (Exception e) {
 			//Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will fail/return-empty anyway)
-			log.log(Level.FINEST, "Error during mapping filter criteria: " , e);
+			log.debug("Error during mapping filter criteria: ", e);
 		}
 		
 		//convert the value to Key (DBRef) if it is a entity/@Reference of the field type is Key
@@ -235,7 +237,7 @@ public class QueryImpl<T> implements Query<T> {
 				Key<?> k = (value instanceof Key) ? (Key<?>)value : ds.getKey(value);
 				mappedValue = k.toRef(mapr);
 			} catch (Exception e) {
-				log.log(Level.WARNING, "Error converting value(" + value + ") to reference.", e);
+				log.debug("Error converting value(" + value + ") to reference.", e);
 				mappedValue = mapr.toMongoObject(value);
 			}
 		}
@@ -324,7 +326,7 @@ public class QueryImpl<T> implements Query<T> {
 			log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
 					+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
 					+ " is a " + mf.getType().getName());
-			log.log(Level.FINE, "Location of warning:\r\n", t);
+			log.debug("Location of warning:\r\n", t);
 		}
 		
 		return mf;

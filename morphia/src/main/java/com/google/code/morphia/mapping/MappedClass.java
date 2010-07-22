@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.annotations.Embedded;
@@ -34,6 +33,8 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.annotations.Version;
+import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.validation.MappingValidator;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
@@ -47,7 +48,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings("unchecked")
 public class MappedClass {
-	private static final Logger log = Logger.getLogger(MappedClass.class.getName());
+	private static final MorphiaLogger log = MorphiaLoggerFactory.get(MappedClass.class);
 	
 	private static class ClassMethodPair {
 		Class<?> clazz;
@@ -287,7 +288,7 @@ public class MappedClass {
 					
 					Object inst = toCall.get(type);
 					method.setAccessible(true);
-					log.fine("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
+					log.debug("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
 					if (inst == null)
 						if (method.getParameterTypes().length == 0)
 							tempObj = method.invoke(entity);
@@ -317,7 +318,7 @@ public class MappedClass {
 	private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr,
 			Collection<EntityInterceptor> interceptors) {
 		for (EntityInterceptor ei : interceptors) {
-			log.fine("Calling interceptor method " + event.getSimpleName() + " on " + ei );
+			log.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
 			
 			if 		(event.equals(PreLoad.class)) 		ei.preLoad(entity, dbObj, mapr);
 			else if (event.equals(PostLoad.class)) 		ei.postLoad(entity, dbObj, mapr);
