@@ -12,8 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.morphia.Key;
 import com.google.code.morphia.converters.DefaultConverters;
+import com.google.code.morphia.mapping.cache.Cache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -93,18 +93,18 @@ class EmbeddedMapper {
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Map<Key, Object> retrieved) {
+	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, Cache cache) {
 		try {
 			if (mf.isMap()) {
-				readMap(dbObject, mf, entity, retrieved);
+				readMap(dbObject, mf, entity, cache);
 			} else if (mf.isMultipleValues()) {
-				readCollection(dbObject, mf, entity, retrieved);
+				readCollection(dbObject, mf, entity, cache);
 			} else {
 				// single document
 				BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
 				if (dbVal != null) {
 					Object refObj = ReflectionUtils.createInstance(mf, dbVal);
-					refObj = mapper.fromDb(dbVal, refObj, retrieved);
+					refObj = mapper.fromDb(dbVal, refObj, cache);
 					if (refObj != null) {
 						mf.setFieldValue(entity, refObj);
 					}
@@ -116,7 +116,7 @@ class EmbeddedMapper {
 	}
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
-			final Map<Key, Object> retrieved) {
+ Cache cache) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
 		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
@@ -128,7 +128,7 @@ class EmbeddedMapper {
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
-				newEntity = mapper.fromDb(dbObj, newEntity, retrieved);
+				newEntity = mapper.fromDb(dbObj, newEntity, cache);
 				values.add(newEntity);
 			}
 		}
@@ -143,7 +143,7 @@ class EmbeddedMapper {
 	}
 
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
-			Map<Key, Object> retrieved) {
+ Cache cache) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
@@ -151,7 +151,7 @@ class EmbeddedMapper {
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object newEntity = ReflectionUtils.createInstance(mf.getSubType(), (BasicDBObject) entry.getValue());
 				
-				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, retrieved);
+				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, cache);
 				Object objKey = converters.decode(mf.getMapKeyType(), entry.getKey());
 				map.put(objKey, newEntity);
 			}

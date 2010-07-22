@@ -24,6 +24,8 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.Serializer;
+import com.google.code.morphia.mapping.cache.Cache;
+import com.google.code.morphia.mapping.cache.DefaultCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -41,6 +43,9 @@ import com.mongodb.DBObject;
 public class QueryImpl<T> implements Query<T> {
 	private static final MorphiaLogger log = MorphiaLoggerFactory.get(Mapper.class);
 	
+	// TODO us see where to properly get an instance from
+	private final Cache cache = new DefaultCache();
+
 	// is there a reason for those fields not to be private?
 
 	boolean validating = true;
@@ -120,7 +125,7 @@ public class QueryImpl<T> implements Query<T> {
 
 	public Iterable<T> fetch() {
 		DBCursor cursor = prepareCursor();
-		return new MorphiaIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
+		return new MorphiaIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
 	}
 	
 

@@ -36,6 +36,7 @@ import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.mapping.cache.Cache;
 import com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
@@ -157,7 +158,7 @@ public class Mapper {
 	 * @param dbObj
 	 *            Value to update with; null means skip
 	 */
-	public void updateKeyInfo(final Object entity, final DBObject dbObj) {
+	public void updateKeyInfo(final Object entity, final DBObject dbObj, Cache cache) {
 		MappedClass mc = getMappedClass(entity);
 
 		// update id field, if there.		
@@ -165,7 +166,7 @@ public class Mapper {
 			try {
 				MappedField mf = mc.getMappedField(ID_KEY);
 				Object oldIdValue = mc.getIdField().get(entity);
-				setIdValue(entity, mf, dbObj, new HashMap<Key, Object>());
+				setIdValue(entity, mf, dbObj, cache);
 				Object dbIdValue = mc.getIdField().get(entity);
 				if (oldIdValue != null) {
 					// The entity already had an id set. Check to make sure it
@@ -191,7 +192,7 @@ public class Mapper {
 	}
 
 	/** coverts a DBObject back to a type-safe java object */
-	public Object fromDBObject(final Class entityClass, final DBObject dbObject) {
+	public Object fromDBObject(final Class entityClass, final DBObject dbObject, Cache cache) {
 		if (dbObject == null) {
 			Throwable t = new Throwable();
 			logger.error("Somebody passed in a null dbObject; bad client!", t);
@@ -201,7 +202,7 @@ public class Mapper {
 		Object entity = null;
 		Map<Key, Object> retrieved = new HashMap<Key, Object>();
 		entity = ReflectionUtils.createInstance(entityClass, dbObject);
-		fromDb(dbObject, entity, retrieved);
+		fromDb(dbObject, entity, cache);
 		return entity;
 	}
 
@@ -324,16 +325,17 @@ public class Mapper {
 		return dbObject;
 	}
 	
-	Object fromDb(DBObject dbObject, final Object entity, Map<Key, Object> retrieved) {
+	Object fromDb(DBObject dbObject, final Object entity, Cache cache) {
 		// check the history key (a key is the namespace + id)
 		
 		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
 			Key key = new Key(entity.getClass(), dbObject.get(ID_KEY));
-			Object cachedInstance = retrieved.get(key);
+			Object cachedInstance = cache.getEntity(key);
 			if (cachedInstance != null)
 				return cachedInstance;
 			else
-				retrieved.put(key, entity); // to avoid stackOverflow in recursive refs
+				cache.putEntity(key, entity); // to avoid stackOverflow in
+												// recursive refs
 		}
 
 		MappedClass mc = getMappedClass(entity);
@@ -342,16 +344,16 @@ public class Mapper {
 		try {
 			for (MappedField mf : mc.getPersistenceFields()) {
 				if (mf.hasAnnotation(Id.class)) {
-					setIdValue(entity, mf, dbObject, retrieved);
+					setIdValue(entity, mf, dbObject, cache);
 				} else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
 						|| mf.isTypeMongoCompatible() || converters.hasSimpleValueConverter(mf))
 					valueMapper.fromDBObject(dbObject, mf, entity);
 				else if (mf.hasAnnotation(Embedded.class))
-					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
+					embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
 				else if (mf.hasAnnotation(Reference.class))
-					referenceMapper.fromDBObject(dbObject, mf, entity, retrieved);
+					referenceMapper.fromDBObject(dbObject, mf, entity, cache);
 				else {
-					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
+					embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
 				}
 			}
 		} catch (Exception e) {
@@ -361,19 +363,19 @@ public class Mapper {
 		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
 			String id = dbObject.get(ID_KEY).toString();
 			Key key = new Key(entity.getClass(), id);
-			retrieved.put(key, entity);
+			cache.putEntity(key, entity);
 		}
 		mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);
 		return entity;
 	}
 	
-	private void setIdValue(Object entity, MappedField mf, DBObject dbObject, Map<Key, Object> retrieved) {
+	private void setIdValue(Object entity, MappedField mf, DBObject dbObject, Cache cache) {
 		if (dbObject.get(ID_KEY) != null) {
 			Object dbVal = dbObject.get(ID_KEY);
 			Object idVal = null;
 			
 			if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
-				embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
+				embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
 				idVal = mf.getFieldValue(entity);
 			} else {
 				idVal = converters.decode(mf.getType(), dbObject.get(ID_KEY));							

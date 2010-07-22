@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.mapping.cache.Cache;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 
@@ -13,13 +14,18 @@ import com.mongodb.DBCursor;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
-	DBCursor wrapped;
-	Mapper m;
-	Class<T> clazz;
-	String kind;
+	private final DBCursor wrapped;
+	private final Mapper m;
+	private final Class<T> clazz;
+	private final String kind;
+	private final Cache cache;
 
-	public MorphiaIterator(DBCursor it, Mapper m, Class<T> clazz, String kind) {
-		this.wrapped = it; this.m = m; this.clazz = clazz;this.kind = kind;
+	public MorphiaIterator(DBCursor it, Mapper m, Class<T> clazz, String kind, Cache cache) {
+		this.wrapped = it;
+		this.m = m;
+		this.clazz = clazz;
+		this.kind = kind;
+		this.cache = cache;
 	}
 	
 	public Iterator<T> iterator() {
@@ -33,7 +39,7 @@ public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
 	
 	public T next() {
 		if(!hasNext()) throw new NoSuchElementException();
-		T entity = (T) m.fromDBObject(clazz, (BasicDBObject) wrapped.next());
+		T entity = (T) m.fromDBObject(clazz, (BasicDBObject) wrapped.next(), cache);
 		return (T) entity;
 	}
 	

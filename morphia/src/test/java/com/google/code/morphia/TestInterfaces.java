@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.mapping.cache.DefaultCache;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testmodel.Shape;
@@ -52,7 +53,7 @@ public class TestInterfaces extends TestBase {
         shapes.save(rectangleDbObj);
 
         BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject(Mapper.ID_KEY, rectangleDbObj.get(Mapper.ID_KEY)));
-        Shape rectangleLoaded = morphia.fromDBObject(Shape.class, rectangleDbObjLoaded);
+		Shape rectangleLoaded = morphia.fromDBObject(Shape.class, rectangleDbObjLoaded, new DefaultCache());
 
         assertTrue(rectangle.getArea() == rectangleLoaded.getArea());
         assertTrue(rectangleLoaded instanceof Rectangle);
@@ -67,7 +68,7 @@ public class TestInterfaces extends TestBase {
         shapeshifters.save(shifterDbObj);
 
         BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Mapper.ID_KEY, shifterDbObj.get(Mapper.ID_KEY)));
-        ShapeShifter shifterLoaded = morphia.fromDBObject(ShapeShifter.class, shifterDbObjLoaded);
+		ShapeShifter shifterLoaded = morphia.fromDBObject(ShapeShifter.class, shifterDbObjLoaded, new DefaultCache());
 
         assertNotNull(shifterLoaded);
         assertNotNull(shifterLoaded.getReferencedShape());

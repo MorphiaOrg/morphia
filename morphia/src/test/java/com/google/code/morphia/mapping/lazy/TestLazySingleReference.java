@@ -2,6 +2,7 @@ package com.google.code.morphia.mapping.lazy;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.Key;
@@ -85,6 +86,8 @@ public class TestLazySingleReference extends ProxyTestBase {
 	}
 	
 	@Test
+	@Ignore
+	// FIXME us
 	public final void testSameProxy() {
 		RootEntity root = new RootEntity();
 		ReferencedEntity reference = new ReferencedEntity();

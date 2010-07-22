@@ -18,6 +18,8 @@ import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.mapping.cache.Cache;
+import com.google.code.morphia.mapping.cache.DefaultCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
@@ -308,7 +310,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> T get(Class<T> clazz, DBRef ref) {
-		return morphia.fromDBObject(clazz, ref.fetch());
+		return morphia.fromDBObject(clazz, ref.fetch(), createCache());
 	}
 	
 
@@ -694,7 +696,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		
-		mapr.updateKeyInfo(entity, dbObj);
+		mapr.updateKeyInfo(entity, dbObj, createCache());
 		
 		firePostPersistForChildren(involvedObjects, mapr);
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
@@ -721,6 +723,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
 		DBObject q = qi.getQueryObject();
 		DBObject s = qi.getSortObject();
+		Cache cache = createCache();
         //TODO replace with 2.1 driver, once that is ready.
 		
 		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
@@ -730,8 +733,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         	cmd.append( "sort", s );
         
         cmd.append( "remove", true);
-		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command( cmd ).get( "value" ));
+		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command(cmd).get("value"),
+				cache);
         return entity;
+	}
+
+	private Cache createCache() {
+		// TODO us see where to get cache instance from
+		return new DefaultCache();
 	}
 
 	public <T> T findAndModify(Query<T> q, UpdateOperations<T> ops) {
@@ -760,7 +769,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (res == null) 
 			return null;
 		else
-			return (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), res);
+			return (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), res, createCache());
 	}
 	
 	/** Converts a list of keys to refs */
