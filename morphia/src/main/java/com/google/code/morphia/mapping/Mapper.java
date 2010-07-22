@@ -280,12 +280,17 @@ public class Mapper {
 			try {
 				Class<? extends Annotation> annType = null;
 				// get the annotation from the field.
-				for (Class<? extends Annotation> testType : new Class[] { Id.class, Property.class, Embedded.class,
-						Serialized.class, Reference.class })
+				for (Class<? extends Annotation> testType : new Class[] { 	Id.class, 
+																			Property.class, 
+																			Embedded.class, 
+																			Serialized.class, 
+																			Reference.class }) {
 					if (mf.hasAnnotation(testType)) {
 						annType = testType;
 						break;
 					}
+				}
+				
 				if (Id.class.equals(annType)) {
 					Object idVal = mf.getFieldValue(entity);
 					if (idVal != null) {
@@ -303,15 +308,9 @@ public class Mapper {
 					referenceMapper.toDBObject(entity, mf, dbObject, opts);
 				else if (Embedded.class.equals(annType)) {
 					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
-					
 				} else {
-					// maybe act according to some default!?
 					logger.fine("No annotation was found, embedding " + mf);
 					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
-					
-// logger.warning("Ignoring field: " + mf.getFullName() +
-					// " [type:" + mf.getType().getSimpleName()
-					// + "]");
 				}
 
 			} catch (Exception e) {
@@ -352,14 +351,8 @@ public class Mapper {
 				else if (mf.hasAnnotation(Reference.class))
 					referenceMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				else {
-					// that was broken before because not being in sync with
-					// toDBObject
-					// logger.warning("Ignoring field: " + mf.getFullName() +
-					// " [type:" + mf.getType().getName() + "]");
-					
 					embeddedMapper.fromDBObject(dbObject, mf, entity, retrieved);
 				}
-
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -391,9 +384,9 @@ public class Mapper {
 				throw new MappingException(String.format("@Id field (_id='" + dbVal +"') was converted to null"));
 		}
 	}
+
 	// TODO might be better to expose via some "options" object?
 	public DefaultConverters getConverters() {
 		return converters;
 	}
-
 }
