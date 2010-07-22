@@ -17,7 +17,6 @@ import com.google.code.morphia.mapping.lazy.proxy.SerializableMapObjectReference
 import com.thoughtworks.proxy.factory.CglibProxyFactory;
 import com.thoughtworks.proxy.toys.delegate.DelegationMode;
 import com.thoughtworks.proxy.toys.dispatch.Dispatching;
-import com.thoughtworks.proxy.toys.hotswap.HotSwappingInvoker;
 
 /**
  * i have to admit, there are plenty of open questions for me on that
@@ -37,8 +36,8 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
 		SerializableEntityObjectReference objectReference = new SerializableEntityObjectReference(
 				targetClass, p, key);
 		
-		
-		T backend = (T) new HotSwappingInvoker(new Class[] { targetClass, Serializable.class }, factory,
+		T backend = (T) new NonFinalizingHotSwappingInvoker(new Class[] { targetClass,
+				Serializable.class }, factory,
 				objectReference, DelegationMode.SIGNATURE).proxy();
 
 
@@ -57,7 +56,7 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
 		SerializableCollectionObjectReference objectReference = new SerializableCollectionObjectReference(
 				listToProxy, referenceObjClass, ignoreMissing, p);
 
-		T backend = (T) new HotSwappingInvoker(new Class[] { targetClass, Serializable.class }, factory,
+		T backend = (T) new NonFinalizingHotSwappingInvoker(new Class[] { targetClass, Serializable.class }, factory,
 				objectReference, DelegationMode.SIGNATURE).proxy();
 		T proxy = (T) Dispatching.proxy(targetClass,
 				new Class[] { ProxiedEntityReferenceList.class, targetClass, Serializable.class }).with(
@@ -74,7 +73,7 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
 		SerializableMapObjectReference objectReference = new SerializableMapObjectReference(
 				mapToProxy, referenceObjClass, ignoreMissing, p);
 
-		T backend = (T) new HotSwappingInvoker(new Class[] { targetClass, Serializable.class }, factory,
+		T backend = (T) new NonFinalizingHotSwappingInvoker(new Class[] { targetClass, Serializable.class }, factory,
 				objectReference, DelegationMode.SIGNATURE).proxy();
 		T proxy = (T) Dispatching.proxy(targetClass,
 				new Class[] { ProxiedEntityReferenceMap.class, targetClass, Serializable.class }).with(objectReference,
