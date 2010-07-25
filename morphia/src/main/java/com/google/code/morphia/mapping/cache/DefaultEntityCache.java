@@ -8,8 +8,10 @@ import relocated.morphia.org.apache.commons.collections.ReferenceMap;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
+import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings( { "rawtypes", "unchecked" })
 public class DefaultEntityCache implements EntityCache {
 	
 	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultEntityCache.class);
@@ -42,8 +44,14 @@ public class DefaultEntityCache implements EntityCache {
 	public <T> T getEntity(Key<T> k) {
 		Object o = entityMap.get(k);
 		if (o == null) {
-			// TODO opt: maybe we see if we have a proxy for that, that was
-			// already fetched...
+			if (LazyFeatureDependencies.testDependencyFullFilled()) {
+				Object proxy = proxyMap.get(k);
+				if (proxy != null) {
+					ProxyHelper.isFetched(proxy);
+					stats.hits++;
+					return (T) ProxyHelper.unwrap(proxy);
+				}
+			}
 			// System.out.println("miss entity " + k + ":" + this);
 			stats.misses++;
 		} else {
