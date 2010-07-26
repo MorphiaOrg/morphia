@@ -25,6 +25,7 @@ import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.Serializer;
 import com.google.code.morphia.mapping.cache.EntityCache;
+import com.google.code.morphia.utils.Assert;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -428,6 +429,7 @@ public class QueryImpl<T> implements Query<T> {
 		public QueryFieldEndImpl(String fe, QueryImpl<T> q) {this.fieldExpr = fe; this.query=q;}
 
 		public Query<T> startsWith(String prefix) {
+			Assert.parametersNotNull("prefix",prefix);
 			query.filter("" + fieldExpr, Pattern.compile("^" + prefix));
 			return query;
 		}
@@ -438,6 +440,7 @@ public class QueryImpl<T> implements Query<T> {
 		}
 
 		public Query<T> equal(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " =", val);
 			return query;
 		}
@@ -448,56 +451,70 @@ public class QueryImpl<T> implements Query<T> {
 		}
 
 		public Query<T> greaterThan(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " >", val);
 			return query;
 		}
 
 		public Query<T> greaterThanOrEq(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " >=", val);
 			return query;
 		}
 
 		public Query<T> hasThisOne(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " =", val);
 			return query;
 		}
 
 		public Query<T> hasAllOf(Iterable<?> vals) {
+			Assert.parametersNotNull("vals",vals);
+			Assert.parameterNotEmpty(vals,"vals");
 			query.filter(fieldExpr + " all", vals);
 			return query;
 		}
 
 		public Query<T> hasAnyOf(Iterable<?> vals) {
+			Assert.parametersNotNull("vals",vals);
+			Assert.parameterNotEmpty(vals,"vals");
 			query.filter(fieldExpr + " in", vals);
 			return query;
 		}
 
 		public Query<T> hasThisElement(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " elem", val);
 			return query;
 		}
 
 		public Query<T> hasNoneOf(Iterable<?> vals) {
+			Assert.parametersNotNull("vals",vals);
+			Assert.parameterNotEmpty(vals,"vals");
 			query.filter(fieldExpr + " nin", vals);
 			return query;
 		}
 
 		public Query<T> lessThan(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " <", val);
 			return query;
 		}
 
 		public Query<T> lessThanOrEq(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " <=", val);
 			return query;
 		}
 
 		public Query<T> notEqual(Object val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " <>", val);
 			return query;
 		}
 
 		public Query<T> sizeEq(int val) {
+			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " size", val);
 			return query;
 		}
