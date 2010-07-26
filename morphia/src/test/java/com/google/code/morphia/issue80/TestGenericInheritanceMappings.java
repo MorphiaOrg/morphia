@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -59,7 +60,7 @@ public class TestGenericInheritanceMappings extends TestBase {
 		morphia.map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
 	}
 
-    @Test
+    @Test @Ignore
     public void testIt() throws Exception {
     	ContainsThings ct = new ContainsThings();
     	HoldsAnInteger hai = new HoldsAnInteger();
