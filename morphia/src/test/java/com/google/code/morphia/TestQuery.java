@@ -41,6 +41,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
@@ -158,6 +159,13 @@ public class TestQuery  extends TestBase {
         assertNotNull(ds.find(ContainsPhotoKey.class, "photo", p).get());
         assertNotNull(ds.find(ContainsPhotoKey.class, "photo", cpk.photo).get());
         assertNull(ds.find(ContainsPhotoKey.class, "photo", 1).get());
+        
+        try {
+            ds.find(ContainsPhotoKey.class, "photo.keywords","foo").get();
+            assertNull("um, query validation should have thrown");
+        } catch (MappingException e) {
+        	//do nothing, this is good.
+        }
     }
 
     @Test
@@ -173,6 +181,13 @@ public class TestQuery  extends TestBase {
         Query<ContainsPic> query = ds.createQuery(ContainsPic.class);
 
 		assertEquals(1, query.field("pic").equal(p).asList().size());
+
+		try {
+            ds.find(ContainsPic.class, "pic.name","foo").get();
+            assertNull("um, query validation should have thrown");
+        } catch (MappingException e) {
+        	//do nothing, this is good.
+        }
     }
     @Test
     public void testQueryOverLazyReference() throws Exception {

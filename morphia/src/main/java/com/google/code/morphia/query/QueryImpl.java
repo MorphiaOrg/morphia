@@ -322,6 +322,10 @@ public class QueryImpl<T> implements Query<T> {
 				//skip the map key validation, and move to the next part
 				i++;
 			}
+			//catch people trying to search into @Reference/@Serialized fields
+			if (i < parts.length && !canQueryPast(mf))
+				throw new MappingException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+			
 			if (i >= parts.length) break;
 			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 		}
@@ -337,6 +341,11 @@ public class QueryImpl<T> implements Query<T> {
 		}
 		
 		return mf;
+	}
+	
+	/** Returns if the MappedField is a Reference or Serilized  */
+	public static boolean canQueryPast(MappedField mf) {
+		return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
 	}
 	
 	public static boolean isCompatibleForQuery(Class<?> type, Object value) {
@@ -440,7 +449,6 @@ public class QueryImpl<T> implements Query<T> {
 		}
 
 		public Query<T> equal(Object val) {
-			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " =", val);
 			return query;
 		}
@@ -463,7 +471,6 @@ public class QueryImpl<T> implements Query<T> {
 		}
 
 		public Query<T> hasThisOne(Object val) {
-			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " =", val);
 			return query;
 		}
@@ -508,7 +515,6 @@ public class QueryImpl<T> implements Query<T> {
 		}
 
 		public Query<T> notEqual(Object val) {
-			Assert.parametersNotNull("val",val);
 			query.filter(fieldExpr + " <>", val);
 			return query;
 		}
