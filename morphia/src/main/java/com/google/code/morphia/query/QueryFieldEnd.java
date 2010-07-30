@@ -13,6 +13,7 @@ public interface QueryFieldEnd<T> {
 	Query<T> notEqual(Object val);
 
 	Query<T> startsWith(String prefix);
+	Query<T> startsWithIgnoreCase(String string);
 	
 	Query<T> hasThisOne(Object val);
 	Query<T> hasAllOf(Iterable<?> vals);

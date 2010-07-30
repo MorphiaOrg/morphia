@@ -443,6 +443,12 @@ public class QueryImpl<T> implements Query<T> {
 			return query;
 		}
 		
+		public Query<T> startsWithIgnoreCase(String prefix) {
+			Assert.parametersNotNull("prefix", prefix);
+			query.filter("" + fieldExpr, Pattern.compile("^" + prefix, Pattern.CASE_INSENSITIVE));
+			return query;
+		}
+
 		public Query<T> doesNotExist() {
 			query.filter("" + fieldExpr + " exists", 0);
 			return query;
