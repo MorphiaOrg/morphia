@@ -272,7 +272,7 @@ public class QueryImpl<T> implements Query<T> {
 				inner = new HashMap<String, Object>();
 				query.put(prop, inner);
 			}
-			((Map)inner).put(op.val(), mappedValue);
+			((Map<String, Object>)inner).put(op.val(), mappedValue);
 		}
 		return this;	
 	}
