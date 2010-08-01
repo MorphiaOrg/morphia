@@ -647,7 +647,7 @@ public class ReflectionUtils
 	/** turns the object into an ObjectId if it is/should-be one */
 	public static Object asObjectIdMaybe(final Object id) {
 		try {
-			if ((id instanceof String) && ObjectId.isValid((String) id))
+			if ((id instanceof String) && (((String) id).length() <= 24) && ObjectId.isValid((String) id))
 				return new ObjectId((String) id);
 		} catch (Exception e) {
 			// sometimes isValid throws exceptions... bad!
