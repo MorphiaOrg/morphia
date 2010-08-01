@@ -448,7 +448,31 @@ public class QueryImpl<T> implements Query<T> {
 			query.filter("" + fieldExpr, Pattern.compile("^" + prefix, Pattern.CASE_INSENSITIVE));
 			return query;
 		}
+		
+		public Query<T> endsWith(String suffix) {
+			Assert.parametersNotNull("suffix", suffix);
+			query.filter("" + fieldExpr, Pattern.compile(suffix + "$"));
+			return query;
+		}
+		
+		public Query<T> endsWithIgnoreCase(String suffix) {
+			Assert.parametersNotNull("suffix", suffix);
+			query.filter("" + fieldExpr, Pattern.compile(suffix + "$", Pattern.CASE_INSENSITIVE));
+			return query;
+		}
 
+		public Query<T> contains(String chars) {
+			Assert.parametersNotNull("chars", chars);
+			query.filter("" + fieldExpr, Pattern.compile(chars));
+			return query;
+		}
+		
+		public Query<T> containsIgnoreCase(String chars) {
+			Assert.parametersNotNull("chars", chars);
+			query.filter("" + fieldExpr, Pattern.compile(chars, Pattern.CASE_INSENSITIVE));
+			return query;
+		}
+		
 		public Query<T> doesNotExist() {
 			query.filter("" + fieldExpr + " exists", 0);
 			return query;

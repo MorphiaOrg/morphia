@@ -14,6 +14,10 @@ public interface QueryFieldEnd<T> {
 
 	Query<T> startsWith(String prefix);
 	Query<T> startsWithIgnoreCase(String string);
+	Query<T> endsWith(String prefix);
+	Query<T> endsWithIgnoreCase(String string);
+	Query<T> contains(String prefix);
+	Query<T> containsIgnoreCase(String string);
 	
 	Query<T> hasThisOne(Object val);
 	Query<T> hasAllOf(Iterable<?> vals);
