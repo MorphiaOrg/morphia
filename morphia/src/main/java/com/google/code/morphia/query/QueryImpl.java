@@ -227,7 +227,7 @@ public class QueryImpl<T> implements Query<T> {
 		Object mappedValue;
 		MappedClass mc = null;
 		try {
-			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()))
+			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()) && !ReflectionUtils.implementsInterface(value.getClass(), Iterable.class))
 				if (mf!=null && !mf.isTypeMongoCompatible())
 					mc=mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 				else
