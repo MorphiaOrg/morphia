@@ -15,6 +15,7 @@ import com.google.code.morphia.annotations.AlsoLoad;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -46,7 +47,7 @@ public class MappedField {
 	// mappingAnnotations)
 	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
 			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
-					Version.class, AlsoLoad.class));
+					Version.class, AlsoLoad.class, NotSaved.class));
 	
 	private Class subType = null; // the type (T) for the Collection<T>/T[]/Map<?,T>
 	private Class keyType = null; // the type (T) for the Map<T,?>

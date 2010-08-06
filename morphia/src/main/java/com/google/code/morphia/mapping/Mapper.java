@@ -25,6 +25,7 @@ import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
@@ -283,6 +284,11 @@ public class Mapper {
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
 				Class<? extends Annotation> annType = null;
+				
+				//skip not saved fields.
+				if (mf.hasAnnotation(NotSaved.class))
+						continue;
+			
 				// get the annotation from the field.
 				for (Class<? extends Annotation> testType : new Class[] { 	Id.class, 
 																			Property.class, 
