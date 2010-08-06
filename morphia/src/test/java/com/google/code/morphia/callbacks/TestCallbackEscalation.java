@@ -8,6 +8,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -26,20 +27,13 @@ public class TestCallbackEscalation extends TestBase
     @Entity
     static class A extends Callbacks
     {
-        @Id
-        String id;
+        @Id ObjectId id;
 
         @Embedded
         B b;
 
         @Embedded
         List<B> bs = new LinkedList<B>();
-
-        String getId()
-        {
-            return this.id;
-        }
-
     }
 
     @Embedded
@@ -142,7 +136,7 @@ public class TestCallbackEscalation extends TestBase
         Assert.assertFalse(a.b.preLoad);
         Assert.assertFalse(a.bs.get(0).preLoad);
 
-        a = this.ds.find(A.class, "_id", a.getId()).get();
+        a = this.ds.find(A.class, "_id", a.id).get();
 
         Assert.assertTrue(a.preLoad);
         Assert.assertTrue(a.b.preLoad);
@@ -167,7 +161,7 @@ public class TestCallbackEscalation extends TestBase
         Assert.assertFalse(a.b.preLoad);
         Assert.assertFalse(a.bs.get(0).preLoad);
 
-        a = this.ds.find(A.class, "_id", a.getId()).get();
+        a = this.ds.find(A.class, "_id", a.id).get();
 
         Assert.assertTrue(a.postLoad);
         Assert.assertTrue(a.b.postLoad);

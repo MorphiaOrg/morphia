@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -21,17 +22,11 @@ public class ClassMappingTest extends TestBase
 {
 
     @SuppressWarnings("unchecked")
-    public static class E
-    {
-        @Id
-        String id;
+    public static class E {
+		@Id ObjectId id;
 
-        @Property
-        Class<? extends Collection> testClass;
-
-
+        @Property Class<? extends Collection> testClass;
         Class<? extends Collection> testClass2;
-
     }
 
     @Test

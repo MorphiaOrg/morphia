@@ -55,13 +55,13 @@ import com.mongodb.MongoInternalException;
 public class TestQuery  extends TestBase {
 
     public static class Photo {
-        @Id String id;
+        @Id ObjectId id;
         List<String> keywords = Collections.singletonList("amazing");
     }
 
 
     public static class PhotoWithKeywords {
-        @Id String id;
+        @Id ObjectId id;
         @Embedded List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("neveda"), new Keyword("arizona"));
         public PhotoWithKeywords() {}
         public PhotoWithKeywords(final String... words) {
@@ -82,13 +82,13 @@ public class TestQuery  extends TestBase {
     }
 
     public static class ContainsPhotoKey {
-        @Id String id;
+        @Id ObjectId id;
         Key<Photo> photo;
     }
 
     @Entity
     public static class ContainsPic {
-        @Id String id;
+        @Id ObjectId id;
         String name = "test";
         @Reference
 		Pic pic;
@@ -97,12 +97,12 @@ public class TestQuery  extends TestBase {
     }
     @Entity
     public static class Pic {
-        @Id String id;
+        @Id ObjectId id;
         String name;
     }
 
     public static class ContainsRenamedFields{
-        @Id String id;
+        @Id ObjectId id;
         @Property("first_name")
         String firstName = "Scott";
         @Property("last_name")

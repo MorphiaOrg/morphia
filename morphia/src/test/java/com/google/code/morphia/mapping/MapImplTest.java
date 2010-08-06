@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -20,23 +21,14 @@ import com.google.code.morphia.annotations.Id;
 public class MapImplTest extends TestBase{
 	
 
-	@SuppressWarnings("unchecked")
 	public static class E {
-		@Id
-		String id;
+		@Id ObjectId id;
 
 		@Embedded
-		MyMap<String,String> mymap = new MyMap();
-		
-		
+		MyMap<String,String> mymap = new MyMap<String,String>();
 	}
 	public static class MyMap<V,T> extends HashMap<String,String>{
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
-		
 	}
 	
 	@Test

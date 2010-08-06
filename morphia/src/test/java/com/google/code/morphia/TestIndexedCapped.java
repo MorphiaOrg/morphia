@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ import com.mongodb.DBObject;
 public class TestIndexedCapped  extends TestBase{
 	@Entity(cap=@CappedAt(count=1))
 	public static class CurrentStatus{
-		@Id String id;
+		@Id ObjectId id;
 		String message;
 		
 		@SuppressWarnings("unused")
@@ -52,19 +53,19 @@ public class TestIndexedCapped  extends TestBase{
 
 	@Entity
 	public static class IndexedClass{
-		@Id String id;
+		@Id ObjectId id;
 		@Indexed long l=4;
 	}
 
 	@Entity
 	public static class NamedIndexClass{
-		@Id String id;
+		@Id ObjectId id;
 		@Indexed(name="l_ascending") long l=4;	
 	}
 
 	@Entity
 	public static class UniqueIndexClass{
-		@Id String id;
+		@Id ObjectId id;
 		@Indexed(name="l_ascending", unique=true) long l=4;
 		String name;
 		UniqueIndexClass(){}
@@ -72,8 +73,7 @@ public class TestIndexedCapped  extends TestBase{
 	}
 	
 	public static class Ad {
-		@Id
-		public long id;
+		@Id public long id;
 
 		@Property("lastMod")
 		@Indexed

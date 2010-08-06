@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -62,8 +63,7 @@ public class TestSerializerTest extends TestBase {
 	}
 	
 	public static class E {
-		@Id
-		String id;
+		@Id ObjectId id;
 		@Serialized
 		byte[] payload1;
 		@Serialized()

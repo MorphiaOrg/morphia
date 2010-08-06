@@ -8,6 +8,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,12 +24,8 @@ import com.google.code.morphia.annotations.Id;
 public class CollectionOfValuesTest extends TestBase {
 	
 	public static class ContainsListOfList {
-		@Id
-		String id;
-
-		
-		@Embedded
-		List<List<String>> listOfList;
+		@Id ObjectId id;
+		@Embedded List<List<String>> listOfList;
 	}
 	
 	public static class ContainsTwoDimensionalArray {

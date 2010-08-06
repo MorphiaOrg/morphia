@@ -5,6 +5,7 @@ package com.google.code.morphia.mapping;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -16,8 +17,7 @@ import com.google.code.morphia.annotations.Id;
  */
 public class ByteArrayMappingTest extends TestBase {
 	public static class ContainsByteArray {
-		@Id
-		String id;
+		@Id ObjectId id;
 		Byte[] ba;
 	}
 	

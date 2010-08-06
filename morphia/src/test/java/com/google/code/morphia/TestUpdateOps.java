@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -44,12 +45,12 @@ import com.google.code.morphia.testutil.StandardTests;
 public class TestUpdateOps  extends TestBase {
 
 	public static class ContainsIntArray{
-		protected @Id String id;
+		protected @Id ObjectId id;
 		public Integer[] vals = {1,2,3};
 	}
 
 	public static class ContainsInt{
-		protected @Id String id;
+		protected @Id ObjectId id;
 		public int val;
 	}
 	@Test @Category(StandardTests.class)

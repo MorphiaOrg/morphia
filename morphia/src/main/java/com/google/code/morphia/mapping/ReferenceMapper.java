@@ -129,7 +129,7 @@ class ReferenceMapper {
 			Object id = mappedClass.getIdField().get(entity);
 			if (id == null)
 				throw new MappingException("@Id field cannot be null!");
-			Key key = new Key(mappedClass.getCollectionName(), ReflectionUtils.asObjectIdMaybe(id));
+			Key key = new Key(mappedClass.getCollectionName(), id);
 			return key;
 		} catch (IllegalAccessException iae) {
 			throw new RuntimeException(iae);

@@ -19,6 +19,7 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,25 +31,25 @@ import com.google.code.morphia.annotations.Id;
 public class TestDatatypes  extends TestBase {
 	
 	public static class ContainsFloat{
-		@Id String id;
+		@Id ObjectId id;
 		float val0 = 1.1F;
 		Float val1 = 1.1F;
     }
 
 	public static class ContainsDouble{
-		@Id String id;
+		@Id ObjectId id;
 		double val0 = 1.1D;
 		Double val1 = 1.1D;
     }
 
 	public static class ContainsShort{
-		@Id String id;
+		@Id ObjectId id;
 		short val0 = 1;
 		Short val1 = 1;
     }
 
 	public static class ContainsByte{
-		@Id String id;
+		@Id ObjectId id;
 		byte val0 = 1;
 		Byte val1 = 1;
     }

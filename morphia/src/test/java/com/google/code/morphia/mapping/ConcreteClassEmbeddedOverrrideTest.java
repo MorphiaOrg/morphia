@@ -5,6 +5,7 @@ package com.google.code.morphia.mapping;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -17,9 +18,8 @@ import com.google.code.morphia.annotations.Id;
 public class ConcreteClassEmbeddedOverrrideTest extends TestBase {
 	
 	public static class E {
-		@Id
-		String id;
-		
+		@Id ObjectId id;
+
 		@Embedded
 		A a1 = new A();
 		

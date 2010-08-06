@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -22,14 +23,12 @@ import com.google.code.morphia.annotations.Id;
  */
 public class LocaleMappingTest extends TestBase {
 	
-	@SuppressWarnings("unchecked")
 	public static class E {
-		@Id
-		String id;
+		@Id ObjectId id;
 		Locale l1;
 		
 		@Embedded
-		List<Locale> l2 = new ArrayList();
+		List<Locale> l2 = new ArrayList<Locale>();
 		
 		Locale[] l3;
 	}

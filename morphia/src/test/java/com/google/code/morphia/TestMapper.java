@@ -21,11 +21,10 @@ import com.google.code.morphia.annotations.Reference;
 public class TestMapper extends TestBase {
 	public static class A {
 		static int loadCount = 0;
-		@Id
-		String id;
+		@Id ObjectId id;
 		
 		String getId() {
-			return id;
+			return id.toString();
 		}
 		
 		@PostLoad
@@ -40,8 +39,7 @@ public class TestMapper extends TestBase {
 	
 	@Entity("holders")
 	public static class HoldsMultipleA {
-		@Id
-		String id;
+		@Id ObjectId id;
 		@Reference
 		A a1;
 		@Reference
@@ -50,8 +48,7 @@ public class TestMapper extends TestBase {
 	
 	@Entity("holders")
 	public static class HoldsMultipleALazily {
-		@Id
-		String id;
+		@Id ObjectId id;
 		@Reference(lazy = true)
 		A a1;
 		@Reference
@@ -134,8 +131,7 @@ public class TestMapper extends TestBase {
 	}
 	
 	public static class UsesCustomIdObject {
-		@Id
-		CustomId id;
+		@Id CustomId id;
 		String text;
 	}
 	

@@ -20,6 +20,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class TestPerf  extends TestBase{
 	
 	@Entity
 	public static class Address {
-		@Id String id;
+		@Id ObjectId id;
 		String name = "Scott";
 		String street = "3400 Maple";
 		String city = "Manhattan Beach";

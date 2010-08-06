@@ -29,7 +29,6 @@ import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.IndexFieldDef;
-import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
@@ -107,7 +106,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected <T, V> void delete(DBCollection dbColl, V id) {
-		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, ReflectionUtils.asObjectIdMaybe(id)).get());
+		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
 	}
 	
 
@@ -121,23 +120,17 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(clazz);
 		delete(dbColl, id);
 	}
-	@SuppressWarnings("rawtypes")
+
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
 		DBCollection dbColl = getCollection(clazz);			
 		DBObject q = null;
-
-		List objIds = new ArrayList();
-		for (V id : ids) {
-			objIds.add(ReflectionUtils.asObjectIdMaybe(id));
-		}
-		
-		DBCursor cursor = ((QueryImpl<T>) find(clazz, Mapper.ID_KEY + " in", objIds)).prepareCursor();
+		DBCursor cursor = ((QueryImpl<T>) find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids)).prepareCursor();
 		q = cursor.getQuery();
 		
 		if ( q!=null )
 			dbColl.remove(q);
 		else
-			for (Object id : objIds)
+			for (Object id : ids)
 				delete(clazz, id);
 	}
 	
@@ -317,11 +310,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	@SuppressWarnings("rawtypes")
 	public <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
-		List objIds = new ArrayList();
-		for (V id : ids) {
-			objIds.add(ReflectionUtils.asObjectIdMaybe(id));
-		}
-		return find(clazz, Mapper.ID_KEY + " in", objIds);
+		return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids);
 	}
 
 	/** Queries the server to check for each DBRef */
@@ -384,9 +373,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			List objIds = new ArrayList();
 			List<Key> kindKeys = kindMap.get(kind);
 			for (Key key : kindKeys) {
-				objIds.add(ReflectionUtils.asObjectIdMaybe(key.getId()));
+				objIds.add(key.getId());
 			}
-			List kindResults = find(kind, null).filter("_id in", objIds).asList();
+			List kindResults = find(kind, null).disableValidation().filter("_id in", objIds).asList();
 			entities.addAll(kindResults);
 		}
 		

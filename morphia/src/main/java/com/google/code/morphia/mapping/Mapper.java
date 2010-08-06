@@ -14,7 +14,6 @@ package com.google.code.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,7 +204,6 @@ public class Mapper {
 		}
 
 		Object entity = null;
-		Map<Key, Object> retrieved = new HashMap<Key, Object>();
 		entity = ReflectionUtils.createInstance(entityClass, dbObject);
 		fromDb(dbObject, entity, cache);
 		return entity;
@@ -303,7 +301,7 @@ public class Mapper {
 						if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
 							embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
 						} else {
-							Object dbVal = converters.encode(ReflectionUtils.asObjectIdMaybe(idVal));							
+							Object dbVal = converters.encode(idVal);							
 							dbObject.put(ID_KEY, dbVal);
 						}
 					}

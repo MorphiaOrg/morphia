@@ -5,6 +5,7 @@ package com.google.code.morphia.mapping;
 
 import junit.framework.Assert;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import com.google.code.morphia.Key;
@@ -17,26 +18,22 @@ import com.google.code.morphia.annotations.Id;
  */
 public class CharacterMappingTest extends TestBase {
 	public static class ContainsChar {
-		@Id
-		String id;
+		@Id ObjectId id;
 		char c;
 	}
 	
 	public static class ContainsCharacter {
-		@Id
-		String id;
+		@Id ObjectId id;
 		Character c;
 	}
 	
 	public static class ContainsCharArray {
-		@Id
-		String id;
+		@Id ObjectId id;
 		char c[];
 	}
 	
 	public static class ContainsCharacterArray {
-		@Id
-		String id;
+		@Id ObjectId id;
 		Character c[];
 	}
 	

@@ -19,6 +19,7 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,9 +43,9 @@ public class TestInheritanceMappings extends TestBase {
 	
 	@Entity("vehicles")
 	public static abstract class AbstractVehicle implements Vehicle{
-		@Id String id;
+		@Id ObjectId id;
 		public String getId() {
-			return this.id;
+			return id.toString();
 		}
 	}
 	

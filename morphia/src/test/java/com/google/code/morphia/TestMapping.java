@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -93,7 +94,7 @@ public class TestMapping  extends TestBase {
 	
 	@Embedded
 	public static class IdOnEmbedded {
-		@Id String id;
+		@Id ObjectId id;
 	}
 	
 	@Embedded("no-id")
@@ -110,7 +111,7 @@ public class TestMapping  extends TestBase {
 	}
 
 	public static class ContainsRef {
-		public @Id String id;
+		public @Id ObjectId id;
 		public DBRef rect;
 	}
 
@@ -129,7 +130,7 @@ public class TestMapping  extends TestBase {
 	}
 
 	public static class ContainsFinalField{
-		public @Id String id;
+		public @Id ObjectId id;
 		public final String name;
 		
 		protected ContainsFinalField() {
@@ -142,23 +143,23 @@ public class TestMapping  extends TestBase {
 	}
 	
 	public static class ContainsbyteArray {
-		@Id String id;
+		@Id ObjectId id;
 		byte[] bytes = "Scott".getBytes();
 	}
 
 	public static class ContainsSerializedData{
-		@Id String id;
+		@Id ObjectId id;
 		@Serialized SerializableClass data = new SerializableClass();
 	}
 
 	public static class ContainsLongAndStringArray {
-		@Id String id;
+		@Id ObjectId id;
 		private Long[] longs = {0L, 1L, 2L};
 		String[] strings = {"Scott", "Rocks"};
 	}
 	
 	public static class ContainsCollection {
-		@Id String id;
+		@Id ObjectId id;
 		Collection<String> coll = new ArrayList<String>();
 		
 		private ContainsCollection() {
@@ -167,13 +168,13 @@ public class TestMapping  extends TestBase {
 	}
 	
 	public static class ContainsPrimitiveMap{
-		@Id String id;
+		@Id ObjectId id;
 		@Embedded public Map<String, Long> embeddedValues = new HashMap();
 		public Map<String, Long> values = new HashMap();
 	}
 
 	public static class ContainsEmbeddedEntity{
-		@Id String id;
+		@Id ObjectId id;
 		@Embedded ContainsIntegerList cil = new ContainsIntegerList();
 	}
 
@@ -181,36 +182,36 @@ public class TestMapping  extends TestBase {
 
 	@Entity(value="cil", noClassnameStored=true)
  	public static class ContainsIntegerList {
-		@Id String id;
+		@Id ObjectId id;
 		List<Integer> intList = new ArrayList<Integer>();
 	}
 
  	public static class ContainsIntegerListNewAndOld {
-		@Id String id;
+		@Id ObjectId id;
 		List<Integer> intList = new ArrayList<Integer>();
 		List<Integer> ints = new ArrayList<Integer>();
 	}
 
 	@Entity(value="cil", noClassnameStored=true)
 	public static class ContainsIntegerListNew {
-		@Id String id;
+		@Id ObjectId id;
 		@AlsoLoad("intList") List<Integer> ints = new ArrayList<Integer>();
 	}
 	
 	public static class ContainsEnum1KeyMap{
-		@Id String id;
+		@Id ObjectId id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
 		@Embedded
 		public Map<Enum1, String> embeddedValues = new HashMap<Enum1,String>();
 	}
 
 	public static class ContainsIntKeyMap{
-		@Id String id;
+		@Id ObjectId id;
 		public Map<Integer, String> values = new HashMap<Integer,String>();
 	}
 	
 	public static class ContainsXKeyMap<T>{
-		@Id String id;
+		@Id ObjectId id;
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
@@ -219,13 +220,13 @@ public class TestMapping  extends TestBase {
 
 		public BaseEntity() {}
 	
-		@Id String id;
+		@Id ObjectId id;
 		public String getId() {
-			return id;
+			return id.toString();
 		}
 	
        public void setId(String id) {
-    	   this.id = id;
+    	   this.id = new ObjectId(id);
        }
 	}
 	@Entity
@@ -236,7 +237,7 @@ public class TestMapping  extends TestBase {
 
 	public static class MapSubclass extends LinkedHashMap<String, Object> {
 		private static final long serialVersionUID = 1L;
-		@Id String id;
+		@Id ObjectId id;
 	}
 
 	@Test
@@ -671,6 +672,7 @@ public class TestMapping  extends TestBase {
 			public void thisMustFail() throws Throwable {
 		        RecursiveParent parent = new RecursiveParent();
 		        RecursiveChild child = new RecursiveChild();
+		        child.setId(null);
 		        parent.setChild(child);
 		        ds.save(parent);
 			}
