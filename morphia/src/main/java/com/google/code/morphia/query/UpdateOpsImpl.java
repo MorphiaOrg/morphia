@@ -43,7 +43,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 	public UpdateOperations<T> add(String fieldExpr, Object value) {
 		Object dbObj = mapr.toMongoObject(value);
-		add("$set", fieldExpr, dbObj);
+		add("$addToSet", fieldExpr, dbObj);
 		return this;
 	}
 

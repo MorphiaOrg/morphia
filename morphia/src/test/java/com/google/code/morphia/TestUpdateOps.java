@@ -81,10 +81,10 @@ public class TestUpdateOps  extends TestBase {
 		assertEquals(3, ds.getCount(q1));
 		assertEquals(0, ds.getCount(q2));
 
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).add("height",1D).add("width", 1D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).set("height",1D).set("width", 1D), true);		
 		assertNotNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNull(ds.find(Rectangle.class, "width", 2D).get());
-		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).add("height",2D).add("width", 2D), true);		
+		ds.update(ds.find(Rectangle.class, "width", 1D), ds.createUpdateOperations(Rectangle.class).set("height",2D).set("width", 2D), true);		
 		assertNull(ds.find(Rectangle.class, "width", 1D).get());
 		assertNotNull(ds.find(Rectangle.class, "width", 2D).get());
 	}

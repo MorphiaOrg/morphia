@@ -82,13 +82,13 @@ public interface Datastore {
 
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
-	/** updates all entities found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
+	/** updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
 	/** updates the first entity found with the operations; this is an atomic operation*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops);
-	/** updates the first entity found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
+	/** updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
-	/** updates the first entity found with the operations, if nothing is found insert the update as an entity; this is an atomic operation per entity*/
+	/** updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing);
 
 	
