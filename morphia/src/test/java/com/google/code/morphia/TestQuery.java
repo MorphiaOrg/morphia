@@ -41,8 +41,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
@@ -163,7 +163,7 @@ public class TestQuery  extends TestBase {
         try {
             ds.find(ContainsPhotoKey.class, "photo.keywords","foo").get();
             assertNull("um, query validation should have thrown");
-        } catch (MappingException e) {
+        } catch (QueryException e) {
         	//do nothing, this is good.
         }
     }
@@ -185,7 +185,7 @@ public class TestQuery  extends TestBase {
 		try {
             ds.find(ContainsPic.class, "pic.name","foo").get();
             assertNull("um, query validation should have thrown");
-        } catch (MappingException e) {
+        } catch (QueryException e) {
         	//do nothing, this is good.
         }
     }

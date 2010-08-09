@@ -23,6 +23,7 @@ import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
@@ -700,7 +701,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
-		DBObject q = ((QueryImpl<T>) query).getQueryObject();
+		QueryImpl<T> qImpl= (QueryImpl<T>) query;
+		if ( qImpl.getSortObject() != null && qImpl.getSortObject().keySet() != null && !qImpl.getSortObject().keySet().isEmpty())
+			throw new QueryException("sorting is not allowed for updates.");
+		if ( qImpl.getOffset() > 0)
+			throw new QueryException("a query offset is not allowed for updates.");
+		if ( qImpl.getLimit() > 0)
+			throw new QueryException("a query limit is not allowed for updates.");
+		
+		DBObject q = qImpl.getQueryObject();
 		if (q == null)
 			q = new BasicDBObject();
 		dbColl.update(q, u, createIfMissing, multi);

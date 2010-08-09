@@ -22,7 +22,6 @@ import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
-import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.Serializer;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.Assert;
@@ -74,6 +73,13 @@ public class QueryImpl<T> implements Query<T> {
 		this.query = (Map<String, Object>) query;
 	}
 	
+	public int getOffset() {
+		return offset;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
 	
 	public DBObject getQueryObject() {
 		return (query == null) ? null : new BasicDBObject(query);
@@ -312,10 +318,10 @@ public class QueryImpl<T> implements Query<T> {
 			if (mf == null) {
 				mf = mc.getMappedFieldByJavaField(part);
 				if (mf != null)
-					throw new MappingException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
+					throw new QueryException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
 							"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
 				else
-					throw new MappingException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+					throw new QueryException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
 			}
 			i++;
 			if (mf.isMap()) {
@@ -324,7 +330,7 @@ public class QueryImpl<T> implements Query<T> {
 			}
 			//catch people trying to search into @Reference/@Serialized fields
 			if (i < parts.length && !canQueryPast(mf))
-				throw new MappingException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+				throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
 			
 			if (i >= parts.length) break;
 			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
@@ -560,6 +566,7 @@ public class QueryImpl<T> implements Query<T> {
 		return new QueryFieldEndImpl<T>(fieldExpr, this);
 	}
 
+	//TODO: make me work!
 	public Query<T> hintIndex(String idxName) {
 		return null;
 	}
