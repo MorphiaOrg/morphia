@@ -9,30 +9,30 @@ import java.util.List;
  *  </p> 
  **/
 public interface UpdateOperations<T> {
-	/** sets a the field value */
+	/** sets the field value */
 	UpdateOperations<T> set(String fieldExpr, Object value);
 	/** removes the field */
 	UpdateOperations<T> unset(String fieldExpr);
 
-	/** adds the value to an array field (on the server)*/
+	/** adds the value to an array field*/
 	UpdateOperations<T> add(String fieldExpr, Object value);
 	UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups);
-	/** adds the values to an array field (on the server) */
+	/** adds the values to an array field*/
 	UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups);
 	
-	/** removed the first value from the array (on the server)*/
+	/** removes the first value from the array*/
 	UpdateOperations<T> removeFirst(String fieldExpr);
-	/** removed the last value from the array (on the server)*/
+	/** removes the last value from the array*/
 	UpdateOperations<T> removeLast(String fieldExpr);
-	/** removed the value from the array field (on the server)*/
+	/** removes the value from the array field*/
 	UpdateOperations<T> removeAll(String fieldExpr, Object value);
-	/** removed the values from the array field (on the server) */
+	/** removes the values from the array field*/
 	UpdateOperations<T> removeAll(String fieldExpr, List<?> values);
 
-	/** decrements the value from the numeric field by 1 (on the server) */
+	/** decrements the numeric field by 1*/
 	UpdateOperations<T> dec(String fieldExpr);
-	/** increments the value from the numeric field by 1 (on the server) */
+	/** increments the numeric field by 1*/
 	UpdateOperations<T> inc(String fieldExpr);
-	/** increments the value from the numeric field by value (negatives are allowed) (on the server) */
+	/** increments the numeric field by value (negatives are allowed)*/
 	UpdateOperations<T> inc(String fieldExpr, Number value);
 }
