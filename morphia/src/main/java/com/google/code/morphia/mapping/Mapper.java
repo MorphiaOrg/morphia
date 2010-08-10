@@ -371,8 +371,7 @@ public class Mapper {
 		}
 
 		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
-			String id = dbObject.get(ID_KEY).toString();
-			Key key = new Key(entity.getClass(), id);
+			Key key = new Key(entity.getClass(), dbObject.get(ID_KEY));
 			cache.putEntity(key, entity);
 		}
 		mc.callLifecycleMethods(PostLoad.class, entity, dbObject, this);
