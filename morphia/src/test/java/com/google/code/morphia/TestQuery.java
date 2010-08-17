@@ -87,6 +87,13 @@ public class TestQuery  extends TestBase {
     }
 
     @Entity
+    public static class HasIntId {
+    	protected HasIntId() {}
+    	HasIntId(int id) { this.id = id;}
+        @Id public int id;
+    }
+
+    @Entity
     public static class ContainsPic {
         @Id ObjectId id;
         String name = "test";
@@ -518,7 +525,14 @@ public class TestQuery  extends TestBase {
         ds.delete(ds.find(Rectangle.class, "height", 1D));
         assertEquals(2, ds.getCount(Rectangle.class));
     }
+    @Test
+    public void testIdRangeQuery() throws Exception {
+    	ds.save(new HasIntId(1), new HasIntId(11), new HasIntId(12));
+        assertEquals(2, ds.find(HasIntId.class).filter("_id >", 5).filter("_id <", 20).countAll());
+        assertEquals(1, ds.find(HasIntId.class).field("_id").greaterThan(0).field("_id").lessThan(11).countAll());
+    }
 
+    	
     @Test
     public void testRangeQuery() throws Exception {
         Rectangle[] rects = {
@@ -534,6 +548,8 @@ public class TestQuery  extends TestBase {
         }
 
         assertEquals(4, ds.getCount(ds.createQuery(Rectangle.class).filter("height >", 3)));
+        assertEquals(3, ds.getCount(ds.createQuery(Rectangle.class).filter("height >", 3).filter("height <", 10)));
+        assertEquals(1, ds.getCount(ds.createQuery(Rectangle.class).filter("height >", 9).filter("width <", 5)));
         assertEquals(3, ds.getCount(ds.createQuery(Rectangle.class).filter("height <", 7)));
     }
 
