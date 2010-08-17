@@ -102,16 +102,22 @@ public class QueryImpl<T> implements Query<T> {
 	
 
 	public long countAll() {
-		return dbColl.getCount(getQueryObject());
+		DBObject query = getQueryObject();
+		if (log.isTraceEnabled())
+			log.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
+		return dbColl.getCount(query);
 	}
 	
 	public DBCursor prepareCursor() {
 		DBObject query = getQueryObject();
 		DBObject fields = getFieldsObject();
-		
-		if (log.isDebugEnabled())
-			log.debug("Running query: " + query + ", " + fields + ",off:" + offset + ",limit:" + limit);
-		
+		//TODO Remove try after 2.1 (when CodeWScope is json-able
+		try {
+			if (log.isTraceEnabled())
+				log.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
+		} catch (Exception e) {
+			log.error("Error trace-logging!", e);
+		}
 		DBCursor cursor = dbColl.find(query, fields);
 		if (offset > 0)
 			cursor.skip(offset);
@@ -128,6 +134,14 @@ public class QueryImpl<T> implements Query<T> {
 
 	public Iterable<T> fetch() {
 		DBCursor cursor = prepareCursor();
+		//TODO Remove try after 2.1 (when CodeWScope is json-able
+		try {
+			if (log.isTraceEnabled())
+				log.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
+		} catch (Exception e) {
+			log.error("Error trace-logging!", e);
+		}
+
 		return new MorphiaIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
 	}
 	
@@ -138,6 +152,10 @@ public class QueryImpl<T> implements Query<T> {
 		fields = new String[] {Mapper.ID_KEY};
 		includeFields = true;
 		DBCursor cursor = prepareCursor();
+
+		if (log.isTraceEnabled())
+			log.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
+
 		fields = oldFields;
 		includeFields = oldInclude;
 		return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());

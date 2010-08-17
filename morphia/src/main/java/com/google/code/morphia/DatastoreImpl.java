@@ -712,6 +712,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBObject q = qImpl.getQueryObject();
 		if (q == null)
 			q = new BasicDBObject();
+
+		if (log.isTraceEnabled())
+			log.trace("Executing update(" + dbColl.getName() + ") for query: " + q + ", ops: " + u + ", multi: " + multi + ", upsert: " + createIfMissing);
+
 		dbColl.update(q, u, createIfMissing, multi);
 		CommandResult opRes = dbColl.getDB().getLastError();
 		return new UpdateResults<T>(opRes);
@@ -732,6 +736,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         	cmd.append( "sort", s );
         
         cmd.append( "remove", true);
+        
+		if (log.isTraceEnabled())
+			log.trace("Executing findAndModify(" + dbColl.getName() + ") with " + cmd);
+
 		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command(cmd).get("value"),
 				cache);
         return entity;
@@ -763,6 +771,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
         if (!oldVersion)
         	cmd.append( "new", true);
         
+		if (log.isTraceEnabled())
+			log.info("Executing findAndModify(" + dbColl.getName() + ") with " + cmd);
+
 		DBObject res = (DBObject) db.command( cmd ).get( "value" );
 		
 		if (res == null) 
