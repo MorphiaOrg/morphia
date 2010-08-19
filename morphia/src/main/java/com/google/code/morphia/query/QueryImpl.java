@@ -252,15 +252,15 @@ public class QueryImpl<T> implements Query<T> {
 		MappedClass mc = null;
 		try {
 			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()) && !ReflectionUtils.implementsInterface(value.getClass(), Iterable.class))
-				if (mf!=null && !mf.isTypeMongoCompatible())
-					mc=mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+				if (mf != null && !mf.isTypeMongoCompatible())
+					mc = mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 				else
 					mc = mapr.getMappedClass(value);
 		} catch (Exception e) {
 			//Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will fail/return-empty anyway)
 			log.debug("Error during mapping filter criteria: ", e);
 		}
-		
+	
 		//convert the value to Key (DBRef) if it is a entity/@Reference or the field type is Key
 		if ((mf!=null && (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class)))
 				|| (mc != null && mc.getEntityAnnotation() != null)) {
@@ -278,9 +278,9 @@ public class QueryImpl<T> implements Query<T> {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		else
+		else {
 			mappedValue = mapr.toMongoObject(value);
-		
+		}
 		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;
 		
 		//convert single values into lists for $in/$nin

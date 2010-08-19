@@ -46,6 +46,7 @@ import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoInternalException;
 
 /**
@@ -268,6 +269,26 @@ public class TestQuery  extends TestBase {
         assertNotNull(pwkLoaded);
         Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
         Assert.assertEquals(3, pwkLoaded.keywords.size());
+    }
+
+    @Test @Ignore
+    public void testDBOBjectOrQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+        
+        AdvancedDatastore ads = (AdvancedDatastore) ds;
+        List<DBObject> orList = new ArrayList<DBObject>();
+        orList.add(new BasicDBObject("keywords", "scott"));
+        orList.add(new BasicDBObject("keywords", "ralph"));
+        BasicDBObject orQuery = new BasicDBObject("$or", orList);
+        
+        Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class, orQuery);
+        Assert.assertEquals(1, q.countAll());
+
+        q = ads.createQuery(PhotoWithKeywords.class).filter("$or", orList);
+        Assert.assertEquals(1, q.countAll());
+        
+        
     }
 
     @Test @Ignore
