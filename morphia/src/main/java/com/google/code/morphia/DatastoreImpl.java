@@ -847,4 +847,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Mapper mapper = morphia.getMapper();
 		return mapper.createEntityCache();
 	}
+	
+	public WriteConcern getDefaultWriteConcern() {return defConcern;} 
+	public void setDefaultWriteConcern(WriteConcern wc) {defConcern = wc;}
+
 }

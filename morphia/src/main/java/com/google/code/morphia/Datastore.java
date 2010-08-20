@@ -145,4 +145,8 @@ public interface Datastore {
 	Mongo getMongo();
 	
 	DBCollection getCollection(Class<?> c);
+	
+	WriteConcern getDefaultWriteConcern();
+	void setDefaultWriteConcern(WriteConcern wc);
+	
 }
