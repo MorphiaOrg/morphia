@@ -49,7 +49,7 @@ public interface Query<T> extends QueryResults<T> {
 	 * 
 	 * <ul>
 	 * <li>{@code order("age")}</li>
-	 * <li>{@code order("-age")} (descending sort)</li>
+	 * <li>{@code order("-age")} (descending order)</li>
 	 * <li>{@code order("age,date")}</li>
 	 * <li>{@code order("age,-date")} (age ascending, date descending)</li>
 	 * </ul>
