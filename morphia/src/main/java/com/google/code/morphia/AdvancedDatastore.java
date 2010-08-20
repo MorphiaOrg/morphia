@@ -4,13 +4,14 @@ import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.WriteConcern;
 
 /**
  * <p>
- * This interface exposes advanced {@link Datastore} features.
+ * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options.
  * 	
  *  <ul>
- * 		<li>Implements matching methods from the {@code Datastore} but with a specified kind (collection name). </li>
+ * 		<li>Implements matching methods from the {@code Datastore} but with a specified kind (collection name), or raw types (DBObject). </li>
  * 	</ul>
  * </p>
  * @author ScottHernandez
@@ -35,12 +36,12 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Key<T> insert(String kind, T entity);
 	
 	<T> Key<T> insert(T entity);
+	<T> Key<T> insert(T entity, WriteConcern wc);
 	<T> Iterable<Key<T>> insert(T... entities);
-	<T> Iterable<Key<T>> insert(Iterable<T>entities);
+	<T> Iterable<Key<T>> insert(Iterable<T>entities, WriteConcern wc);
 
 
 	//DBObject implementations; incase we don't have features impl'd yet
 	<T> Query<T> createQuery(Class<T> kind, DBObject q);
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind, DBObject ops);
-
 }

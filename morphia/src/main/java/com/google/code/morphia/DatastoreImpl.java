@@ -34,12 +34,13 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
-import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -106,20 +107,30 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return new Key<T>((Class<T>) entity.getClass(), id);
 	}
 	
-	protected <T, V> void delete(DBCollection dbColl, V id) {
-		dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
+	protected <T, V> void delete(DBCollection dbColl, V id, WriteConcern wc) {
+		WriteResult wr;
+		if (wc == null)
+			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
+		else
+			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get(), wc);
+		
+		if (wr.getCachedLastError() != null)
+			wr.getCachedLastError().throwOnError();
 	}
 	
 
 	public <T> void delete(String kind, T id) {
 		DBCollection dbColl = getDB().getCollection(kind);
-		delete(dbColl, id);
+		delete(dbColl, id, null);
 	}
 	
+	public <T, V> void delete(Class<T> clazz, V id, WriteConcern wc) {
+		DBCollection dbColl = getCollection(clazz);
+		delete(dbColl, id, wc);
+	}
 
 	public <T, V> void delete(Class<T> clazz, V id) {
-		DBCollection dbColl = getCollection(clazz);
-		delete(dbColl, id);
+		delete(clazz, id, null);
 	}
 
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
@@ -135,30 +146,42 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				delete(clazz, id);
 	}
 	
-
 	public <T> void delete(T entity) {
+		delete(entity, null);
+	}
+	
+	public <T> void delete(T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		if (entity instanceof Class<?>)
 			throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
 		try {
 			Object id = getId(entity);
-			delete(entity.getClass(), id);
+			delete(entity.getClass(), id, wc);
+				
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
 
 	public <T> void delete(Query<T> query) {
+		delete(query, null);
+	}
+	
+	public <T> void delete(Query<T> query, WriteConcern wc) {
 		QueryImpl<T> q = (QueryImpl<T>) query;
 		DBCollection dbColl = getCollection(q.getEntityClass());
 		if (q.getQueryObject() != null)
-			dbColl.remove(q.getQueryObject());
-		else	
-			dbColl.remove(new BasicDBObject());
+			if (wc == null)
+				dbColl.remove(q.getQueryObject());
+			else
+				dbColl.remove(q.getQueryObject(), wc);
+		else
+			if (wc == null)
+				dbColl.remove(new BasicDBObject());
+			else
+				dbColl.remove(new BasicDBObject(), wc);
 	}
 	
-
 	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique,
 			boolean dropDupsOnCreate) {
 		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
@@ -309,7 +332,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 
-	@SuppressWarnings("rawtypes")
 	public <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
 		return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids);
 	}
@@ -424,7 +446,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public DBCollection getCollection(Class clazz) {
 		String collName = morphia.getMapper().getCollectionName(clazz);
 		DBCollection dbC = getDB().getCollection(collName);
-		dbC.setWriteConcern(WriteConcern.STRICT);
+		dbC.setWriteConcern(WriteConcern.SAFE);
 		return dbC;
 	}
 
@@ -485,9 +507,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities) {
+		return insert(entities, null);
+	}
+	
+	public <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
 		for (T ent : entities)
-			savedKeys.add(insert(ent));
+			savedKeys.add(insert(ent, wc));
 		return savedKeys;
 	}
 
@@ -499,24 +525,37 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Key<T> insert(T entity) {
+		return insert(entity, null);
+	}
+	public <T> Key<T> insert(T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getCollection(entity);
-		return insert(dbColl, entity);
+		return insert(dbColl, entity, wc);
 	}
 
 	public <T> Key<T> insert(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getDB().getCollection(kind);
-		return insert(dbColl, entity);
+		return insert(dbColl, entity, null);
+	}
+
+	public <T> Key<T> insert(String kind, T entity, WriteConcern wc) {
+		entity = ProxyHelper.unwrap(entity);
+		DBCollection dbColl = getDB().getCollection(kind);
+		return insert(dbColl, entity, wc);
+	}
+
+	protected <T> Key<T> insert(DBCollection dbColl, T entity) {
+		return insert(dbColl, entity, null);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	protected <T> Key<T> insert(DBCollection dbColl, T entity) {
+	protected <T> Key<T> insert(DBCollection dbColl, T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
 		
 		DB db = dbColl.getDB();
-		// TODO scary message from driver ... db.requestStart();
+		db.requestStart();
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
@@ -528,7 +567,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if (dbObj.get(Mapper.ID_KEY) == null)
 				throw new MappingException("Missing _id after save!");
 			
-			if (dbColl.getWriteConcern() == WriteConcern.STRICT) {
+			if (dbColl.getWriteConcern() == WriteConcern.SAFE) {
 				DBObject lastErr = db.getLastError();
 				if (lastErr.get("err") != null)
 					throw new MappingException("Error: " + lastErr.toString());
@@ -539,15 +578,19 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			
 			return key;
 		} finally {
-			// TODO scary message from driver ... db.requestDone();
+			db.requestDone();
 		}
 		
 	}
 
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
+		return save(entities, null);
+	}
+	
+	public <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc) {
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
 		for (T ent : entities)
-			savedKeys.add(save(ent));
+			savedKeys.add(save(ent, wc));
 		return savedKeys;
 		
 	}	
@@ -559,14 +602,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return savedKeys;
 	}
 	
-	protected <T> Key<T> save(DBCollection dbColl, T entity) {
+	protected <T> Key<T> save(DBCollection dbColl, T entity, WriteConcern wc) {
 
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
+		WriteResult wr = null;
+		
 		DB db = dbColl.getDB();
-//		db.requestStart();
+		db.requestStart();
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
@@ -583,7 +628,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					Object idValue = dbObj.get(Mapper.ID_KEY);
 					
 					UpdateResults<T> res = update(find((Class<T>) entity.getClass(), Mapper.ID_KEY, idValue).filter(
-							versionKeyName, oldVersion), dbObj, false, false);
+							versionKeyName, oldVersion), dbObj, false, false, wc);
+					
+					wr = res.getWriteResult();
 					
 					if (res.getHadError())
 						throw new MappingException("Error: " + res.getError());
@@ -591,32 +638,41 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 					if (res.getUpdatedCount() != 1)
 						throw new ConcurrentModificationException("Entity of class " + entity.getClass().getName()
 								+ " (id='" + idValue + "',version='" + oldVersion + "') was concurrently updated.");
-				} else {
-					dbColl.save(dbObj);
-				}
+				} else
+					if (wc == null)
+						wr = dbColl.save(dbObj);
+					else
+						wr = dbColl.save(dbObj, wc);
 				
 				mfVersion.setFieldValue(entity, newVersion);
 			} else
-				dbColl.save(dbObj);
+				if (wc == null)
+					wr = dbColl.save(dbObj);
+				else
+					wr = dbColl.save(dbObj, wc);
 			
 			if (dbObj.get(Mapper.ID_KEY) == null)
 				throw new MappingException("Missing _id after save!");
 			
-			if (dbColl.getWriteConcern() == WriteConcern.STRICT) {
-				DBObject lastErr = db.getLastError();
-				if (lastErr.get("err") != null)
-					throw new MappingException("Error: " + lastErr.toString());
-			}
+			throwOnError(wc, wr);
+			
 			postSaveOperations(entity, dbObj, dbColl, involvedObjects);
 			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
 			key.setKindClass((Class<? extends T>) entity.getClass());
 			
 			return key;
 		} finally {
-//			db.requestDone();
+			db.requestDone();
 		}
 	}
 	
+	protected void throwOnError(WriteConcern wc, WriteResult wr) {
+		if ( wc == null && wr.getLastConcern() == null) {
+			CommandResult cr = wr.getLastError();
+			if (cr.getErrorMessage() != null || cr.getErrorMessage().isEmpty())
+				cr.throwOnError();
+		}		
+	}
 	private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr) {
 		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
 			Object entity = e.getKey();
@@ -627,18 +683,20 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 	}
 	
-
 	public <T> Key<T> save(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getDB().getCollection(kind);
-		return save(dbColl, entity);
+		return save(dbColl, entity, null);
 	}
 	
-
 	public <T> Key<T> save(T entity) {
+		return save(entity, null);
+	}
+
+	public <T> Key<T> save(T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getCollection(entity);
-		return save(dbColl, entity);
+		return save(dbColl, entity, wc);
 	}
 
 	public <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
@@ -652,6 +710,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
+		return update(query, ops, createIfMissing, null);
+	}
+	
+	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc) {
 		return update(query, ops, createIfMissing, false);
 	}
 
@@ -665,9 +727,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return update(query, ops, false, false);
 	}
 	
-
 	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
-		return update(query, ops, createIfMissing, false);
+		return update(query, ops, createIfMissing, null);
+		
+	}
+
+	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc) {
+		return update(query, ops, createIfMissing, false, wc);
 	}
 	
 
@@ -676,7 +742,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject u = mapr.toDBObject(entity, involvedObjects);
 		
-		UpdateResults<T> res = update(query, u, createIfMissing, false);
+		UpdateResults<T> res = update(query, u, createIfMissing, false, null);
 		postSaveOperations(entity, u, getCollection(entity), involvedObjects);
 		return res;
 	}
@@ -692,14 +758,19 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		firePostPersistForChildren(involvedObjects, mapr);
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
 	}
+
+	@SuppressWarnings("rawtypes")
+	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi, WriteConcern wc) {
+		DBObject u = ((UpdateOpsImpl) ops).getOps();
+		return update(query, u, createIfMissing, multi, null);		
+	}
 	
 	@SuppressWarnings("rawtypes")
 	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi) {
-		DBObject u = ((UpdateOpsImpl) ops).getOps();
-		return update(query, u, createIfMissing, multi);
+		return update(query, ops, createIfMissing, multi, null);
 	}
 	
-	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi) {
+	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi, WriteConcern wc) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		QueryImpl<T> qImpl= (QueryImpl<T>) query;
 		if ( qImpl.getSortObject() != null && qImpl.getSortObject().keySet() != null && !qImpl.getSortObject().keySet().isEmpty())
@@ -716,38 +787,27 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (log.isTraceEnabled())
 			log.trace("Executing update(" + dbColl.getName() + ") for query: " + q + ", ops: " + u + ", multi: " + multi + ", upsert: " + createIfMissing);
 
-		dbColl.update(q, u, createIfMissing, multi);
-		CommandResult opRes = dbColl.getDB().getLastError();
-		return new UpdateResults<T>(opRes);
+		WriteResult wr;
+		if (wc == null)
+			wr = dbColl.update(q, u, createIfMissing, multi);
+		else
+			wr = dbColl.update(q, u, createIfMissing, multi, wc);
+
+		return new UpdateResults<T>(wr);
 	}
 
 	public <T> T findAndDelete(Query<T> query) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
-		DBObject q = qi.getQueryObject();
-		DBObject s = qi.getSortObject();
 		EntityCache cache = createCache();
-        //TODO replace with 2.1 driver, once that is ready.
 		
-		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
-        if (q != null && !q.keySet().isEmpty())
-        	cmd.append( "query", q );
-        if (s != null && !s.keySet().isEmpty())
-        	cmd.append( "sort", s );
-        
-        cmd.append( "remove", true);
-        
 		if (log.isTraceEnabled())
-			log.trace("Executing findAndModify(" + dbColl.getName() + ") with " + cmd);
+			log.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
 
-		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), (DBObject) db.command(cmd).get("value"),
-				cache);
+		DBObject result = dbColl.findAndModify(qi.getQueryObject(), null, qi.getSortObject(), true, null, false, false);
+
+		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), result, cache);
         return entity;
-	}
-
-	private EntityCache createCache() {
-		Mapper mapper = morphia.getMapper();
-		return mapper.createEntityCache();
 	}
 
 	public <T> T findAndModify(Query<T> q, UpdateOperations<T> ops) {
@@ -757,24 +817,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
-		DBObject q = qi.getQueryObject();
-		DBObject s = qi.getSortObject();
-        //TODO replace with 2.1 driver, once that is ready.
-		
-		BasicDBObject cmd = new BasicDBObject( "findandmodify", dbColl.getName());
-        if (q != null && !q.keySet().isEmpty())
-        	cmd.append( "query", q );
-        if (s != null && !s.keySet().isEmpty())
-        	cmd.append( "sort", s );
-        if (ops != null && ((UpdateOpsImpl<T>) ops).getOps() != null)
-        	cmd.append( "update", ((UpdateOpsImpl<T>) ops).getOps() );
-        if (!oldVersion)
-        	cmd.append( "new", true);
-        
-		if (log.isTraceEnabled())
-			log.info("Executing findAndModify(" + dbColl.getName() + ") with " + cmd);
 
-		DBObject res = (DBObject) db.command( cmd ).get( "value" );
+		if (log.isTraceEnabled())
+			log.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
+
+		DBObject res = dbColl.findAndModify(qi.getQueryObject(), 
+											null, 
+											qi.getSortObject(), 
+											false, 
+											((UpdateOpsImpl<T>) ops).getOps(), !oldVersion, 
+											false);
 		
 		if (res == null) 
 			return null;
@@ -799,5 +851,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		return keys;
 	}
-
+	
+	private EntityCache createCache() {
+		Mapper mapper = morphia.getMapper();
+		return mapper.createEntityCache();
+	}
 }

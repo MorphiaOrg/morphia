@@ -1,16 +1,21 @@
 package com.google.code.morphia.query;
 
 import com.mongodb.CommandResult;
+import com.mongodb.WriteResult;
 
 public class UpdateResults<T> {
+	//TODO: remove most of these vars and get from WriteResult/GLE
 	private boolean hadError;
 	private String error;
 	private boolean updatedExisting;
 	private int updateCount;
 	private int insertCount;
 	private Object newId;
+	private WriteResult wr;
 	
-	public UpdateResults(CommandResult opRes) {
+	public UpdateResults(WriteResult wr) {
+		this.wr = wr;
+		CommandResult opRes = wr.getLastError();
 		updatedExisting = (opRes.containsField("updatedExisting") && (Boolean)opRes.get("updatedExisting"));
 		error = (String)opRes.getErrorMessage();
 		hadError = error != null && !error.isEmpty();
@@ -31,4 +36,5 @@ public class UpdateResults<T> {
 	public int getUpdatedCount() {return updateCount;}
 	public int getInsertedCount() {return insertCount;}
 	public Object getNewId() {return newId;}
+	public WriteResult getWriteResult() {return wr;}
 } 

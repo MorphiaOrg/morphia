@@ -11,6 +11,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
 /**
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
@@ -25,8 +26,10 @@ public interface Datastore {
 	<T,V> void delete(Class<T> clazz, Iterable<V> ids);
 	/** Deletes the given entities based on the query */
 	<T> void delete(Query<T> q);
+	<T> void delete(Query<T> q, WriteConcern wc);
 	/** Deletes the given entity (by id) */
 	<T> void delete(T entity);
+	<T> void delete(T entity, WriteConcern wc);
 
 	/** Find all instances by type */
 	<T> Query<T> find(Class<T> clazz);
@@ -75,19 +78,23 @@ public interface Datastore {
 	
 	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
 	<T> Iterable<Key<T>> save(Iterable<T> entities);
+	<T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
 	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
 	<T> Iterable<Key<T>> save(T... entities);
 	/** Saves the entity (Object) and updates the @Id, @CollectionName fields */
 	<T> Key<T> save(T entity);
+	<T> Key<T> save(T entity, WriteConcern wc);
 
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
 	/** updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
+	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
 	/** updates the first entity found with the operations; this is an atomic operation*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops);
 	/** updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
+	<T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
 	/** updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/
 	<T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing);
 
@@ -138,5 +145,4 @@ public interface Datastore {
 	Mongo getMongo();
 	
 	DBCollection getCollection(Class<?> c);
-
 }
