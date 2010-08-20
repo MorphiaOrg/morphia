@@ -45,13 +45,13 @@ public interface Query<T> extends QueryResults<T> {
     Query<T> where(CodeWScope js);
 	
 	/**
-	 * <p>Sorts based on a property.  Examples:</p>
+	 * <p>Sorts based on a property (defines return order).  Examples:</p>
 	 * 
 	 * <ul>
-	 * <li>{@code sort("age")}</li>
-	 * <li>{@code sort("-age")} (descending sort)</li>
-	 * <li>{@code sort("age,date")}</li>
-	 * <li>{@code sort("age,-date")} (age ascending, date descending)</li>
+	 * <li>{@code order("age")}</li>
+	 * <li>{@code order("-age")} (descending sort)</li>
+	 * <li>{@code order("age,date")}</li>
+	 * <li>{@code order("age,-date")} (age ascending, date descending)</li>
 	 * </ul>
 	 */
 	Query<T> order(String condition);
