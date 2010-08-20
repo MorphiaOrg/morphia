@@ -394,7 +394,7 @@ public class ReflectionUtils
      */
     public static <T> T getAnnotation(final Class c, final Class<T> ann)
     {
-        // TODO isn´t that actually breaking the contract of @Inherited?
+        // TODO isn't that actually breaking the contract of @Inherited?
         if (c.isAnnotationPresent(ann))
         {
             return (T) c.getAnnotation(ann);
