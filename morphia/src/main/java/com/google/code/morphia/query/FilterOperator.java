@@ -6,6 +6,8 @@ package com.google.code.morphia.query;
  *
  */
 public enum FilterOperator {
+	NEAR("$near"),
+	WITHIN("$within"),
 	EQUAL("$eq"),
 	GREATER_THAN("$gt"),
 	GREATER_THAN_OR_EQUAL("$gte"),
@@ -20,7 +22,7 @@ public enum FilterOperator {
 	NOT_IN("$nin"),
 	ALL("$all"),
 	ELEMENT_MATCH("$elemMatch"),
-	NOT_EQUAL("$ne"), 
+	NOT_EQUAL("$ne"),
 	WHERE("$where");
 	
 	private String value;

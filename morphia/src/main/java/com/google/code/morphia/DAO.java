@@ -12,8 +12,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
 /**
- *
  * @author Olafur Gauti Gudmundsson
+ * @author Scott Hernandez
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DAO<T,K extends Serializable> {
@@ -160,5 +160,9 @@ public class DAO<T,K extends Serializable> {
 
     public void dropCollection() {
     	ds.getCollection(entityClazz).drop();
+    }
+
+    public Datastore getDatastore() {
+    	return this.ds;
     }
 }

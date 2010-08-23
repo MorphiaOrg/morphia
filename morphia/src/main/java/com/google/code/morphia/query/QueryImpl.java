@@ -218,6 +218,10 @@ public class QueryImpl<T> implements Query<T> {
 			return FilterOperator.ELEMENT_MATCH;
 		else if (operator.toLowerCase().equals("size"))
 			return FilterOperator.SIZE;
+		else if (operator.toLowerCase().equals("within"))
+			return FilterOperator.WITHIN;
+		else if (operator.toLowerCase().equals("near"))
+			return FilterOperator.NEAR;
 		else
 			throw new IllegalArgumentException("Unknown operator '" + operator + "'");
 	}
@@ -501,6 +505,13 @@ public class QueryImpl<T> implements Query<T> {
 
 		public Query<T> exists() {
 			query.filter("" + fieldExpr + " exists", true);
+			return query;
+		}
+
+		public Query<T> near(int x, int y) {
+			ArrayList<Integer> point = new ArrayList<Integer>(2);
+			point.add(x); point.add(y);
+			query.filter(fieldExpr + " near", point);
 			return query;
 		}
 
