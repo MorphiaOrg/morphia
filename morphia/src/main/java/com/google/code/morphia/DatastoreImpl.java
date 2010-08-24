@@ -410,10 +410,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T, V> T get(Class<T> clazz, V id) {
-		List<T> results = find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).asList();
-		if (results == null || results.size() == 0)
-			return null;
-		return results.get(0);
+		return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).get();
 	}
 	
 

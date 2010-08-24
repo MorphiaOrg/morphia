@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
-import org.bson.types.ObjectId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.logging.MorphiaLogger;
@@ -354,10 +354,13 @@ public class QueryImpl<T> implements Query<T> {
 				((mf.isMultipleValues() && !isCompatibleForQuery(mf.getSubType(), value)))) {
 				
 			Throwable t = new Throwable();
-			log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
-					+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
-					+ " is a " + mf.getType().getName());
-			log.debug("Location of warning:\r\n", t);
+			StackTraceElement ste = getFirstClientLine(t);
+			if (log.isWarningEnabled())
+				log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
+						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
+						+ " is a " + mf.getType().getName() + (ste == null ? "" : "\r\n --@--" + ste));
+			if (log.isDebugEnabled())
+				log.debug("Location of warning:\r\n", t);
 		}
 		
 		return mf;
@@ -368,6 +371,18 @@ public class QueryImpl<T> implements Query<T> {
 		return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
 	}
 	
+	/** Return the first {@link StackTraceElement} not in our code (package). */
+	public static StackTraceElement getFirstClientLine(Throwable t) {
+		for(StackTraceElement ste : t.getStackTrace())
+			if ( 	!ste.getClassName().startsWith("com.google.code.morphia") && 
+					!ste.getClassName().startsWith("sun.reflect") && 
+					!ste.getClassName().startsWith("org.junit") && 
+					!ste.getClassName().startsWith("org.eclipse") && 
+					!ste.getClassName().startsWith("java.lang"))
+				return ste;
+		
+		return null;
+	}
 	public static boolean isCompatibleForQuery(Class<?> type, Object value) {
 		if (value == null || type == null) 
 			return true;
@@ -377,9 +392,9 @@ public class QueryImpl<T> implements Query<T> {
 			return true;
 		else if (value instanceof Pattern && String.class.equals(type))
 			return true;
-		else if (value instanceof List)
+		else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type))
 			return true;
-		else if (value instanceof ObjectId && String.class.equals(type))
+		else if (value instanceof List)
 			return true;
 		else if (!value.getClass().isAssignableFrom(type) &&
 				//hack to let Long match long, and so on

@@ -55,6 +55,7 @@ import com.mongodb.MongoInternalException;
  */
 public class TestQuery  extends TestBase {
 
+	@Entity
     public static class Photo {
         @Id ObjectId id;
         List<String> keywords = Collections.singletonList("amazing");

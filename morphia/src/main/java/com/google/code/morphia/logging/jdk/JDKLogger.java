@@ -5,8 +5,9 @@ import java.util.logging.Logger;
 
 import com.google.code.morphia.logging.MorphiaLogger;
 
+@SuppressWarnings("rawtypes")
 public class JDKLogger implements MorphiaLogger {
-	
+	private static final long serialVersionUID = 1L;
 	private final Logger logger;
 	
 	public JDKLogger(Class c) {
@@ -18,15 +19,15 @@ public class JDKLogger implements MorphiaLogger {
 	}
 	
 	public void trace(String msg) {
-		logger.log(Level.FINER, msg);
+		log(Level.FINER, msg);
 	}
 	
 	public void trace(String format, Object... arg) {
-		logger.log(Level.FINER, format, arg);
+		log(Level.FINER, format, arg);
 	}
 	
 	public void trace(String msg, Throwable t) {
-		logger.log(Level.FINER, msg, t);
+		log(Level.FINER, msg, t);
 	}
 	
 	public boolean isDebugEnabled() {
@@ -34,15 +35,15 @@ public class JDKLogger implements MorphiaLogger {
 	}
 	
 	public void debug(String msg) {
-		logger.log(Level.FINE, msg);
+		log(Level.FINE, msg);
 	}
 	
 	public void debug(String format, Object... arg) {
-		logger.log(Level.FINE, format, arg);
+		log(Level.FINE, format, arg);
 	}
 	
 	public void debug(String msg, Throwable t) {
-		logger.log(Level.FINE, msg, t);
+		log(Level.FINE, msg, t);
 		
 	}
 	
@@ -51,15 +52,15 @@ public class JDKLogger implements MorphiaLogger {
 	}
 	
 	public void info(String msg) {
-		logger.log(Level.INFO, msg);
+		log(Level.INFO, msg);
 	}
 	
 	public void info(String format, Object... arg) {
-		logger.log(Level.INFO, format, arg);
+		log(Level.INFO, format, arg);
 	}
 	
 	public void info(String msg, Throwable t) {
-		logger.log(Level.INFO, msg, t);
+		log(Level.INFO, msg, t);
 	}
 	
 	public boolean isWarningEnabled() {
@@ -67,16 +68,15 @@ public class JDKLogger implements MorphiaLogger {
 	}
 	
 	public void warning(String msg) {
-		logger.log(Level.WARNING, msg);
-		
+		log(Level.WARNING, msg);		
 	}
 	
 	public void warning(String format, Object... arg) {
-		logger.log(Level.WARNING, format, arg);
+		log(Level.WARNING, format, arg);
 	}
 	
 	public void warning(String msg, Throwable t) {
-		logger.log(Level.WARNING, msg, t);
+		log(Level.WARNING, msg, t);
 	}
 	
 	public boolean isErrorEnabled() {
@@ -84,17 +84,59 @@ public class JDKLogger implements MorphiaLogger {
 	}
 	
 	public void error(String msg) {
-		logger.log(Level.SEVERE, msg);
+		log(Level.SEVERE, msg);
 		
 	}
 	
 	public void error(String format, Object... arg) {
-		logger.log(Level.SEVERE, format, arg);
+		log(Level.SEVERE, format, arg);
 		
 	}
 	
 	public void error(String msg, Throwable t) {
-		logger.log(Level.SEVERE, msg, t);
+		log(Level.SEVERE, msg, t);
 	}
 	
+	protected void log(Level l, String m, Throwable t) {
+		String[] callerInfo = getCaller(new Throwable());
+		logger.logp(l, callerInfo[0], callerInfo[1],  m, t);		
+	}
+	
+	protected void log(Level l, String f, Object... a) {
+		String[] callerInfo = getCaller(new Throwable());
+		logger.logp(l, callerInfo[0], callerInfo[1], f, a);		
+	}
+	
+	/** returns an array (class, method) of the caller before our logger class in the stack*/
+	protected String[] getCaller(Throwable t) {
+		StackTraceElement stack[] = (new Throwable()).getStackTrace();
+		final String loggerClassname = getClass().getName();
+		
+		String callerName = "";
+		String callerMethod = "";
+		
+		int i = 0;
+		while (i < stack.length) {
+		    StackTraceElement ste = stack[i];
+		    String fc = ste.getClassName();
+		    if (fc.equals(loggerClassname)) break;
+
+		    i++;
+		}
+		
+		//skip an extra frame... we call ourselves
+		i++;
+		
+		while (i < stack.length) {
+		    StackTraceElement ste = stack[i];
+		    String fc = ste.getClassName();
+		    if (!fc.equals(loggerClassname)) {
+		        callerMethod = ste.getMethodName();
+		        callerName = fc;
+		        return new String[] {callerName,callerMethod};
+		    }
+		    i++;
+		}
+        return new String[] {"",""};
+	}
 }
