@@ -29,7 +29,7 @@ public class ClassConverter extends TypeConverter implements SimpleValueConverte
         }
         catch (ClassNotFoundException e)
         {
-            throw new MappingException("Cannot creat class from Name '"+l+"'",e);
+            throw new MappingException("Cannot create class from Name '"+l+"'",e);
         }
 	}
 
