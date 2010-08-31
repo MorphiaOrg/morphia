@@ -43,7 +43,9 @@ public class QueryImpl<T> implements Query<T> {
 	private static final MorphiaLogger log = MorphiaLoggerFactory.get(Mapper.class);
 	
 	private final EntityCache cache;
-	private boolean validating = true;
+	private boolean validatingNames = true;
+	private boolean validatingTypes = true;
+	
 	private Map<String, Object> query = null;
 	private String[] fields = null;
 	private Boolean includeFields = null;
@@ -234,10 +236,8 @@ public class QueryImpl<T> implements Query<T> {
 		String prop = parts[0].trim();
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 		
-		//The field we are filtering on, in the java object
-		MappedField mf = null;
-		if (validating)
-			mf = validate(prop, value);
+		//The field we are filtering on, in the java object; only known if we are validating
+		MappedField mf = validate(prop, value);
 		
 		//TODO differentiate between the key/value for maps; we will just get the mf for the field, not which part we are looking for
 		
@@ -315,55 +315,60 @@ public class QueryImpl<T> implements Query<T> {
     }
 	
 
-	public Query<T> enableValidation(){ validating = true; return this; }
+	public Query<T> enableValidation(){ validatingNames = validatingTypes = true; return this; }
 
-	public Query<T> disableValidation(){ validating = false; return this; }
+	public Query<T> disableValidation(){ validatingNames = validatingTypes = false; return this; }
+	
+	QueryImpl<T> validateNames() {validatingNames = true; return this; }
+	QueryImpl<T> disableTypeValidation() {validatingTypes = false; return this; }
 	
 	/** Validate the path, and value type, returning the mappedfield for the field at the path */
 	private MappedField validate(String prop, Object value) {
-		String[] parts = prop.split("\\.");
-		//		if (parts.length == 0) parts = new String[]{prop};
-		if (this.clazz == null) return null;
-		MappedClass mc = ds.getMapper().getMappedClass(this.clazz);
-		MappedField mf;
-		for(int i=0; ; ) {
-			String part = parts[i];
-			mf = mc.getMappedField(part);
-			
-			if (mf == null) {
-				mf = mc.getMappedFieldByJavaField(part);
-				if (mf != null)
-					throw new QueryException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
-							"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
-				else
-					throw new QueryException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
-			}
-			i++;
-			if (mf.isMap()) {
-				//skip the map key validation, and move to the next part
-				i++;
-			}
-			//catch people trying to search into @Reference/@Serialized fields
-			if (i < parts.length && !canQueryPast(mf))
-				throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
-			
-			if (i >= parts.length) break;
-			mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
-		}
+		MappedField mf = null;
 		
-		if (	 (mf.isSingleValue() && !isCompatibleForQuery(mf.getType(), value)) || 
-				((mf.isMultipleValues() && !isCompatibleForQuery(mf.getSubType(), value)))) {
+		if (validatingNames) {
+			String[] parts = prop.split("\\.");
+			if (this.clazz == null) return null;
+			MappedClass mc = ds.getMapper().getMappedClass(this.clazz);
+			for(int i=0; ; ) {
+				String part = parts[i];
+				mf = mc.getMappedField(part);
 				
-			Throwable t = new Throwable();
-			StackTraceElement ste = getFirstClientLine(t);
-			if (log.isWarningEnabled())
-				log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
-						+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
-						+ " is a " + mf.getType().getName() + (ste == null ? "" : "\r\n --@--" + ste));
-			if (log.isDebugEnabled())
-				log.debug("Location of warning:\r\n", t);
-		}
+				if (mf == null) {
+					mf = mc.getMappedFieldByJavaField(part);
+					if (mf != null)
+						throw new QueryException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
+								"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
+					else
+						throw new QueryException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+				}
+				i++;
+				if (mf.isMap()) {
+					//skip the map key validation, and move to the next part
+					i++;
+				}
+				//catch people trying to search into @Reference/@Serialized fields
+				if (i < parts.length && !canQueryPast(mf))
+					throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+				
+				if (i >= parts.length) break;
+				mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+			}
+	
+			if (validatingTypes)
+				if (	 (mf.isSingleValue() && !isCompatibleForQuery(mf.getType(), value)) || 
+						((mf.isMultipleValues() && !isCompatibleForQuery(mf.getSubType(), value)))) {
 		
+					Throwable t = new Throwable();
+					StackTraceElement ste = getFirstClientLine(t);
+					if (log.isWarningEnabled())
+						log.warning("Datatypes for the query may be inconsistent; searching with an instance of "
+								+ value.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
+								+ " is a " + mf.getType().getName() + (ste == null ? "" : "\r\n --@--" + ste));
+					if (log.isDebugEnabled())
+						log.debug("Location of warning:\r\n", t);
+				}			
+		}
 		return mf;
 	}
 	
@@ -509,18 +514,17 @@ public class QueryImpl<T> implements Query<T> {
 			return query;
 		}
 		
+		public Query<T> exists() {
+			query.disableTypeValidation().filter("" + fieldExpr + " exists", true).enableValidation();
+			return query;
+		}
 		public Query<T> doesNotExist() {
-			query.filter("" + fieldExpr + " exists", 0);
+			query.disableTypeValidation().filter("" + fieldExpr + " exists", false).enableValidation();
 			return query;
 		}
 
 		public Query<T> equal(Object val) {
 			query.filter(fieldExpr + " =", val);
-			return query;
-		}
-
-		public Query<T> exists() {
-			query.filter("" + fieldExpr + " exists", true);
 			return query;
 		}
 

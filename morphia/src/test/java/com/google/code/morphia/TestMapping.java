@@ -341,6 +341,9 @@ public class TestMapping  extends TestBase {
 		assertNotNull(mapLoaded.values.get(2));
 		
 		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.2").exists());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.2").doesNotExist().countAll());
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
 	}
 
 	@Test @Ignore
