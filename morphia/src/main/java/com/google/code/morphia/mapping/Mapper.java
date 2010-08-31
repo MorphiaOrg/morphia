@@ -14,10 +14,9 @@ package com.google.code.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -231,35 +230,57 @@ public class Mapper {
 		}
 		Class type = newObj.getClass();
 		boolean bSameType = origClass.equals(type);
-		boolean bSingleValue = true;
-		Class subType = null;
-
-		if (type.isArray()
-				|| ReflectionUtils.implementsAnyInterface(type, Iterable.class, Collection.class, List.class,
-						Set.class, Map.class)) {
-			bSingleValue = false;
-			// subtype of Long[], List<Long> is Long
-			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(type);
-		}
-
-		if (bSameType && bSingleValue && !ReflectionUtils.isPropertyType(type)) {
-			DBObject dbObj = toDBObject(javaObj);
-			dbObj.removeField(CLASS_NAME_FIELDNAME);
-			return dbObj;
-		} else if (bSameType && !bSingleValue && !ReflectionUtils.isPropertyType(subType)) {
-			ArrayList<Object> vals = new ArrayList<Object>();
-			if (type.isArray()) {
-				for (Object obj : (Object[]) newObj) {
-					vals.add(toMongoObject(obj));
-				}
-			} else {
-				for (Object obj : (Iterable) newObj) {
-					vals.add(toMongoObject(obj));
-				}
-			}
-			return vals;
-		} else {
+		
+		//TODO: think about this logic a bit more. 
+		//Even if the converter changed it, should it still be processed?
+		
+		
+		//The converter ran, and produced another type.
+		if (!bSameType)
 			return newObj;
+		else {
+			
+			boolean isSingleValue = true;
+			boolean isMap = false;
+			Class subType = null;
+	
+			if (type.isArray() || ReflectionUtils.implementsAnyInterface(type, Iterable.class, Map.class)) {
+				isSingleValue = false;
+				isMap = ReflectionUtils.implementsInterface(type, Map.class);
+				// subtype of Long[], List<Long> is Long
+				subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(type, (isMap) ? 1 : 0);
+			}
+	
+			if (isSingleValue && !ReflectionUtils.isPropertyType(type)) {
+				DBObject dbObj = toDBObject(newObj);
+				dbObj.removeField(CLASS_NAME_FIELDNAME);
+				return dbObj;
+			} else if (newObj instanceof DBObject) {
+				return newObj;
+			} else if (isMap) {
+				if (ReflectionUtils.isPropertyType(subType))
+					return toDBObject(newObj);
+				else {
+					HashMap m = new HashMap();
+					for(Map.Entry e : (Iterable<Map.Entry>)((Map)newObj).entrySet())
+						m.put(e.getKey(), toMongoObject(e.getValue()));
+
+					return toDBObject(m);
+				}
+			//Set/List but needs elements converted
+			} else if (!isSingleValue && !ReflectionUtils.isPropertyType(subType)) {
+				ArrayList<Object> vals = new ArrayList<Object>();
+				if (type.isArray()) 
+					for (Object obj : (Object[]) newObj)
+						vals.add(toMongoObject(obj));
+				else
+					for (Object obj : (Iterable) newObj) 
+						vals.add(toMongoObject(obj));
+	
+				return vals;
+			} else {
+				return newObj;
+			}
 		}
 	}
 
@@ -387,7 +408,7 @@ public class Mapper {
 				embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
 				idVal = mf.getFieldValue(entity);
 			} else {
-				idVal = converters.decode(mf.getType(), dbObject.get(ID_KEY));							
+				idVal = converters.decode(mf.getType(), dbObject.get(ID_KEY), mf);							
 				mf.setFieldValue(entity, idVal);
 			}
 			

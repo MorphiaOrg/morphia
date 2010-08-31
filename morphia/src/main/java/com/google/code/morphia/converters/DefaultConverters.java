@@ -15,6 +15,7 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
 import com.google.code.morphia.mapping.MappingException;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
@@ -31,10 +32,14 @@ public class DefaultConverters {
 	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();
 	
 	public DefaultConverters() {
-		// some converters are commented out since the passthrough converter is enabled.
-		
-		//		addConverter(new PassthroughConverter(ObjectId.class));
-		//		addConverter(new PassthroughConverter(DBRef.class));
+		// some converters are commented out since the pass-through converter is enabled, at the end of the list.
+		// Re-enable them if that changes.
+//		addConverter(new PassthroughConverter(ObjectId.class));
+//		addConverter(new PassthroughConverter(DBRef.class));
+
+		//Pass-through DBObject or else the MapOfValuesConverter will process it.
+		addConverter(new PassthroughConverter(DBObject.class, BasicDBObject.class));
+		//Pass-through byte[] for the driver to handle
 		addConverter(new PassthroughConverter(byte[].class));
 		addConverter(new EnumSetConverter());
 		addConverter(new EnumConverter());
@@ -138,10 +143,14 @@ public class DefaultConverters {
 		}
 	}
 	
-	public Object decode(Class c, Object fromDBObject) {
+	public Object decode(Class c, Object fromDBObject, MappedField mf) {
 		if (c == null)
 			c = fromDBObject.getClass();
-		return getEncoder(c).decode(c, fromDBObject);
+		return getEncoder(c).decode(c, fromDBObject, mf);
+	}
+	
+	public Object decode(Class c, Object fromDBObject) {
+		return decode(c, fromDBObject, null);
 	}
 	
 	public Object encode(Object o) {

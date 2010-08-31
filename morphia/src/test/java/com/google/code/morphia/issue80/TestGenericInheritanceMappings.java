@@ -60,6 +60,7 @@ public class TestGenericInheritanceMappings extends TestBase {
 		morphia.map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
 	}
 
+	//Waiting on issue 80
     @Test @Ignore
     public void testIt() throws Exception {
     	ContainsThings ct = new ContainsThings();

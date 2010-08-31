@@ -272,27 +272,28 @@ public class TestQuery  extends TestBase {
         Assert.assertEquals(3, pwkLoaded.keywords.size());
     }
 
-    @Test @Ignore
+    @Test
     public void testDBOBjectOrQuery() throws Exception {
         PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         ds.save(pwk);
         
         AdvancedDatastore ads = (AdvancedDatastore) ds;
         List<DBObject> orList = new ArrayList<DBObject>();
-        orList.add(new BasicDBObject("keywords", "scott"));
-        orList.add(new BasicDBObject("keywords", "ralph"));
+        orList.add(new BasicDBObject("keywords.keyword", "scott"));
+        orList.add(new BasicDBObject("keywords.keyword", "ralph"));
         BasicDBObject orQuery = new BasicDBObject("$or", orList);
         
         Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class, orQuery);
         Assert.assertEquals(1, q.countAll());
 
-        q = ads.createQuery(PhotoWithKeywords.class).filter("$or", orList);
+        q = ads.createQuery(PhotoWithKeywords.class).disableValidation().filter("$or", orList);
         Assert.assertEquals(1, q.countAll());
         
         
     }
 
-    @Test @Ignore
+    //TODO: Enable when Issue87 is done.
+    @Test @Ignore()
     public void testIdFieldNameQuery() throws Exception {
         PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         ds.save(pwk);
@@ -301,7 +302,7 @@ public class TestQuery  extends TestBase {
         assertNotNull(pwkLoaded);
     }
 
-    @Test @Ignore
+    @Test
     public void testComplexIdQuery() throws Exception {
     	CustomId cId = new CustomId();
     	cId.id = new ObjectId();

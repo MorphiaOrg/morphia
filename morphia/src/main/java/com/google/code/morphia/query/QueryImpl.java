@@ -99,7 +99,6 @@ public class QueryImpl<T> implements Query<T> {
 	public DBObject getSortObject() {
 		return (sort == null) ? null : sort.get();
 	}
-	
 
 	public long countAll() {
 		DBObject query = getQueryObject();
@@ -274,9 +273,11 @@ public class QueryImpl<T> implements Query<T> {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		else {
+		else if (value instanceof DBObject)
+			mappedValue = value;
+		else
 			mappedValue = mapr.toMongoObject(value);
-		}
+		
 		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;
 		
 		//convert single values into lists for $in/$nin

@@ -187,6 +187,7 @@ public class TestDAO extends TestBase {
          assertEquals(5,hotelReloaded.getStars());
     }
     
+    //This will never be allowed as type erasure removes the type info for the hotelDAO variable.
     @Test @Ignore
     public void testErasureDao() throws Exception {
         //broken, you must subclass DAO to use this constructor.

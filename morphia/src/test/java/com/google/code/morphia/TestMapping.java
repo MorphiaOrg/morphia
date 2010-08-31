@@ -77,6 +77,12 @@ public class TestMapping  extends TestBase {
 			this.id = key;
 		}
 	}
+
+	@Entity
+	public static class MapAsId {
+		@Id Map<String, String> id = new HashMap<String, String>();
+		String name = "hello";		
+	}
 	
 	@Entity
 	public static class MissingId {
@@ -454,6 +460,7 @@ public class TestMapping  extends TestBase {
 		
 		assertNotNull(loaded.id);        
 	}
+
 	@Test
     public void testKeyAsId() throws Exception {
         morphia.map(KeyAsId.class);
@@ -469,6 +476,19 @@ public class TestMapping  extends TestBase {
         assertNotNull(kaiLoaded);
         assertNotNull(kaiKey);
 	}
+
+	@Test
+    public void testMapAsId() throws Exception {
+        morphia.map(MapAsId.class);
+        
+        MapAsId mai = new MapAsId();
+        mai.id.put("test", "string");
+        Key<MapAsId> maiKey = ds.save(mai);
+        MapAsId maiLoaded = ds.get(MapAsId.class, new BasicDBObject("test","string"));
+        assertNotNull(maiLoaded);
+        assertNotNull(maiKey);
+	}
+
 	@Test
     public void testDbRefMapping() throws Exception {
         morphia.map(ContainsRef.class).map(Rectangle.class);
