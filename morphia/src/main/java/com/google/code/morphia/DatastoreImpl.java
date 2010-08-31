@@ -539,7 +539,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return insert(dbColl, entity, defConcern);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	protected <T> Key<T> insert(DBCollection dbColl, T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
@@ -592,7 +591,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected <T> Key<T> save(DBCollection dbColl, T entity, WriteConcern wc) {
-
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
@@ -604,34 +602,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		try {
 			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
-			MappedField mfVersion= null;
-			if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty())
-				mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
+
+			//try to do an update if there is a @Version field
+			wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
 			
-			if (mfVersion != null) {
-				String versionKeyName = mfVersion.getNameToStore();
-				Long oldVersion = (Long) mfVersion.getFieldValue(entity);
-				long newVersion = VersionHelper.nextValue(oldVersion);
-				dbObj.put(versionKeyName, newVersion);
-				if (oldVersion != null && oldVersion > 0) {
-					Object idValue = dbObj.get(Mapper.ID_KEY);
-					
-					UpdateResults<T> res = update(find((Class<T>) entity.getClass(), Mapper.ID_KEY, idValue).filter(
-							versionKeyName, oldVersion), dbObj, false, false, wc);
-					
-					wr = res.getWriteResult();
-					
-					if (res.getUpdatedCount() != 1)
-						throw new ConcurrentModificationException("Entity of class " + entity.getClass().getName()
-								+ " (id='" + idValue + "',version='" + oldVersion + "') was concurrently updated.");
-				} else
-					if (wc == null)
-						wr = dbColl.save(dbObj);
-					else
-						wr = dbColl.save(dbObj, wc);
-				
-				mfVersion.setFieldValue(entity, newVersion);
-			} else
+			if(wr == null)
 				if (wc == null)
 					wr = dbColl.save(dbObj);
 				else
@@ -652,6 +627,42 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 	}
 	
+	protected <T> WriteResult tryVersionedUpdate(DBCollection dbColl, T entity, DBObject dbObj, WriteConcern wc, DB db, MappedClass mc) {
+		WriteResult wr = null;
+		if (mc.getFieldsAnnotatedWith(Version.class).isEmpty())
+			return wr;
+		
+		
+		MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
+		String versionKeyName = mfVersion.getNameToStore();
+		Long oldVersion = (Long) mfVersion.getFieldValue(entity);
+		long newVersion = VersionHelper.nextValue(oldVersion);
+		dbObj.put(versionKeyName, newVersion);
+		if (oldVersion != null && oldVersion > 0) {
+			Object idValue = dbObj.get(Mapper.ID_KEY);
+			
+			UpdateResults<T> res = update(  find((Class<T>) entity.getClass(), Mapper.ID_KEY, idValue).filter(versionKeyName, oldVersion), 
+											dbObj, 
+											false, 
+											false, 
+											wc);
+			
+			wr = res.getWriteResult();
+			
+			if (res.getUpdatedCount() != 1)
+				throw new ConcurrentModificationException("Entity of class " + entity.getClass().getName()
+						+ " (id='" + idValue + "',version='" + oldVersion + "') was concurrently updated.");
+		} else
+			if (wc == null)
+				wr = dbColl.save(dbObj);
+			else
+				wr = dbColl.save(dbObj, wc);
+
+		//update the version.
+		mfVersion.setFieldValue(entity, newVersion);
+		return wr;
+	}
+	
 	protected void throwOnError(WriteConcern wc, WriteResult wr) {
 		if ( wc == null && wr.getLastConcern() == null) {
 			CommandResult cr = wr.getLastError();
@@ -664,7 +675,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			Object entity = e.getKey();
 			DBObject dbObj = e.getValue();
 			MappedClass mc = mapr.getMappedClass(entity);
-			
 			mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
 		}
 	}
@@ -737,7 +747,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			LinkedHashMap<Object, DBObject> involvedObjects) {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
-		
 		
 		mapr.updateKeyInfo(entity, dbObj, createCache());
 		
@@ -847,5 +856,4 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public WriteConcern getDefaultWriteConcern() {return defConcern;} 
 	public void setDefaultWriteConcern(WriteConcern wc) {defConcern = wc;}
-
 }
