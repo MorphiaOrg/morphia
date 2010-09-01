@@ -179,7 +179,7 @@ public class Mapper {
 					if (!dbIdValue.equals(oldIdValue)) {
 						mf.setFieldValue(entity, oldIdValue);//put the value back...
 						
-						throw new RuntimeException("id mismatch: " + oldIdValue + " != " + dbIdValue + " for "
+						throw new RuntimeException("@Id mismatch: " + oldIdValue + " != " + dbIdValue + " for "
 								+ entity.getClass().getName());
 					}
 				} else {
@@ -190,7 +190,7 @@ public class Mapper {
 					throw (RuntimeException) e;
 				}
 
-				throw new RuntimeException(e);
+				throw new RuntimeException("Error setting @Id field after save/insert.", e);
 			}
 		}
 	}
