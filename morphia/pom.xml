@@ -6,7 +6,14 @@
     <packaging>jar</packaging>
     <version>0.96-SNAPSHOT</version>
     <name>morphia</name>
-    
+
+    <parent>
+		<groupId>com.google.code.morphia</groupId>
+		<artifactId>morphia-parent</artifactId>
+		<version>0.96-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
     <url>http://code.google.com/p/morphia/</url>
     <description>A lightweight library for mapping Java objects to/from MongoDB (see mongodb.org).</description>
     <properties>
@@ -41,26 +48,6 @@
     </developers>
 
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>com.google.gwt</groupId>-->
-<!--			<artifactId>gwt-servlet</artifactId>-->
-<!--			<version>${gwt.version}</version>-->
-<!--			<scope>compile</scope>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.google.gwt</groupId>-->
-<!--			<artifactId>gwt-user</artifactId>-->
-<!--			<version>${gwt.version}</version>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
-<!--    	<dependency>-->
-<!--    		<groupId>com.google.collections</groupId>-->
-<!--    		<artifactId>google-collections</artifactId>-->
-<!--    		<version>1.0</version>-->
-<!--    		<type>jar</type>-->
-<!--    		<optional>false</optional>-->
-<!--    	</dependency>-->
-		
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
@@ -144,6 +131,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+						<sourceExcludes>
+								<sourceExclude>**/emul/**/*.java</sourceExclude>
+						</sourceExcludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

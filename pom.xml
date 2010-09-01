@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.google.code.morphia</groupId>
+    <artifactId>morphia-parent</artifactId>
+    <version>0.96-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Morphia Build</name>
+	<description>Build Project for Morphia</description>
+
+	<modules>
+			<module>morphia</module>
+			<module>no-proxy-deps-tests</module>
+	</modules>
+</project>
