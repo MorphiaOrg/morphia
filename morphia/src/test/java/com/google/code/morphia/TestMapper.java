@@ -11,6 +11,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 
 /**
  * Tests mapper functions; this is tied to some of the internals.
@@ -149,6 +150,12 @@ public class TestMapper extends TestBase {
 	
 	@Test
 	public void SingleProxy() throws Exception {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
 		A.loadCount = 0;
 		A a = new A();
 		HoldsMultipleALazily holder = new HoldsMultipleALazily();

@@ -12,6 +12,12 @@ public class TestCGLibLazyProxyFactory extends ProxyTestBase
 	@Test
 	public final void testCreateProxy()
 	{
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
 		final E e = new E();
 		e.setFoo("bar");
 		final Key<E> key = ds.save(e);

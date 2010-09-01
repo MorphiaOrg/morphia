@@ -14,6 +14,13 @@ import com.google.code.morphia.testutil.TestEntity;
 public class TestLazySingleReference extends ProxyTestBase {
 	@Test
 	public final void testCreateProxy() {
+		
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+        
 		RootEntity root = new RootEntity();
 		ReferencedEntity referenced = new ReferencedEntity();
 		
@@ -48,7 +55,13 @@ public class TestLazySingleReference extends ProxyTestBase {
 	
 	@Test
 	public final void testShortcutInterface() {
-		RootEntity root = new RootEntity();
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
+        RootEntity root = new RootEntity();
 		ReferencedEntity reference = new ReferencedEntity();
 		
 		root.r = reference;
@@ -89,6 +102,12 @@ public class TestLazySingleReference extends ProxyTestBase {
 	@Ignore
 	// FIXME us
 	public final void testSameProxy() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
 		RootEntity root = new RootEntity();
 		ReferencedEntity reference = new ReferencedEntity();
 		
@@ -105,6 +124,12 @@ public class TestLazySingleReference extends ProxyTestBase {
 	
 	@Test
 	public final void testSerialization() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
 		RootEntity e1 = new RootEntity();
 		ReferencedEntity e2 = new ReferencedEntity();
 		
@@ -129,6 +154,12 @@ public class TestLazySingleReference extends ProxyTestBase {
 	
 	@Test
 	public final void testGetKeyWithoutFetching() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled())
+        {
+            return;
+        }
+
 		RootEntity root = new RootEntity();
 		ReferencedEntity reference = new ReferencedEntity();
 		
