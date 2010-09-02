@@ -81,12 +81,12 @@ public class MappedClass {
 	private List<MappedField> persistenceFields = new ArrayList<MappedField>();
 	
 	/** the type we are mapping to/from */
-	private Class clazz;
-	private Constructor ctor;
+	private Class<?> clazz;
+	private Constructor<?> ctor;
 	Mapper mapr;
 	
 	/** constructor */
-	public MappedClass(Class clazz, Mapper mapr) {
+	public MappedClass(Class<?> clazz, Mapper mapr) {
 		this.mapr = mapr;
 		this.clazz = clazz;
 		discover();
@@ -98,7 +98,7 @@ public class MappedClass {
 			addAnnotation(c);
 		}
 		
-		Class type = clazz;
+		Class<?> type = clazz;
 		
 		//allows private/protected constructors
 		try {
@@ -225,7 +225,7 @@ public class MappedClass {
 	}
 	
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
-	public static boolean isSupportedType(Class clazz) {
+	public static boolean isSupportedType(Class<?> clazz) {
 		if (ReflectionUtils.isPropertyType(clazz)) return true;
 		if (clazz.isArray() || ReflectionUtils.implementsAnyInterface(clazz, 	
 				Iterable.class,
@@ -233,7 +233,7 @@ public class MappedClass {
 				List.class,
 				Set.class,
 				Map.class)){
-			Class subType = null;
+			Class<?> subType = null;
 			if (clazz.isArray()) subType = clazz.getComponentType();
 			else subType = ReflectionUtils.getParameterizedClass(clazz);
 			
@@ -254,7 +254,7 @@ public class MappedClass {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Class) return equals((Class)obj);
+		if (obj instanceof Class<?>) return equals((Class<?>)obj);
 		else if (obj instanceof MappedClass) return equals((MappedClass)obj);
 		else return false;
 	}
@@ -263,7 +263,7 @@ public class MappedClass {
 		return this.getClazz().equals(clazz);
 	}
 	
-	public boolean equals(Class clazz) {
+	public boolean equals(Class<?> clazz) {
 		return this.getClazz().equals(clazz);
 	}
 	
@@ -375,12 +375,12 @@ public class MappedClass {
 	/**
 	 * @return the clazz
 	 */
-	public Class getClazz() {
+	public Class<?> getClazz() {
 		return clazz;
 	}
 	
 	/** @return the constructor for this mapped class */
-	public Constructor getCTor() {
+	public Constructor<?> getCTor() {
 		return ctor;
 	}
 	
