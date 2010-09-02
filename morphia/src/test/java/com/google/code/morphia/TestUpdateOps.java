@@ -37,6 +37,7 @@ import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.StandardTests;
+import com.mongodb.WriteConcern;
 
 /**
  *
@@ -92,6 +93,15 @@ public class TestUpdateOps  extends TestBase {
 	@Test
     public void testInsertUpdates() throws Exception {
 		UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperations(Circle.class).inc("radius",1D), true);
+		assertEquals(1, res.getInsertedCount());
+		assertEquals(0, res.getUpdatedCount());
+		
+		assertEquals(false, res.getUpdatedExisting());
+	}
+
+	@Test
+    public void testInsertUpdatesUnsafe() throws Exception {
+		UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperations(Circle.class).inc("radius",1D), true, WriteConcern.NONE);
 		assertEquals(1, res.getInsertedCount());
 		assertEquals(0, res.getUpdatedCount());
 		
