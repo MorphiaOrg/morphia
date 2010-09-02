@@ -1,16 +1,177 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.google.code.morphia</groupId>
-    <artifactId>morphia-parent</artifactId>
-    <version>0.96-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.google.code.morphia</groupId>
+  <artifactId>morphia-parent</artifactId>
+  <!--  bogus version to be referenced by the modules -->
+  <version>1.0</version>
+  <packaging>pom</packaging>
 
-	<name>Morphia Build</name>
-	<description>Build Project for Morphia</description>
+  <name>Morphia Build</name>
+  <description>Build Project for Morphia</description>
 
-	<modules>
-			<module>morphia</module>
-			<module>no-proxy-deps-tests</module>
-	</modules>
+  <url>http://code.google.com/p/morphia/</url>
+
+  <properties>
+    <morphia.version>0.96-SNAPSHOT</morphia.version>
+    <!-- might go into gwt module? -->
+    <gwt.version>2.0.3</gwt.version>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>http://code.google.com/p/morphia/source/browse</url>
+    <connection>http://morphia.googlecode.com/svn/trunk/</connection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>oli.gauti</id>
+      <name>Olafur Gauti Gudmundsson</name>
+    </developer>
+    <developer>
+      <id>scotthernandez</id>
+      <name>Scott Hernandez</name>
+      <email>scotthernandez (hot/g mail)</email>
+      <timezone>(GMT-08:00) Pacific Time(US &amp; Canada)</timezone>
+    </developer>
+    <developer>
+      <id>us@thomas-daily.de</id>
+      <name>Uwe Schäfer</name>
+    </developer>
+  </developers>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>2.1</version>
+      <type>jar</type>
+      <optional>false</optional>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <type>jar</type>
+      <scope>test</scope>
+      <optional>false</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>src/etc/header.txt</header>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <show>public</show>
+          <author>false</author>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!--
+        <plugin> <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId> <configuration>
+        <sourceExcludes> <sourceExclude>**/emul/**/*.java</sourceExclude>
+        </sourceExcludes> </configuration> </plugin>
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.jvnet.wagon-svn</groupId>
+        <artifactId>wagon-svn</artifactId>
+        <version>1.9</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>1.0-beta-6</version>
+      </extension>
+    </extensions>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <!--
+            <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+          -->
+          <show>public</show>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>morphia-googlecode</id>
+      <url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>morphia-googlecode</id>
+      <url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <modules>
+    <module>morphia</module>
+    <module>no-proxy-deps-tests</module>
+  </modules>
+
 </project>
