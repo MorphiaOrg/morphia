@@ -543,32 +543,25 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
 		
-		DB db = dbColl.getDB();
-		db.requestStart();
-		try {
-			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 
-			WriteResult wr;
-			if (wc == null)
-				wr = dbColl.insert(dbObj);
-			else
-				wr = dbColl.insert(dbObj, wc);
+		WriteResult wr;
+		if (wc == null)
+			wr = dbColl.insert(dbObj);
+		else
+			wr = dbColl.insert(dbObj, wc);
 
-			if (dbObj.get(Mapper.ID_KEY) == null)
-				throw new MappingException("Missing _id after save!");
-			
-			throwOnError(wc, wr);
-			
-			postSaveOperations(entity, dbObj, dbColl, involvedObjects);
-			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
-			key.setKindClass((Class<? extends T>) entity.getClass());
-			
-			return key;
-		} finally {
-			db.requestDone();
-		}
+		if (dbObj.get(Mapper.ID_KEY) == null)
+			throw new MappingException("Missing _id after save!");
 		
+		throwOnError(wc, wr);
+		
+		postSaveOperations(entity, dbObj, dbColl, involvedObjects);
+		Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
+		key.setKindClass((Class<? extends T>) entity.getClass());
+		
+		return key;
 	}
 
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
@@ -597,34 +590,28 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		
 		WriteResult wr = null;
 		
-		DB db = dbColl.getDB();
-		db.requestStart();
-		try {
-			LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-			DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 
-			//try to do an update if there is a @Version field
-			wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
-			
-			if(wr == null)
-				if (wc == null)
-					wr = dbColl.save(dbObj);
-				else
-					wr = dbColl.save(dbObj, wc);
-			
-			if (dbObj.get(Mapper.ID_KEY) == null)
-				throw new MappingException("Missing _id after save!");
-			
-			throwOnError(wc, wr);
-			
-			postSaveOperations(entity, dbObj, dbColl, involvedObjects);
-			Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
-			key.setKindClass((Class<? extends T>) entity.getClass());
-			
-			return key;
-		} finally {
-			db.requestDone();
-		}
+		//try to do an update if there is a @Version field
+		wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
+		
+		if(wr == null)
+			if (wc == null)
+				wr = dbColl.save(dbObj);
+			else
+				wr = dbColl.save(dbObj, wc);
+		
+		if (dbObj.get(Mapper.ID_KEY) == null)
+			throw new MappingException("Missing _id after save!");
+		
+		throwOnError(wc, wr);
+		
+		postSaveOperations(entity, dbObj, dbColl, involvedObjects);
+		Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
+		key.setKindClass((Class<? extends T>) entity.getClass());
+		
+		return key;
 	}
 	
 	protected <T> WriteResult tryVersionedUpdate(DBCollection dbColl, T entity, DBObject dbObj, WriteConcern wc, DB db, MappedClass mc) {
