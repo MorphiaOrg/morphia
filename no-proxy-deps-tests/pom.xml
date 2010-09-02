@@ -1,28 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>morphia-parent</artifactId>
-    <groupId>com.google.code.morphia</groupId>
-    <version>1.0</version>
-    <relativePath>../</relativePath>
-  </parent>
+	<parent>
+		<artifactId>morphia-parent</artifactId>
+		<groupId>com.google.code.morphia</groupId>
+		<version>1.0</version>
+		<relativePath>../</relativePath>
+	</parent>
 
-  <groupId>com.google.code.morphia</groupId>
-  <artifactId>morphia-no-proxy-deps</artifactId>
-  <version>${morphia.version}</version>
-  <name>morphia-no-proxy-deps</name>
-  <packaging>jar</packaging>
-  <build>
-      <testSourceDirectory>../morphia/src/test/java/</testSourceDirectory>
-  </build>
-  <dependencies>
-    <!--  automatically looses the optional dependencies -->
-    <dependency>
-      <groupId>com.google.code.morphia</groupId>
-      <artifactId>morphia</artifactId>
-      <version>${morphia.version}</version>
-    </dependency>
-  </dependencies>
+	<groupId>com.google.code.morphia</groupId>
+	<artifactId>morphia-no-proxy-deps</artifactId>
+	<version>${morphia.version}</version>
+	<name>morphia-no-proxy-deps</name>
+	<packaging>jar</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<classesDirectory>fakeClassesDirectory</classesDirectory>
+					<testClassesDirectory>../morphia/target/test-classes</testClassesDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!--  automatically looses the optional dependencies -->
+		<dependency>
+			<groupId>com.google.code.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>${morphia.version}</version>
+		</dependency>
+	</dependencies>
+
 </project>
