@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestDatastore.FacebookUser;
@@ -123,13 +122,10 @@ public class TestQuery  extends TestBase {
         ds.save(new ContainsRenamedFields());
 
         ContainsRenamedFields ent = null;
-        try {
-            //validation will cause an exception
-            ent = ds.find(ContainsRenamedFields.class).field("firstName").equal("Scott").get();
-        } catch (Exception e) {
-        } finally {
-            assertNull(ent);
-        }
+        
+        ent = ds.find(ContainsRenamedFields.class).field("firstName").equal("Scott").get();
+        assertNotNull(ent);
+        
         ent = ds.find(ContainsRenamedFields.class).field("first_name").equal("Scott").get();
         assertNotNull(ent);
     }
@@ -257,6 +253,13 @@ public class TestQuery  extends TestBase {
     }
 
     @Test
+    public void testDeepQueryWithRenamedFields() throws Exception {
+        ds.save(new PhotoWithKeywords());
+        assertNotNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
+        assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
+    }
+    
+    @Test
     public void testIdOnlyQuery() throws Exception {
         PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         ds.save(pwk);
@@ -292,8 +295,7 @@ public class TestQuery  extends TestBase {
         
     }
 
-    //TODO: Enable when Issue87 is done.
-    @Test @Ignore()
+    @Test
     public void testIdFieldNameQuery() throws Exception {
         PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         ds.save(pwk);
@@ -314,6 +316,21 @@ public class TestQuery  extends TestBase {
     	this.ds.save(ucio);
                 
     	UsesCustomIdObject ucioLoaded = ds.find(UsesCustomIdObject.class, "_id.type", "banker").get();
+        assertNotNull(ucioLoaded);
+    }
+
+    @Test
+    public void testComplexIdQueryWithRenamedField() throws Exception {
+    	CustomId cId = new CustomId();
+    	cId.id = new ObjectId();
+    	cId.type = "banker";
+    	
+    	UsesCustomIdObject ucio = new UsesCustomIdObject();
+    	ucio.id = cId;
+    	ucio.text = "hllo";
+    	this.ds.save(ucio);
+                
+    	UsesCustomIdObject ucioLoaded = ds.find(UsesCustomIdObject.class, "_id.t", "banker").get();
         assertNotNull(ucioLoaded);
     }
     

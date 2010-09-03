@@ -237,7 +237,9 @@ public class QueryImpl<T> implements Query<T> {
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 		
 		//The field we are filtering on, in the java object; only known if we are validating
-		MappedField mf = validate(prop, value);
+		StringBuffer sb = new StringBuffer(prop); //validate might modify prop string to translate java field name to db field name
+		MappedField mf = validate(sb, value);
+		prop = sb.toString();
 		
 		//TODO differentiate between the key/value for maps; we will just get the mf for the field, not which part we are looking for
 		
@@ -313,7 +315,6 @@ public class QueryImpl<T> implements Query<T> {
     public Query<T> where(CodeWScope cws) {
     	return filterWhere(cws);
     }
-	
 
 	public Query<T> enableValidation(){ validatingNames = validatingTypes = true; return this; }
 
@@ -323,8 +324,12 @@ public class QueryImpl<T> implements Query<T> {
 	QueryImpl<T> disableTypeValidation() {validatingTypes = false; return this; }
 	
 	/** Validate the path, and value type, returning the mappedfield for the field at the path */
-	private MappedField validate(String prop, Object value) {
+	private MappedField validate(StringBuffer origProp, Object value) {
+		//TODO: cache validations (in static?).
+		
 		MappedField mf = null;
+		String prop = origProp.toString();
+		boolean hasTranslations = false;
 		
 		if (validatingNames) {
 			String[] parts = prop.split("\\.");
@@ -334,26 +339,40 @@ public class QueryImpl<T> implements Query<T> {
 				String part = parts[i];
 				mf = mc.getMappedField(part);
 				
+				//translate from java field name to stored field name
 				if (mf == null) {
 					mf = mc.getMappedFieldByJavaField(part);
-					if (mf != null)
-						throw new QueryException("The field '" + part + "' is named '" + mf.getNameToStore() + "' in '" + this.clazz.getName()+ "' " +
-								"(while validating - '" + prop + "'); Please use '" + mf.getNameToStore() + "' in your query.");
-					else
-						throw new QueryException("The field '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
+				    if (mf == null) throw new QueryException("The field '" + part + "' could not be found in '" + this.clazz.getName() + 
+				    										"' while validating - " + prop + 
+				    										"; if you wish to continue please disable validation.");
+				    hasTranslations = true;
+				    parts[i] = mf.getNameToStore();
 				}
+				
 				i++;
 				if (mf.isMap()) {
 					//skip the map key validation, and move to the next part
 					i++;
 				}
+				
 				//catch people trying to search into @Reference/@Serialized fields
 				if (i < parts.length && !canQueryPast(mf))
 					throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + this.clazz.getName()+ "' while validating - " + prop);
 				
 				if (i >= parts.length) break;
+				//get the next MappedClass for the next field validation
 				mc = ds.getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
 			}
+			
+			//record new property string if there has been a translation to any part
+			if (hasTranslations) {
+    			origProp.setLength(0); // clear existing content
+    			origProp.append(parts[0]);
+	    		for (int i = 1; i < parts.length; i++) {
+	    		    origProp.append('.');
+		    	    origProp.append(parts[i]);
+    			}
+    		}
 	
 			if (validatingTypes)
 				if (	 (mf.isSingleValue() && !isCompatibleForQuery(mf.getType(), value)) || 

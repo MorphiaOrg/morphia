@@ -10,6 +10,7 @@ import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 
@@ -59,9 +60,15 @@ public class TestMapper extends TestBase {
 	}
 	
 	public static class CustomId implements Serializable {
-		/*
-		 * (non-Javadoc)
-		 * 
+		
+		private static final long serialVersionUID = 1L;
+		
+		@Property("v")
+		ObjectId id;
+		@Property("t")
+		String type;
+
+		/* (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -125,10 +132,6 @@ public class TestMapper extends TestBase {
 			builder.append("]");
 			return builder.toString();
 		}
-		
-		private static final long serialVersionUID = 1L;
-		ObjectId id;
-		String type;
 	}
 	
 	public static class UsesCustomIdObject {
