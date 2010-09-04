@@ -22,8 +22,11 @@ public class MorphiaLoggerFactory {
 		Collections.reverse(MorphiaLoggerFactory.factories);
 		for (String f : MorphiaLoggerFactory.factories) {
 			MorphiaLoggerFactory.loggerFactory = newInstance(f);
-			if (MorphiaLoggerFactory.loggerFactory != null)
-				return;
+            if (MorphiaLoggerFactory.loggerFactory != null) {
+                loggerFactory.get(MorphiaLoggerFactory.class).info(
+                        "LoggerImplFactory set to " + loggerFactory.getClass().getName());
+                return;
+            }
 		}
 		throw new IllegalStateException("Cannot instanciate any MorphiaLoggerFactory");
 	}

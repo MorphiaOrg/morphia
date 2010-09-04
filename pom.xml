@@ -172,6 +172,8 @@
   <modules>
     <module>morphia</module>
     <module>no-proxy-deps-tests</module>
+    <module>validation</module>
+    <module>logging-slf4j</module>
   </modules>
 
 </project>
