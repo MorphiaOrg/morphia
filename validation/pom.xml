@@ -33,7 +33,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.1.0.Final</version>
-			<optional>true</optional>
 		</dependency>
 			
 		<dependency>
@@ -44,4 +43,10 @@
 		</dependency>
 		
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>jboss</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/public/</url>
+		</repository>
+	</repositories>
 </project>
