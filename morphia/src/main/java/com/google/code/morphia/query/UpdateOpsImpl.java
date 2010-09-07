@@ -34,6 +34,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 		return new BasicDBObject(ops);
 	}
 	protected void add(String op, String f, Object val) {
+		if (val== null)
+			throw new QueryException("Val cannot be null");
+		
 		if (!ops.containsKey(op)) {
 			ops.put(op, new HashMap<String, Object>());
 		}
@@ -47,12 +50,18 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 
 	public UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups) {
+		if (value== null)
+			throw new QueryException("Value cannot be null.");
+
 		Object dbObj = mapr.toMongoObject(value);
 		add((addDups) ? "$push" : "$addToSet", fieldExpr, dbObj);
 		return this;
 	}
 
 	public UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups) {
+		if (values == null || values.isEmpty())
+			throw new QueryException("Values cannot be null or empty.");
+		
 		List<?> convertedValues = (List<?>)mapr.toMongoObject(values);
 		if(addDups)
 			add("$pushAll", fieldExpr, convertedValues);
@@ -72,6 +81,8 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 
 	public UpdateOperations<T> inc(String fieldExpr, Number value) {
+		if (value== null)
+			throw new QueryException("Value cannot be null.");
 		add("$inc", fieldExpr, value);
 		return this;
 	}
@@ -84,6 +95,8 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 
 	public UpdateOperations<T> removeAll(String fieldExpr, Object value) {
+		if (value== null)
+			throw new QueryException("Value cannot be null.");
 		Object dbObj = mapr.toMongoObject(value);
 		add("$pull", fieldExpr, dbObj);
 		return this;
@@ -91,6 +104,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 
 	public UpdateOperations<T> removeAll(String fieldExpr, List<?> values) {
+		if (values== null || values.isEmpty())
+			throw new QueryException("Value cannot be null or empty.");
+		
 		List<Object> vals = toDBObjList(values);
 		add("$pullAll", fieldExpr, vals);
 		return this;
@@ -107,6 +123,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 	}
 
 	public UpdateOperations<T> set(String fieldExpr, Object value) {
+		if (value== null)
+			throw new QueryException("Value cannot be null.");
+
 		Object dbObj = mapr.toMongoObject(value);
 		add("$set", fieldExpr, dbObj);
 		return this;
