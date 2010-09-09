@@ -62,6 +62,13 @@ public interface Query<T> extends QueryResults<T> {
 	 * @param value must be >= 0.  A value of 0 indicates no limit.
 	 */
 	Query<T> limit(int value);
+
+	/**
+	 * Batch-size of the fetched result (cursor).
+	 * 
+	 * @param value must be >= 0.  A value of 0 indicates the server default.
+	 */
+	Query<T> batchSize(int value);
 	
 	/**
 	 * Starts the query results at a particular zero-based offset.

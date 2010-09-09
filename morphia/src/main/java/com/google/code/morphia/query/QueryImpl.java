@@ -54,6 +54,7 @@ public class QueryImpl<T> implements Query<T> {
 	private DBCollection dbColl = null;
 	private int offset = 0;
 	private int limit = -1;
+	private int batchSize = 0;
 	private String indexHint;
 	private Class<T> clazz = null;
 	
@@ -121,6 +122,8 @@ public class QueryImpl<T> implements Query<T> {
 			cursor.skip(offset);
 		if (limit > 0)
 			cursor.limit(limit);
+		if (batchSize > 0)
+			cursor.batchSize(batchSize);
 		if (sort != null)
 			cursor.sort(getSortObject());
 		if (indexHint != null)
@@ -452,6 +455,10 @@ public class QueryImpl<T> implements Query<T> {
 		return this;
 	}
 	
+	public Query<T> batchSize(int value) {
+		this.batchSize = value;
+		return this;
+	}
 
 	public Query<T> skip(int value) {
 		this.offset = value;
