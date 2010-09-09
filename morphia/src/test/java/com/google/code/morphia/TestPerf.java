@@ -27,7 +27,6 @@ import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB.WriteConcern;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
@@ -51,7 +50,7 @@ public class TestPerf  extends TestBase{
 
 	@Test @Ignore
     public void testAddressInsertPerf() throws Exception {
-    	int count = 5000;
+    	int count = 10000;
     	boolean strict = true;
     	long startTicks = new Date().getTime();
     	insertAddresses(count, true, strict);
@@ -75,10 +74,10 @@ public class TestPerf  extends TestBase{
 
 	@Test @Ignore
     public void testAddressLoadPerf() throws Exception {
-    	insertAddresses(10, false, false);
+    	insertAddresses(1, false, false);
     	
 		int count = 5000;
-    	boolean strict = true;
+    	boolean strict = false;
     	long startTicks = new Date().getTime();
     	loadAddresses(count, true, strict);
     	long endTicks = new Date().getTime();
@@ -100,8 +99,6 @@ public class TestPerf  extends TestBase{
 	
 	public void loadAddresses(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
-    	if (strict) 
-    		dbColl.setWriteConcern(WriteConcern.STRICT);
     	
     	for(int i=0;i<count;i++) {
     		if(raw) {
@@ -113,7 +110,6 @@ public class TestPerf  extends TestBase{
     			addr.state = dbObj.getString("state");
     			addr.zip = dbObj.getInt("zip");
     			addr.added = (Date) dbObj.get("added");
-    			dbColl.save(dbObj);
     		}else {
     			ds.find(Address.class).get();
     		}
@@ -122,8 +118,6 @@ public class TestPerf  extends TestBase{
 
 	public void insertAddresses(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
-    	if (strict) 
-    		dbColl.setWriteConcern(WriteConcern.STRICT);
     	
     	for(int i=0;i<count;i++) {
 			Address addr = new Address();
@@ -135,9 +129,15 @@ public class TestPerf  extends TestBase{
     			dbObj.put("state", addr.state);
     			dbObj.put("zip", addr.zip);
     			dbObj.put("added", new Date());
-    			dbColl.save(dbObj);
+    			if (strict)
+    				dbColl.save(dbObj, com.mongodb.WriteConcern.SAFE);
+    			else
+    				dbColl.save(dbObj);
     		}else {
-    			ds.save(addr);
+    			if (strict)
+    				ds.save(addr, com.mongodb.WriteConcern.SAFE);
+    			else
+    				ds.save(addr);
     		}
     	}
     }
