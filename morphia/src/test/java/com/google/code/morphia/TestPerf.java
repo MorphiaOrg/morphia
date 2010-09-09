@@ -35,7 +35,7 @@ import com.mongodb.DBObject;
  * @author Scott Hernandez
  */
 public class TestPerf  extends TestBase{
-	static double FailFactor = 1.05;
+	static double FailFactor = 1.10;
 	
 	@Entity
 	public static class Address {
@@ -48,7 +48,7 @@ public class TestPerf  extends TestBase{
 		Date added = new Date();
 	}
 
-	@Test @Ignore
+	@Test
     public void testAddressInsertPerf() throws Exception {
     	int count = 10000;
     	boolean strict = true;
@@ -132,12 +132,12 @@ public class TestPerf  extends TestBase{
     			if (strict)
     				dbColl.save(dbObj, com.mongodb.WriteConcern.SAFE);
     			else
-    				dbColl.save(dbObj);
+    				dbColl.save(dbObj, com.mongodb.WriteConcern.NORMAL);
     		}else {
     			if (strict)
     				ds.save(addr, com.mongodb.WriteConcern.SAFE);
     			else
-    				ds.save(addr);
+    				ds.save(addr, com.mongodb.WriteConcern.NORMAL);
     		}
     	}
     }
