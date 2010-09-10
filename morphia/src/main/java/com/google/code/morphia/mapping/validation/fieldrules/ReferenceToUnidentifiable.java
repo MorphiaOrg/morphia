@@ -9,6 +9,7 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
+import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.validation.ConstraintViolation;
 import com.google.code.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -23,6 +24,9 @@ public class ReferenceToUnidentifiable extends FieldConstraint {
 	protected void check(MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
 		if (mf.hasAnnotation(Reference.class)) {
 			Class realType = (mf.isSingleValue()) ? mf.getType() : mf.getSubType();
+			
+			if (realType == null) throw new MappingException("Type is null for this MappedField: " + mf);
+			
 			if ((!realType.isInterface() && mc.getMapper().getMappedClass(realType).getIdField() == null))
 				ve.add(new ConstraintViolation(Level.FATAL, mc, mf, this.getClass(), mf.getFullName() + " is annotated as a @"
 						+ Reference.class.getSimpleName() + " but the " + mf.getType().getName()

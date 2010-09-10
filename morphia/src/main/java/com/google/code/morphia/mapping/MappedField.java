@@ -231,7 +231,26 @@ public class MappedField {
 	
 	@Override
 	public String toString() {
-		return name + "; " + this.mappingAnnotations.toString();
+		StringBuffer sb = new StringBuffer();
+		sb.append(name).append("{");
+		sb.append(" type:").append(field.getType().getSimpleName()).append(",");
+		sb.append(" subtype:").append(getSubType()).append(",");
+		if(isSingleValue)
+			sb.append(" single:true,");
+		if(isMap) {
+			sb.append(" map:true,");
+			sb.append(" map-key:").append(keyType.getSimpleName());
+		}
+		if(isSet) {
+			sb.append(" set:true,");
+		}
+		
+		//remove last comma
+		if (sb.charAt(sb.length()-1) == ',')
+			sb.setLength(sb.length()-1);
+		
+		sb.append("); ").append(this.mappingAnnotations.toString());
+		return sb.toString();
 	}
 	
 	/** returns the type of the underlying java field*/
