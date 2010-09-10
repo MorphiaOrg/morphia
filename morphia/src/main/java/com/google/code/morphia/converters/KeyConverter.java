@@ -19,6 +19,8 @@ public class KeyConverter extends TypeConverter {
 	
 	@Override
 	public Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
+		if (o == null) return null;
+		
 		return new Key((DBRef) o);
 	}
 	

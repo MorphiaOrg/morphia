@@ -17,6 +17,8 @@ public class FloatConverter extends TypeConverter implements SimpleValueConverte
 	
 	@Override
 	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+		if (val == null) return null;
+
 		if (val instanceof Float) 
 			return val;
 

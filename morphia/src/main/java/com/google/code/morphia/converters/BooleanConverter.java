@@ -17,11 +17,12 @@ public class BooleanConverter extends TypeConverter implements SimpleValueConver
 	
 	@Override
 	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
-		Object dbValue = val;
-		if (dbValue instanceof Boolean) {
+		if (val == null) return null;
+		
+		if (val instanceof Boolean)
 			return (Boolean) val;
-		}
-		String sVal = val.toString();
+
+			String sVal = val.toString();
 		return Boolean.parseBoolean(sVal);
 	}
 }

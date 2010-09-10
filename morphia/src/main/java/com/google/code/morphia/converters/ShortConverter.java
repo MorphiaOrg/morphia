@@ -16,7 +16,9 @@ public class ShortConverter extends TypeConverter implements SimpleValueConverte
 	
 	@Override
 	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
-		Object dbValue = val;
+		if (val == null) return null;
+			Object dbValue = val;
+		
 		if (dbValue instanceof Number)
 			return ((Number) dbValue).shortValue();
 		

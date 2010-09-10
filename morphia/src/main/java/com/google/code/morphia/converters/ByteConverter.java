@@ -16,6 +16,8 @@ public class ByteConverter extends TypeConverter implements SimpleValueConverter
 	
 	@Override
 	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+		if (val == null) return null;
+
 		if (val instanceof Number)
 			return ((Number) val).byteValue();
 		

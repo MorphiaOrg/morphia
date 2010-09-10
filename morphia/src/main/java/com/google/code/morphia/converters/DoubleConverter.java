@@ -18,12 +18,14 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
 	@Override
 	public
 	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
-		if (val instanceof Double) {
+		if (val == null) return null;
+		
+		if (val instanceof Double)
 			return (Double) val;
-		}
-		if (val instanceof Number) {
+		
+		if (val instanceof Number)
 			return ((Number) val).doubleValue();
-		}
+
 		String sVal = val.toString();
 		return Double.parseDouble(sVal);
 	}

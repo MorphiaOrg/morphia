@@ -31,6 +31,8 @@ public class MapOfValuesConverter extends TypeConverter {
 	
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
+		if (fromDBObject == null) return null;
+
 		Map<Object, Object> map = (Map<Object, Object>) fromDBObject;
 		Map values = (Map) ReflectionUtils.newInstance(f.getCTor(), HashMap.class);
 		for (Map.Entry<Object, Object> entry : map.entrySet()) {

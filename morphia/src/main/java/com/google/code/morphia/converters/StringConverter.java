@@ -16,9 +16,11 @@ public class StringConverter extends TypeConverter implements SimpleValueConvert
 
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
-		if (fromDBObject instanceof String) {
+		if (fromDBObject == null) return null;
+		
+		if (fromDBObject instanceof String)
 			return (String) fromDBObject;
-		}
+		
 		return fromDBObject.toString();
 	}
 }

@@ -24,10 +24,10 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
 	}
 	
 	@Override
-	public Object encode(Object value, MappedField optionalExtraInfo) {
-		if (value == null)
-			return null;
-		return value.toString();
+	public Object encode(Object val, MappedField optionalExtraInfo) {
+		if (val == null) return null;
+
+		return val.toString();
 	}
 	
 	public static Locale parseLocale(final String localeString) {

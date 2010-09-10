@@ -21,6 +21,7 @@ public class EnumConverter extends TypeConverter implements SimpleValueConverter
 	@Override
 	public
 	Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+		if (fromDBObject == null) return null;
 		return Enum.valueOf(targetClass, fromDBObject.toString());
 	}
 	

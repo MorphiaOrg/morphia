@@ -21,9 +21,11 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
 	@Override
 	public
 	Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
-		if (val instanceof Date) {
+		if (val == null) return null;
+
+		if (val instanceof Date)
 			return val;
-		}
+			
 		return new Date(Date.parse(val.toString())); // good luck
 	}
 }

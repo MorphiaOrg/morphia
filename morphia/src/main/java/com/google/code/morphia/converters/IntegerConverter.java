@@ -18,6 +18,8 @@ public class IntegerConverter extends TypeConverter implements SimpleValueConver
 	
 	@Override
 	public Object decode(Class targetClass, Object val, MappedField optionalExtraInfo) throws MappingException {
+		if (val == null) return null;
+
 		if (val instanceof Integer) 
 			return val;
 		

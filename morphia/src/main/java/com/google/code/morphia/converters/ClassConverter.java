@@ -18,9 +18,7 @@ public class ClassConverter extends TypeConverter implements SimpleValueConverte
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
 		if (fromDBObject == null)
-        {
             return null;
-        }
 
 		String l = fromDBObject.toString();
 		try

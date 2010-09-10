@@ -16,6 +16,8 @@ public class CharArrayConverter extends TypeConverter  implements SimpleValueCon
 	
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+		if (fromDBObject == null) return null;
+		
 		return fromDBObject.toString().toCharArray();
 	}
 	

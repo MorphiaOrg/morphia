@@ -27,6 +27,7 @@ public class SerializedObjectConverter extends TypeConverter {
 	
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
+		if (fromDBObject == null) return null;
 		
 		if (!((fromDBObject instanceof Binary) || (fromDBObject instanceof byte[]))) {
 			throw new MappingException("The stored data is not a DBBinary or byte[] instance for " + f.getFullName()

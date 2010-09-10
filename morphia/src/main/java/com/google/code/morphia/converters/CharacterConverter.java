@@ -16,6 +16,8 @@ public class CharacterConverter extends TypeConverter implements SimpleValueConv
 	
 	@Override
 	public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
+		if (fromDBObject == null) return null;
+
 		// TODO: Check length. Maybe "" should be null?
 		return fromDBObject.toString().charAt(0);
 	}
