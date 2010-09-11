@@ -6,7 +6,6 @@ package com.google.code.morphia.mapping.lazy;
 import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
-
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * 
@@ -42,16 +41,14 @@ public class LazyFeatureDependencies {
 	 * @return
 	 */
 	public static LazyProxyFactory createDefaultProxyFactory() {
-		if (testDependencyFullFilled())
+		if (testDependencyFullFilled()) {
+			String factoryClassName = "com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory";
 			try {
-				return (LazyProxyFactory) Class.forName("com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory").newInstance();
-			} catch (InstantiationException e) {
-				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
-			} catch (IllegalAccessException e) {
-				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
-			} catch (ClassNotFoundException e) {
-				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
+				return (LazyProxyFactory) Class.forName(factoryClassName).newInstance();
+			} catch (Exception e) {
+				logger.error("While instanciating " + factoryClassName, e);
 			}
+		}
 		return null;
 	}
 }
