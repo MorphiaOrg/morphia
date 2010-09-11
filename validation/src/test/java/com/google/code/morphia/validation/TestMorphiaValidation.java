@@ -12,7 +12,7 @@ import com.google.code.morphia.annotations.Id;
 /**
  * @author doc
  */
-public class TestMorphiaValidationTest extends TestBase {
+public class TestMorphiaValidation extends TestBase {
 	
 	public static class E {
 		@Id
@@ -37,7 +37,7 @@ public class TestMorphiaValidationTest extends TestBase {
 			
 			@Override
 			protected void thisMustFail() throws Throwable {
-				TestMorphiaValidationTest.this.ds.save(e);
+				TestMorphiaValidation.this.ds.save(e);
 			}
 		};
 		

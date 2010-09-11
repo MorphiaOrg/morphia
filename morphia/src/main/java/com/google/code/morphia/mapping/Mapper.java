@@ -37,7 +37,6 @@ import com.google.code.morphia.logging.MorphiaLogger;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.cache.DefaultEntityCache;
 import com.google.code.morphia.mapping.cache.EntityCache;
-import com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -69,7 +68,7 @@ public class Mapper {
 	private final ReferenceMapper referenceMapper = new ReferenceMapper(this, converters);
 	private final EmbeddedMapper embeddedMapper = new EmbeddedMapper(this, converters);
 	private final ValueMapper valueMapper = new ValueMapper(converters);
-	final LazyProxyFactory proxyFactory = LazyFeatureDependencies.testDependencyFullFilled() ? new CGLibLazyProxyFactory() : null;
+	final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 	MapperOptions opts = new MapperOptions();
 	

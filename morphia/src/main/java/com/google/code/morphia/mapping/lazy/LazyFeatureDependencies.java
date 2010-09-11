@@ -9,7 +9,7 @@ import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
- *
+ * 
  */
 public class LazyFeatureDependencies {
 	
@@ -25,7 +25,7 @@ public class LazyFeatureDependencies {
 			logger.warning("Lazy loading impossible due to missing dependencies.");
 		return fullfilled;
 	}
-
+	
 	public static boolean testDependencyFullFilled() {
 		if (fullFilled != null)
 			return fullFilled;
@@ -36,5 +36,22 @@ public class LazyFeatureDependencies {
 			fullFilled = false;
 		}
 		return fullFilled;
+	}
+	
+	/**
+	 * @return
+	 */
+	public static LazyProxyFactory createDefaultProxyFactory() {
+		if (testDependencyFullFilled())
+			try {
+				return (LazyProxyFactory) Class.forName("com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory").newInstance();
+			} catch (InstantiationException e) {
+				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
+			} catch (IllegalAccessException e) {
+				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
+			} catch (ClassNotFoundException e) {
+				logger.warning("While instanciating com.google.code.morphia.mapping.lazy.CGLibLazyProxyFactory",e);
+			}
+		return null;
 	}
 }
