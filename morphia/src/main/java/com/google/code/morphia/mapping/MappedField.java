@@ -120,6 +120,7 @@ public class MappedField {
 			
 			// get the subtype T, T[]/List<T>/Map<?,T>
 			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(field, (isMap) ? 1 : 0);
+
 			if (isMap)
 				keyType = ReflectionUtils.getParameterizedClass(field, 0);
 		}
@@ -135,7 +136,7 @@ public class MappedField {
 		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
 			log.warning("The multi-valued field '"
 							+ getFullName()
-							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning.");
+							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning. " + subType );
 			isMongoType = true;
 		}
 	}
@@ -232,15 +233,20 @@ public class MappedField {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(name).append("{");
+		sb.append(name).append(" (");
 		sb.append(" type:").append(field.getType().getSimpleName()).append(",");
-		sb.append(" subtype:").append(getSubType()).append(",");
+		
 		if(isSingleValue)
 			sb.append(" single:true,");
+		else {
+			sb.append(" multiple:true,");
+			sb.append(" subtype:").append(getSubType()).append(",");
+		}
 		if(isMap) {
 			sb.append(" map:true,");
 			sb.append(" map-key:").append(keyType.getSimpleName());
 		}
+		
 		if(isSet) {
 			sb.append(" set:true,");
 		}

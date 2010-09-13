@@ -37,7 +37,7 @@ import com.mongodb.Mongo;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  **/
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Morphia {
 	private final Mapper mapper;
 
@@ -45,7 +45,7 @@ public class Morphia {
         this(Collections.EMPTY_SET);
     }
 
-    public Morphia( Set<Class> classesToMap ) {
+	public Morphia( Set<Class> classesToMap ) {
         this.mapper = new Mapper();
         for (Class c : classesToMap) {
             map(c);
@@ -126,6 +126,10 @@ public class Morphia {
         return mapper.isMapped(entityClass);
     }
 
+	public <T> T fromDBObject(Class<T> entityClass, DBObject dbObject) {
+		return fromDBObject(entityClass, dbObject, mapper.createEntityCache());
+	}
+	
 	public <T> T fromDBObject(Class<T> entityClass, DBObject dbObject, EntityCache cache) {
         if ( !entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
