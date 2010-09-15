@@ -16,7 +16,7 @@
 
 package com.google.code.morphia;
 
-import java.util.Date;
+import java.util.*;
 
 import junit.framework.Assert;
 
@@ -26,9 +26,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 
 /**
  *
@@ -141,4 +139,66 @@ public class TestPerf  extends TestBase{
     		}
     	}
     }
+	
+	@Entity(value="imageMeta", noClassnameStored=true)
+	public static class TestObj {
+		@Id public ObjectId id = new ObjectId();
+		public long var1;
+		public long var2;
+	}
+	
+	@Test
+	public void testDifference() {
+        try {
+                Morphia morphia = new Morphia();
+                morphia.map(TestObj.class);
+                AdvancedDatastore ds = (AdvancedDatastore) morphia.createDatastore("my_database");
+                //create the list
+                List<TestObj> objList = new ArrayList<TestObj>();
+                for (int i=0; i<1000; i++){
+                        TestObj obj = new TestObj();
+                        obj.id = new ObjectId();
+                        obj.var1 = 3345345l+i;
+                        obj.var2 = 6785678l+i;
+                        objList.add(obj);
+                }
+                
+                long start = System.currentTimeMillis();
+                ds.insert(objList, WriteConcern.SAFE);
+                System.out.println("Time taken morphia: "+(System.currentTimeMillis()-start)+"ms");
+                
+                Mongo mongoConn = new Mongo("localhost" , 27017 );
+                DB mongoDB = mongoConn.getDB("my_database");
+                List<DBObject> batchPush = new ArrayList<DBObject>();
+                for (int i=0; i<1000; i++){
+                	DBObject doc = new BasicDBObject();
+                    doc.put("_id", new ObjectId());
+                    doc.put("var1", 3345345l+i);
+                    doc.put("var2", 6785678l+i);
+                    batchPush.add(doc);
+                }
+                DBCollection c = mongoDB.getCollection("imageMeta2");
+                c.setWriteConcern(WriteConcern.SAFE);
+                start = System.currentTimeMillis();
+                for (DBObject doc : batchPush)
+                	c.insert(doc);
+                System.out.println("Time taken regular: "+(System.currentTimeMillis()-start)+"ms");
+                
+                batchPush = new ArrayList<DBObject>();
+                for (int i=0; i<1000; i++){
+                	DBObject doc = new BasicDBObject();
+                    doc.put("_id", new ObjectId());
+                    doc.put("var1", 3345345l+i);
+                    doc.put("var2", 6785678l+i);
+                    batchPush.add(doc);
+                }
+
+                start = System.currentTimeMillis();
+                c.insert(batchPush);
+                System.out.println("Time taken batch regular: "+(System.currentTimeMillis()-start)+"ms");                
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        }
+        
+	}
 }
