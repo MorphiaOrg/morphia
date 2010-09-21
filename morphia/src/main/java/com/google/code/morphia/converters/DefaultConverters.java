@@ -65,6 +65,10 @@ public class DefaultConverters {
 		addConverter(new PassthroughConverter());
 	}
 	
+	/**
+	 * Add a type converter. If it is a duplicate for an existing type, it will override that type.
+	 * @param tc
+	 */
 	public void addConverter(TypeConverter tc) {
 		if (tc.getSupportedTypes() != null)
 			for(Class c : tc.getSupportedTypes())
@@ -72,10 +76,23 @@ public class DefaultConverters {
 		else
 			untypedTypeEncoders.add(tc);
 	}
+
+	/**
+	 * Removes the type converter.
+	 * @param tc
+	 */
+	public void removeConverter(TypeConverter tc) {
+		if (untypedTypeEncoders.contains(tc))
+			untypedTypeEncoders.remove(tc);
+		
+		for (List<TypeConverter> tcList : tcMap.values())
+			if(tcList.contains(tc))
+				tcList.remove(tc);
+	}
 	
 	private void addTypedConverter(Class type, TypeConverter tc) {
 		if (tcMap.containsKey(type)) {
-			tcMap.get(type).add(tc);
+			tcMap.get(type).add(0,tc);
 			log.warning("Added duplicate converter for " + type + " ; " + tcMap.get(type));
 		} else {
 			ArrayList<TypeConverter> vals = new ArrayList<TypeConverter>();
