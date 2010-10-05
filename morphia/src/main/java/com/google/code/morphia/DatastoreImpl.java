@@ -163,7 +163,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(q.getEntityClass());
 		WriteResult wr;
 		
-		if (q.getSortObject() != null || q.getOffset() != 0 || q.getLimit() != 0)
+		if (q.getSortObject() != null || q.getOffset() != 0 || q.getLimit() > 0)
 			throw new QueryException("Delete does not allow sort/offset/limit query options.");
 		
 		if (q.getQueryObject() != null)
