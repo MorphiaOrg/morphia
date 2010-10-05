@@ -189,7 +189,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				keys.add(fieldName, (dir == IndexDirection.ASC) ? 1 : -1);
 		}
 		
-		if (name != null && !name.isEmpty()) {
+		if (name != null && name.length() > 0) {
 			if (keyOpts == null)
 				keyOpts = new BasicDBObjectBuilder();
 			keyOpts.add("name", name);
@@ -653,7 +653,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	protected void throwOnError(WriteConcern wc, WriteResult wr) {
 		if ( wc == null && wr.getLastConcern() == null) {
 			CommandResult cr = wr.getLastError();
-			if (cr != null && cr.getErrorMessage() != null && !cr.getErrorMessage().isEmpty())
+			if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() > 0)
 				cr.throwOnError();
 		}		
 	}
