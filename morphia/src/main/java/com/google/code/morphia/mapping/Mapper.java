@@ -215,7 +215,7 @@ public class Mapper {
 
 		Object entity = null;
 		entity = ReflectionUtils.createInstance(entityClass, dbObject);
-		fromDb(dbObject, entity, cache);
+		entity = fromDb(dbObject, entity, cache);
 		return entity;
 	}
 
