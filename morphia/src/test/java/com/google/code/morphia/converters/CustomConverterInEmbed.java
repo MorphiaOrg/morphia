@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -20,13 +19,16 @@ import com.google.code.morphia.testutil.TestEntity;
  * @author Uwe Schaefer
  * 
  */
+@SuppressWarnings("rawtypes")
 public class CustomConverterInEmbed extends TestBase {
 	
 	public static class E1 extends TestEntity {
+		private static final long serialVersionUID = 1L;
 		List<Foo> foo = new LinkedList<Foo>();
 	}
 	
 	public static class E2 extends TestEntity {
+		private static final long serialVersionUID = 1L;
 		Map<String, Foo> foo = new HashMap<String, Foo>();
 	}
 	
@@ -45,7 +47,7 @@ public class CustomConverterInEmbed extends TestBase {
 		}
 	}
 	
-	public static class FooConverter extends TypeConverter {
+	public static class FooConverter extends TypeConverter implements SimpleValueConverter  {
 		
 		public boolean done;
 		
@@ -72,7 +74,6 @@ public class CustomConverterInEmbed extends TestBase {
 	
 	//FIXME issue 101
 	
-	@Ignore
 	@Test
 	public void testConversionInList() throws Exception {
 		FooConverter fc = new FooConverter();
@@ -83,7 +84,6 @@ public class CustomConverterInEmbed extends TestBase {
 		junit.framework.Assert.assertTrue(fc.didConversion());
 	}
 
-	@Ignore
 	@Test
 	public void testConversionInMap() throws Exception {
 		FooConverter fc = new FooConverter();
@@ -93,6 +93,12 @@ public class CustomConverterInEmbed extends TestBase {
 		ds.save(e);
 		
 		junit.framework.Assert.assertTrue(fc.didConversion());
+		
+		e = ds.find(E2.class).get();
+		junit.framework.Assert.assertNotNull(e.foo);
+		junit.framework.Assert.assertFalse(e.foo.isEmpty());
+		junit.framework.Assert.assertTrue(e.foo.containsKey("bar"));
+		junit.framework.Assert.assertEquals(e.foo.get("bar").string, "bar");
 	}
 
 }

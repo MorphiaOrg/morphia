@@ -3,7 +3,6 @@
  */
 package com.google.code.morphia.converters;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -27,7 +26,7 @@ public class CustomConverterDefault extends TestBase {
 		// constructor.
 		//
 		// @Property
-		Foo foo = new Foo("test");
+		Foo foo;
 		
 	}
 	
@@ -45,7 +44,8 @@ public class CustomConverterDefault extends TestBase {
 		}
 	}
 	
-	public static class FooConverter extends TypeConverter {
+	@SuppressWarnings("rawtypes")
+	public static class FooConverter extends TypeConverter implements SimpleValueConverter{
 		
 		public boolean done;
 		
@@ -71,14 +71,20 @@ public class CustomConverterDefault extends TestBase {
 	}
 	
 	@Test
-	@Ignore
 	public void testConversion() throws Exception {
 		FooConverter fc = new FooConverter();
 		morphia.getMapper().getConverters().addConverter(fc);
+		morphia.map(E.class);
 		E e = new E();
+		e.foo = new Foo("test");
 		ds.save(e);
 		
 		junit.framework.Assert.assertTrue(fc.didConversion());
+		
+		e = ds.find(E.class).get();
+		junit.framework.Assert.assertNotNull(e.foo);
+		junit.framework.Assert.assertEquals(e.foo.string, "test");
+		
 	}
 	
 }

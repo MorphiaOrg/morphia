@@ -6,7 +6,6 @@ package com.google.code.morphia.converters;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.mongodb.DBObject;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)

@@ -28,7 +28,6 @@ public class IterableConverter extends TypeConverter {
 	}
 	
 	@Override
-	@SuppressWarnings("rawtypes")
 	protected
 	boolean isSupported(Class c, MappedField optionalExtraInfo) {
 		if (optionalExtraInfo != null)
@@ -37,7 +36,6 @@ public class IterableConverter extends TypeConverter {
 			return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
 	public
 	Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {

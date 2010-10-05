@@ -31,6 +31,8 @@ public class DefaultConverters {
 	private List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
 	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();
 	
+	private Mapper mapr;
+	
 	public DefaultConverters() {
 		// some converters are commented out since the pass-through converter is enabled, at the end of the list.
 		// Re-enable them if that changes.
@@ -75,6 +77,8 @@ public class DefaultConverters {
 				addTypedConverter(c, tc);
 		else
 			untypedTypeEncoders.add(tc);
+		
+		tc.setMapper(mapr);
 	}
 
 	/**
@@ -179,6 +183,7 @@ public class DefaultConverters {
 	}
 
 	public void setMapper(Mapper mapr) {
+		this.mapr = mapr;
 		for(List<TypeConverter> tcs : tcMap.values())
 			for(TypeConverter tc : tcs)
 				tc.setMapper(mapr);
@@ -190,4 +195,20 @@ public class DefaultConverters {
 		TypeConverter conv = getEncoder(c);
 		return (conv instanceof SimpleValueConverter);
 	}
+
+	public boolean hasSimpleValueConverter(Class c) {
+		TypeConverter conv = getEncoder(c);
+		return (conv instanceof SimpleValueConverter);
+	}
+
+	public boolean hasDbObjectConverter(MappedField c) {
+		TypeConverter conv = getEncoder(c);
+		return conv != null && !(conv instanceof PassthroughConverter) && !(conv instanceof SimpleValueConverter);
+	}
+	
+	public boolean hasDbObjectConverter(Class c) {
+		TypeConverter conv = getEncoder(c);
+		return conv != null && !(conv instanceof PassthroughConverter) && !(conv instanceof SimpleValueConverter);
+	}
+	
 }
