@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -32,9 +33,8 @@ class EmbeddedMapper implements CustomMapper{
 			DBObject dbObj = fieldValue == null ? null : mapr.toDBObject(fieldValue, involvedObjects);
 			if (dbObj != null) {
 				
-				if (mf.getType().equals(fieldValue.getClass())) {
+				if (mf.getType().equals(fieldValue.getClass()) && !(dbObj instanceof BasicDBList))
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
-				}
 				
 				if (dbObj.keySet().size() > 0 || mapr.getOptions().storeEmpties) {
 					dbObject.put(name, dbObj);
@@ -50,7 +50,7 @@ class EmbeddedMapper implements CustomMapper{
 			List values = new ArrayList();
 			for (Object o : coll) {
 				DBObject dbObj = mapr.toDBObject(o, involvedObjects);
-				if (mf.getSubType().equals(o.getClass())) {
+				if (mf.getSubType().equals(o.getClass()) && !(dbObj instanceof BasicDBList)) {
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				values.add(dbObj);
@@ -70,7 +70,7 @@ class EmbeddedMapper implements CustomMapper{
 				Object entryVal = entry.getValue();
 				DBObject convertedVal = mapr.toDBObject(entryVal, involvedObjects);
 				
-				if (mf.getSubType().equals(entryVal.getClass())) {
+				if (mf.getSubType().equals(entryVal.getClass()) && !(convertedVal instanceof BasicDBList)) {
 					convertedVal.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
