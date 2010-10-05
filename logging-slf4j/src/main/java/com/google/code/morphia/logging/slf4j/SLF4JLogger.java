@@ -2,13 +2,13 @@ package com.google.code.morphia.logging.slf4j;
 
 import org.slf4j.Logger;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 
-public class SLF4JLogger implements MorphiaLogger {
-	
+public class SLF4JLogger implements Logr {
+	private static final long serialVersionUID = 1L;
 	private final Logger logger;
 	
-	public SLF4JLogger(final Class c) {
+	public SLF4JLogger(final Class<?> c) {
 		this.logger = org.slf4j.LoggerFactory.getLogger(c);
 	}
 	
