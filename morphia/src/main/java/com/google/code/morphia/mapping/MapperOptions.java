@@ -19,4 +19,8 @@ public class MapperOptions {
 	public boolean storeEmpties = false;
 	/** <p>Controls if final fields are stored. </p>*/
 	public boolean ignoreFinals = false; //ignore final fields.
+	
+	public CustomMapper referenceMapper = new ReferenceMapper();
+	public CustomMapper embeddedMapper = new EmbeddedMapper();
+	public CustomMapper valueMapper = new ValueMapper();
 }

@@ -15,7 +15,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -47,6 +46,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
+ * 
+ * <p>This is the heart of Morphia and takes care of mapping from/to POJOs/DBObjects<p>
+ * <p>This class is thread-safe and keeps various "cached" data which should speed up processing.</p>
+ * 
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
@@ -55,26 +58,32 @@ public class Mapper {
 
 	public static final MorphiaLogger logger = MorphiaLoggerFactory.get(Mapper.class);
 
+	/** The @{@link Id} field name that is stored with mongodb.*/
 	public static final String ID_KEY = "_id";
+	/** Special name that can never be used. Used as default for some fields to indicate default state.*/
 	public static final String IGNORED_FIELDNAME = ".";
+	/** Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to support polymorphism*/
 	public static final String CLASS_NAME_FIELDNAME = "className";
 
 	/** Set of classes that registered by this mapper */
 	private final ConcurrentHashMap<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
 	private final ConcurrentLinkedQueue<EntityInterceptor> interceptors = new ConcurrentLinkedQueue<EntityInterceptor>();
 	
+	private MapperOptions opts = new MapperOptions();
 	// TODO: make these configurable
-	private final DefaultConverters converters = new DefaultConverters();;
-	private final ReferenceMapper referenceMapper = new ReferenceMapper(this, converters);
-	private final EmbeddedMapper embeddedMapper = new EmbeddedMapper(this, converters);
-	private final ValueMapper valueMapper = new ValueMapper(converters);
-	final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
+	LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
-	MapperOptions opts = new MapperOptions();
-	
+	DefaultConverters converters = new DefaultConverters();;
+
 	public Mapper() {
 		converters.setMapper(this);
 	}
+
+	public Mapper(MapperOptions opts) {
+		converters.setMapper(this);
+		this.opts = opts;
+	}
+
 	/**
 	 * <p>
 	 * Adds an {@link EntityInterceptor}
@@ -194,7 +203,9 @@ public class Mapper {
 		}
 	}
 
-	/** coverts a DBObject back to a type-safe java object */
+	/** Converts a DBObject back to a type-safe java object (POJO)
+	 * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the DBObject
+	 **/
 	public Object fromDBObject(final Class entityClass, final DBObject dbObject, EntityCache cache) {
 		if (dbObject == null) {
 			Throwable t = new Throwable();
@@ -211,10 +222,10 @@ public class Mapper {
 	/**
 	 * <p>
 	 * Converts a java object to a mongo-compatible object (possibly a DBObject
-	 * for complex mappings)
+	 * for complex mappings). Very similar to {@link Mapper.toDBObject}
 	 * </p>
 	 * <p>
-	 * Used by query/update operations
+	 * Used (mainly) by query/update operations
 	 * </p>
 	 */
 	public Object toMongoObject(final Object javaObj) {
@@ -283,16 +294,22 @@ public class Mapper {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Converts an entity (POJO) to a DBObject; A special field will be added to keep track of the class: {@link Mapper.CLASS_NAME_FIELDNAME}
+	 * </p>
+	 * @param entity The POJO
+	 */
 	public DBObject toDBObject(final Object entity) {
 		return toDBObject(entity, null);
 	}
 
 	/**
-	 * <p>
-	 * Converts an entity (POJO) to a DBObject
-	 * </p>
+	 * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the class: {@link Mapper.CLASS_NAME_FIELDNAME} </p>
+	 * @param entity The POJO
+	 * @param involvedObjects A Map of (already converted) POJOs
 	 */
-	public DBObject toDBObject(Object entity, final LinkedHashMap<Object, DBObject> involvedObjects) {
+	public DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects) {
 		
 		BasicDBObject dbObject = new BasicDBObject();
 		MappedClass mc = getMappedClass(entity);
@@ -325,7 +342,7 @@ public class Mapper {
 					Object idVal = mf.getFieldValue(entity);
 					if (idVal != null) {
 						if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
-							embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
+							opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 						} else {
 							Object dbVal = converters.encode(idVal);							
 							dbObject.put(ID_KEY, dbVal);
@@ -333,23 +350,23 @@ public class Mapper {
 					}
 				} else if (Property.class.equals(annType) || Serialized.class.equals(annType)
 						|| mf.isTypeMongoCompatible() || (converters.hasSimpleValueConverter(mf)))
-					valueMapper.toDBObject(entity, mf, dbObject, opts);
+					opts.valueMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				else if (Reference.class.equals(annType))
-					referenceMapper.toDBObject(entity, mf, dbObject, opts);
+					opts.referenceMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				else if (Embedded.class.equals(annType)) {
-					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
+					opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				} else {
 					logger.debug("No annotation was found, embedding " + mf);
-					embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, opts);
+					opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				}
 
 			} catch (Exception e) {
 				throw new MappingException("Error mapping field:" + mf.getFullName(), e);
 			}
 		}
-		if (involvedObjects != null) {
+		if (involvedObjects != null)
 			involvedObjects.put(entity, dbObject);
-		}
+
 		mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
 		return dbObject;
 	}
@@ -377,13 +394,13 @@ public class Mapper {
 					setIdValue(entity, mf, dbObject, cache);
 				} else if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
 						|| mf.isTypeMongoCompatible() || converters.hasSimpleValueConverter(mf))
-					valueMapper.fromDBObject(dbObject, mf, entity);
+					opts.valueMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				else if (mf.hasAnnotation(Embedded.class))
-					embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
+					opts.embeddedMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				else if (mf.hasAnnotation(Reference.class))
-					referenceMapper.fromDBObject(dbObject, mf, entity, cache);
+					opts.referenceMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				else {
-					embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
+					opts.embeddedMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				}
 			}
 		} catch (Exception e) {
@@ -404,7 +421,7 @@ public class Mapper {
 			Object idVal = null;
 			
 			if (!mf.isTypeMongoCompatible() && !converters.hasSimpleValueConverter(mf)) {
-				embeddedMapper.fromDBObject(dbObject, mf, entity, cache);
+				opts.embeddedMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				idVal = mf.getFieldValue(entity);
 			} else {
 				idVal = converters.decode(mf.getType(), dbObject.get(ID_KEY), mf);							

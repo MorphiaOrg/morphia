@@ -655,7 +655,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			CommandResult cr = wr.getLastError();
 			if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() > 0)
 				cr.throwOnError();
-		}		
+		}
 	}
 	private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr) {
 		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {

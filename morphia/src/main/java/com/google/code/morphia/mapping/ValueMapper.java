@@ -1,41 +1,31 @@
-/**
- * 
- */
 package com.google.code.morphia.mapping;
 
-import com.google.code.morphia.converters.DefaultConverters;
+import java.util.Map;
+
+import com.google.code.morphia.mapping.cache.EntityCache;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-class ValueMapper
-{
-
-	private final DefaultConverters converters;
-	
-	public ValueMapper(DefaultConverters converters) {
-		this.converters = converters;
+/**
+ * Simple mapper that just uses the Mapper.getOptions().converts
+ * @author Scott Hernnadez
+ *
+ */
+class ValueMapper implements CustomMapper {
+	public void toDBObject(Object entity, MappedField mf, BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
+		try {
+			mapr.converters.toDBObject(entity, mf, dbObject, mapr.getOptions());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity)
-    {
-        try
-        {
-			converters.fromDBObject(dbObject, mf, entity);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-	void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, MapperOptions opts)
-    {
-        try
-        {
-			converters.toDBObject(entity, mf, dbObject, opts);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+	public void fromDBObject(DBObject dbObject, MappedField mf, Object entity, EntityCache cache, Mapper mapr) {
+		try {
+			mapr.converters.fromDBObject(dbObject, mf, entity);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
 }

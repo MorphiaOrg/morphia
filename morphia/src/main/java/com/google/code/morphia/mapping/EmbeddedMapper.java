@@ -8,45 +8,35 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 @SuppressWarnings({"unchecked","rawtypes"})
-class EmbeddedMapper {
-	private final Mapper mapper;
-	private final DefaultConverters converters;
-	
-	public EmbeddedMapper(Mapper mapper, DefaultConverters converters) {
-		this.mapper = mapper;
-		this.converters = converters;
-	}
-	
-	void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject,
-			final LinkedHashMap<Object, DBObject> involvedObjects, MapperOptions opts) {
+class EmbeddedMapper implements CustomMapper{
+	public void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject,
+			Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		String name = mf.getNameToStore();
 		
 		Object fieldValue = mf.getFieldValue(entity);
 		
 		if (mf.isMap()) {
-			writeMap(mf, dbObject, involvedObjects, name, fieldValue, opts);
+			writeMap(mf, dbObject, involvedObjects, name, fieldValue, mapr);
 		} else if (mf.isMultipleValues()) {
-			writeCollection(mf, dbObject, involvedObjects, name, fieldValue, opts);
+			writeCollection(mf, dbObject, involvedObjects, name, fieldValue, mapr);
 		} else {
-			DBObject dbObj = fieldValue == null ? null : mapper.toDBObject(fieldValue, involvedObjects);
+			DBObject dbObj = fieldValue == null ? null : mapr.toDBObject(fieldValue, involvedObjects);
 			if (dbObj != null) {
 				
 				if (mf.getType().equals(fieldValue.getClass())) {
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
-				if (dbObj.keySet().size() > 0 || opts.storeEmpties) {
+				if (dbObj.keySet().size() > 0 || mapr.getOptions().storeEmpties) {
 					dbObject.put(name, dbObj);
 				}
 			}
@@ -54,57 +44,57 @@ class EmbeddedMapper {
 	}
 
 	private void writeCollection(final MappedField mf, final BasicDBObject dbObject,
-			final LinkedHashMap<Object, DBObject> involvedObjects, String name, Object fieldValue, MapperOptions opts) {
+			Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
 		Iterable coll = (Iterable) fieldValue;
 		if (coll != null) {
 			List values = new ArrayList();
 			for (Object o : coll) {
-				DBObject dbObj = mapper.toDBObject(o, involvedObjects);
+				DBObject dbObj = mapr.toDBObject(o, involvedObjects);
 				if (mf.getSubType().equals(o.getClass())) {
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				values.add(dbObj);
 			}
-			if (values.size() > 0 || opts.storeEmpties) {
+			if (values.size() > 0 || mapr.getOptions().storeEmpties) {
 				dbObject.put(name, values);
 			}
 		}
 	}
 
 	private void writeMap(final MappedField mf, final BasicDBObject dbObject,
-			final LinkedHashMap<Object, DBObject> involvedObjects, String name, Object fieldValue, MapperOptions opts) {
+			Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
 		Map<String, Object> map = (Map<String, Object>) fieldValue;
 		if (map != null) {
 			BasicDBObject values = new BasicDBObject();
 			for (Map.Entry<String, Object> entry : map.entrySet()) {
 				Object entryVal = entry.getValue();
-				DBObject convertedVal = mapper.toDBObject(entryVal, involvedObjects);
+				DBObject convertedVal = mapr.toDBObject(entryVal, involvedObjects);
 				
 				if (mf.getSubType().equals(entryVal.getClass())) {
 					convertedVal.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
-				String strKey = converters.encode(entry.getKey()).toString();
+				String strKey = mapr.converters.encode(entry.getKey()).toString();
 				values.put(strKey, convertedVal);
 			}
-			if (values.size() > 0 || opts.storeEmpties) {
+			if (values.size() > 0 || mapr.getOptions().storeEmpties) {
 				dbObject.put(name, values);
 			}
 		}
 	}
 	
-	void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache) {
+	public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache, Mapper mapr) {
 		try {
 			if (mf.isMap()) {
-				readMap(dbObject, mf, entity, cache);
+				readMap(dbObject, mf, entity, cache, mapr);
 			} else if (mf.isMultipleValues()) {
-				readCollection(dbObject, mf, entity, cache);
+				readCollection(dbObject, mf, entity, cache, mapr);
 			} else {
 				// single document
 				BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
 				if (dbVal != null) {
 					Object refObj = ReflectionUtils.createInstance(mf, dbVal);
-					refObj = mapper.fromDb(dbVal, refObj, cache);
+					refObj = mapr.fromDb(dbVal, refObj, cache);
 					if (refObj != null) {
 						mf.setFieldValue(entity, refObj);
 					}
@@ -116,7 +106,7 @@ class EmbeddedMapper {
 	}
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity,
- EntityCache cache) {
+ EntityCache cache, Mapper mapr) {
 		// multiple documents in a List
 		Class newEntityType = mf.getSubType();
 		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
@@ -128,7 +118,7 @@ class EmbeddedMapper {
 			
 			for (BasicDBObject dbObj : dbVals) {
 				Object newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
-				newEntity = mapper.fromDb(dbObj, newEntity, cache);
+				newEntity = mapr.fromDb(dbObj, newEntity, cache);
 				values.add(newEntity);
 			}
 		}
@@ -143,7 +133,7 @@ class EmbeddedMapper {
 	}
 
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity,
- EntityCache cache) {
+ EntityCache cache, Mapper mapr) {
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
@@ -151,8 +141,8 @@ class EmbeddedMapper {
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object newEntity = ReflectionUtils.createInstance(mf.getSubType(), (BasicDBObject) entry.getValue());
 				
-				newEntity = mapper.fromDb((BasicDBObject) entry.getValue(), newEntity, cache);
-				Object objKey = converters.decode(mf.getMapKeyType(), entry.getKey());
+				newEntity = mapr.fromDb((BasicDBObject) entry.getValue(), newEntity, cache);
+				Object objKey = mapr.converters.decode(mf.getMapKeyType(), entry.getKey());
 				map.put(objKey, newEntity);
 			}
 		}
