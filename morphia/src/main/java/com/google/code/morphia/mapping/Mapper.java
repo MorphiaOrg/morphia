@@ -32,7 +32,7 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.cache.DefaultEntityCache;
 import com.google.code.morphia.mapping.cache.EntityCache;
@@ -56,7 +56,7 @@ import com.mongodb.DBObject;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
 
-	public static final MorphiaLogger logger = MorphiaLoggerFactory.get(Mapper.class);
+	public static final Logr logger = MorphiaLoggerFactory.get(Mapper.class);
 
 	/** The @{@link Id} field name that is stored with mongodb.*/
 	public static final String ID_KEY = "_id";

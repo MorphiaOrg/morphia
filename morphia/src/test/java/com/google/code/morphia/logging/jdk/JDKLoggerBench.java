@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.jdk.FasterJDKLogger;
 import com.google.code.morphia.logging.jdk.FastestJDKLogger;
 import com.google.code.morphia.logging.jdk.JDKLogger;
@@ -19,7 +19,7 @@ import com.google.code.morphia.logging.jdk.JDKLogger;
  */
 public class JDKLoggerBench implements I
 {
-    private static MorphiaLogger logger;
+    private static Logr logger;
     private static JDKLoggerBench r = new JDKLoggerBench();
 
     public static void main(final String[] args) throws Exception

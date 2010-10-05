@@ -16,7 +16,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.validation.ConstraintViolation.Level;
@@ -41,7 +41,7 @@ import com.google.code.morphia.mapping.validation.fieldrules.VersionMisuse;
  */
 public class MappingValidator {
 	
-	private static final MorphiaLogger logger = MorphiaLoggerFactory.get(MappingValidator.class);
+	private static final Logr logger = MorphiaLoggerFactory.get(MappingValidator.class);
 	
 	public void validate(List<MappedClass> classes) {
 		Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
@@ -121,7 +121,7 @@ public class MappingValidator {
 			this.v = v;
 		}
 		
-		void log(MorphiaLogger logger) {
+		void log(Logr logger) {
 			switch (v.getLevel()) {
 				case SEVERE:
 					logger.error(v.render());

@@ -6,7 +6,7 @@ import java.util.Map;
 import relocated.morphia.org.apache.commons.collections.ReferenceMap;
 
 import com.google.code.morphia.Key;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
@@ -14,7 +14,7 @@ import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 @SuppressWarnings( { "rawtypes", "unchecked" })
 public class DefaultEntityCache implements EntityCache {
 	
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultEntityCache.class);
+	private static final Logr log = MorphiaLoggerFactory.get(DefaultEntityCache.class);
 	
 	private final Map<Key, Object> entityMap = new ReferenceMap(ReferenceMap.HARD, ReferenceMap.WEAK);
 	private final Map<Key, Object> proxyMap = new ReferenceMap(ReferenceMap.WEAK, ReferenceMap.WEAK);

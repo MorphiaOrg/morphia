@@ -3,10 +3,10 @@ package com.google.code.morphia.logging.jdk;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 
 @SuppressWarnings("rawtypes")
-public class JDKLogger implements MorphiaLogger {
+public class JDKLogger implements Logr {
 	private static final long serialVersionUID = 1L;
 	private final Logger logger;
 	

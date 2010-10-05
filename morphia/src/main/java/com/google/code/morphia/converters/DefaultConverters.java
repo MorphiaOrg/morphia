@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
@@ -26,7 +26,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultConverters {
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DefaultConverters.class);
+	private static final Logr log = MorphiaLoggerFactory.get(DefaultConverters.class);
 	
 	private List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
 	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();

@@ -17,7 +17,7 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
@@ -40,7 +40,7 @@ import com.mongodb.DBObject;
  * @param <T> The type we will be querying for, and returning.
  */
 public class QueryImpl<T> implements Query<T> {
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(Mapper.class);
+	private static final Logr log = MorphiaLoggerFactory.get(Mapper.class);
 	
 	private final EntityCache cache;
 	private boolean validatingNames = true;

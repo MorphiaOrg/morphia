@@ -12,7 +12,7 @@ import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Version;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
@@ -48,7 +48,7 @@ import com.mongodb.WriteResult;
  */
 @SuppressWarnings("unchecked")
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(DatastoreImpl.class);
+	private static final Logr log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
 	protected Morphia morphia;
 	protected Mongo mongo;

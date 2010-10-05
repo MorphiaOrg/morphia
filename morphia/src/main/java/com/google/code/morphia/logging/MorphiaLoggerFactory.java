@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.code.morphia.logging.jdk.JDKLoggerImplFactory;
+import com.google.code.morphia.logging.jdk.JDKLoggerFactory;
 
 public class MorphiaLoggerFactory {
-	private static LoggerImplFactory loggerFactory = null;
+	private static LogrFactory loggerFactory = null;
 	
-	private static List<String> factories = Arrays.asList(JDKLoggerImplFactory.class.getName(),
+	private static List<String> factories = Arrays.asList(JDKLoggerFactory.class.getName(),
 	"com.google.code.morphia.logging.slf4j.SLF4JLoggerImplFactory");
 	
 	private static synchronized void init() {
@@ -31,23 +31,24 @@ public class MorphiaLoggerFactory {
 		throw new IllegalStateException("Cannot instanciate any MorphiaLoggerFactory");
 	}
 	
-	private static LoggerImplFactory newInstance(String f) {
+	private static LogrFactory newInstance(String f) {
 		try {
 			Class c = Class.forName(f);
-			return (LoggerImplFactory) c.newInstance();
+			return (LogrFactory) c.newInstance();
 		} catch (Throwable ignore) {
 		}
 		return null;
 	}
 	
-	public static final MorphiaLogger get(Class c) {
+	public static final Logr get(Class<?> c) {
 		init();
 		return MorphiaLoggerFactory.loggerFactory.get(c);
 	}
-	
-	public static void registerLoggerImplFactory(Class<? extends LoggerImplFactory> factoryClass) {
+
+	/** Register a LoggerFactory; last one registered is used.**/
+	public static void registerLogger(Class<? extends LogrFactory> factoryClass) {
 		if (MorphiaLoggerFactory.loggerFactory == null)
-			MorphiaLoggerFactory.factories.add(factoryClass.getName());
+			MorphiaLoggerFactory.factories.add(0,factoryClass.getName());
 		else
 			throw new IllegalStateException("LoggerImplFactory must be registered before logging is initialized.");
 	}

@@ -3,7 +3,7 @@ package com.google.code.morphia.logging.jdk;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 
 @SuppressWarnings("rawtypes")
 public class FasterJDKLogger extends FastestJDKLogger {

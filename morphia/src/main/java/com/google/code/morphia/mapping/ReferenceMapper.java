@@ -13,7 +13,7 @@ import java.util.Map;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -29,7 +29,7 @@ import com.mongodb.DBRef;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 class ReferenceMapper implements CustomMapper {
-	public static final MorphiaLogger log = MorphiaLoggerFactory.get(ReferenceMapper.class);
+	public static final Logr log = MorphiaLoggerFactory.get(ReferenceMapper.class);
 	
 	public void toDBObject(Object entity, MappedField mf, BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		String name = mf.getNameToStore();

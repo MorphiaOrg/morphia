@@ -33,7 +33,7 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.annotations.Version;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.validation.MappingValidator;
 import com.google.code.morphia.utils.ReflectionUtils;
@@ -48,7 +48,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings("unchecked")
 public class MappedClass {
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(MappedClass.class);
+	private static final Logr log = MorphiaLoggerFactory.get(MappedClass.class);
 	
 	private static class ClassMethodPair {
 		Class<?> clazz;

@@ -20,7 +20,7 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Version;
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
@@ -32,7 +32,7 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
-	private static final MorphiaLogger log = MorphiaLoggerFactory.get(MappedField.class);
+	private static final Logr log = MorphiaLoggerFactory.get(MappedField.class);
 	
 	// the field :)
 	private Field field;

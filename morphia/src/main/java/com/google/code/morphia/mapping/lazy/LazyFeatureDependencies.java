@@ -3,7 +3,7 @@
  */
 package com.google.code.morphia.mapping.lazy;
 
-import com.google.code.morphia.logging.MorphiaLogger;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 /**
@@ -12,7 +12,7 @@ import com.google.code.morphia.logging.MorphiaLoggerFactory;
  */
 public class LazyFeatureDependencies {
 	
-	private static final MorphiaLogger logger = MorphiaLoggerFactory.get(LazyFeatureDependencies.class);
+	private static final Logr logger = MorphiaLoggerFactory.get(LazyFeatureDependencies.class);
 	private static Boolean fullFilled;
 	
 	private LazyFeatureDependencies() {

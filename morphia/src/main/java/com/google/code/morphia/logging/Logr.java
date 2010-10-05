@@ -2,7 +2,7 @@ package com.google.code.morphia.logging;
 
 import java.io.Serializable;
 
-public interface MorphiaLogger extends Serializable {
+public interface Logr extends Serializable {
 	
 	public boolean isTraceEnabled();
 	
