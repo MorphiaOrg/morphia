@@ -1,16 +1,18 @@
 package com.google.code.morphia.logging;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.google.code.morphia.logging.jdk.JDKLoggerFactory;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class MorphiaLoggerFactory {
 	private static LogrFactory loggerFactory = null;
 	
-	private static List<String> factories = Arrays.asList(JDKLoggerFactory.class.getName(),
-	"com.google.code.morphia.logging.slf4j.SLF4JLoggerImplFactory");
+	private static List<String> factories = new ArrayList(Arrays.asList(JDKLoggerFactory.class.getName(),
+	"com.google.code.morphia.logging.slf4j.SLF4JLoggerImplFactory"));
 	
 	private static synchronized void init() {
 		if (MorphiaLoggerFactory.loggerFactory == null) {
@@ -33,7 +35,7 @@ public class MorphiaLoggerFactory {
 	
 	private static LogrFactory newInstance(String f) {
 		try {
-			Class c = Class.forName(f);
+			Class<?> c = Class.forName(f);
 			return (LogrFactory) c.newInstance();
 		} catch (Throwable ignore) {
 		}

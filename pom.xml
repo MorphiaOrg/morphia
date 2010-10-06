@@ -13,7 +13,7 @@
   <url>http://code.google.com/p/morphia/</url>
 
   <properties>
-    <morphia.version>0.96-SNAPSHOT</morphia.version>
+    <morphia.version>0.97-SNAPSHOT</morphia.version>
     <!-- might go into gwt module? -->
     <gwt.version>2.0.3</gwt.version>
   </properties>

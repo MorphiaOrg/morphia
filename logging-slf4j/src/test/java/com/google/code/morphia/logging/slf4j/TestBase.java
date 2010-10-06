@@ -28,8 +28,6 @@ public abstract class TestBase {
 		this.mongo.dropDatabase("morphia_test");
 		morphia = new Morphia();
 		this.db = this.mongo.getDB("morphia_test");
-		this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
-		
+		this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());	
 	}
-	
 }
