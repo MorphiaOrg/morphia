@@ -26,7 +26,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 
 /**
- * Represents the mapping of this field to/from mongodb (name, annotations)
+ * Represents the mapping of this field to/from mongodb (name, list<annotation>)
  * 
  * @author Scott Hernandez
  */
@@ -41,10 +41,10 @@ public class MappedField {
 	// the name to store in mongodb {name:value}
 	private String name;
 	
-	// Annotations that have been found relevent to mapping
+	// Annotations that have been found relevant to mapping
 	protected Map<Class<? extends Annotation>, Annotation> mappingAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
-	// The Annotations to look for when reflecting on the field (stored in the
-	// mappingAnnotations)
+	
+	// The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
 	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
 			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
 					Version.class, AlsoLoad.class, NotSaved.class));
@@ -146,7 +146,7 @@ public class MappedField {
 		return name;
 	}
 	
-	/** Returns the name of the field's (key)name for mongodb */
+	/** Returns the name of the field's (key)name for mongodb, in order of loading. */
 	public List<String> getLoadNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		names.add(name);

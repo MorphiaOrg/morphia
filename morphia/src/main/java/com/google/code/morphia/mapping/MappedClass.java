@@ -31,6 +31,7 @@ import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.logging.Logr;
@@ -54,7 +55,7 @@ public class MappedClass {
 		Class<?> clazz;
 		Method method;
 		
-		public ClassMethodPair(Class<?> c, Method m) { clazz = c; method =m ; }
+		public ClassMethodPair(Class<?> c, Method m) { clazz = c; method = m ; }
 	}
 	
 	/** special fields representing the Key of the object */
@@ -150,6 +151,7 @@ public class MappedClass {
 			} else if (	field.isAnnotationPresent(Property.class) ||
 						field.isAnnotationPresent(Reference.class) ||
 						field.isAnnotationPresent(Embedded.class) ||
+						field.isAnnotationPresent(Serialized.class) ||
 						isSupportedType(field.getType()) ||
 						ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
 				persistenceFields.add(new MappedField(field));
