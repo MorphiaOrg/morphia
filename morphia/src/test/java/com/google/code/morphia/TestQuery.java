@@ -19,10 +19,12 @@ package com.google.code.morphia;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -258,6 +260,47 @@ public class TestQuery  extends TestBase {
         assertNotNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
         assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
     }
+
+    @Test
+    public void testSnapshottedQuery() throws Exception {
+    	ds.delete(ds.find(PhotoWithKeywords.class));
+    	ds.save(new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"));
+        Iterator<PhotoWithKeywords> it = ds.find(PhotoWithKeywords.class, "keywords.keyword", "scott").enableSnapshotMode().batchSize(2).iterator();
+    	ds.save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
+    	
+    	PhotoWithKeywords pwkLoaded = null;
+    	pwkLoaded = it.next();
+        assertNotNull(pwkLoaded);
+    	pwkLoaded = it.next();
+        assertNotNull(pwkLoaded);
+    	//okay, now we should getmore...
+        assertTrue(it.hasNext());
+    	pwkLoaded = it.next();    	
+        assertNotNull(pwkLoaded);
+        assertTrue(!it.hasNext());
+    }
+
+    @Test
+    public void testNonSnapshottedQuery() throws Exception {
+    	ds.delete(ds.find(PhotoWithKeywords.class));
+    	ds.save(new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"));
+        Iterator<PhotoWithKeywords> it = ds.find(PhotoWithKeywords.class, "keywords.keyword", "scott").enableSnapshotMode().batchSize(2).iterator();
+    	ds.save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
+        
+    	PhotoWithKeywords pwkLoaded = null;
+    	pwkLoaded = it.next();
+        assertNotNull(pwkLoaded);
+    	pwkLoaded = it.next();
+        assertNotNull(pwkLoaded);
+    	//okay, now we should getmore...
+        assertTrue(it.hasNext());
+    	pwkLoaded = it.next();    	
+        assertNotNull(pwkLoaded);
+        assertTrue(it.hasNext());
+    	pwkLoaded = it.next();    	
+        assertNotNull(pwkLoaded);
+    }
+
     
     @Test
     public void testIdOnlyQuery() throws Exception {

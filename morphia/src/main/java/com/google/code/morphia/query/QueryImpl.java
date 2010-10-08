@@ -8,8 +8,6 @@ import java.util.Map;
 
 import org.bson.types.CodeWScope;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
@@ -144,10 +142,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 			cursor.limit(limit);
 		if (batchSize > 0)
 			cursor.batchSize(batchSize);
+		if (snapshotted)
+			cursor.snapshot();
 		if (sort != null)
 			cursor.sort(getSortObject());
 		if (indexHint != null)
 			cursor.hint(indexHint);
+
+		//Check for bad options.
+		if (snapshotted && (sort!=null || indexHint!=null))
+			log.warning("Snapshotted query should not have hint/sort.");
+		
 		
 		return cursor;
 	}
@@ -376,10 +381,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return new FieldEndImpl<CriteriaContainerImpl>(this, field, container, validate);
 	}
 
-	//TODO: make me work!
+	//TODO: test this.
 	public Query<T> hintIndex(String idxName) {
-		throw new RuntimeException(new NotImplementedException());
-		//return this;
+		indexHint = idxName;
+		return this;
 	}
 
 	public Query<T> retrievedFields(boolean include, String...fields){
