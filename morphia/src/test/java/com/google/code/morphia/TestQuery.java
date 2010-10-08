@@ -610,5 +610,49 @@ public class TestQuery  extends TestBase {
         assertEquals(2, ds.getCount(ds.createQuery(Rectangle.class).filter("height >", 3).filter("height <", 8)));
         assertEquals(1, ds.getCount(ds.createQuery(Rectangle.class).filter("height >", 3).filter("height <", 8).filter("width", 10)));
     }
+    
+    @Test
+    public void testCombinationQuery() throws Exception {
+        Rectangle[] rects = {
+                new Rectangle(1, 10),
+                new Rectangle(4, 2),
+                new Rectangle(6, 10),
+                new Rectangle(8, 5),
+                new Rectangle(10, 4),
+        };
+        for(Rectangle rect: rects)
+        {
+            ds.save(rect);
+        }
+        
+        Query<Rectangle> q;
+        
+        q = ds.createQuery(Rectangle.class);
+        q.and(
+        	q.criteria("width").equal(10),
+        	q.criteria("height").equal(1)
+        );
+        
+        assertEquals(1, ds.getCount(q));
+
+        q = ds.createQuery(Rectangle.class);
+        q.or(
+            	q.criteria("width").equal(10),
+            	q.criteria("height").equal(10)
+        );
+
+        assertEquals(3, ds.getCount(q));
+        
+        q = ds.createQuery(Rectangle.class);
+        q.or(
+            	q.criteria("width").equal(10),
+            	q.and(
+                   	q.criteria("width").equal(5),
+                   	q.criteria("height").equal(8)
+            	)
+        );
+
+        assertEquals(3, ds.getCount(q));
+    }
 
 }

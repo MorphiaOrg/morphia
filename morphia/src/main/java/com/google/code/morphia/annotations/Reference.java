@@ -43,7 +43,9 @@ public @interface Reference {
     String value() default Mapper.IGNORED_FIELDNAME;
     /** Specify the concrete class to instantiate. */
     Class<?> concreteClass() default Object.class;
+    /** Ignore any reference that don't resolve (aren't in mongodb) */
     boolean ignoreMissing() default false;
 
+    /** Create a proxy around the reference which will be resolved on the first method call. */
     boolean lazy() default false;
 }

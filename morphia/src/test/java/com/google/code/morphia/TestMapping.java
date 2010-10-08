@@ -689,6 +689,8 @@ public class TestMapping  extends TestBase {
             db.dropDatabase();
         }
     }
+
+    
     @Test
     public void testReferenceWithoutIdValue() throws Exception {
 		new AssertedFailure(MappingException.class) {

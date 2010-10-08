@@ -16,7 +16,9 @@
 
 package com.google.code.morphia;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -26,7 +28,12 @@ import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
 
 /**
  *
@@ -164,7 +171,8 @@ public class TestPerf  extends TestBase{
                 }
                 
                 long start = System.currentTimeMillis();
-                ds.insert(objList, WriteConcern.SAFE);
+                for(TestObj to : objList)
+                	ds.insert(to, WriteConcern.SAFE);
                 System.out.println("Time taken morphia: "+(System.currentTimeMillis()-start)+"ms");
                 
                 Mongo mongoConn = new Mongo("localhost" , 27017 );
@@ -183,6 +191,20 @@ public class TestPerf  extends TestBase{
                 for (DBObject doc : batchPush)
                 	c.insert(doc);
                 System.out.println("Time taken regular: "+(System.currentTimeMillis()-start)+"ms");
+
+                objList = new ArrayList<TestObj>();
+                for (int i=0; i<1000; i++){
+                        TestObj obj = new TestObj();
+                        obj.id = new ObjectId();
+                        obj.var1 = 3345345l+i;
+                        obj.var2 = 6785678l+i;
+                        objList.add(obj);
+                }
+                
+                start = System.currentTimeMillis();
+                ds.insert(objList, WriteConcern.SAFE);
+                System.out.println("Time taken batch morphia: "+(System.currentTimeMillis()-start)+"ms");
+
                 
                 batchPush = new ArrayList<DBObject>();
                 for (int i=0; i<1000; i++){

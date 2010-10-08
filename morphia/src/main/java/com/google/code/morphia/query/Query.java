@@ -36,7 +36,15 @@ public interface Query<T> extends QueryResults<T> {
 	Query<T> filter(String condition, Object value);
 	
 	/** Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...} */
-	QueryFieldEnd<T> field(String fieldExpr);
+	FieldEnd<? extends Query<T>> field(String field);
+	FieldEnd<? extends Query<T>> field(String field, boolean validate);
+
+	/** Criteria builder interface */
+	FieldEnd<? extends CriteriaContainerImpl> criteria(String field);
+	FieldEnd<? extends CriteriaContainerImpl> criteria(String field, boolean validate);
+
+	CriteriaContainer and(Criteria... criteria);
+	CriteriaContainer or(Criteria... criteria);
 
 	/** Limit the query using this javascript block; only one per query*/
     Query<T> where(String js);
@@ -89,6 +97,9 @@ public interface Query<T> extends QueryResults<T> {
 	
 	/** Limits the fields retrieved */
 	Query<T> retrievedFields(boolean include, String...fields);
+	
+	Query<T> enableSnapshotMode();
+	Query<T> disableSnapshotMode();
 	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There

@@ -18,7 +18,7 @@ public class TestQueryParams extends TestBase {
 	@Test
 	public void testNullAcceptance() throws Exception {
 		Query<E> q = ds.createQuery(E.class);
-		final QueryFieldEnd<E> e = q.field("_id");
+		final FieldEnd<?> e = q.field("_id");
 		
 		// have to suceed:
 		e.equal(null);
@@ -90,7 +90,7 @@ public class TestQueryParams extends TestBase {
 	@Test
 	public void testEmptyCollectionAcceptance() throws Exception {
 		Query<E> q = ds.createQuery(E.class);
-		final QueryFieldEnd<E> e = q.field("_id");
+		final FieldEnd<?> e = q.field("_id");
 		
 		new AssertedFailure() {
 			public void thisMustFail() throws Throwable {

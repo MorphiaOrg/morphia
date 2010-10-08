@@ -1,9 +1,11 @@
 package com.google.code.morphia;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -288,9 +290,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> Query<T> createQuery(Class<T> kind, DBObject q) {
-		QueryImpl<T> ret = (QueryImpl<T>) createQuery(kind);
-		ret.setQueryObject(q);
-		return ret;
+		return new QueryImpl<T>(kind, getCollection(kind), this, q);
 	}
 
 	public <T> Query<T> find(String kind, Class<T> clazz) {
@@ -505,17 +505,38 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc) {
+		ArrayList<DBObject> ents = entities instanceof List ? new ArrayList<DBObject>(((List<T>)entities).size()) : new ArrayList<DBObject>();
+
+		Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+		T lastEntity = null;
+		for (T ent : entities) {
+			ents.add(entityToDBObj(ent, involvedObjects));
+			lastEntity = ent;
+		}
+		
+		DBCollection dbColl = getCollection(lastEntity);
+		WriteResult wr = null;
+		
+		DBObject[] dbObjs = new DBObject[ents.size()];
+		dbColl.insert(ents.toArray(dbObjs), wc);
+		
+		throwOnError(wc, wr);
+		
 		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
-		for (T ent : entities)
-			savedKeys.add(insert(ent, wc));
+		Iterator<T> entitiesIT = entities.iterator();
+		Iterator<DBObject> dbObjsIT = ents.iterator();
+		
+		while (entitiesIT.hasNext()) {
+			T entity = entitiesIT.next();
+			DBObject dbObj = dbObjsIT.next();
+			savedKeys.add(postSaveGetKey(entity, dbObj, dbColl, involvedObjects));
+		}
+		
 		return savedKeys;
 	}
 
 	public <T> Iterable<Key<T>> insert(T...entities) {
-		ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
-		for (T ent : entities)
-			savedKeys.add(insert(ent));
-		return savedKeys;
+		return insert(Arrays.asList(entities), defConcern);
 	}
 	
 	public <T> Key<T> insert(T entity) {
@@ -544,30 +565,37 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected <T> Key<T> insert(DBCollection dbColl, T entity, WriteConcern wc) {
-		entity = ProxyHelper.unwrap(entity);
-		Mapper mapr = morphia.getMapper();
-		
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
-
+		DBObject dbObj = entityToDBObj(entity, involvedObjects);
 		WriteResult wr;
 		if (wc == null)
 			wr = dbColl.insert(dbObj);
 		else
 			wr = dbColl.insert(dbObj, wc);
 
+		throwOnError(wc, wr);
+
+		return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
+
+	}
+
+	protected DBObject entityToDBObj(Object entity, Map<Object, DBObject> involvedObjects) {
+		entity = ProxyHelper.unwrap(entity);
+		DBObject dbObj = morphia.getMapper().toDBObject(entity, involvedObjects);
+		return dbObj;
+	}
+	
+	protected <T> Key<T> postSaveGetKey(T entity, DBObject dbObj, DBCollection dbColl, Map<Object, DBObject> involvedObjects){
 		if (dbObj.get(Mapper.ID_KEY) == null)
 			throw new MappingException("Missing _id after save!");
-		
-		throwOnError(wc, wr);
 		
 		postSaveOperations(entity, dbObj, dbColl, involvedObjects);
 		Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
 		key.setKindClass((Class<? extends T>) entity.getClass());
 		
-		return key;
+		return key;		
 	}
-
+	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
 		return save(entities, defConcern);
 	}
@@ -588,14 +616,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected <T> Key<T> save(DBCollection dbColl, T entity, WriteConcern wc) {
-		entity = ProxyHelper.unwrap(entity);
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		WriteResult wr = null;
 		
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+		DBObject dbObj = entityToDBObj(entity, involvedObjects);
 
 		//try to do an update if there is a @Version field
 		wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
@@ -605,17 +632,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				wr = dbColl.save(dbObj);
 			else
 				wr = dbColl.save(dbObj, wc);
-		
-		if (dbObj.get(Mapper.ID_KEY) == null)
-			throw new MappingException("Missing _id after save!");
-		
+
 		throwOnError(wc, wr);
-		
-		postSaveOperations(entity, dbObj, dbColl, involvedObjects);
-		Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
-		key.setKindClass((Class<? extends T>) entity.getClass());
-		
-		return key;
+		return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
 	}
 	
 	protected <T> WriteResult tryVersionedUpdate(DBCollection dbColl, T entity, DBObject dbObj, WriteConcern wc, DB db, MappedClass mc) {
@@ -661,7 +680,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				cr.throwOnError();
 		}
 	}
-	private void firePostPersistForChildren(LinkedHashMap<Object, DBObject> involvedObjects, Mapper mapr) {
+	private void firePostPersistForChildren(Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
 			Object entity = e.getKey();
 			DBObject dbObj = e.getValue();
@@ -735,7 +754,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	private <T> void postSaveOperations(Object entity, DBObject dbObj, DBCollection dbColl,
-			LinkedHashMap<Object, DBObject> involvedObjects) {
+			Map<Object, DBObject> involvedObjects) {
 		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
@@ -792,7 +811,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (log.isTraceEnabled())
 			log.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
 
-		DBObject result = dbColl.findAndModify(qi.getQueryObject(), null, qi.getSortObject(), true, null, false, false);
+		DBObject result = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false, false);
 
 		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), result, cache);
         return entity;
@@ -810,7 +829,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			log.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
 
 		DBObject res = dbColl.findAndModify(qi.getQueryObject(), 
-											null, 
+											qi.getFieldsObject(), 
 											qi.getSortObject(), 
 											false, 
 											((UpdateOpsImpl<T>) ops).getOps(), !oldVersion, 

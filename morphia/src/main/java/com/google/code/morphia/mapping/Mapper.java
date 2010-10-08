@@ -15,9 +15,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
@@ -66,8 +65,8 @@ public class Mapper {
 	public static final String CLASS_NAME_FIELDNAME = "className";
 
 	/** Set of classes that registered by this mapper */
-	private final ConcurrentHashMap<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
-	private final ConcurrentLinkedQueue<EntityInterceptor> interceptors = new ConcurrentLinkedQueue<EntityInterceptor>();
+	private final Map<String, MappedClass> mappedClasses = new HashMap<String, MappedClass>();
+	private final List<EntityInterceptor> interceptors = new ArrayList<EntityInterceptor>();
 	
 	private MapperOptions opts = new MapperOptions();
 	// TODO: make these configurable
