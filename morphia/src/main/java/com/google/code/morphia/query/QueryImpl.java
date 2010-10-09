@@ -17,6 +17,7 @@ import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -48,16 +49,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	private Class<T> clazz = null;
 	private DBObject baseQuery = null;
 	private boolean snapshotted = false;
+	private boolean slaveOk = false;
+	private boolean noTimeout = false;
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds) {
 		super(CriteriaJoin.AND);
 		
 		this.query = this;
-		
 		this.clazz = clazz;
 		this.ds = ((DatastoreImpl)ds);
 		this.dbColl = coll;
 		this.cache = this.ds.getMapper().createEntityCache();
+		this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().slaveOk();
 	}
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
@@ -149,6 +152,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (indexHint != null)
 			cursor.hint(indexHint);
 
+		if (slaveOk)
+			cursor.addOption(Bytes.QUERYOPTION_SLAVEOK);
+
+		if (noTimeout)
+			cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
+		
 		//Check for bad options.
 		if (snapshotted && (sort!=null || indexHint!=null))
 			log.warning("Snapshotted query should not have hint/sort.");
@@ -395,7 +404,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this;
 	}
 
-	/** Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) 
+	/** Enabled snapshotted mode where duplicate results 
+	 * (which may be updated during the lifetime of the cursor) 
 	 *  will not be returned. Not compatible with order/sort and hint. 
 	 **/
 	public Query<T> enableSnapshotMode() {
@@ -403,8 +413,32 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this;
 	}
 
+	/** Disable snapshotted mode (default mode). This will be faster
+	 *  but changes made during the cursor may cause duplicates. **/
 	public Query<T> disableSnapshotMode() {
 		snapshotted = false;
+		return this;
+	}
+
+	public Query<T> queryNonPrimary() {
+		slaveOk = true;
+		return this;
+	}
+
+	public Query<T> queryPrimaryOnly() {
+		slaveOk = false;
+		return this;
+	}
+
+	/** Disables cursor timeout on server. */
+	public Query<T> disableTimeout() {
+		noTimeout = false;
+		return this;
+	}
+
+	/** Enables cursor timeout on server. */
+	public Query<T> enableTimeout(){
+		noTimeout = true;
 		return this;
 	}
 }

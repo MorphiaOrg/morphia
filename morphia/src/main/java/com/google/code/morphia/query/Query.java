@@ -97,9 +97,27 @@ public interface Query<T> extends QueryResults<T> {
 	
 	/** Limits the fields retrieved */
 	Query<T> retrievedFields(boolean include, String...fields);
-	
+
+	/** Enabled snapshotted mode where duplicate results 
+	 * (which may be updated during the lifetime of the cursor) 
+	 *  will not be returned. Not compatible with order/sort and hint. **/
 	Query<T> enableSnapshotMode();
+	
+	/** Disable snapshotted mode (default mode). This will be faster 
+	 *  but changes made during the cursor may cause duplicates. **/
 	Query<T> disableSnapshotMode();
+	
+	/** Route query to non-primary node  */
+	Query<T> queryNonPrimary();
+
+	/** Route query to primary node  */
+	Query<T> queryPrimaryOnly();
+
+	/** Disables cursor timeout on server. */
+	Query<T> disableTimeout();
+
+	/** Enables cursor timeout on server. */
+	Query<T> enableTimeout();
 	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There
