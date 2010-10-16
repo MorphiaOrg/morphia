@@ -52,9 +52,9 @@ import com.mongodb.WriteResult;
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	private static final Logr log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
-	protected Morphia morphia;
-	protected Mongo mongo;
-	protected DB db;
+	final protected Morphia morphia;
+	final protected Mongo mongo;
+	final protected DB db;
 	protected WriteConcern defConcern = WriteConcern.SAFE;
 	
 	public DatastoreImpl(Morphia morphia, Mongo mongo) {

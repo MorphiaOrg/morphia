@@ -11,8 +11,10 @@ import org.bson.types.CodeWScope;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.mongodb.BasicDBObject;
@@ -60,7 +62,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		this.ds = ((DatastoreImpl)ds);
 		this.dbColl = coll;
 		this.cache = this.ds.getMapper().createEntityCache();
-		this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().slaveOk();
+		
+		MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
+		Entity entAn = mc == null ? null : mc.getEntityAnnotation();
+		if (entAn != null)
+			this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().slaveOk();
 	}
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
@@ -152,11 +158,15 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (indexHint != null)
 			cursor.hint(indexHint);
 
-		if (slaveOk)
-			cursor.addOption(Bytes.QUERYOPTION_SLAVEOK);
-
-		if (noTimeout)
-			cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
+		if (slaveOk) {
+			int opts = dbColl.getOptions();
+			cursor.addOption(opts |= Bytes.QUERYOPTION_SLAVEOK);
+		}
+		
+		if (noTimeout) {
+			int opts = dbColl.getOptions();
+			cursor.addOption(opts |= Bytes.QUERYOPTION_NOTIMEOUT);
+		}
 		
 		//Check for bad options.
 		if (snapshotted && (sort!=null || indexHint!=null))

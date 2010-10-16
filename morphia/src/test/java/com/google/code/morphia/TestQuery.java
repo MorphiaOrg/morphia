@@ -284,7 +284,7 @@ public class TestQuery  extends TestBase {
     public void testNonSnapshottedQuery() throws Exception {
     	ds.delete(ds.find(PhotoWithKeywords.class));
     	ds.save(new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"), new PhotoWithKeywords("scott", "hernandez"));
-        Iterator<PhotoWithKeywords> it = ds.find(PhotoWithKeywords.class, "keywords.keyword", "scott").enableSnapshotMode().batchSize(2).iterator();
+        Iterator<PhotoWithKeywords> it = ds.find(PhotoWithKeywords.class).enableSnapshotMode().batchSize(2).iterator();
     	ds.save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
         
     	PhotoWithKeywords pwkLoaded = null;
