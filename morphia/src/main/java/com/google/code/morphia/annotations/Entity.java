@@ -42,4 +42,8 @@ public @interface Entity {
 	
 	//set slaveOk for queries for this Entity.
 	boolean slaveOk() default false;
+	
+	//any WriteConcern static string. Case insensitive. STRICT/SAFE, NORMAL, etc...
+	String concern() default "";
+
 }

@@ -1,5 +1,7 @@
 package com.google.code.morphia;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.code.morphia.annotations.CappedAt;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Version;
@@ -131,7 +134,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T, V> void delete(Class<T> clazz, V id) {
-		delete(clazz, id, defConcern);
+		delete(clazz, id, getWriteConcern(clazz));
 	}
 
 	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
@@ -140,7 +143,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> void delete(T entity) {
-		delete(entity, defConcern);
+		delete(entity, getWriteConcern(entity));
 	}
 	
 	public <T> void delete(T entity, WriteConcern wc) {
@@ -157,7 +160,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> void delete(Query<T> query) {
-		delete(query, defConcern);
+		delete(query, getWriteConcern(query.getEntityClass()));
 	}
 	
 	public <T> void delete(Query<T> query, WriteConcern wc) {
@@ -501,7 +504,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities) {
-		return insert(entities, defConcern);
+		//TODO: try not to create two iterators...
+		Object first = entities.iterator().next();
+		return insert(entities, getWriteConcern(first));
 	}
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc) {
@@ -536,11 +541,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> Iterable<Key<T>> insert(T...entities) {
-		return insert(Arrays.asList(entities), defConcern);
+		return insert(Arrays.asList(entities), getWriteConcern(entities[0]));
 	}
 	
 	public <T> Key<T> insert(T entity) {
-		return insert(entity, defConcern);
+		return insert(entity, getWriteConcern(entity));
 	}
 	public <T> Key<T> insert(T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
@@ -551,17 +556,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> Key<T> insert(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getDB().getCollection(kind);
-		return insert(dbColl, entity, defConcern);
+		return insert(dbColl, entity, getWriteConcern(entity));
 	}
 
 	public <T> Key<T> insert(String kind, T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getDB().getCollection(kind);
 		return insert(dbColl, entity, wc);
-	}
-
-	protected <T> Key<T> insert(DBCollection dbColl, T entity) {
-		return insert(dbColl, entity, defConcern);
 	}
 	
 	protected <T> Key<T> insert(DBCollection dbColl, T entity, WriteConcern wc) {
@@ -597,7 +598,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
-		return save(entities, defConcern);
+		Object first = entities.iterator().next();
+		return save(entities, getWriteConcern(first));
 	}
 	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc) {
@@ -692,11 +694,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> Key<T> save(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getDB().getCollection(kind);
-		return save(dbColl, entity, defConcern);
+		return save(dbColl, entity, getWriteConcern(entity));
 	}
 	
 	public <T> Key<T> save(T entity) {
-		return save(entity, defConcern);
+		return save(entity, getWriteConcern(entity));
 	}
 
 	public <T> Key<T> save(T entity, WriteConcern wc) {
@@ -716,7 +718,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
-		return update(query, ops, createIfMissing, defConcern);
+		return update(query, ops, createIfMissing, getWriteConcern(query.getEntityClass()));
 	}
 	
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc) {
@@ -734,7 +736,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing) {
-		return update(query, ops, createIfMissing, defConcern);
+		return update(query, ops, createIfMissing, getWriteConcern(query.getEntityClass()));
 		
 	}
 
@@ -748,7 +750,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject u = mapr.toDBObject(entity, involvedObjects);
 		
-		UpdateResults<T> res = update(query, u, createIfMissing, false, defConcern);
+		UpdateResults<T> res = update(query, u, createIfMissing, false, getWriteConcern(entity));
 		postSaveOperations(entity, u, getCollection(entity), involvedObjects);
 		return res;
 	}
@@ -772,7 +774,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@SuppressWarnings("rawtypes")
 	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi) {
-		return update(query, ops, createIfMissing, multi, defConcern);
+		return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));
 	}
 	
 	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi, WriteConcern wc) {
@@ -859,9 +861,41 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return keys;
 	}
 	
+	//TODO: Remove this once driver gets it (2.3)
+    //map of the constants from above for use by fromString
+    private static Map<String, WriteConcern> _namedConcerns = null;
+    
+    /** Get the WriteConcern constants by name: NONE, NORMAL, SAFE, FSYNC_SAFE, REPLICA_SAFE. (matching is done case insensitively)*/
+    private static WriteConcern getConcernByName(String name) {
+    	if (_namedConcerns == null) {
+			HashMap<String, WriteConcern> newMap = new HashMap<String, WriteConcern>( 8 , 1 );
+			for (Field f : WriteConcern.class.getFields())
+				if (Modifier.isStatic( f.getModifiers() ) && f.getType().equals( WriteConcern.class )) {
+					try {
+						newMap.put( f.getName().toLowerCase(), (WriteConcern) f.get( null ) );
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			
+			//Thought about doing a synchronize but this seems just as safe and I don't care about race conditions.
+			_namedConcerns = newMap;
+		}
+
+    	return _namedConcerns.get(name.toLowerCase());		
+    }
+	
 	private EntityCache createCache() {
 		Mapper mapper = morphia.getMapper();
 		return mapper.createEntityCache();
+	}
+	/** Gets the write concern for entity or returns the default write concern for this datastore */
+	public WriteConcern getWriteConcern(Object clazzOrEntity) {
+		Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
+		if(entityAnn != null && entityAnn.concern() != null && entityAnn.concern() != "" )
+			return getConcernByName(entityAnn.concern());
+		
+		return defConcern;
 	}
 	
 	public WriteConcern getDefaultWriteConcern() {return defConcern;} 
