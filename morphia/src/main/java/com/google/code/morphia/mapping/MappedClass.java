@@ -156,7 +156,7 @@ public class MappedClass {
 						ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
 				persistenceFields.add(new MappedField(field));
 			} else {
-				if(mapr.getOptions().defaultFieldAnnotation != null)
+				if(mapr.getOptions().defaultMapper != null)
 					persistenceFields.add(new MappedField(field));					
 				else
 					log.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");

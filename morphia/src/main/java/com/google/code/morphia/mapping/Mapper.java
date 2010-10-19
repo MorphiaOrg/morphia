@@ -355,8 +355,8 @@ public class Mapper {
 				else if (Embedded.class.equals(annType)) {
 					opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				} else {
-					logger.debug("No annotation was found, embedding " + mf);
-					opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
+					logger.debug("No annotation was found, using default mapper " + opts.defaultMapper + " for " + mf);
+					opts.defaultMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 				}
 
 			} catch (Exception e) {
@@ -399,7 +399,7 @@ public class Mapper {
 				else if (mf.hasAnnotation(Reference.class))
 					opts.referenceMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				else {
-					opts.embeddedMapper.fromDBObject(dbObject, mf, entity, cache, this);
+					opts.defaultMapper.fromDBObject(dbObject, mf, entity, cache, this);
 				}
 			}
 		} catch (Exception e) {

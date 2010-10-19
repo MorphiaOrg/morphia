@@ -643,15 +643,4 @@ public class ReflectionUtils
 		Object[] array = values.toArray((Object[]) exampleArray);
 		return array;
 	}
-
-	/** turns the object into an ObjectId if it is/should-be one */
-	public static Object asObjectIdMaybe(final Object id) {
-		try {
-			if ((id instanceof String) && (((String) id).length() <= 24) && ObjectId.isValid((String) id))
-				return new ObjectId((String) id);
-		} catch (Exception e) {
-			// sometimes isValid throws exceptions... bad!
-		}
-		return id;
-	}
 }

@@ -216,6 +216,11 @@ public class TestMapping  extends TestBase {
 		public Map<Integer, String> values = new HashMap<Integer,String>();
 	}
 	
+	public static class ContainsObjectIdKeyMap{
+		@Id ObjectId id;
+		public Map<ObjectId, String> values = new HashMap<ObjectId,String>();
+	}
+	
 	public static class ContainsXKeyMap<T>{
 		@Id ObjectId id;
 		public Map<T, String> values = new HashMap<T,String>();
@@ -324,7 +329,30 @@ public class TestMapping  extends TestBase {
 		assertEquals(cilLoaded.intList.size(), 1);
 		assertEquals(1,(int)cilLoaded.intList.get(0));
 	}
-	
+    
+    @Test
+    public void testObjectIdKeyedMap() throws Exception {
+    	ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
+    	ObjectId o1 = new ObjectId("111111111111111111111111");
+    	ObjectId o2 = new ObjectId("222222222222222222222222");
+		map.values.put(o1,"I'm 1s");
+		map.values.put(o2,"I'm 2s");
+		
+		Key<?> mapKey = ds.save(map);
+		
+		ContainsObjectIdKeyMap mapLoaded = ds.get(ContainsObjectIdKeyMap.class, mapKey.getId());
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2,mapLoaded.values.size());
+		assertNotNull(mapLoaded.values.get(o1));
+		assertNotNull(mapLoaded.values.get(o2));
+		
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.111111111111111111111111").exists());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.111111111111111111111111").doesNotExist().countAll());
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
+    }
+
 	@Test
     public void testIntKeyedMap() throws Exception {
 		ContainsIntKeyMap map = new ContainsIntKeyMap ();

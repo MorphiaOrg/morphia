@@ -62,6 +62,7 @@ public class DefaultConverters {
 		addConverter(new MapOfValuesConverter(this));
 		addConverter(new IterableConverter(this));
 		addConverter(new ClassConverter());
+		addConverter(new ObjectIdConverter());
 
 		//generic converter that will just pass things through.
 		addConverter(new PassthroughConverter());

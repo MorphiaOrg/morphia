@@ -1,9 +1,5 @@
 package com.google.code.morphia.mapping;
 
-import java.lang.annotation.Annotation;
-
-import com.google.code.morphia.annotations.Embedded;
-
 /**
  * Options to control mapping behavior.
  * 
@@ -12,7 +8,6 @@ import com.google.code.morphia.annotations.Embedded;
 public class MapperOptions {
 	/** <p>Treat java transient fields as if they have <code>@Transient</code> on them</p> */
 	public boolean actLikeSerializer = false;
-	public Class<? extends Annotation> defaultFieldAnnotation = Embedded.class;
 	/** <p>Controls if null are stored. </p>*/
 	public boolean storeNulls = false;
 	/** <p>Controls if empty collection/arrays are stored. </p>*/
@@ -23,4 +18,5 @@ public class MapperOptions {
 	public CustomMapper referenceMapper = new ReferenceMapper();
 	public CustomMapper embeddedMapper = new EmbeddedMapper();
 	public CustomMapper valueMapper = new ValueMapper();
+	public CustomMapper defaultMapper = embeddedMapper;
 }
