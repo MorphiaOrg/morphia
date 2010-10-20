@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.query.MorphiaIterator;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -38,6 +39,7 @@ import com.mongodb.WriteConcern;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;
 	static double ReadFailFactor = 1.50;
@@ -79,17 +81,17 @@ public class TestPerf  extends TestBase{
 
 	@Test
     public void testAddressLoadPerf() throws Exception {
-    	insertAddresses(1, false, false);
+    	insertAddresses(5001, true, false);
     	
 		int count = 5000;
     	boolean strict = false;
     	long startTicks = new Date().getTime();
-    	loadAddresses(count, true, strict);
+    	loadAddresses2(count, true, strict);
     	long endTicks = new Date().getTime();
     	long rawInsertTime = endTicks - startTicks;
     	
     	startTicks = new Date().getTime();
-    	loadAddresses(count, false, strict);
+    	loadAddresses2(count, false, strict);
     	endTicks = new Date().getTime();
     	long insertTime = endTicks - startTicks;
     	
@@ -119,6 +121,27 @@ public class TestPerf  extends TestBase{
     			ds.find(Address.class).get();
     		}
     	}
+    }
+
+	public void loadAddresses2(int count, boolean raw, boolean strict) {
+    	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
+    	Iterable it = raw ? dbColl.find().limit(count) : ds.find(Address.class).limit(count).fetch();
+    	
+    	for(Object o : it)
+    		if(raw) {
+    			Address addr = new Address();
+    			BasicDBObject dbObj = (BasicDBObject) o;
+    			addr.name = dbObj.getString("name");
+    			addr.street = dbObj.getString("street");
+    			addr.city = dbObj.getString("city");
+    			addr.state = dbObj.getString("state");
+    			addr.zip = dbObj.getInt("zip");
+    			addr.added = (Date) dbObj.get("added");
+    		}else {
+    			//no-op; already happened during iteration
+    		}
+    	if (!raw)
+            System.out.println("driverTime: "+ ((MorphiaIterator<Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object>)it).getMapperTime() + "ms");
     }
 
 	public void insertAddresses(int count, boolean raw, boolean strict) {
