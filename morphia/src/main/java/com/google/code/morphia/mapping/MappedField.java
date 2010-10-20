@@ -208,7 +208,9 @@ public class MappedField {
 	 * Returns the name of the field's key-name for mongodb
 	 */
 	private String getMappedFieldName() {
-		if (hasAnnotation(Property.class)) {
+		if (hasAnnotation(Id.class))
+			return Mapper.ID_KEY;
+		else if (hasAnnotation(Property.class)) {
 			Property mv = (Property) mappingAnnotations.get(Property.class);
 			if (!mv.value().equals(Mapper.IGNORED_FIELDNAME))
 				return mv.value();
@@ -224,8 +226,7 @@ public class MappedField {
 			Serialized me = (Serialized) mappingAnnotations.get(Serialized.class);
 			if (!me.value().equals(Mapper.IGNORED_FIELDNAME))
 				return me.value();
-		} else if (hasAnnotation(Id.class))
-			return Mapper.ID_KEY;
+		}
 		
 		return this.field.getName();
 	}

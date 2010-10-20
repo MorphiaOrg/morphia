@@ -55,7 +55,8 @@ import com.mongodb.WriteResult;
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	private static final Logr log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
-	final protected Morphia morphia;
+//	final protected Morphia morphia;
+	final protected Mapper mapr;
 	final protected Mongo mongo;
 	final protected DB db;
 	protected WriteConcern defConcern = WriteConcern.SAFE;
@@ -65,7 +66,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName, String username, char[] password) {
-		this.morphia = morphia;
+//		this.morphia = morphia;
+		this.mapr = morphia.getMapper();
 		this.mongo = mongo;
 		this.db = mongo.getDB(dbName);
 		if (username != null) 
@@ -245,7 +247,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> void ensureIndexes(Class<T> clazz) {
-		MappedClass mc = morphia.getMapper().getMappedClass(clazz);
+		MappedClass mc = mapr.getMappedClass(clazz);
 		ensureIndexes(mc);
 	}
 	
@@ -253,14 +255,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public void ensureIndexes() {
 		// loops over mappedClasses and call ensureIndex for each @Entity object
 		// (for now)
-		for (MappedClass mc : morphia.getMappedClasses().values()) {
+		for (MappedClass mc : mapr.getMappedClasses().values()) {
 			ensureIndexes(mc);
 		}
 	}
 	
 
 	public void ensureCaps() {
-		Mapper mapr = morphia.getMapper();
 		for (MappedClass mc : mapr.getMappedClasses().values())
 			if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
 				CappedAt cap = mc.getEntityAnnotation().cap();
@@ -329,7 +330,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> T get(Class<T> clazz, DBRef ref) {
-		return morphia.fromDBObject(clazz, ref.fetch(), createCache());
+		return (T)mapr.fromDBObject(clazz, ref.fetch(), createCache());
 	}
 	
 
@@ -422,8 +423,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> T getByKey(Class<T> clazz, Key<T> key) {
-		Mapper mapr = morphia.getMapper();
-
 		String kind = mapr.getCollectionName(clazz);
 		String keyKind = key.updateKind(mapr);
 		if (!kind.equals(keyKind))
@@ -442,7 +441,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	@SuppressWarnings("rawtypes")
 	public DBCollection getCollection(Class clazz) {
-		String collName = morphia.getMapper().getCollectionName(clazz);
+		String collName = mapr.getCollectionName(clazz);
 		DBCollection dbC = getDB().getCollection(collName);
 		return dbC;
 	}
@@ -487,8 +486,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		entity = ProxyHelper.unwrap(entity);
 		MappedClass mc;
 		String keyClassName = entity.getClass().getName();
-		if (morphia.getMappedClasses().containsKey(keyClassName))
-			mc = morphia.getMappedClasses().get(keyClassName);
+		if (mapr.getMappedClasses().containsKey(keyClassName))
+			mc = mapr.getMappedClasses().get(keyClassName);
 		else
 			mc = new MappedClass(entity.getClass(), getMapper());
 		
@@ -500,7 +499,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public Mapper getMapper() {
-		return this.morphia.getMapper();
+		return mapr;
 	}
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities) {
@@ -582,7 +581,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	protected DBObject entityToDBObj(Object entity, Map<Object, DBObject> involvedObjects) {
 		entity = ProxyHelper.unwrap(entity);
-		DBObject dbObj = morphia.getMapper().toDBObject(entity, involvedObjects);
+		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 		return dbObj;
 	}
 	
@@ -618,7 +617,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected <T> Key<T> save(DBCollection dbColl, T entity, WriteConcern wc) {
-		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		WriteResult wr = null;
@@ -682,7 +680,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				cr.throwOnError();
 		}
 	}
-	private void firePostPersistForChildren(Map<Object, DBObject> involvedObjects, Mapper mapr) {
+	private void firePostPersistForChildren(Map<Object, DBObject> involvedObjects) {
 		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
 			Object entity = e.getKey();
 			DBObject dbObj = e.getValue();
@@ -746,7 +744,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing) {
-		Mapper mapr = morphia.getMapper();
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject u = mapr.toDBObject(entity, involvedObjects);
 		
@@ -757,12 +754,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	private <T> void postSaveOperations(Object entity, DBObject dbObj, DBCollection dbColl,
 			Map<Object, DBObject> involvedObjects) {
-		Mapper mapr = morphia.getMapper();
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		mapr.updateKeyInfo(entity, dbObj, createCache());
 		
-		firePostPersistForChildren(involvedObjects, mapr);
+		firePostPersistForChildren(involvedObjects);
 		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
 	}
 
@@ -815,7 +811,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 		DBObject result = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false, false);
 
-		T entity = (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), result, cache);
+		T entity = (T) mapr.fromDBObject(qi.getEntityClass(), result, cache);
         return entity;
 	}
 
@@ -840,7 +836,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (res == null) 
 			return null;
 		else
-			return (T) morphia.getMapper().fromDBObject(qi.getEntityClass(), res, createCache());
+			return (T) mapr.fromDBObject(qi.getEntityClass(), res, createCache());
 	}
 	
 	/** Converts a list of keys to refs */
@@ -886,8 +882,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
     }
 	
 	private EntityCache createCache() {
-		Mapper mapper = morphia.getMapper();
-		return mapper.createEntityCache();
+		return mapr.createEntityCache();
 	}
 	/** Gets the write concern for entity or returns the default write concern for this datastore */
 	public WriteConcern getWriteConcern(Object clazzOrEntity) {

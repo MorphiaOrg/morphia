@@ -23,7 +23,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -40,7 +39,8 @@ import com.mongodb.WriteConcern;
  * @author Scott Hernandez
  */
 public class TestPerf  extends TestBase{
-	static double FailFactor = 1.10;
+	static double WriteFailFactor = 1.10;
+	static double ReadFailFactor = 1.50;
 	
 	@Entity
 	public static class Address {
@@ -74,10 +74,10 @@ public class TestPerf  extends TestBase{
     							insertTime,
     							rawInsertTime);
     	Assert.assertTrue(msg, 
-    			insertTime < (rawInsertTime * FailFactor ));
+    			insertTime < (rawInsertTime * WriteFailFactor ));
     }
 
-	@Test @Ignore
+	@Test
     public void testAddressLoadPerf() throws Exception {
     	insertAddresses(1, false, false);
     	
@@ -99,7 +99,7 @@ public class TestPerf  extends TestBase{
     							insertTime,
     							rawInsertTime);
     	Assert.assertTrue(msg, 
-    			insertTime < (rawInsertTime * FailFactor ));
+    			insertTime < (rawInsertTime * ReadFailFactor ));
     }
 	
 	public void loadAddresses(int count, boolean raw, boolean strict) {

@@ -64,40 +64,23 @@ import com.mongodb.DBRef;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class TestMapping  extends TestBase {
-	
-	@Entity
-	public static class KeyAsId {
-		@Id Key<?> id;
-		String name = "hello";
-		
-		protected KeyAsId() {}
-		public KeyAsId(Key<?> key) {
-			this.id = key;
-		}
-	}
 
 	@Entity
-	public static class MapAsId {
-		@Id Map<String, String> id = new HashMap<String, String>();
-		String name = "hello";		
-	}
-	
-	@Entity
-	public static class MissingId {
+	private static class MissingId {
 		String id;
 	}
 	
-	public static class MissingIdStill {
+	private static class MissingIdStill {
 		String id;
 	}
 	
 	@Entity("no-id")
-	public static class MissingIdRenamed {
+	private static class MissingIdRenamed {
 		String id;
 	}
-	
+
 	@Embedded
 	public static class IdOnEmbedded {
 		@Id ObjectId id;
@@ -490,34 +473,6 @@ public class TestMapping  extends TestBase {
 		assertEquals(loaded.strings, clasa.strings);
 		
 		assertNotNull(loaded.id);        
-	}
-
-	@Test
-    public void testKeyAsId() throws Exception {
-        morphia.map(KeyAsId.class);
-        
-        Rectangle r = new Rectangle(1,1);
-//        Rectangle r2 = new Rectangle(11,11);
-        
-        Key<Rectangle> rKey = ds.save(r);
-//        Key<Rectangle> r2Key = ds.save(r2);
-        KeyAsId kai = new KeyAsId(rKey);
-        Key<KeyAsId> kaiKey = ds.save(kai);
-        KeyAsId kaiLoaded = ds.get(KeyAsId.class, rKey);
-        assertNotNull(kaiLoaded);
-        assertNotNull(kaiKey);
-	}
-
-	@Test
-    public void testMapAsId() throws Exception {
-        morphia.map(MapAsId.class);
-        
-        MapAsId mai = new MapAsId();
-        mai.id.put("test", "string");
-        Key<MapAsId> maiKey = ds.save(mai);
-        MapAsId maiLoaded = ds.get(MapAsId.class, new BasicDBObject("test","string"));
-        assertNotNull(maiLoaded);
-        assertNotNull(maiKey);
 	}
 
 	@Test

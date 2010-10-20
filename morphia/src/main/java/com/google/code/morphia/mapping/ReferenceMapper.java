@@ -307,6 +307,7 @@ class ReferenceMapper implements CustomMapper {
 		if (cached != null)
 			return cached;
 		
+		//TODO: if _db is null, set it?
 		BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 		
 		if (refDbObject != null) {

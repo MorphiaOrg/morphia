@@ -22,7 +22,7 @@ public class MisplacedProperty extends FieldConstraint {
 		// a field can be a Value, Reference, or Embedded
 		if (mf.hasAnnotation(Property.class)) {
 			// make sure that the property type is supported
-			if (mf.isSingleValue() && !mf.isTypeMongoCompatible()) {
+			if (mf.isSingleValue() && !mf.isTypeMongoCompatible() && !mc.getMapper().getConverters().hasSimpleValueConverter(mf)) {
 				ve.add(new ConstraintViolation(Level.FATAL, mc, mf, this.getClass(), mf.getFullName() + " is annotated as @"
 						+ Property.class.getSimpleName() + " but is a type that cannot be mapped simply (type is "
 						+ mf.getType().getName() + ")."));
