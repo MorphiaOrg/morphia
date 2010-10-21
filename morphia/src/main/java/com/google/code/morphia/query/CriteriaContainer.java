@@ -7,5 +7,4 @@ public interface CriteriaContainer extends Criteria {
 	CriteriaContainer or(Criteria... criteria);
 	
 	FieldEnd<? extends CriteriaContainer> criteria(String field);
-	FieldEnd<? extends CriteriaContainer> criteria(String field, boolean validate);
 }

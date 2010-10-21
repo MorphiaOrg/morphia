@@ -385,7 +385,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this.field(name, this.validatingNames);
 	}
 	
-	public FieldEnd<? extends Query<T>> field(String field, boolean validate) {
+	private FieldEnd<? extends Query<T>> field(String field, boolean validate) {
 		return new FieldEndImpl<QueryImpl<T>>(this, field, this, validate);
 	}
 
@@ -393,7 +393,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this.criteria(field, this.validatingNames);
 	}
 
-	public FieldEnd<? extends CriteriaContainerImpl> criteria(String field, boolean validate) {
+	private FieldEnd<? extends CriteriaContainerImpl> criteria(String field, boolean validate) {
 		CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
 		this.add(container);
 		

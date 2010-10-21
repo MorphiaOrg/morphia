@@ -2,8 +2,6 @@ package com.google.code.morphia.query;
 
 import org.bson.types.CodeWScope;
 
-
-
 /**
  * @author Scott Hernandez
  */
@@ -37,11 +35,9 @@ public interface Query<T> extends QueryResults<T> {
 	
 	/** Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...} */
 	FieldEnd<? extends Query<T>> field(String field);
-	FieldEnd<? extends Query<T>> field(String field, boolean validate);
 
 	/** Criteria builder interface */
 	FieldEnd<? extends CriteriaContainerImpl> criteria(String field);
-	FieldEnd<? extends CriteriaContainerImpl> criteria(String field, boolean validate);
 
 	CriteriaContainer and(Criteria... criteria);
 	CriteriaContainer or(Criteria... criteria);

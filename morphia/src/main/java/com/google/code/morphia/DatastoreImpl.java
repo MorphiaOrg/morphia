@@ -250,7 +250,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
 				ensureIndex(mc.getClazz(), index.name(), new IndexFieldDef[] {new IndexFieldDef(mf.getNameToStore(), index
-						.value())}, index.unique(), index.dropDups(), background);
+						.value())}, index.unique(), index.dropDups(), index.background() ? index.background() : background );
 			}
 		}
 	}

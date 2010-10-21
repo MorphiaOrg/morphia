@@ -82,7 +82,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements Criteria,
 		return this.criteria(name, this.query.isValidatingNames());
 	}
 	
-	public FieldEnd<? extends CriteriaContainer> criteria(String field, boolean validateName) {
+	private FieldEnd<? extends CriteriaContainer> criteria(String field, boolean validateName) {
 		return new FieldEndImpl<CriteriaContainerImpl>(this.query, field, this, validateName);
 	}
 }
