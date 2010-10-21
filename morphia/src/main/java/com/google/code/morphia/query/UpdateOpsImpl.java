@@ -53,7 +53,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 		if (value== null)
 			throw new QueryException("Value cannot be null.");
 
-		Object dbObj = mapr.toMongoObject(value);
+		Object dbObj = mapr.toMongoObject(value, true);
 		add((addDups) ? "$push" : "$addToSet", fieldExpr, dbObj);
 		return this;
 	}
@@ -62,7 +62,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 		if (values == null || values.isEmpty())
 			throw new QueryException("Values cannot be null or empty.");
 		
-		List<?> convertedValues = (List<?>)mapr.toMongoObject(values);
+		List<?> convertedValues = (List<?>)mapr.toMongoObject(values, true);
 		if(addDups)
 			add("$pushAll", fieldExpr, convertedValues);
 		else
@@ -126,7 +126,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 		if (value== null)
 			throw new QueryException("Value cannot be null.");
 
-		Object dbObj = mapr.toMongoObject(value);
+		Object dbObj = mapr.toMongoObject(value, true);
 		add("$set", fieldExpr, dbObj);
 		return this;
 	}

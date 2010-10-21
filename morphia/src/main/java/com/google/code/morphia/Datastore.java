@@ -127,17 +127,19 @@ public interface Datastore {
 	
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
-
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, IndexFieldDef...fields);
-
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
-	
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
 	void ensureIndexes();
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}, possibly in the background*/
+	void ensureIndexes(boolean background);
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
 	<T> void ensureIndexes(Class<T>  clazz);
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}, possibly in the background*/
+	<T> void ensureIndexes(Class<T>  clazz, boolean background);
+
 	/** ensure capped DBCollections for {@code Entity}(s) */
 	void ensureCaps();
 	

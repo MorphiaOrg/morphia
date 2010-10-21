@@ -3,6 +3,7 @@
  */
 package com.google.code.morphia.mapping;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,7 +58,8 @@ class EmbeddedMapper implements CustomMapper{
 					values.add(mapr.converters.encode(o));
 				else {
 					DBObject dbObj = mapr.toDBObject(o, involvedObjects);
-					if (mf.getSubType().equals(o.getClass()) && !(dbObj instanceof BasicDBList)) {
+					if (	!mf.getSubType().isInterface() && !Modifier.isAbstract(mf.getSubType().getModifiers()) && 
+							mf.getSubType().equals(o.getClass()) && !(dbObj instanceof BasicDBList)) {
 						dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 					}
 					values.add(dbObj);
@@ -85,7 +87,8 @@ class EmbeddedMapper implements CustomMapper{
 				else {
 					val = mapr.toDBObject(entryVal, involvedObjects);
 				
-					if (mf.getSubType().equals(entryVal.getClass()) && !(val instanceof BasicDBList))
+					if (	!mf.getSubType().isInterface() && !Modifier.isAbstract(mf.getSubType().getModifiers()) && 
+							!(val instanceof BasicDBList) && mf.getSubType().equals(entryVal.getClass()))
 						((DBObject)val).removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				

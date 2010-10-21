@@ -247,6 +247,10 @@ public class Mapper {
 	 * </p>
 	 */
 	public Object toMongoObject(final Object javaObj) {
+		return toMongoObject(javaObj, false);
+	}
+	
+	public Object toMongoObject(final Object javaObj, boolean includeClassName) {
 		if (javaObj == null) {
 			return null;
 		}
@@ -281,7 +285,8 @@ public class Mapper {
 	
 			if (isSingleValue && !ReflectionUtils.isPropertyType(type)) {
 				DBObject dbObj = toDBObject(newObj);
-				dbObj.removeField(CLASS_NAME_FIELDNAME);
+				if(!includeClassName)
+					dbObj.removeField(CLASS_NAME_FIELDNAME);
 				return dbObj;
 			} else if (newObj instanceof DBObject) {
 				return newObj;
@@ -291,7 +296,7 @@ public class Mapper {
 				else {
 					HashMap m = new HashMap();
 					for(Map.Entry e : (Iterable<Map.Entry>)((Map)newObj).entrySet())
-						m.put(e.getKey(), toMongoObject(e.getValue()));
+						m.put(e.getKey(), toMongoObject(e.getValue(), includeClassName));
 
 					return toDBObject(m);
 				}
@@ -300,10 +305,10 @@ public class Mapper {
 				ArrayList<Object> vals = new ArrayList<Object>();
 				if (type.isArray()) 
 					for (Object obj : (Object[]) newObj)
-						vals.add(toMongoObject(obj));
+						vals.add(toMongoObject(obj, includeClassName));
 				else
 					for (Object obj : (Iterable) newObj) 
-						vals.add(toMongoObject(obj));
+						vals.add(toMongoObject(obj, includeClassName));
 	
 				return vals;
 			} else {

@@ -186,11 +186,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		
 		throwOnError(wc, wr);
 	}
+
+	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique, boolean dropDupsOnCreate) {
+		ensureIndex(clazz, name, defs, unique, dropDupsOnCreate, false);
+	}
 	
-	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique,
-			boolean dropDupsOnCreate) {
+	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique, boolean dropDupsOnCreate, boolean background) {
 		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
-		BasicDBObjectBuilder keyOpts = null;
+		BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
+
 		for (IndexFieldDef def : defs) {
 			String fieldName = def.getField();
 			IndexDirection dir = def.getDirection();
@@ -199,29 +203,31 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			else
 				keys.add(fieldName, (dir == IndexDirection.ASC) ? 1 : -1);
 		}
-		
+
 		if (name != null && name.length() > 0) {
-			if (keyOpts == null)
-				keyOpts = new BasicDBObjectBuilder();
 			keyOpts.add("name", name);
 		}
 		if (unique) {
-			if (keyOpts == null)
-				keyOpts = new BasicDBObjectBuilder();
 			keyOpts.add("unique", true);
 			if (dropDupsOnCreate)
 				keyOpts.add("dropDups", true);
 		}
+
+		if (background) {
+			keyOpts.add("background", true);
+		}
 		
 		DBCollection dbColl = getCollection(clazz);
 		log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
-		if (keyOpts == null) {
+		
+		BasicDBObject opts = (BasicDBObject) keyOpts.get();
+		if (opts.isEmpty()) {
 			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 			dbColl.ensureIndex(keys.get());
 		} else {
 			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys + " and opts "
 					+ keyOpts);
-			dbColl.ensureIndex(keys.get(), keyOpts.get());
+			dbColl.ensureIndex(keys.get(), opts);
 		}
 	}
 	
@@ -233,30 +239,40 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		ensureIndex(type, null, fields, false, false);
 	}
 	
-	protected void ensureIndexes(MappedClass mc) {
+	public <T> void ensureIndex(Class<T> type, boolean background, IndexFieldDef... fields) {
+		ensureIndex(type, null, fields, false, false, background);
+	}
+	
+	protected void ensureIndexes(MappedClass mc, boolean background) {
 		if (mc.getEntityAnnotation() == null)
 			return;
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
 				ensureIndex(mc.getClazz(), index.name(), new IndexFieldDef[] {new IndexFieldDef(mf.getNameToStore(), index
-						.value())}, index.unique(), index.dropDups());
+						.value())}, index.unique(), index.dropDups(), background);
 			}
 		}
 	}
 	
-
 	public <T> void ensureIndexes(Class<T> clazz) {
-		MappedClass mc = mapr.getMappedClass(clazz);
-		ensureIndexes(mc);
+		ensureIndexes(clazz, false);
 	}
 	
+	public <T> void ensureIndexes(Class<T> clazz, boolean background) {
+		MappedClass mc = mapr.getMappedClass(clazz);
+		ensureIndexes(mc, background);
+	}
 
 	public void ensureIndexes() {
+		ensureIndexes(false);
+	}
+
+	public void ensureIndexes(boolean background) {
 		// loops over mappedClasses and call ensureIndex for each @Entity object
 		// (for now)
 		for (MappedClass mc : mapr.getMappedClasses().values()) {
-			ensureIndexes(mc);
+			ensureIndexes(mc, background);
 		}
 	}
 	
