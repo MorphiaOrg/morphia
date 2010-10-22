@@ -265,10 +265,9 @@ public class Mapper {
 		
 		//TODO: think about this logic a bit more. 
 		//Even if the converter changed it, should it still be processed?
-		
-		
+
 		//The converter ran, and produced another type.
-		if (!bSameType)
+		if (!bSameType && !ReflectionUtils.implementsAnyInterface(type, Iterable.class, Map.class))
 			return newObj;
 		else {
 			
