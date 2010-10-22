@@ -58,8 +58,8 @@ class EmbeddedMapper implements CustomMapper{
 					values.add(mapr.converters.encode(o));
 				else {
 					DBObject dbObj = mapr.toDBObject(o, involvedObjects);
-					if (	!mf.getSubType().isInterface() && !Modifier.isAbstract(mf.getSubType().getModifiers()) && 
-							mf.getSubType().equals(o.getClass()) && !(dbObj instanceof BasicDBList)) {
+					if (	!mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
+							mf.getSubClass().equals(o.getClass()) && !(dbObj instanceof BasicDBList)) {
 						dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 					}
 					values.add(dbObj);
@@ -85,10 +85,13 @@ class EmbeddedMapper implements CustomMapper{
 				else if(mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(entryVal.getClass()))
 					val = mapr.converters.encode(entryVal);
 				else {
-					val = mapr.toDBObject(entryVal, involvedObjects);
+					if (ReflectionUtils.implementsAnyInterface(entryVal.getClass(), Collection.class, Map.class))
+						val = mapr.toMongoObject(entryVal, true);
+					else
+						val = mapr.toDBObject(entryVal, involvedObjects);
 				
-					if (	!mf.getSubType().isInterface() && !Modifier.isAbstract(mf.getSubType().getModifiers()) && 
-							!(val instanceof BasicDBList) && mf.getSubType().equals(entryVal.getClass()))
+					if (	val != null && !mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
+							!ReflectionUtils.implementsAnyInterface(val.getClass(), Collection.class, Map.class) && mf.getSubClass().equals(entryVal.getClass()))
 						((DBObject)val).removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
@@ -139,7 +142,7 @@ class EmbeddedMapper implements CustomMapper{
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache, Mapper mapr) {
 		// multiple documents in a List
-		Class newEntityType = mf.getSubType();
+		Class newEntityType = mf.getSubClass();
 		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
 		
 		Object dbVal = mf.getDbObjectValue(dbObject);
@@ -151,9 +154,10 @@ class EmbeddedMapper implements CustomMapper{
 				Object newEntity;
 				
 				//run converters
-				if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getSubType()))
-					newEntity = mapr.converters.decode(mf.getSubType(), dbObj, mf);
+				if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getSubClass()))
+					newEntity = mapr.converters.decode(mf.getSubClass(), dbObj, mf);
 				else {
+//					if (mf.get
 					newEntity = ReflectionUtils.createInstance(newEntityType, dbObj);
 					newEntity = mapr.fromDb(dbObj, newEntity, cache);
 				}
@@ -163,7 +167,7 @@ class EmbeddedMapper implements CustomMapper{
 		}
 		if (values.size() > 0) {
 			if (mf.getType().isArray()) {
-				Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), ReflectionUtils.iterToList(values));
+				Object[] array = ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values));
 				mf.setFieldValue(entity, array);
 			} else {
 				mf.setFieldValue(entity, values);
@@ -176,7 +180,7 @@ class EmbeddedMapper implements CustomMapper{
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {
-			Class newEntityType = mf.getSubType();
+			Class newEntityType = mf.getSubClass();
 			for (Map.Entry entry : dbVal.entrySet()) {
 				Object val = entry.getValue();
 				Object newEntity = null;
@@ -184,8 +188,8 @@ class EmbeddedMapper implements CustomMapper{
 				//run converters
 				if (val != null) {
 					if (	mapr.converters.hasSimpleValueConverter(mf) || 
-							mapr.converters.hasSimpleValueConverter(mf.getSubType()))
-						newEntity = mapr.converters.decode(mf.getSubType(), val, mf);
+							mapr.converters.hasSimpleValueConverter(mf.getSubClass()))
+						newEntity = mapr.converters.decode(mf.getSubClass(), val, mf);
 					else {
 						
 						if (!(val instanceof DBObject))
@@ -197,7 +201,7 @@ class EmbeddedMapper implements CustomMapper{
 					}
 				}
 
-				Object objKey = mapr.converters.decode(mf.getMapKeyType(), entry.getKey());
+				Object objKey = mapr.converters.decode(mf.getMapKeyClass(), entry.getKey());
 				map.put(objKey, newEntity);
 			}
 		}

@@ -41,7 +41,7 @@ public class IterableConverter extends TypeConverter {
 	Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
 		if (mf == null || fromDBObject == null) return fromDBObject;
 		
-		Class subtypeDest = mf.getSubType();
+		Class subtypeDest = mf.getSubClass();
 		Collection vals = null;
 		
 		if (fromDBObject.getClass().isArray()) {
@@ -99,9 +99,9 @@ public class IterableConverter extends TypeConverter {
 		}
 		
 		List values = new ArrayList();
-		if (f != null && f.getSubType() != null) {
+		if (f != null && f.getSubClass() != null) {
 			for (Object o : iterableValues) {
-				values.add(chain.encode(f.getSubType(), o));
+				values.add(chain.encode(f.getSubClass(), o));
 			}
 		} else {
 			for (Object o : iterableValues) {

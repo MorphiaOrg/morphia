@@ -186,6 +186,15 @@ public class ReflectionUtils
      *            the class we want to check
      * @return true if the class represents a valid property type
      */
+    public static boolean isPropertyType(final Type type) {
+    	if (type instanceof ParameterizedType)
+    		return isPropertyType(((ParameterizedType)type).getRawType());
+    	if (type instanceof Class)
+    		return isPropertyType((Class)type);
+    		
+    	throw new RuntimeException("bad type, not parameterized...");
+    }
+    
     public static boolean isPropertyType(final Class type)
     {
         if (type == null)
@@ -234,54 +243,67 @@ public class ReflectionUtils
      * @return the class that parameterizes the field, or null if field is not
      *         parameterized
      */
-    public static Class getParameterizedClass(final Field field, final int index)
-    {
-        if (field.getGenericType() instanceof ParameterizedType)
-        {
-            ParameterizedType ptype = (ParameterizedType) field.getGenericType();
-            if ((ptype.getActualTypeArguments() != null) && (ptype.getActualTypeArguments().length <= index))
-            {
-                return null;
-            }
-            Type paramType = ptype.getActualTypeArguments()[index];
-            if (paramType instanceof GenericArrayType)
-            {
-                Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
-                return Array.newInstance(arrayType, 0).getClass();
-            }
-            else
-            {
-                if (paramType instanceof ParameterizedType)
-                {
-                    ParameterizedType paramPType = (ParameterizedType) paramType;
-                    return (Class) paramPType.getRawType();
-                }
-                else
-                {
-                    if (paramType instanceof TypeVariable)
-                    {
-                        // TODO: Figure out what to do... Walk back up the to
-                        // the parent class and try to get the variable type
-                        // from the T/V/X
-                        throw new MappingException("Generic Typed Class not supported:  <"
-                                + ((TypeVariable) paramType).getName() + "> = "
-                                + ((TypeVariable) paramType).getBounds()[0]);
-                    }
-                    else
-                        if (paramType instanceof Class)
-                        {
-                            return (Class) paramType;
-                        }
-                        else
-                        {
-                            throw new MappingException(
-                                    "Unknown type... pretty bad... call for help, wave your hands... yeah!");
-                        }
-                }
-            }
-        }
-        return null;
-    }
+	public static Class getParameterizedClass(final Field field, final int index) {
+		if (field.getGenericType() instanceof ParameterizedType) {
+			ParameterizedType ptype = (ParameterizedType) field.getGenericType();
+			if ((ptype.getActualTypeArguments() != null) && (ptype.getActualTypeArguments().length <= index)) {
+				return null;
+			}
+			Type paramType = ptype.getActualTypeArguments()[index];
+			if (paramType instanceof GenericArrayType) {
+				Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
+				return Array.newInstance(arrayType, 0).getClass();
+			} else {
+				if (paramType instanceof ParameterizedType) {
+					ParameterizedType paramPType = (ParameterizedType) paramType;
+					return (Class) paramPType.getRawType();
+				} else {
+					if (paramType instanceof TypeVariable) {
+						// TODO: Figure out what to do... Walk back up the to
+						// the parent class and try to get the variable type
+						// from the T/V/X
+						throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = "
+								+ ((TypeVariable) paramType).getBounds()[0]);
+					} else if (paramType instanceof Class) {
+						return (Class) paramType;
+					} else {
+						throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Type getParameterizedType(final Field field, final int index) {
+		if (field.getGenericType() instanceof ParameterizedType) {
+			ParameterizedType ptype = (ParameterizedType) field.getGenericType();
+			if ((ptype.getActualTypeArguments() != null) && (ptype.getActualTypeArguments().length <= index)) {
+				return null;
+			}
+			Type paramType = ptype.getActualTypeArguments()[index];
+			if (paramType instanceof GenericArrayType) {
+				return ((GenericArrayType) paramType).getGenericComponentType();
+			} else {
+				if (paramType instanceof ParameterizedType) {
+					return paramType;
+				} else {
+					if (paramType instanceof TypeVariable) {
+						// TODO: Figure out what to do... Walk back up the to
+						// the parent class and try to get the variable type
+						// from the T/V/X
+//						throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
+						return paramType;
+					} else if (paramType instanceof Class) {
+						return (Class) paramType;
+					} else {
+						throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+					}
+				}
+			}
+		}
+		return null;
+	}
 
     public static Class getTypeArgumentOfParameterizedClass(final Field field, final int index, final int typeIndex)
     {

@@ -178,7 +178,7 @@ class ReferenceMapper implements CustomMapper {
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, Reference refAnn,
 			EntityCache cache, Mapper mapr) {
 		// multiple references in a List
-		Class referenceObjClass = mf.getSubType();
+		Class referenceObjClass = mf.getSubClass();
 		Collection references = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class
 				: HashSet.class);
 		
@@ -206,7 +206,7 @@ class ReferenceMapper implements CustomMapper {
 					referencesAsProxy.__addAll(keys);
 				} else {
 					DBRef dbRef = (DBRef) dbVal;
-					if (!exists(mf.getSubType(), dbRef, cache, mapr)) {
+					if (!exists(mf.getSubClass(), dbRef, cache, mapr)) {
 						String msg = "The reference(" + dbRef.toString() + ") could not be fetched for "
 								+ mf.getFullName();
 						if (!refAnn.ignoreMissing())
@@ -271,7 +271,7 @@ class ReferenceMapper implements CustomMapper {
 		}
 		
 		if (mf.getType().isArray()) {
-			Object[] array = ReflectionUtils.convertToArray(mf.getSubType(), ReflectionUtils.iterToList(references));
+			Object[] array = ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(references));
 			mf.setFieldValue(entity, array);
 		} else {
 			mf.setFieldValue(entity, references);
@@ -327,7 +327,7 @@ class ReferenceMapper implements CustomMapper {
 	
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final Reference refAnn,
 			EntityCache cache, Mapper mapr) {
-		Class referenceObjClass = mf.getSubType();
+		Class referenceObjClass = mf.getSubClass();
 		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);

@@ -33,7 +33,7 @@ public class PropertyAndEmbeddedTest extends TestBase {
 		@PreSave
 		public void preSave(DBObject o) {
 			document = o.toString();
-			System.out.println(document);
+//			System.out.println(document);
 		}
 		
 		@Transient

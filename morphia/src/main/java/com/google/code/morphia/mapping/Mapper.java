@@ -297,7 +297,7 @@ public class Mapper {
 					for(Map.Entry e : (Iterable<Map.Entry>)((Map)newObj).entrySet())
 						m.put(e.getKey(), toMongoObject(e.getValue(), includeClassName));
 
-					return toDBObject(m);
+					return m;
 				}
 			//Set/List but needs elements converted
 			} else if (!isSingleValue && !ReflectionUtils.isPropertyType(subType)) {
@@ -364,10 +364,15 @@ public class Mapper {
 			if (cachedInstance != null)
 				return cachedInstance;
 			else
-				cache.putEntity(key, entity); // to avoid stackOverflow in
-												// recursive refs
+				cache.putEntity(key, entity); // to avoid stackOverflow in recursive refs
 		}
-
+		
+		//hack to bypass things and just read the value.
+		if (entity instanceof MappedField) {
+			readMappedField(dbObject, (MappedField) entity, entity, cache);
+			return entity;
+		}
+		
 		MappedClass mc = getMappedClass(entity);
 		
 		dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);

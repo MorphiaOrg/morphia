@@ -41,7 +41,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 		try {
 			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()) && !ReflectionUtils.implementsInterface(value.getClass(), Iterable.class))
 				if (mf != null && !mf.isTypeMongoCompatible())
-					mc = mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+					mc = mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
 				else
 					mc = mapr.getMappedClass(value);
 		} catch (Exception e) {
@@ -123,7 +123,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 				
 				if (i >= parts.length) break;
 				//get the next MappedClass for the next field validation
-				mc = query.getDatastore().getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubType());
+				mc = query.getDatastore().getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
 			}
 			
 			//record new property string if there has been a translation to any part
@@ -138,9 +138,9 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 	
 			if (validateTypes)
 				if (	 (mf.isSingleValue() && !isCompatibleForCriteria(mf.getType(), operator, value)) || 
-						((mf.isMultipleValues() && !isCompatibleForCriteria(mf.getSubType(), operator, value)))) {
+						((mf.isMultipleValues() && !isCompatibleForCriteria(mf.getSubClass(), operator, value)))) {
 		
-					System.out.println(mf.getField());
+//					System.out.println(mf.getField());
 					
 					Throwable t = new Throwable();
 					StackTraceElement ste = getFirstClientLine(t);

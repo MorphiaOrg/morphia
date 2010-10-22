@@ -23,7 +23,7 @@ public class ReferenceToUnidentifiable extends FieldConstraint {
 	@Override
 	protected void check(MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
 		if (mf.hasAnnotation(Reference.class)) {
-			Class realType = (mf.isSingleValue()) ? mf.getType() : mf.getSubType();
+			Class realType = (mf.isSingleValue()) ? mf.getType() : mf.getSubClass();
 			
 			if (realType == null) throw new MappingException("Type is null for this MappedField: " + mf);
 			

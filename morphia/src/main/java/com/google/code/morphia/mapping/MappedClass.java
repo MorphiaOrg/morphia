@@ -130,7 +130,7 @@ public class MappedClass {
 		
 		embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
 		entityAn = (Entity)releventAnnotations.get(Entity.class);
-		//        polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
+		// polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
 		collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 		
 		for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
@@ -198,7 +198,7 @@ public class MappedClass {
 	public List<MappedField> getFieldsAnnotatedWith(Class<? extends Annotation> clazz){
 		List<MappedField> results = new ArrayList<MappedField>();
 		for(MappedField mf : persistenceFields){
-			if(mf.mappingAnnotations.containsKey(clazz))
+			if(mf.foundAnnotations.containsKey(clazz))
 				results.add(mf);
 		}
 		return results;

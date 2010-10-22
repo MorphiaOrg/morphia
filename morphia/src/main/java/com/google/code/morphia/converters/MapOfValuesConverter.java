@@ -36,8 +36,8 @@ public class MapOfValuesConverter extends TypeConverter {
 		Map<Object, Object> map = (Map<Object, Object>) fromDBObject;
 		Map values = (Map) ReflectionUtils.newInstance(f.getCTor(), HashMap.class);
 		for (Map.Entry<Object, Object> entry : map.entrySet()) {
-			Object objKey = converters.decode(f.getMapKeyType(), entry.getKey());
-			values.put(objKey, converters.decode(f.getSubType(), entry.getValue()));
+			Object objKey = converters.decode(f.getMapKeyClass(), entry.getKey());
+			values.put(objKey, converters.decode(f.getSubClass(), entry.getValue()));
 		}
 		return values;
 	}
