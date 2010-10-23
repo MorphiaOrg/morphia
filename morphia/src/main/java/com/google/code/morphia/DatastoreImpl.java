@@ -637,6 +637,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		
 		WriteResult wr = null;
 		
+		//involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject dbObj = entityToDBObj(entity, involvedObjects);
 

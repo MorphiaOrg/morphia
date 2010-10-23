@@ -215,7 +215,7 @@ public class TestUpdateOps  extends TestBase {
 		assertEquals(13D, cLoaded.getRadius(), 0D);
 	}
 	
-	@Test @Ignore //ignore until SERVER-1470 is fixed.
+	@Test @Ignore("ignore until SERVER-1470 is fixed")
     public void testInsertWithRef() throws Exception {
 		Pic pic = new Pic();
 		pic.name = "fist";

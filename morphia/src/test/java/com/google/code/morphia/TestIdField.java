@@ -67,7 +67,7 @@ public class TestIdField extends TestBase {
 		@Id Map<String, String> id = new HashMap<String, String>();
 	}
 
-	@Test @Ignore
+	@Test @Ignore("need to set the _db in the dbref for this to work...")
     public void testReferenceAsId() throws Exception {
         morphia.map(ReferenceAsId.class);
         

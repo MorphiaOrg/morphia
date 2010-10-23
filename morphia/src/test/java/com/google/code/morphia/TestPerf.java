@@ -23,7 +23,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -41,7 +40,6 @@ import com.mongodb.WriteConcern;
  * @author Scott Hernandez
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-@Ignore
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;
 	static double ReadFailFactor = 1.50;

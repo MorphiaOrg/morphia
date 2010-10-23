@@ -41,25 +41,26 @@ public class MappedField {
 			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
 					Version.class, AlsoLoad.class, NotSaved.class));
 	
-	private Field field; // the field :)
-	private Constructor ctor; // the constructor for the type
-	private String name; // the name to store in mongodb {name:value}
+	protected Field field; // the field :)
+	protected Constructor ctor; // the constructor for the type
+	protected String name; // the name to store in mongodb {name:value}
 	// Annotations that have been found relevant to mapping
 	protected Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
-	private Type subType = null; // the type (T) for the Collection<T>/T[]/Map<?,T>
-	private Type mapKeyType = null; // the type (T) for the Map<T,?>
-	private boolean isSingleValue = true; // indicates the field is a single value
-	private boolean isMongoType = false; // indicated the type is a mongo compatible type (our version of value-type)
-	private boolean isMap = false; // indicated if it implements Map interface
-	private boolean isSet = false; // indicated if the collection is a set (or list)
+	protected Type subType = null; // the type (T) for the Collection<T>/T[]/Map<?,T>
+	protected Type mapKeyType = null; // the type (T) for the Map<T,?>
+	protected boolean isSingleValue = true; // indicates the field is a single value
+	protected boolean isMongoType = false; // indicated the type is a mongo compatible type (our version of value-type)
+	protected boolean isMap = false; // indicated if it implements Map interface
+	protected boolean isSet = false; // indicated if the collection is a set (or list)
 	
-	/** the constructor*/
-	protected MappedField(Field f) {
+	/** the constructor */
+	MappedField(Field f) {
 		f.setAccessible(true);
 		field = f;
 		discover();
 	}
 	
+	/** the constructor */
 	protected MappedField(){}
 	
 	/** Discovers interesting (that we care about) things about the field. */
@@ -271,9 +272,10 @@ public class MappedField {
 
 	/** If the underlying java type is a map then it returns T from Map<T,V> */
 	public Class getMapKeyClass() {
-		return getClass(mapKeyType);
+		return toClass(mapKeyType);
 	}
-	private Class getClass(Type t) {
+
+	protected Class toClass(Type t) {
 		if(t == null) 
 			return null;
 		else if(t instanceof Class)
@@ -288,7 +290,7 @@ public class MappedField {
 	}
 	/** If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>*/
 	public Class getSubClass() {
-		return getClass(subType);
+		return toClass(subType);
 	}
 	
 	public Type getSubType() {
@@ -363,5 +365,4 @@ public class MappedField {
 		
 		return getType();
 	}
-	
 }

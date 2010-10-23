@@ -355,6 +355,12 @@ public class Mapper {
 	}
 	
 	Object fromDb(DBObject dbObject, final Object entity, EntityCache cache) {
+		//hack to bypass things and just read the value.
+		if (entity instanceof MappedField) {
+			readMappedField(dbObject, (MappedField) entity, entity, cache);
+			return entity;
+		}
+		
 		// check the history key (a key is the namespace + id)
 		
 		if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
@@ -365,12 +371,6 @@ public class Mapper {
 				return cachedInstance;
 			else
 				cache.putEntity(key, entity); // to avoid stackOverflow in recursive refs
-		}
-		
-		//hack to bypass things and just read the value.
-		if (entity instanceof MappedField) {
-			readMappedField(dbObject, (MappedField) entity, entity, cache);
-			return entity;
 		}
 		
 		MappedClass mc = getMappedClass(entity);

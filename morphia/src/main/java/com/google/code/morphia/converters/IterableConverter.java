@@ -19,6 +19,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
+
 @SuppressWarnings({"unchecked","rawtypes"})
 public class IterableConverter extends TypeConverter {
 	private final DefaultConverters chain;
@@ -29,9 +30,9 @@ public class IterableConverter extends TypeConverter {
 	
 	@Override
 	protected
-	boolean isSupported(Class c, MappedField optionalExtraInfo) {
-		if (optionalExtraInfo != null)
-			return optionalExtraInfo.isMultipleValues() && !optionalExtraInfo.isMap();
+	boolean isSupported(Class c, MappedField mf) {
+		if (mf != null)
+			return mf.isMultipleValues() && !mf.isMap(); //&& !mf.isTypeMongoCompatible();
 		else
 			return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
 	}
