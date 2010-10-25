@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Vector;
 
 import org.bson.types.ObjectId;
@@ -187,6 +188,17 @@ public class TestMapping  extends TestBase {
 		@AlsoLoad("intList") List<Integer> ints = new ArrayList<Integer>();
 	}
 	
+	@Entity(noClassnameStored=true)
+	private static class ContainsUUID {
+		@Id ObjectId id;
+		UUID uuid = UUID.randomUUID();
+	}
+
+	@Entity(noClassnameStored=true)
+	private static class ContainsUuidId {
+		@Id UUID id = UUID.randomUUID();
+	}
+	
 	public static class ContainsEnum1KeyMap{
 		@Id ObjectId id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
@@ -232,6 +244,31 @@ public class TestMapping  extends TestBase {
 	public static class MapSubclass extends LinkedHashMap<String, Object> {
 		private static final long serialVersionUID = 1L;
 		@Id ObjectId id;
+	}
+
+	@Test
+    public void testUUID() throws Exception {
+		morphia.map(ContainsUUID.class);
+		ContainsUUID cuuid = new ContainsUUID();
+		UUID before = cuuid.uuid;
+		ds.save(cuuid);
+		ContainsUUID loaded = ds.find(ContainsUUID.class).get();
+		assertNotNull(loaded);
+		assertNotNull(loaded.id);
+		assertNotNull(loaded.uuid);
+		assertEquals(before, loaded.uuid);
+	}
+	
+	@Test
+    public void testUuidId() throws Exception {
+		morphia.map(ContainsUuidId.class);
+		ContainsUuidId cuuidId = new ContainsUuidId();
+		UUID before = cuuidId.id;
+		Key<ContainsUuidId> key = ds.save(cuuidId);
+		ContainsUuidId loaded = ds.get(ContainsUuidId.class, before);
+		assertNotNull(loaded);
+		assertNotNull(loaded.id);
+		assertEquals(before, loaded.id);
 	}
 
 	@Test

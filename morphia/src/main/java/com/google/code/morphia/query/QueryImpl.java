@@ -41,7 +41,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	
 	private String[] fields = null;
 	private Boolean includeFields = null;
-	private BasicDBObjectBuilder sort = null;
+	private DBObject sort = null;
 	private DatastoreImpl ds = null;
 	private DBCollection dbColl = null;
 	private int offset = 0;
@@ -119,7 +119,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public DBObject getSortObject() {
-		return (sort == null) ? null : sort.get();
+		return (sort == null) ? null : sort;
 	}
 	
 	public boolean isValidatingNames() {
@@ -154,7 +154,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (snapshotted)
 			cursor.snapshot();
 		if (sort != null)
-			cursor.sort(getSortObject());
+			cursor.sort(sort);
 		if (indexHint != null)
 			cursor.hint(indexHint);
 
@@ -351,9 +351,15 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (snapshotted)
 			throw new QueryException("order cannot be used on a snapshotted query.");
 		
-		sort = BasicDBObjectBuilder.start();
-		String[] sorts = condition.split(",");
-		for (String s : sorts) {
+		sort = parseSortString(condition);
+		
+		return this;
+	}
+	
+	public static BasicDBObject parseSortString(String str) {
+		BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
+		String[] parts = str.split(",");
+		for (String s : parts) {
 			s = s.trim();
 			int dir = 1;
 			
@@ -363,11 +369,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 				s = s.substring(1).trim();
 			}
 			
-			sort = sort.add(s, dir);
+			ret = ret.add(s, dir);
 		}
-		return this;
+		return (BasicDBObject) ret.get();
 	}
-	
 
 	public Iterator<T> iterator() {
 		return fetch().iterator();

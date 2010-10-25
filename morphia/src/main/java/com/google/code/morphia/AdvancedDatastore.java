@@ -11,7 +11,7 @@ import com.mongodb.WriteConcern;
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options.
  * 	
  *  <ul>
- * 		<li>Implements matching methods from the {@code Datastore} but with a specified kind (collection name), or raw types (DBObject). </li>
+ * 		<li>Implements matching methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (DBObject). </li>
  * 	</ul>
  * </p>
  * @author ScottHernandez

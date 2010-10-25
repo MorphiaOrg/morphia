@@ -11,10 +11,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.logging.Logr;
@@ -27,6 +30,8 @@ import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
+import com.google.code.morphia.query.FieldCriteria;
+import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.query.QueryImpl;
@@ -51,7 +56,7 @@ import com.mongodb.WriteResult;
  * 
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "deprecation" })
 public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	private static final Logr log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
@@ -187,23 +192,31 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		throwOnError(wc, wr);
 	}
 
+	public <T> void ensureIndex(Class<T> type, String fields) {
+		ensureIndex(type, null, fields, false, false);
+	}
+
 	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique, boolean dropDupsOnCreate) {
 		ensureIndex(clazz, name, defs, unique, dropDupsOnCreate, false);
 	}
-	
-	public <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] defs, boolean unique, boolean dropDupsOnCreate, boolean background) {
-		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
-		BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
 
-		for (IndexFieldDef def : defs) {
-			String fieldName = def.getField();
-			IndexDirection dir = def.getDirection();
-			if (dir == IndexDirection.BOTH)
-				keys.add(fieldName, 1).add(fieldName, -1);
-			else
-				keys.add(fieldName, (dir == IndexDirection.ASC) ? 1 : -1);
+	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate) {
+		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, false);
+	}
+
+	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate, boolean background) {
+		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, background);
+	}
+	protected <T> void ensureIndex(Class<T> clazz, String name, BasicDBObject fields, boolean unique, boolean dropDupsOnCreate, boolean background) {
+		//validate field names and translate them to the stored values
+		BasicDBObject keys = new BasicDBObject();
+		for(Entry<String, Object> entry : fields.entrySet()){
+			StringBuffer sb = new StringBuffer(entry.getKey());
+			FieldCriteria.validate(clazz, mapr, sb, FilterOperator.IN, "", true, false);
+			keys.put(sb.toString(), entry.getValue());
 		}
-
+		
+		BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
 		if (name != null && name.length() > 0) {
 			keyOpts.add("name", name);
 		}
@@ -218,23 +231,35 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		}
 		
 		DBCollection dbColl = getCollection(clazz);
-		log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
 		
 		BasicDBObject opts = (BasicDBObject) keyOpts.get();
 		if (opts.isEmpty()) {
-			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys);
-			dbColl.ensureIndex(keys.get());
+			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + keys);
+			dbColl.ensureIndex(keys);
 		} else {
-			log.debug("Ensuring index for " + dbColl.getName() + "." + defs + " with keys " + keys + " and opts "
-					+ keyOpts);
-			dbColl.ensureIndex(keys.get(), opts);
+			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + keys + " and opts:" + opts);
+			dbColl.ensureIndex(keys, opts);
 		}
+		
+	}
+	
+	@SuppressWarnings({ "rawtypes"})
+	public void ensureIndex(Class clazz, String name, IndexFieldDef[] defs, boolean unique, boolean dropDupsOnCreate, boolean background) {
+		BasicDBObjectBuilder keys = BasicDBObjectBuilder.start();
+
+		for (IndexFieldDef def : defs) {
+			String fieldName = def.getField();
+			IndexDirection dir = def.getDirection();
+			keys.add(fieldName, (dir == IndexDirection.ASC) ? 1 : -1);
+		}
+		
+		ensureIndex(clazz, name, (BasicDBObject) keys.get(), unique, dropDupsOnCreate, background);
 	}
 	
 	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
 		ensureIndex(type, new IndexFieldDef(name, dir));
 	}
-	
+
 	public <T> void ensureIndex(Class<T> type, IndexFieldDef... fields) {
 		ensureIndex(type, null, fields, false, false);
 	}
@@ -244,8 +269,19 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected void ensureIndexes(MappedClass mc, boolean background) {
-		if (mc.getEntityAnnotation() == null)
+		//skip embedded types
+		if (mc.getEmbeddedAnnotation() != null)
 			return;
+
+		//Ensure indexes from class annotation
+		Indexes idxs = (Indexes) mc.getAnnotation(Indexes.class);
+		if (idxs != null && idxs.value() != null && idxs.value().length > 0)
+			for(Index index : idxs.value()) {
+				BasicDBObject fields = QueryImpl.parseSortString(index.value());
+				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background );
+			}
+
+		//Ensure indexes from field annotations
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);

@@ -29,9 +29,9 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 	
 	@SuppressWarnings("unchecked")
 	protected FieldCriteria(QueryImpl<?> query, String field, FilterOperator operator, Object value, boolean validateNames, boolean validateTypes) {
-		//The field we are filtering on, in the java object; only known if we are validating
 		StringBuffer sb = new StringBuffer(field); //validate might modify prop string to translate java field name to db field name
-		MappedField mf = validate(query, sb, operator, value, validateNames, validateTypes);
+		MappedField mf = validate(query.getEntityClass(), query.getDatastore().getMapper(), sb, operator, value, validateNames, validateTypes);
+		//The field we are filtering on, in the java object; only known if we are validating
 		field = sb.toString();
 
 		Mapper mapr = query.getDatastore().getMapper();
@@ -46,7 +46,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 					mc = mapr.getMappedClass(value);
 		} catch (Exception e) {
 			//Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will fail/return-empty anyway)
-			log.debug("Error during mapping filter criteria: ", e);
+			log.debug("Error during mapping of filter criteria: ", e);
 		}
 	
 		//convert the value to Key (DBRef) if it is a entity/@Reference or the field type is Key
@@ -85,7 +85,8 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 	
 	/** Validate the path, and value type, returning the mappedfield for the field at the path 
 	 * @param value2 */
-	protected MappedField validate(QueryImpl<?> query, StringBuffer origProp, FilterOperator operator, Object value, boolean validateNames, boolean validateTypes) {
+	@SuppressWarnings("rawtypes")
+	public static MappedField validate(Class clazz, Mapper mapr, StringBuffer origProp, FilterOperator operator, Object value, boolean validateNames, boolean validateTypes) {
 		//TODO: cache validations (in static?).
 		
 		MappedField mf = null;
@@ -94,9 +95,9 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 		
 		if (validateNames) {
 			String[] parts = prop.split("\\.");
-			if (query.getEntityClass() == null) return null;
+			if (clazz == null) return null;
 			
-			MappedClass mc = query.getDatastore().getMapper().getMappedClass(query.getEntityClass());
+			MappedClass mc = mapr.getMappedClass(clazz);
 			for(int i=0; ; ) {
 				String part = parts[i];
 				mf = mc.getMappedField(part);
@@ -104,7 +105,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 				//translate from java field name to stored field name
 				if (mf == null) {
 					mf = mc.getMappedFieldByJavaField(part);
-				    if (mf == null) throw new QueryException("The field '" + part + "' could not be found in '" + query.getEntityClass().getName() + 
+				    if (mf == null) throw new QueryException("The field '" + part + "' could not be found in '" + clazz.getName() + 
 				    										"' while validating - " + prop + 
 				    										"; if you wish to continue please disable validation.");
 				    hasTranslations = true;
@@ -119,11 +120,11 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 				
 				//catch people trying to search into @Reference/@Serialized fields
 				if (i < parts.length && !canQueryPast(mf))
-					throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + query.getEntityClass().getName()+ "' while validating - " + prop);
+					throw new QueryException("Can not use dot-notation past '" + part + "' could not be found in '" + clazz.getName()+ "' while validating - " + prop);
 				
 				if (i >= parts.length) break;
 				//get the next MappedClass for the next field validation
-				mc = query.getDatastore().getMapper().getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
+				mc = mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
 			}
 			
 			//record new property string if there has been a translation to any part
@@ -140,8 +141,6 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 				if (	 (mf.isSingleValue() && !isCompatibleForCriteria(mf.getType(), operator, value)) || 
 						((mf.isMultipleValues() && !isCompatibleForCriteria(mf.getSubClass(), operator, value)))) {
 		
-//					System.out.println(mf.getField());
-					
 					Throwable t = new Throwable();
 					StackTraceElement ste = getFirstClientLine(t);
 					if (log.isWarningEnabled())

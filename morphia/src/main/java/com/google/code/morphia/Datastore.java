@@ -127,11 +127,17 @@ public interface Datastore {
 	
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
-	/** Ensures (creating if necessary) the index and direction */
+	/** Ensures (creating if necessary) the index including the field(s) + directions*/
+	@Deprecated
 	<T> void ensureIndex(Class<T> clazz, IndexFieldDef...fields);
-	/** Ensures (creating if necessary) the index and direction */
+	/** Ensures (creating if necessary) the index including the field(s) + directions*/
+	@Deprecated
 	<T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
-	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
+	/** Ensures (creating if necessary) the index including the field(s) + directions; eg fields = "field1, -field2" ({field1:1, field2:-1}) */
+	<T> void ensureIndex(Class<T> clazz, String fields);
+	/** Ensures (creating if necessary) the index including the field(s) + directions; eg fields = "field1, -field2" ({field1:1, field2:-1}) */
+	<T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
+
 	void ensureIndexes();
 	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}, possibly in the background*/
 	void ensureIndexes(boolean background);

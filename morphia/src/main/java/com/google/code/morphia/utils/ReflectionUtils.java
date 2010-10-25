@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
@@ -216,7 +217,8 @@ public class ReflectionUtils
                 || (type == Short.class) 	|| (type == Integer.class) 	|| (type == int.class) 		|| (type == Long.class)
                 || (type == long.class) 	|| (type == Double.class) 	|| (type == double.class) 	|| (type == float.class)
                 || (type == Float.class) 	|| (type == Boolean.class) 	|| (type == boolean.class) 	|| (type == Byte.class)
-                || (type == byte.class) 	|| (type == Date.class) 	|| (type == Locale.class) 	|| (type == Class.class) || type.isEnum();
+                || (type == byte.class) 	|| (type == Date.class) 	|| (type == Locale.class) 	|| (type == Class.class) 
+                || (type == UUID.class) 	|| type.isEnum();
     }
 
     /**

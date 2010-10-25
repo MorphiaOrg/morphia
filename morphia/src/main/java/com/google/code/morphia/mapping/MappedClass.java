@@ -23,6 +23,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.EntityListeners;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.annotations.Polymorphic;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
@@ -68,14 +69,14 @@ public class MappedClass {
 	
 	/** Annotations we are interested in looking for. */
 	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
-			Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class, Version.class));
+			Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class, Version.class, Indexes.class));
 	/** Annotations we were interested in, and found. */
-	private Map<Class<? extends Annotation>, Annotation> releventAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
+	private Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
 	
-	/** Methods which are lifecycle events */
+	/** Methods which are life-cycle events */
 	private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 	
-	/** the collectionName based on the type and @Entity value(); this can be overriden by the @CollectionName field on the instance*/
+	/** the collectionName based on the type and @Entity value(); this can be overridden by the @CollectionName field on the instance*/
 	private String collName;
 	
 	/** a list of the fields to map */
@@ -111,7 +112,7 @@ public class MappedClass {
 		List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();
 		lifecycleClasses.add(clazz);
 		
-		EntityListeners entityLisAnn = (EntityListeners) releventAnnotations.get(EntityListeners.class);
+		EntityListeners entityLisAnn = (EntityListeners) foundAnnotations.get(EntityListeners.class);
 		if (entityLisAnn != null && entityLisAnn.value() != null && entityLisAnn.value().length != 0)
 			for (Class<?> c : entityLisAnn.value())
 				lifecycleClasses.add(c);
@@ -128,8 +129,8 @@ public class MappedClass {
 			}
 		}
 		
-		embeddedAn = (Embedded)releventAnnotations.get(Embedded.class);
-		entityAn = (Entity)releventAnnotations.get(Entity.class);
+		embeddedAn = (Embedded)foundAnnotations.get(Embedded.class);
+		entityAn = (Entity)foundAnnotations.get(Entity.class);
 		// polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
 		collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 		
@@ -186,7 +187,7 @@ public class MappedClass {
 	private void addAnnotation(Class<? extends Annotation> c) {
 		Annotation ann = ReflectionUtils.getAnnotation(getClazz(), c);
 		if (ann != null)
-			releventAnnotations.put(c, ann);
+			foundAnnotations.put(c, ann);
 	}
 	
 	@Override
@@ -357,7 +358,14 @@ public class MappedClass {
 	 * @return the releventAnnotations
 	 */
 	public Map<Class<? extends Annotation>, Annotation> getReleventAnnotations() {
-		return releventAnnotations;
+		return foundAnnotations;
+	}
+	
+	/**
+	 * @return the instance if it was found
+	 */
+	public Annotation getAnnotation(Class<? extends Annotation> clazz) {
+		return foundAnnotations.get(clazz);
 	}
 	
 	/**
