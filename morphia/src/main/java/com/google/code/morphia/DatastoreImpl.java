@@ -795,12 +795,17 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return update(query, ops, createIfMissing, false, wc);
 	}
 	
-
 	public <T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing) {
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject u = mapr.toDBObject(entity, involvedObjects);
 		
 		UpdateResults<T> res = update(query, u, createIfMissing, false, getWriteConcern(entity));
+		
+		//update @Id field
+		CommandResult gle = res.getWriteResult().getCachedLastError();
+		if(gle != null && res.getInsertedCount() > 0)
+			mapr.updateKeyInfo(entity, new BasicDBObject(Mapper.ID_KEY, res.getNewId()), null);
+		
 		postSaveOperations(entity, u, getCollection(entity), involvedObjects);
 		return res;
 	}
