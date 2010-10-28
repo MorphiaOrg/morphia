@@ -159,14 +159,21 @@ class EmbeddedMapper implements CustomMapper{
 			
 			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections.singletonList((BasicDBObject) dbVal);
 			
-			for (DBObject dbObj : dbVals) {
-				Object newEntity;
+			for (Object val : dbVals) {
+				Object newEntity = null;
 				
-				//run converters
-				if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getSubClass()))
-					newEntity = mapr.converters.decode(mf.getSubClass(), dbObj, mf);
-				else {
-					newEntity = readMapOrCollectionOrEntity(dbObj, mf, cache, mapr);
+				if (val != null) {
+					if(!(val instanceof DBObject))
+						throw new RuntimeException("invalid type:" + val.getClass());
+					
+					DBObject dbObj = (DBObject)val;
+					
+					//run converters
+					if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getSubClass()))
+						newEntity = mapr.converters.decode(mf.getSubClass(), dbObj, mf);
+					else {
+						newEntity = readMapOrCollectionOrEntity(dbObj, mf, cache, mapr);
+					}
 				}
 				
 				values.add(newEntity);

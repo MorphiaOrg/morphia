@@ -52,6 +52,7 @@ public class CollectionOfValuesTest extends TestBase {
 	@Test
 	public void testListOfListMapping() throws Exception {
 		morphia.map(ContainsListOfList.class);
+		ds.delete(ds.find(ContainsListOfList.class));
 		ContainsListOfList entity = new ContainsListOfList();
 		ArrayList<List<String>> testList = new ArrayList<List<String>>();
 		ArrayList<String> element1 = new ArrayList<String>();
