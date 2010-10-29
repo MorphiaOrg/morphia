@@ -119,9 +119,9 @@ public class Mapper {
 	/** Creates a MappedClass and validates it. */
 	public MappedClass addMappedClass(Class c) {
 		MappedClass mc = new MappedClass(c, this);
-		mc.validate();
 		return addMappedClass(mc, true);
 	}
+	
 	/** Validates MappedClass and adds to internal cache. */
 	public MappedClass addMappedClass(MappedClass mc) {
 		return addMappedClass(mc, true);
@@ -139,7 +139,7 @@ public class Mapper {
 		if (mcs == null)
 			mcs = new HashSet();
 		mcs.add(mc);
-		
+
 		return mc;
 	}
 

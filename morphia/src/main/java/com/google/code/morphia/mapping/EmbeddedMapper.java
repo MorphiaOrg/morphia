@@ -7,7 +7,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -157,17 +156,20 @@ class EmbeddedMapper implements CustomMapper{
 		Object dbVal = mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {
 			
-			List<BasicDBObject> dbVals = (dbVal instanceof List) ? (List<BasicDBObject>) dbVal : Collections.singletonList((BasicDBObject) dbVal);
+			List dbVals = null;
+			if (dbVal instanceof List)
+				dbVals = (List) dbVal;
+			else {
+				dbVals = new BasicDBList();
+				dbVals.add(dbVal);
+			}
 			
-			for (Object val : dbVals) {
+			for (Object o : dbVals) {
+				
+				DBObject dbObj = (DBObject) o;
 				Object newEntity = null;
 				
-				if (val != null) {
-					if(!(val instanceof DBObject))
-						throw new RuntimeException("invalid type:" + val.getClass());
-					
-					DBObject dbObj = (DBObject)val;
-					
+				if (dbObj != null) {
 					//run converters
 					if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getSubClass()))
 						newEntity = mapr.converters.decode(mf.getSubClass(), dbObj, mf);

@@ -637,6 +637,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return dbObj;
 	}
 	
+	/** call postSaveOperations and returns Key for entity */
 	protected <T> Key<T> postSaveGetKey(T entity, DBObject dbObj, DBCollection dbColl, Map<Object, DBObject> involvedObjects){
 		if (dbObj.get(Mapper.ID_KEY) == null)
 			throw new MappingException("Missing _id after save!");
@@ -797,16 +798,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public <T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing) {
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-		DBObject u = mapr.toDBObject(entity, involvedObjects);
+		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
 		
-		UpdateResults<T> res = update(query, u, createIfMissing, false, getWriteConcern(entity));
+		UpdateResults<T> res = update(query, dbObj, createIfMissing, false, getWriteConcern(entity));
 		
-		//update @Id field
+		//update _id field
 		CommandResult gle = res.getWriteResult().getCachedLastError();
 		if(gle != null && res.getInsertedCount() > 0)
-			mapr.updateKeyInfo(entity, new BasicDBObject(Mapper.ID_KEY, res.getNewId()), null);
-		
-		postSaveOperations(entity, u, getCollection(entity), involvedObjects);
+			dbObj.put(Mapper.ID_KEY, res.getNewId());
+
+		postSaveOperations(entity, dbObj, getCollection(entity), involvedObjects);
 		return res;
 	}
 	
