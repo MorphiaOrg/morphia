@@ -269,8 +269,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	protected void ensureIndexes(MappedClass mc, boolean background) {
+		ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
+	}
+	
+	protected void ensureIndexes(MappedClass mc, boolean background, ArrayList<MappedClass> parentMCs, ArrayList<MappedField> parentMFs) {
+		if (parentMCs.contains(mc))
+			return;
+		
 		//skip embedded types
-		if (mc.getEmbeddedAnnotation() != null)
+		if (mc.getEmbeddedAnnotation() != null && (parentMCs == null || parentMCs.isEmpty()))
 			return;
 
 		//Ensure indexes from class annotation
@@ -281,12 +288,28 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background );
 			}
 
-		//Ensure indexes from field annotations
+		//Ensure indexes from field annotations, and embedded entities
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
-				ensureIndex(mc.getClazz(), index.name(), new IndexFieldDef[] {new IndexFieldDef(mf.getNameToStore(), index
-						.value())}, index.unique(), index.dropDups(), index.background() ? index.background() : background );
+				StringBuilder field = new StringBuilder();
+				field.append(index.value() == IndexDirection.ASC ? "" : "-");
+				Class<?> indexedClass = (parentMCs.isEmpty() ? mc : parentMCs.get(0)).getClazz();
+				if (!parentMCs.isEmpty())
+					for(MappedField pmf : parentMFs)
+						field.append(pmf.getNameToStore()).append(".");
+				
+				field.append(mf.getNameToStore());
+				
+				ensureIndex(indexedClass, index.name(), field.toString(), index.unique(), index.dropDups(), index.background() ? index.background() : background );
+			}
+			
+			if (!mf.isTypeMongoCompatible()) {
+				ArrayList<MappedClass> newParentClasses = (ArrayList<MappedClass>) parentMCs.clone();
+				ArrayList<MappedField> newParents = (ArrayList<MappedField>) parentMFs.clone();
+				newParentClasses.add(mc);
+				newParents.add(mf);
+				ensureIndexes(mapr.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background, newParentClasses, newParents);
 			}
 		}
 	}
@@ -391,7 +414,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	/** Queries the server to check for each DBRef */
-	@SuppressWarnings("rawtypes")
 	public <T> List<Key<T>> getKeysByRefs(List<DBRef> refs) {
 		ArrayList<Key<T>> tempKeys = new ArrayList<Key<T>>(refs.size());
 		
@@ -403,7 +425,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				kindMap.put(ref.getRef(), new ArrayList<DBRef>(Collections.singletonList((DBRef) ref)));
 		}
 		for (String kind : kindMap.keySet()) {
-			List objIds = new ArrayList();
+			List<Object> objIds = new ArrayList<Object>();
 			List<DBRef> kindRefs = kindMap.get(kind);
 			for (DBRef key : kindRefs) {
 				objIds.add(key.getId());
@@ -447,7 +469,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				kindMap.put(key.getKind(), new ArrayList<Key>(Collections.singletonList((Key) key)));
 		}
 		for (String kind : kindMap.keySet()) {
-			List objIds = new ArrayList();
+			List<Object> objIds = new ArrayList<Object>();
 			List<Key> kindKeys = kindMap.get(kind);
 			for (Key key : kindKeys) {
 				objIds.add(key.getId());
@@ -907,11 +929,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	/** Converts a list of refs to keys */
-	@SuppressWarnings("rawtypes")
 	public static <T> List<Key<T>> refsToKeys(List<DBRef> refs, Class<T> c) {
 		ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
 		for(DBRef ref : refs) {
-			keys.add(new Key(ref));
+			keys.add(new Key<T>(ref));
 		}
 		return keys;
 	}
@@ -922,12 +943,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
     
     /** Get the WriteConcern constants by name: NONE, NORMAL, SAFE, FSYNC_SAFE, REPLICA_SAFE. (matching is done case insensitively)*/
     private static WriteConcern getConcernByName(String name) {
-    	if (_namedConcerns == null) {
-			HashMap<String, WriteConcern> newMap = new HashMap<String, WriteConcern>( 8 , 1 );
+		if (_namedConcerns == null) {
+			HashMap<String, WriteConcern> newMap = new HashMap<String, WriteConcern>(8, 1);
 			for (Field f : WriteConcern.class.getFields())
-				if (Modifier.isStatic( f.getModifiers() ) && f.getType().equals( WriteConcern.class )) {
+				if (Modifier.isStatic(f.getModifiers()) && f.getType().equals(WriteConcern.class)) {
 					try {
-						newMap.put( f.getName().toLowerCase(), (WriteConcern) f.get( null ) );
+						newMap.put(f.getName().toLowerCase(), (WriteConcern) f.get(null));
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}

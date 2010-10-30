@@ -18,9 +18,11 @@
 package com.google.code.morphia.annotations;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Defines an index
@@ -28,6 +30,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Documented @Inherited
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
 public @interface Index {
 	/** List of fields (prepended with "-" for desc; defaults to asc) */
 	String value();

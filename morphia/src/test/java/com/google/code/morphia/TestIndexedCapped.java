@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.CappedAt;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Index;
@@ -92,6 +93,18 @@ public class TestIndexedCapped  extends TestBase{
 		@Indexed public boolean active;
 	}
 
+	@Embedded
+	private static class IndexedEmbed {
+		@Indexed(IndexDirection.DESC)
+		String name;
+	}
+	
+	private static class ContainsIndexedEmbed {
+		@Id ObjectId id;
+		IndexedEmbed e;
+	}
+	
+	
 	@Before @Override
 	public void setUp() {
 		super.setUp();
@@ -117,12 +130,20 @@ public class TestIndexedCapped  extends TestBase{
 	
 	@Test
 	public void testIndexes() {
-		MappedClass mc = morphia.getMapper().getMappedClass(Ad2.class);
-		this.morphia.map(Ad2.class);
+		MappedClass mc = this.morphia.getMapper().addMappedClass(Ad2.class);
 
 		assertFalse(hasNamedIndex("active_1_lastMod_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 		ds.ensureIndexes(Ad2.class);
 		assertTrue(hasNamedIndex("active_1_lastMod_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+	}
+
+	@Test
+	public void testEmbeddedIndex() {
+		MappedClass mc = this.morphia.getMapper().addMappedClass(ContainsIndexedEmbed.class);
+
+		assertFalse(hasNamedIndex("e.name_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+		ds.ensureIndexes(ContainsIndexedEmbed.class);
+		assertTrue(hasNamedIndex("e.name_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 
 	@Test
