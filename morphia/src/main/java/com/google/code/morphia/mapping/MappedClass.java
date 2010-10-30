@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.EntityInterceptor;
+import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.EntityListeners;
@@ -68,8 +69,15 @@ public class MappedClass {
 	//    private Polymorphic polymorphicAn;
 	
 	/** Annotations we are interested in looking for. */
-	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
-			Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class, Version.class, Indexes.class));
+	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(Arrays.asList(
+			Embedded.class, 
+			Entity.class, 
+			Polymorphic.class, 
+			EntityListeners.class, 
+			Version.class, 
+			Converters.class, 
+			Indexes.class));
+	
 	/** Annotations we were interested in, and found. */
 	private Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
 	

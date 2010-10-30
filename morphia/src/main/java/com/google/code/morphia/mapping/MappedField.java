@@ -37,10 +37,16 @@ import com.mongodb.DBObject;
 public class MappedField {
 	private static final Logr log = MorphiaLoggerFactory.get(MappedField.class);
 	// The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(
-			Arrays.asList(Serialized.class, Indexed.class, Property.class, Reference.class, Embedded.class, Id.class,
-					Version.class, AlsoLoad.class, NotSaved.class));
-	
+	public static List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>(Arrays.asList(
+			Serialized.class, 
+			Indexed.class, 
+			Property.class, 
+			Reference.class, 
+			Embedded.class, 
+			Id.class,
+			Version.class, 
+			AlsoLoad.class, 
+			NotSaved.class));
 	protected Field field; // the field :)
 	protected Constructor ctor; // the constructor for the type
 	protected String name; // the name to store in mongodb {name:value}

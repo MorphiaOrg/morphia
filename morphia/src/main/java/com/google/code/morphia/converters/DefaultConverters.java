@@ -15,6 +15,7 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -30,6 +31,7 @@ public class DefaultConverters {
 	
 	private List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
 	private Map<Class,List<TypeConverter>> tcMap = new HashMap<Class,List<TypeConverter>>();
+	private List<Class<? extends TypeConverter>> registeredConverterClasses = new LinkedList<Class<? extends TypeConverter>>();
 	
 	private Mapper mapr;
 	
@@ -72,7 +74,7 @@ public class DefaultConverters {
 	 * Add a type converter. If it is a duplicate for an existing type, it will override that type.
 	 * @param tc
 	 */
-	public void addConverter(TypeConverter tc) {
+	public TypeConverter addConverter(TypeConverter tc) {
 		if (tc.getSupportedTypes() != null)
 			for(Class c : tc.getSupportedTypes())
 				addTypedConverter(c, tc);
@@ -80,6 +82,13 @@ public class DefaultConverters {
 			untypedTypeEncoders.add(tc);
 		
 		tc.setMapper(mapr);
+		
+		registeredConverterClasses.add(tc.getClass());
+		return tc;
+	}
+	
+	public TypeConverter addConverter(Class<? extends TypeConverter> clazz) {
+		return addConverter((TypeConverter) ReflectionUtils.createInstance(clazz));
 	}
 
 	/**
@@ -87,12 +96,18 @@ public class DefaultConverters {
 	 * @param tc
 	 */
 	public void removeConverter(TypeConverter tc) {
-		if (untypedTypeEncoders.contains(tc))
+		if (tc.getSupportedTypes() == null)
 			untypedTypeEncoders.remove(tc);
+		else
+			for (List<TypeConverter> tcList : tcMap.values())
+				if(tcList.contains(tc))
+					tcList.remove(tc);
 		
-		for (List<TypeConverter> tcList : tcMap.values())
-			if(tcList.contains(tc))
-				tcList.remove(tc);
+		registeredConverterClasses.remove(tc.getClass());		
+	}
+
+	public boolean isRegistered(Class<? extends TypeConverter> tcClass) {
+		return registeredConverterClasses.contains(tcClass);
 	}
 	
 	private void addTypedConverter(Class type, TypeConverter tc) {
@@ -105,6 +120,7 @@ public class DefaultConverters {
 			tcMap.put(type, vals);
 		}
 	}
+	
 	public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
 		Object object = mf.getDbObjectValue(dbObj);
 		if (object == null) {

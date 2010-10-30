@@ -25,8 +25,8 @@ import org.junit.Test;
 
 import com.google.code.morphia.AdvancedDatastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.converters.DefaultConverters;
 import com.google.code.morphia.converters.IntegerConverter;
 import com.google.code.morphia.converters.SimpleValueConverter;
 import com.google.code.morphia.converters.TypeConverter;
@@ -66,6 +66,7 @@ public class CustomConvertersTest {
 		}
 	}
 	
+	@Converters(CharacterToByteConverter.class)
 	static class CharEntity {
 		@Id ObjectId id = new ObjectId();
 		Character c = 'a';
@@ -84,9 +85,9 @@ public class CustomConvertersTest {
 		mongo.dropDatabase("morphia_test");
 		db = mongo.getDB("morphia_test");
         ds = (AdvancedDatastore) morphia.createDatastore(mongo, db.getName());
-        DefaultConverters dc = morphia.getMapper().getConverters();
-        //override the Character/char converter
-        dc.addConverter(new CharacterToByteConverter());
+//        DefaultConverters dc = morphia.getMapper().getConverters();
+//        //override the Character/char converter
+//        dc.addConverter(new CharacterToByteConverter());
 	}
 	
 	@Test

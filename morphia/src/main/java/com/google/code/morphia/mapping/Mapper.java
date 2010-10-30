@@ -22,6 +22,7 @@ import java.util.Set;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
+import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
@@ -33,6 +34,7 @@ import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.converters.DefaultConverters;
+import com.google.code.morphia.converters.TypeConverter;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.cache.DefaultEntityCache;
@@ -133,6 +135,12 @@ public class Mapper {
 		if (validate)
 			mc.validate();
 		
+		Converters c = (Converters) mc.getAnnotation(Converters.class);
+		if (c != null)
+			for(Class<? extends TypeConverter> clazz : c.value())
+				if(!converters.isRegistered(clazz))
+					converters.addConverter(clazz);
+					
 		mappedClasses.put(mc.getClazz().getName(), mc);
 		
 		Set<MappedClass> mcs = mappedClassesByCollection.get(mc.getCollectionName());

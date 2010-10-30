@@ -562,13 +562,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	protected Object getId(Object entity) {
 		entity = ProxyHelper.unwrap(entity);
-		MappedClass mc;
-		String keyClassName = entity.getClass().getName();
-		if (mapr.getMappedClasses().containsKey(keyClassName))
-			mc = mapr.getMappedClasses().get(keyClassName);
-		else
-			mc = new MappedClass(entity.getClass(), getMapper());
-		
+//		String keyClassName = entity.getClass().getName();
+		MappedClass mc = mapr.getMappedClass(entity.getClass());
+//		
+//		if (mapr.getMappedClasses().containsKey(keyClassName))
+//			mc = mapr.getMappedClasses().get(keyClassName);
+//		else
+//			mc = new MappedClass(entity.getClass(), getMapper());
+//		
 		try {
 			return mc.getIdField().get(entity);
 		} catch (Exception e) {
