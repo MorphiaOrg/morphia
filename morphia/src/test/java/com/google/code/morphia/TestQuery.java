@@ -335,8 +335,20 @@ public class TestQuery  extends TestBase {
 
         q = ads.createQuery(PhotoWithKeywords.class).disableValidation().filter("$or", orList);
         Assert.assertEquals(1, q.countAll());
+    }
+
+    @Test
+    public void testFluentOrQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
         
-        
+        AdvancedDatastore ads = (AdvancedDatastore) ds;
+        Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class);
+        q.or(
+        		q.criteria("keywords.keyword").equal("scott"),
+        		q.criteria("keywords.keyword").equal("ralph")); 
+
+        Assert.assertEquals(1, q.countAll());
     }
 
     @Test
