@@ -131,7 +131,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T> void delete(String kind, T id) {
-		DBCollection dbColl = getDB().getCollection(kind);
+		DBCollection dbColl = getCollection(kind);
 		delete(dbColl, id, defConcern);
 	}
 	
@@ -373,7 +373,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> Query<T> find(String kind, Class<T> clazz) {
-		return new QueryImpl<T>(clazz, getDB().getCollection(kind), this);
+		return new QueryImpl<T>(clazz, getCollection(kind), this);
 	}
 	
 
@@ -525,6 +525,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return getCollection(obj.getClass());
 	}
 	
+	protected DBCollection getCollection(String kind) {
+		if (kind == null) return null;
+		return getDB().getCollection(kind);
+	}
 
 	public <T> long getCount(T entity) {
 		entity = ProxyHelper.unwrap(entity);
@@ -538,7 +542,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public long getCount(String kind) {
-		return getDB().getCollection(kind).getCount();
+		return getCollection(kind).getCount();
 	}
 	
 
@@ -628,13 +632,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> Key<T> insert(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
-		DBCollection dbColl = getDB().getCollection(kind);
+		DBCollection dbColl = getCollection(kind);
 		return insert(dbColl, entity, getWriteConcern(entity));
 	}
 
 	public <T> Key<T> insert(String kind, T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
-		DBCollection dbColl = getDB().getCollection(kind);
+		DBCollection dbColl = getCollection(kind);
 		return insert(dbColl, entity, wc);
 	}
 	
@@ -767,7 +771,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public <T> Key<T> save(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
-		DBCollection dbColl = getDB().getCollection(kind);
+		DBCollection dbColl = getCollection(kind);
 		return save(dbColl, entity, getWriteConcern(entity));
 	}
 	
