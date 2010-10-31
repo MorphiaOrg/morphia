@@ -218,8 +218,9 @@ public class TestAsListPerf extends TestBase {
 	}
 	
 	public static double morphiaQueryAndMorphiaConv(final int nbOfHits, final Datastore ds, final Morphia morphia) {
-		Query<Address> query = ds.createQuery(Address.class);
-		query.field("parity").equal(0);
+		Query<Address> query = ds.createQuery(Address.class).
+									order("name").
+									field("parity").equal(0);
 		long start = System.nanoTime();
 		List<Address> resultList = query.asList();
 		long duration = (System.nanoTime() - start) / 1000000; //ns -> ms
@@ -228,10 +229,11 @@ public class TestAsListPerf extends TestBase {
 	}
 	
 	public static double driverQueryAndMorphiaConv(final int nbOfHits, final Datastore ds, final Morphia morphia) {
-		BasicDBObject query = new BasicDBObject();
-		query.append("parity", 0);
 		long start = System.nanoTime();
-		List<DBObject> list = ds.getDB().getCollection("Address").find(query).toArray();
+		List<DBObject> list = ds.getDB().getCollection("Address").
+									find(new BasicDBObject("parity", 0)).
+									sort(new BasicDBObject("name", 1)).
+									toArray();
 		EntityCache entityCache = new DefaultEntityCache();
 		List<Address> resultList = new LinkedList<Address>();
 		for (DBObject dbObject : list) {
