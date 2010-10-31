@@ -31,17 +31,22 @@ public class TestAsListPerf extends TestBase {
 	final int nbOfTasks = 300;
 	final int threadPool = 10;
 	
+	@Override
+	public void dropDB() {
+		//do nothing...
+	}
 	
 	@Override
 	public void setUp() {
 		super.setUp();
         morphia.map(Address.class);
-        
-		for (int i = 0; i < addressNb; i++) {
-			Address address = new Address(i);
-			ds.save(address);
-		}
-
+        if (this.ds.getCount(Address.class) == 0) {
+			for (int i = 0; i < addressNb; i++) {
+				Address address = new Address(i);
+				ds.save(address);	
+			}
+			ds.find(Address.class).filter("name", "random").limit(-1).fetch();
+        }
 	}
 
 	@Test
