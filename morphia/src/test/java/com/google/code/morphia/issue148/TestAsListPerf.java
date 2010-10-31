@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.Datastore;
@@ -24,7 +25,7 @@ import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-//@Ignore("enable when testing on issue")
+@Ignore("enable when testing on issue")
 public class TestAsListPerf extends TestBase {
 	final int addressNb = 2000;
 	final int nbOfTasks = 300;
