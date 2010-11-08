@@ -16,16 +16,16 @@
 
 package com.google.code.morphia.query;
 
-/** Error during query. 
+/** Error during update. 
  *  @author ScottHernandez */
-public class QueryException extends RuntimeException {
+public class UpdateException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public QueryException( String message ) {
+	public UpdateException( String message ) {
             super(message);
     }
 
-    public QueryException( String message, Throwable cause ) {
+    public UpdateException( String message, Throwable cause ) {
             super(message, cause);
     }
 

@@ -26,9 +26,11 @@ public interface Datastore {
 	<T,V> void delete(Class<T> clazz, Iterable<V> ids);
 	/** Deletes the given entities based on the query */
 	<T> void delete(Query<T> q);
+	/** Deletes the given entities based on the query, with the WriteConcern */
 	<T> void delete(Query<T> q, WriteConcern wc);
-	/** Deletes the given entity (by id) */
+	/** Deletes the given entity (by @Id) */
 	<T> void delete(T entity);
+	/** Deletes the given entity (by @Id), with the WriteConcern */
 	<T> void delete(T entity, WriteConcern wc);
 
 	/** Find all instances by type */
@@ -76,14 +78,21 @@ public interface Datastore {
 	/** Gets the count of items returned by this query; same as {@code query.countAll()}*/
 	<T> long getCount(Query<T> query); 
 	
-	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
+	/** Saves the entities (Objects) and updates the @Id field */
 	<T> Iterable<Key<T>> save(Iterable<T> entities);
+	/** Saves the entities (Objects) and updates the @Id field, with the WriteConcern  */
 	<T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
-	/** Saves the entities (Objects) and updates the @Id, @CollectionName fields */
+	/** Saves the entities (Objects) and updates the @Id field */
 	<T> Iterable<Key<T>> save(T... entities);
-	/** Saves the entity (Object) and updates the @Id, @CollectionName fields */
+	/** Saves the entity (Object) and updates the @Id field */
 	<T> Key<T> save(T entity);
+	/** Saves the entity (Object) and updates the @Id field, with the WriteConcern  */
 	<T> Key<T> save(T entity, WriteConcern wc);
+
+	/** Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity. */
+	<T> Key<T> merge(T entity);
+	/** Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity. */
+	<T> Key<T> merge(T entity, WriteConcern wc);
 
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
@@ -138,12 +147,13 @@ public interface Datastore {
 	/** Ensures (creating if necessary) the index including the field(s) + directions; eg fields = "field1, -field2" ({field1:1, field2:-1}) */
 	<T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
 
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}*/
 	void ensureIndexes();
-	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}, possibly in the background*/
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the background*/
 	void ensureIndexes(boolean background);
-	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}*/
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}*/
 	<T> void ensureIndexes(Class<T>  clazz);
-	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed)}, possibly in the background*/
+	/** Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the background*/
 	<T> void ensureIndexes(Class<T>  clazz, boolean background);
 
 	/** ensure capped DBCollections for {@code Entity}(s) */

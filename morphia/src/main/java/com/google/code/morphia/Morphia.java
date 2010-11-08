@@ -18,12 +18,10 @@ package com.google.code.morphia;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
@@ -104,15 +102,6 @@ public class Morphia {
         } catch (ClassNotFoundException cnfex) {
             throw new MappingException("Could not get map classes from package " + packageName, cnfex);
         }
-    }
-
-    /**
-     * Get a set of all classes that are mapped by this instance.
-     *
-     * @return all classes that are mapped by this instance
-     */
-    public Map<String, MappedClass> getMappedClasses() {
-        return Collections.unmodifiableMap(mapper.getMappedClasses());
     }
 
     /**

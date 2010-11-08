@@ -14,11 +14,14 @@ package com.google.code.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
@@ -47,6 +50,7 @@ import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 /**
  * 
@@ -68,10 +72,11 @@ public class Mapper {
 	public static final String CLASS_NAME_FIELDNAME = "className";
 
 	/** Set of classes that registered by this mapper */
-	private final Map<String, MappedClass> mappedClasses = new HashMap<String, MappedClass>();
-	private final Map<String, Set<MappedClass>> mappedClassesByCollection = new HashMap<String, Set<MappedClass>>();
+	private final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
+	private final Map<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
 	
-	private final List<EntityInterceptor> interceptors = new ArrayList<EntityInterceptor>();
+	private final List<EntityInterceptor> interceptors = new LinkedList<EntityInterceptor>();
+	
 	
 	private MapperOptions opts = new MapperOptions();
 	// TODO: make these configurable
@@ -151,9 +156,14 @@ public class Mapper {
 		return mc;
 	}
 
+	/** Returns collection of MappedClasses*/
+	public Collection<MappedClass> getMappedClasses() {
+		return new ArrayList<MappedClass>(mappedClasses.values());
+	}
+
 	/** Returns map of MappedClasses by class name */
-	public Map<String, MappedClass> getMappedClasses() {
-		return mappedClasses;
+	public Map<String, MappedClass> getMCMap() {
+		return Collections.unmodifiableMap(mappedClasses);
 	}
 
 	/**
@@ -431,8 +441,8 @@ public class Mapper {
 			}
 		}
 		
-		if (Property.class.equals(annType) || Serialized.class.equals(annType)
-				|| mf.isTypeMongoCompatible() || (converters.hasSimpleValueConverter(mf)))
+		if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible() || 
+				(converters.hasSimpleValueConverter(mf) || (converters.hasSimpleValueConverter(mf.getFieldValue(entity)))))
 			opts.valueMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 		else if (Reference.class.equals(annType))
 			opts.referenceMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
@@ -453,4 +463,29 @@ public class Mapper {
 	public EntityCache createEntityCache() {
 		return new DefaultEntityCache();// TODO choose impl
 	}
+	
+	public <T> Key<T> refToKey(DBRef ref) {
+		Key<T> key = new Key<T>(ref.getRef(), ref.getId());
+		return key;
+	}
+	
+	public DBRef keyToRef(Key key) {
+		if (key.getKindClass() == null && key.getKind() == null) 
+			throw new IllegalStateException("How can it be missing both?");
+		if (key.getKind() == null)
+			key.setKind(getCollectionName(key.getKindClass()));
+			
+		return new DBRef(null, key.getKind(), key.getId());
+	}
+	
+	public String updateKind(Key key) {
+		if (key.getKind() == null && key.getKindClass() == null)
+			throw new IllegalStateException("Key is invalid! " + toString());
+		else if (key.getKind() == null)
+			key.setKind(getMappedClass(key.getKindClass()).getCollectionName());
+		
+		return key.getKind();
+	}
+	
+	
 }

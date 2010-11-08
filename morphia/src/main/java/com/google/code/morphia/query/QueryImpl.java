@@ -33,7 +33,7 @@ import com.mongodb.DBObject;
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Criteria {
 	
-	private static final Logr log = MorphiaLoggerFactory.get(Mapper.class);
+	private static final Logr log = MorphiaLoggerFactory.get(QueryImpl.class);
 	
 	private final EntityCache cache;
 	private boolean validatingNames = true;
@@ -204,12 +204,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 
 	public List<T> asList() {
 		List<T> results = new ArrayList<T>();
-		for(T ent : fetch())
+		MorphiaIterator<T> iter = (MorphiaIterator<T>) fetch().iterator();
+		for(T ent : iter)
 			results.add(ent);
 
 		if (log.isTraceEnabled())
-			log.trace("\nasList: " + dbColl.getName() + "\n result size " + results.size() + "\n cache: "
-				+ (cache.stats()) + "\n for " + this.getQueryObject());
+			log.trace(String.format("\nasList: %s \t %d entities, iterator time: driver %4.2f ms, mapper %4.2f ms \n cache: %s \n for $s \n ", 
+					dbColl.getName(),
+					results.size(),
+					iter.getDriverTime(),
+					iter.getMapperTime(),
+					cache.stats().toString(),
+					getQueryObject()));
 
 		return results;
 	}

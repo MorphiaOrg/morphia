@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.Datastore;
@@ -25,10 +24,16 @@ import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-@Ignore("enable when testing on issue")
+@SuppressWarnings({"unchecked", "unused"})
+//@Ignore("enable when testing on issue")
 public class TestAsListPerf extends TestBase {
-	final int addressNb = 2000;
-	final int nbOfTasks = 300;
+
+//	static {
+//		MorphiaLoggerFactory.registerLogger((Class<? extends LogrFactory>) SilentLogger.class);
+//	}
+	
+	final int nbOfAddresses = 500;
+	final int nbOfTasks = 200;
 	final int threadPool = 10;
 	
 	@Override
@@ -41,7 +46,7 @@ public class TestAsListPerf extends TestBase {
 		super.setUp();
         morphia.map(Address.class);
         if (this.ds.getCount(Address.class) == 0) {
-			for (int i = 0; i < addressNb; i++) {
+			for (int i = 0; i < nbOfAddresses; i++) {
 				Address address = new Address(i);
 				ds.save(address);	
 			}
@@ -51,20 +56,18 @@ public class TestAsListPerf extends TestBase {
 
 	@Test
 	public void compareDriverAndMorphiaQueryingOnce() throws Exception {
-		double driverAvg = driverQueryAndMorphiaConv(addressNb / 2, ds, morphia);
-		double morphiaAvg = morphiaQueryAndMorphiaConv(addressNb / 2, ds, morphia);
+		double driverAvg = driverQueryAndMorphiaConv(nbOfAddresses, ds, morphia);
+		double morphiaAvg = morphiaQueryAndMorphiaConv(nbOfAddresses, ds, morphia);
 		System.out.println(String.format("compareDriverAndMorphiaQueryingOnce - driver: %4.2f ms/pojo , morphia: %4.2f ms/pojo ", driverAvg , morphiaAvg));
 		Assert.assertNotNull(driverAvg);
 	}
 	
 	@Test
 	public void morphiaQueryingMultithreaded() throws InterruptedException {
-		int nbOfHits = addressNb / 2;
-		
 		Result morphiaQueryThreadsResult = new Result(nbOfTasks);
 		List<MorphiaQueryThread> morphiaThreads = new ArrayList<MorphiaQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfHits, ds, morphia));
+			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService morphiaPool = Executors.newFixedThreadPool(threadPool);
 		for (MorphiaQueryThread thread : morphiaThreads) {
@@ -73,19 +76,17 @@ public class TestAsListPerf extends TestBase {
 		morphiaPool.shutdown();
 		morphiaPool.awaitTermination(30, TimeUnit.SECONDS);
 		
-		System.out.println(String.format("morphiaQueryingMultithreaded - %d morphia queries in an average time of %4.2f ms/pojo", 
+		System.out.println(String.format("morphiaQueryingMultithreaded - (%d queries) morphia: %4.2f ms/pojo", 
 				morphiaQueryThreadsResult.results.size(), 
 				morphiaQueryThreadsResult.getAverageTime()));
 	}
 	
 	@Test
 	public void driverQueryingMultithreaded() throws InterruptedException {
-		int nbOfHits = addressNb / 2;
-		
 		Result mongoQueryThreadsResult = new Result(nbOfTasks);
 		List<MongoQueryThread> mongoThreads = new ArrayList<MongoQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfHits, ds, morphia));
+			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService mongoPool = Executors.newFixedThreadPool(threadPool);
 		for (MongoQueryThread mongoQueryThread : mongoThreads) {
@@ -95,7 +96,7 @@ public class TestAsListPerf extends TestBase {
 		mongoPool.shutdown();
 		mongoPool.awaitTermination(30, TimeUnit.SECONDS);
 		
-		System.out.println(String.format("driverQueryingMultithreaded - %d driver queries in an average time of %4.2f ms/pojo", 
+		System.out.println(String.format("driverQueryingMultithreaded - (%d queries) driver: %4.2f ms/pojo", 
 				mongoQueryThreadsResult.results.size(), 
 				mongoQueryThreadsResult.getAverageTime()));
 		
@@ -103,12 +104,10 @@ public class TestAsListPerf extends TestBase {
 	
 	@Test
 	public void compareMorphiaAndDriverQueryingMultithreaded() throws InterruptedException {
-		int nbOfHits = addressNb / 2;
-		
 		Result morphiaQueryThreadsResult = new Result(nbOfTasks);
 		List<MorphiaQueryThread> morphiaThreads = new ArrayList<MorphiaQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfHits, ds, morphia));
+			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService morphiaPool = Executors.newFixedThreadPool(threadPool);
 		for (MorphiaQueryThread thread : morphiaThreads) {
@@ -121,7 +120,7 @@ public class TestAsListPerf extends TestBase {
 		Result mongoQueryThreadsResult = new Result(nbOfTasks);
 		List<MongoQueryThread> mongoThreads = new ArrayList<MongoQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfHits, ds, morphia));
+			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService mongoPool = Executors.newFixedThreadPool(threadPool);
 		for (MongoQueryThread mongoQueryThread : mongoThreads) {
@@ -131,18 +130,16 @@ public class TestAsListPerf extends TestBase {
 		mongoPool.shutdown();
 		mongoPool.awaitTermination(30, TimeUnit.SECONDS);
 		
-		System.out.println(String.format("compareMorphiaAndDriverQueryingMultithreaded (%d queries each) - driver average time: %4.2f ms/pojo, morphia average time %4.2f ms/pojo", 
+		System.out.println(String.format("compareMorphiaAndDriverQueryingMultithreaded (%d queries each) - driver: %4.2f ms/pojo (avg), morphia: %4.2f ms/pojo (avg)", 
 				mongoQueryThreadsResult.results.size(), mongoQueryThreadsResult.getAverageTime(), morphiaQueryThreadsResult.getAverageTime()));
 	}
 	
 	@Test
 	public void compareDriverAndMorphiaQueryingMultithreaded() throws InterruptedException {
-		int nbOfHits = addressNb / 2;
-		
 		Result mongoQueryThreadsResult = new Result(nbOfTasks);
 		List<MongoQueryThread> mongoThreads = new ArrayList<MongoQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfHits, ds, morphia));
+			mongoThreads.add(new MongoQueryThread(mongoQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService mongoPool = Executors.newFixedThreadPool(threadPool);
 		for (MongoQueryThread mongoQueryThread : mongoThreads) {
@@ -155,7 +152,7 @@ public class TestAsListPerf extends TestBase {
 		Result morphiaQueryThreadsResult = new Result(nbOfTasks);
 		List<MorphiaQueryThread> morphiaThreads = new ArrayList<MorphiaQueryThread>(nbOfTasks);
 		for (int i = 0; i < nbOfTasks; i++) {
-			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfHits, ds, morphia));
+			morphiaThreads.add(new MorphiaQueryThread(morphiaQueryThreadsResult, nbOfAddresses, ds, morphia));
 		}
 		ExecutorService morphiaPool = Executors.newFixedThreadPool(threadPool);
 		for (MorphiaQueryThread thread : morphiaThreads) {
@@ -163,7 +160,7 @@ public class TestAsListPerf extends TestBase {
 		}
 		morphiaPool.shutdown();
 		morphiaPool.awaitTermination(30, TimeUnit.SECONDS);
-		System.out.println(String.format("compareDriverAndMorphiaQueryingMultithreaded (%d queries each) - driver average time: %4.2f ms/pojo, morphia average time %4.2f ms/pojo", 
+		System.out.println(String.format("compareDriverAndMorphiaQueryingMultithreaded (%d queries each) - driver: %4.2f ms/pojo (avg), morphia %4.2f ms/pojo (avg)", 
 				mongoQueryThreadsResult.results.size(), mongoQueryThreadsResult.getAverageTime(), morphiaQueryThreadsResult.getAverageTime()));
 	}
 	
@@ -224,8 +221,7 @@ public class TestAsListPerf extends TestBase {
 	
 	public static double morphiaQueryAndMorphiaConv(final int nbOfHits, final Datastore ds, final Morphia morphia) {
 		Query<Address> query = ds.createQuery(Address.class).
-									order("name").
-									field("parity").equal(0);
+									order("name");
 		long start = System.nanoTime();
 		List<Address> resultList = query.asList();
 		long duration = (System.nanoTime() - start) / 1000000; //ns -> ms
@@ -236,7 +232,7 @@ public class TestAsListPerf extends TestBase {
 	public static double driverQueryAndMorphiaConv(final int nbOfHits, final Datastore ds, final Morphia morphia) {
 		long start = System.nanoTime();
 		List<DBObject> list = ds.getDB().getCollection("Address").
-									find(new BasicDBObject("parity", 0)).
+									find().
 									sort(new BasicDBObject("name", 1)).
 									toArray();
 		EntityCache entityCache = new DefaultEntityCache();

@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
 
-import com.google.code.morphia.mapping.Mapper;
-import com.mongodb.DBRef;
-
 /**
- * <p>The key object; this class is take from the app-engine datastore (mostly).
+ * <p>The key object; this class is take from the app-engine datastore (mostly) implementation.
  * It is also Serializable and GWT-safe, enabling your entity objects to
  * be used for GWT RPC should you so desire.</p>
  * 
@@ -50,27 +47,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 		this.id = id;
 	}
 	
-	/** Create a key with a DBRef*/
-	public Key(DBRef ref)
-	{
-		this.kind = ref.getRef();
-		this.id = ref.getId();
-	}
-	
-	@Deprecated
-	public DBRef toRef() {
-		if (kind == null) throw new IllegalStateException("missing collect-name; please call toRef(Mapper)");
-		return new DBRef(null, kind, id);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public DBRef toRef(Mapper mapr) {
-		if (kind != null) return toRef();
-		if (kindClass == null && kind == null) throw new IllegalStateException("missing kindClass; please call toRef(Mapper)");
-		kind = mapr.getCollectionName(kindClass);
-		return new DBRef(null, kind, id);
-	}
-	
 	/**
 	 * @return the id associated with this key.
 	 */
@@ -86,6 +62,12 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	{
 		return this.kind;
 	}
+	/**
+	 * sets the collection-name.
+	 */
+	public void setKind(String newKind) {
+		kind = newKind;
+	}
 	
 	public void setKindClass(Class<? extends T> clazz) {
 		this.kindClass = clazz;
@@ -93,15 +75,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	
 	public Class<? extends T> getKindClass() {
 		return this.kindClass;
-	}
-	
-	public String updateKind(Mapper mapr) {
-		if (kind == null && kindClass == null)
-			throw new IllegalStateException("Key is invalid! " + toString());
-		else if (kind == null)
-			kind = mapr.getMappedClass(kindClass).getCollectionName();
-		
-		return kind;
 	}
 	
 	/**

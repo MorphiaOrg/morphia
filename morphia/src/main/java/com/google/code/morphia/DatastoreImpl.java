@@ -35,6 +35,7 @@ import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.query.QueryImpl;
+import com.google.code.morphia.query.UpdateException;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.query.UpdateResults;
@@ -330,14 +331,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public void ensureIndexes(boolean background) {
 		// loops over mappedClasses and call ensureIndex for each @Entity object
 		// (for now)
-		for (MappedClass mc : mapr.getMappedClasses().values()) {
+		for (MappedClass mc : mapr.getMappedClasses()) {
 			ensureIndexes(mc, background);
 		}
 	}
 	
 
 	public void ensureCaps() {
-		for (MappedClass mc : mapr.getMappedClasses().values())
+		for (MappedClass mc : mapr.getMappedClasses())
 			if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
 				CappedAt cap = mc.getEntityAnnotation().cap();
 				String collName = mapr.getCollectionName(mc.getClazz());
@@ -437,7 +438,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		//put them back in order, minus the missing ones.
 		ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
 		for (DBRef ref : refs) {
-			Key<T> testKey = new Key<T>(ref);
+			Key<T> testKey = mapr.refToKey(ref);
 			if (tempKeys.contains(testKey))
 				keys.add(testKey);
 		}
@@ -456,7 +457,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		// String clazzKind = (clazz==null) ? null :
 		// getMapper().getCollectionName(clazz);
 		for (Key<?> key : keys) {
-			key.updateKind(getMapper());
+			mapr.updateKind(key);
 			
 			// if (clazzKind != null && !key.getKind().equals(clazzKind))
 			// throw new IllegalArgumentException("Types are not equal (" +
@@ -498,7 +499,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> T getByKey(Class<T> clazz, Key<T> key) {
 		String kind = mapr.getCollectionName(clazz);
-		String keyKind = key.updateKind(mapr);
+		String keyKind = mapr.updateKind(key);
 		if (!kind.equals(keyKind))
 			throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + keyKind);
 		
@@ -838,6 +839,31 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return res;
 	}
 	
+	public <T> Key<T> merge(T entity) {
+		return merge(entity, getWriteConcern(entity));
+	}
+
+	public <T> Key<T> merge(T entity, WriteConcern wc) {
+		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+		DBObject dbObj = mapr.toDBObject(entity, involvedObjects);
+		Key<T> key = getKey(entity);
+		entity = ProxyHelper.unwrap(entity);
+		Object id = getId(entity);
+		if (id == null)
+			throw new MappingException("Could not get id for " + entity.getClass().getName());
+		Query<T> query = (Query<T>) createQuery(entity.getClass()).filter(Mapper.ID_KEY, id);
+
+		UpdateResults<T> res = update(query, new BasicDBObject("$set", dbObj), false, false, wc);
+		
+		//check for updated count if we have a gle
+		CommandResult gle = res.getWriteResult().getCachedLastError();
+		if(gle != null && res.getUpdatedCount() == 0)
+			throw new UpdateException("Not updated: " + gle);
+
+		postSaveOperations(entity, dbObj, getCollection(entity), involvedObjects);
+		return key;
+	}
+	
 	private <T> void postSaveOperations(Object entity, DBObject dbObj, DBCollection dbColl,
 			Map<Object, DBObject> involvedObjects) {
 		MappedClass mc = mapr.getMappedClass(entity);
@@ -929,15 +955,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public static <T> List<DBRef> keysAsRefs(List<Key<T>> keys, Mapper mapr){
 		ArrayList<DBRef> refs = new ArrayList<DBRef>(keys.size());
 		for(Key<T> key : keys)
-			refs.add(key.toRef(mapr));
+			refs.add(mapr.keyToRef(key));
 		return refs;
 	}
 	
 	/** Converts a list of refs to keys */
-	public static <T> List<Key<T>> refsToKeys(List<DBRef> refs, Class<T> c) {
+	public static <T> List<Key<T>> refsToKeys(Mapper mapr, List<DBRef> refs, Class<T> c) {
 		ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
 		for(DBRef ref : refs) {
-			keys.add(new Key<T>(ref));
+			keys.add((Key<T>)mapr.refToKey(ref));
 		}
 		return keys;
 	}

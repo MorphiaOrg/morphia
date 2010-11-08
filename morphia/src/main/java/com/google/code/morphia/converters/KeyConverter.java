@@ -21,14 +21,14 @@ public class KeyConverter extends TypeConverter {
 	public Object decode(Class targetClass, Object o, MappedField optionalExtraInfo) throws MappingException {
 		if (o == null) return null;
 		
-		return new Key((DBRef) o);
+		return mapr.refToKey((DBRef) o);
 	}
 	
 	@Override
 	public Object encode(Object t, MappedField optionalExtraInfo) {
 		if (t == null)
 			return null;
-		return ((Key) t).toRef(mapr);
+		return mapr.keyToRef((Key) t);
 	}
 
 }

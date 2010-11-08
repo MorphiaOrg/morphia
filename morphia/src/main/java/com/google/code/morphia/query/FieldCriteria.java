@@ -54,7 +54,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 				|| (mc != null && mc.getEntityAnnotation() != null)) {
 			try {
 				Key<?> k = (value instanceof Key) ? (Key<?>)value : query.getDatastore().getKey(value);
-				mappedValue = k.toRef(mapr);
+				mappedValue = mapr.keyToRef(k);
 			} catch (Exception e) {
 				log.debug("Error converting value(" + value + ") to reference.", e);
 				mappedValue = mapr.toMongoObject(value);

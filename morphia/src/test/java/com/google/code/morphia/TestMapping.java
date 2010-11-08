@@ -518,9 +518,7 @@ public class TestMapping  extends TestBase {
         DBCollection stuff = db.getCollection("stuff");
         DBCollection rectangles = db.getCollection("rectangles");
         
-        assertTrue("'ne' field should not be persisted!",
- !morphia.getMappedClasses().get(ContainsRef.class.getName())
-				.containsJavaFieldName("ne"));
+        assertTrue("'ne' field should not be persisted!", !morphia.getMapper().getMCMap().get(ContainsRef.class.getName()).containsJavaFieldName("ne"));
 
         Rectangle r = new Rectangle(1,1);
         DBObject rDbObject = morphia.toDBObject(r);

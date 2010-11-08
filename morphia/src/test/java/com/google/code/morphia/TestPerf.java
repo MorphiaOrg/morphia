@@ -33,12 +33,14 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.ReflectionDBObject;
 import com.mongodb.WriteConcern;
 
 /**
  *
  * @author Scott Hernandez
  */
+//@Ignore 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;
@@ -51,7 +53,75 @@ public class TestPerf  extends TestBase{
 		String street = "3400 Maple";
 		String city = "Manhattan Beach";
 		String state = "CA";
-		int zip = 94114;
+		int zip = 90266;
+		Date added = new Date();
+		
+		public Address() {}
+		
+		public Address(BasicDBObject dbObj) {
+			name = dbObj.getString("name");
+			street = dbObj.getString("street");
+			city = dbObj.getString("city");
+			state = dbObj.getString("state");
+			zip = dbObj.getInt("zip");
+			added = (Date) dbObj.get("added");
+		}
+		
+		public DBObject toDBObject() {
+			DBObject dbObj = new BasicDBObject();
+			dbObj.put("name", name);
+			dbObj.put("street", street);
+			dbObj.put("city", city);
+			dbObj.put("state", state);
+			dbObj.put("zip", zip);
+			dbObj.put("added", new Date());
+			return dbObj;
+		}
+	}
+	
+	public static class Address2 extends ReflectionDBObject{
+		public String getname() {
+			return name;
+		}
+		public void setname(String name) {
+			this.name = name;
+		}
+		public String getstreet() {
+			return street;
+		}
+		public void setstreet(String street) {
+			this.street = street;
+		}
+		public String getcity() {
+			return city;
+		}
+		public void setcity(String city) {
+			this.city = city;
+		}
+		public String getstate() {
+			return state;
+		}
+		public void setstate(String state) {
+			this.state = state;
+		}
+		public int getzip() {
+			return zip;
+		}
+		public void setzip(int zip) {
+			this.zip = zip;
+		}
+		public Date getadded() {
+			return added;
+		}
+		public void setadded(Date added) {
+			this.added = added;
+		}
+		
+		String name = "Scott";
+		String street = "3400 Maple";
+		String city = "Manhattan Beach";
+		String state = "CA";
+		int zip = 90266;
 		Date added = new Date();
 	}
 
@@ -88,20 +158,32 @@ public class TestPerf  extends TestBase{
     	long startTicks = new Date().getTime();
     	loadAddresses2(count, true, strict);
     	long endTicks = new Date().getTime();
-    	long rawInsertTime = endTicks - startTicks;
-    	
+    	long rawLoadTime = endTicks - startTicks;
+
     	startTicks = new Date().getTime();
     	loadAddresses2(count, false, strict);
     	endTicks = new Date().getTime();
-    	long insertTime = endTicks - startTicks;
-    	
-    	String msg = String.format("Load (%s) performance is too slow: %sX slower (%s/%s)", 
-    							count,
-    							String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 4),
-    							insertTime,
-    							rawInsertTime);
-    	Assert.assertTrue(msg, 
-    			insertTime < (rawInsertTime * ReadFailFactor ));
+    	long morphiaLoadTime = endTicks - startTicks;
+
+    	startTicks = new Date().getTime();
+    	loadAddresses3(count, true, strict);
+    	endTicks = new Date().getTime();
+    	long reflectLoadTime = endTicks - startTicks;
+
+    	String msg = String.format("Load (%s) performance is too slow compared to ReflectionDBObject: %sX slower (%s/%s)", 
+				count,
+				String.valueOf((double)morphiaLoadTime/reflectLoadTime).subSequence(0, 4),
+				morphiaLoadTime,
+				reflectLoadTime);    	
+    	Assert.assertTrue(msg, morphiaLoadTime < (reflectLoadTime * WriteFailFactor ));
+
+    	msg = String.format("Load (%s) performance is too slow compared to raw: %sX slower (%s/%s)", 
+				count,
+				String.valueOf((double)morphiaLoadTime/rawLoadTime).subSequence(0, 4),
+				morphiaLoadTime,
+				rawLoadTime);    	
+		Assert.assertTrue(msg, morphiaLoadTime < (rawLoadTime * ReadFailFactor ));
+
     }
 	
 	public void loadAddresses(int count, boolean raw, boolean strict) {
@@ -109,14 +191,7 @@ public class TestPerf  extends TestBase{
     	
     	for(int i=0;i<count;i++) {
     		if(raw) {
-    			Address addr = new Address();
-    			BasicDBObject dbObj = (BasicDBObject) dbColl.findOne();
-    			addr.name = dbObj.getString("name");
-    			addr.street = dbObj.getString("street");
-    			addr.city = dbObj.getString("city");
-    			addr.state = dbObj.getString("state");
-    			addr.zip = dbObj.getInt("zip");
-    			addr.added = (Date) dbObj.get("added");
+    			new Address((BasicDBObject) dbColl.findOne());
     		}else {
     			ds.find(Address.class).get();
     		}
@@ -129,17 +204,31 @@ public class TestPerf  extends TestBase{
     	
     	for(Object o : it)
     		if(raw) {
-    			Address addr = new Address();
-    			BasicDBObject dbObj = (BasicDBObject) o;
-    			addr.name = dbObj.getString("name");
-    			addr.street = dbObj.getString("street");
-    			addr.city = dbObj.getString("city");
-    			addr.state = dbObj.getString("state");
-    			addr.zip = dbObj.getInt("zip");
-    			addr.added = (Date) dbObj.get("added");
+    			new Address((BasicDBObject) o);
     		}else {
     			//no-op; already happened during iteration
     		}
+    	if (!raw)
+            System.out.println("driverTime: "+ ((MorphiaIterator<Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object>)it).getMapperTime() + "ms");
+    }
+
+	public void loadAddresses3(int count, boolean raw, boolean strict) {
+    	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
+    	Iterable it = raw ? dbColl.find().limit(count) : ds.find(Address.class).limit(count).fetch();
+
+    	if (raw) 
+    		dbColl.setObjectClass(Address2.class);
+
+    	for(Object o : it)
+    		if(raw) {
+    			Address2 addr = (Address2)o;
+    		}else {
+    			//no-op; already happened during iteration
+    		}
+    	
+//    	if (raw) 
+//    		dbColl.setObjectClass(null);
+
     	if (!raw)
             System.out.println("driverTime: "+ ((MorphiaIterator<Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object>)it).getMapperTime() + "ms");
     }
@@ -150,13 +239,7 @@ public class TestPerf  extends TestBase{
     	for(int i=0;i<count;i++) {
 			Address addr = new Address();
     		if(raw) {
-    			DBObject dbObj = new BasicDBObject();
-    			dbObj.put("name", addr.name);
-    			dbObj.put("street", addr.street);
-    			dbObj.put("city", addr.city);
-    			dbObj.put("state", addr.state);
-    			dbObj.put("zip", addr.zip);
-    			dbObj.put("added", new Date());
+    			DBObject dbObj = addr.toDBObject();
     			if (strict)
     				dbColl.save(dbObj, com.mongodb.WriteConcern.SAFE);
     			else

@@ -38,7 +38,7 @@ public class DefaultEntityCache implements EntityCache {
 	
 	public void notifyExists(Key<?> k, boolean exists) {
 		existenceMap.put(k, exists);
-		stats.writes++;
+		stats.entities++;
 	}
 	
 	public <T> T getEntity(Key<T> k) {
@@ -73,7 +73,7 @@ public class DefaultEntityCache implements EntityCache {
 	
 	public <T> void putProxy(Key<T> k, T t) {
 		proxyMap.put(k, t);
-		stats.writes++;
+		stats.entities++;
 		
 	}
 	
