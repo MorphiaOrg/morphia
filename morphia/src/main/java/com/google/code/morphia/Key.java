@@ -100,7 +100,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 			return cmp;
 		
 		try {
-			cmp = compareNullable((Comparable)this.id,(Comparable)other.id);
+			cmp = compareNullable((Comparable<?>)this.id,(Comparable<?>)other.id);
 			if (cmp != 0)
 				return cmp;
 		} catch (Exception e) {

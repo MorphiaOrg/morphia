@@ -678,7 +678,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Iterable<Key<T>> save(Iterable<T> entities) {
-		Object first = entities.iterator().next();
+		Object first = null;
+		try {
+			first = entities.iterator().next();
+		} catch (Exception e) {
+			//do nothing
+		}
 		return save(entities, getWriteConcern(first));
 	}
 	
@@ -997,9 +1002,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	/** Gets the write concern for entity or returns the default write concern for this datastore */
 	public WriteConcern getWriteConcern(Object clazzOrEntity) {
-		Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-		if(entityAnn != null && entityAnn.concern() != null && entityAnn.concern() != "" )
-			return getConcernByName(entityAnn.concern());
+		if (clazzOrEntity != null) {
+			Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
+			if(entityAnn != null && entityAnn.concern() != null && entityAnn.concern() != "" )
+				return getConcernByName(entityAnn.concern());
+		}
 		
 		return defConcern;
 	}

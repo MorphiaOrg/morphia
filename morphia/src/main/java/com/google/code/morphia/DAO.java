@@ -10,6 +10,7 @@ import com.google.code.morphia.query.QueryResults;
 import com.google.code.morphia.query.UpdateOperations;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
 
 /**
  * @author Olafur Gauti Gudmundsson
@@ -95,6 +96,10 @@ public class DAO<T, K extends Serializable> {
 		ds.save(entity);
 	}
 	
+	/** Saves the entity; either inserting or overriding the existing document */
+	public void save(T entity, WriteConcern wc) {
+		ds.save(entity, wc);
+	}
 	/** Updates the first entity matched by the constraints with the modifiers supplied.*/
 	public void updateFirst(Query q, UpdateOperations ops) {
 		ds.updateFirst(q, ops);
@@ -105,12 +110,17 @@ public class DAO<T, K extends Serializable> {
 		ds.update(q, ops);
 	}
 	
-	/** Saves the entity */
+	/** Deletes the entity */
 	public void delete(T entity) {
 		ds.delete(entity);
 	}
 
-	/** Saves the entity by id value */
+	/** Deletes the entity */
+	public void delete(T entity, WriteConcern wc) {
+		ds.delete(entity, wc);
+	}
+
+	/** Delete the entity by id value */
 	public void deleteById(K id) {
 		ds.delete(entityClazz, id);
 	}
