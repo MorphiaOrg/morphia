@@ -7,8 +7,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -135,7 +133,7 @@ class EmbeddedMapper implements CustomMapper{
 						if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getType()))
 							refObj = mapr.converters.decode(mf.getType(), dbVal, mf);
 						else {
-							refObj = ReflectionUtils.createInstance(mf, ((DBObject)dbVal));
+							refObj = mapr.getOptions().objectFactory.createInstance(mf, ((DBObject)dbVal));
 							refObj = mapr.fromDb(((DBObject)dbVal), refObj, cache);
 						}
 						if (refObj != null) {
@@ -151,7 +149,7 @@ class EmbeddedMapper implements CustomMapper{
 
 	private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache, Mapper mapr) {
 		// multiple documents in a List
-		Collection values = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class : HashSet.class);
+		Collection values = mf.isSet() ? mapr.getOptions().objectFactory.createSet(mf) : mapr.getOptions().objectFactory.createList(mf);
 		
 		Object dbVal = mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {
@@ -192,7 +190,7 @@ class EmbeddedMapper implements CustomMapper{
 	}
 	
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache, Mapper mapr) {
-		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
+		Map map = mapr.getOptions().objectFactory.createMap(mf);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {
@@ -234,7 +232,7 @@ class EmbeddedMapper implements CustomMapper{
 //				readCollection(dbObj, mocMF, mocMF, cache, mapr);
 			return mocMF.getValue();
 		} else {
-			Object newEntity = ReflectionUtils.createInstance(mf.getSubClass(), dbObj);
+			Object newEntity = mapr.getOptions().objectFactory.createInstance(mf.getSubClass(), dbObj);
 			return mapr.fromDb(dbObj, newEntity, cache);
 		}
 	} 

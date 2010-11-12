@@ -7,10 +7,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import com.google.code.morphia.ObjectFactory;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.utils.ReflectionUtils;
@@ -65,14 +64,8 @@ public class IterableConverter extends TypeConverter {
 	}
 	
 	private Collection<?> createNewCollection(final MappedField mf) {
-		Collection<?> values;
-		
-		if (!mf.isSet()) {
-			values = (List<?>) ReflectionUtils.newInstance(mf.getCTor(), ArrayList.class);
-		} else {
-			values = (Set<?>) ReflectionUtils.newInstance(mf.getCTor(), HashSet.class);
-		}
-		return values;
+		ObjectFactory of = mapr.getOptions().objectFactory;
+		return mf.isSet() ? of.createSet(mf) : of.createList(mf);
 	}
 	
 	@Override

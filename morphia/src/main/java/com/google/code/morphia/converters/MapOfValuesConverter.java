@@ -30,20 +30,20 @@ public class MapOfValuesConverter extends TypeConverter {
 	}
 	
 	@Override
-	public Object decode(Class targetClass, Object fromDBObject, MappedField f) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
 		if (fromDBObject == null) return null;
 
 		Map<Object, Object> map = (Map<Object, Object>) fromDBObject;
-		Map values = (Map) ReflectionUtils.newInstance(f.getCTor(), HashMap.class);
+		Map values = mapr.getOptions().objectFactory.createMap(mf);
 		for (Map.Entry<Object, Object> entry : map.entrySet()) {
-			Object objKey = converters.decode(f.getMapKeyClass(), entry.getKey());
-			values.put(objKey, converters.decode(f.getSubClass(), entry.getValue()));
+			Object objKey = converters.decode(mf.getMapKeyClass(), entry.getKey());
+			values.put(objKey, converters.decode(mf.getSubClass(), entry.getValue()));
 		}
 		return values;
 	}
 	
 	@Override
-	public Object encode(Object value, MappedField f) {
+	public Object encode(Object value, MappedField mf) {
 		if (value == null)
 			return null;
 		

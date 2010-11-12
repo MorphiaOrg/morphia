@@ -186,21 +186,21 @@ public final class Assert {
 	public static void parameterNotEmpty(final Collection obj, final String paramName) {
 		if (obj.isEmpty()) {
 			Assert.raiseError("Parameter '" + paramName + "' from type '" + obj.getClass().getName()
-					+ "' was expected to be NOT Empty");
+					+ "' is expected to NOT be empty.");
 		}
 	}
 	
 	public static void parameterNotEmpty(final Iterable obj, final String paramName) {
 		if (!obj.iterator().hasNext()) {
 			Assert.raiseError("Parameter '" + paramName + "' from type '" + obj.getClass().getName()
-					+ "' was expected to be NOT Empty");
+					+ "' is expected to NOT be empty");
 		}
 	}
 	
 	public static void parameterNotEmpty(final String reference, final String nameOfParameter) {
 		
 		if ("".equals(reference)) {
-			Assert.raiseError("Parameter '" + nameOfParameter + "' is not expected to be empty.");
+			Assert.raiseError("Parameter '" + nameOfParameter + "' is expected to NOT be empty.");
 		}
 	}
 	

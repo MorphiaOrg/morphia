@@ -5,8 +5,6 @@ package com.google.code.morphia.mapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +84,7 @@ class ReferenceMapper implements CustomMapper {
 			Mapper mapr) {
 		Map<Object, Object> map = (Map<Object, Object>) fieldValue;
 		if ((map != null)) {
-			Map values = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
+			Map values = mapr.getOptions().objectFactory.createMap(mf);
 			
 			if (ProxyHelper.isProxy(map) && ProxyHelper.isUnFetched(map)) {
 				ProxiedEntityReferenceMap proxy = (ProxiedEntityReferenceMap) map;
@@ -179,8 +177,7 @@ class ReferenceMapper implements CustomMapper {
 			EntityCache cache, Mapper mapr) {
 		// multiple references in a List
 		Class referenceObjClass = mf.getSubClass();
-		Collection references = (Collection) ReflectionUtils.newInstance(mf.getCTor(), (!mf.isSet()) ? ArrayList.class
-				: HashSet.class);
+		Collection references = mf.isSet() ? mapr.getOptions().objectFactory.createSet(mf) : mapr.getOptions().objectFactory.createList(mf);
 		
 		if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
 			Object dbVal = mf.getDbObjectValue(dbObject);
@@ -240,7 +237,7 @@ class ReferenceMapper implements CustomMapper {
 											+ ") could not be fetched for " + mf.getFullName());
 								}
 							} else {
-								Object refObj = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
+								Object refObj = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
 								refObj = mapr.fromDb(refDbObject, refObj, cache);
 								references.add(refObj);
 								cache.putEntity(k, refObj);
@@ -261,7 +258,7 @@ class ReferenceMapper implements CustomMapper {
 										+ ") could not be fetched for " + mf.getFullName());
 							}
 						} else {
-							Object newEntity = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
+							Object newEntity = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
 							newEntity = mapr.fromDb(refDbObject, newEntity, cache);
 							references.add(newEntity);
 						}
@@ -311,7 +308,7 @@ class ReferenceMapper implements CustomMapper {
 		BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 		
 		if (refDbObject != null) {
-			Object refObj = ReflectionUtils.createInstance(referenceObjClass, refDbObject);
+			Object refObj = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
 			refObj = mapr.fromDb(refDbObject, refObj, cache);
 			cache.putEntity(key, refObj);
 			return refObj;
@@ -328,7 +325,7 @@ class ReferenceMapper implements CustomMapper {
 	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final Reference refAnn,
 			EntityCache cache, Mapper mapr) {
 		Class referenceObjClass = mf.getSubClass();
-		Map map = (Map) ReflectionUtils.newInstance(mf.getCTor(), HashMap.class);
+		Map map = mapr.getOptions().objectFactory.createMap(mf);
 		
 		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
 		if (dbVal != null) {

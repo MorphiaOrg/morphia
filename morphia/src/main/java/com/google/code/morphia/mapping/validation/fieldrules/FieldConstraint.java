@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
+import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.validation.ClassConstraint;
 import com.google.code.morphia.mapping.validation.ConstraintViolation;
 
@@ -15,6 +16,7 @@ import com.google.code.morphia.mapping.validation.ConstraintViolation;
  *
  */
 public abstract class FieldConstraint implements ClassConstraint {
+	Mapper mapr;
 	
 	public final void check(MappedClass mc, Set<ConstraintViolation> ve) {
 		for (MappedField mf : mc.getPersistenceFields()) {

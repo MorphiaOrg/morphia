@@ -291,7 +291,7 @@ public class MappedClass {
 					toCall.put(cm.clazz, null);
 				for (Class<?> c : toCall.keySet())
 					if (c != null)
-						toCall.put(c, ReflectionUtils.createInstance(c));
+						toCall.put(c, getOrCreateInstance(c));
 				
 				for (ClassMethodPair cm: methodPairs) {
 					Method method = cm.method;
@@ -326,6 +326,18 @@ public class MappedClass {
 		return retDbObj;
 	}
 
+	private Object getOrCreateInstance(Class<?> clazz) {
+		if (mapr.instanceCache.containsKey(clazz))
+			return mapr.instanceCache.get(clazz);
+		
+		Object o = mapr.getOptions().objectFactory.createInstance(clazz);
+		Object nullO = mapr.instanceCache.put(clazz, o);
+		if (nullO != null)
+			log.error("Race-condition, created duplicate class: " + clazz);
+		
+		return o;
+			
+	}
 	private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr,
 			Collection<EntityInterceptor> interceptors) {
 		for (EntityInterceptor ei : interceptors) {

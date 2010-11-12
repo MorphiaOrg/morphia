@@ -1,5 +1,7 @@
 package com.google.code.morphia.mapping;
 
+import com.google.code.morphia.ObjectFactory;
+
 /**
  * Options to control mapping behavior.
  * 
@@ -19,4 +21,6 @@ public class MapperOptions {
 	public CustomMapper embeddedMapper = new EmbeddedMapper();
 	public CustomMapper valueMapper = new ValueMapper();
 	public CustomMapper defaultMapper = embeddedMapper;
+	
+	public ObjectFactory objectFactory = new DefaultCreator();
 }

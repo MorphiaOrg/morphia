@@ -592,22 +592,6 @@ public class ReflectionUtils
         }
     }
 
-    /**
-     * creates an instance of testType (if it isn't Object.class or null) or
-     * fallbackType
-     */
-    public static Object newInstance(final Constructor tryMe, final Class fallbackType) {
-		if (tryMe != null) {
-			tryMe.setAccessible(true);
-			try {
-				return tryMe.newInstance();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return createInstance(fallbackType);
-    }
-
 	/**
 	 * gets the Class for some classname, or if the className is not found,
 	 * return the defaultClass instance
@@ -637,11 +621,11 @@ public class ReflectionUtils
 		return createInstance(c);
 	}
 
-	public static Object newInstance(final Class<?> c, final Class<?> fallbackType) {
-		return newInstance(getNoArgsConstructor(c), fallbackType);
-	}
+//	public static Object newInstance(final Class<?> c, final Class<?> fallbackType) {
+//		return newInstance(getNoArgsConstructor(c), fallbackType);
+//	}
 
-	public static Constructor getNoArgsConstructor(final Class ctorType) {
+	private static Constructor getNoArgsConstructor(final Class ctorType) {
 		try {
 			Constructor ctor = ctorType.getDeclaredConstructor();
 			ctor.setAccessible(true);

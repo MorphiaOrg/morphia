@@ -75,8 +75,11 @@ public class Mapper {
 	private final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
 	private final Map<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
 	
+	//EntityInterceptors; these are called before EntityListeners and lifecycle methods on an Entity, for all Entities
 	private final List<EntityInterceptor> interceptors = new LinkedList<EntityInterceptor>();
-	
+
+	//A general cache of instances of classes; used by MappedClass for EntityListerner(s)
+	final Map<Class, Object> instanceCache = new ConcurrentHashMap();
 	
 	private MapperOptions opts = new MapperOptions();
 	// TODO: make these configurable
@@ -250,7 +253,7 @@ public class Mapper {
 		}
 
 		Object entity = null;
-		entity = ReflectionUtils.createInstance(entityClass, dbObject);
+		entity = opts.objectFactory.createInstance(entityClass, dbObject);
 		entity = fromDb(dbObject, entity, cache);
 		return entity;
 	}

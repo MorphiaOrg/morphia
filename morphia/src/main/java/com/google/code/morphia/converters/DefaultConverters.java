@@ -15,7 +15,6 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MapperOptions;
 import com.google.code.morphia.mapping.MappingException;
-import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -87,7 +86,7 @@ public class DefaultConverters {
 	}
 	
 	public TypeConverter addConverter(Class<? extends TypeConverter> clazz) {
-		return addConverter((TypeConverter) ReflectionUtils.createInstance(clazz));
+		return addConverter((TypeConverter) this.mapr.getOptions().objectFactory.createInstance(clazz));
 	}
 
 	/**
