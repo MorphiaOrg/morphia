@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
@@ -172,10 +171,10 @@ public class ReflectionUtils
      *            the super class we want to check against
      * @return true if type implements superClass, else false
      */
-    public static boolean extendsClass(final Class type, final Class superClass)
-    {
-        return superClass.isAssignableFrom(type);
-    }
+//    public static boolean extendsClass(final Class type, final Class superClass)
+//    {
+//        return superClass.isAssignableFrom(type);
+//    }
 
     /**
      * Check if the class supplied represents a valid property type.
@@ -577,30 +576,30 @@ public class ReflectionUtils
 //		return createInstance(mf.getConcreteType(), dbObject);
 //	}
 
-    public static Object createInstance(final Class type)
-    {
-        try
-        {
-            return getNoArgsConstructor(type).newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static Object createInstance(final Class type)
+//    {
+//        try
+//        {
+//            return getNoArgsConstructor(type).newInstance();
+//        }
+//        catch (Exception e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 	/**
 	 * gets the Class for some classname, or if the className is not found,
 	 * return the defaultClass instance
 	 */
-	public static Class getClassForName(final String className, final Class defaultClass) {
-		try {
-			Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
-			return c;
-		} catch (ClassNotFoundException ex) {
-			return defaultClass;
-		}
-	}
+//	public static Class getClassForName(final String className, final Class defaultClass) {
+//		try {
+//			Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+//			return c;
+//		} catch (ClassNotFoundException ex) {
+//			return defaultClass;
+//		}
+//	}
 
 	/**
 	 * create a new instance of the entity, first using the dbObject field, then
@@ -622,15 +621,15 @@ public class ReflectionUtils
 //		return newInstance(getNoArgsConstructor(c), fallbackType);
 //	}
 
-	private static Constructor getNoArgsConstructor(final Class ctorType) {
-		try {
-			Constructor ctor = ctorType.getDeclaredConstructor();
-			ctor.setAccessible(true);
-			return ctor;
-		} catch (NoSuchMethodException e) {
-			throw new MappingException("No usable constructor for " + ctorType.getName(), e);
-		}
-	}
+//	private static Constructor getNoArgsConstructor(final Class ctorType) {
+//		try {
+//			Constructor ctor = ctorType.getDeclaredConstructor();
+//			ctor.setAccessible(true);
+//			return ctor;
+//		} catch (NoSuchMethodException e) {
+//			throw new MappingException("No usable constructor for " + ctorType.getName(), e);
+//		}
+//	}
 
 	public static ArrayList iterToList (Iterable it) {
 		if (it instanceof ArrayList) return (ArrayList) it;

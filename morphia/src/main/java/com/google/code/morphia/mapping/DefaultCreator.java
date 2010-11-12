@@ -19,20 +19,11 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultCreator implements ObjectFactory {
-	//TODO: move code from reflectionUtils into here.
-	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(java.lang.Class)
 	 */
-	public Object createInstance(Class clazz) {
-        try
-        {
-            return getNoArgsConstructor(clazz).newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+	public Object createInstance(Class clazz) { 
+		return createInst(clazz);
 	}
 	
 	/* (non-Javadoc)
@@ -47,7 +38,8 @@ public class DefaultCreator implements ObjectFactory {
 			// otherwise return the entityClass
 			c = getClassForName(className, clazz);
 		}
-		return createInstance(c);	}
+		return createInstance(c);	
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(com.google.code.morphia.mapping.MappedField, com.mongodb.DBObject)
@@ -57,20 +49,41 @@ public class DefaultCreator implements ObjectFactory {
 		return createInstance(mf.getConcreteType(), dbObj);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.code.morphia.ObjectFactory#createMap(com.google.code.morphia.mapping.MappedField)
+	 */
 	public Map createMap(MappedField mf) {
 		return (Map) newInstance(mf.getCTor(), HashMap.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.code.morphia.ObjectFactory#createList(com.google.code.morphia.mapping.MappedField)
+	 */
 	public List createList(MappedField mf) {
 		return (List) newInstance(mf.getCTor(), ArrayList.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.code.morphia.ObjectFactory#createSet(com.google.code.morphia.mapping.MappedField)
+	 */
 	public Set createSet(MappedField mf) {
 		return (Set) newInstance(mf.getCTor(), HashSet.class);
 	}
+
+	
+	public static Object createInst(Class clazz) {
+        try
+        {
+            return getNoArgsConstructor(clazz).newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+	}
 	
     /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
-    private Object newInstance(final Constructor tryMe, final Class fallbackType) {
+    private static Object newInstance(final Constructor tryMe, final Class fallbackType) {
 		if (tryMe != null) {
 			tryMe.setAccessible(true);
 			try {
@@ -79,10 +92,10 @@ public class DefaultCreator implements ObjectFactory {
 				throw new RuntimeException(e);
 			}
 		}
-		return createInstance(fallbackType);
+		return createInst(fallbackType);
     }
     
-	private Constructor getNoArgsConstructor(final Class ctorType) {
+	private static Constructor getNoArgsConstructor(final Class ctorType) {
 		try {
 			Constructor ctor = ctorType.getDeclaredConstructor();
 			ctor.setAccessible(true);

@@ -6,11 +6,11 @@ package com.google.code.morphia.mapping.validation.fieldrules;
 import java.util.Set;
 
 import com.google.code.morphia.annotations.Version;
+import com.google.code.morphia.mapping.DefaultCreator;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.validation.ConstraintViolation;
 import com.google.code.morphia.mapping.validation.ConstraintViolation.Level;
-import com.google.code.morphia.utils.ReflectionUtils;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -24,8 +24,8 @@ public class VersionMisuse extends FieldConstraint {
 			Class<?> type = mf.getType();
 			if (Long.class.equals(type) || long.class.equals(type)) {
 				
-				// hope that this is tested already by now?
-				Object testInstance = ReflectionUtils.createInstance(mc.getClazz());
+				//TODO: Replace this will a read ObjectFactory call -- requires Mapper instance.
+				Object testInstance = DefaultCreator.createInst(mc.getClazz());
 				
 				// check initial value
 				if (Long.class.equals(type)) {
