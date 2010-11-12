@@ -13,7 +13,7 @@
 	<url>http://code.google.com/p/morphia/</url>
 
 	<properties>
-		<morphia.version>0.97</morphia.version>
+		<morphia.version>0.98-SNAPSHOT</morphia.version>
 	</properties>
 
 	<licenses>
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.2</version>
+			<version>2.3</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
