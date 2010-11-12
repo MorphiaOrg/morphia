@@ -21,7 +21,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 
 public class FieldCriteria extends AbstractCriteria implements Criteria {
-	private static final Logr log = MorphiaLoggerFactory.get(Mapper.class);
+	private static final Logr log = MorphiaLoggerFactory.get(FieldCriteria.class);
 
 	private String field;
 	private FilterOperator operator;
