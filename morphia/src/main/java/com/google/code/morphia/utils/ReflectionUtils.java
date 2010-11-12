@@ -136,17 +136,17 @@ public class ReflectionUtils
         return validFields;
     }
 
-    public static boolean implementsAnyInterface(final Class type, final Class... interfaceClasses)
-    {
-        for (Class iF : interfaceClasses)
-        {
-            if (implementsInterface(type, iF))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public static boolean implementsAnyInterface(final Class type, final Class... interfaceClasses)
+//    {
+//        for (Class iF : interfaceClasses)
+//        {
+//            if (implementsInterface(type, iF))
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Check if a class implements a specific interface.

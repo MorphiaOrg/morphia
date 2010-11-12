@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.annotations.Converters;
@@ -238,12 +237,7 @@ public class MappedClass {
 	/** Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver*/
 	public static boolean isSupportedType(Class<?> clazz) {
 		if (ReflectionUtils.isPropertyType(clazz)) return true;
-		if (clazz.isArray() || ReflectionUtils.implementsAnyInterface(clazz, 	
-				Iterable.class,
-				Collection.class,
-				List.class,
-				Set.class,
-				Map.class)){
+		if (clazz.isArray() || Map.class.isAssignableFrom(clazz) || Iterable.class.isAssignableFrom(clazz)){
 			Class<?> subType = null;
 			if (clazz.isArray()) subType = clazz.getComponentType();
 			else subType = ReflectionUtils.getParameterizedClass(clazz);

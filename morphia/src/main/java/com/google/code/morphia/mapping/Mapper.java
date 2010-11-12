@@ -289,7 +289,7 @@ public class Mapper {
 		//Even if the converter changed it, should it still be processed?
 
 		//The converter ran, and produced another type.
-		if (!bSameType && !ReflectionUtils.implementsAnyInterface(type, Iterable.class, Map.class))
+		if (!bSameType && !(Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)))
 			return newObj;
 		else {
 			
@@ -297,7 +297,7 @@ public class Mapper {
 			boolean isMap = false;
 			Class subType = null;
 	
-			if (type.isArray() || ReflectionUtils.implementsAnyInterface(type, Iterable.class, Map.class)) {
+			if (type.isArray() || Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)) {
 				isSingleValue = false;
 				isMap = ReflectionUtils.implementsInterface(type, Map.class);
 				// subtype of Long[], List<Long> is Long

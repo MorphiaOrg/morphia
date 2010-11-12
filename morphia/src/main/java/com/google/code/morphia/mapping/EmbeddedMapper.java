@@ -18,8 +18,7 @@ import com.mongodb.DBObject;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 class EmbeddedMapper implements CustomMapper{
-	public void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject,
-			Map<Object, DBObject> involvedObjects, Mapper mapr) {
+	public void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		String name = mf.getNameToStore();
 		
 		Object fieldValue = mf.getFieldValue(entity);
@@ -56,13 +55,13 @@ class EmbeddedMapper implements CustomMapper{
 					values.add(mapr.converters.encode(o));
 				else {
 					Object val;
-					if (ReflectionUtils.implementsAnyInterface(o.getClass(), Collection.class, Map.class))
+					if (Collection.class.isAssignableFrom(o.getClass()) || Map.class.isAssignableFrom(o.getClass()))
 						val = mapr.toMongoObject(o, true);
 					else
 						val = mapr.toDBObject(o, involvedObjects);
 
 					if (	val != null && val instanceof DBObject && 
-							!ReflectionUtils.implementsAnyInterface(val.getClass(), Collection.class, Map.class) && 
+							!(Collection.class.isAssignableFrom(val.getClass()) || Map.class.isAssignableFrom(val.getClass())) && 
 							!mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
 							mf.getSubClass().equals(o.getClass())) {
 						((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
@@ -90,13 +89,13 @@ class EmbeddedMapper implements CustomMapper{
 				else if(mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(entryVal.getClass()))
 					val = mapr.converters.encode(entryVal);
 				else {
-					if (ReflectionUtils.implementsAnyInterface(entryVal.getClass(), Collection.class, Map.class))
+					if (Map.class.isAssignableFrom(entryVal.getClass()) || Collection.class.isAssignableFrom(entryVal.getClass()))
 						val = mapr.toMongoObject(entryVal, true);
 					else
 						val = mapr.toDBObject(entryVal, involvedObjects);
 				
 					if (	val != null && val instanceof DBObject && 
-							!ReflectionUtils.implementsAnyInterface(val.getClass(), Collection.class, Map.class) && 
+							!(Collection.class.isAssignableFrom(val.getClass()) || Map.class.isAssignableFrom(val.getClass())) && 
 							!mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
 							mf.getSubClass().equals(entryVal.getClass()))
 						((DBObject)val).removeField(Mapper.CLASS_NAME_FIELDNAME);
@@ -223,13 +222,9 @@ class EmbeddedMapper implements CustomMapper{
 	}
 
 	private Object readMapOrCollectionOrEntity(DBObject dbObj, MappedField mf, EntityCache cache, Mapper mapr) {
-		if(ReflectionUtils.implementsAnyInterface(mf.getSubClass(), Iterable.class, Map.class)) {
+		if(Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass())) {
 			MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType)mf.getSubType());
 			mapr.fromDb(dbObj, mocMF, cache);
-//			if(mocMF.isMap())
-//				readMap(dbObj, mocMF, mocMF, cache, mapr);
-//			else
-//				readCollection(dbObj, mocMF, mocMF, cache, mapr);
 			return mocMF.getValue();
 		} else {
 			Object newEntity = mapr.getOptions().objectFactory.createInstance(mf.getSubClass(), dbObj);

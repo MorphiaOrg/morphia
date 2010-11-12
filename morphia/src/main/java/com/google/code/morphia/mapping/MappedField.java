@@ -120,21 +120,23 @@ public class MappedField {
 		
 		this.name = getMappedFieldName();
 		Class type = field.getType();
-		if ((type.isArray() || ReflectionUtils.implementsAnyInterface(type, Collection.class, Map.class)) && !ReflectionUtils.implementsAnyInterface(type, String.class)) {
+		if (	type.isArray() || 
+				Collection.class.isAssignableFrom(type) || 
+				Map.class.isAssignableFrom(type)) {
 			
 			isSingleValue = false;
 			
-			// subtype of Long[], List<Long> is Long
-			isMap = ReflectionUtils.implementsInterface(type, Map.class);
-			isSet = ReflectionUtils.implementsInterface(type, Set.class);
+			isMap = Map.class.isAssignableFrom(type);
+			isSet = Set.class.isAssignableFrom(type);
 			//for debugging
-			isCollection = ReflectionUtils.implementsInterface(type, Collection.class);
+			isCollection = Collection.class.isAssignableFrom(type);
 			isArray = type.isArray();
 			
+			//for debugging with issue
 			if (!isMap && !isSet && !isCollection && !isArray)
 				throw new MappingException("type is not a map/set/collection/array : " + type);
 			
-			// get the subtype T, T[]/List<T>/Map<?,T>
+			// get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long
 			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedType(field, (isMap) ? 1 : 0);
 
 			if (isMap)
@@ -383,7 +385,6 @@ public class MappedField {
 				return concrete;
 			}
 		}
-		
 		return getType();
 	}
 }

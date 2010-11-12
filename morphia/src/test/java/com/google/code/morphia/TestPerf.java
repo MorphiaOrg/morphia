@@ -41,7 +41,7 @@ import com.mongodb.WriteConcern;
  *
  * @author Scott Hernandez
  */
-@Ignore 
+//@Ignore 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;
@@ -150,7 +150,7 @@ public class TestPerf  extends TestBase{
     			insertTime < (rawInsertTime * WriteFailFactor ));
     }
 
-	@Test
+	@Test @Ignore
     public void testAddressLoadPerf() throws Exception {
     	insertAddresses(5001, true, false);
     	

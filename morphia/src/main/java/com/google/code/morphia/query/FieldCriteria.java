@@ -74,7 +74,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;
 		
 		//convert single values into lists for $in/$nin
-		if (type != null && (operator == FilterOperator.IN || operator == FilterOperator.NOT_IN) && !type.isArray() && !ReflectionUtils.implementsAnyInterface(type, Iterable.class) ) {
+		if (type != null && (operator == FilterOperator.IN || operator == FilterOperator.NOT_IN) && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
 			mappedValue = Collections.singletonList(mappedValue);
 		}
 		
@@ -181,11 +181,11 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 			return true;
 		else if (operator.equals(FilterOperator.EXISTS) && (value instanceof Boolean))
 			return true;
-		else if (operator.equals(FilterOperator.IN) && (value.getClass().isArray() || ReflectionUtils.implementsAnyInterface(value.getClass(), Iterable.class, Map.class)))
+		else if (operator.equals(FilterOperator.IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
 			return true;
-		else if (operator.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || ReflectionUtils.implementsAnyInterface(value.getClass(), Iterable.class, Map.class)))
+		else if (operator.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
 			return true;
-		else if (operator.equals(FilterOperator.ALL) && (value.getClass().isArray() || ReflectionUtils.implementsAnyInterface(value.getClass(), Iterable.class, Map.class)))
+		else if (operator.equals(FilterOperator.ALL) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
 			return true;
 		else if (value instanceof Integer && (int.class.equals(type) || long.class.equals(type) || Long.class.equals(type)))
 			return true;
