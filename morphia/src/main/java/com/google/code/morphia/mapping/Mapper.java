@@ -82,6 +82,7 @@ public class Mapper {
 	final Map<Class, Object> instanceCache = new ConcurrentHashMap();
 	
 	private MapperOptions opts = new MapperOptions();
+
 	// TODO: make these configurable
 	LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
 	DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();

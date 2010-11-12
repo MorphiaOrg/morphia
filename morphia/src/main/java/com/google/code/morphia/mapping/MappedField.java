@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,9 @@ public class MappedField {
 	protected boolean isSingleValue = true; // indicates the field is a single value
 	protected boolean isMongoType = false; // indicated the type is a mongo compatible type (our version of value-type)
 	protected boolean isMap = false; // indicated if it implements Map interface
-	protected boolean isSet = false; // indicated if the collection is a set (or list)
+	protected boolean isSet = false; // indicated if the collection is a set
+	protected boolean isArray = false; // indicated if it is an Array
+	protected boolean isCollection = false; // indicated if the collection is a list)
 	
 	/** the constructor */
 	MappedField(Field f) {
@@ -116,13 +119,18 @@ public class MappedField {
 		
 		this.name = getMappedFieldName();
 		Class type = field.getType();
-		if (type.isArray() || ReflectionUtils.implementsAnyInterface(field.getType(), Iterable.class, Map.class)) {
+		if ((type.isArray() || ReflectionUtils.implementsAnyInterface(type, Collection.class, Map.class)) && !ReflectionUtils.implementsAnyInterface(type, String.class)) {
 			
 			isSingleValue = false;
 			
 			// subtype of Long[], List<Long> is Long
 			isMap = ReflectionUtils.implementsInterface(type, Map.class);
 			isSet = ReflectionUtils.implementsInterface(type, Set.class);
+			isCollection = ReflectionUtils.implementsInterface(type, Collection.class);
+			isArray = type.isArray();
+			
+			if (!isMap && !isSet && !isCollection && !isArray)
+				throw new MappingException("type is not a map/set/collection/array : " + type);
 			
 			// get the subtype T, T[]/List<T>/Map<?,T>
 			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedType(field, (isMap) ? 1 : 0);
@@ -243,20 +251,23 @@ public class MappedField {
 		sb.append(name).append(" (");
 		sb.append(" type:").append(field.getType().getSimpleName()).append(",");
 		
-		if(isSingleValue)
+		if(isSingleValue())
 			sb.append(" single:true,");
 		else {
 			sb.append(" multiple:true,");
 			sb.append(" subtype:").append(getSubClass()).append(",");
 		}
-		if(isMap) {
+		if(isMap()) {
 			sb.append(" map:true,");
 			sb.append(" map-key:").append(getMapKeyClass().getSimpleName());
 		}
 		
-		if(isSet) {
+		if(isSet())
 			sb.append(" set:true,");
-		}
+		if(isCollection)
+			sb.append(" collection:true,");
+		if(isArray)
+			sb.append(" array:true,");
 		
 		//remove last comma
 		if (sb.charAt(sb.length()-1) == ',')
@@ -304,6 +315,8 @@ public class MappedField {
 	}
 	
 	public boolean isSingleValue() {
+		if(!isSingleValue && !isMap && !isSet && !isArray && !isCollection)
+			throw new RuntimeException("Not single, but none of the types that are not-single.");
 		return isSingleValue;
 	}
 	

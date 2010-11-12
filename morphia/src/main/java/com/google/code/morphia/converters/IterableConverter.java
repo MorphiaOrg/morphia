@@ -70,7 +70,7 @@ public class IterableConverter extends TypeConverter {
 	
 	@Override
 	public
-	Object encode(Object value, MappedField f) {
+	Object encode(Object value, MappedField mf) {
 		
 		if (value == null)
 			return null;
@@ -88,14 +88,17 @@ public class IterableConverter extends TypeConverter {
 			
 			iterableValues = Arrays.asList((Object[]) value);
 		} else {
+			if (!(value instanceof Iterable))
+				throw new ConverterException("Cannot cast " + value.getClass() + " to Iterable for MappedField: " + mf);
+			
 			// cast value to a common interface
 			iterableValues = (Iterable<?>) value;
 		}
 		
 		List values = new ArrayList();
-		if (f != null && f.getSubClass() != null) {
+		if (mf != null && mf.getSubClass() != null) {
 			for (Object o : iterableValues) {
-				values.add(chain.encode(f.getSubClass(), o));
+				values.add(chain.encode(mf.getSubClass(), o));
 			}
 		} else {
 			for (Object o : iterableValues) {
