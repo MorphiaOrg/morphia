@@ -59,6 +59,7 @@ public class MappedField {
 	protected boolean isMongoType = false; // indicated the type is a mongo compatible type (our version of value-type)
 	protected boolean isMap = false; // indicated if it implements Map interface
 	protected boolean isSet = false; // indicated if the collection is a set
+	//for debugging
 	protected boolean isArray = false; // indicated if it is an Array
 	protected boolean isCollection = false; // indicated if the collection is a list)
 	
@@ -126,6 +127,7 @@ public class MappedField {
 			// subtype of Long[], List<Long> is Long
 			isMap = ReflectionUtils.implementsInterface(type, Map.class);
 			isSet = ReflectionUtils.implementsInterface(type, Set.class);
+			//for debugging
 			isCollection = ReflectionUtils.implementsInterface(type, Collection.class);
 			isArray = type.isArray();
 			

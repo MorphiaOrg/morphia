@@ -12,13 +12,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.ObjectFactory;
-import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 
 /**
  * @author ScottHernandez
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultCreator implements ObjectFactory {
 	//TODO: move code from reflectionUtils into here.
 	
@@ -26,21 +25,36 @@ public class DefaultCreator implements ObjectFactory {
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(java.lang.Class)
 	 */
 	public Object createInstance(Class clazz) {
-		return ReflectionUtils.createInstance(clazz);
+        try
+        {
+            return getNoArgsConstructor(clazz).newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(java.lang.Class, com.mongodb.DBObject)
 	 */
 	public Object createInstance(Class clazz, DBObject dbObj) {
-		return ReflectionUtils.createInstance(clazz, dbObj);
-	}
+		// see if there is a className value
+		String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
+		Class c = clazz;
+		if (className != null) {
+			// try to Class.forName(className) as defined in the dbObject first,
+			// otherwise return the entityClass
+			c = getClassForName(className, clazz);
+		}
+		return createInstance(c);	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(com.google.code.morphia.mapping.MappedField, com.mongodb.DBObject)
 	 */
 	public Object createInstance(MappedField mf, DBObject dbObj) {
-		return ReflectionUtils.createInstance(mf, dbObj);
+		// see if there is a className value
+		return createInstance(mf.getConcreteType(), dbObj);
 	}
 
 	public Map createMap(MappedField mf) {
@@ -56,7 +70,7 @@ public class DefaultCreator implements ObjectFactory {
 	}
 	
     /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
-    private static Object newInstance(final Constructor tryMe, final Class fallbackType) {
+    private Object newInstance(final Constructor tryMe, final Class fallbackType) {
 		if (tryMe != null) {
 			tryMe.setAccessible(true);
 			try {
@@ -65,7 +79,29 @@ public class DefaultCreator implements ObjectFactory {
 				throw new RuntimeException(e);
 			}
 		}
-		return ReflectionUtils.createInstance(fallbackType);
+		return createInstance(fallbackType);
     }
+    
+	private Constructor getNoArgsConstructor(final Class ctorType) {
+		try {
+			Constructor ctor = ctorType.getDeclaredConstructor();
+			ctor.setAccessible(true);
+			return ctor;
+		} catch (NoSuchMethodException e) {
+			throw new MappingException("No usable constructor for " + ctorType.getName(), e);
+		}
+	}
+	/**
+	 * gets the Class for some classname, or if the className is not found,
+	 * return the defaultClass instance
+	 */
+	private static Class getClassForName(final String className, final Class defaultClass) {
+		try {
+			Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+			return c;
+		} catch (ClassNotFoundException ex) {
+			return defaultClass;
+		}
+	}
 
 }

@@ -47,10 +47,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.mapping.MappedField;
-import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /**
@@ -575,10 +572,10 @@ public class ReflectionUtils
 	 * create a new instance of the entity, first using the dbObject field, then
 	 * by calling createInstence based on the type
 	 */
-	public static Object createInstance(final MappedField mf, final DBObject dbObject) {
-		// see if there is a className value
-		return createInstance(mf.getConcreteType(), dbObject);
-	}
+//	public static Object createInstance(final MappedField mf, final DBObject dbObject) {
+//		// see if there is a className value
+//		return createInstance(mf.getConcreteType(), dbObject);
+//	}
 
     public static Object createInstance(final Class type)
     {
@@ -609,17 +606,17 @@ public class ReflectionUtils
 	 * create a new instance of the entity, first using the dbObject field, then
 	 * by calling createInstence based on the type
 	 */
-	public static Object createInstance(final Class entityClass, final DBObject dbObject) {
-		// see if there is a className value
-		String className = (String) dbObject.get(Mapper.CLASS_NAME_FIELDNAME);
-		Class c = entityClass;
-		if (className != null) {
-			// try to Class.forName(className) as defined in the dbObject first,
-			// otherwise return the entityClass
-			c = getClassForName(className, entityClass);
-		}
-		return createInstance(c);
-	}
+//	public static Object createInstance(final Class entityClass, final DBObject dbObject) {
+//		// see if there is a className value
+//		String className = (String) dbObject.get(Mapper.CLASS_NAME_FIELDNAME);
+//		Class c = entityClass;
+//		if (className != null) {
+//			// try to Class.forName(className) as defined in the dbObject first,
+//			// otherwise return the entityClass
+//			c = getClassForName(className, entityClass);
+//		}
+//		return createInstance(c);
+//	}
 
 //	public static Object newInstance(final Class<?> c, final Class<?> fallbackType) {
 //		return newInstance(getNoArgsConstructor(c), fallbackType);
