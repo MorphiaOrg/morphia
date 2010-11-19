@@ -182,7 +182,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (log.isTraceEnabled())
 			log.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
 
-		return new MorphiaIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
+		return new MorphiaIterator<T,T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
 	}
 	
 
@@ -202,9 +202,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	public List<T> asList() {
 		List<T> results = new ArrayList<T>();
-		MorphiaIterator<T> iter = (MorphiaIterator<T>) fetch().iterator();
+		MorphiaIterator<T,T> iter = (MorphiaIterator<T,T>) fetch().iterator();
 		for(T ent : iter)
 			results.add(ent);
 

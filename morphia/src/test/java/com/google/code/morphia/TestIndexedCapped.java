@@ -103,6 +103,14 @@ public class TestIndexedCapped  extends TestBase{
 		@Id ObjectId id;
 		IndexedEmbed e;
 	}
+
+	
+	private static class CircularEmbeddedEntity {
+		@Id ObjectId id = new ObjectId();
+		String name;
+		@Indexed
+		CircularEmbeddedEntity a;
+	}
 	
 	
 	@Before @Override
@@ -158,6 +166,13 @@ public class TestIndexedCapped  extends TestBase{
 		assertFalse(hasNamedIndex("lastMod_1_active_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 		ds.ensureIndex(Ad.class, defs);
 		assertTrue(hasNamedIndex("lastMod_1_active_-1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
+	}
+
+	@Test
+    public void testIndexedRecursiveEntity() throws Exception {
+		MappedClass mc = morphia.getMapper().getMappedClass(CircularEmbeddedEntity.class);
+		ds.ensureIndexes();
+		assertTrue(hasNamedIndex("a_1",db.getCollection(mc.getCollectionName()).getIndexInfo()));
 	}
 	
 	

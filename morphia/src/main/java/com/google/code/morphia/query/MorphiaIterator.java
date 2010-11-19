@@ -13,7 +13,7 @@ import com.mongodb.DBCursor;
  * @author Scott Hernandez
  */
 @SuppressWarnings("unchecked")
-public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
+public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	private final DBCursor wrapped;
 	private final Mapper m;
 	private final Class<T> clazz;
@@ -30,7 +30,7 @@ public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
 		this.cache = cache;
 	}
 	
-	public Iterator<T> iterator() {
+	public Iterator<V> iterator() {
 		return this;
 	}
 	
@@ -42,17 +42,24 @@ public class MorphiaIterator<T> implements Iterable<T>, Iterator<T>{
 		return ret;
 	}
 	
-	public T next() {
+	public V next() {
 		if(!hasNext()) throw new NoSuchElementException();
-
-		long start = System.currentTimeMillis();
-    	BasicDBObject dbObj = (BasicDBObject) wrapped.next();
-    	driverTime += System.currentTimeMillis() - start;
-    	
-    	start = System.currentTimeMillis();
-		T entity = (T) m.fromDBObject(clazz, dbObj, cache);
+    	BasicDBObject dbObj = getNext();
+    	return processItem(dbObj);
+	}
+	
+	protected V processItem(BasicDBObject dbObj) {
+    	long start = System.currentTimeMillis();
+		V entity = (V) m.fromDBObject(clazz, dbObj, cache);
     	mapperTime += System.currentTimeMillis() - start;
-		return (T) entity;
+		return (V) entity;
+	}
+	
+	protected BasicDBObject getNext() {
+		long start = System.currentTimeMillis();
+		BasicDBObject dbObj = (BasicDBObject) wrapped.next();
+    	driverTime += System.currentTimeMillis() - start;
+    	return dbObj;
 	}
 	
 	public void remove() {

@@ -6,6 +6,7 @@ package com.google.code.morphia.mapping;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,13 @@ class EmbeddedMapper implements CustomMapper{
 	}
 
 	private void writeCollection(final MappedField mf, final BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
-		Iterable coll = (Iterable) fieldValue;
+		Iterable coll = null;
+		
+		if (mf.isArray)
+			coll =  Arrays.asList((Object[])fieldValue);
+		else
+			coll = (Iterable) fieldValue;
+		
 		if (coll != null) {
 			List values = new ArrayList();
 			for (Object o : coll) {
@@ -60,10 +67,9 @@ class EmbeddedMapper implements CustomMapper{
 					else
 						val = mapr.toDBObject(o, involvedObjects);
 
-					if (	val != null && val instanceof DBObject && 
-							!(Collection.class.isAssignableFrom(val.getClass()) || Map.class.isAssignableFrom(val.getClass())) && 
-							!mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
-							mf.getSubClass().equals(o.getClass())) {
+					if (	val != null && val instanceof DBObject && !mf.getSubClass().isInterface() && 
+							!Modifier.isAbstract(mf.getSubClass().getModifiers()) && mf.getSubClass().equals(o.getClass())) {
+						
 						((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
 					}
 					values.add(val);
@@ -94,11 +100,9 @@ class EmbeddedMapper implements CustomMapper{
 					else
 						val = mapr.toDBObject(entryVal, involvedObjects);
 				
-					if (	val != null && val instanceof DBObject && 
-							!(Collection.class.isAssignableFrom(val.getClass()) || Map.class.isAssignableFrom(val.getClass())) && 
-							!mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
-							mf.getSubClass().equals(entryVal.getClass()))
-						((DBObject)val).removeField(Mapper.CLASS_NAME_FIELDNAME);
+					if (	val != null && val instanceof DBObject && !mf.getSubClass().isInterface() && 
+							!Modifier.isAbstract(mf.getSubClass().getModifiers()) && mf.getSubClass().equals(entryVal.getClass()))
+						((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
 				String strKey = mapr.converters.encode(entry.getKey()).toString();

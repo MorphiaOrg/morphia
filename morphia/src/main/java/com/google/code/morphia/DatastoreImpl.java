@@ -241,7 +241,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + keys + " and opts:" + opts);
 			dbColl.ensureIndex(keys, opts);
 		}
-		
+
+		//TODO: remove this once using 2.4 driver does this in ensureIndex
+		CommandResult cr = dbColl.getDB().getLastError();
+		cr.throwOnError();
 	}
 	
 	@SuppressWarnings({ "rawtypes"})
@@ -251,7 +254,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for (IndexFieldDef def : defs) {
 			String fieldName = def.getField();
 			IndexDirection dir = def.getDirection();
-			keys.add(fieldName, (dir == IndexDirection.ASC) ? 1 : -1);
+			keys.add(fieldName, dir.toIndexValue());
 		}
 		
 		ensureIndex(clazz, name, (BasicDBObject) keys.get(), unique, dropDupsOnCreate, background);
@@ -294,7 +297,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			if (mf.hasAnnotation(Indexed.class)) {
 				Indexed index = mf.getAnnotation(Indexed.class);
 				StringBuilder field = new StringBuilder();
-				field.append(index.value() == IndexDirection.ASC ? "" : "-");
 				Class<?> indexedClass = (parentMCs.isEmpty() ? mc : parentMCs.get(0)).getClazz();
 				if (!parentMCs.isEmpty())
 					for(MappedField pmf : parentMFs)
@@ -302,7 +304,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				
 				field.append(mf.getNameToStore());
 				
-				ensureIndex(indexedClass, index.name(), field.toString(), index.unique(), index.dropDups(), index.background() ? index.background() : background );
+				ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(), index.dropDups(), index.background() ? index.background() : background );
 			}
 			
 			if (!mf.isTypeMongoCompatible()) {

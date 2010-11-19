@@ -210,7 +210,7 @@ public class TestPerf  extends TestBase{
     			//no-op; already happened during iteration
     		}
     	if (!raw)
-            System.out.println("driverTime: "+ ((MorphiaIterator<Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object>)it).getMapperTime() + "ms");
+            System.out.println("driverTime: "+ ((MorphiaIterator<Object,Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object,Object>)it).getMapperTime() + "ms");
     }
 
 	public void loadAddresses3(int count, boolean raw, boolean strict) {
@@ -231,7 +231,7 @@ public class TestPerf  extends TestBase{
 //    		dbColl.setObjectClass(null);
 
     	if (!raw)
-            System.out.println("driverTime: "+ ((MorphiaIterator<Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object>)it).getMapperTime() + "ms");
+            System.out.println("driverTime: "+ ((MorphiaIterator<Object,Object>)it).getDriverTime() + "ms, mapperTime:" + ((MorphiaIterator<Object,Object>)it).getMapperTime() + "ms");
     }
 
 	public void insertAddresses(int count, boolean raw, boolean strict) {

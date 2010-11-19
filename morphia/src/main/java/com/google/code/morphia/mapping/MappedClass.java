@@ -265,7 +265,7 @@ public class MappedClass {
 	}
 	
 	public boolean equals(MappedClass clazz) {
-		return this.getClazz().equals(clazz);
+		return this.getClazz().equals(clazz.getClazz());
 	}
 	
 	public boolean equals(Class<?> clazz) {

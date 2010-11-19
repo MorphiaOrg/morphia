@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -91,7 +92,12 @@ public class TestMapping  extends TestBase {
 	public static class RenamedEmbedded {
 		String name;
 	}
-		
+	
+	private static class ContainsEmbeddedArray {
+		@Id ObjectId id = new ObjectId();
+		RenamedEmbedded[] res;
+	}
+	
 	public static class NotEmbeddable {
 		String noImNot = "no, I'm not";
 	}
@@ -164,7 +170,7 @@ public class TestMapping  extends TestBase {
 	}
 
 	public static class ContainsEmbeddedEntity{
-		@Id ObjectId id;
+		@Id ObjectId id = new ObjectId();
 		@Embedded ContainsIntegerList cil = new ContainsIntegerList();
 	}
 
@@ -281,6 +287,28 @@ public class TestMapping  extends TestBase {
 		assertNotNull(ceeLoaded.id);
 		assertNotNull(ceeLoaded.cil);
 		assertNull(ceeLoaded.cil.id);
+		
+		
+	}
+	
+	@Test
+    public void testEmbeddedArrayElementHasNoClassname() throws Exception {
+		morphia.map(ContainsEmbeddedArray.class);
+		ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
+		cea.res = new RenamedEmbedded[] { new RenamedEmbedded() };
+		
+		DBObject dbObj = morphia.toDBObject(cea);
+		assertTrue(!((DBObject)((List)dbObj.get("res")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME));
+	}
+
+	@Test
+    public void testEmbeddedEntityDBObjectHasNoClassname() throws Exception {
+		morphia.map(ContainsEmbeddedEntity.class);
+		ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
+		cee.cil = new ContainsIntegerList();
+		cee.cil.intList = Collections.singletonList(1);
+		DBObject dbObj = morphia.toDBObject(cee);
+		assertTrue(!((DBObject)dbObj.get("cil")).containsField(Mapper.CLASS_NAME_FIELDNAME));
 	}
 
 	@Test
@@ -610,6 +638,9 @@ public class TestMapping  extends TestBase {
             borg.setAddress(borgAddr);
             
             BasicDBObject hotelDbObj = (BasicDBObject) morphia.toDBObject(borg);
+            assertTrue( !( ((DBObject)((List)hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)) ); 
+            
+            
             hotels.save(hotelDbObj);
 
 			Hotel borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
