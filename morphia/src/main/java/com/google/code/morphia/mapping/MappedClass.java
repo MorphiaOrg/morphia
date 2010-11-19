@@ -76,6 +76,13 @@ public class MappedClass {
 			Version.class, 
 			Converters.class, 
 			Indexes.class));
+	/** Annotations interesting for life-cycle events */
+	private static Class<? extends Annotation>[] lifecycleAnnotations = new Class[] {
+			PrePersist.class, 
+			PreSave.class, 
+			PostPersist.class, 
+			PreLoad.class, 
+			PostLoad.class};
 	
 	/** Annotations we were interested in, and found. */
 	private Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
@@ -98,7 +105,14 @@ public class MappedClass {
 	public MappedClass(Class<?> clazz, Mapper mapr) {
 		this.mapr = mapr;
 		this.clazz = clazz;
+
+		if (log.isTraceEnabled())
+			log.trace("Creating MappedClass for " + clazz);
+		
 		discover();
+
+		if (log.isDebugEnabled())
+			log.debug("MappedClass done: " + toString());
 	}
 	
 	/** Discovers interesting (that we care about) things about the class. */
@@ -124,7 +138,6 @@ public class MappedClass {
 			for (Class<?> c : entityLisAnn.value())
 				lifecycleClasses.add(c);
 		
-		Class<? extends Annotation>[] lifecycleAnnotations = new Class[] {PrePersist.class, PreSave.class, PostPersist.class, PreLoad.class, PostLoad.class};
 		for (Class<?> cls : lifecycleClasses) {
 			for (Method m : ReflectionUtils.getDeclaredAndInheritedMethods(cls)) {
 				for(Class<? extends Annotation> c : lifecycleAnnotations) {
@@ -132,7 +145,6 @@ public class MappedClass {
 						addLifecycleEventMethod(c, m, cls.equals(clazz) ? null : cls);
 					}
 				}
-
 			}
 		}
 		
@@ -293,7 +305,10 @@ public class MappedClass {
 					
 					Object inst = toCall.get(type);
 					method.setAccessible(true);
-					log.debug("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
+					
+					if (log.isDebugEnabled())
+						log.debug("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst + "");
+					
 					if (inst == null)
 						if (method.getParameterTypes().length == 0)
 							tempObj = method.invoke(entity);
@@ -335,7 +350,8 @@ public class MappedClass {
 	private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, DBObject dbObj, Mapper mapr,
 			Collection<EntityInterceptor> interceptors) {
 		for (EntityInterceptor ei : interceptors) {
-			log.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
+			if (log.isDebugEnabled())
+				log.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
 			
 			if 		(event.equals(PreLoad.class)) 		ei.preLoad(entity, dbObj, mapr);
 			else if (event.equals(PostLoad.class)) 		ei.postLoad(entity, dbObj, mapr);
