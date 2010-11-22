@@ -91,11 +91,10 @@ public class ReflectionUtils
      *            the list to start from (can be null)
      * @return an array of all declared and inherited fields
      */
-    public static List<Method> getDeclaredAndInheritedMethods(final Class type)
-    {
-        return getDeclaredAndInheritedMethods(type, null);
-    }
-
+	public static List<Method> getDeclaredAndInheritedMethods(final Class type) {
+		return getDeclaredAndInheritedMethods(type, new ArrayList());
+	}
+	
     protected static List<Method> getDeclaredAndInheritedMethods(final Class type, List<Method> methods)
     {
         if ((type == null) || (type == Object.class))

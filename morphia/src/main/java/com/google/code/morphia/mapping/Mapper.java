@@ -93,7 +93,7 @@ public class Mapper {
 	}
 
 	public Mapper(MapperOptions opts) {
-		converters.setMapper(this);
+		this();
 		this.opts = opts;
 	}
 
