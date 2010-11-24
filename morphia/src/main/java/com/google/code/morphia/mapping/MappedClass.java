@@ -5,7 +5,6 @@ package com.google.code.morphia.mapping;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -98,7 +97,7 @@ public class MappedClass {
 	
 	/** the type we are mapping to/from */
 	private Class<?> clazz;
-	private Constructor<?> ctor;
+//	private Constructor<?> ctor;
 	Mapper mapr;
 	
 	/** constructor */
@@ -121,15 +120,6 @@ public class MappedClass {
 			addAnnotation(c);
 		}
 		
-		Class<?> type = clazz;
-		
-		//allows private/protected constructors
-		try {
-			ctor = type.getDeclaredConstructor();
-			ctor.setAccessible(true);
-		} catch (NoSuchMethodException e) {
-			throw new MappingException("" + type.getName() + " cannot be used; It does not have a no-args constructor.", e);
-		}
 		List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();
 		lifecycleClasses.add(clazz);
 		
@@ -380,10 +370,6 @@ public class MappedClass {
 		return embeddedAn;
 	}
 	
-	//    public Polymorphic getPolymorphicAnnotation() {
-	//        return polymorphicAn;
-	//    }
-	
 	/**
 	 * @return the releventAnnotations
 	 */
@@ -417,11 +403,6 @@ public class MappedClass {
 	 */
 	public Class<?> getClazz() {
 		return clazz;
-	}
-	
-	/** @return the constructor for this mapped class */
-	public Constructor<?> getCTor() {
-		return ctor;
 	}
 	
 	/** @return the Mapper this class is bound to */
