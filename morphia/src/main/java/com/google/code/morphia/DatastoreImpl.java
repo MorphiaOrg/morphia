@@ -1,7 +1,5 @@
 package com.google.code.morphia;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -979,30 +977,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return keys;
 	}
 	
-	//TODO: Remove this once driver gets it (2.3)
-    //map of the constants from above for use by fromString
-    private static Map<String, WriteConcern> _namedConcerns = null;
-    
-    /** Get the WriteConcern constants by name: NONE, NORMAL, SAFE, FSYNC_SAFE, REPLICA_SAFE. (matching is done case insensitively)*/
-    private static WriteConcern getConcernByName(String name) {
-		if (_namedConcerns == null) {
-			HashMap<String, WriteConcern> newMap = new HashMap<String, WriteConcern>(8, 1);
-			for (Field f : WriteConcern.class.getFields())
-				if (Modifier.isStatic(f.getModifiers()) && f.getType().equals(WriteConcern.class)) {
-					try {
-						newMap.put(f.getName().toLowerCase(), (WriteConcern) f.get(null));
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			
-			//Thought about doing a synchronize but this seems just as safe and I don't care about race conditions.
-			_namedConcerns = newMap;
-		}
-
-    	return _namedConcerns.get(name.toLowerCase());		
-    }
-	
 	private EntityCache createCache() {
 		return mapr.createEntityCache();
 	}
@@ -1011,7 +985,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (clazzOrEntity != null) {
 			Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
 			if(entityAnn != null && entityAnn.concern() != null && entityAnn.concern() != "" )
-				return getConcernByName(entityAnn.concern());
+				return WriteConcern.valueOf(entityAnn.concern());
 		}
 		
 		return defConcern;
