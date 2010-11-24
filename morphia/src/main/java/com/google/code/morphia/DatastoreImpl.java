@@ -930,8 +930,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 		DBObject result = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false, false);
 
-		T entity = (T) mapr.fromDBObject(qi.getEntityClass(), result, cache);
-        return entity;
+		if (result != null) {
+			T entity = (T) mapr.fromDBObject(qi.getEntityClass(), result, cache);
+	        return entity;
+		}
+		
+		return null;
 	}
 
 	public <T> T findAndModify(Query<T> q, UpdateOperations<T> ops) {
