@@ -35,4 +35,12 @@ public interface UpdateOperations<T> {
 	UpdateOperations<T> inc(String fieldExpr);
 	/** increments the numeric field by value (negatives are allowed)*/
 	UpdateOperations<T> inc(String fieldExpr, Number value);
+	
+	/** Turns on validation (for all calls made after); by default validation is on*/
+	UpdateOperations<T> enableValidation();
+	/** Turns off validation (for all calls made after)*/
+	UpdateOperations<T> disableValidation();
+
+	/** Enables isolation (so this update happens in one shot, without yielding)*/
+	UpdateOperations<T> isolated();
 }

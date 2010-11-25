@@ -1,7 +1,5 @@
 package com.google.code.morphia;
 
-import java.io.IOException;
-import java.io.NotSerializableException;
 import java.io.Serializable;
 
 /**
@@ -29,6 +27,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	
 	/** Id value */
 	protected Object id;
+	protected byte[] idBytes;
 	
 	/** For GWT serialization */
 	protected Key() {}
@@ -38,6 +37,13 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	{
 		this.kindClass = kind;
 		this.id = id;
+	}
+
+	/** Create a key with an id */
+	public Key(Class<? extends T> kind, byte[] idBytes)
+	{
+		this.kindClass = kind;
+		this.idBytes = idBytes;
 	}
 	
 	/** Create a key with an id */
@@ -164,11 +170,18 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 			return o1.compareTo(o2);
 	}
 	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		if (!(id instanceof Serializable))
-			throw new NotSerializableException(id.getClass().getName());
-		// TODO persist id to a BasicDBObject (or Map<String, Object>) using
-		// mapper to make serializable.
-		out.defaultWriteObject();
-	}
+//	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+//		if (!(id instanceof Serializable))
+//			throw new NotSerializableException(id.getClass().getName());
+//		// TODO persist id to a BasicDBObject (or Map<String, Object>) using
+//		// mapper to make serializable.
+//		out.defaultWriteObject();
+//	}
+//	private void readObject(java.io.ObjectInputStream in) throws IOException {
+//		if (!(id instanceof Serializable))
+//			throw new NotSerializableException(id.getClass().getName());
+//		// TODO persist id to a BasicDBObject (or Map<String, Object>) using
+//		// mapper to make serializable.
+//		in.defaultWriteObject();
+//	}
 }

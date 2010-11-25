@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -20,11 +21,21 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 	Map<String, Map<String, Object>> ops = new HashMap<String, Map<String, Object>>();
 	Mapper mapr;
 	Class<T> clazz;
+	boolean validateNames = true;
+	boolean validateTypes = true;
+	boolean isolated = false;
 	
 	public UpdateOpsImpl(Class<T> type, Mapper mapper) {
 		this.mapr = mapper;
 		this.clazz = type;
 	}
+
+	public UpdateOperations<T> enableValidation(){ validateNames = validateTypes = true; return this; }
+
+	public UpdateOperations<T> disableValidation(){ validateNames = validateTypes = false; return this; }
+	
+	public UpdateOperations<T> isolated() { isolated = true; return this; }
+	public boolean isIsolated() { return isolated; }
 	
 	@SuppressWarnings("unchecked")
 	public void setOps(DBObject ops) {
@@ -33,10 +44,18 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 	public DBObject getOps() {
 		return new BasicDBObject(ops);
 	}
+	
 	protected void add(String op, String f, Object val) {
 		if (val== null)
 			throw new QueryException("Val cannot be null");
-		
+
+		if (validateNames || validateTypes) {
+			StringBuffer sb = new StringBuffer(f);
+			@SuppressWarnings("unused")
+			MappedField mf = Mapper.validate(clazz, mapr, sb, FilterOperator.EQUAL, val, validateNames, validateTypes);
+			f = sb.toString();
+		}
+
 		if (!ops.containsKey(op)) {
 			ops.put(op, new HashMap<String, Object>());
 		}

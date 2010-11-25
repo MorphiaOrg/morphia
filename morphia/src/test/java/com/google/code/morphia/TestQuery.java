@@ -44,7 +44,7 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
-import com.google.code.morphia.query.QueryException;
+import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
@@ -171,8 +171,8 @@ public class TestQuery  extends TestBase {
         try {
             ds.find(ContainsPhotoKey.class, "photo.keywords","foo").get();
             assertNull("um, query validation should have thrown");
-        } catch (QueryException e) {
-        	//do nothing, this is good.
+        } catch (ValidationException e) {
+            assertTrue(e.getMessage().contains("could not be found"));
         }
     }
 
@@ -193,8 +193,8 @@ public class TestQuery  extends TestBase {
 		try {
             ds.find(ContainsPic.class, "pic.name","foo").get();
             assertNull("um, query validation should have thrown");
-        } catch (QueryException e) {
-        	//do nothing, this is good.
+        } catch (ValidationException e) {
+            assertTrue(e.getMessage().contains("Can not use dot-"));
         }
     }
     @Test

@@ -11,6 +11,7 @@
 
 package com.google.code.morphia.mapping;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+
+import org.bson.BSONEncoder;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
@@ -47,6 +52,8 @@ import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.LazyProxyFactory;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
+import com.google.code.morphia.query.FilterOperator;
+import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -62,7 +69,7 @@ import com.mongodb.DBRef;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
-	public static final Logr logger = MorphiaLoggerFactory.get(Mapper.class);
+	private static final Logr log = MorphiaLoggerFactory.get(Mapper.class);
 
 	/** The @{@link Id} field name that is stored with mongodb.*/
 	public static final String ID_KEY = "_id";
@@ -249,7 +256,7 @@ public class Mapper {
 	public Object fromDBObject(final Class entityClass, final DBObject dbObject, EntityCache cache) {
 		if (dbObject == null) {
 			Throwable t = new Throwable();
-			logger.error("Somebody passed in a null dbObject; bad client!", t);
+			log.error("Somebody passed in a null dbObject; bad client!", t);
 			return null;
 		}
 
@@ -279,7 +286,7 @@ public class Mapper {
 		Class origClass = javaObj.getClass();
 		Object newObj = converters.encode(origClass, javaObj);
 		if (newObj == null) {
-			logger.warning("converted " + javaObj + " to null");
+			log.warning("converted " + javaObj + " to null");
 			return newObj;
 		}
 		Class type = newObj.getClass();
@@ -453,7 +460,7 @@ public class Mapper {
 		else if (Embedded.class.equals(annType)) {
 			opts.embeddedMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 		} else {
-			logger.debug("No annotation was found, using default mapper " + opts.defaultMapper + " for " + mf);
+			log.debug("No annotation was found, using default mapper " + opts.defaultMapper + " for " + mf);
 			opts.defaultMapper.toDBObject(entity, mf, dbObject, involvedObjects, this);
 		}
 
@@ -491,5 +498,131 @@ public class Mapper {
 		return key.getKind();
 	}
 	
+	<T> Key<T> createKey(Class<T> clazz, Serializable id){
+		return new Key<T>(clazz, id);
+	}
 	
+	<T> Key<T> createKey(Class<T> clazz, Object id){
+		if (id instanceof Serializable)
+			return createKey(clazz, (Serializable) id);
+		
+		BSONEncoder enc = new BSONEncoder();
+		return new Key<T>(clazz, enc.encode(toDBObject(id)));
+	}
+
+	/** Validate the path, and value type, returning the mappedfield for the field at the path */
+	public static MappedField validate(Class clazz, Mapper mapr, StringBuffer origProp, FilterOperator op, Object val, boolean validateNames, boolean validateTypes) {
+		//TODO: cache validations (in static?).
+		
+		MappedField mf = null;
+		String prop = origProp.toString();
+		boolean hasTranslations = false;
+		
+		if (validateNames) {
+			String[] parts = prop.split("\\.");
+			if (clazz == null) return null;
+			
+			MappedClass mc = mapr.getMappedClass(clazz);
+			for(int i=0; ; ) {
+				String part = parts[i];
+				mf = mc.getMappedField(part);
+				
+				//translate from java field name to stored field name
+				if (mf == null) {
+					mf = mc.getMappedFieldByJavaField(part);
+				    if (mf == null) throw new ValidationException("The field '" + part + "' could not be found in '" + clazz.getName() + 
+				    										"' while validating - " + prop + 
+				    										"; if you wish to continue please disable validation.");
+				    hasTranslations = true;
+				    parts[i] = mf.getNameToStore();
+				}
+				
+				i++;
+				if (mf.isMap()) {
+					//skip the map key validation, and move to the next part
+					i++;
+				}
+				
+				//catch people trying to search/update into @Reference/@Serialized fields
+				if (i < parts.length && !canQueryPast(mf))
+					throw new ValidationException("Can not use dot-notation past '" + part + "' could not be found in '" + clazz.getName()+ "' while validating - " + prop);
+				
+				if (i >= parts.length) break;
+				//get the next MappedClass for the next field validation
+				mc = mapr.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
+			}
+			
+			//record new property string if there has been a translation to any part
+			if (hasTranslations) {
+				origProp.setLength(0); // clear existing content
+				origProp.append(parts[0]);
+	    		for (int i = 1; i < parts.length; i++) {
+	    		    origProp.append('.');
+		    	    origProp.append(parts[i]);
+				}
+			}
+	
+			if (validateTypes)
+				if (	 (mf.isSingleValue() && !isCompatibleForOperator(mf.getType(), op, val)) || 
+						((mf.isMultipleValues() && !isCompatibleForOperator(mf.getSubClass(), op, val)))) {
+
+					Throwable t = new Throwable();
+					StackTraceElement ste = getFirstClientLine(t);
+					if (log.isWarningEnabled())
+						log.warning("Datatypes for the query/update may be inconsistent; searching with an instance of "
+								+ val.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
+								+ " is a " + mf.getType().getName() + (ste == null ? "" : "\r\n --@--" + ste));
+					if (log.isDebugEnabled())
+						log.debug("Location of warning:\r\n", t);
+				}			
+		}
+		return mf;
+	}
+
+	/** Return the first {@link StackTraceElement} not in our code (package). */
+	private static StackTraceElement getFirstClientLine(Throwable t) {
+		for(StackTraceElement ste : t.getStackTrace())
+			if ( 	!ste.getClassName().startsWith("com.google.code.morphia") && 
+					!ste.getClassName().startsWith("sun.reflect") && 
+					!ste.getClassName().startsWith("org.junit") && 
+					!ste.getClassName().startsWith("org.eclipse") && 
+					!ste.getClassName().startsWith("java.lang"))
+				return ste;
+		
+		return null;
+	}
+
+	/** Returns if the MappedField is a Reference or Serilized  */
+	private static boolean canQueryPast(MappedField mf) {
+		return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
+	}
+
+	public static boolean isCompatibleForOperator(Class<?> type, FilterOperator op, Object value) {
+		if (value == null || type == null) 
+			return true;
+		else if (op.equals(FilterOperator.EXISTS) && (value instanceof Boolean))
+			return true;
+		else if (op.equals(FilterOperator.IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
+			return true;
+		else if (op.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
+			return true;
+		else if (op.equals(FilterOperator.ALL) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass()) || Map.class.isAssignableFrom(value.getClass())))
+			return true;
+		else if (value instanceof Integer && (int.class.equals(type) || long.class.equals(type) || Long.class.equals(type)))
+			return true;
+		else if ((value instanceof Integer || value instanceof Long) && (double.class.equals(type) || Double.class.equals(type)))
+			return true;
+		else if (value instanceof Pattern && String.class.equals(type))
+			return true;
+		else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type))
+			return true;
+		else if (value instanceof List<?>)
+			return true;
+		else if (!value.getClass().isAssignableFrom(type) &&
+				//hack to let Long match long, and so on
+				!value.getClass().getSimpleName().toLowerCase().equals(type.getSimpleName().toLowerCase())) {
+			return false;
+		}
+		return true;
+	}
 }

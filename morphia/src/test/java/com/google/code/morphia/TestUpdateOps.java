@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,6 +35,7 @@ import com.google.code.morphia.TestQuery.Pic;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
+import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.StandardTests;
@@ -97,6 +99,30 @@ public class TestUpdateOps  extends TestBase {
 		assertEquals(0, res.getUpdatedCount());
 		
 		assertEquals(false, res.getUpdatedExisting());
+	}
+	
+	@Test
+    public void testBadFieldName() throws Exception {
+		try {
+			ds.update(
+					ds.createQuery(Circle.class).field("radius").equal(0), 
+					ds.createUpdateOperations(Circle.class).inc("r",1D), true, WriteConcern.SAFE);
+			Assert.assertTrue(false); //should not get here.
+		} catch (ValidationException e) {
+			Assert.assertTrue(e.getMessage().contains("found in"));
+		}
+	}
+
+	@Test @Ignore("need to inspect the logs")
+    public void testBadFieldType() throws Exception {
+		try {
+			ds.update(
+					ds.createQuery(Circle.class).field("radius").equal(0), 
+					ds.createUpdateOperations(Circle.class).set("radius","1"), true, WriteConcern.SAFE);
+			Assert.assertTrue(false); //should not get here.
+		} catch (ValidationException e) {
+			Assert.assertTrue(e.getMessage().contains("inconsistent"));
+		}
 	}
 
 	@Test

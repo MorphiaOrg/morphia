@@ -5,7 +5,7 @@ import org.bson.types.CodeWScope;
 /**
  * @author Scott Hernandez
  */
-public interface Query<T> extends QueryResults<T> {
+public interface Query<T> extends QueryResults<T>, Cloneable {
 	/**
 	 * <p>Create a filter based on the specified condition and value.
 	 * </p><p>
@@ -125,4 +125,6 @@ public interface Query<T> extends QueryResults<T> {
 	String toString();
 	
 	Class<T> getEntityClass();
+	
+	Query<T> clone();
 }

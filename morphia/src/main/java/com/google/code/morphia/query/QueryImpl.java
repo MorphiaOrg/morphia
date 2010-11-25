@@ -32,12 +32,11 @@ import com.mongodb.DBObject;
  * @param <T> The type we will be querying for, and returning.
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Criteria {
-	
 	private static final Logr log = MorphiaLoggerFactory.get(QueryImpl.class);
 	
-	private final EntityCache cache;
-	private boolean validatingNames = true;
-	private boolean validatingTypes = true;
+	private EntityCache cache;
+	private boolean validateName = true;
+	private boolean validateType = true;
 	
 	private String[] fields = null;
 	private Boolean includeFields = null;
@@ -80,6 +79,28 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		this.baseQuery = baseQuery;
 	}
 	
+	@Override
+	public QueryImpl<T> clone(){
+		QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
+		n.attachedTo = attachedTo;
+		n.baseQuery = baseQuery;
+		n.batchSize = batchSize;
+		n.cache = cache;
+		n.fields = fields;
+		n.includeFields = includeFields;
+		n.indexHint = indexHint;
+		n.limit = limit;
+		n.noTimeout = noTimeout;
+		n.offset = offset;
+		n.query = n;
+		n.slaveOk = slaveOk;
+		n.snapshotted = snapshotted;
+		n.sort = sort;
+		n.validateName = validateName;
+		n.validateType = validateType;
+		return n;
+	}
+
 	public void setQueryObject(DBObject query) {
 		this.baseQuery = query;
 	}
@@ -123,11 +144,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public boolean isValidatingNames() {
-		return validatingNames;
+		return validateName;
 	}
 	
 	public boolean isValidatingTypes() {
-		return validatingTypes;
+		return validateType;
 	}
 	
 	public long countAll() {
@@ -289,7 +310,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		String prop = parts[0].trim();
 		FilterOperator op = (parts.length == 2) ? this.translate(parts[1]) : FilterOperator.EQUAL;
 		
-		this.add(new FieldCriteria(this, prop, op, value, this.validatingNames, this.validatingTypes));
+		this.add(new FieldCriteria(this, prop, op, value, this.validateName, this.validateType));
 
 		return this;	
 	}
@@ -304,12 +325,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this;
 	}
 
-	public Query<T> enableValidation(){ validatingNames = validatingTypes = true; return this; }
+	public Query<T> enableValidation(){ validateName = validateType = true; return this; }
 
-	public Query<T> disableValidation(){ validatingNames = validatingTypes = false; return this; }
+	public Query<T> disableValidation(){ validateName = validateType = false; return this; }
 	
-	QueryImpl<T> validateNames() {validatingNames = true; return this; }
-	QueryImpl<T> disableTypeValidation() {validatingTypes = false; return this; }
+	QueryImpl<T> validateNames() {validateName = true; return this; }
+	QueryImpl<T> disableTypeValidation() {validateType = false; return this; }
 	
 	public T get() {
 		int oldLimit = limit;
@@ -394,7 +415,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public FieldEnd<? extends Query<T>> field(String name) {
-		return this.field(name, this.validatingNames);
+		return this.field(name, this.validateName);
 	}
 	
 	private FieldEnd<? extends Query<T>> field(String field, boolean validate) {
@@ -402,7 +423,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 
 	public FieldEnd<? extends CriteriaContainerImpl> criteria(String field) {
-		return this.criteria(field, this.validatingNames);
+		return this.criteria(field, this.validateName);
 	}
 
 	private FieldEnd<? extends CriteriaContainerImpl> criteria(String field, boolean validate) {

@@ -28,7 +28,6 @@ import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
-import com.google.code.morphia.query.FieldCriteria;
 import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryException;
@@ -211,7 +210,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		BasicDBObject keys = new BasicDBObject();
 		for(Entry<String, Object> entry : fields.entrySet()){
 			StringBuffer sb = new StringBuffer(entry.getKey());
-			FieldCriteria.validate(clazz, mapr, sb, FilterOperator.IN, "", true, false);
+			Mapper.validate(clazz, mapr, sb, FilterOperator.IN, "", true, false);
 			keys.put(sb.toString(), entry.getValue());
 		}
 		
@@ -882,6 +881,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	@SuppressWarnings("rawtypes")
 	private <T> UpdateResults<T> update(Query<T> query, UpdateOperations ops, boolean createIfMissing, boolean multi, WriteConcern wc) {
 		DBObject u = ((UpdateOpsImpl) ops).getOps();
+		if (((UpdateOpsImpl) ops).isIsolated()) {
+			Query<T> q = query.clone();
+			q.disableValidation().filter("$atomic", true);
+			return update(q, u, createIfMissing, multi, wc);		
+		}
 		return update(query, u, createIfMissing, multi, wc);		
 	}
 	
