@@ -23,9 +23,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.code.morphia.dao.BasicDAO;
+import com.google.code.morphia.dao.DAO;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
@@ -42,7 +43,7 @@ public class TestDAO extends TestBase {
     public void testNewDAO() throws Exception {
         morphia.map(Hotel.class);
 
-        DAO<Hotel,String> hotelDAO = new DAO<Hotel,String>(Hotel.class, mongo, morphia, "morphia_test");
+        DAO<Hotel, String> hotelDAO = new BasicDAO<Hotel,String>(Hotel.class, mongo, morphia, "morphia_test");
 
         Hotel borg = Hotel.create();
         borg.setName("Hotel Borg");
@@ -87,7 +88,7 @@ public class TestDAO extends TestBase {
         assertEquals(2, allHotels.size());
         assertEquals(2, hotelDAO.findIds().size());
 
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().skip(1).limit(10)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().offset(1).limit(10)).asList().size());
         assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
@@ -105,7 +106,7 @@ public class TestDAO extends TestBase {
         hotelDAO.deleteById(borg.getId());
         assertEquals(1, hotelDAO.count());
 
-        hotelDAO.dropCollection();
+        hotelDAO.getCollection().drop();
         assertEquals(0, hotelDAO.count());
     }
 
@@ -155,20 +156,20 @@ public class TestDAO extends TestBase {
         List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().skip(1).limit(10)).asList().size());
+        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().offset(1).limit(10)).asList().size());
         assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
         // try updating
-        UpdateOperations mods = hotelDAO.createUpdateOperations().inc("stars", 1);
+        UpdateOperations<Hotel> mods = hotelDAO.createUpdateOperations().inc("stars", 1);
         hotelDAO.update(hotelDAO.createQuery().filter("stars", 4), mods);
         assertEquals(2, hotelDAO.count(hotelDAO.createQuery().filter("stars", 5)));
 
         hotelDAO.deleteById(borg.getId());
         assertEquals(1, hotelDAO.count());
 
-        hotelDAO.dropCollection();
+        hotelDAO.getCollection().drop();
         assertEquals(0, hotelDAO.count());
     }
     @Test
@@ -186,12 +187,4 @@ public class TestDAO extends TestBase {
          Hotel hotelReloaded = hotelDAO.get(borg.getId());
          assertEquals(5,hotelReloaded.getStars());
     }
-    
-    //This will never be allowed as type erasure removes the type info for the hotelDAO variable.
-    @Test @Ignore
-    public void testErasureDao() throws Exception {
-        //broken, you must subclass DAO to use this constructor.
-        DAO<Hotel, String> hotelDAO = new DAO<Hotel, String>(mongo, morphia, db.getName());
-        hotelDAO.find();
-    }    
 }

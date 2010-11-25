@@ -16,8 +16,8 @@
 
 package com.google.code.morphia.testdaos;
 
-import com.google.code.morphia.DAO;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.dao.BasicDAO;
 import com.google.code.morphia.testmodel.Hotel;
 import com.mongodb.Mongo;
 
@@ -25,7 +25,7 @@ import com.mongodb.Mongo;
  *
  * @author Olafur Gauti Gudmundsson
  */
-public class HotelDAO extends DAO<Hotel,String> {
+public class HotelDAO extends BasicDAO<Hotel,String> {
 
     public HotelDAO( Morphia morphia, Mongo mongo ) {
         super(mongo, morphia, "morphia_test");

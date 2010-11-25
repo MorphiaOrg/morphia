@@ -16,13 +16,12 @@ import com.google.code.morphia.utils.ReflectionUtils;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * 
  */
-@SuppressWarnings("unchecked")
 public class MapKeyDifferentFromString extends FieldConstraint {
 	final private static String supportedExample = "(Map<String/Enum/Long/..., ?>)";
 	@Override
 	protected void check(MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
 		if (mf.isMap() && (!mf.hasAnnotation(Serialized.class))) {
-			Class parameterizedClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
+			Class<?> parameterizedClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
 			if (parameterizedClass == null) {
 				ve.add(new ConstraintViolation(Level.WARNING, mc, mf, this.getClass(),
 						"Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported " + supportedExample));
