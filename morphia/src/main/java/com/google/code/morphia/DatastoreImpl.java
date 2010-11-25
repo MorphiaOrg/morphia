@@ -17,6 +17,7 @@ import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.annotations.PostPersist;
+import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
@@ -304,7 +305,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(), index.dropDups(), index.background() ? index.background() : background );
 			}
 			
-			if (!mf.isTypeMongoCompatible()) {
+			if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class)) {
 				ArrayList<MappedClass> newParentClasses = (ArrayList<MappedClass>) parentMCs.clone();
 				ArrayList<MappedField> newParents = (ArrayList<MappedField>) parentMFs.clone();
 				newParentClasses.add(mc);
