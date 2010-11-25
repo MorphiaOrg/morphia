@@ -8,6 +8,8 @@ package com.google.code.morphia.query;
 public enum FilterOperator {
 	NEAR("$near"),
 	WITHIN("$within"),
+	WITHIN_CIRCLE("$circle"),
+	WITHIN_BOX("$box"),
 	EQUAL("$eq"),
 	GREATER_THAN("$gt"),
 	GREATER_THAN_OR_EQUAL("$gte"),

@@ -20,9 +20,9 @@ import com.mongodb.DBObject;
 public class FieldCriteria extends AbstractCriteria implements Criteria {
 	private static final Logr log = MorphiaLoggerFactory.get(FieldCriteria.class);
 
-	private String field;
-	private FilterOperator operator;
-	private Object value;
+	private final String field;
+	private final FilterOperator operator;
+	private final Object value;
 	
 	@SuppressWarnings("unchecked")
 	protected FieldCriteria(QueryImpl<?> query, String field, FilterOperator op, Object value, boolean validateNames, boolean validateTypes) {
@@ -75,6 +75,10 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 			mappedValue = Collections.singletonList(mappedValue);
 		}
 		
+		//TODO: investigate and/or add option to control this.
+		if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject)
+			((DBObject)mappedValue).removeField(Mapper.ID_KEY);
+		
 		this.field = field;
 		this.operator = op;
 		this.value = mappedValue;
@@ -99,6 +103,6 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 
 	@Override
 	public String toString() {
-		return this.field + " = " + this.value;
+		return this.field + " " + this.operator.val() + " " + this.value;
 	}
 }

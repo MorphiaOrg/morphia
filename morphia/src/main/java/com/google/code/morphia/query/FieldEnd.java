@@ -29,4 +29,11 @@ public interface FieldEnd<T> {
 
 	T hasThisElement(Object val);
 	T sizeEq(int val);
+	
+	T near(double x, double y);
+	T near(double x, double y, boolean spherical);
+	T near(double x, double y, double radius);
+	T near(double x, double y, double radius, boolean spherical);
+	T near(double x1, double y1, double x2, double y2);
+	
 }
