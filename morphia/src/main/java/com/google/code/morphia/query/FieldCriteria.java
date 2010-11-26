@@ -20,15 +20,14 @@ import com.mongodb.DBObject;
 public class FieldCriteria extends AbstractCriteria implements Criteria {
 	private static final Logr log = MorphiaLoggerFactory.get(FieldCriteria.class);
 
-	private final String field;
-	private final FilterOperator operator;
-	private final Object value;
+	protected final String field;
+	protected final FilterOperator operator;
+	protected final Object value;
 	
 	@SuppressWarnings("unchecked")
 	protected FieldCriteria(QueryImpl<?> query, String field, FilterOperator op, Object value, boolean validateNames, boolean validateTypes) {
 		StringBuffer sb = new StringBuffer(field); //validate might modify prop string to translate java field name to db field name
 		MappedField mf = Mapper.validate(query.getEntityClass(), query.getDatastore().getMapper(), sb, op, value, validateNames, validateTypes);
-		//The field we are filtering on, in the java object; only known if we are validating
 		field = sb.toString();
 
 		Mapper mapr = query.getDatastore().getMapper();
@@ -68,7 +67,7 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 		else
 			mappedValue = mapr.toMongoObject(value);
 		
-		Class<?> type = (mappedValue != null) ? mappedValue.getClass() : null;
+		Class<?> type = (mappedValue == null) ?  null : mappedValue.getClass();
 		
 		//convert single values into lists for $in/$nin
 		if (type != null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN) && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {

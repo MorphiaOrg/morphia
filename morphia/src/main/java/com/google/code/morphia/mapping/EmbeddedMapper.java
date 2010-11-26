@@ -184,8 +184,7 @@ class EmbeddedMapper implements CustomMapper{
 		}
 		if (values.size() > 0) {
 			if (mf.getType().isArray()) {
-				Object[] array = ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values));
-				mf.setFieldValue(entity, array);
+				mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values)));
 			} else {
 				mf.setFieldValue(entity, values);
 			}

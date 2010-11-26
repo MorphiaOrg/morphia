@@ -54,28 +54,22 @@ public class CriteriaContainerImpl extends AbstractCriteria implements Criteria,
 	}
 	
 	public CriteriaContainer and(Criteria... criteria) {
-		CriteriaContainerImpl parent = new CriteriaContainerImpl(this.query, CriteriaJoin.AND);
-		
-		for (Criteria c: criteria) {
-			parent.add(c);
-		}
-			
-		this.add(parent);
-
-		return parent;
+		return collect(CriteriaJoin.AND, criteria);
 	}
 	
-	
 	public CriteriaContainer or(Criteria... criteria) {
-		CriteriaContainerImpl parent = new CriteriaContainerImpl(this.query, CriteriaJoin.OR);
+		return collect(CriteriaJoin.OR, criteria);
+	}
+	
+	private CriteriaContainer collect(CriteriaJoin cj, Criteria... criteria) {
+		CriteriaContainerImpl parent = new CriteriaContainerImpl(this.query, cj);
 		
-		for (Criteria c: criteria) {
+		for (Criteria c: criteria)
 			parent.add(c);
-		}
 		
-		this.add(parent);
+		add(parent);
 		
-		return parent;
+		return parent;		
 	}
 	
 	public FieldEnd<? extends CriteriaContainer> criteria(String name) {

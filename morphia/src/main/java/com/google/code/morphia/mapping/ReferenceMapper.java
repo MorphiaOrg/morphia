@@ -268,8 +268,7 @@ class ReferenceMapper implements CustomMapper {
 		}
 		
 		if (mf.getType().isArray()) {
-			Object[] array = ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(references));
-			mf.setFieldValue(entity, array);
+			mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(references)));
 		} else {
 			mf.setFieldValue(entity, references);
 		}

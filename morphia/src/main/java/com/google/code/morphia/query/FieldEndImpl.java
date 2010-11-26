@@ -1,5 +1,7 @@
 package com.google.code.morphia.query;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.google.code.morphia.utils.Assert;
@@ -23,6 +25,11 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	private T addCrit(FilterOperator op, Object val) {
 		target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes()));
 		return target;		
+	}
+
+	private T addGeoCrit(FilterOperator op, Object val, Map<String, Object> opts) {
+		target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
+		return target;
 	}
 
 	public T startsWith(String prefix) {
@@ -132,19 +139,36 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	}
 	
 	public T near(double x, double y) {
-		return addCrit(FilterOperator.NEAR, new double[] {x,y});
+		return near(x, y, false);
 	}
 	
 	public T near(double x, double y, boolean spherical) {
-		throw new RuntimeException();
-	}	
+		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y}, spherical ? opts("$sphere", true) : null);
+	}
+	
 	public T near(double x, double y, double radius) {
-		throw new RuntimeException();
+		return near(x, y, radius, false);
 	}
+	
 	public T near(double x, double y, double radius, boolean spherical) {
-		throw new RuntimeException();
+		return addGeoCrit(FilterOperator.WITHIN_CIRCLE, new Object[]{new double[] {x,y}, radius}, spherical ? opts("$sphere", true) : null);
 	}
+	
 	public T near(double x1, double y1, double x2, double y2) {
-		throw new RuntimeException();
+		return addGeoCrit(FilterOperator.WITHIN_CIRCLE, new double[][] {new double[] {x1 , y1}, new double[] {x2,y2}}, null);
 	}
+	
+	private Map<String, Object> opts(String s, Object v) {
+		Map<String, Object> opts = new HashMap<String, Object>();
+		opts.put(s, v);
+		return opts;
+	}
+	
+//	private Map<String, Object> opts(String s1, Object v1, String s2, Object v2) {
+//		Map<String, Object> opts = new HashMap<String, Object>();
+//		opts.put(s1, v1);
+//		opts.put(s2, v2);
+//		return opts;
+//
+//	}
 }

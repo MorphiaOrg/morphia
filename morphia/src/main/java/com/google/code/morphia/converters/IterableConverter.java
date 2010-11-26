@@ -57,8 +57,7 @@ public class IterableConverter extends TypeConverter {
 		}
 
 		if (mf.getType().isArray()) {
-			Object[] retArray = ReflectionUtils.convertToArray(subtypeDest, (ArrayList)vals);
-			return retArray;
+			return ReflectionUtils.convertToArray(subtypeDest, (ArrayList)vals);
 		} else
 			return vals;
 	}
