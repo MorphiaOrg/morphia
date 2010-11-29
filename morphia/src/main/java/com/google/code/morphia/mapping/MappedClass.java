@@ -156,7 +156,7 @@ public class MappedClass {
 				continue;
 			else if (field.isAnnotationPresent(Id.class)) {
 					idField = field;
-					MappedField mf = new MappedField(idField);
+					MappedField mf = new MappedField(idField, clazz);
 					persistenceFields.add(mf);
 			} else if (	field.isAnnotationPresent(Property.class) ||
 						field.isAnnotationPresent(Reference.class) ||
@@ -164,10 +164,10 @@ public class MappedClass {
 						field.isAnnotationPresent(Serialized.class) ||
 						isSupportedType(field.getType()) ||
 						ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
-				persistenceFields.add(new MappedField(field));
+				persistenceFields.add(new MappedField(field, clazz));
 			} else {
 				if(mapr.getOptions().defaultMapper != null)
-					persistenceFields.add(new MappedField(field));					
+					persistenceFields.add(new MappedField(field, clazz));					
 				else
 					log.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");
 			}

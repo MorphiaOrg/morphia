@@ -3,9 +3,11 @@ package com.google.code.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,7 @@ public class MappedField {
 			Version.class, 
 			AlsoLoad.class, 
 			NotSaved.class));
+	protected Class persistedClass;
 	protected Field field; // the field :)
 	protected Constructor ctor; // the constructor for the type
 	protected String name; // the name to store in mongodb {name:value}
@@ -64,9 +67,10 @@ public class MappedField {
 	protected boolean isCollection = false; // indicated if the collection is a list)
 	
 	/** the constructor */
-	MappedField(Field f) {
+	MappedField(Field f, Class<?> clazz) {
 		f.setAccessible(true);
 		field = f;
+		persistedClass = clazz;
 		discover();
 	}
 	
@@ -120,6 +124,24 @@ public class MappedField {
 		
 		this.name = getMappedFieldName();
 		Class type = field.getType();
+		Type gType = field.getGenericType();
+		TypeVariable<GenericDeclaration> tv = null;
+		ParameterizedType pt = null;
+		if (gType instanceof TypeVariable)
+			tv = (TypeVariable<GenericDeclaration>) gType;
+		else if (gType instanceof ParameterizedType)
+			pt = (ParameterizedType) gType;
+		
+		if (tv != null) {
+//			List<Class<?>> t = ReflectionUtils.getTypeArguments(field.getDeclaringClass(), persistedClass);
+			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
+		} else if (pt != null) {
+			log.debug("found instance of ParameterizedType : " + pt);
+		}
+		
+		if (Object.class.equals(type) && (tv != null || pt != null))
+			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );
+
 		if (	type.isArray() || 
 				Collection.class.isAssignableFrom(type) || 
 				Map.class.isAssignableFrom(type)) {

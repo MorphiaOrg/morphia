@@ -32,24 +32,25 @@ import com.google.code.morphia.annotations.Id;
  */
 public class TestInheritanceMappings extends TestBase {
 
-	public static enum VehicleClass {
+	
+	private static enum VehicleClass {
 		Bicycle, Moped, MiniCar, Car, Truck;
 	}
-	public static interface Vehicle {
+	private static interface Vehicle {
 		String getId();
 		int getWheelCount();
 		VehicleClass getVehicleClass();
 	}
 	
 	@Entity("vehicles")
-	public static abstract class AbstractVehicle implements Vehicle{
+	private static abstract class AbstractVehicle implements Vehicle{
 		@Id ObjectId id;
 		public String getId() {
 			return id.toString();
 		}
 	}
 	
-	public static class Car extends AbstractVehicle{
+	private static class Car extends AbstractVehicle{
 		public VehicleClass getVehicleClass() {
 			return VehicleClass.Car;
 		}
@@ -59,7 +60,7 @@ public class TestInheritanceMappings extends TestBase {
 		}
 	}
 
-	public static class FlyingCar extends AbstractVehicle{
+	private static class FlyingCar extends AbstractVehicle{
 		public VehicleClass getVehicleClass() {
 			return VehicleClass.Car;
 		}
@@ -69,6 +70,13 @@ public class TestInheritanceMappings extends TestBase {
 		}
 	}
 	
+	private static class GenericId<T> {
+		@Id T id;
+	}
+	
+	private static class ParameterizedIdEntity extends GenericId<String>{
+		
+	}
 
 	@Before @Override
 	public void setUp() {
@@ -84,6 +92,19 @@ public class TestInheritanceMappings extends TestBase {
     	
     	assertEquals(ds.getCount(Car.class), 1);
     	assertEquals(ds.getCount(AbstractVehicle.class), 1);
+    	
+    }
+
+    @Test
+    public void testParamIdEntity() throws Exception {
+    	morphia.map(ParameterizedIdEntity.class);
+    	ParameterizedIdEntity c = new ParameterizedIdEntity();
+    	c.id = "foo";
+    	ds.save(c);
+    	assertNotNull(c.id);
+    	
+    	assertEquals("foo", c.id);
+    	assertEquals(ds.getCount(ParameterizedIdEntity.class), 1);
     	
     }
     
