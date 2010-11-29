@@ -19,6 +19,9 @@ import com.mongodb.WriteConcern;
 public interface Datastore {	
 	/** Creates a (type-safe) reference to the entity; if stored this will become a {@link DBRef} */
 	<T> Key<T> getKey(T entity);
+
+	/** Does a query to check if the keyOrEntity exists in mongodb */
+	Key<?> exists(Object keyOrEntity);
 	
 	/** Deletes the given entity (by id) */
 	<T,V> void delete(Class<T> clazz, V id);
@@ -65,7 +68,6 @@ public interface Datastore {
 	/** Find the given entities (by id), verifying they are of the correct type; shorthand for {@code find("_id in", ids)} */
 	<T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys);
 	/** Find the given entities (by id); shorthand for {@code find("_id in", ids)} */
-//	@SuppressWarnings("unchecked")
 	<T> List<T> getByKeys(Iterable<Key<T>> keys);
 	/** Find the given entity (by collectionName/id);*/
 	<T> T getByKey(Class<T> clazz, Key<T> key);

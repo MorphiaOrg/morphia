@@ -18,6 +18,7 @@ package com.google.code.morphia;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.UnknownHostException;
@@ -248,6 +249,19 @@ public class TestDatastore  extends TestBase{
 		assertNotNull(res.get(0).id);
 		assertNotNull(res.get(1));
 		assertNotNull(res.get(1).username);
+	}
+	@Test
+    public void testExists() throws Exception {
+			
+		Key<FacebookUser> k = ds.save(new FacebookUser(1,"user 1"));
+		assertEquals(1, ds.getCount(FacebookUser.class));
+		assertNotNull(ds.get(FacebookUser.class, 1));
+		assertNotNull(ds.exists(k));
+		assertNotNull(ds.getByKey(FacebookUser.class, k));
+		ds.delete(ds.find(FacebookUser.class));
+		assertEquals(0, ds.getCount(FacebookUser.class));
+		assertNull(ds.exists(k));
+		
 	}
 	public void testIdUpdatedOnSave() throws Exception {
 		Rectangle rect = new Rectangle(10, 10);

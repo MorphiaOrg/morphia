@@ -514,6 +514,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			throw new MappingException("Could not get id for " + entity.getClass().getName());
 		return (T) get(entity.getClass(), id);
 	}
+
+	public Key<?> exists(Object entityOrKey) {
+		entityOrKey = ProxyHelper.unwrap(entityOrKey);
+		Key<?> key = getKey(entityOrKey);
+		Object id = key.getId();
+		if (id == null)
+			throw new MappingException("Could not get id for " + entityOrKey.getClass().getName());
+		return find(key.getKind(), key.getKindClass()).filter(Mapper.ID_KEY, key.getId()).getKey();
+	}
 	
 	@SuppressWarnings("rawtypes")
 	public DBCollection getCollection(Class clazz) {
