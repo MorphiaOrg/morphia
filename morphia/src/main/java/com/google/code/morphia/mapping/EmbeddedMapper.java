@@ -136,7 +136,7 @@ class EmbeddedMapper implements CustomMapper{
 						if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(mf.getType()))
 							refObj = mapr.converters.decode(mf.getType(), dbVal, mf);
 						else {
-							refObj = mapr.getOptions().objectFactory.createInstance(mf, ((DBObject)dbVal));
+							refObj = mapr.getOptions().objectFactory.createInstance(mapr, mf, ((DBObject)dbVal));
 							refObj = mapr.fromDb(((DBObject)dbVal), refObj, cache);
 						}
 						if (refObj != null) {
@@ -230,7 +230,7 @@ class EmbeddedMapper implements CustomMapper{
 			mapr.fromDb(dbObj, mocMF, cache);
 			return mocMF.getValue();
 		} else {
-			Object newEntity = mapr.getOptions().objectFactory.createInstance(mf.getSubClass(), dbObj);
+			Object newEntity = mapr.getOptions().objectFactory.createInstance(mapr, mf, dbObj);
 			return mapr.fromDb(dbObj, newEntity, cache);
 		}
 	} 

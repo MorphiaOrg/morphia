@@ -165,7 +165,7 @@ class ReferenceMapper implements CustomMapper {
 					}
 				}
 			} else {
-				resolvedObject = resolveObject(dbRef, referenceObjClass, refAnn.ignoreMissing(), mf, cache, mapr);
+				resolvedObject = resolveObject(dbRef, mf, cache, mapr);
 			}
 			
 			mf.setFieldValue(entity, resolvedObject);
@@ -216,53 +216,21 @@ class ReferenceMapper implements CustomMapper {
 				}
 			}
 		} else {
-			
 			Object dbVal = mf.getDbObjectValue(dbObject);
 			if (dbVal != null) {
 				if (dbVal instanceof List) {
 					List refList = (List) dbVal;
 					for (Object dbRefObj : refList) {
 						DBRef dbRef = (DBRef) dbRefObj;
-						
-						Key k = mapr.refToKey(dbRef);
-						Object cachedEntity = cache.getEntity(k);
-						if (cachedEntity != null) {
-							references.add(cachedEntity);
-						} else {
-							BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-							
-							if (refDbObject == null) {
-								if (!refAnn.ignoreMissing()) {
-									throw new MappingException("The reference(" + dbRef.toString()
-											+ ") could not be fetched for " + mf.getFullName());
-								}
-							} else {
-								Object refObj = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
-								refObj = mapr.fromDb(refDbObject, refObj, cache);
-								references.add(refObj);
-								cache.putEntity(k, refObj);
-							}
-						}
+						Object ent = resolveObject(dbRef, mf, cache, mapr);
+						if (ent != null) 
+							references.add(ent);
 					}
 				} else {
 					DBRef dbRef = (DBRef) dbVal;
-					Key k = mapr.refToKey(dbRef);
-					Object cachedEntity = cache.getEntity(k);
-					if (cachedEntity != null) {
-						references.add(cachedEntity);
-					} else {
-						BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
-						if (refDbObject == null) {
-							if (!refAnn.ignoreMissing()) {
-								throw new MappingException("The reference(" + dbRef.toString()
-										+ ") could not be fetched for " + mf.getFullName());
-							}
-						} else {
-							Object newEntity = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
-							newEntity = mapr.fromDb(refDbObject, newEntity, cache);
-							references.add(newEntity);
-						}
-					}
+					Object ent = resolveObject(dbRef, mf, cache, mapr);
+					if (ent != null) 
+						references.add(ent);
 				}
 			}
 		}
@@ -293,10 +261,9 @@ class ReferenceMapper implements CustomMapper {
 		return exists;
 	}
 	
-	Object resolveObject(final DBRef dbRef, final Class referenceObjClass, final boolean ignoreMissing,
-			final MappedField mf, EntityCache cache, Mapper mapr) {
+	Object resolveObject(final DBRef dbRef, final MappedField mf, EntityCache cache, Mapper mapr) {
 		
-		Key key = new Key(referenceObjClass, dbRef.getId());
+		Key key = new Key(mf.getSubClass(), dbRef.getId());
 		// key.updateKind(mapper);
 		
 		Object cached = cache.getEntity(key);
@@ -307,12 +274,13 @@ class ReferenceMapper implements CustomMapper {
 		BasicDBObject refDbObject = (BasicDBObject) dbRef.fetch();
 		
 		if (refDbObject != null) {
-			Object refObj = mapr.getOptions().objectFactory.createInstance(referenceObjClass, refDbObject);
+			Object refObj = mapr.getOptions().objectFactory.createInstance(mapr, mf, refDbObject);
 			refObj = mapr.fromDb(refDbObject, refObj, cache);
 			cache.putEntity(key, refObj);
 			return refObj;
 		}
 		
+		boolean ignoreMissing = mf.getAnnotation(Reference.class) != null && mf.getAnnotation(Reference.class).ignoreMissing();
 		if (!ignoreMissing) {
 			throw new MappingException("The reference(" + dbRef.toString() + ") could not be fetched for "
 					+ mf.getFullName());
@@ -340,7 +308,7 @@ class ReferenceMapper implements CustomMapper {
 					ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
 					proxiedMap.__put(entry.getKey(), mapr.refToKey(dbRef));
 				} else {
-					Object resolvedObject = resolveObject(dbRef, referenceObjClass, refAnn.ignoreMissing(), mf, cache, mapr);
+					Object resolvedObject = resolveObject(dbRef, mf, cache, mapr);
 					map.put(entry.getKey(), resolvedObject);
 				}
 			}

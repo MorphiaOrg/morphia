@@ -25,6 +25,7 @@ import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
+import com.google.code.morphia.annotations.ConstructorArgs;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
@@ -48,6 +49,7 @@ public class MappedField {
 			Embedded.class, 
 			Id.class,
 			Version.class, 
+			ConstructorArgs.class, 
 			AlsoLoad.class, 
 			NotSaved.class));
 	protected Class persistedClass;
@@ -107,7 +109,8 @@ public class MappedField {
 				ctor = ctorType.getDeclaredConstructor();
 				ctor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
-				throw new MappingException("No usable constructor for " + field.getType().getName(), e);
+				if (!hasAnnotation(ConstructorArgs.class))
+					throw new MappingException("No usable constructor for " + field.getType().getName(), e);
 			}
 		else {
 			// see if we can create instances of the type used for declaration

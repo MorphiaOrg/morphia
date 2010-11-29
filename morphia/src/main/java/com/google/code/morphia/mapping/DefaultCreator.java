@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.ObjectFactory;
+import com.google.code.morphia.annotations.ConstructorArgs;
+import com.google.code.morphia.logging.Logr;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.mongodb.DBObject;
 
 /**
@@ -19,6 +22,8 @@ import com.mongodb.DBObject;
  */
 @SuppressWarnings({"unchecked","rawtypes"})
 public class DefaultCreator implements ObjectFactory {
+	private static final Logr log = MorphiaLoggerFactory.get(DefaultCreator.class);
+
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(java.lang.Class)
 	 */
@@ -30,23 +35,59 @@ public class DefaultCreator implements ObjectFactory {
 	 * @see com.google.code.morphia.ObjectFactory#createInstance(java.lang.Class, com.mongodb.DBObject)
 	 */
 	public Object createInstance(Class clazz, DBObject dbObj) {
-		// see if there is a className value
-		String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
-		Class c = clazz;
-		if (className != null) {
-			// try to Class.forName(className) as defined in the dbObject first,
-			// otherwise return the entityClass
-			c = getClassForName(className, clazz);
-		}
+		Class c = getClass(dbObj);
+		if (c == null)
+			c = clazz;
 		return createInstance(c);	
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.google.code.morphia.ObjectFactory#createInstance(com.google.code.morphia.mapping.MappedField, com.mongodb.DBObject)
+	 * @see com.google.code.morphia.ObjectFactory#createInstance(com.google.code.morphia.mapping.Mapper, com.google.code.morphia.mapping.MappedField, com.mongodb.DBObject)
 	 */
-	public Object createInstance(MappedField mf, DBObject dbObj) {
+	public Object createInstance(Mapper mapr, MappedField mf, DBObject dbObj) {
+		Class c = getClass(dbObj);
+		if (c == null)
+			c = mf.isSingleValue ? mf.getConcreteType() : mf.getSubClass();
+		try {
+			return createInstance(c, dbObj);
+		} catch (RuntimeException e) {
+			ConstructorArgs argAnn = mf.getAnnotation(ConstructorArgs.class);
+			if (argAnn == null)
+				throw e;
+			//TODO: now that we have a mapr, get the arg types that way by getting the fields by name.
+			Object[] args = new Object[argAnn.value().length];
+			Class[] argTypes = new Class[argAnn.value().length];
+			for(int i = 0; i < argAnn.value().length; i++) {
+				//TODO: run converters and stuff against these. Kinda like the List of List stuff, using a fake MappedField to hold the value
+				Object val = dbObj.get(argAnn.value()[i]);
+				args[i] = val;
+				argTypes[i] = val.getClass();
+			}
+	        try {
+	        	Constructor ctor = c.getDeclaredConstructor(argTypes);
+	        	ctor.setAccessible(true);
+	            return ctor.newInstance(args);
+			} catch (Exception ex) {
+	            throw new RuntimeException(ex);
+	        }
+		}
+	}
+
+	private Class getClass(DBObject dbObj) {
 		// see if there is a className value
-		return createInstance(mf.getConcreteType(), dbObj);
+		String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
+		Class c = null;
+		if (className != null) {
+			// try to Class.forName(className) as defined in the dbObject first,
+			// otherwise return the entityClass
+			try {
+				c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+			} catch (ClassNotFoundException e) {
+				if (log.isWarningEnabled())
+					log.warning("Class not found defined in dbObj: " , e);
+			}
+		}
+		return c;
 	}
 
 	/* (non-Javadoc)
@@ -72,14 +113,11 @@ public class DefaultCreator implements ObjectFactory {
 
 	
 	public static Object createInst(Class clazz) {
-        try
-        {
-            return getNoArgsConstructor(clazz).newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+		try {
+			return getNoArgsConstructor(clazz).newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
     /** creates an instance of testType (if it isn't Object.class or null) or fallbackType */
@@ -104,17 +142,4 @@ public class DefaultCreator implements ObjectFactory {
 			throw new MappingException("No usable constructor for " + ctorType.getName(), e);
 		}
 	}
-	/**
-	 * gets the Class for some classname, or if the className is not found,
-	 * return the defaultClass instance
-	 */
-	private static Class getClassForName(final String className, final Class defaultClass) {
-		try {
-			Class c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
-			return c;
-		} catch (ClassNotFoundException ex) {
-			return defaultClass;
-		}
-	}
-
 }
