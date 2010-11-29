@@ -54,7 +54,7 @@ public class DefaultCreator implements ObjectFactory {
 			ConstructorArgs argAnn = mf.getAnnotation(ConstructorArgs.class);
 			if (argAnn == null)
 				throw e;
-			//TODO: now that we have a mapr, get the arg types that way by getting the fields by name.
+			//TODO: now that we have a mapr, get the arg types that way by getting the fields by name. + Validate names
 			Object[] args = new Object[argAnn.value().length];
 			Class[] argTypes = new Class[argAnn.value().length];
 			for(int i = 0; i < argAnn.value().length; i++) {

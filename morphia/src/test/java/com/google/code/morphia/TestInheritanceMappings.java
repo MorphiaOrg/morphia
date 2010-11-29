@@ -69,6 +69,14 @@ public class TestInheritanceMappings extends TestBase {
 			return 0;
 		}
 	}
+
+	private static class GenericIdPlus<T,K> {
+		@Id T id;
+		K k;
+	}
+	private static class ParameterizedEntity extends GenericIdPlus<String, Long>{
+		String b;
+	}
 	
 	private static class GenericId<T> {
 		@Id T id;
@@ -101,11 +109,30 @@ public class TestInheritanceMappings extends TestBase {
     	ParameterizedIdEntity c = new ParameterizedIdEntity();
     	c.id = "foo";
     	ds.save(c);
+    	c = ds.get(ParameterizedIdEntity.class, "foo");
     	assertNotNull(c.id);
     	
     	assertEquals("foo", c.id);
     	assertEquals(ds.getCount(ParameterizedIdEntity.class), 1);
+    }
+    
+    @Test
+    public void testParamEntity() throws Exception {
+    	morphia.map(ParameterizedEntity.class);
+    	ParameterizedEntity c = new ParameterizedEntity();
+    	c.id = "foo";
+    	c.b = "eh";
+    	c.k = 12L;
+    	ds.save(c);
+    	c = ds.get(ParameterizedEntity.class, "foo");
+    	assertNotNull(c.id);
+    	assertNotNull(c.b);
+    	assertNotNull(c.k);
     	
+    	assertEquals("foo", c.id);
+    	assertEquals("eh", c.b);
+    	assertEquals(12, c.k.longValue());
+    	assertEquals(ds.getCount(ParameterizedEntity.class), 1);
     }
     
 }

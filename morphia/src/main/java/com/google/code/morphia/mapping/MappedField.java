@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.annotations.AlsoLoad;
+import com.google.code.morphia.annotations.ConstructorArgs;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -25,7 +26,6 @@ import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-import com.google.code.morphia.annotations.ConstructorArgs;
 import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
@@ -52,8 +52,10 @@ public class MappedField {
 			ConstructorArgs.class, 
 			AlsoLoad.class, 
 			NotSaved.class));
+	
 	protected Class persistedClass;
 	protected Field field; // the field :)
+	protected Class realType; // the real type
 	protected Constructor ctor; // the constructor for the type
 	protected String name; // the name to store in mongodb {name:value}
 	// Annotations that have been found relevant to mapping
@@ -84,6 +86,75 @@ public class MappedField {
 		for (Class<? extends Annotation> clazz : interestingAnnotations)
 			addAnnotation(clazz);
 		
+		name = getMappedFieldName();
+		
+		//type must be discovered before the constructor.
+		discoverType();
+		discoverCTor();
+		discoverMultivalued();
+		
+		// check the main type
+		isMongoType = ReflectionUtils.isPropertyType(realType);
+		
+		// if the main type isn't supported by the Mongo, see if the subtype is.
+		// works for T[], List<T>, Map<?, T>, where T is Long/String/etc.
+		if (!isMongoType && subType != null)
+			isMongoType = ReflectionUtils.isPropertyType(subType);
+		
+		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
+			log.warning("The multi-valued field '"
+							+ getFullName()
+							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning. " + subType );
+			isMongoType = true;
+		}
+	}
+
+	private void discoverMultivalued() {
+		if (	realType.isArray() || 
+				Collection.class.isAssignableFrom(realType) || 
+				Map.class.isAssignableFrom(realType)) {
+			
+			isSingleValue = false;
+			
+			isMap = Map.class.isAssignableFrom(realType);
+			isSet = Set.class.isAssignableFrom(realType);
+			//for debugging
+			isCollection = Collection.class.isAssignableFrom(realType);
+			isArray = realType.isArray();
+			
+			//for debugging with issue
+			if (!isMap && !isSet && !isCollection && !isArray)
+				throw new MappingException("type is not a map/set/collection/array : " + realType);
+			
+			// get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long
+			subType = (realType.isArray()) ? realType.getComponentType() : ReflectionUtils.getParameterizedType(field, (isMap) ? 1 : 0);
+
+			if (isMap)
+				mapKeyType = ReflectionUtils.getParameterizedType(field, 0);
+		}
+	}
+	
+	private void discoverType() {
+		realType = field.getType();
+		Type gType = field.getGenericType();
+		TypeVariable<GenericDeclaration> tv = null;
+		ParameterizedType pt = null;
+		if (gType instanceof TypeVariable)
+			tv = (TypeVariable<GenericDeclaration>) gType;
+		else if (gType instanceof ParameterizedType)
+			pt = (ParameterizedType) gType;
+		
+		if (tv != null) {
+			realType = ReflectionUtils.getTypeArgument(persistedClass, tv);
+		} else if (pt != null) {
+			log.debug("found instance of ParameterizedType : " + pt);
+		}
+		
+		if (Object.class.equals(realType) && (tv != null || pt != null))
+			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );		
+	}
+	
+	private void discoverCTor() {
 		Class ctorType = null;
 		// get the first annotation with a concreteClass that isn't Object.class
 		for (Annotation an : foundAnnotations.values()) {
@@ -110,77 +181,19 @@ public class MappedField {
 				ctor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
 				if (!hasAnnotation(ConstructorArgs.class))
-					throw new MappingException("No usable constructor for " + field.getType().getName(), e);
+					throw new MappingException("No usable constructor for " + ctorType.getName(), e);
 			}
 		else {
 			// see if we can create instances of the type used for declaration
 			
 			try {
-				ctor = field.getType().getDeclaredConstructor();
+				ctor = getType().getDeclaredConstructor();
 				ctor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
 				// never mind.
 			} catch (SecurityException e) {
 				// never mind.
 			}
-		}
-		
-		this.name = getMappedFieldName();
-		Class type = field.getType();
-		Type gType = field.getGenericType();
-		TypeVariable<GenericDeclaration> tv = null;
-		ParameterizedType pt = null;
-		if (gType instanceof TypeVariable)
-			tv = (TypeVariable<GenericDeclaration>) gType;
-		else if (gType instanceof ParameterizedType)
-			pt = (ParameterizedType) gType;
-		
-		if (tv != null) {
-//			List<Class<?>> t = ReflectionUtils.getTypeArguments(field.getDeclaringClass(), persistedClass);
-			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
-		} else if (pt != null) {
-			log.debug("found instance of ParameterizedType : " + pt);
-		}
-		
-		if (Object.class.equals(type) && (tv != null || pt != null))
-			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );
-
-		if (	type.isArray() || 
-				Collection.class.isAssignableFrom(type) || 
-				Map.class.isAssignableFrom(type)) {
-			
-			isSingleValue = false;
-			
-			isMap = Map.class.isAssignableFrom(type);
-			isSet = Set.class.isAssignableFrom(type);
-			//for debugging
-			isCollection = Collection.class.isAssignableFrom(type);
-			isArray = type.isArray();
-			
-			//for debugging with issue
-			if (!isMap && !isSet && !isCollection && !isArray)
-				throw new MappingException("type is not a map/set/collection/array : " + type);
-			
-			// get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long
-			subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedType(field, (isMap) ? 1 : 0);
-
-			if (isMap)
-				mapKeyType = ReflectionUtils.getParameterizedType(field, 0);
-		}
-		
-		// check the main type
-		isMongoType = ReflectionUtils.isPropertyType(type);
-		
-		// if the main type isn't supported by the Mongo, see if the subtype is.
-		// works for T[], List<T>, Map<?, T>, where T is Long/String/etc.
-		if (!isMongoType && subType != null)
-			isMongoType = ReflectionUtils.isPropertyType(subType);
-		
-		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
-			log.warning("The multi-valued field '"
-							+ getFullName()
-							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning. " + subType );
-			isMongoType = true;
 		}
 	}
 	
@@ -278,7 +291,7 @@ public class MappedField {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(name).append(" (");
-		sb.append(" type:").append(field.getType().getSimpleName()).append(",");
+		sb.append(" type:").append(realType.getSimpleName()).append(",");
 		
 		if(isSingleValue())
 			sb.append(" single:true,");
@@ -308,7 +321,7 @@ public class MappedField {
 	
 	/** returns the type of the underlying java field*/
 	public Class getType() {
-		return field.getType();
+		return realType;
 	}
 	
 	/** returns the declaring class of the java field */
