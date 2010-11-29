@@ -25,6 +25,9 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
 
 		if (val instanceof Date)
 			return val;
+
+		if (val instanceof Number)
+			return new Date(((Number)val).longValue());
 			
 		return new Date(Date.parse(val.toString())); // good luck
 	}
