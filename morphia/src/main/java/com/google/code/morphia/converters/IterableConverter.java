@@ -37,8 +37,7 @@ public class IterableConverter extends TypeConverter {
 	}
 	
 	@Override
-	public
-	Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
 		if (mf == null || fromDBObject == null) return fromDBObject;
 		
 		Class subtypeDest = mf.getSubClass();

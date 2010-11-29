@@ -644,10 +644,17 @@ public class ReflectionUtils
 		return ar;
 	}
 
-	public static Object[] convertToArray(final Class type, final ArrayList<?> values) {
-		Object exampleArray = Array.newInstance(type, 1);
-		Object[] array = values.toArray((Object[]) exampleArray);
-		return array;
+	public static Object convertToArray(final Class type, final ArrayList<?> values) {
+		Object exampleArray = Array.newInstance(type, values.size());
+		try {
+			Object[] array = values.toArray((Object[]) exampleArray);
+			return array;
+		} catch (ClassCastException e) {
+			for (int i = 0; i < values.size(); i++) {
+				Array.set(exampleArray, i, values.get(i));
+			}
+			return exampleArray;
+		}
 	}
 	
 

@@ -3,7 +3,6 @@ package com.google.code.morphia.query;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -11,7 +10,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.utils.IndexDirection;
-@Ignore
+import com.mongodb.MongoInternalException;
+
 public class TestGeoQueries extends TestBase {
 	@Entity
 	@SuppressWarnings("unused")
@@ -48,8 +48,13 @@ public class TestGeoQueries extends TestBase {
 	public void testNearNoIndex() throws Exception {
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 0).get();
-		Assert.assertNotNull(found);
+		Place found = null;
+		try {
+			found = ds.find(Place.class).field("loc").near(0, 0).get();
+			Assert.assertFalse(true);
+		} catch (MongoInternalException e) {
+			Assert.assertNull(found);
+		}
 	}
 
 	@Test
@@ -57,8 +62,43 @@ public class TestGeoQueries extends TestBase {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 0, 1.1).get();
+		Place found = ds.find(Place.class).field("loc").near(0, 1, 1.1).get();
 		Assert.assertNotNull(found);
 	}
 
+	@Test
+	public void testNearWithRadiusSphere() throws Exception {
+		ds.ensureIndexes();
+		Place place1 = new Place("place1", new double[] {1,1});
+		ds.save(place1);
+		Place found = ds.find(Place.class).field("loc").near(0, 1, 1, true).get();
+		Assert.assertNotNull(found);
+	}
+
+	@Test
+	public void testNearOutsizeRadius() throws Exception {
+		ds.ensureIndexes();
+		Place place1 = new Place("place1", new double[] {1,1});
+		ds.save(place1);
+		Place found = ds.find(Place.class).field("loc").near(2, 2, .4).get();
+		Assert.assertNull(found);
+	}
+
+	@Test
+	public void testNearWithBox() throws Exception {
+		ds.ensureIndexes();
+		Place place1 = new Place("place1", new double[] {1,1});
+		ds.save(place1);
+		Place found = ds.find(Place.class).field("loc").near(0, 0, 2, 2).get();
+		Assert.assertNotNull(found);
+	}
+
+	@Test
+	public void testNearOutsideBox() throws Exception {
+		ds.ensureIndexes();
+		Place place1 = new Place("place1", new double[] {1,1});
+		ds.save(place1);
+		Place found = ds.find(Place.class).field("loc").near(0, 0, .4, .5).get();
+		Assert.assertNull(found);
+	}
 }

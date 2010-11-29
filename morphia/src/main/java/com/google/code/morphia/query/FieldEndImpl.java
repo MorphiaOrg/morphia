@@ -155,7 +155,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	}
 	
 	public T near(double x1, double y1, double x2, double y2) {
-		return addGeoCrit(FilterOperator.WITHIN_CIRCLE, new double[][] {new double[] {x1 , y1}, new double[] {x2,y2}}, null);
+		return addGeoCrit(FilterOperator.WITHIN_BOX, new double[][] {new double[] {x1 , y1}, new double[] {x2,y2}}, null);
 	}
 	
 	private Map<String, Object> opts(String s, Object v) {
