@@ -141,20 +141,26 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	public T near(double x, double y) {
 		return near(x, y, false);
 	}
-	
+
+	public T near(double x, double y, double radius) {
+		return near(x, y, radius,  false);
+	}
+	public T near(double x, double y, double radius, boolean spherical) {
+		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y}, spherical ? opts("$sphere", true, "$maxDistance", radius) : null);		
+	}	
 	public T near(double x, double y, boolean spherical) {
 		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y}, spherical ? opts("$sphere", true) : null);
 	}
 	
-	public T near(double x, double y, double radius) {
-		return near(x, y, radius, false);
+	public T within(double x, double y, double radius) {
+		return within(x, y, radius, false);
 	}
 	
-	public T near(double x, double y, double radius, boolean spherical) {
-		return addGeoCrit(FilterOperator.WITHIN_CIRCLE, new Object[]{new double[] {x,y}, radius}, spherical ? opts("$sphere", true) : null);
+	public T within(double x, double y, double radius, boolean spherical) {
+		return addGeoCrit(FilterOperator.WITHIN_CIRCLE, new Object[] { new double[] { x, y }, radius }, spherical ? opts("$sphere", true) : null);
 	}
 	
-	public T near(double x1, double y1, double x2, double y2) {
+	public T within(double x1, double y1, double x2, double y2) {
 		return addGeoCrit(FilterOperator.WITHIN_BOX, new double[][] {new double[] {x1 , y1}, new double[] {x2,y2}}, null);
 	}
 	
@@ -164,11 +170,11 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 		return opts;
 	}
 	
-//	private Map<String, Object> opts(String s1, Object v1, String s2, Object v2) {
-//		Map<String, Object> opts = new HashMap<String, Object>();
-//		opts.put(s1, v1);
-//		opts.put(s2, v2);
-//		return opts;
-//
-//	}
+	private Map<String, Object> opts(String s1, Object v1, String s2, Object v2) {
+		Map<String, Object> opts = new HashMap<String, Object>();
+		opts.put(s1, v1);
+		opts.put(s2, v2);
+		return opts;
+
+	}
 }

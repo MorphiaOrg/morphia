@@ -43,6 +43,15 @@ public class TestGeoQueries extends TestBase {
 		Place found = ds.find(Place.class).field("loc").near(0, 0).get();
 		Assert.assertNotNull(found);
 	}
+
+	@Test
+	public void testNearMaxDistance() throws Exception {
+		ds.ensureIndexes();
+		Place place1 = new Place("place1", new double[] {1,1});
+		ds.save(place1);
+		Place found = ds.find(Place.class).field("loc").near(0, 0, 12).get();
+		Assert.assertNotNull(found);
+	}
 	
 	@Test 
 	public void testNearNoIndex() throws Exception {
@@ -58,47 +67,47 @@ public class TestGeoQueries extends TestBase {
 	}
 
 	@Test
-	public void testNearWithRadius() throws Exception {
+	public void testWithinRadius() throws Exception {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 1, 1.1).get();
+		Place found = ds.find(Place.class).field("loc").within(0, 1, 1.1).get();
 		Assert.assertNotNull(found);
 	}
 
 	@Test
-	public void testNearWithRadiusSphere() throws Exception {
+	public void testWithinRadiusSphere() throws Exception {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 1, 1, true).get();
+		Place found = ds.find(Place.class).field("loc").within(0, 1, 1, true).get();
 		Assert.assertNotNull(found);
 	}
 
 	@Test
-	public void testNearOutsizeRadius() throws Exception {
+	public void testWithinOutsideRadius() throws Exception {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(2, 2, .4).get();
+		Place found = ds.find(Place.class).field("loc").within(2, 2, .4).get();
 		Assert.assertNull(found);
 	}
 
 	@Test
-	public void testNearWithBox() throws Exception {
+	public void testWithinBox() throws Exception {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 0, 2, 2).get();
+		Place found = ds.find(Place.class).field("loc").within(0, 0, 2, 2).get();
 		Assert.assertNotNull(found);
 	}
 
 	@Test
-	public void testNearOutsideBox() throws Exception {
+	public void testWithinOutsideBox() throws Exception {
 		ds.ensureIndexes();
 		Place place1 = new Place("place1", new double[] {1,1});
 		ds.save(place1);
-		Place found = ds.find(Place.class).field("loc").near(0, 0, .4, .5).get();
+		Place found = ds.find(Place.class).field("loc").within(0, 0, .4, .5).get();
 		Assert.assertNull(found);
 	}
 }

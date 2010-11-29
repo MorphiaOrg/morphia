@@ -34,5 +34,7 @@ public interface FieldEnd<T> {
 	T near(double x, double y, boolean spherical);
 	T near(double x, double y, double radius);
 	T near(double x, double y, double radius, boolean spherical);
-	T near(double x1, double y1, double x2, double y2);
+	T within(double x, double y, double radius);
+	T within(double x, double y, double radius, boolean spherical);
+	T within(double x1, double y1, double x2, double y2);
 }
