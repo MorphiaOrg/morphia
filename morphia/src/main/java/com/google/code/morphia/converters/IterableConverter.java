@@ -41,26 +41,29 @@ public class IterableConverter extends TypeConverter {
 		if (mf == null || fromDBObject == null) return fromDBObject;
 		
 		Class subtypeDest = mf.getSubClass();
-		Collection vals = null;
+		Collection vals = createNewCollection(mf);
 		
 		if (fromDBObject.getClass().isArray()) {
-			vals = new ArrayList();
+			//This should never happen. The driver always returns list/arrays as a List
 			for(Object o : (Object[])fromDBObject)
 				vals.add(chain.decode( (subtypeDest != null) ? subtypeDest : o.getClass(), o));
 		} else if (fromDBObject instanceof Iterable) {
 			// map back to the java datatype
 			// (List/Set/Array[])
-			vals = createNewCollection(mf);
 			for (Object o : (Iterable) fromDBObject)
 				vals.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
+		} else {
+			//Single value case.
+			vals.add(chain.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject));
 		}
 
+		//convert to and array if that is the destination type (not a list/set)
 		if (mf.getType().isArray()) {
 			return ReflectionUtils.convertToArray(subtypeDest, (ArrayList)vals);
 		} else
 			return vals;
 	}
-	
+
 	private Collection<?> createNewCollection(final MappedField mf) {
 		ObjectFactory of = mapr.getOptions().objectFactory;
 		return mf.isSet() ? of.createSet(mf) : of.createList(mf);
