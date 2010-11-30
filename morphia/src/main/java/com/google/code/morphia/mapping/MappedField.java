@@ -309,7 +309,10 @@ public class MappedField {
 		}
 		if(isMap()) {
 			sb.append(" map:true,");
-			sb.append(" map-key:").append(getMapKeyClass().getSimpleName());
+			if (getMapKeyClass() != null)
+				sb.append(" map-key:").append(getMapKeyClass().getSimpleName());
+			else
+				sb.append(" map-key: class unknown! ");
 		}
 		
 		if(isSet())
