@@ -89,8 +89,8 @@ public class MappedField {
 		name = getMappedFieldName();
 		
 		//type must be discovered before the constructor.
-		discoverType();
-		discoverCTor();
+		realType = discoverType();
+		ctor = discoverCTor();
 		discoverMultivalued();
 		
 		// check the main type
@@ -134,8 +134,8 @@ public class MappedField {
 		}
 	}
 	
-	private void discoverType() {
-		realType = field.getType();
+	private Class discoverType() {
+		Class type = field.getType();
 		Type gType = field.getGenericType();
 		TypeVariable<GenericDeclaration> tv = null;
 		ParameterizedType pt = null;
@@ -145,16 +145,22 @@ public class MappedField {
 			pt = (ParameterizedType) gType;
 		
 		if (tv != null) {
-			realType = ReflectionUtils.getTypeArgument(persistedClass, tv);
+			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
 		} else if (pt != null) {
 			log.debug("found instance of ParameterizedType : " + pt);
 		}
 		
 		if (Object.class.equals(realType) && (tv != null || pt != null))
-			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );		
+			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );
+		
+		if (type == null)
+			throw new MappingException("A type could not be found for " + this.field);
+		
+		return type;
 	}
 	
-	private void discoverCTor() {
+	private Constructor discoverCTor() {
+		Constructor returnCtor = null;
 		Class ctorType = null;
 		// get the first annotation with a concreteClass that isn't Object.class
 		for (Annotation an : foundAnnotations.values()) {
@@ -177,24 +183,26 @@ public class MappedField {
 		
 		if (ctorType != null)
 			try {
-				ctor = ctorType.getDeclaredConstructor();
-				ctor.setAccessible(true);
+				returnCtor = ctorType.getDeclaredConstructor();
+				returnCtor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
 				if (!hasAnnotation(ConstructorArgs.class))
 					throw new MappingException("No usable constructor for " + ctorType.getName(), e);
 			}
 		else {
 			// see if we can create instances of the type used for declaration
-			
-			try {
-				ctor = getType().getDeclaredConstructor();
-				ctor.setAccessible(true);
-			} catch (NoSuchMethodException e) {
-				// never mind.
-			} catch (SecurityException e) {
-				// never mind.
-			}
+			ctorType = getType();
+			if (ctorType != null)
+				try {
+					returnCtor = ctorType.getDeclaredConstructor();
+					returnCtor.setAccessible(true);
+				} catch (NoSuchMethodException e) {
+					// never mind.
+				} catch (SecurityException e) {
+					// never mind.
+				}
 		}
+		return returnCtor;
 	}
 	
 	/** Returns the name of the field's (key)name for mongodb */
