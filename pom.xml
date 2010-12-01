@@ -13,7 +13,7 @@
 	<url>http://code.google.com/p/morphia/</url>
 
 	<properties>
-		<morphia.version>0.98-SNAPSHOT</morphia.version>
+		<morphia.version>0.98</morphia.version>
 	</properties>
 
 	<licenses>
