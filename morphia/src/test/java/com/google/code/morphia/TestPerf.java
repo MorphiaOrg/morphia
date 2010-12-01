@@ -176,7 +176,7 @@ public class TestPerf  extends TestBase{
 				String.valueOf((double)morphiaLoadTime/reflectLoadTime).subSequence(0, 4),
 				morphiaLoadTime,
 				reflectLoadTime);    	
-    	Assert.assertTrue(msg, morphiaLoadTime < (reflectLoadTime * WriteFailFactor ));
+    	Assert.assertTrue(msg, morphiaLoadTime < (reflectLoadTime * ReadFailFactor ));
 
     	msg = String.format("Load (%s) performance is too slow compared to raw: %sX slower (%s/%s)", 
 				count,

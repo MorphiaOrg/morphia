@@ -97,7 +97,6 @@ public class MappedClass {
 	
 	/** the type we are mapping to/from */
 	private Class<?> clazz;
-//	private Constructor<?> ctor;
 	Mapper mapr;
 	
 	/** constructor */
