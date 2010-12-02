@@ -168,7 +168,8 @@ public class MappedClass {
 				if(mapr.getOptions().defaultMapper != null)
 					persistenceFields.add(new MappedField(field, clazz));					
 				else
-					log.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");
+					if(log.isWarningEnabled())
+						log.warning("Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:" + field.getType().getName() + "]");
 			}
 		}
 	}
@@ -331,7 +332,8 @@ public class MappedClass {
 		Object o = mapr.getOptions().objectFactory.createInstance(clazz);
 		Object nullO = mapr.instanceCache.put(clazz, o);
 		if (nullO != null)
-			log.error("Race-condition, created duplicate class: " + clazz);
+			if(log.isErrorEnabled())
+				log.error("Race-condition, created duplicate class: " + clazz);
 		
 		return o;
 			

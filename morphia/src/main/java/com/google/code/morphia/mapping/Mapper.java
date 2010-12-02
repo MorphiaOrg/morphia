@@ -564,7 +564,7 @@ public class Mapper {
 	
 			if (validateTypes)
 				if (	 (mf.isSingleValue() && !isCompatibleForOperator(mf.getType(), op, val)) || 
-						((mf.isMultipleValues() && !isCompatibleForOperator(mf.getSubClass(), op, val)))) {
+						((mf.isMultipleValues() && !(isCompatibleForOperator(mf.getSubClass(), op, val) || isCompatibleForOperator(mf.getType(), op, val) )))) {
 
 					Throwable t = new Throwable();
 					StackTraceElement ste = getFirstClientLine(t);

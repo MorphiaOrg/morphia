@@ -102,7 +102,8 @@ public class MappedField {
 			isMongoType = ReflectionUtils.isPropertyType(subType);
 		
 		if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
-			log.warning("The multi-valued field '"
+			if(log.isWarningEnabled())
+				log.warning("The multi-valued field '"
 							+ getFullName()
 							+ "' is a possible heterogenous collection. It cannot be verified. Please declare a valid type to get rid of this warning. " + subType );
 			isMongoType = true;
@@ -147,11 +148,13 @@ public class MappedField {
 		if (tv != null) {
 			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
 		} else if (pt != null) {
-			log.debug("found instance of ParameterizedType : " + pt);
+			if(log.isDebugEnabled())
+				log.debug("found instance of ParameterizedType : " + pt);
 		}
 		
 		if (Object.class.equals(realType) && (tv != null || pt != null))
-			throw new MappingException("Parameterized types are not supported. See '" + field.getName() + "' on " + field.getDeclaringClass() );
+			if(log.isWarningEnabled())
+				log.warning("Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on " + field.getDeclaringClass() );
 		
 		if (type == null)
 			throw new MappingException("A type could not be found for " + this.field);
@@ -175,9 +178,11 @@ public class MappedField {
 			} catch (NoSuchMethodException e) {
 				// do nothing
 			} catch (IllegalArgumentException e) {
-				log.warning("There should not be an argument", e);
+				if(log.isWarningEnabled())
+					log.warning("There should not be an argument", e);
 			} catch (Exception e) {
-				log.warning("", e);
+				if(log.isWarningEnabled())
+					log.warning("", e);
 			}
 		}
 		
@@ -187,7 +192,8 @@ public class MappedField {
 				returnCtor.setAccessible(true);
 			} catch (NoSuchMethodException e) {
 				if (!hasAnnotation(ConstructorArgs.class))
-					throw new MappingException("No usable constructor for " + ctorType.getName(), e);
+					if(log.isWarningEnabled())
+						log.warning("No usable constructor for " + ctorType.getName(), e);
 			}
 		else {
 			// see if we can create instances of the type used for declaration
