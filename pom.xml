@@ -13,7 +13,7 @@
 	<url>http://code.google.com/p/morphia/</url>
 
 	<properties>
-		<morphia.version>0.98</morphia.version>
+		<morphia.version>0.99-SNAPSHOT</morphia.version>
 	</properties>
 
 	<licenses>
@@ -72,7 +72,10 @@
 					<source>1.5</source>
 					<target>1.5</target>
 					<encoding>UTF-8</encoding>
-				</configuration>
+                    <excludes>
+                        <exclude>**/emul/**/*.java</exclude>
+                    </excludes>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

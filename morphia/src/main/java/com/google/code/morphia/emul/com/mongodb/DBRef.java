@@ -1,4 +1,4 @@
-package com.google.code.morphia.emul.com.mongodb;
+package com.mongodb;
 
 import java.io.Serializable;
 

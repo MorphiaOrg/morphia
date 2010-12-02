@@ -1,4 +1,4 @@
-package com.google.code.morphia.emul.org.bson.types;
+package org.bson.types;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
