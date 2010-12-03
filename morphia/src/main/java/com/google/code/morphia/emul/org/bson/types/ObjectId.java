@@ -1,7 +1,6 @@
 package org.bson.types;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Random;
 
@@ -21,12 +20,9 @@ public class ObjectId implements Serializable {
         for ( int i=0; i<b.length; i++ ){
             b[b.length-(i+1)] = (byte)Integer.parseInt( s.substring( i*2 , i*2 + 2) , 16 );
         }
-        ByteBuffer bb = ByteBuffer.wrap( b );
-        
-        _inc = bb.getInt(); 
-        _machine = bb.getInt();
-        _time = bb.getInt();
-
+        _inc = readInt(b,0); 
+        _machine = readInt(b,4); 
+        _time = readInt(b,8); 
     }
     public ObjectId( Date time ){
         this(time, rnd.nextInt());
@@ -42,7 +38,18 @@ public class ObjectId implements Serializable {
         _machine = machine;
         _inc = inc;
     }
-
+    /**
+     * Added this to simplify the serialization
+     * @param time 
+     * @param machine
+     * @param inc
+     */
+    ObjectId( int time , int machine , int inc ){
+    	_time = time;
+    	_machine = machine;
+    	_inc = inc;
+    }
+    
 	/** Checks if a string could be an <code>ObjectId</code>.
      * @return whether the string could be an object id
      */
@@ -129,10 +136,9 @@ public class ObjectId implements Serializable {
 
     public byte[] toByteArray(){
         byte b[] = new byte[12];
-        ByteBuffer bb = ByteBuffer.wrap( b );
-        bb.putInt( _inc );
-        bb.putInt( _machine );
-        bb.putInt( _time );
+        putInt(_inc, b, 0);
+        putInt(_machine, b, 4);
+        putInt(_time, b, 8);        
         reverse( b );
         return b;
     }
@@ -166,8 +172,43 @@ public class ObjectId implements Serializable {
     public int getInc(){
         return _inc;
     }
-
-    final int _time;
-    final int _machine;
-    final int _inc;
+    /**
+     * Masking to only use the least significant byte of an integer
+     */
+    private static final int BYTE_MASK= 0x000000FF;
+	
+    /**
+     * Read 4 bytes from the given array starting at the given index and turn them into an integer
+     * 
+     * @param bytes the byte array to read from
+     * @param startIndex the index to start att
+     * @return the integer represented by the four bytes
+     */
+    private static final int readInt(byte[] bytes, int startIndex){
+		int b0 =   BYTE_MASK &  (int)bytes[0+startIndex];
+		int b1 =   BYTE_MASK &  (int)bytes[1+startIndex];
+		int b2 =   BYTE_MASK &  (int)bytes[2+startIndex];
+		int b3 =   BYTE_MASK &  (int)bytes[3+startIndex];
+		int val =  b0 << 24 | b1 << 16 | b2 << 8 | b3 ;
+		
+		return val;
+	}
+	
+	
+    /**
+     * Write the integer 'val' as a 4 byte value to the given array starting at the given index
+     * @param val the integer value to write
+     * @param bytes the byte array to write to 
+     * @param startIndex the index in the array to start writing at
+     */
+    public static void putInt(int val, byte[] bytes , int startIndex){
+    	for(int i=0 ; i < 4; i++){
+    		bytes[i+startIndex] = (byte) (val & BYTE_MASK);
+    		val = val >>8;
+    	}
+    }
+    
+    int _time;
+    int _machine;
+    int _inc;
 }
