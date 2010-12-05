@@ -82,6 +82,13 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	public Class<? extends T> getKindClass() {
 		return this.kindClass;
 	}
+
+	private void checkState(Key k) {
+		if (k.kindClass == null && k.kind == null)
+			throw new IllegalStateException("Kind must be specified (or a class).");
+		if (k.id == null && k.idBytes == null)
+			throw new IllegalStateException("id must be specified");
+	}
 	
 	/**
 	 * <p>Compares based on the following traits, in order:</p>
@@ -94,6 +101,9 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	@SuppressWarnings("unchecked")
 	public int compareTo(Key<?> other)
 	{
+		checkState(this);
+		checkState(other);
+		
 		int cmp = 0;
 		// First kind
 		if (other.kindClass != null && kindClass != null) {
