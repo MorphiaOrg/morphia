@@ -566,14 +566,17 @@ public class Mapper {
 				if (	 (mf.isSingleValue() && !isCompatibleForOperator(mf.getType(), op, val)) || 
 						((mf.isMultipleValues() && !(isCompatibleForOperator(mf.getSubClass(), op, val) || isCompatibleForOperator(mf.getType(), op, val) )))) {
 
-					Throwable t = new Throwable();
-					StackTraceElement ste = getFirstClientLine(t);
-					if (log.isWarningEnabled())
-						log.warning("Datatypes for the query/update may be inconsistent; searching with an instance of "
-								+ val.getClass().getName() + " when the field " + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
-								+ " is a " + mf.getType().getName() + (ste == null ? "" : "\r\n --@--" + ste));
-					if (log.isDebugEnabled())
-						log.debug("Location of warning:\r\n", t);
+					
+					if (log.isWarningEnabled()) {
+						Throwable t = new Throwable();
+						StackTraceElement ste = getFirstClientLine(t);
+						log.warning("The type(s) for the query/update may be inconsistent; using an instance of type '"
+								+ val.getClass().getName() + "' for the field '" + mf.getDeclaringClass().getName()+ "." + mf.getJavaFieldName()
+								+ "' which is declared as '" + mf.getType().getName() + (ste == null ? "'" : "'\r\n --@--" + ste));
+
+						if (log.isDebugEnabled())
+							log.debug("Location of warning:\r\n", t);
+					}
 				}			
 		}
 		return mf;
