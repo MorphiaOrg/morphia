@@ -12,11 +12,11 @@ import com.google.code.morphia.mapping.MappingException;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class DateConverter extends TypeConverter implements SimpleValueConverter{
 	
-	public DateConverter() { super(Date.class); };
-	
+	public DateConverter() { this(Date.class); };
+	protected DateConverter(Class clazz) { super(clazz); }
 	@SuppressWarnings("deprecation")
 	@Override
 	public

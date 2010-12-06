@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -136,6 +137,11 @@ public class TestMapping  extends TestBase {
 		public ContainsFinalField(String name) {
 			this.name = name;
 		}
+	}
+
+	public static class ContainsTimestamp {
+		@Id ObjectId id;
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
 	}
 	
 	public static class ContainsbyteArray {
@@ -487,6 +493,17 @@ public class TestMapping  extends TestBase {
 		assertNotNull(loaded);        
 		assertNotNull(loaded.name);        
 		assertEquals("foo", loaded.name);
+	}
+
+	@Test
+    public void testTimestampMapping() throws Exception {
+		morphia.map(ContainsTimestamp.class);
+		ContainsTimestamp cts = new ContainsTimestamp();
+		Key<ContainsTimestamp> savedKey = ds.save(cts);
+		ContainsTimestamp loaded = ds.get(ContainsTimestamp.class, savedKey.getId());
+		assertNotNull(loaded.ts);
+		assertEquals(loaded.ts.getTime(), cts.ts.getTime());
+
 	}
 
 	@Test

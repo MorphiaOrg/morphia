@@ -63,6 +63,7 @@ public class DefaultConverters {
 		addConverter(new IterableConverter(this));
 		addConverter(new ClassConverter());
 		addConverter(new ObjectIdConverter());
+		addConverter(new TimestampConverter());
 
 		//generic converter that will just pass things through.
 		addConverter(new PassthroughConverter());
