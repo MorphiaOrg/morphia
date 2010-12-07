@@ -96,6 +96,11 @@ public interface Datastore {
 	/** Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity. */
 	<T> Key<T> merge(T entity, WriteConcern wc);
 
+	/** updates the entity with the operations; this is an atomic operation*/
+	<T> UpdateResults<T> update(T ent, UpdateOperations<T> ops);
+	/** updates the entity with the operations; this is an atomic operation*/
+	<T> UpdateResults<T> update(Key<T> key, UpdateOperations<T> ops);
+	
 	/** updates all entities found with the operations; this is an atomic operation per entity*/
 	<T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
 	/** updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this is an atomic operation per entity*/

@@ -820,6 +820,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return update(query, ops, createIfMissing, false);
 	}
 
+	public <T> UpdateResults<T> update(T ent, UpdateOperations<T> ops) {
+		return update(getKey(ent), ops);
+	}
+
+	public <T> UpdateResults<T> update(Key<T> key, UpdateOperations<T> ops) {
+		Class<T> clazz = (Class<T>) key.getKindClass();
+		if (clazz == null)
+			clazz = (Class<T>) mapr.getClassFromKind(key.getKind());
+		return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), ops);
+	}
 
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops) {
 		return update(query, ops, false, true);

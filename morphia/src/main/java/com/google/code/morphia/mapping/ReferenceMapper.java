@@ -264,7 +264,6 @@ class ReferenceMapper implements CustomMapper {
 	Object resolveObject(final DBRef dbRef, final MappedField mf, EntityCache cache, Mapper mapr) {
 		
 		Key key = mapr.createKey(mf.isSingleValue() ? mf.getType() : mf.getSubClass(), dbRef.getId());
-		// key.updateKind(mapper);
 		
 		Object cached = cache.getEntity(key);
 		if (cached != null)

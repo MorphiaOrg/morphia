@@ -361,6 +361,10 @@ public class Mapper {
 	 * @param involvedObjects A Map of (already converted) POJOs
 	 */
 	public DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects) {
+		return toDBObject(entity, involvedObjects, true);
+	}
+	
+	DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects, boolean lifecycle) {
 		
 		BasicDBObject dbObject = new BasicDBObject();
 		MappedClass mc = getMappedClass(entity);
@@ -368,7 +372,9 @@ public class Mapper {
 		if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored())
 			dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
 
-		dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
+		if (lifecycle)
+			dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
+		
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
 				writeMappedField(dbObject, mf, entity, involvedObjects);
@@ -379,7 +385,9 @@ public class Mapper {
 		if (involvedObjects != null)
 			involvedObjects.put(entity, dbObject);
 
-		mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
+		if (lifecycle)
+			mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
+		
 		return dbObject;
 	}
 	
@@ -506,6 +514,7 @@ public class Mapper {
 		if (id instanceof Serializable)
 			return createKey(clazz, (Serializable) id);
 		
+		//TODO: cache the encoders, maybe use the pool version of the buffer that the driver does.
 		BSONEncoder enc = new BSONEncoder();
 		return new Key<T>(clazz, enc.encode(toDBObject(id)));
 	}
@@ -627,5 +636,15 @@ public class Mapper {
 			return false;
 		}
 		return true;
+	}
+
+	public Class<?> getClassFromKind(String kind) {
+		Set<MappedClass> mcs = mappedClassesByCollection.get(kind);
+		if (mcs.isEmpty())
+			throw new MappingException("The collection '" + kind + "' is not mapped to a java class.");
+		if (mcs.size() > 1)
+			if (log.isInfoEnabled())
+				log.info("Found more than one class mapped to collection '"+kind+"'" + mcs);
+		return mcs.iterator().next().getClazz();
 	}
 }
