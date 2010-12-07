@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.google.code.morphia.logging.Logr;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.utils.Assert;
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
+	private static final Logr log = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
 	private QueryImpl<?> query;
 	private String field;
@@ -96,7 +99,11 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
 	public T hasAnyOf(Iterable<?> vals) {
 		Assert.parametersNotNull("vals",vals);
-		Assert.parameterNotEmpty(vals,"vals");
+//		Assert.parameterNotEmpty(vals,"vals"); //it is valid but will never return any results.
+		if (log.isWarningEnabled()) {
+			if (!vals.iterator().hasNext())
+				log.warning("Specified an empty list/collection with the '" + field + "' criteria");
+		}
 		return addCrit(FilterOperator.IN, vals);
 	}
 	

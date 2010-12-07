@@ -457,7 +457,7 @@ public class TestMapping  extends TestBase {
 		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
 	}
 
-	@Test @Ignore("need to add this feature; closer after changes in 0.97")
+	@Test @Ignore("need to add this feature")
     public void testGenericKeyedMap() throws Exception {
 		ContainsXKeyMap<Integer> map = new ContainsXKeyMap<Integer>();
 		map.values.put(1,"I'm 1");
