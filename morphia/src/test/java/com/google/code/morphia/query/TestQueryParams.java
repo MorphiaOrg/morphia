@@ -104,10 +104,10 @@ public class TestQueryParams extends TestBase {
 			}
 		};
 		
-		new AssertedFailure() {
-			public void thisMustFail() throws Throwable {
-				e.hasAnyOf(Collections.EMPTY_LIST);
-			}
-		};
+//		new AssertedFailure() {
+//			public void thisMustFail() throws Throwable {
+//				e.hasAnyOf(Collections.EMPTY_LIST);
+//			}
+//		};
 	}
 }

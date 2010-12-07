@@ -182,6 +182,5 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 		opts.put(s1, v1);
 		opts.put(s2, v2);
 		return opts;
-
 	}
 }
