@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -218,9 +219,15 @@ public class TestMapping  extends TestBase {
 		public Map<Enum1, String> embeddedValues = new HashMap<Enum1,String>();
 	}
 
-	public static class ContainsIntKeyMap{
+	public static class ContainsIntKeyMap {
 		@Id ObjectId id;
 		public Map<Integer, String> values = new HashMap<Integer,String>();
+	}
+
+	public static class ContainsIntKeySetStringMap {
+		@Id ObjectId id;
+		@Embedded
+		public Map<Integer, Set<String>> values = new HashMap<Integer,Set<String>>();
 	}
 	
 	public static class ContainsObjectIdKeyMap{
@@ -421,6 +428,28 @@ public class TestMapping  extends TestBase {
 		assertEquals(2,mapLoaded.values.size());
 		assertNotNull(mapLoaded.values.get(1));
 		assertNotNull(mapLoaded.values.get(2));
+		
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.2").exists());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.2").doesNotExist().countAll());
+		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
+		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
+	}
+
+	@Test
+    public void testIntKeySetStringMap() throws Exception {
+		ContainsIntKeySetStringMap map = new ContainsIntKeySetStringMap();
+		map.values.put(1, Collections.singleton("I'm 1"));
+		map.values.put(2, Collections.singleton("I'm 2"));
+		
+		Key<?> mapKey = ds.save(map);
+		
+		ContainsIntKeySetStringMap  mapLoaded = ds.get(ContainsIntKeySetStringMap.class, mapKey.getId());
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2,mapLoaded.values.size());
+		assertNotNull(mapLoaded.values.get(1));
+		assertNotNull(mapLoaded.values.get(2));
+		assertEquals(1,mapLoaded.values.get(1).size());
 		
 		assertNotNull(ds.find(ContainsIntKeyMap.class).field("values.2").exists());
 		assertEquals(0, ds.find(ContainsIntKeyMap.class).field("values.2").doesNotExist().countAll());
