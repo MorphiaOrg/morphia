@@ -361,7 +361,7 @@ public class MappedField {
 		else if(t instanceof WildcardType)
 			return (Class)((WildcardType) t).getUpperBounds()[0];
 
-		throw new RuntimeException();
+		throw new RuntimeException("Generic TypeVariable not supported!");
 		
 	}
 	/** If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>*/
