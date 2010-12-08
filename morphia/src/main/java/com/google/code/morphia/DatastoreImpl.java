@@ -201,13 +201,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate) {
-		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, false);
+		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, false, false);
 	}
 
 	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate, boolean background) {
-		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, background);
+		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, background, false);
 	}
-	protected <T> void ensureIndex(Class<T> clazz, String name, BasicDBObject fields, boolean unique, boolean dropDupsOnCreate, boolean background) {
+	protected <T> void ensureIndex(Class<T> clazz, String name, BasicDBObject fields, boolean unique, boolean dropDupsOnCreate, boolean background, boolean sparse) {
 		//validate field names and translate them to the stored values
 		BasicDBObject keys = new BasicDBObject();
 		for(Entry<String, Object> entry : fields.entrySet()){
@@ -226,9 +226,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				keyOpts.add("dropDups", true);
 		}
 
-		if (background) {
+		if (background)
 			keyOpts.add("background", true);
-		}
+		if (sparse)
+			keyOpts.add("sparse", true);
 		
 		DBCollection dbColl = getCollection(clazz);
 		
@@ -256,7 +257,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			keys.add(fieldName, dir.toIndexValue());
 		}
 		
-		ensureIndex(clazz, name, (BasicDBObject) keys.get(), unique, dropDupsOnCreate, background);
+		ensureIndex(clazz, name, (BasicDBObject) keys.get(), unique, dropDupsOnCreate, background, false);
 	}
 	
 	public <T> void ensureIndex(Class<T> type, String name, IndexDirection dir) {
@@ -288,7 +289,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (idxs != null && idxs.value() != null && idxs.value().length > 0)
 			for(Index index : idxs.value()) {
 				BasicDBObject fields = QueryImpl.parseSortString(index.value());
-				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background );
+				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background, index.sparse() ? index.sparse() : false );
 			}
 
 		//Ensure indexes from field annotations, and embedded entities
@@ -303,7 +304,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				
 				field.append(mf.getNameToStore());
 				
-				ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(), index.dropDups(), index.background() ? index.background() : background );
+				ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(), index.dropDups(), index.background() ? index.background() : background , index.sparse() ? index.sparse() : false);
 			}
 			
 			if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)) {

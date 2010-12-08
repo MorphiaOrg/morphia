@@ -26,6 +26,8 @@ public @interface Indexed {
 	boolean unique() default false;
 	/** Tells the unique index to drop duplicates silently when creating; only the first will be kept*/
 	boolean dropDups() default false;
-	/** Create the index in the background? (defaults false)*/
+	/** Create the index in the background?*/
 	boolean background() default false;
+	/** Create the index with the sparse option*/
+	boolean sparse() default false;
 }
