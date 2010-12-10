@@ -240,6 +240,25 @@ public class TestMapping  extends TestBase {
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
+	private static class ContainsMapOfEmbeddedInterfaces{
+		@Id ObjectId id;
+		@Embedded Map<String, Serializable> values = new HashMap<String, Serializable>();
+	}
+
+	private static class ContainsMapOfEmbeddedGoos{
+		@Id ObjectId id;
+		@Embedded Map<String, Goo> values = new HashMap<String, Goo>();
+	}
+	
+	private static class Goo implements Serializable {
+		static final long serialVersionUID = 1L;
+		@Id ObjectId id;
+		String name;
+		
+		Goo(){}
+		Goo(String n) {name=n;}
+	}
+	
 	public static abstract class BaseEntity implements Serializable{
 		private static final long serialVersionUID = 1L;
 
@@ -488,9 +507,22 @@ public class TestMapping  extends TestBase {
 		assertNotNull(primMapLoaded);
 		assertEquals(2,primMapLoaded.embeddedValues.size());
 		assertEquals(2,primMapLoaded.values.size());
+	}
+
+	@Test
+    public void testMapWithEmbeddedInterface() throws Exception {
+		ContainsPrimitiveMap primMap = new ContainsPrimitiveMap();
+		primMap.embeddedValues.put("first",1L);
+		primMap.embeddedValues.put("second",2L);
+		primMap.values.put("first",1L);
+		primMap.values.put("second",2L);
+		Key<ContainsPrimitiveMap> primMapKey = ds.save(primMap);
 		
+		ContainsPrimitiveMap primMapLoaded = ds.get(ContainsPrimitiveMap.class, primMapKey.getId());
 		
-		
+		assertNotNull(primMapLoaded);
+		assertEquals(2,primMapLoaded.embeddedValues.size());
+		assertEquals(2,primMapLoaded.values.size());
 	}
 
 	@Test
@@ -739,6 +771,30 @@ public class TestMapping  extends TestBase {
         }
     }
 
+    @Test
+    public void testEmbeddedMaps() throws Exception {
+        morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+    	Goo g1 = new Goo("Scott");
+    	ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
+    	cmoeg.values.put("first", g1);
+    	ds.save(cmoeg);
+    	//check className in the map values.
+    	
+    	BasicDBObject goo = (BasicDBObject) ( (BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedGoos.class).findOne().get("values") ).get("first");
+    	boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+    	assertTrue(!hasF);
+    	
+    	ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
+    	cmoei.values.put("first", g1);
+    	ds.save(cmoei);
+    	//check className in the map values.
+    	goo = (BasicDBObject) ( (BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedInterfaces.class).findOne().get("values") ).get("first");
+    	hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+    	assertTrue(hasF);
+    	
+    	
+    }
+    
     @Test
     public void testMaps() throws Exception {
         try {
