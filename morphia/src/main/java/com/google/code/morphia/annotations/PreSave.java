@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Called right before DBCollection.save() is called. This event will be called on top level Entities.
+ * Called right before DBCollection.save() is called. Changes made to the entity (java class) will not be persisted. This event will be called on top level Entities.
  * 
  * @author Scott Hernandez
  */
