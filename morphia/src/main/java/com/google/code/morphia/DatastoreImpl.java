@@ -822,7 +822,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> UpdateResults<T> update(T ent, UpdateOperations<T> ops) {
-		return update(getKey(ent), ops);
+		MappedClass mc = mapr.getMappedClass(ent);
+		Query<T> q = (Query<T>) createQuery(mc.getClazz());
+		q.disableValidation().filter(Mapper.ID_KEY, getId(ent));
+		
+		if (mc.getFieldsAnnotatedWith(Version.class).size() > 0) {
+			MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
+			Long oldVer = (Long)versionMF.getFieldValue(ent);
+			q.filter(versionMF.getNameToStore(), oldVer);
+			ops.set(versionMF.getNameToStore(), VersionHelper.nextValue(oldVer));
+		}
+
+		return update(q, ops);
 	}
 
 	public <T> UpdateResults<T> update(Key<T> key, UpdateOperations<T> ops) {
