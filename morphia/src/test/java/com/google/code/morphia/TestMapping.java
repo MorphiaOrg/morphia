@@ -240,24 +240,6 @@ public class TestMapping  extends TestBase {
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
-	private static class ContainsMapOfEmbeddedInterfaces{
-		@Id ObjectId id;
-		@Embedded Map<String, Serializable> values = new HashMap<String, Serializable>();
-	}
-
-	private static class ContainsMapOfEmbeddedGoos{
-		@Id ObjectId id;
-		@Embedded Map<String, Goo> values = new HashMap<String, Goo>();
-	}
-	
-	private static class Goo implements Serializable {
-		static final long serialVersionUID = 1L;
-		@Id ObjectId id;
-		String name;
-		
-		Goo(){}
-		Goo(String n) {name=n;}
-	}
 	
 	public static abstract class BaseEntity implements Serializable{
 		private static final long serialVersionUID = 1L;
@@ -769,30 +751,6 @@ public class TestMapping  extends TestBase {
         } finally {
             db.dropDatabase();
         }
-    }
-
-    @Test
-    public void testEmbeddedMaps() throws Exception {
-        morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
-    	Goo g1 = new Goo("Scott");
-    	ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
-    	cmoeg.values.put("first", g1);
-    	ds.save(cmoeg);
-    	//check className in the map values.
-    	
-    	BasicDBObject goo = (BasicDBObject) ( (BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedGoos.class).findOne().get("values") ).get("first");
-    	boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    	assertTrue(!hasF);
-    	
-    	ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
-    	cmoei.values.put("first", g1);
-    	ds.save(cmoei);
-    	//check className in the map values.
-    	goo = (BasicDBObject) ( (BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedInterfaces.class).findOne().get("values") ).get("first");
-    	hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    	assertTrue(hasF);
-    	
-    	
     }
     
     @Test

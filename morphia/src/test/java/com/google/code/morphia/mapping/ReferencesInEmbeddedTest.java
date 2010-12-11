@@ -13,17 +13,18 @@ import com.google.code.morphia.testutil.TestEntity;
 /**
  * @author josephpachod
  */
+@SuppressWarnings("unused")
 public class ReferencesInEmbeddedTest extends TestBase
 {
     @Entity
-    static class Container extends TestEntity {
+    private static class Container extends TestEntity {
 		private static final long serialVersionUID = 1L;
 		String name ;
         @Embedded
         private EmbedContainingReference embed;
     }
     
-    static class EmbedContainingReference {
+    private static class EmbedContainingReference {
         String name ;
         @Reference
         protected ReferencedEntity ref;
@@ -33,7 +34,7 @@ public class ReferencesInEmbeddedTest extends TestBase
     }
     
     @Entity
-    static class ReferencedEntity extends TestEntity{
+    private static class ReferencedEntity extends TestEntity{
 		private static final long serialVersionUID = 1L;
 		String foo;
     }

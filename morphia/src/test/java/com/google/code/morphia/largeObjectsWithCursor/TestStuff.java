@@ -24,7 +24,7 @@ public class TestStuff extends TestBase {
 		
 		public E() {
 			index = null;
-			largeContent = createLargeByteArray();
+			largeContent = null;
 		}
 		
 		private byte[] createLargeByteArray() {

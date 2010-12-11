@@ -22,7 +22,7 @@ public class BooleanConverter extends TypeConverter implements SimpleValueConver
 		if (val instanceof Boolean)
 			return (Boolean) val;
 
-			String sVal = val.toString();
+		String sVal = val.toString();
 		return Boolean.parseBoolean(sVal);
 	}
 }
