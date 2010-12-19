@@ -72,10 +72,10 @@
 					<source>1.5</source>
 					<target>1.5</target>
 					<encoding>UTF-8</encoding>
-                    <excludes>
-                        <exclude>**/emul/**/*.java</exclude>
-                    </excludes>
-                </configuration>
+					<excludes>
+						<exclude>**/emul/**/*.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -142,7 +142,9 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.7</version>
 				<configuration>
-					<!-- <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile> -->
+					<!--
+						<stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+					-->
 					<show>public</show>
 				</configuration>
 			</plugin>
