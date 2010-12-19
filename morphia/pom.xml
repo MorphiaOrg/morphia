@@ -15,36 +15,37 @@
 	<version>${morphia.version}</version>
 	<name>morphia</name>
 
-<!--	<properties>-->
-<!--		<gwt.version>2.1.0</gwt.version>-->
-<!--	</properties>-->
+	<!--	<properties>-->
+	<!--		<gwt.version>2.1.0</gwt.version>-->
+	<!--	</properties>-->
 
 	<build>
 		<resources>
 			<resource>
-			    <directory>src/main/java</directory>
-		        <includes>
-		          <include>**/Key.java</include>
-		        </includes>
-	      	</resource>
-      	</resources>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/Key.java</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<version>2.1.0</version>
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<goals>-->
-<!--							<goal>compile</goal>-->
-<!--							<goal>resources</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
+				<!--				<executions>-->
+				<!--					<execution>-->
+				<!--						<goals>-->
+				<!--							<goal>compile</goal>-->
+				<!--							<goal>resources</goal>-->
+				<!--						</goals>-->
+				<!--					</execution>-->
+				<!--				</executions>-->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
 				<configuration>
 					<sourceExcludes>
 						<sourceExclude>**/emul/**/*.java</sourceExclude>
@@ -62,9 +63,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.google.gwt</groupId> 
-	        <artifactId>gwt-user</artifactId> 
-	        <version>2.1.0</version> 
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>2.1.0</version>
 			<type>jar</type>
 			<optional>true</optional>
 		</dependency>
@@ -85,16 +86,16 @@
 			</plugin>
 		</plugins>
 	</reporting>
-  <!--	<pluginRepositories>-->
-<!--		<pluginRepository>-->
-<!--			<id>gwt-maven.snapshots</id>-->
-<!--			<url>http://nexus.codehaus.org/snapshots</url>-->
-<!--			<snapshots>-->
-<!--				<enabled>true</enabled>-->
-<!--			</snapshots>-->
-<!--			<releases>-->
-<!--				<enabled>false</enabled>-->
-<!--			</releases>-->
-<!--		</pluginRepository>-->
-<!--	</pluginRepositories>-->
+	<!--	<pluginRepositories>-->
+	<!--		<pluginRepository>-->
+	<!--			<id>gwt-maven.snapshots</id>-->
+	<!--			<url>http://nexus.codehaus.org/snapshots</url>-->
+	<!--			<snapshots>-->
+	<!--				<enabled>true</enabled>-->
+	<!--			</snapshots>-->
+	<!--			<releases>-->
+	<!--				<enabled>false</enabled>-->
+	<!--			</releases>-->
+	<!--		</pluginRepository>-->
+	<!--	</pluginRepositories>-->
 </project>
