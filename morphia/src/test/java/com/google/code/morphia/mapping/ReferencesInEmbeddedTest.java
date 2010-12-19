@@ -34,7 +34,7 @@ public class ReferencesInEmbeddedTest extends TestBase
     }
     
     @Entity
-    private static class ReferencedEntity extends TestEntity{
+    public static class ReferencedEntity extends TestEntity{
 		private static final long serialVersionUID = 1L;
 		String foo;
     }
