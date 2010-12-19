@@ -58,9 +58,10 @@ public class TestSLF4JLoggerTest extends TestBase {
 		
 		final String log = new String(this.baos.toByteArray());
 		
-		Assert.assertTrue(log.contains("WARN"));
-		Assert.assertTrue(log.contains("instance of java.lang.String when the field"));
-		Assert.assertTrue(log.contains("E.i is a int"));
+        Assert.assertTrue(log.contains("WARN"));
+        Assert.assertTrue(log.contains("instance of"));
+        Assert.assertTrue(log.contains("java.lang.String"));
+        Assert.assertTrue(log.contains("which is declared"));
 		
 		Assert.assertTrue(log
 				.contains("LoggerImplFactory set to com.google.code.morphia.logging.slf4j.SLF4JLoggerImplFactory"));
