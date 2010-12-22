@@ -134,6 +134,14 @@ public interface Datastore {
 	 * @return The Entity (the result of the update if oldVersion is false)
 	 */
 	<T> T findAndModify(Query<T> q, UpdateOperations<T> ops, boolean oldVersion);
+	/** 
+	 * Find the first Entity from the Query, and modify it.
+	 * @param q the query to find the Entity with; You are not allowed to offset/skip in the query.
+	 * @param oldVersion indicated the old version of the Entity should be returned
+	 * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
+	 * @return The Entity (the result of the update if oldVersion is false)
+	 */
+	<T> T findAndModify(Query<T> q, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing);
 
 	/** The builder for all update operations */
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind);

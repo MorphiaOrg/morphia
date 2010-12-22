@@ -978,6 +978,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion) {
+		return findAndModify(query,ops,oldVersion, false); 
+	}
+	
+	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing) {
 		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
 
@@ -989,7 +993,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 											qi.getSortObject(), 
 											false, 
 											((UpdateOpsImpl<T>) ops).getOps(), !oldVersion, 
-											false);
+											createIfMissing);
 		
 		if (res == null) 
 			return null;
