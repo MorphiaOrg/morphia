@@ -7,7 +7,7 @@ package com.google.code.morphia.query;
  */
 public enum UpdateOperator {
 	SET("$set"),
-	UNSET("$set"),
+	UNSET("$unset"),
 	PULL("$pull"),
 	PULL_ALL("$pullAll"),
 	PUSH("$push"),
