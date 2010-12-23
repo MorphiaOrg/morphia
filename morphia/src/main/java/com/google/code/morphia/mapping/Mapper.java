@@ -11,6 +11,7 @@
 
 package com.google.code.morphia.mapping;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 import com.google.code.morphia.mapping.lazy.DefaultDatastoreProvider;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
 import com.google.code.morphia.mapping.lazy.LazyProxyFactory;
+import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.ValidationException;
@@ -275,11 +277,11 @@ public class Mapper {
 	 * Used (mainly) by query/update operations
 	 * </p>
 	 */
-	public Object toMongoObject(final Object javaObj) {
+	Object toMongoObject(final Object javaObj) {
 		return toMongoObject(javaObj, false);
 	}
 	
-	public Object toMongoObject(final Object javaObj, boolean includeClassName) {
+	Object toMongoObject(final Object javaObj, boolean includeClassName) {
 		if (javaObj == null) {
 			return null;
 		}
@@ -294,11 +296,9 @@ public class Mapper {
 		
 		//TODO: think about this logic a bit more. 
 		//Even if the converter changed it, should it still be processed?
-
-		//The converter ran, and produced another type.
 		if (!bSameType && !(Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)))
 			return newObj;
-		else {
+		else { //The converter ran, and produced another type, or it is a list/map
 			
 			boolean isSingleValue = true;
 			boolean isMap = false;
@@ -343,6 +343,72 @@ public class Mapper {
 				return newObj;
 			}
 		}
+	}
+	
+	public Object toMongoObject(MappedField mf, MappedClass mc, Object value) {
+		Object mappedValue = value;
+		
+		//convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
+		if ((mf!=null && (	mf.hasAnnotation(Reference.class) || 
+							mf.getType().isAssignableFrom(Key.class) || 
+							mf.getType().isAssignableFrom(DBRef.class))
+						 ) || (mc != null && mc.getEntityAnnotation() != null)) {
+			try {
+				Key<?> k = (value instanceof Key) ? (Key<?>)value : getKey(value);
+				mappedValue = keyToRef(k);
+			} catch (Exception e) {
+				log.debug("Error converting value(" + value + ") to reference.", e);
+				mappedValue = toMongoObject(value, false);
+			}
+		}//serialized
+		else if (mf!=null && mf.hasAnnotation(Serialized.class))
+			try {
+				mappedValue = Serializer.serialize(value, !mf.getAnnotation(Serialized.class).disableCompression());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		//pass-through
+		else if (value instanceof DBObject)
+			mappedValue = value;
+		else {
+			mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf));
+			if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf))
+				((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
+		}
+		
+		return mappedValue;
+	}
+
+	public Object getId(Object entity) {
+		entity = ProxyHelper.unwrap(entity);
+//		String keyClassName = entity.getClass().getName();
+		MappedClass mc = getMappedClass(entity.getClass());
+//		
+//		if (getMappedClasses().containsKey(keyClassName))
+//			mc = getMappedClasses().get(keyClassName);
+//		else
+//			mc = new MappedClass(entity.getClass(), getMapper());
+		try {
+			return mc.getIdField().get(entity);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public <T> Key<T> getKey(T entity) {
+		if (entity instanceof ProxiedEntityReference) {
+			ProxiedEntityReference proxy = (ProxiedEntityReference) entity;
+			return (Key<T>) proxy.__getKey();
+		}
+		
+		entity = ProxyHelper.unwrap(entity);
+		if (entity instanceof Key)
+			return (Key<T>) entity;
+		
+		Object id = getId(entity);
+		if (id == null)
+			throw new MappingException("Could not get id for " + entity.getClass().getName());
+		return new Key<T>((Class<T>) entity.getClass(), id);
 	}
 
 	/**
@@ -586,7 +652,7 @@ public class Mapper {
 						if (log.isDebugEnabled())
 							log.debug("Location of warning:\r\n", t);
 					}
-				}			
+				}
 		}
 		return mf;
 	}

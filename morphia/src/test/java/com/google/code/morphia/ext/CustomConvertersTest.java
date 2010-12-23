@@ -16,15 +16,11 @@
 
 package com.google.code.morphia.ext;
 
-import java.net.UnknownHostException;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.google.code.morphia.AdvancedDatastore;
-import com.google.code.morphia.Morphia;
+import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.converters.IntegerConverter;
@@ -33,20 +29,13 @@ import com.google.code.morphia.converters.TypeConverter;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class CustomConvertersTest {
+public class CustomConvertersTest extends TestBase {
 
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	AdvancedDatastore ds;
-	
 	@SuppressWarnings("rawtypes") 
 	static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
 		public CharacterToByteConverter() { super(Character.class, char.class); }
@@ -71,27 +60,10 @@ public class CustomConvertersTest {
 		@Id ObjectId id = new ObjectId();
 		Character c = 'a';
 	}
-	
-	public CustomConvertersTest () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = (AdvancedDatastore) morphia.createDatastore(mongo, db.getName());
-//        DefaultConverters dc = morphia.getMapper().getConverters();
-//        //override the Character/char converter
-//        dc.addConverter(new CharacterToByteConverter());
-	}
-	
 	@Test
 	public void testIt() {
+		morphia.map(CharEntity.class);
 		
 		ds.save(new CharEntity());
 		CharEntity ce = ds.find(CharEntity.class).get();

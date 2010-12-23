@@ -41,7 +41,7 @@ import com.mongodb.WriteConcern;
  *
  * @author Scott Hernandez
  */
-//@Ignore 
+@Ignore 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;

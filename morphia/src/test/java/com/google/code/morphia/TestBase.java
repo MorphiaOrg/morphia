@@ -6,6 +6,7 @@ package com.google.code.morphia;
 import org.junit.After;
 import org.junit.Before;
 
+import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 
@@ -27,18 +28,20 @@ public abstract class TestBase
     @Before
     public void setUp()
     {
-    	dropDB();
         this.db = this.mongo.getDB("morphia_test");
         this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
     }
 	
     protected void dropDB() {
-        this.mongo.dropDatabase("morphia_test");
+        //this.mongo.dropDatabase("morphia_test");
+		for(MappedClass mc : morphia.getMapper().getMappedClasses())
+//			if( mc.getEntityAnnotation() != null )
+				db.getCollection(mc.getCollectionName()).drop();
     	
     }
     
 	@After
 	public void tearDown() {
-//		new ScopedFirstLevelCacheProvider().release();
+    	dropDB();
 	}
 }

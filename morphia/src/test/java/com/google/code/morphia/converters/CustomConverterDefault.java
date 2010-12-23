@@ -16,7 +16,7 @@ import com.google.code.morphia.testutil.TestEntity;
  */
 public class CustomConverterDefault extends TestBase {
 	
-	public static class E extends TestEntity {
+	private static class E extends TestEntity {
 		private static final long serialVersionUID = 1L;
 		
 		// FIXME issue 100 :
@@ -31,7 +31,7 @@ public class CustomConverterDefault extends TestBase {
 	}
 	
 	// unknown type to convert
-	public static class Foo {
+	private static class Foo {
 		private String string;
 		
 		public Foo(String string) {

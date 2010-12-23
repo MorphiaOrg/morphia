@@ -37,7 +37,7 @@ class EmbeddedMapper implements CustomMapper{
 
 			DBObject dbObj = fieldValue == null ? null : mapr.toDBObject(fieldValue, involvedObjects);
 			if (dbObj != null) {
-				if (mf.getType().equals(fieldValue.getClass()) && !(dbObj instanceof BasicDBList))
+				if (!shouldSaveClassName(fieldValue, dbObj, mf))
 					dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
 				
 				if (dbObj.keySet().size() > 0 || mapr.getOptions().storeEmpties) {
@@ -67,11 +67,9 @@ class EmbeddedMapper implements CustomMapper{
 					else
 						val = mapr.toDBObject(o, involvedObjects);
 
-					if (	val != null && val instanceof DBObject && !mf.getSubClass().isInterface() && 
-							!Modifier.isAbstract(mf.getSubClass().getModifiers()) && mf.getSubClass().equals(o.getClass())) {
-						
+					if (!shouldSaveClassName(o, val, mf))
 						((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
-					}
+					
 					values.add(val);
 				}
 			}
@@ -100,8 +98,7 @@ class EmbeddedMapper implements CustomMapper{
 					else
 						val = mapr.toDBObject(entryVal, involvedObjects);
 				
-					if (	val != null && val instanceof DBObject && !mf.getSubClass().isInterface() && 
-							!Modifier.isAbstract(mf.getSubClass().getModifiers()) && mf.getSubClass().equals(entryVal.getClass()))
+					if (!shouldSaveClassName(entryVal, val, mf))
 						((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
 				}
 				
@@ -233,6 +230,22 @@ class EmbeddedMapper implements CustomMapper{
 			Object newEntity = mapr.getOptions().objectFactory.createInstance(mapr, mf, dbObj);
 			return mapr.fromDb(dbObj, newEntity, cache);
 		}
-	} 
+	}
+	
+	public static boolean shouldSaveClassName(Object rawVal, Object convertedVal, MappedField mf) {
+		if (rawVal == null || mf == null)
+			return true;
+		if (mf.isSingleValue())
+			return !(mf.getType().equals(rawVal.getClass()) && !(convertedVal instanceof BasicDBList));
+		else
+			if ( convertedVal != null && 
+				 convertedVal instanceof DBObject && 
+				 !mf.getSubClass().isInterface() && 
+				 !Modifier.isAbstract(mf.getSubClass().getModifiers()) && 
+				 mf.getSubClass().equals(rawVal.getClass()))
+				return false;
+			else 
+				return true;
+	}
 
 }

@@ -28,7 +28,6 @@ import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
-import com.google.code.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.Query;
@@ -101,22 +100,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return createRef(entity.getClass(), id);
 	}
 	
+	@Deprecated
+	protected Object getId(Object entity) {
+		return mapr.getId(entity);
+	}
 
+	@Deprecated // use mapper instead.
 	public <T> Key<T> getKey(T entity) {
-		
-		if (entity instanceof ProxiedEntityReference) {
-			ProxiedEntityReference proxy = (ProxiedEntityReference) entity;
-			return (Key<T>) proxy.__getKey();
-		}
-		
-		entity = ProxyHelper.unwrap(entity);
-		if (entity instanceof Key)
-			return (Key<T>) entity;
-		
-		Object id = getId(entity);
-		if (id == null)
-			throw new MappingException("Could not get id for " + entity.getClass().getName());
-		return new Key<T>((Class<T>) entity.getClass(), id);
+		return mapr.getKey(entity);
 	}
 	
 	protected <T, V> void delete(DBCollection dbColl, V id, WriteConcern wc) {
@@ -522,7 +513,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Object id = key.getId();
 		if (id == null)
 			throw new MappingException("Could not get id for " + entityOrKey.getClass().getName());
-		return find(key.getKind(), key.getKindClass()).filter(Mapper.ID_KEY, key.getId()).getKey();
+		
+		String collName = key.getKind();
+		if (collName == null)
+			collName = getCollection(key.getKindClass()).getName();
+		
+		return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId()).getKey();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -570,23 +566,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public DB getDB() {
 		return db;
-	}
-	
-	protected Object getId(Object entity) {
-		entity = ProxyHelper.unwrap(entity);
-//		String keyClassName = entity.getClass().getName();
-		MappedClass mc = mapr.getMappedClass(entity.getClass());
-//		
-//		if (mapr.getMappedClasses().containsKey(keyClassName))
-//			mc = mapr.getMappedClasses().get(keyClassName);
-//		else
-//			mc = new MappedClass(entity.getClass(), getMapper());
-//		
-		try {
-			return mc.getIdField().get(entity);
-		} catch (Exception e) {
-			return null;
-		}
 	}
 	
 	public Mapper getMapper() {

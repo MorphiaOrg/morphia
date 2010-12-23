@@ -32,7 +32,9 @@ import org.junit.experimental.categories.Category;
 
 import com.google.code.morphia.TestQuery.ContainsPic;
 import com.google.code.morphia.TestQuery.Pic;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.query.ValidationException;
@@ -45,17 +47,26 @@ import com.mongodb.WriteConcern;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("unused")
 public class TestUpdateOps  extends TestBase {
 
-	public static class ContainsIntArray{
+	private static class ContainsIntArray{
 		protected @Id ObjectId id;
 		public Integer[] vals = {1,2,3};
 	}
 
-	public static class ContainsInt{
+	private static class ContainsInt{
 		protected @Id ObjectId id;
 		public int val;
 	}
+	
+    @Entity
+    private static class ContainsPicKey {
+        @Id ObjectId id;
+        String name = "test";
+		Key<Pic> pic;
+    }
+
 	@Test @Category(StandardTests.class)
     public void testUpdateSingleField() throws Exception {
 		Rectangle[] rects = {	new Rectangle(1, 10),
@@ -275,6 +286,86 @@ public class TestUpdateOps  extends TestBase {
 		assertNotNull(cp.pic.name);
 		assertEquals(cp.pic.name, "fist");
 		
+	}
+	
+	@Test
+    public void testUpdateRef() throws Exception {
+		ContainsPic cp = new ContainsPic();
+		cp.name = "cp one";
+
+		Key<ContainsPic> cpKey = ds.save(cp);
+		
+		Pic pic = new Pic();
+		pic.name = "fist";
+		Key<Pic> picKey = ds.save(pic);
+
+
+		//test with Key<Pic>
+		UpdateResults<ContainsPic> res = ds.updateFirst(
+				ds.find(ContainsPic.class, "name", cp.name), 
+				ds.createUpdateOperations(ContainsPic.class).set("pic", pic));
+
+		assertEquals(1, res.getUpdatedCount());
+
+		//test reading the object.
+		ContainsPic cp2 = ds.find(ContainsPic.class).get();
+		assertNotNull(cp2);
+		assertEquals(cp2.name, cp.name);
+		assertNotNull(cp2.pic);
+		assertNotNull(cp2.pic.name);
+		assertEquals(cp2.pic.name, pic.name);
+		
+		res = ds.updateFirst(
+				ds.find(ContainsPic.class, "name", cp.name), 
+				ds.createUpdateOperations(ContainsPic.class).set("pic", picKey));
+		
+		//test reading the object.
+		ContainsPic cp3 = ds.find(ContainsPic.class).get();
+		assertNotNull(cp3);
+		assertEquals(cp3.name, cp.name);
+		assertNotNull(cp3.pic);
+		assertNotNull(cp3.pic.name);
+		assertEquals(cp3.pic.name, pic.name);
+	}
+
+	@Test
+    public void testUpdateKeyRef() throws Exception {
+		ContainsPicKey cpk = new ContainsPicKey();
+		cpk.name = "cpk one";
+
+		Key<ContainsPicKey> cpKey = ds.save(cpk);
+		
+		Pic pic = new Pic();
+		pic.name = "fist again";
+		Key<Pic> picKey = ds.save(pic);
+//		picKey = ds.getKey(pic);
+
+
+		//test with Key<Pic>
+		UpdateResults<ContainsPicKey> res = ds.updateFirst(
+				ds.find(ContainsPicKey.class, "name", cpk.name), 
+				ds.createUpdateOperations(ContainsPicKey.class).set("pic", pic));
+
+		assertEquals(1, res.getUpdatedCount());
+
+		//test reading the object.
+		ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).get();
+		assertNotNull(cpk2);
+		assertEquals(cpk2.name, cpk.name);
+		assertNotNull(cpk2.pic);
+		assertEquals(cpk2.pic, picKey);
+		
+		res = ds.updateFirst(
+				ds.find(ContainsPicKey.class, "name", cpk.name), 
+				ds.createUpdateOperations(ContainsPicKey.class).set("pic", picKey));
+
+		//test reading the object.
+		ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).get();
+		assertNotNull(cpk3);
+		assertEquals(cpk3.name, cpk.name);
+		assertNotNull(cpk3.pic);
+		assertEquals(cpk3.pic, picKey);
+	
 	}
 	
 }

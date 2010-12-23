@@ -60,6 +60,7 @@ public class TestSingleToMultipleConversion extends TestBase {
 	}
 	
 	@Test public void testBasicType() throws Exception {
+		ds.delete(ds.createQuery(HasSingleString.class));
 		ds.save(new HasSingleString());
 		Assert.assertNotNull(ds.find(HasSingleString.class).get());
 		Assert.assertEquals(1, ds.find(HasSingleString.class).countAll());

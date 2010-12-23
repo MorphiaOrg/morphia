@@ -32,7 +32,6 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 
 		Mapper mapr = query.getDatastore().getMapper();
 		
-		Object mappedValue;
 		MappedClass mc = null;
 		try {
 			if (value != null && !ReflectionUtils.isPropertyType(value.getClass()) && !ReflectionUtils.implementsInterface(value.getClass(), Iterable.class))
@@ -44,28 +43,8 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 			//Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will fail/return-empty anyway)
 			log.debug("Error during mapping of filter criteria: ", e);
 		}
-	
-		//convert the value to Key (DBRef) if it is a entity/@Reference or the field type is Key
-		if ((mf!=null && (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class)))
-				|| (mc != null && mc.getEntityAnnotation() != null)) {
-			try {
-				Key<?> k = (value instanceof Key) ? (Key<?>)value : query.getDatastore().getKey(value);
-				mappedValue = mapr.keyToRef(k);
-			} catch (Exception e) {
-				log.debug("Error converting value(" + value + ") to reference.", e);
-				mappedValue = mapr.toMongoObject(value);
-			}
-		}
-		else if (mf!=null && mf.hasAnnotation(Serialized.class))
-			try {
-				mappedValue = Serializer.serialize(value, !mf.getAnnotation(Serialized.class).disableCompression());
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		else if (value instanceof DBObject)
-			mappedValue = value;
-		else
-			mappedValue = mapr.toMongoObject(value);
+		
+		Object mappedValue = mapr.toMongoObject(mf, mc, value);
 		
 		Class<?> type = (mappedValue == null) ?  null : mappedValue.getClass();
 		

@@ -109,6 +109,9 @@ public class TestQuery  extends TestBase {
     public static class Pic {
         @Id ObjectId id;
         String name;
+        
+        String getName() { return name; }
+        ObjectId getId() { return id; }
     }
 
     public static class ContainsRenamedFields{

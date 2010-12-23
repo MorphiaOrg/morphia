@@ -62,7 +62,7 @@ public class TestSerializerTest extends TestBase {
 		
 	}
 	
-	public static class E {
+	private static class E {
 		@Id ObjectId id;
 		@Serialized
 		byte[] payload1;

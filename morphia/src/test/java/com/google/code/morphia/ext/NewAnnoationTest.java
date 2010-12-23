@@ -20,47 +20,38 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.code.morphia.Datastore;
 import com.google.code.morphia.EntityInterceptor;
-import com.google.code.morphia.Morphia;
+import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class NewAnnoationTest {
-
-	Mongo mongo;
-	Morphia morphia = new Morphia();
-	DB db;
-	Datastore ds;
+public class NewAnnoationTest extends TestBase {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.FIELD})
-	public static @interface Lowercase {
+	static @interface Lowercase {
 	}
 	
-	public static class User {
+	private static class User {
 		@Id String id;
 		@Lowercase
 		String email;
 	}
 
-	public static class ToLowercaseHelper implements EntityInterceptor {
+	private static class ToLowercaseHelper implements EntityInterceptor {
 		public void postLoad(Object ent, DBObject dbObj, Mapper mapr) {
 		}
 
@@ -84,26 +75,11 @@ public class NewAnnoationTest {
 		}
 	}
 	
-	public NewAnnoationTest () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Before
-	public void setUp() {
-		mongo.dropDatabase("morphia_test");
-		db = mongo.getDB("morphia_test");
-        ds = morphia.createDatastore(mongo, db.getName());
-		MappedField.interestingAnnotations.add(Lowercase.class);
-		morphia.getMapper().addInterceptor(new ToLowercaseHelper());
-		
-	}
-	
 	@Test
 	public void testIt() {
+		MappedField.interestingAnnotations.add(Lowercase.class);
+		morphia.getMapper().addInterceptor(new ToLowercaseHelper());
+		morphia.map(User.class);
 		User u = new User();
 		u.email = "ScottHernandez@gmail.com";
 		

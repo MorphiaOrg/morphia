@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -47,13 +46,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
 /**
  *
  * @author Scott Hernandez
  */
-public class TestDatastore  extends TestBase{
+public class TestDatastore  extends TestBase {
 
 	@Entity("facebook_users")
 	public static class FacebookUser {
@@ -132,7 +130,7 @@ public class TestDatastore  extends TestBase{
 			dbObj.put("preLoadWithParam", true);
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		@PreLoad
 		DBObject PreLoadWithParamAndReturn(DBObject dbObj) {
 			DBObject retObj = new BasicDBObject((Map)dbObj);
@@ -164,26 +162,15 @@ public class TestDatastore  extends TestBase{
 		}
 	}
 	
-	public TestDatastore () {
-		try {
-			mongo = new Mongo();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
-		morphia.map(Hotel.class).map(KeysKeysKeys.class).map(Rectangle.class).map(FacebookUser.class);
-		//delete, and (re)create test db
-	}
 	@SuppressWarnings("unused")
 	@Test
     public void testMorphiaDS() throws Exception {
-		Mongo m = new Mongo();
-//		Datastore ds = new Morphia().createDatastore(m);
-		Datastore ds = new Morphia().createDatastore(m, "test");
+//		Datastore ds = new Morphia().createDatastore(mongo);
+		Datastore ds = new Morphia().createDatastore(mongo, "test");
 	}
 	@Test
     public void testLowlevelbyteArray() throws Exception {
-	    Mongo m = new Mongo();
-		DBCollection c = m.getDB("test").getCollection( "testBinary" );
+		DBCollection c = mongo.getDB("test").getCollection( "testBinary" );
 	    c.drop();
 	    DBObject loaded;
 	    Iterator<DBObject> it = c.find(new BasicDBObject(), null, 0, 1);
@@ -231,6 +218,7 @@ public class TestDatastore  extends TestBase{
 	}
 	@Test
     public void testGet() throws Exception {
+		morphia.map(FacebookUser.class);
 		List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
 		fbUsers.add(new FacebookUser(1,"user 1"));
 		fbUsers.add(new FacebookUser(2,"user 2"));
@@ -252,7 +240,6 @@ public class TestDatastore  extends TestBase{
 	}
 	@Test
     public void testExists() throws Exception {
-			
 		Key<FacebookUser> k = ds.save(new FacebookUser(1,"user 1"));
 		assertEquals(1, ds.getCount(FacebookUser.class));
 		assertNotNull(ds.get(FacebookUser.class, 1));
@@ -263,6 +250,19 @@ public class TestDatastore  extends TestBase{
 		assertNull(ds.exists(k));
 		
 	}
+	
+    @Test
+    public void testExistsWithEntity() throws Exception {
+        FacebookUser facebookUser = new FacebookUser(1, "user one");
+        ds.save(facebookUser);
+        assertEquals(1, ds.getCount(FacebookUser.class));
+        assertNotNull(ds.get(FacebookUser.class, 1));
+        assertNotNull(ds.exists(facebookUser));
+        ds.delete(ds.find(FacebookUser.class));
+        assertEquals(0, ds.getCount(FacebookUser.class));
+        assertNull(ds.exists(facebookUser));
+    }
+    
 	public void testIdUpdatedOnSave() throws Exception {
 		Rectangle rect = new Rectangle(10, 10);
 		ds.save(rect);
@@ -342,6 +342,7 @@ public class TestDatastore  extends TestBase{
 	
     @Test
     public void testEmbedded() throws Exception {
+    	ds.delete(ds.createQuery(Hotel.class));
         Hotel borg = Hotel.create();
         borg.setName("Hotel Borg");
         borg.setStars(4);
@@ -361,7 +362,6 @@ public class TestDatastore  extends TestBase{
         Hotel hotelLoaded = ds.get(Hotel.class, borg.getId());
         assertEquals(borg.getName(), hotelLoaded.getName());
         assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
-        
     }
     
 }
