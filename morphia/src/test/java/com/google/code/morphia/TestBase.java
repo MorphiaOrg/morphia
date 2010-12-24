@@ -15,6 +15,7 @@ public abstract class TestBase
     protected Mongo mongo;
     protected DB db;
     protected Datastore ds;
+    protected AdvancedDatastore ads;
     protected Morphia morphia = new Morphia();
 
     protected TestBase() {
@@ -30,6 +31,7 @@ public abstract class TestBase
     {
         this.db = this.mongo.getDB("morphia_test");
         this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
+        this.ads = (AdvancedDatastore) ds;
     }
 	
     protected void dropDB() {

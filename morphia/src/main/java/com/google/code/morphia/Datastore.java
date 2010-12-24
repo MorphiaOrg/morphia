@@ -1,6 +1,10 @@
 package com.google.code.morphia;
 
 import java.util.List;
+import java.util.Map;
+
+import org.bson.types.Code;
+import org.bson.types.CodeWScope;
 
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
@@ -143,6 +147,21 @@ public interface Datastore {
 	 */
 	<T> T findAndModify(Query<T> q, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing);
 
+	@SuppressWarnings("rawtypes")
+	/**
+	 * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
+	 * @param <T> The type of resulting data
+	 * @param outputType The type of resulting data; inline is not working yet
+	 * @param type MapreduceType
+	 * @param q The query (only the criteria, limit and sort will be used)
+	 * @param map The map function, in javascript, as a string
+	 * @param reduce The reduce function, in javascript, as a string
+	 * @param finalize The finalize function, in javascript, as a string; can be null
+	 * @param scopeFields Each map entry will be a global variable in all the functions; can be null
+	 * @return counts and stuff
+	 */
+	<T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize, Map<String, Object> scopeFields, Class<T> outputType);
+	
 	/** The builder for all update operations */
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind);
 	

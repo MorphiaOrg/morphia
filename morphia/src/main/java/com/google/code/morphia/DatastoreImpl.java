@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bson.types.Code;
+
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Index;
@@ -37,6 +39,7 @@ import com.google.code.morphia.query.UpdateException;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateOpsImpl;
 import com.google.code.morphia.query.UpdateResults;
+import com.google.code.morphia.utils.Assert;
 import com.google.code.morphia.utils.IndexDirection;
 import com.google.code.morphia.utils.IndexFieldDef;
 import com.mongodb.BasicDBObject;
@@ -961,8 +964,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
+		DBCollection dbColl = getCollection((qi).getEntityClass());
 
 		if (log.isTraceEnabled())
 			log.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
@@ -980,6 +983,70 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			return (T) mapr.fromDBObject(qi.getEntityClass(), res, createCache());
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public <T> MapreduceResults<T> mapReduce(MapreduceType type, Query query, String map, String reduce, String finalize, Map<String, Object> scopeFields, Class<T> outputType) {
+		Assert.parametersNotNull("map", map); Assert.parameterNotEmpty(map, "map");
+		Assert.parametersNotNull("reduce", reduce);	Assert.parameterNotEmpty(reduce, "reduce");
+
+		QueryImpl<T> qi = ((QueryImpl<T>) query);
+		DBCollection dbColl = getCollection((qi).getEntityClass());
+
+		if (log.isTraceEnabled())
+			log.info("Executing mapReduce(" + dbColl.getName() + ") with query(" + qi.toString() 
+					+ ") map(" + map +") reduce(" + reduce + ") finalize(" + finalize + ") scope(" + scopeFields +")");
+
+		//TODO replace this with the 2.4 driver impl.
+		String outColl = mapr.getCollectionName(outputType);
+		BasicDBObjectBuilder bldr = BasicDBObjectBuilder.start("mapreduce", mapr.getCollectionName(qi.getEntityClass()));
+
+		switch (type) {
+		case REDUCE:
+			bldr.push("out").add("reduce",outColl).pop();
+			break;
+		case MERGE:
+			bldr.push("out").add("merge",outColl).pop();
+			break;
+		case INLINE:
+			bldr.push("out").add("inline",1).pop();
+			break;
+		default:
+			bldr.add("out", outColl);
+			break;
+		}
+
+		if (qi.getOffset() != 0 || qi.getFieldsObject() != null)
+			throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
+
+		if(qi.getQueryObject() != null)
+			bldr.add("query", qi.getQueryObject());
+		if(qi.getLimit() > 0)
+			bldr.add("limit", qi.getLimit());
+		if(qi.getSortObject() != null)
+			bldr.add("sort", qi.getSortObject());
+		
+		bldr.add("map", map);
+		bldr.add("reduce", reduce);
+		
+		if(finalize != null && finalize.length() > 0)
+			bldr.add("finalize", finalize);
+		
+		if(scopeFields != null && scopeFields.size() > 0)
+			bldr.add("scope", mapr.toMongoObject(null, null, scopeFields));
+		
+		DBObject dbObj = bldr.get();
+		CommandResult cr = dbColl.getDB().command(dbObj);
+		cr.throwOnError();
+		MapreduceResults mrRes = (MapreduceResults) mapr.fromDBObject(MapreduceResults.class, cr, createCache());
+		
+		QueryImpl baseQ = null;
+		if (!MapreduceType.INLINE.equals(type))
+			baseQ = new QueryImpl(outputType, db.getCollection(mrRes.getOutputCollectionName()), this);
+		//TODO Handle inline case and create an iterator/able.
+		
+		mrRes.setBits(type, baseQ);
+		return mrRes;
+	}
+
 	/** Converts a list of keys to refs */
 	public static <T> List<DBRef> keysAsRefs(List<Key<T>> keys, Mapper mapr){
 		ArrayList<DBRef> refs = new ArrayList<DBRef>(keys.size());

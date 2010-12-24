@@ -22,6 +22,10 @@ public class BooleanConverter extends TypeConverter implements SimpleValueConver
 		if (val instanceof Boolean)
 			return (Boolean) val;
 
+		//handle the case for things like the ok field
+		if (val instanceof Number)
+			return ((Number)val).doubleValue()==1D;
+
 		String sVal = val.toString();
 		return Boolean.parseBoolean(sVal);
 	}

@@ -277,11 +277,7 @@ public class Mapper {
 	 * Used (mainly) by query/update operations
 	 * </p>
 	 */
-	Object toMongoObject(final Object javaObj) {
-		return toMongoObject(javaObj, false);
-	}
-	
-	Object toMongoObject(final Object javaObj, boolean includeClassName) {
+	Object toMongoObject(Object javaObj, boolean includeClassName) {
 		if (javaObj == null) {
 			return null;
 		}
@@ -417,7 +413,7 @@ public class Mapper {
 	 * </p>
 	 * @param entity The POJO
 	 */
-	public DBObject toDBObject(final Object entity) {
+	public DBObject toDBObject(Object entity) {
 		return toDBObject(entity, null);
 	}
 
@@ -457,7 +453,7 @@ public class Mapper {
 		return dbObject;
 	}
 	
-	Object fromDb(DBObject dbObject, final Object entity, EntityCache cache) {
+	Object fromDb(DBObject dbObject, Object entity, EntityCache cache) {
 		//hack to bypass things and just read the value.
 		if (entity instanceof MappedField) {
 			readMappedField(dbObject, (MappedField) entity, entity, cache);
