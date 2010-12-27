@@ -18,6 +18,14 @@ package com.google.code.morphia;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -25,6 +33,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.mapping.validation.ConstraintViolationException;
 
 /**
  *
@@ -87,11 +96,87 @@ public class TestInheritanceMappings extends TestBase {
 	
 	private static class ParameterizedIdEntity extends GenericId<String> {}
 
+	private static interface MapPlusIterableStringString extends Iterable<Entry<String, String>>, Map<String, String> {}
+
+	@Entity(noClassnameStored=true)
+	public static class MapLike implements MapPlusIterableStringString {
+		@Id ObjectId id;
+		private HashMap<String, String> realMap = new HashMap<String, String>();
+		public Iterator<java.util.Map.Entry<String, String>> iterator() {
+			return realMap.entrySet().iterator();
+		}
+
+		public void clear() {
+			realMap.clear();
+		}
+
+		public boolean containsKey(Object key) {
+			return realMap.containsKey(key);
+		}
+
+		public boolean containsValue(Object value) {
+			return realMap.containsValue(value);
+		}
+
+		public Set<java.util.Map.Entry<String, String>> entrySet() {
+			return realMap.entrySet();
+		}
+
+		public String get(Object key) {
+			return realMap.get(key);
+		}
+
+		public boolean isEmpty() {
+			return realMap.isEmpty();
+		}
+
+		public Set<String> keySet() {
+			return realMap.keySet();
+		}
+
+		public String put(String key, String value) {
+			return realMap.put(key, value);
+		}
+
+		public void putAll(Map<? extends String, ? extends String> m) {
+			realMap.putAll(m);
+		}
+
+		public String remove(Object key) {
+			return realMap.remove(key);
+		}
+
+		public int size() {
+			return realMap.size();
+		}
+
+		public Collection<String> values() {
+			return realMap.values();
+		}
+		
+	}
+	
 	@Before @Override
 	public void setUp() {
 		super.setUp();
 		morphia.map(Car.class).map(AbstractVehicle.class).map(FlyingCar.class);
 	}
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testMapEntity() throws Exception {
+    	morphia.map(MapLike.class);
+    	MapLike m = new MapLike();
+    	m.put("Name", "Scott");
+    	ds.save(m);
+    	assertNotNull(m.id);    	
+    	assertEquals(ds.getCount(MapLike.class), 1);
+    	
+    	m = ds.find(MapLike.class).get();
+    	assertNotNull(m.id);    	
+    	assertTrue(m.containsKey("Name"));    	
+    	assertEquals("Scott", m.get("Name"));    	
+    	
+    }
 
     @Test
     public void testSuperclassEntity() throws Exception {

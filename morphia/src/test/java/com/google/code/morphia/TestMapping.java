@@ -39,6 +39,7 @@ import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.code.morphia.TestInheritanceMappings.MapLike;
 import com.google.code.morphia.annotations.AlsoLoad;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
@@ -240,6 +241,10 @@ public class TestMapping  extends TestBase {
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
+	public static class ContainsMapLike {
+		@Id ObjectId id;
+		MapLike m = new MapLike();
+	}
 	
 	public static abstract class BaseEntity implements Serializable{
 		private static final long serialVersionUID = 1L;
@@ -474,6 +479,16 @@ public class TestMapping  extends TestBase {
 		assertNotNull(mapLoaded.values.get(2));
 	}
 
+	@Test
+    public void testMapLike() throws Exception {
+		ContainsMapLike ml = new ContainsMapLike();
+		ml.m.put("first","test");
+		ds.save(ml);
+		ContainsMapLike mlLoaded = ds.find(ContainsMapLike.class).get();
+		assertNotNull(mlLoaded);
+		assertNotNull(mlLoaded.m);
+		assertNotNull(mlLoaded.m.containsKey("first"));
+	}
 	
 	@Test
     public void testPrimMap() throws Exception {

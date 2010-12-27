@@ -24,6 +24,7 @@ import com.google.code.morphia.mapping.validation.classrules.DuplicatedAttribute
 import com.google.code.morphia.mapping.validation.classrules.EmbeddedAndId;
 import com.google.code.morphia.mapping.validation.classrules.EmbeddedAndValue;
 import com.google.code.morphia.mapping.validation.classrules.EntityAndEmbed;
+import com.google.code.morphia.mapping.validation.classrules.EntityCannotBeMapOrIterable;
 import com.google.code.morphia.mapping.validation.classrules.MultipleId;
 import com.google.code.morphia.mapping.validation.classrules.MultipleVersions;
 import com.google.code.morphia.mapping.validation.classrules.NoId;
@@ -91,6 +92,7 @@ public class MappingValidator {
 		constraints.add(new EmbeddedAndId());
 		constraints.add(new EntityAndEmbed());
 		constraints.add(new EmbeddedAndValue());
+		constraints.add(new EntityCannotBeMapOrIterable());
 		constraints.add(new DuplicatedAttributeNames());
 //		constraints.add(new ContainsEmbeddedWithId());
 		// field-level
