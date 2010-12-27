@@ -82,9 +82,10 @@ public class TestInheritanceMappings extends TestBase {
 		@Id T id;
 	}
 	
-	private static class ParameterizedIdEntity extends GenericId<String>{
-		
-	}
+	private static class GenericIdSub<V> extends GenericId<V> {}
+	private static class ParameterizedIdEntity2 extends GenericIdSub<String> {}
+	
+	private static class ParameterizedIdEntity extends GenericId<String> {}
 
 	@Before @Override
 	public void setUp() {
@@ -114,6 +115,19 @@ public class TestInheritanceMappings extends TestBase {
     	
     	assertEquals("foo", c.id);
     	assertEquals(ds.getCount(ParameterizedIdEntity.class), 1);
+    }
+
+    @Test
+    public void testParamIdEntity2() throws Exception {
+    	morphia.map(ParameterizedIdEntity2.class);
+    	ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
+    	c.id = "foo";
+    	ds.save(c);
+    	c = ds.get(ParameterizedIdEntity2.class, "foo");
+    	assertNotNull(c.id);
+    	
+    	assertEquals("foo", c.id);
+    	assertEquals(ds.getCount(ParameterizedIdEntity2.class), 1);
     }
     
     @Test

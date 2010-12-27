@@ -67,7 +67,7 @@ public class TestIdField extends TestBase {
 		@Id Map<String, String> id = new HashMap<String, String>();
 	}
 
-	@Test @Ignore("need to set the _db in the dbref for this to work...")
+	@Test @Ignore("need to set the _db in the dbref for this to work... see issue 90, ")
     public void testReferenceAsId() throws Exception {
         morphia.map(ReferenceAsId.class);
         
@@ -121,5 +121,4 @@ public class TestIdField extends TestBase {
         assertTrue(dbObj.containsField("width"));
         assertEquals(4, dbObj.size());
 	}
-
 }

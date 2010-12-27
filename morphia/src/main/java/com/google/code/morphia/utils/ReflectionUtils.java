@@ -755,8 +755,12 @@ public class ReflectionUtils
 				Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
 				TypeVariable<?>[] typeParameters = rawType.getTypeParameters();
 				for (int i = 0; i < actualTypeArguments.length; i++) {
-					if (typeParameters[i].equals(tv))
-						return getClass(actualTypeArguments[i]);
+					if (typeParameters[i].equals(tv)) {
+						Class cls = getClass(actualTypeArguments[i]);
+						if (cls != null) 
+							return cls;
+						return getClass(resolvedTypes.get(actualTypeArguments[i]));
+					}
 					resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
 				}
 				
