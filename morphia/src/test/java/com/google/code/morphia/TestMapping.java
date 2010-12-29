@@ -399,6 +399,7 @@ public class TestMapping  extends TestBase {
     
     @Test
     public void testObjectIdKeyedMap() throws Exception {
+    	morphia.map(ContainsObjectIdKeyMap.class);
     	ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
     	ObjectId o1 = new ObjectId("111111111111111111111111");
     	ObjectId o2 = new ObjectId("222222222222222222222222");
