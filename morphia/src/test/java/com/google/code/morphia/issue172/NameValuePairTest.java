@@ -11,7 +11,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.testutil.AssertedFailure;
 
-@Ignore("add back when TypeLiteral support is in")
+@Ignore("add back when TypeLiteral support is in; issue 175")
 public class NameValuePairTest extends TestBase {
 	
 	@Test
