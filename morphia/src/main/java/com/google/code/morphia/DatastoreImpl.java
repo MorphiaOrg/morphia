@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bson.types.Code;
-
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Index;
@@ -872,6 +870,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			throw new MappingException("Could not get id for " + entity.getClass().getName());
 		Query<T> query = (Query<T>) createQuery(entity.getClass()).filter(Mapper.ID_KEY, id);
 
+		//remove (immutable) _id field for update.
+		dbObj.removeField(Mapper.ID_KEY);
 		UpdateResults<T> res = update(query, new BasicDBObject("$set", dbObj), false, false, wc);
 		
 		//check for updated count if we have a gle
