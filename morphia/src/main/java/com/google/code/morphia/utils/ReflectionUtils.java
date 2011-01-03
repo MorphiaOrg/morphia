@@ -543,9 +543,11 @@ public class ReflectionUtils
                 String filePath = resources.nextElement().getFile();
                 // WINDOWS HACK
                 if (filePath.indexOf("%20") > 0)
-                {
                     filePath = filePath.replaceAll("%20", " ");
-                }
+                // # in the jar name
+                if (filePath.indexOf("%23") > 0)
+                    filePath = filePath.replaceAll("%23", "#");
+
                 if (filePath != null)
                 {
                     if ((filePath.indexOf("!") > 0) & (filePath.indexOf(".jar") > 0))
