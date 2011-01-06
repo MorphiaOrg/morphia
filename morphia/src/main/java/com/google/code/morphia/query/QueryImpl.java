@@ -101,6 +101,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return n;
 	}
 
+	public DBCollection getCollection() {
+		return dbColl;
+	}
+	
 	public void setQueryObject(DBObject query) {
 		this.baseQuery = query;
 	}

@@ -29,7 +29,6 @@ import com.google.code.morphia.annotations.Id;
  */
 public class TestDatastoreMerge  extends TestBase {
 
-	@SuppressWarnings("unused")
 	private static class TestEntity {
 		@Id ObjectId id;
 		String name;

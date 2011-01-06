@@ -164,7 +164,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public <T> void delete(Query<T> query, WriteConcern wc) {
 		QueryImpl<T> q = (QueryImpl<T>) query;
-		DBCollection dbColl = getCollection(q.getEntityClass());
+
+		DBCollection dbColl = q.getCollection();
+		//TODO remove this after testing.
+		if(dbColl == null)
+			dbColl = getCollection(q.getEntityClass());
+		
 		WriteResult wr;
 		
 		if (q.getSortObject() != null || q.getOffset() != 0 || q.getLimit() > 0)
@@ -365,6 +370,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> Query<T> createQuery(Class<T> kind, DBObject q) {
 		return new QueryImpl<T>(kind, getCollection(kind), this, q);
+	}
+
+	public <T> Query<T> createQuery(String kind, Class<T> clazz, DBObject q) {
+		return new QueryImpl<T>(clazz, db.getCollection(kind), this, q);
+	}
+
+	public <T> Query<T> createQuery(String kind, Class<T> clazz) {
+		return new QueryImpl<T>(clazz, db.getCollection(kind), this);
 	}
 
 	public <T> Query<T> find(String kind, Class<T> clazz) {
@@ -661,7 +674,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (dbObj.get(Mapper.ID_KEY) == null)
 			throw new MappingException("Missing _id after save!");
 		
-		postSaveOperations(entity, dbObj, dbColl, involvedObjects);
+		postSaveOperations(entity, dbObj, involvedObjects);
 		Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
 		key.setKindClass((Class<? extends T>) entity.getClass());
 		
@@ -852,7 +865,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if(gle != null && res.getInsertedCount() > 0)
 			dbObj.put(Mapper.ID_KEY, res.getNewId());
 
-		postSaveOperations(entity, dbObj, getCollection(entity), involvedObjects);
+		postSaveOperations(entity, dbObj, involvedObjects);
 		return res;
 	}
 	
@@ -879,12 +892,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if(gle != null && res.getUpdatedCount() == 0)
 			throw new UpdateException("Not updated: " + gle);
 
-		postSaveOperations(entity, dbObj, getCollection(entity), involvedObjects);
+		postSaveOperations(entity, dbObj, involvedObjects);
 		return key;
 	}
 	
-	private <T> void postSaveOperations(Object entity, DBObject dbObj, DBCollection dbColl,
-			Map<Object, DBObject> involvedObjects) {
+	private <T> void postSaveOperations(Object entity, DBObject dbObj, Map<Object, DBObject> involvedObjects) {
 		MappedClass mc = mapr.getMappedClass(entity);
 		
 		mapr.updateKeyInfo(entity, dbObj, createCache());
@@ -910,16 +922,21 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	private <T> UpdateResults<T> update(Query<T> query, DBObject u, boolean createIfMissing, boolean multi, WriteConcern wc) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
-		QueryImpl<T> qImpl= (QueryImpl<T>) query;
-		if ( qImpl.getSortObject() != null && qImpl.getSortObject().keySet() != null && !qImpl.getSortObject().keySet().isEmpty())
+		QueryImpl<T> qi = (QueryImpl<T>) query;
+
+		DBCollection dbColl = qi.getCollection();
+		//TODO remove this after testing.
+		if(dbColl == null)
+			dbColl = getCollection(qi.getEntityClass());
+		
+		if ( qi.getSortObject() != null && qi.getSortObject().keySet() != null && !qi.getSortObject().keySet().isEmpty())
 			throw new QueryException("sorting is not allowed for updates.");
-		if ( qImpl.getOffset() > 0)
+		if ( qi.getOffset() > 0)
 			throw new QueryException("a query offset is not allowed for updates.");
-		if ( qImpl.getLimit() > 0)
+		if ( qi.getLimit() > 0)
 			throw new QueryException("a query limit is not allowed for updates.");
 		
-		DBObject q = qImpl.getQueryObject();
+		DBObject q = qi.getQueryObject();
 		if (q == null)
 			q = new BasicDBObject();
 
@@ -938,7 +955,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> T findAndDelete(Query<T> query) {
-		DBCollection dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
+		DBCollection dbColl = ((QueryImpl<T>) query).getCollection();
+		//TODO remove this after testing.
+		if(dbColl == null)
+			dbColl = getCollection(((QueryImpl<T>) query).getEntityClass());
+
 		QueryImpl<T> qi = ((QueryImpl<T>) query);
 		EntityCache cache = createCache();
 		
@@ -964,8 +985,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> T findAndModify(Query<T> query, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing) {
-		QueryImpl<T> qi = ((QueryImpl<T>) query);
-		DBCollection dbColl = getCollection((qi).getEntityClass());
+		QueryImpl<T> qi = (QueryImpl<T>) query;
+
+		DBCollection dbColl = qi.getCollection();
+		//TODO remove this after testing.
+		if(dbColl == null)
+			dbColl = getCollection(qi.getEntityClass());
 
 		if (log.isTraceEnabled())
 			log.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
@@ -988,8 +1013,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Assert.parametersNotNull("map", map); Assert.parameterNotEmpty(map, "map");
 		Assert.parametersNotNull("reduce", reduce);	Assert.parameterNotEmpty(reduce, "reduce");
 
-		QueryImpl<T> qi = ((QueryImpl<T>) query);
-		DBCollection dbColl = getCollection((qi).getEntityClass());
+		QueryImpl<T> qi = (QueryImpl<T>) query;
+
+		DBCollection dbColl = qi.getCollection();
+		//TODO remove this after testing.
+		if(dbColl == null)
+			dbColl = getCollection(qi.getEntityClass());
 
 		if (log.isTraceEnabled())
 			log.info("Executing mapReduce(" + dbColl.getName() + ") with query(" + qi.toString() 
