@@ -9,9 +9,9 @@ import com.google.code.morphia.logging.LogrFactory;
 /**
  * @author doc
  */
-public class SLF4JLoggerImplFactory implements LogrFactory {
+public class SLF4JLogrImplFactory implements LogrFactory {
 	public Logr get(final Class<?> c) {
-		return new SLF4JLogger(c);
+		return new SLF4JLogr(c);
 	}
 	
 }

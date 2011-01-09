@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 
 import com.google.code.morphia.logging.Logr;
 
-public class SLF4JLogger implements Logr {
+public class SLF4JLogr implements Logr {
 	private static final long serialVersionUID = 1L;
 	private final Logger logger;
 	
-	public SLF4JLogger(final Class<?> c) {
+	public SLF4JLogr(final Class<?> c) {
 		this.logger = org.slf4j.LoggerFactory.getLogger(c);
 	}
 	
