@@ -1098,15 +1098,12 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	/** Gets the write concern for entity or returns the default write concern for this datastore */
 	public WriteConcern getWriteConcern(Object clazzOrEntity) {
-		WriteConcern wc = null;
+		WriteConcern wc = defConcern;
 		if (clazzOrEntity != null) {
 			Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-			if(entityAnn != null && entityAnn.concern() != null && !"".equals(entityAnn.concern()))
+			if(entityAnn != null && !"".equals(entityAnn.concern()))
 				wc = WriteConcern.valueOf(entityAnn.concern());
 		}
-		
-		if (wc == null)
-			wc = defConcern;
 		
 		return wc;
 	}
