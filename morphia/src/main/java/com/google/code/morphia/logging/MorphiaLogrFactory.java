@@ -8,24 +8,24 @@ import java.util.List;
 import com.google.code.morphia.logging.jdk.JDKLoggerFactory;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class MorphiaLoggerFactory {
+public class MorphiaLogrFactory {
 	private static LogrFactory loggerFactory = null;
 	
 	private static List<String> factories = new ArrayList(Arrays.asList(JDKLoggerFactory.class.getName(),
 	"com.google.code.morphia.logging.slf4j.SLF4JLoggerImplFactory"));
 	
 	private static synchronized void init() {
-		if (MorphiaLoggerFactory.loggerFactory == null) {
+		if (MorphiaLogrFactory.loggerFactory == null) {
 			chooseLoggerFactory();
 		}
 	}
 	
 	private static void chooseLoggerFactory() {
-		Collections.reverse(MorphiaLoggerFactory.factories);
-		for (String f : MorphiaLoggerFactory.factories) {
-			MorphiaLoggerFactory.loggerFactory = newInstance(f);
-            if (MorphiaLoggerFactory.loggerFactory != null) {
-                loggerFactory.get(MorphiaLoggerFactory.class).info(
+		Collections.reverse(MorphiaLogrFactory.factories);
+		for (String f : MorphiaLogrFactory.factories) {
+			MorphiaLogrFactory.loggerFactory = newInstance(f);
+            if (MorphiaLogrFactory.loggerFactory != null) {
+                loggerFactory.get(MorphiaLogrFactory.class).info(
                         "LoggerImplFactory set to " + loggerFactory.getClass().getName());
                 return;
             }
@@ -44,13 +44,13 @@ public class MorphiaLoggerFactory {
 	
 	public static final Logr get(Class<?> c) {
 		init();
-		return MorphiaLoggerFactory.loggerFactory.get(c);
+		return MorphiaLogrFactory.loggerFactory.get(c);
 	}
 
 	/** Register a LoggerFactory; last one registered is used.**/
 	public static void registerLogger(Class<? extends LogrFactory> factoryClass) {
-		if (MorphiaLoggerFactory.loggerFactory == null)
-			MorphiaLoggerFactory.factories.add(0,factoryClass.getName());
+		if (MorphiaLogrFactory.loggerFactory == null)
+			MorphiaLogrFactory.factories.add(0,factoryClass.getName());
 		else
 			throw new IllegalStateException("LoggerImplFactory must be registered before logging is initialized.");
 	}

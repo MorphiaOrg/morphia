@@ -3,7 +3,7 @@ package com.google.code.morphia.logging;
 import java.io.Serializable;
 
 /** Silent logger; it doesn't do anything! */
-public class SilentLogger implements Logr, Serializable{
+public class SilentLogr implements Logr, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public boolean isTraceEnabled() { return false; }
