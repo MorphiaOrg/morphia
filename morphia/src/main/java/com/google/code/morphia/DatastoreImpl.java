@@ -1101,7 +1101,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		WriteConcern wc = null;
 		if (clazzOrEntity != null) {
 			Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-			if(entityAnn != null && entityAnn.concern() != null && entityAnn.concern() != "" )
+			if(entityAnn != null && entityAnn.concern() != null && !"".equals(entityAnn.concern()))
 				wc = WriteConcern.valueOf(entityAnn.concern());
 		}
 		
