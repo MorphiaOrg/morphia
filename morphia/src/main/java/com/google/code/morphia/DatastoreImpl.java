@@ -771,15 +771,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				cr.throwOnError();
 		}
 	}
-	private void firePostPersistForChildren(Map<Object, DBObject> involvedObjects) {
-		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
-			Object entity = e.getKey();
-			DBObject dbObj = e.getValue();
-			MappedClass mc = mapr.getMappedClass(entity);
-			mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
-		}
-	}
-	
 	public <T> Key<T> save(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getCollection(kind);
@@ -897,12 +888,15 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	private <T> void postSaveOperations(Object entity, DBObject dbObj, Map<Object, DBObject> involvedObjects) {
-		MappedClass mc = mapr.getMappedClass(entity);
-		
 		mapr.updateKeyInfo(entity, dbObj, createCache());
 		
-		firePostPersistForChildren(involvedObjects);
-		mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapr);
+		//call PostPersist on all involved entities (including the entity)
+		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
+			Object ent = e.getKey();
+			DBObject dbO = e.getValue();
+			MappedClass mc = mapr.getMappedClass(entity);
+			mc.callLifecycleMethods(PostPersist.class, ent, dbO, mapr);
+		}
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -90,16 +90,23 @@ public class TestDatastore  extends TestBase {
 		
 		@PrePersist
 		void PrePersist() {
+			if (prePersist == true)
+				throw new RuntimeException("already called");
+
 			prePersist = true;
 		}
 		
 		@PrePersist
 		protected void PrePersistWithParam(DBObject dbObj) {
+			if (prePersistWithParam == true)
+				throw new RuntimeException("already called");
 			prePersistWithParam = true;
 		}
 		
 		@PrePersist
 		public DBObject PrePersistWithParamAndReturn(DBObject dbObj) {
+			if (prePersistWithParamAndReturn == true)
+				throw new RuntimeException("already called");
 			prePersistWithParamAndReturn = true;
 			return null;
 //			DBObject retObj = new BasicDBObject((Map)dbObj);
@@ -110,7 +117,10 @@ public class TestDatastore  extends TestBase {
 		@SuppressWarnings("unused")
 		@PostPersist
 		private void PostPersistPersist() {
+			if (postPersist == true)
+				throw new RuntimeException("already called");
 			postPersist = true;
+			
 		}
 		
 		@PostPersist
@@ -122,6 +132,9 @@ public class TestDatastore  extends TestBase {
 
 		@PreLoad
 		void PreLoad() {
+			if (preLoad == true)
+				throw new RuntimeException("already called");
+
 			preLoad = true;
 		}
 		
@@ -140,11 +153,16 @@ public class TestDatastore  extends TestBase {
 
 		@PostLoad
 		void PostLoad() {
+			if (postLoad == true)
+				throw new RuntimeException("already called");
+
 			postLoad = true;
 		}
 		
 		@PreLoad
 		void PostLoadWithParam(DBObject dbObj) {
+			if (postLoadWithParam == true)
+				throw new RuntimeException("already called");
 			postLoadWithParam = true;
 //			dbObj.put("postLoadWithParam", true);
 		}
