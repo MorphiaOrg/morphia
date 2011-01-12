@@ -75,9 +75,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		this.mapr = morphia.getMapper();
 		this.mongo = mongo;
 		this.db = mongo.getDB(dbName);
-		if (username != null) 
+		if (username != null)
 			if (!this.db.authenticate(username, password))
-				throw new MappingException("Authentication failed!");
+				throw new AuthenticationException("User '" + username
+						+ "' cannot be authenticated with the given password for database '" + dbName + "'");
 		
 		// VERY discussable
 		DatastoreHolder.getInstance().set(this);
