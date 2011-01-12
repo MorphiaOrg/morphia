@@ -77,4 +77,9 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	public long getMapperTime() {
 		return mapperTime;
 	}
+	
+	public void close() {
+		if (wrapped != null)
+			wrapped.close();
+	}
 }
