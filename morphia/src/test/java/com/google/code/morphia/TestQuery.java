@@ -211,8 +211,7 @@ public class TestQuery  extends TestBase {
     @Test
     public void testWhereStringQuery() throws Exception {
         ds.save(new PhotoWithKeywords());
-        CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
-        assertNotNull(ds.find(PhotoWithKeywords.class).where(hasKeyword.getCode()).get());
+        assertNotNull(ds.find(PhotoWithKeywords.class).where("this.keywords != null").get());
     }
 
     @Test
