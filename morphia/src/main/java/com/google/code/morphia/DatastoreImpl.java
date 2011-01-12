@@ -76,7 +76,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		this.mongo = mongo;
 		this.db = mongo.getDB(dbName);
 		if (username != null) 
-			this.db.authenticate(username, password);
+			if (!this.db.authenticate(username, password))
+				throw new MappingException("Authentication failed!");
 		
 		// VERY discussable
 		DatastoreHolder.getInstance().set(this);
