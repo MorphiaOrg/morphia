@@ -383,6 +383,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (snapshotted)
 			throw new QueryException("order cannot be used on a snapshotted query.");
 		
+		//TODO: validate names and translate from java names.
 		sort = parseSortString(condition);
 		
 		return this;
