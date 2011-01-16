@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>morphia-parent</artifactId>
+		<groupId>com.google.code.morphia</groupId>
+		<version>1.0</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<groupId>com.google.code.morphia</groupId>
+	<artifactId>gwt</artifactId>
+	<version>${morphia.version}</version>
+	<name>Morphia Google Web Toolkit Extension</name>
+	<packaging>jar</packaging>
+
+	<properties>
+		<gwt.version>2.1.0</gwt.version>
+	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/gwt-java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+	<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt.version}</version>
+				<!--				<executions>-->
+				<!--					<execution>-->
+				<!--						<goals>-->
+				<!--							<goal>compile</goal>-->
+				<!--							<goal>resources</goal>-->
+				<!--						</goals>-->
+				<!--					</execution>-->
+				<!--				</executions>-->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<sourceExcludes>
+						<sourceExclude>**/emul/**/*.java</sourceExclude>
+					</sourceExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<excludes>
+						<exclude>gwt-java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>${morphia.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwt.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.3</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt.version}</version>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>
