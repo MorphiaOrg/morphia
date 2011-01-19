@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.morphia.testmodel.Rectangle;
+import com.mongodb.BasicDBObject;
 
 /**
  *
@@ -45,6 +46,7 @@ public class TestSuperDatastore extends TestBase {
 		Rectangle rect = new Rectangle(10, 10);
 		rect.setId("1");
 		
+		db.getCollection(ns).remove(new BasicDBObject());
 		
 		//test delete(entity, id)
 		ads.save(ns, rect);
@@ -61,6 +63,7 @@ public class TestSuperDatastore extends TestBase {
 		Rectangle rect = new Rectangle(10, 10);
 		rect.setId("1");
 		
+		db.getCollection(ns).remove(new BasicDBObject());
 		
 		//test delete(entity, id)
 		ads.save(ns, rect);
@@ -75,6 +78,8 @@ public class TestSuperDatastore extends TestBase {
 		String ns = "hotels";
 		Rectangle rect = new Rectangle(10, 10);
 		rect.setId("1");
+
+		db.getCollection(ns).remove(new BasicDBObject());
 		
 		//test delete(entity, id)
 		ads.save(ns, rect);

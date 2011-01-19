@@ -10,6 +10,7 @@ import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 
 public interface DAO<T, K> {
 	/** Starts a query for this DAO entities type*/
@@ -34,16 +35,17 @@ public interface DAO<T, K> {
 	public UpdateResults<T> update(Query<T> q, UpdateOperations<T> ops);
 	
 	/** Deletes the entity */
-	public void delete(T entity);
+	public WriteResult delete(T entity);
 	
-	/** Deletes the entity */
-	public void delete(T entity, WriteConcern wc);
+	/** Deletes the entity 
+	 * @return */
+	public WriteResult delete(T entity, WriteConcern wc);
 	
 	/** Delete the entity by id value */
-	public void deleteById(K id);
+	public WriteResult deleteById(K id);
 	
 	/** Saves the entities given the query*/
-	public void deleteByQuery(Query<T> q);
+	public WriteResult deleteByQuery(Query<T> q);
 	
 	/** Loads the entity by id value*/
 	public T get(K id);

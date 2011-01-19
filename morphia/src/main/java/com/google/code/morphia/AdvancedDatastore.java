@@ -5,6 +5,7 @@ import com.google.code.morphia.query.UpdateOperations;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 
 /**
  * <p>
@@ -31,7 +32,7 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Query<T> find(String kind, Class<T> clazz);
 	<T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size);
 	<T> Key<T> save(String kind, T entity);
-	<T> void delete(String kind, T id);
+	<T> WriteResult delete(String kind, T id);
 	
 	<T> Key<T> insert(String kind, T entity);
 	

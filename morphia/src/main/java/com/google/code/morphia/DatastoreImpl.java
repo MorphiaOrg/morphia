@@ -113,7 +113,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return mapr.getKey(entity);
 	}
 	
-	protected <T, V> void delete(DBCollection dbColl, V id, WriteConcern wc) {
+	protected <T, V> WriteResult delete(DBCollection dbColl, V id, WriteConcern wc) {
 		WriteResult wr;
 		if (wc == null)
 			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
@@ -121,50 +121,52 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get(), wc);
 		
 		throwOnError(wc, wr);
+		
+		return wr;
 	}
 	
 
-	public <T> void delete(String kind, T id) {
+	public <T> WriteResult delete(String kind, T id) {
 		DBCollection dbColl = getCollection(kind);
-		delete(dbColl, id, defConcern);
+		return delete(dbColl, id, defConcern);
 	}
 	
-	public <T, V> void delete(Class<T> clazz, V id, WriteConcern wc) {
+	public <T, V> WriteResult delete(Class<T> clazz, V id, WriteConcern wc) {
 		DBCollection dbColl = getCollection(clazz);
-		delete(dbColl, id, wc);
+		return delete(dbColl, id, wc);
 	}
 
-	public <T, V> void delete(Class<T> clazz, V id) {
-		delete(clazz, id, getWriteConcern(clazz));
+	public <T, V> WriteResult delete(Class<T> clazz, V id) {
+		return delete(clazz, id, getWriteConcern(clazz));
 	}
 
-	public <T, V> void delete(Class<T> clazz, Iterable<V> ids) {
+	public <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids) {
 		Query<T> q = find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids);
-		delete(q);
+		return delete(q);
 	}
 	
-	public <T> void delete(T entity) {
-		delete(entity, getWriteConcern(entity));
+	public <T> WriteResult delete(T entity) {
+		return delete(entity, getWriteConcern(entity));
 	}
 	
-	public <T> void delete(T entity, WriteConcern wc) {
+	public <T> WriteResult delete(T entity, WriteConcern wc) {
 		entity = ProxyHelper.unwrap(entity);
 		if (entity instanceof Class<?>)
 			throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
 		try {
 			Object id = getId(entity);
-			delete(entity.getClass(), id, wc);
+			return delete(entity.getClass(), id, wc);
 				
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public <T> void delete(Query<T> query) {
-		delete(query, getWriteConcern(query.getEntityClass()));
+	public <T> WriteResult delete(Query<T> query) {
+		return delete(query, getWriteConcern(query.getEntityClass()));
 	}
 	
-	public <T> void delete(Query<T> query, WriteConcern wc) {
+	public <T> WriteResult delete(Query<T> query, WriteConcern wc) {
 		QueryImpl<T> q = (QueryImpl<T>) query;
 
 		DBCollection dbColl = q.getCollection();
@@ -189,6 +191,8 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				wr = dbColl.remove(new BasicDBObject(), wc);
 		
 		throwOnError(wc, wr);
+		
+		return wr;
 	}
 
 	public <T> void ensureIndex(Class<T> type, String fields) {

@@ -16,6 +16,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 /**
  * Datastore interface to get/delete/save objects
  * @author Scott Hernandez
@@ -28,17 +29,18 @@ public interface Datastore {
 	Key<?> exists(Object keyOrEntity);
 	
 	/** Deletes the given entity (by id) */
-	<T,V> void delete(Class<T> clazz, V id);
+	<T,V> WriteResult delete(Class<T> clazz, V id);
 	/** Deletes the given entities (by id) */
-	<T,V> void delete(Class<T> clazz, Iterable<V> ids);
+	<T,V> WriteResult delete(Class<T> clazz, Iterable<V> ids);
 	/** Deletes the given entities based on the query */
-	<T> void delete(Query<T> q);
-	/** Deletes the given entities based on the query, with the WriteConcern */
-	<T> void delete(Query<T> q, WriteConcern wc);
+	<T> WriteResult delete(Query<T> q);
+	/** Deletes the given entities based on the query, with the WriteConcern 
+	 * @return */
+	<T> WriteResult delete(Query<T> q, WriteConcern wc);
 	/** Deletes the given entity (by @Id) */
-	<T> void delete(T entity);
+	<T> WriteResult delete(T entity);
 	/** Deletes the given entity (by @Id), with the WriteConcern */
-	<T> void delete(T entity, WriteConcern wc);
+	<T> WriteResult delete(T entity, WriteConcern wc);
 
 	/** Find all instances by type */
 	<T> Query<T> find(Class<T> clazz);

@@ -15,6 +15,7 @@ import com.google.code.morphia.query.UpdateResults;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 
 /**
  * @author Olafur Gauti Gudmundsson
@@ -131,29 +132,29 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#delete(T)
 	 */
-	public void delete(T entity) {
-		ds.delete(entity);
+	public WriteResult delete(T entity) {
+		return ds.delete(entity);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#delete(T, com.mongodb.WriteConcern)
 	 */
-	public void delete(T entity, WriteConcern wc) {
-		ds.delete(entity, wc);
+	public WriteResult delete(T entity, WriteConcern wc) {
+		return ds.delete(entity, wc);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#deleteById(K)
 	 */
-	public void deleteById(K id) {
-		ds.delete(entityClazz, id);
+	public WriteResult deleteById(K id) {
+		return ds.delete(entityClazz, id);
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#deleteByQuery(com.google.code.morphia.query.Query)
 	 */
-	public void deleteByQuery(Query q) {
-		ds.delete(q);
+	public WriteResult deleteByQuery(Query q) {
+		return ds.delete(q);
 	}
 	
 	/* (non-Javadoc)
