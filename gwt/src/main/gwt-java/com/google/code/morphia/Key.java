@@ -3,14 +3,8 @@ package com.google.code.morphia;
 import java.io.Serializable;
 
 /**
- * <p>The key object; this class is take from the app-engine datastore (mostly) implementation.
- * It is also Serializable and GWT-safe, enabling your entity objects to
- * be used for GWT RPC should you so desire.</p>
- * 
- * <p>You may use normal DBRef objects as relationships in your entities if you
- * desire neither type safety nor GWTability.</p>
- * 
- * @author Jeff Schnitzer <jeff@infohazard.org> (from Objectify codebase)
+ * gwt client impl. 
+ * @see com.google.code.morphia.Key
  * @author Scott Hernandez (adapted to morphia/mongodb)
  */
 public class Key<T> implements Serializable, Comparable<Key<?>> {
@@ -23,7 +17,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	 * OFactory, making this object non-serializable.
 	 */
 	protected String kind;
-	protected Class<? extends T> kindClass;
 	
 	/** Id value */
 	protected Serializable id;
@@ -31,20 +24,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	
 	/** For GWT serialization */
 	protected Key() {}
-	
-	/** Create a key with an id */
-	public Key(Class<? extends T> kind, Serializable id)
-	{
-		this.kindClass = kind;
-		this.id = id;
-	}
-
-	/** Create a key with an id */
-	public Key(Class<? extends T> kind, byte[] idBytes)
-	{
-		this.kindClass = kind;
-		this.idBytes = idBytes;
-	}
 	
 	/** Create a key with an id */
 	public Key(String kind, Serializable id)
@@ -75,16 +54,8 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 		kind = newKind;
 	}
 	
-	public void setKindClass(Class<? extends T> clazz) {
-		this.kindClass = clazz;
-	}
-	
-	public Class<? extends T> getKindClass() {
-		return this.kindClass;
-	}
-
 	private void checkState(Key k) {
-		if (k.kindClass == null && k.kind == null)
+		if (k.kind == null)
 			throw new IllegalStateException("Kind must be specified (or a class).");
 		if (k.id == null && k.idBytes == null)
 			throw new IllegalStateException("id must be specified");
@@ -106,11 +77,6 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 		
 		int cmp = 0;
 		// First kind
-		if (other.kindClass != null && kindClass != null) {
-			cmp = this.kindClass.getName().compareTo(other.kindClass.getName());
-			if (cmp != 0)
-				return cmp;
-		}
 		cmp = compareNullable(this.kind, other.kind);
 		if (cmp != 0)
 			return cmp;
@@ -155,10 +121,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 		if ( kind != null) {
 			bld.append("kind=");
 			bld.append(this.kind);
-		} else {
-			bld.append("kindClass=");
-			bld.append(this.kindClass.getName());
-		}
+		} 
 		bld.append(", id=");
 		bld.append(this.id);
 		bld.append("}");
@@ -179,19 +142,4 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 		else
 			return o1.compareTo(o2);
 	}
-	
-//	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-//		if (!(id instanceof Serializable))
-//			throw new NotSerializableException(id.getClass().getName());
-//		// TODO persist id to a BasicDBObject (or Map<String, Object>) using
-//		// mapper to make serializable.
-//		out.defaultWriteObject();
-//	}
-//	private void readObject(java.io.ObjectInputStream in) throws IOException {
-//		if (!(id instanceof Serializable))
-//			throw new NotSerializableException(id.getClass().getName());
-//		// TODO persist id to a BasicDBObject (or Map<String, Object>) using
-//		// mapper to make serializable.
-//		in.defaultWriteObject();
-//	}
 }

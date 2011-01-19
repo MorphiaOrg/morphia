@@ -1,7 +1,5 @@
 package com.mongodb;
 
-import java.io.Serializable;
-
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
@@ -12,7 +10,7 @@ public class DBRef_CustomFieldSerializer {
 	}
 	
 	public static DBRef instantiate(SerializationStreamReader streamReader) throws SerializationException {
-		return new DBRef((Serializable)streamReader.readObject(), streamReader.readString(), (Serializable)streamReader.readObject());
+		return new DBRef((DB) streamReader.readObject(), streamReader.readString(), streamReader.readObject());
 	}
 	
 	public static void serialize(SerializationStreamWriter streamWriter, DBRef instance) throws SerializationException {

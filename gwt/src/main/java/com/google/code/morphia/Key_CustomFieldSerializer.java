@@ -16,13 +16,13 @@ public class Key_CustomFieldSerializer {
 		Key newKey = new Key();
 		newKey.id = (Serializable) streamReader.readObject();
 		newKey.kind = streamReader.readString();		
-		newKey.kindClass = (Class) streamReader.readObject();
+//		newKey.kindClass = (Class) streamReader.readObject();
 		return newKey;
 	}
 	
 	public static void serialize(SerializationStreamWriter streamWriter, Key instance) throws SerializationException {
 		streamWriter.writeObject(instance.getId());
 		streamWriter.writeString(instance.getKind());
-		streamWriter.writeObject(instance.getKindClass());
+//		streamWriter.writeObject(instance.getKindClass());
 	}
 }
