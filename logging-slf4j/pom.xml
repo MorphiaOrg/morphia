@@ -5,13 +5,13 @@
 	<parent>
 		<artifactId>morphia-parent</artifactId>
 		<groupId>com.google.code.morphia</groupId>
-		<version>1.0</version>
+		<version>1.1</version>
 		<relativePath>../</relativePath>
 	</parent>
 
 	<groupId>com.google.code.morphia</groupId>
-	<artifactId>logging-slf4j</artifactId>
-	<version>${morphia.version}</version>
+	<artifactId>morphia-logging-slf4j</artifactId>
+	<version>0.99-SNAPSHOT</version>
 	<name>Logging via SLF4J</name>
 	<packaging>jar</packaging>
 
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
-			<version>${morphia.version}</version>
+			<version>0.99-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

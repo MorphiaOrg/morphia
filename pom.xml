@@ -3,18 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.google.code.morphia</groupId>
 	<artifactId>morphia-parent</artifactId>
-	<!-- bogus version to be referenced by the modules -->
-	<version>1.0</version>
+	<version>1.1</version>
 	<packaging>pom</packaging>
 
 	<name>Morphia Build</name>
 	<description>Build Project for Morphia</description>
 
 	<url>http://code.google.com/p/morphia/</url>
-
-	<properties>
-		<morphia.version>0.99-SNAPSHOT</morphia.version>
-	</properties>
 
 	<licenses>
 		<license>
@@ -26,7 +21,8 @@
 
 	<scm>
 		<url>http://code.google.com/p/morphia/source/browse</url>
-		<connection>http://morphia.googlecode.com/svn/trunk/</connection>
+		<connection>scm:svn:http://morphia.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://morphia.googlecode.com/svn/trunk</developerConnection>
 	</scm>
 
 	<developers>
@@ -65,7 +61,16 @@
 	</dependencies>
 
 	<build>
-		<plugins>
+	    <pluginManagement>
+	      <plugins>
+	        <plugin>
+	          <groupId>org.codehaus.mojo</groupId>
+	          <artifactId>gwt-maven-plugin</artifactId>
+	          <version>2.1.0</version>
+	        </plugin>
+	      </plugins>
+	    </pluginManagement>
+	 	<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -91,24 +96,6 @@
 					<header>src/etc/header.txt</header>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<show>public</show>
-					<author>false</author>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -118,6 +105,26 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<show>public</show>
+					<author>false</author>
+					<encoding>UTF-8</encoding>
+					<quiet>true</quiet>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>javadoc</goal>
+							<goal>jar</goal>
+						</goals>
+						<phase>site</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -142,16 +149,30 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.7</version>
 				<configuration>
-					<!--
-						<stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-					-->
 					<show>public</show>
+					<author>false</author>
+					<encoding>UTF-8</encoding>
+					<quiet>true</quiet>
 				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>default</id>
+						<configuration>
+						</configuration>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
 
 	<distributionManagement>
+		<site>
+			<id>morphia-googlecode</id>
+			<url>svn:https://morphia.googlecode.com/svn/site</url>
+		</site>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>morphia-googlecode</id>
