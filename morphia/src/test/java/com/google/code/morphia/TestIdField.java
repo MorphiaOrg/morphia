@@ -117,8 +117,6 @@ public class TestIdField extends TestBase {
 		BasicDBObject dbObj = (BasicDBObject) morphia.toDBObject(r);
         assertFalse(dbObj.containsField("id"));
         assertTrue(dbObj.containsField(Mapper.ID_KEY));
-        assertTrue(dbObj.containsField("height"));
-        assertTrue(dbObj.containsField("width"));
-        assertEquals(4, dbObj.size());
+        assertEquals(4, dbObj.size()); //_id, h, w, className
 	}
 }

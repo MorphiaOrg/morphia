@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.code.morphia.annotations.CappedAt;
 import com.google.code.morphia.annotations.Entity;
@@ -29,7 +28,6 @@ import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
-import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryException;
 import com.google.code.morphia.query.QueryImpl;
@@ -61,31 +59,40 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	private static final Logr log = MorphiaLoggerFactory.get(DatastoreImpl.class);
 	
 //	final protected Morphia morphia;
-	final protected Mapper mapr;
-	final protected Mongo mongo;
-	final protected DB db;
+	protected Mapper mapr;
+	protected Mongo mongo;
+	protected DB db;
 	protected WriteConcern defConcern = WriteConcern.SAFE;
+	
+	public DatastoreImpl(Mapper mapr, Mongo mongo, String dbName) {
+		this.mapr = mapr;
+		this.mongo = mongo;
+		this.db = mongo.getDB(dbName);
+
+		// VERY discussable
+		DatastoreHolder.getInstance().set(this);
+	}
 	
 	public DatastoreImpl(Morphia morphia, Mongo mongo) {
 		this(morphia, mongo, null);
 	}
 	
 	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName, String username, char[] password) {
-//		this.morphia = morphia;
-		this.mapr = morphia.getMapper();
-		this.mongo = mongo;
-		this.db = mongo.getDB(dbName);
+		this(morphia.getMapper(), mongo, dbName);
+
 		if (username != null)
 			if (!this.db.authenticate(username, password))
 				throw new AuthenticationException("User '" + username
 						+ "' cannot be authenticated with the given password for database '" + dbName + "'");
 		
-		// VERY discussable
-		DatastoreHolder.getInstance().set(this);
 	}
 
 	public DatastoreImpl(Morphia morphia, Mongo mongo, String dbName) {
-		this(morphia, mongo, dbName, null, null);
+		this(morphia.getMapper(), mongo, dbName);
+	}
+	
+	public DatastoreImpl copy(String db) {
+		return new DatastoreImpl(mapr, mongo, db);
 	}
 	
 	public <T, V> DBRef createRef(Class<T> clazz, V id) {
@@ -204,21 +211,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate) {
-		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, false, false);
+		ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapr, true), unique, dropDupsOnCreate, false, false);
 	}
 
 	public <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate, boolean background) {
-		ensureIndex(clazz, name, QueryImpl.parseSortString(fields), unique, dropDupsOnCreate, background, false);
+		ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapr, true), unique, dropDupsOnCreate, background, false);
 	}
+	
 	protected <T> void ensureIndex(Class<T> clazz, String name, BasicDBObject fields, boolean unique, boolean dropDupsOnCreate, boolean background, boolean sparse) {
-		//validate field names and translate them to the stored values
-		BasicDBObject keys = new BasicDBObject();
-		for(Entry<String, Object> entry : fields.entrySet()){
-			StringBuffer sb = new StringBuffer(entry.getKey());
-			Mapper.validate(clazz, mapr, sb, FilterOperator.IN, "", true, false);
-			keys.put(sb.toString(), entry.getValue());
-		}
-		
 		BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
 		if (name != null && name.length() > 0) {
 			keyOpts.add("name", name);
@@ -238,11 +238,11 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		
 		BasicDBObject opts = (BasicDBObject) keyOpts.get();
 		if (opts.isEmpty()) {
-			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + keys);
-			dbColl.ensureIndex(keys);
+			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields);
+			dbColl.ensureIndex(fields);
 		} else {
-			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + keys + " and opts:" + opts);
-			dbColl.ensureIndex(keys, opts);
+			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields + " and opts:" + opts);
+			dbColl.ensureIndex(fields, opts);
 		}
 
 		//TODO: remove this once using 2.4 driver does this in ensureIndex
@@ -291,7 +291,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Indexes idxs = (Indexes) mc.getAnnotation(Indexes.class);
 		if (idxs != null && idxs.value() != null && idxs.value().length > 0)
 			for(Index index : idxs.value()) {
-				BasicDBObject fields = QueryImpl.parseSortString(index.value());
+				BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapr, true);
 				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background, index.sparse() ? index.sparse() : false );
 			}
 
@@ -1012,7 +1012,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	public <T> MapreduceResults<T> mapReduce(MapreduceType type, Query query, String map, String reduce, String finalize, Map<String, Object> scopeFields, Class<T> outputType) {
 		Assert.parametersNotNull("map", map); Assert.parameterNotEmpty(map, "map");
 		Assert.parametersNotNull("reduce", reduce);	Assert.parameterNotEmpty(reduce, "reduce");
-
+		
+		if (MapreduceType.INLINE.equals(type))
+			throw new IllegalArgumentException("Inline map/reduce is not supported.");
+		
 		QueryImpl<T> qi = (QueryImpl<T>) query;
 
 		DBCollection dbColl = qi.getCollection();

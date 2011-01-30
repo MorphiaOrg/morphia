@@ -26,9 +26,9 @@ import com.google.code.morphia.testutil.TestEntity;
 public class Rectangle extends TestEntity implements Shape {
 	private static final long serialVersionUID = 1L;
 	
-	@Property
+	@Property("h")
     private double height;
-    @Property
+    @Property("w")
     private double width;
 
     public Rectangle() {

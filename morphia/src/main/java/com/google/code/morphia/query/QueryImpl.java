@@ -383,13 +383,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (snapshotted)
 			throw new QueryException("order cannot be used on a snapshotted query.");
 		
-		//TODO: validate names and translate from java names.
-		sort = parseSortString(condition);
+		sort = parseFieldsString(condition, clazz, this.ds.getMapper(), this.validateName);
 		
 		return this;
 	}
 	
-	public static BasicDBObject parseSortString(String str) {
+	/** parses the string and validates each part*/
+	public static BasicDBObject parseFieldsString(String str, Class clazz, Mapper mapr, boolean validate) {
 		BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
 		String[] parts = str.split(",");
 		for (String s : parts) {
@@ -402,6 +402,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 				s = s.substring(1).trim();
 			}
 			
+			if(validate) {
+				StringBuffer sb = new StringBuffer(s);
+				Mapper.validate(clazz, mapr, sb, FilterOperator.IN, "", true, false);
+				s = sb.toString();
+			}
 			ret = ret.add(s, dir);
 		}
 		return (BasicDBObject) ret.get();
