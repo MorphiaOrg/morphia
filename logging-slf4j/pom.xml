@@ -11,7 +11,7 @@
 
 	<groupId>com.google.code.morphia</groupId>
 	<artifactId>morphia-logging-slf4j</artifactId>
-	<version>0.99-SNAPSHOT</version>
+	<version>1.00-SNAPSHOT</version>
 	<name>Logging via SLF4J</name>
 	<packaging>jar</packaging>
 
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
-			<version>0.99-SNAPSHOT</version>
+			<version>1.00-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

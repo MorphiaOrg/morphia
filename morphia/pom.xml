@@ -12,7 +12,7 @@
 	<groupId>com.google.code.morphia</groupId>
 	<artifactId>morphia</artifactId>
 	<packaging>jar</packaging>
-	<version>0.99-SNAPSHOT</version>
+	<version>1.00-SNAPSHOT</version>
 	<name>morphia</name>
 
 	<dependencies>
