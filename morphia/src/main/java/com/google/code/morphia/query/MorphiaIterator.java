@@ -14,19 +14,19 @@ import com.mongodb.DBCursor;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
-	private final DBCursor wrapped;
-	private final Mapper m;
-	private final Class<T> clazz;
-//	private final String kind;
-	private final EntityCache cache;
-	private long  driverTime = 0;
-	private long  mapperTime= 0;
+	protected final DBCursor wrapped;
+	protected final Mapper m;
+	protected final Class<T> clazz;
+	protected final String kind;
+	protected final EntityCache cache;
+	protected long  driverTime = 0;
+	protected long  mapperTime= 0;
 
 	public MorphiaIterator(DBCursor it, Mapper m, Class<T> clazz, String kind, EntityCache cache) {
 		this.wrapped = it;
 		this.m = m;
 		this.clazz = clazz;
-//		this.kind = kind;
+		this.kind = kind;
 		this.cache = cache;
 	}
 	
@@ -50,9 +50,9 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	
 	protected V processItem(BasicDBObject dbObj) {
     	long start = System.currentTimeMillis();
-		V entity = (V) m.fromDBObject(clazz, dbObj, cache);
+		V item = convertItem(dbObj);
     	mapperTime += System.currentTimeMillis() - start;
-		return (V) entity;
+		return (V) item;
 	}
 	
 	protected BasicDBObject getNext() {
@@ -60,6 +60,10 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 		BasicDBObject dbObj = (BasicDBObject) wrapped.next();
     	driverTime += System.currentTimeMillis() - start;
     	return dbObj;
+	}
+	
+	protected V convertItem(BasicDBObject dbObj) {
+		return (V) m.fromDBObject(clazz, dbObj, cache);
 	}
 	
 	public void remove() {
@@ -76,6 +80,10 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	/** Returns the time spent calling the mapper in ms */
 	public long getMapperTime() {
 		return mapperTime;
+	}
+	
+	public DBCursor getCursor() {
+		return wrapped;
 	}
 	
 	public void close() {

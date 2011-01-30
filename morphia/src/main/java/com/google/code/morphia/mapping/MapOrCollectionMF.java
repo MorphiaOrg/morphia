@@ -38,7 +38,7 @@ public class MapOrCollectionMF extends MappedField {
 		pType = t;
 		Class rawClass = (Class)t.getRawType();
 		isSet = ReflectionUtils.implementsInterface(rawClass, Set.class);
-		isMap = ReflectionUtils.implementsInterface(rawClass, Map.class);;
+		isMap = ReflectionUtils.implementsInterface(rawClass, Map.class);
 		mapKeyType = getMapKeyClass();
 		subType = getSubType();
 		isMongoType = ReflectionUtils.isPropertyType(getSubClass());
