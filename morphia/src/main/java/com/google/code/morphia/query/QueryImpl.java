@@ -135,11 +135,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	public DBObject getFieldsObject() {
 		if (fields == null || fields.length == 0) 
 			return null;
-		
+
 		Map<String, Boolean> fieldsFilter = new HashMap<String, Boolean>();
-		for(String field : this.fields)
+		for(String field : this.fields) {
+			StringBuffer sb = new StringBuffer(field); //validate might modify prop string to translate java field name to db field name
+			Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+			field = sb.toString();
 			fieldsFilter.put(field, (includeFields));
-		
+		}
 		return new BasicDBObject(fieldsFilter);
 	}
 	

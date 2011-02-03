@@ -339,6 +339,19 @@ public class TestQuery  extends TestBase {
     }
 
     @Test
+    public void testFluentNotQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+        
+        AdvancedDatastore ads = (AdvancedDatastore) ds;
+        Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class);
+        q.criteria("keywords.keyword").not().startsWith("ralph"); 
+
+        Assert.assertEquals(1, q.countAll());
+    }
+
+    
+    @Test
     public void testIdFieldNameQuery() throws Exception {
         PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         ds.save(pwk);

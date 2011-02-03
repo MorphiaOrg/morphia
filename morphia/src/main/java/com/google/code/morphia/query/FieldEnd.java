@@ -1,6 +1,7 @@
 package com.google.code.morphia.query;
 
 public interface FieldEnd<T> {
+	FieldEnd<T> not();
 	
 	T exists();
 	T doesNotExist();

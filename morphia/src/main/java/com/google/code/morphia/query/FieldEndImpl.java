@@ -14,27 +14,40 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	private QueryImpl<?> query;
 	private String field;
 	private T target;
-	
+	private boolean not;
 	private boolean validateName;
 	
-	public FieldEndImpl(QueryImpl<?> query, String field, T target, boolean validateName) {
+	private FieldEndImpl(QueryImpl<?> query, String field, T target, boolean validateName, boolean not) {
 		this.query = query;
 		this.field = field;
 		this.target = target;
 		this.validateName = validateName;
+		this.not = not;
 	}
-
+	
+	public FieldEndImpl(QueryImpl<?> query, String field, T target, boolean validateName) {
+		
+		this(query, field, target,validateName, false);
+	}
+	
 	/** Add a criteria */
 	private T addCrit(FilterOperator op, Object val) {
-		target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes()));
-		return target;		
-	}
-
-	private T addGeoCrit(FilterOperator op, Object val, Map<String, Object> opts) {
-		target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
+		target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not));
 		return target;
 	}
 
+	private T addGeoCrit(FilterOperator op, Object val, Map<String, Object> opts) {
+		if (not) 
+			throw new QueryException("Geospatial queries cannot be negated with 'not'.");
+		
+		target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
+		return target;
+	}
+	
+	public FieldEnd<T> not() {
+		not = !not;
+		return this;
+	}
 	public T startsWith(String prefix) {
 		Assert.parametersNotNull("val", prefix);
 		return addCrit(FilterOperator.EQUAL, Pattern.compile("^" + prefix));
@@ -183,4 +196,5 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 		opts.put(s2, v2);
 		return opts;
 	}
+	
 }
