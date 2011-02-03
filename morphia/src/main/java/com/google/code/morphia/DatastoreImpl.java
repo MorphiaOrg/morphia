@@ -560,17 +560,17 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 	public <T> long getCount(T entity) {
 		entity = ProxyHelper.unwrap(entity);
-		return getCollection(entity).getCount();
+		return getCollection(entity).count();
 	}
 	
 
 	public <T> long getCount(Class<T> clazz) {
-		return getCollection(clazz).getCount();
+		return getCollection(clazz).count();
 	}
 	
 
 	public long getCount(String kind) {
-		return getCollection(kind).getCount();
+		return getCollection(kind).count();
 	}
 	
 
