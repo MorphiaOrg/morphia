@@ -369,6 +369,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			}
 	}
 	
+	public <T> Query<T> queryByExample(T ex) {
+		//TODO: think about remove className from baseQuery param below.
+		return new QueryImpl<T>((Class<T>) ex.getClass(), getCollection(ex), this, entityToDBObj(ex, new HashMap<Object, DBObject>()));
+	}
 
 	public <T> Query<T> createQuery(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);

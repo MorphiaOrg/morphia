@@ -389,6 +389,30 @@ public class TestQuery  extends TestBase {
     	UsesCustomIdObject ucioLoaded = ds.find(UsesCustomIdObject.class, "_id.t", "banker").get();
         assertNotNull(ucioLoaded);
     }
+
+    @Test
+    public void testQBE() throws Exception {
+    	CustomId cId = new CustomId();
+    	cId.id = new ObjectId();
+    	cId.type = "banker";
+    	
+    	UsesCustomIdObject ucio = new UsesCustomIdObject();
+    	ucio.id = cId;
+    	ucio.text = "hllo";
+    	this.ds.save(ucio);
+    	UsesCustomIdObject ucioLoaded  = null;
+
+//		Add back if/when query by example for embedded fields is supported (require dot'n each field).			
+//    	CustomId exId = new CustomId();
+//    	exId.type = cId.type;
+//    	ucioLoaded = ds.find(UsesCustomIdObject.class, "_id", exId).get();
+//      assertNotNull(ucioLoaded);
+        
+    	UsesCustomIdObject ex = new UsesCustomIdObject();
+    	ex.text = ucio.text;
+    	ucioLoaded = ds.queryByExample(ex).get();
+        assertNotNull(ucioLoaded);
+    }
     
     @Test
     public void testDeepQueryWithBadArgs() throws Exception {

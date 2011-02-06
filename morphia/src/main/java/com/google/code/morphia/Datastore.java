@@ -3,9 +3,6 @@ package com.google.code.morphia;
 import java.util.List;
 import java.util.Map;
 
-import org.bson.types.Code;
-import org.bson.types.CodeWScope;
-
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
@@ -169,6 +166,9 @@ public interface Datastore {
 	
 	/** Returns a new query bound to the kind (a specific {@link DBCollection})  */
 	<T> Query<T> createQuery(Class<T> kind);
+
+	/** Returns a new query based on the example object*/
+	<T> Query<T> queryByExample(T example);
 	
 	/** Ensures (creating if necessary) the index and direction */
 	<T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
