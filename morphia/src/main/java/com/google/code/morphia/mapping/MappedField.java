@@ -296,6 +296,10 @@ public class MappedField {
 			Serialized me = (Serialized) foundAnnotations.get(Serialized.class);
 			if (!me.value().equals(Mapper.IGNORED_FIELDNAME))
 				return me.value();
+		} else if (hasAnnotation(Version.class)) {
+			Version me = (Version) foundAnnotations.get(Version.class);
+			if (!me.value().equals(Mapper.IGNORED_FIELDNAME))
+				return me.value();
 		}
 		
 		return this.field.getName();
