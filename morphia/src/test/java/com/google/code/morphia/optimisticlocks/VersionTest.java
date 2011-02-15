@@ -13,6 +13,7 @@ import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Version;
+import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.validation.ConstraintViolationException;
 import com.google.code.morphia.testutil.AssertedFailure;
 import com.google.code.morphia.testutil.TestEntity;
@@ -35,7 +36,7 @@ public class VersionTest extends TestBase {
 	
 	public static class ALong extends TestEntity {
 		private static final long serialVersionUID = 1L;
-		@Version
+		@Version("versionNameContributedByAnnotation")
 		Long v;
 		
 		String text;
@@ -112,6 +113,12 @@ public class VersionTest extends TestBase {
 				ds.save(a1);
 			}
 		};
+	}
+	
+	@Test
+	public void testVersionFieldNameContribution() throws Exception {
+		MappedField mappedFieldByJavaField = morphia.getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
+		Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getNameToStore());
 	}
 
 }
