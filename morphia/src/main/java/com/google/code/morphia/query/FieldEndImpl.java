@@ -166,7 +166,10 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 		return near(x, y, radius,  false);
 	}
 	public T near(double x, double y, double radius, boolean spherical) {
-		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y}, spherical ? opts("$sphere", true, "$maxDistance", radius) : null);		
+		Map<String, Object> opts = opts("$maxDistance", radius);
+		if (spherical)
+			opts.put("$sphere",spherical);
+		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y},  opts);		
 	}	
 	public T near(double x, double y, boolean spherical) {
 		return addGeoCrit(FilterOperator.NEAR, new double[] {x,y}, spherical ? opts("$sphere", true) : null);
