@@ -904,7 +904,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		for (Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
 			Object ent = e.getKey();
 			DBObject dbO = e.getValue();
-			MappedClass mc = mapr.getMappedClass(entity);
+			MappedClass mc = mapr.getMappedClass(ent);
 			mc.callLifecycleMethods(PostPersist.class, ent, dbO, mapr);
 		}
 	}
