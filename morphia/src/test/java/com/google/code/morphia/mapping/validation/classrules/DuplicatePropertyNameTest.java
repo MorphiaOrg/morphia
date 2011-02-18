@@ -21,7 +21,7 @@ import com.google.code.morphia.testutil.AssertedFailure;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  *
  */
-public class DuplicatePropertyName extends TestBase {
+public class DuplicatePropertyNameTest extends TestBase {
 	@Entity
 	public static class DuplicatedPropertyName {
 		@Id

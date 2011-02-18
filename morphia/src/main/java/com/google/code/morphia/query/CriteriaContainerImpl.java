@@ -8,8 +8,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 public class CriteriaContainerImpl extends AbstractCriteria implements Criteria, CriteriaContainer {
-	private CriteriaJoin joinMethod;
-	private List<Criteria> children;
+	protected CriteriaJoin joinMethod;
+	protected List<Criteria> children;
 	
 	protected QueryImpl<?> query;
 	

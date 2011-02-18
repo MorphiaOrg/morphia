@@ -1,6 +1,7 @@
 package com.google.code.morphia.query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -82,22 +83,28 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	@Override
 	public QueryImpl<T> clone(){
 		QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
-		n.attachedTo = attachedTo;
-		n.baseQuery = baseQuery;
 		n.batchSize = batchSize;
-		n.cache = cache;
-		n.fields = fields;
+		n.cache = this.ds.getMapper().createEntityCache(); // fresh cache
+		n.fields = fields == null ? null : Arrays.copyOf(fields, fields.length);
 		n.includeFields = includeFields;
 		n.indexHint = indexHint;
 		n.limit = limit;
 		n.noTimeout = noTimeout;
+		n.query = n; // feels weird, correct?
 		n.offset = offset;
-		n.query = n;
 		n.slaveOk = slaveOk;
 		n.snapshotted = snapshotted;
-		n.sort = sort;
 		n.validateName = validateName;
 		n.validateType = validateType;
+
+		// please review:
+		n.sort = (DBObject) (sort == null ? null : ((BasicDBObject) sort).clone()); // wrong?
+		n.baseQuery = (DBObject) (baseQuery == null ? null : ((BasicDBObject) baseQuery).clone()); // wrong?
+
+		// fields from superclass
+		n.attachedTo = attachedTo;
+		n.children = children == null ? null : new ArrayList<Criteria>(children);
+
 		return n;
 	}
 
@@ -497,4 +504,5 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		noTimeout = true;
 		return this;
 	}
+
 }
