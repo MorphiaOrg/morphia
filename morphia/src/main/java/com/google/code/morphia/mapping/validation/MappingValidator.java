@@ -28,6 +28,7 @@ import com.google.code.morphia.mapping.validation.classrules.EntityCannotBeMapOr
 import com.google.code.morphia.mapping.validation.classrules.MultipleId;
 import com.google.code.morphia.mapping.validation.classrules.MultipleVersions;
 import com.google.code.morphia.mapping.validation.classrules.NoId;
+import com.google.code.morphia.mapping.validation.classrules.NonStaticInnerClasss;
 import com.google.code.morphia.mapping.validation.fieldrules.ContradictingFieldAnnotation;
 import com.google.code.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import com.google.code.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
@@ -94,6 +95,7 @@ public class MappingValidator {
 		constraints.add(new EmbeddedAndValue());
 		constraints.add(new EntityCannotBeMapOrIterable());
 		constraints.add(new DuplicatedAttributeNames());
+		constraints.add(new NonStaticInnerClasss());
 //		constraints.add(new ContainsEmbeddedWithId());
 		// field-level
 		constraints.add(new MisplacedProperty());
