@@ -11,6 +11,9 @@ import org.zeroturnaround.javarebel.ReloaderFactory;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.Mapper;
 
+/**
+ * @author us@thomas-daily.de
+ */
 public class JRebelPlugin implements Plugin
 {
 
@@ -52,10 +55,8 @@ public class JRebelPlugin implements Plugin
                 {
                     System.err
                             .println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    System.err.println("+ " + JRebelPlugin.class.getSimpleName()
-                            + " cannot act on reloaded class " + klass.getName());
-                    System.err.println("+ Please add " + JRebelPlugin.class.getSimpleName()
-                            + ".getInstance() to Morphia as an extension");
+                    System.err.println("+ " + JRebelPlugin.class.getSimpleName() + " cannot act on reloaded class "
+                            + klass.getName());
                     System.err.println("+ see " + JRebelPlugin.URL);
                     System.err
                             .println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -67,8 +68,8 @@ public class JRebelPlugin implements Plugin
                     {
                         if (m.isMapped(klass))
                         {
-                            System.out.println(JRebelPlugin.class.getSimpleName()
-                                    + ": Remapping reloaded class " + klass.getName());
+                            System.out.println(JRebelPlugin.class.getSimpleName() + ": Remapping reloaded class "
+                                    + klass.getName());
                             m.addMappedClass(klass);
                         }
                     }
