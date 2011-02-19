@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>morphia-parent</artifactId>
+		<groupId>com.google.code.morphia</groupId>
+		<version>1.1</version>
+		<relativePath>../</relativePath>
+	</parent>
+	<groupId>com.google.code.morphia</groupId>
+	<artifactId>morphia-jrebel-plug</artifactId>
+	<version>1.00-SNAPSHOT</version>
+	<name>JRebel Plugin</name>
+	<packaging>jar</packaging>
+	<dependencies>
+		<!-- automatically looses the optional dependencies -->
+		<dependency>
+			<groupId>com.google.code.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>1.00-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>javarebel-sdk</artifactId>
+			<version>2.0.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>javarebel-utils</artifactId>
+			<version>2.0.2</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<JavaRebel-Plugin>com.google.code.morphia.plugin.jrebel.MorphiaJRebelPlugin</JavaRebel-Plugin>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
