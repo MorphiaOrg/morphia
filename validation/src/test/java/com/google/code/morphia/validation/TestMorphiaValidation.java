@@ -34,7 +34,7 @@ public class TestMorphiaValidation extends TestBase
         final E e = new E();
         e.email = "not an email";
 
-        new ValidationExtension().applyTo(this.morphia);
+        new ValidationExtension(this.morphia);
 
         new AssertedFailure()
         {

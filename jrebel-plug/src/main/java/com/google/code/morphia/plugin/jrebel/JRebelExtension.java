@@ -4,26 +4,26 @@
 package com.google.code.morphia.plugin.jrebel;
 
 import com.google.code.morphia.Morphia;
-import com.google.code.morphia.MorphiaExtension;
+import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 /**
  * @author us@thomas-daily.de
  */
-public class JRebelExtension implements MorphiaExtension
+public class JRebelExtension
 {
-    public void applyTo(final Morphia m)
+    public JRebelExtension(final Morphia m)
     {
-        final JRebelPlugin instance = JRebelPlugin.getInstance();
-        if (instance != null)
+        final Logr log = MorphiaLoggerFactory.get(JRebelExtension.class);
+
+        if (JRebelPlugin.alreadyInstanciated)
         {
-            instance.applyTo(m);
+            new JRebelPlugin().applyTo(m);
+            log.info(this.getClass().getSimpleName() + " initialized");
         }
         else
         {
-            MorphiaLoggerFactory
-                    .get(JRebelExtension.class)
-                    .error("JRebelPlugin was not initialized by JRebel. Class-remapping will not happen - the Extension is ignored.");
+            log.error("JRebelPlugin was not initialized by JRebel. Class-remapping will not happen - the Extension is ignored.");
         }
     }
 }

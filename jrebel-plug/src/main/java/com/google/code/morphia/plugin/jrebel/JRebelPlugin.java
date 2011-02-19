@@ -1,7 +1,7 @@
 package com.google.code.morphia.plugin.jrebel;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.zeroturnaround.javarebel.ClassEventListener;
 import org.zeroturnaround.javarebel.ClassResourceSource;
@@ -19,23 +19,18 @@ public class JRebelPlugin implements Plugin
 
     private static String URL = "http://code.google.com/p/morphia/wiki/JRebel";
 
-    private static JRebelPlugin INSTANCE;
+    private static List<Mapper> mappers = new Vector<Mapper>();
 
-    public static final JRebelPlugin getInstance()
-    {
-        return INSTANCE;
-    }
-
-    List<Mapper> mappers = new LinkedList<Mapper>();
+    static boolean alreadyInstanciated;
 
     public JRebelPlugin()
     {
-        INSTANCE = this;
+        alreadyInstanciated = true;
     }
 
     public void applyTo(final Morphia m)
     {
-        this.mappers.add(m.getMapper());
+        JRebelPlugin.mappers.add(m.getMapper());
     }
 
     public void preinit()
@@ -45,13 +40,13 @@ public class JRebelPlugin implements Plugin
 
             public int priority()
             {
-                return 100;
+                return 1;
             }
 
             @SuppressWarnings("rawtypes")
             public synchronized void onClassEvent(final int eventType, final Class klass)
             {
-                if (JRebelPlugin.this.mappers.isEmpty())
+                if (JRebelPlugin.mappers.isEmpty())
                 {
                     System.err
                             .println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -64,7 +59,7 @@ public class JRebelPlugin implements Plugin
                 }
                 else
                 {
-                    for (final Mapper m : JRebelPlugin.this.mappers)
+                    for (final Mapper m : JRebelPlugin.mappers)
                     {
                         if (m.isMapped(klass))
                         {
@@ -81,7 +76,6 @@ public class JRebelPlugin implements Plugin
 
     public boolean checkDependencies(final ClassLoader classLoader, final ClassResourceSource classResourceSource)
     {
-
         final boolean morphiaAvail = classResourceSource.getClassResource("com.google.code.morphia.Morphia") != null;
         return morphiaAvail;
     }

@@ -11,29 +11,29 @@ import javax.validation.ValidatorFactory;
 
 import com.google.code.morphia.AbstractEntityInterceptor;
 import com.google.code.morphia.Morphia;
-import com.google.code.morphia.MorphiaExtension;
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
 
 /**
  * @author us@thomas-daily.de
  */
-public class ValidationExtension extends AbstractEntityInterceptor implements MorphiaExtension
+public class ValidationExtension extends AbstractEntityInterceptor
 {
     private ValidatorFactory validationFactory;
     private Mapper mapper;
 
+    @Deprecated
     public ValidationExtension()
+    {
+        // use the new ValidationExtension(morphia) convention
+    }
+
+    public ValidationExtension(final Morphia m)
     {
         final Configuration<?> configuration = Validation.byDefaultProvider().configure();
         this.validationFactory = configuration.buildValidatorFactory();
-    }
 
-    public void applyTo(final Morphia m)
-    {
-        // this is supposed to change with a decent configuration interface
-        this.mapper = m.getMapper();
-        this.mapper.addInterceptor(this);
+        m.getMapper().addInterceptor(this);
     }
 
     @Override
