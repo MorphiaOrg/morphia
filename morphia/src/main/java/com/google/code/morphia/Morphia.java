@@ -25,6 +25,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
+import com.google.code.morphia.utils.Assert;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -160,5 +161,10 @@ public class Morphia {
     /** It is best to use a Mongo singleton instance here**/
 	public Datastore createDatastore(Mongo mongo, String dbName) {
 		return createDatastore(mongo, dbName, null, null);
+	}
+	
+	public void addExtension(MorphiaExtension extension) {
+		Assert.parameterNotNull(extension, "extension");
+		extension.applyTo(this);
 	}
 }

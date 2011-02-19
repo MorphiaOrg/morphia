@@ -11,21 +11,21 @@ import org.zeroturnaround.javarebel.ReloaderFactory;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.Mapper;
 
-public class MorphiaJRebelPlugin implements Plugin
+public class JRebelPlugin implements Plugin
 {
 
     private static String URL = "http://code.google.com/p/morphia/wiki/JRebel";
 
-    private static MorphiaJRebelPlugin INSTANCE;
+    private static JRebelPlugin INSTANCE;
 
-    public static final MorphiaJRebelPlugin getInstance()
+    public static final JRebelPlugin getInstance()
     {
         return INSTANCE;
     }
 
     List<Mapper> mappers = new LinkedList<Mapper>();
 
-    public MorphiaJRebelPlugin()
+    public JRebelPlugin()
     {
         INSTANCE = this;
     }
@@ -48,26 +48,26 @@ public class MorphiaJRebelPlugin implements Plugin
             @SuppressWarnings("rawtypes")
             public synchronized void onClassEvent(final int eventType, final Class klass)
             {
-                if (MorphiaJRebelPlugin.this.mappers.isEmpty())
+                if (JRebelPlugin.this.mappers.isEmpty())
                 {
                     System.err
                             .println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    System.err.println("+ " + MorphiaJRebelPlugin.class.getSimpleName()
+                    System.err.println("+ " + JRebelPlugin.class.getSimpleName()
                             + " cannot act on reloaded class " + klass.getName());
-                    System.err.println("+ Please add " + MorphiaJRebelPlugin.class.getSimpleName()
+                    System.err.println("+ Please add " + JRebelPlugin.class.getSimpleName()
                             + ".getInstance() to Morphia as an extension");
-                    System.err.println("+ see " + MorphiaJRebelPlugin.URL);
+                    System.err.println("+ see " + JRebelPlugin.URL);
                     System.err
                             .println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
                 }
                 else
                 {
-                    for (final Mapper m : MorphiaJRebelPlugin.this.mappers)
+                    for (final Mapper m : JRebelPlugin.this.mappers)
                     {
                         if (m.isMapped(klass))
                         {
-                            System.out.println(MorphiaJRebelPlugin.class.getSimpleName()
+                            System.out.println(JRebelPlugin.class.getSimpleName()
                                     + ": Remapping reloaded class " + klass.getName());
                             m.addMappedClass(klass);
                         }
