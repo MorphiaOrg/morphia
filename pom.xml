@@ -191,6 +191,7 @@
 		<module>validation</module>
 		<module>logging-slf4j</module>
 		<module>jrebel-plug</module>
+		<module>guice-plug</module>
 	</modules>
 
 </project>
