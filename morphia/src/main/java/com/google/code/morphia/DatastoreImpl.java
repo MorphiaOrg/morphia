@@ -407,7 +407,14 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T, V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size) {
+		return find(kind, clazz, property, value, offset, size, true);
+	}
+	
+	public <T, V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size,
+			boolean validate) {
 		Query<T> query = find(kind, clazz);
+		if (!validate)
+			query.disableValidation();
 		query.offset(offset);
 		query.limit(size);
 		return query.filter(property, value);
@@ -510,7 +517,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T, V> T get(Class<T> clazz, V id) {
-		return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1).get();
+		return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1, false).get();
 	}
 	
 
