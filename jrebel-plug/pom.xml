@@ -41,7 +41,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<JavaRebel-Plugin>com.google.code.morphia.plugin.jrebel.JRebelPlugin</JavaRebel-Plugin>
+							<JavaRebel-Plugin>com.google.code.morphia.ext.jrebel.JRebelPlugin</JavaRebel-Plugin>
 						</manifestEntries>
 					</archive>
 				</configuration>
