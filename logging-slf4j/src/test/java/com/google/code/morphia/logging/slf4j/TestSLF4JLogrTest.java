@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.logging.MorphiaLogrFactory;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 /**
  * @author us@thomas-daily.de
@@ -41,7 +41,7 @@ public class TestSLF4JLogrTest extends TestBase
         this.baos = new ByteArrayOutputStream();
         System.setErr(new PrintStream(this.baos));
 
-        MorphiaLogrFactory.registerLogger(SLF4JLogrImplFactory.class);
+        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 
         super.setUp();
     }

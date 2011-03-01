@@ -50,8 +50,12 @@ public class MorphiaLoggerFactory {
 	/** Register a LoggerFactory; last one registered is used. **/
 	public static void registerLogger(Class<? extends LogrFactory> factoryClass) {
 		if (MorphiaLoggerFactory.loggerFactory == null)
-			MorphiaLoggerFactory.factories.add(0, factoryClass.getName());
+			MorphiaLoggerFactory.factories.add(factoryClass.getName());
 		else
 			throw new IllegalStateException("LoggerImplFactory must be registered before logging is initialized.");
+	}
+
+	public static void reset() {
+		loggerFactory = null;
 	}
 }
