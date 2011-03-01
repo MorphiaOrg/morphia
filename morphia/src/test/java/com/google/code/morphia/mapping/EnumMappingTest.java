@@ -27,7 +27,9 @@ public class EnumMappingTest extends TestBase {
 		}
 	}
 	static enum Foo {
-		BAR, BAZ
+		BAR() {
+		},
+		BAZ
 	}
 	@Test
 	public void testEnumMapping() throws Exception {

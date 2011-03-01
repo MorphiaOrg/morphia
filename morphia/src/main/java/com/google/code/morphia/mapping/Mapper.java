@@ -282,6 +282,10 @@ public class Mapper {
 			return null;
 		}
 		Class origClass = javaObj.getClass();
+		
+		if (origClass.isAnonymousClass() && origClass.getSuperclass().isEnum())
+			origClass = origClass.getSuperclass();
+
 		Object newObj = converters.encode(origClass, javaObj);
 		if (newObj == null) {
 			log.warning("converted " + javaObj + " to null");
