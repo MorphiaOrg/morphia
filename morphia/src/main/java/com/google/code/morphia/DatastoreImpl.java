@@ -46,6 +46,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
+import com.mongodb.MongoException;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
@@ -1005,13 +1006,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 		if (log.isTraceEnabled())
 			log.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
-
-		DBObject res = dbColl.findAndModify(qi.getQueryObject(), 
+		DBObject res =null;
+		try {
+			res = dbColl.findAndModify(qi.getQueryObject(), 
 											qi.getFieldsObject(), 
 											qi.getSortObject(), 
 											false, 
 											((UpdateOpsImpl<T>) ops).getOps(), !oldVersion, 
 											createIfMissing);
+		} catch (MongoException e) {
+			if(e.getMessage() == null || !e.getMessage().contains("matching"))
+				throw e;
+		}
 		
 		if (res == null) 
 			return null;
