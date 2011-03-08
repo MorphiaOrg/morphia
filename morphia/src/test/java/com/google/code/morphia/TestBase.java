@@ -9,6 +9,7 @@ import org.junit.Before;
 import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 
 public abstract class TestBase
 {

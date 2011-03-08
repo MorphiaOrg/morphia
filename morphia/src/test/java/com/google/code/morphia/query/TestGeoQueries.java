@@ -10,7 +10,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.utils.IndexDirection;
-import com.mongodb.MongoInternalException;
+import com.mongodb.MongoException;
 
 public class TestGeoQueries extends TestBase {
 	@Entity
@@ -63,7 +63,7 @@ public class TestGeoQueries extends TestBase {
 		try {
 			found = ds.find(Place.class).field("loc").near(0, 0).get();
 			Assert.assertFalse(true);
-		} catch (MongoInternalException e) {
+		} catch (MongoException e) {
 			Assert.assertNull(found);
 		}
 	}

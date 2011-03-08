@@ -48,7 +48,7 @@ import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.MongoInternalException;
+import com.mongodb.MongoException;
 
 /**
  *
@@ -222,7 +222,7 @@ public class TestQuery  extends TestBase {
 			// must fail
 	        assertNotNull(ds.find(PhotoWithKeywords.class).where(hasKeyword.getCode()).get());
 			Assert.fail("Invalid javascript magically isn't invalid anymore?");
-		} catch (MongoInternalException e) {
+		} catch (MongoException e) {
 			// fine
 		}
 
