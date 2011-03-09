@@ -146,7 +146,10 @@ public class MappedField {
 			pt = (ParameterizedType) gType;
 		
 		if (tv != null) {
-			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
+//			type = ReflectionUtils.getTypeArgument(persistedClass, tv);
+			Class typeArgument = ReflectionUtils.getTypeArgument(persistedClass, tv);
+			if(typeArgument != null)
+				type = typeArgument;
 		} else if (pt != null) {
 			if(log.isDebugEnabled())
 				log.debug("found instance of ParameterizedType : " + pt);
