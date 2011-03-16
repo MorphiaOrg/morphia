@@ -820,7 +820,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc) {
-		return update(query, ops, createIfMissing, false);
+		return update(query, ops, createIfMissing, true, wc);
 	}
 
 	public <T> UpdateResults<T> update(T ent, UpdateOperations<T> ops) {
