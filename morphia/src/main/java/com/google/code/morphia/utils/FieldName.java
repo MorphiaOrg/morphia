@@ -6,19 +6,18 @@ package com.google.code.morphia.utils;
 import java.lang.reflect.Field;
 
 /**
- * Handy class to test if a certain Fieldname is available in a class. 
- * Usage: If you add 
- * <code>
- * public static final _foo = FieldName.of("foo");
+ * Handy class to test if a certain Fieldname is available in a class. Usage: If
+ * you add <code>
+ * public static final String _foo = FieldName.of("foo");
  * </code>
  * 
- * you´ll see an Exception on loading the class. A nice side-effect: if
- * you use this in Queries like 
- * <code>
+ * you´ll see an Exception on loading the class. A nice side-effect: if you use
+ * this in Queries like <code>
  * q.field(MyEntity._foo).equal("bar")
  * </code>
  * 
- * your IDE is able to track this usage. Using FieldName does not at all replace query validation.
+ * your IDE is able to track this usage. Using FieldName does not at all replace
+ * query validation.
  * 
  * @author us@thomas-daily.de
  * 
