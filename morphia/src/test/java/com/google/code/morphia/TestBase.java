@@ -34,7 +34,7 @@ public abstract class TestBase
         this.ads = (AdvancedDatastore) ds;
     }
 	
-    protected void dropDB() {
+    protected void cleanup() {
         //this.mongo.dropDatabase("morphia_test");
 		for(MappedClass mc : morphia.getMapper().getMappedClasses())
 //			if( mc.getEntityAnnotation() != null )
@@ -44,7 +44,7 @@ public abstract class TestBase
     
 	@After
 	public void tearDown() {
-    	dropDB();
+    	cleanup();
 		mongo.close();
 	}
 }

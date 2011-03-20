@@ -236,6 +236,14 @@ public class TestQuery  extends TestBase {
         assertNotNull(ds.find(PhotoWithKeywords.class).disableValidation().filter("keywords.keyword", Pattern.compile("california")).get());
         assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword",  Pattern.compile("blah")).get());
     }
+    
+    @Test
+    public void testRegexInsensitiveQuery() throws Exception {
+        ds.save(new PhotoWithKeywords());
+        Pattern p = Pattern.compile("(?i)caLifornia");
+        assertNotNull(ds.find(PhotoWithKeywords.class).disableValidation().filter("keywords.keyword", p).get());
+        assertNull(ds.find(PhotoWithKeywords.class, "keywords.keyword",  Pattern.compile("blah")).get());
+    }
 
     @Test
     public void testDeepQuery() throws Exception {
