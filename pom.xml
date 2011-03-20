@@ -192,6 +192,7 @@
 		<module>logging-slf4j</module>
 		<module>jrebel-plug</module>
 		<module>guice-plug</module>
+		<module>entityscanner-plug</module>
 	</modules>
 
 </project>
