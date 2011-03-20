@@ -33,7 +33,7 @@ public class FieldName {
 		if (hasField(clazz, name))
 			return name;
 		throw new FieldNameNotFoundException("Field called '" + name + "' on class '" + clazz
-				+ "' was not found, even though it was defined on ");
+ + "' was not found.");
 	}
 	
 	private static boolean hasField(Class<?> clazz, String name) {
