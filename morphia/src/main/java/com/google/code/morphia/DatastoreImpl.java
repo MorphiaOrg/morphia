@@ -418,7 +418,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			query.disableValidation();
 		query.offset(offset);
 		query.limit(size);
-		return query.filter(property, value);
+		return query.filter(property, value).enableValidation();
 	}
 	
 
@@ -436,7 +436,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 
 	public <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
-		return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids);
+		return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
 	}
 
 	/** Queries the server to check for each DBRef */
