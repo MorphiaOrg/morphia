@@ -2,7 +2,6 @@ package com.google.code.morphia.logging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.code.morphia.logging.jdk.JDKLoggerFactory;
@@ -21,7 +20,6 @@ public class MorphiaLoggerFactory {
 	}
 	
 	private static void chooseLoggerFactory() {
-		Collections.reverse(MorphiaLoggerFactory.factories);
 		for (String f : MorphiaLoggerFactory.factories) {
 			MorphiaLoggerFactory.loggerFactory = newInstance(f);
 			if (MorphiaLoggerFactory.loggerFactory != null) {
@@ -50,7 +48,7 @@ public class MorphiaLoggerFactory {
 	/** Register a LoggerFactory; last one registered is used. **/
 	public static void registerLogger(Class<? extends LogrFactory> factoryClass) {
 		if (MorphiaLoggerFactory.loggerFactory == null)
-			MorphiaLoggerFactory.factories.add(factoryClass.getName());
+			MorphiaLoggerFactory.factories.add(0, factoryClass.getName());
 		else
 			throw new IllegalStateException("LoggerImplFactory must be registered before logging is initialized.");
 	}
