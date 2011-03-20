@@ -1,14 +1,12 @@
 package com.google.code.morphia;
 
-import com.google.code.morphia.annotations.AlsoLoad;
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryImpl;
 import com.mongodb.DBObject;
 
-@Entity @SuppressWarnings({"unused", "unchecked", "rawtypes"})
+@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
 public class MapreduceResults<T> {
 	DBObject rawResults = null;
 	private Stats counts = new Stats();
