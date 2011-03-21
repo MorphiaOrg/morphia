@@ -443,10 +443,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public Iterator<T> tail(boolean awaitData) {
-		// i´d favor message passing instead of a member here.
-		this.tail = true;
-		this.tail_await_data = awaitData;
-		return fetch().iterator();
+		QueryImpl<T> tailQ = clone();
+		tailQ.tail = true;
+		tailQ.tail_await_data = awaitData;
+		return tailQ.fetch().iterator();
 	}
 	
 	public Class<T> getEntityClass() {
@@ -517,14 +517,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 
 	/** Disables cursor timeout on server. */
-	public Query<T> disableTimeout() {
-		noTimeout = false;
+	public Query<T> disableCursorTimeout() {
+		noTimeout = true;
 		return this;
 	}
 
 	/** Enables cursor timeout on server. */
-	public Query<T> enableTimeout(){
-		noTimeout = true;
+	public Query<T> enableCursorTimeout(){
+		noTimeout = false;
 		return this;
 	}
 

@@ -110,10 +110,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 	Query<T> queryPrimaryOnly();
 
 	/** Disables cursor timeout on server. */
-	Query<T> disableTimeout();
+	Query<T> disableCursorTimeout();
 
 	/** Enables cursor timeout on server. */
-	Query<T> enableTimeout();
+	Query<T> enableCursorTimeout();
 	
 	/**
 	 * <p>Generates a string that consistently and uniquely specifies this query.  There
