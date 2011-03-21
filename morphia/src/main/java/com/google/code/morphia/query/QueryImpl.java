@@ -53,6 +53,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	private boolean snapshotted = false;
 	private boolean slaveOk = false;
 	private boolean noTimeout = false;
+	private boolean tail = false;
+	private boolean tail_await_data;
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds) {
 		super(CriteriaJoin.AND);
@@ -104,7 +106,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		// fields from superclass
 		n.attachedTo = attachedTo;
 		n.children = children == null ? null : new ArrayList<Criteria>(children);
-
+		n.tail = tail;
+		n.tail_await_data = tail_await_data;
 		return n;
 	}
 
@@ -194,19 +197,28 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 			cursor.hint(indexHint);
 
 		if (slaveOk) {
-			int opts = dbColl.getOptions();
-			cursor.addOption(opts |= Bytes.QUERYOPTION_SLAVEOK);
+			cursor.addOption(Bytes.QUERYOPTION_SLAVEOK);
 		}
 		
 		if (noTimeout) {
-			int opts = dbColl.getOptions();
-			cursor.addOption(opts |= Bytes.QUERYOPTION_NOTIMEOUT);
+			cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
 		}
 		
+		if (tail) {
+			cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
+			if (tail_await_data)
+				cursor.addOption(Bytes.QUERYOPTION_AWAITDATA);
+		}
+
 		//Check for bad options.
 		if (snapshotted && (sort!=null || indexHint!=null))
 			log.warning("Snapshotted query should not have hint/sort.");
 		
+		if (tail && (sort!=null))
+		{
+		    // i don´t think that just warning is enough here, i´d favor a RTE, agree?
+			log.warning("Sorting on tail is not allowed.");
+		}
 		
 		return cursor;
 	}
@@ -423,6 +435,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 
 	public Iterator<T> iterator() {
+		return fetch().iterator();
+	}
+	
+	public Iterator<T> tail() {
+		return tail(true);
+	}
+	
+	public Iterator<T> tail(boolean awaitData) {
+		// i´d favor message passing instead of a member here.
+		this.tail = true;
+		this.tail_await_data = awaitData;
 		return fetch().iterator();
 	}
 	
