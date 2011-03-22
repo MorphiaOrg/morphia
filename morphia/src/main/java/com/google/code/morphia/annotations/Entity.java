@@ -41,7 +41,8 @@ public @interface Entity {
 	boolean noClassnameStored() default false;
 	
 	//set slaveOk for queries for this Entity.
-	boolean slaveOk() default false;
+	boolean queryNonPrimary() default false;
+	
 	
 	//any WriteConcern static string. Case insensitive. STRICT/SAFE, NORMAL, etc...
 	String concern() default "";

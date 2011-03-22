@@ -68,7 +68,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
 		Entity entAn = mc == null ? null : mc.getEntityAnnotation();
 		if (entAn != null)
-			this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().slaveOk();
+			this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary();
 	}
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
