@@ -371,10 +371,18 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 	
 	public <T> Query<T> queryByExample(T ex) {
-		//TODO: think about remove className from baseQuery param below.
-		return new QueryImpl<T>((Class<T>) ex.getClass(), getCollection(ex), this, entityToDBObj(ex, new HashMap<Object, DBObject>()));
+		return queryByExample(getCollection(ex), ex);
 	}
 
+	public <T> Query<T> queryByExample(String kind, T ex) {
+		return queryByExample(db.getCollection(kind), ex);
+	}
+
+	private <T> Query<T> queryByExample(DBCollection coll, T example) {
+		//TODO: think about remove className from baseQuery param below.
+		return new QueryImpl<T>((Class<T>) example.getClass(), coll, this, entityToDBObj(example, new HashMap<Object, DBObject>()));
+		
+	}
 	public <T> Query<T> createQuery(Class<T> clazz) {
 		return new QueryImpl<T>(clazz, getCollection(clazz), this);
 	}
@@ -760,7 +768,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		if (oldVersion != null && oldVersion > 0) {
 			Object idValue = dbObj.get(Mapper.ID_KEY);
 			
-			UpdateResults<T> res = update(  find((Class<T>) entity.getClass(), Mapper.ID_KEY, idValue).filter(versionKeyName, oldVersion), 
+			UpdateResults<T> res = update(  find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue).filter(versionKeyName, oldVersion), 
 											dbObj, 
 											false, 
 											false, 

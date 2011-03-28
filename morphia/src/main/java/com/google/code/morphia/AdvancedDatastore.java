@@ -47,5 +47,9 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Query<T> createQuery(Class<T> kind, DBObject q);
 	<T> Query<T> createQuery(String kind, Class<T> clazz, DBObject q);
 	
+	/** Returns a new query based on the example object*/
+	<T> Query<T> queryByExample(String kind, T example);
+
+	
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind, DBObject ops);
 }
