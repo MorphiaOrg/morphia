@@ -153,7 +153,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#deleteByQuery(com.google.code.morphia.query.Query)
 	 */
-	public WriteResult deleteByQuery(Query q) {
+	public WriteResult deleteByQuery(Query<T> q) {
 		return ds.delete(q);
 	}
 	
