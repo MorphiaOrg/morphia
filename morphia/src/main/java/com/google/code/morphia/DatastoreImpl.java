@@ -845,6 +845,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	}
 
 	public <T> UpdateResults<T> update(T ent, UpdateOperations<T> ops) {
+		if (ent instanceof Query)
+			return update((Query<T>)ent, ops);
+		
 		MappedClass mc = mapr.getMappedClass(ent);
 		Query<T> q = (Query<T>) createQuery(mc.getClazz());
 		q.disableValidation().filter(Mapper.ID_KEY, getId(ent));
