@@ -443,6 +443,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public Iterator<T> tail(boolean awaitData) {
+		//Create a new query for this, so the current one is not affected.
 		QueryImpl<T> tailQ = clone();
 		tailQ.tail = true;
 		tailQ.tail_await_data = awaitData;

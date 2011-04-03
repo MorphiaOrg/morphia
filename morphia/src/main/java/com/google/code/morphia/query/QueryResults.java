@@ -64,8 +64,8 @@ public interface QueryResults<T>  extends Iterable<T> {
 	
 	/**
 	 * Returns an tailing iterator over a set of elements of type T. If awaitData is true, this
-	 * iterator blocks on hasNext() until new data is avail. Note that if no data is available 
-	 * at all, hasNext() might return immediately.
+	 * iterator blocks on hasNext() until new data is avail (or some amount of time has passed). Note that if no data is available 
+	 * at all, hasNext() might return immediately. You should wrap tail calls in a loop if you want this to be blocking.
 	 * 
 	 * @return an Iterator.
 	 */
