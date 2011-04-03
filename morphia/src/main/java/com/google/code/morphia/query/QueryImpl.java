@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 
 import com.google.code.morphia.Datastore;
@@ -41,7 +42,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	
 	private String[] fields = null;
 	private Boolean includeFields = null;
-	private DBObject sort = null;
+	private BasicDBObject sort = null;
 	private DatastoreImpl ds = null;
 	private DBCollection dbColl = null;
 	private int offset = 0;
@@ -49,7 +50,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	private int batchSize = 0;
 	private String indexHint;
 	private Class<T> clazz = null;
-	private DBObject baseQuery = null;
+	private BasicDBObject baseQuery = null;
 	private boolean snapshotted = false;
 	private boolean slaveOk = false;
 	private boolean noTimeout = false;
@@ -79,7 +80,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 
 	public QueryImpl(Class<T> clazz, DBCollection coll, DatastoreImpl ds, DBObject baseQuery) {
 		this(clazz, coll, ds);
-		this.baseQuery = baseQuery;
+		this.baseQuery = (BasicDBObject) baseQuery;
 	}
 	
 	@Override
@@ -98,10 +99,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		n.snapshotted = snapshotted;
 		n.validateName = validateName;
 		n.validateType = validateType;
-
-		// please review:
-		n.sort = (DBObject) (sort == null ? null : ((BasicDBObject) sort).clone()); // wrong?
-		n.baseQuery = (DBObject) (baseQuery == null ? null : ((BasicDBObject) baseQuery).clone()); // wrong?
+		n.sort = (BasicDBObject) (sort == null ? null : sort.clone());
+		n.baseQuery = (BasicDBObject) (baseQuery == null ? null : baseQuery.clone());
 
 		// fields from superclass
 		n.attachedTo = attachedTo;
@@ -116,7 +115,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	public void setQueryObject(DBObject query) {
-		this.baseQuery = query;
+		this.baseQuery = (BasicDBObject) query;
 	}
 	public int getOffset() {
 		return offset;
@@ -130,7 +129,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		DBObject obj = new BasicDBObject();
 		
 		if (this.baseQuery != null) {
-			obj.putAll(this.baseQuery);
+			obj.putAll((BSONObject)this.baseQuery);
 		}
 		
 		this.addTo(obj);
@@ -411,6 +410,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	}
 	
 	/** parses the string and validates each part*/
+	@SuppressWarnings("rawtypes")
 	public static BasicDBObject parseFieldsString(String str, Class clazz, Mapper mapr, boolean validate) {
 		BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
 		String[] parts = str.split(",");
