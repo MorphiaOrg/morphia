@@ -617,18 +617,31 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Object first = entities.iterator().next();
 		return insert(entities, getWriteConcern(first));
 	}
+
+	public <T> Iterable<Key<T>> insert(String kind, Iterable<T> entities, WriteConcern wc) {
+		DBCollection dbColl = db.getCollection(kind);
+		return insert(dbColl, entities, wc);
+	}
+
+	public <T> Iterable<Key<T>> insert(String kind, Iterable<T> entities) {
+		return insert(kind, entities, getWriteConcern(entities.iterator().next()));
+	}
+
 	
 	public <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc) {
+		//TODO: Do this without creating another iterator
+		DBCollection dbColl = getCollection(entities.iterator().next());
+		return insert(dbColl, entities, wc);
+	}
+	
+	private <T> Iterable<Key<T>> insert(DBCollection dbColl, Iterable<T> entities, WriteConcern wc) {
 		ArrayList<DBObject> ents = entities instanceof List ? new ArrayList<DBObject>(((List<T>)entities).size()) : new ArrayList<DBObject>();
 
 		Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-		T lastEntity = null;
 		for (T ent : entities) {
 			ents.add(entityToDBObj(ent, involvedObjects));
-			lastEntity = ent;
 		}
 		
-		DBCollection dbColl = getCollection(lastEntity);
 		WriteResult wr = null;
 		
 		DBObject[] dbObjs = new DBObject[ents.size()];
@@ -673,7 +686,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		DBCollection dbColl = getCollection(kind);
 		return insert(dbColl, entity, wc);
 	}
-	
+
 	protected <T> Key<T> insert(DBCollection dbColl, T entity, WriteConcern wc) {
 		LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		DBObject dbObj = entityToDBObj(entity, involvedObjects);

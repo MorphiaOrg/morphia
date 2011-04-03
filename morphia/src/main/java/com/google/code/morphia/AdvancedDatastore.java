@@ -41,6 +41,9 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Iterable<Key<T>> insert(T... entities);
 	<T> Iterable<Key<T>> insert(Iterable<T>entities, WriteConcern wc);
 
+	<T> Iterable<Key<T>> insert(String kind, Iterable<T> entities);
+	<T> Iterable<Key<T>> insert(String kind, Iterable<T> entities, WriteConcern wc);
+
 
 	<T> Query<T> createQuery(String kind, Class<T> clazz);
 	//DBObject implementations; incase we don't have features impl'd yet
