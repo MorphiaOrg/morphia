@@ -114,6 +114,24 @@ public class VersionTest extends TestBase {
 			}
 		};
 	}
+
+	@Test
+    public void testConcurrentModDetectionLongWithMerge() throws Exception {
+        ALong a = new ALong();
+        Assert.assertEquals(null, (Long) a.v);
+        ds.save(a);
+        final ALong a1 = a;
+        
+        a1.text = " foosdfds ";
+        ALong a2 = ds.get(a);
+        ds.save(a2);
+        
+        new AssertedFailure(ConcurrentModificationException.class) {
+            public void thisMustFail() throws Throwable {
+                ds.merge(a1);
+            }
+        };
+    }
 	
 	@Test
 	public void testVersionFieldNameContribution() throws Exception {

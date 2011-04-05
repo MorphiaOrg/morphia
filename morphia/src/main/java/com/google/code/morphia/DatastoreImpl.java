@@ -245,10 +245,6 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			log.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields + " and opts:" + opts);
 			dbColl.ensureIndex(fields, opts);
 		}
-
-		//TODO: remove this once using 2.4 driver does this in ensureIndex
-		CommandResult cr = dbColl.getDB().getLastError();
-		cr.throwOnError();
 	}
 	
 	@SuppressWarnings({ "rawtypes"})
@@ -914,14 +910,29 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		Object id = getId(entity);
 		if (id == null)
 			throw new MappingException("Could not get id for " + entity.getClass().getName());
-		Query<T> query = (Query<T>) createQuery(entity.getClass()).filter(Mapper.ID_KEY, id);
 
 		//remove (immutable) _id field for update.
 		dbObj.removeField(Mapper.ID_KEY);
-		UpdateResults<T> res = update(query, new BasicDBObject("$set", dbObj), false, false, wc);
+
+		WriteResult wr = null;
+		
+		MappedClass mc = mapr.getMappedClass(entity);
+		DBCollection dbColl = getCollection(entity);
+		
+		//try to do an update if there is a @Version field
+		wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
+		
+		if(wr == null) {
+			Query<T> query = (Query<T>) createQuery(entity.getClass()).filter(Mapper.ID_KEY, id);
+			wr = update(query, new BasicDBObject("$set", dbObj), false, false, wc).getWriteResult();
+		}
+
+		UpdateResults<T> res = new UpdateResults<T>(wr);
+
+		throwOnError(wc, wr);
 		
 		//check for updated count if we have a gle
-		CommandResult gle = res.getWriteResult().getCachedLastError();
+		CommandResult gle = wr.getCachedLastError();
 		if(gle != null && res.getUpdatedCount() == 0)
 			throw new UpdateException("Not updated: " + gle);
 
