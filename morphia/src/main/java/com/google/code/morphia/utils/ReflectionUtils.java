@@ -28,6 +28,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -216,7 +217,7 @@ public class ReflectionUtils
                 || (type == long.class) 	|| (type == Double.class) 	|| (type == double.class) 	|| (type == float.class)
                 || (type == Float.class) 	|| (type == Boolean.class) 	|| (type == boolean.class) 	|| (type == Byte.class)
                 || (type == byte.class) 	|| (type == Date.class) 	|| (type == Locale.class) 	|| (type == Class.class) 
-                || (type == UUID.class) 	|| type.isEnum();
+                || (type == UUID.class) 	|| (type == URI.class)		|| type.isEnum();
     }
 
     /**
