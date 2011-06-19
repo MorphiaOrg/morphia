@@ -72,6 +72,22 @@ import com.mongodb.DBRef;
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class TestMapping  extends TestBase {
 
+	public static abstract class BaseEntity implements Serializable{
+		private static final long serialVersionUID = 1L;
+
+		public BaseEntity() {}
+	
+		@Id ObjectId id;
+		public String getId() {
+			return id.toString();
+		}
+	
+       public void setId(String id) {
+    	   this.id = new ObjectId(id);
+       }
+	}
+
+	
 	@Entity
 	private static class MissingId {
 		String id;
@@ -87,12 +103,12 @@ public class TestMapping  extends TestBase {
 	}
 
 	@Embedded
-	public static class IdOnEmbedded {
+	private static class IdOnEmbedded {
 		@Id ObjectId id;
 	}
 	
 	@Embedded("no-id")
-	public static class RenamedEmbedded {
+	private static class RenamedEmbedded {
 		String name;
 	}
 	
@@ -101,20 +117,20 @@ public class TestMapping  extends TestBase {
 		RenamedEmbedded[] res;
 	}
 	
-	public static class NotEmbeddable {
+	private static class NotEmbeddable {
 		String noImNot = "no, I'm not";
 	}
-	public static class SerializableClass implements Serializable {
+	private static class SerializableClass implements Serializable {
 		private static final long serialVersionUID = 1L;
 		String someString = "hi, from the ether.";
 	}
 
-	public static class ContainsRef {
+	private static class ContainsRef {
 		public @Id ObjectId id;
 		public DBRef rect;
 	}
 
-	public static class HasFinalFieldId{
+	private static class HasFinalFieldId{
 		public final @Id long id;
 		public String name = "some string";
 		
@@ -128,7 +144,7 @@ public class TestMapping  extends TestBase {
 		}
 	}
 
-	public static class ContainsFinalField{
+	private static class ContainsFinalField{
 		public @Id ObjectId id;
 		public final String name;
 		
@@ -141,28 +157,28 @@ public class TestMapping  extends TestBase {
 		}
 	}
 
-	public static class ContainsTimestamp {
+	private static class ContainsTimestamp {
 		@Id ObjectId id;
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 	}
 	
-	public static class ContainsbyteArray {
+	private static class ContainsbyteArray {
 		@Id ObjectId id;
 		byte[] bytes = "Scott".getBytes();
 	}
 
-	public static class ContainsSerializedData{
+	private static class ContainsSerializedData{
 		@Id ObjectId id;
 		@Serialized SerializableClass data = new SerializableClass();
 	}
 
-	public static class ContainsLongAndStringArray {
+	private static class ContainsLongAndStringArray {
 		@Id ObjectId id;
 		private Long[] longs = {0L, 1L, 2L};
 		String[] strings = {"Scott", "Rocks"};
 	}
 	
-	public static class ContainsCollection {
+	private static class ContainsCollection {
 		@Id ObjectId id;
 		Collection<String> coll = new ArrayList<String>();
 		
@@ -171,13 +187,29 @@ public class TestMapping  extends TestBase {
 		}
 	}
 	
-	public static class ContainsPrimitiveMap{
+	private static class ContainsPrimitiveMap{
 		@Id ObjectId id;
 		@Embedded public Map<String, Long> embeddedValues = new HashMap();
 		public Map<String, Long> values = new HashMap();
 	}
 
-	public static class ContainsEmbeddedEntity{
+	private static interface Foo {
+	}
+	
+	private static class Foo1 implements Foo {
+		String s;
+	}
+
+	private static class Foo2 implements Foo {
+		int i;
+	}
+	
+	private static class ContainsMapWithEmbeddedInterface{
+		@Id ObjectId id;
+		@Embedded public Map<String, Foo> embeddedValues = new HashMap();
+	}
+
+	private static class ContainsEmbeddedEntity{
 		@Id ObjectId id = new ObjectId();
 		@Embedded ContainsIntegerList cil = new ContainsIntegerList();
 	}
@@ -185,19 +217,19 @@ public class TestMapping  extends TestBase {
 	public enum Enum1 { A, B }
 
 	@Entity(value="cil", noClassnameStored=true)
- 	public static class ContainsIntegerList {
+ 	private static class ContainsIntegerList {
 		@Id ObjectId id;
 		List<Integer> intList = new ArrayList<Integer>();
 	}
 
- 	public static class ContainsIntegerListNewAndOld {
+ 	private static class ContainsIntegerListNewAndOld {
 		@Id ObjectId id;
 		List<Integer> intList = new ArrayList<Integer>();
 		List<Integer> ints = new ArrayList<Integer>();
 	}
 
 	@Entity(value="cil", noClassnameStored=true)
-	public static class ContainsIntegerListNew {
+	private static class ContainsIntegerListNew {
 		@Id ObjectId id;
 		@AlsoLoad("intList") List<Integer> ints = new ArrayList<Integer>();
 	}
@@ -213,60 +245,46 @@ public class TestMapping  extends TestBase {
 		@Id UUID id = UUID.randomUUID();
 	}
 	
-	public static class ContainsEnum1KeyMap{
+	private static class ContainsEnum1KeyMap{
 		@Id ObjectId id;
 		public Map<Enum1, String> values = new HashMap<Enum1,String>();
 		@Embedded
 		public Map<Enum1, String> embeddedValues = new HashMap<Enum1,String>();
 	}
 
-	public static class ContainsIntKeyMap {
+	private static class ContainsIntKeyMap {
 		@Id ObjectId id;
 		public Map<Integer, String> values = new HashMap<Integer,String>();
 	}
 
-	public static class ContainsIntKeySetStringMap {
+	private static class ContainsIntKeySetStringMap {
 		@Id ObjectId id;
 		@Embedded
 		public Map<Integer, Set<String>> values = new HashMap<Integer,Set<String>>();
 	}
 	
-	public static class ContainsObjectIdKeyMap{
+	private static class ContainsObjectIdKeyMap{
 		@Id ObjectId id;
 		public Map<ObjectId, String> values = new HashMap<ObjectId,String>();
 	}
 	
-	public static class ContainsXKeyMap<T>{
+	private static class ContainsXKeyMap<T>{
 		@Id ObjectId id;
 		public Map<T, String> values = new HashMap<T,String>();
 	}
 	
-	public static class ContainsMapLike {
+	private static class ContainsMapLike {
 		@Id ObjectId id;
 		MapLike m = new MapLike();
 	}
 	
-	public static abstract class BaseEntity implements Serializable{
-		private static final long serialVersionUID = 1L;
-
-		public BaseEntity() {}
-	
-		@Id ObjectId id;
-		public String getId() {
-			return id.toString();
-		}
-	
-       public void setId(String id) {
-    	   this.id = new ObjectId(id);
-       }
-	}
 	@Entity
-	public static class UsesBaseEntity extends BaseEntity{
+	private static class UsesBaseEntity extends BaseEntity{
 		private static final long serialVersionUID = 1L;
 		
 	}
 
-	public static class MapSubclass extends LinkedHashMap<String, Object> {
+	private static class MapSubclass extends LinkedHashMap<String, Object> {
 		private static final long serialVersionUID = 1L;
 		@Id ObjectId id;
 	}
@@ -508,11 +526,11 @@ public class TestMapping  extends TestBase {
 	}
 
 	@Test
-    public void testMapWithEmbeddedInterface() throws Exception {
+    public void testPrimMapWithNullValue() throws Exception {
 		ContainsPrimitiveMap primMap = new ContainsPrimitiveMap();
-		primMap.embeddedValues.put("first",1L);
+		primMap.embeddedValues.put("first",null);
 		primMap.embeddedValues.put("second",2L);
-		primMap.values.put("first",1L);
+		primMap.values.put("first",null);
 		primMap.values.put("second",2L);
 		Key<ContainsPrimitiveMap> primMapKey = ds.save(primMap);
 		
@@ -521,6 +539,25 @@ public class TestMapping  extends TestBase {
 		assertNotNull(primMapLoaded);
 		assertEquals(2,primMapLoaded.embeddedValues.size());
 		assertEquals(2,primMapLoaded.values.size());
+	}
+
+	@Test
+    public void testMapWithEmbeddedInterface() throws Exception {
+		ContainsMapWithEmbeddedInterface aMap = new ContainsMapWithEmbeddedInterface();
+		Foo f1 = new Foo1();
+		Foo f2 = new Foo2();
+		
+		aMap.embeddedValues.put("first",f1);
+		aMap.embeddedValues.put("second",f2);
+		ds.save(aMap);
+		
+		ContainsMapWithEmbeddedInterface mapLoaded = ds.find(ContainsMapWithEmbeddedInterface.class).get();
+		
+		assertNotNull(mapLoaded);
+		assertEquals(2, mapLoaded.embeddedValues.size());
+		assertTrue(mapLoaded.embeddedValues.get("first") instanceof Foo1);
+		assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
+		
 	}
 
 	@Test

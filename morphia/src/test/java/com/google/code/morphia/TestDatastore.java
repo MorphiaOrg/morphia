@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +43,6 @@ import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.AssertedFailure;
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 /**
@@ -186,22 +183,6 @@ public class TestDatastore  extends TestBase {
     public void testMorphiaDS() throws Exception {
 //		Datastore ds = new Morphia().createDatastore(mongo);
 		Datastore ds = new Morphia().createDatastore(mongo, "test");
-	}
-	@Test
-    public void testLowlevelbyteArray() throws Exception {
-		DBCollection c = mongo.getDB("test").getCollection( "testBinary" );
-	    c.drop();
-	    DBObject loaded;
-	    Iterator<DBObject> it = c.find(new BasicDBObject(), null, 0, 1);
-	    if (it != null && it.hasNext()) loaded = it.next();
-	    
-	    c.save( BasicDBObjectBuilder.start().add( "a" , "eliot".getBytes() ).get() );
-	    
-	    DBObject out = c.findOne();
-	    loaded = c.find(new BasicDBObject(), null, 0, 1).next();
-	    assertEquals(new String((byte[])out.get("a")), new String((byte[])loaded.get("a")));
-	    byte[] b = (byte[])(out.get( "a" ) );
-	    assertEquals( "eliot" , new String( b ) );
 	}
 	
 	@Test
