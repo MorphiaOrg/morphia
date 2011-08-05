@@ -51,6 +51,8 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.mapping.MappingException;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /**
@@ -203,7 +205,8 @@ public class ReflectionUtils
         }
 
         return  isPrimitiveLike(type) || (type == DBRef.class) || (type == Pattern.class) || 
-        		(type == CodeWScope.class) || (type == ObjectId.class) || (type == Key.class) ;
+        		(type == CodeWScope.class) || (type == ObjectId.class) || (type == Key.class) || 
+        		(type == DBObject.class) || (type == BasicDBObject.class)  ;
     }
     
     public static boolean isPrimitiveLike(final Class type) {

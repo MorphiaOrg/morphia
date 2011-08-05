@@ -161,6 +161,11 @@ public class TestMapping  extends TestBase {
 		@Id ObjectId id;
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 	}
+
+	private static class ContainsDBObject {
+		@Id ObjectId id;
+		DBObject dbObj = BasicDBObjectBuilder.start("field", "val").get();
+	}
 	
 	private static class ContainsbyteArray {
 		@Id ObjectId id;
@@ -300,6 +305,13 @@ public class TestMapping  extends TestBase {
 		assertNotNull(loaded.id);
 		assertNotNull(loaded.uuid);
 		assertEquals(before, loaded.uuid);
+	}
+	@Test
+    public void testEmbeddedDBObject() throws Exception {
+		morphia.map(ContainsDBObject.class);
+		ContainsDBObject cdbo = new ContainsDBObject();
+		ds.save(cdbo);
+		assertNotNull(ds.find(ContainsDBObject.class).get());
 	}
 	
 	@Test
