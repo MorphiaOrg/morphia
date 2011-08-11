@@ -7,8 +7,10 @@ package com.google.code.morphia.query;
  */
 public enum FilterOperator {
 	NEAR("$near"),
+	NEAR_SPHERE("$nearSphere"),
 	WITHIN("$within"),
 	WITHIN_CIRCLE("$center"),
+	WITHIN_CIRCLE_SPHERE("$centerSphere"),
 	WITHIN_BOX("$box"),
 	EQUAL("$eq"),
 	GREATER_THAN("$gt"),

@@ -20,10 +20,16 @@ public class GeoFieldCriteria extends FieldCriteria {
 			case NEAR:
 				query = BasicDBObjectBuilder.start(FilterOperator.NEAR.val(), value);
 				break;
+			case NEAR_SPHERE:
+				query = BasicDBObjectBuilder.start(FilterOperator.NEAR_SPHERE.val(), value);
+				break;
 			case WITHIN_BOX:
 				query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(operator.val(), value);
 				break;
 			case WITHIN_CIRCLE:
+				query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(operator.val(), value);
+				break;
+			case WITHIN_CIRCLE_SPHERE:
 				query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(operator.val(), value);
 				break;
 			default:
