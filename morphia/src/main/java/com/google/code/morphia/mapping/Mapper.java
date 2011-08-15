@@ -351,13 +351,31 @@ public class Mapper {
 		//convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
 		if ((mf!=null && (	mf.hasAnnotation(Reference.class) || 
 							mf.getType().isAssignableFrom(Key.class) || 
-							mf.getType().isAssignableFrom(DBRef.class))
-						 ) || (mc != null && mc.getEntityAnnotation() != null)) {
+							mf.getType().isAssignableFrom(DBRef.class) ||
+							//Collection/Array/???
+							(value instanceof Iterable && (
+									mf.getSubClass().isAssignableFrom(Key.class) || 
+									mf.getSubClass().isAssignableFrom(DBRef.class) )
+							)
+						 )) || (mc != null && mc.getEntityAnnotation() != null)) {
 			try {
-				Key<?> k = (value instanceof Key) ? (Key<?>)value : getKey(value);
-				mappedValue = keyToRef(k);
+				if (value instanceof Iterable) {
+					ArrayList<DBRef> refs = new ArrayList<DBRef>();
+					Iterable it = (Iterable)value;
+					for(Object o : it){
+						Key<?> k = (o instanceof Key) ? (Key<?>)o : getKey(o);
+						DBRef dbref = keyToRef(k);
+						refs.add(dbref);
+					}
+					mappedValue = refs;
+				} else {
+					Key<?> k = (value instanceof Key) ? (Key<?>)value : getKey(value);
+					mappedValue = keyToRef(k);
+					if (mappedValue == value)
+						throw new ValidationException("cannnot map to @Reference/Key<T>/DBRef field");
+				}
 			} catch (Exception e) {
-				log.debug("Error converting value(" + value + ") to reference.", e);
+				log.error("Error converting value(" + value + ") to reference.", e);
 				mappedValue = toMongoObject(value, false);
 			}
 		}//serialized

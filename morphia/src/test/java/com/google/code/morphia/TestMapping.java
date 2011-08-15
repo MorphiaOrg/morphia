@@ -111,6 +111,10 @@ public class TestMapping  extends TestBase {
 	private static class RenamedEmbedded {
 		String name;
 	}
+
+	private static class StranglyNamedIdField {
+		@Id ObjectId id_ = new ObjectId();
+	}
 	
 	private static class ContainsEmbeddedArray {
 		@Id ObjectId id = new ObjectId();
@@ -571,7 +575,12 @@ public class TestMapping  extends TestBase {
 		assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
 		
 	}
-
+	
+	@Test
+    public void testIdFieldWithUnderscore() throws Exception {
+		morphia.map(StranglyNamedIdField.class);
+	}
+	
 	@Test
     public void testFinalIdField() throws Exception {
 		morphia.map(HasFinalFieldId.class);
