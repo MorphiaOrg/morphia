@@ -16,7 +16,7 @@ import com.google.code.morphia.annotations.Id;
  *
  */
 public class ByteArrayMappingTest extends TestBase {
-	public static class ContainsByteArray {
+	private static class ContainsByteArray {
 		@Id ObjectId id;
 		Byte[] ba;
 	}

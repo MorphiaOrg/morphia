@@ -3,8 +3,11 @@
  */
 package com.google.code.morphia.converters;
 
+import java.util.ArrayList;
+
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.utils.ReflectionUtils;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -25,6 +28,10 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
 		
 		if (val instanceof Number)
 			return ((Number) val).doubleValue();
+
+		//super-hacky
+		if (val instanceof ArrayList)
+			return ReflectionUtils.convertToArray(double.class, (ArrayList)val);
 
 		String sVal = val.toString();
 		return Double.parseDouble(sVal);
