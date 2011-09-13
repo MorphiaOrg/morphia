@@ -162,8 +162,10 @@ public class Mapper {
 		mappedClasses.put(mc.getClazz().getName(), mc);
 		
 		Set<MappedClass> mcs = mappedClassesByCollection.get(mc.getCollectionName());
-		if (mcs == null)
+		if (mcs == null) {
 			mcs = new HashSet();
+			mappedClassesByCollection.put(mc.getCollectionName(), mcs);
+		}
 		mcs.add(mc);
 
 		return mc;
@@ -205,6 +207,8 @@ public class Mapper {
 	}
 
 	public String getCollectionName(Object object) {
+		if (object == null) throw new IllegalArgumentException();
+		
 		MappedClass mc = getMappedClass(object);
 		return mc.getCollectionName();
 	}
