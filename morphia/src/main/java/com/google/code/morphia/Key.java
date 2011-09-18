@@ -51,7 +51,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 
 	/** Create a key with an id */
 	public Key(String kind, Object id) {
-		this.kind = kind;
+		this.kind = kind.intern();
 		this.id = id;
 	}
 
@@ -73,7 +73,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 	 * sets the collection-name.
 	 */
 	public void setKind(String newKind) {
-		kind = newKind;
+		kind = newKind.intern();
 	}
 
 	public void setKindClass(Class<? extends T> clazz) {
