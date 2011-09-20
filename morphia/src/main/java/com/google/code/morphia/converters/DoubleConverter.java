@@ -13,7 +13,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class DoubleConverter extends TypeConverter implements SimpleValueConverter{
 
 	public DoubleConverter() { super(double.class, Double.class); }
@@ -29,7 +29,7 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
 		if (val instanceof Number)
 			return ((Number) val).doubleValue();
 
-		//super-hacky
+		//FixMe: super-hacky
 		if (val instanceof ArrayList)
 			return ReflectionUtils.convertToArray(double.class, (ArrayList)val);
 
