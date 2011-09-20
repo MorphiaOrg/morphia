@@ -48,6 +48,10 @@ class ReferenceMapper implements CustomMapper {
 	}
 	
 	private void writeSingle(BasicDBObject dbObject, String name, Object fieldValue, Mapper mapr) {
+		if (fieldValue == null) 
+			if(mapr.getOptions().storeNulls)
+				dbObject.put(name, null);
+		
 		DBRef dbrefFromKey = mapr.keyToRef(getKey(fieldValue, mapr));
 		dbObject.put(name, dbrefFromKey);
 	}
@@ -60,17 +64,17 @@ class ReferenceMapper implements CustomMapper {
 				ProxiedEntityReferenceList p = (ProxiedEntityReferenceList) fieldValue;
 				List<Key<?>> getKeysAsList = p.__getKeysAsList();
 				for (Key<?> key : getKeysAsList) {
-					values.add(mapr.keyToRef(key));
+					addValue(values, key, mapr);
 				}
 			} else {
 				
 				if (mf.getType().isArray()) {
 					for (Object o : (Object[]) fieldValue) {
-						values.add(mapr.keyToRef(getKey(o, mapr)));
+						addValue(values, o, mapr);
 					}
 				} else {
 					for (Object o : (Iterable) fieldValue) {
-						values.add(mapr.keyToRef(getKey(o, mapr)));
+						addValue(values, o, mapr);
 					}
 				}
 			}
@@ -78,6 +82,18 @@ class ReferenceMapper implements CustomMapper {
 				dbObject.put(name, values);
 			}
 		}
+	}
+	
+	private void addValue(List vals, Object o, Mapper mapr) {
+		if (o == null && mapr.getOptions().storeNulls) {
+			vals.add(null);
+			return;
+		}
+		
+		if (o instanceof Key)
+			vals.add(mapr.keyToRef((Key)o));
+		else
+			vals.add(mapr.keyToRef(getKey(o, mapr)));
 	}
 	
 	private void writeMap(final MappedField mf, final BasicDBObject dbObject, String name, Object fieldValue,
@@ -153,7 +169,6 @@ class ReferenceMapper implements CustomMapper {
 
 		DBRef dbRef = (DBRef) mf.getDbObjectValue(dbObject);
 		if (dbRef != null) {
-			
 			Object resolvedObject = null;
 			if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
 				if (exists(referenceObjClass, dbRef, cache, mapr)) {
@@ -168,7 +183,8 @@ class ReferenceMapper implements CustomMapper {
 				resolvedObject = resolveObject(dbRef, mf, cache, mapr);
 			}
 			
-			mf.setFieldValue(entity, resolvedObject);
+			if ( resolvedObject != null )
+				mf.setFieldValue(entity, resolvedObject);
 			
 		}
 	}
@@ -223,13 +239,18 @@ class ReferenceMapper implements CustomMapper {
 					for (Object dbRefObj : refList) {
 						DBRef dbRef = (DBRef) dbRefObj;
 						Object ent = resolveObject(dbRef, mf, cache, mapr);
-						if (ent != null) 
-							references.add(ent);
+						if (ent == null) {
+							log.warning("Null reference found when retrieving value for " + mf.getFullName());
+							continue;
+						}
+						references.add(ent);
 					}
 				} else {
 					DBRef dbRef = (DBRef) dbVal;
 					Object ent = resolveObject(dbRef, mf, cache, mapr);
-					if (ent != null) 
+					if (ent == null)
+						log.warning("Null reference found when retrieving value for " + mf.getFullName());
+					else
 						references.add(ent);
 				}
 			}
@@ -262,6 +283,8 @@ class ReferenceMapper implements CustomMapper {
 	}
 	
 	Object resolveObject(final DBRef dbRef, final MappedField mf, EntityCache cache, Mapper mapr) {
+		if (dbRef == null)
+			return null;
 		
 		Key key = mapr.createKey(mf.isSingleValue() ? mf.getType() : mf.getSubClass(), dbRef.getId());
 		
