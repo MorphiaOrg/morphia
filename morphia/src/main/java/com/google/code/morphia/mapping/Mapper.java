@@ -357,7 +357,7 @@ public class Mapper {
 							mf.getType().isAssignableFrom(Key.class) || 
 							mf.getType().isAssignableFrom(DBRef.class) ||
 							//Collection/Array/???
-							(value instanceof Iterable && (
+							(value instanceof Iterable  && mf.isMultipleValues() && (
 									mf.getSubClass().isAssignableFrom(Key.class) || 
 									mf.getSubClass().isAssignableFrom(DBRef.class) )
 							)
