@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.cache.EntityCache;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 /**
  * 
@@ -14,7 +14,7 @@ import com.mongodb.DBCursor;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
-	protected final DBCursor wrapped;
+	protected final Iterator<DBObject> wrapped;
 	protected final Mapper m;
 	protected final Class<T> clazz;
 	protected final String kind;
@@ -22,7 +22,7 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	protected long  driverTime = 0;
 	protected long  mapperTime= 0;
 
-	public MorphiaIterator(DBCursor it, Mapper m, Class<T> clazz, String kind, EntityCache cache) {
+	public MorphiaIterator(Iterator<DBObject> it, Mapper m, Class<T> clazz, String kind, EntityCache cache) {
 		this.wrapped = it;
 		this.m = m;
 		this.clazz = clazz;
@@ -44,25 +44,25 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	
 	public V next() {
 		if(!hasNext()) throw new NoSuchElementException();
-    	BasicDBObject dbObj = getNext();
+    	DBObject dbObj = getNext();
     	return processItem(dbObj);
 	}
 	
-	protected V processItem(BasicDBObject dbObj) {
+	protected V processItem(DBObject dbObj) {
     	long start = System.currentTimeMillis();
 		V item = convertItem(dbObj);
     	mapperTime += System.currentTimeMillis() - start;
 		return (V) item;
 	}
 	
-	protected BasicDBObject getNext() {
+	protected DBObject getNext() {
 		long start = System.currentTimeMillis();
-		BasicDBObject dbObj = (BasicDBObject) wrapped.next();
+		DBObject dbObj = (DBObject) wrapped.next();
     	driverTime += System.currentTimeMillis() - start;
     	return dbObj;
 	}
 	
-	protected V convertItem(BasicDBObject dbObj) {
+	protected V convertItem(DBObject dbObj) {
 		return (V) m.fromDBObject(clazz, dbObj, cache);
 	}
 	
@@ -83,11 +83,11 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V>{
 	}
 	
 	public DBCursor getCursor() {
-		return wrapped;
+		return (DBCursor)wrapped;
 	}
 	
 	public void close() {
-		if (wrapped != null)
-			wrapped.close();
+		if (wrapped != null && wrapped instanceof DBCursor)
+			((DBCursor)wrapped).close();
 	}
 }

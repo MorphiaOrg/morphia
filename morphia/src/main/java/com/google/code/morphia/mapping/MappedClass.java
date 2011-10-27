@@ -84,7 +84,7 @@ public class MappedClass {
 			PostLoad.class};
 	
 	/** Annotations we were interested in, and found. */
-	private Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
+	private Map<Class<? extends Annotation>, ArrayList<Annotation>> foundAnnotations = new HashMap<Class<? extends Annotation>, ArrayList<Annotation>>();
 	
 	/** Methods which are life-cycle events */
 	private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
@@ -107,12 +107,29 @@ public class MappedClass {
 		if (log.isTraceEnabled())
 			log.trace("Creating MappedClass for " + clazz);
 		
+		basicValidate();
 		discover();
 
 		if (log.isDebugEnabled())
 			log.debug("MappedClass done: " + toString());
 	}
 	
+	protected void basicValidate() {
+		boolean isstatic = Modifier.isStatic(clazz.getModifiers());
+		if (!isstatic && clazz.isMemberClass())
+			throw new MappingException("Cannot use non-static inner class: " + clazz + ". Please make static.");
+	}
+	
+	public void update(){
+		embeddedAn = (Embedded) getAnnotation(Embedded.class);
+		entityAn = (Entity)getAnnotation(Entity.class);
+		// polymorphicAn = (Polymorphic) getAnnotation(Polymorphic.class);
+		List<MappedField> fields =  getFieldsAnnotatedWith(Id.class);
+		if (fields != null && fields.size() > 0)
+			idField = fields.get(0).field;
+		
+		
+	}
 	/** Discovers interesting (that we care about) things about the class. */
 	protected void discover() {
 		for (Class<? extends Annotation> c : interestingAnnotations) {
@@ -122,7 +139,7 @@ public class MappedClass {
 		List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();
 		lifecycleClasses.add(clazz);
 		
-		EntityListeners entityLisAnn = (EntityListeners) foundAnnotations.get(EntityListeners.class);
+		EntityListeners entityLisAnn = (EntityListeners) getAnnotation(EntityListeners.class);
 		if (entityLisAnn != null && entityLisAnn.value() != null && entityLisAnn.value().length != 0)
 			for (Class<?> c : entityLisAnn.value())
 				lifecycleClasses.add(c);
@@ -137,9 +154,7 @@ public class MappedClass {
 			}
 		}
 		
-		embeddedAn = (Embedded)foundAnnotations.get(Embedded.class);
-		entityAn = (Entity)foundAnnotations.get(Entity.class);
-		// polymorphicAn = (Polymorphic) releventAnnotations.get(Polymorphic.class);
+		update();
 		collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 		
 		for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
@@ -154,9 +169,9 @@ public class MappedClass {
 			else if (mapr.getOptions().ignoreFinals && ((fieldMods & Modifier.FINAL) == Modifier.FINAL))
 				continue;
 			else if (field.isAnnotationPresent(Id.class)) {
-					idField = field;
-					MappedField mf = new MappedField(idField, clazz);
+					MappedField mf = new MappedField(field, clazz);
 					persistenceFields.add(mf);
+					update();
 			} else if (	field.isAnnotationPresent(Property.class) ||
 						field.isAnnotationPresent(Reference.class) ||
 						field.isAnnotationPresent(Embedded.class) ||
@@ -184,6 +199,17 @@ public class MappedClass {
 			lifecycleMethods.put(lceClazz, methods);
 		}
 	}
+
+	public void addAnnotation(Class<? extends Annotation> clazz, Annotation ann) {
+		if (ann == null || clazz == null) return;
+		
+		if (!this.foundAnnotations.containsKey(clazz)) {
+			ArrayList<Annotation> list = new ArrayList<Annotation>();
+			foundAnnotations.put(clazz, list);
+		}
+
+		foundAnnotations.get(clazz).add(ann);
+	}
 	
 	public List<ClassMethodPair> getLifecycleMethods(Class<Annotation> clazz) {
 		return lifecycleMethods.get(clazz);
@@ -193,12 +219,13 @@ public class MappedClass {
 	 * Adds the annotation, if it exists on the field.
 	 * @param clazz
 	 */
-	private void addAnnotation(Class<? extends Annotation> c) {
-		Annotation ann = ReflectionUtils.getAnnotation(getClazz(), c);
-		if (ann != null)
-			foundAnnotations.put(c, ann);
+	private void addAnnotation(Class<? extends Annotation> clazz) {
+		ArrayList<? extends Annotation> anns = ReflectionUtils.getAnnotations(getClazz(), clazz);
+		for(Annotation ann : anns) {
+			addAnnotation(clazz, ann);
+		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "MappedClass - kind:" + this.getCollectionName() + " for " + this.getClazz().getName() + " fields:" + persistenceFields;
@@ -374,15 +401,24 @@ public class MappedClass {
 	/**
 	 * @return the releventAnnotations
 	 */
-	public Map<Class<? extends Annotation>, Annotation> getReleventAnnotations() {
+	public Map<Class<? extends Annotation>, ArrayList<Annotation>> getReleventAnnotations() {
 		return foundAnnotations;
 	}
 	
 	/**
-	 * @return the instance if it was found
+	 * @return the instance if it was found, if more than onw was found, the last one added
 	 */
 	public Annotation getAnnotation(Class<? extends Annotation> clazz) {
-		return foundAnnotations.get(clazz);
+		ArrayList<Annotation> found = foundAnnotations.get(clazz);
+		return (found != null && found.size() > 0) ? found.get(found.size()-1) : null;
+	}
+
+	/**
+	 * @return the instance if it was found, if more than onw was found, the last one added
+	 */
+	public ArrayList<Annotation> getAnnotations(Class<? extends Annotation> clazz) {
+		ArrayList<Annotation> found = foundAnnotations.get(clazz);
+		return found;
 	}
 	
 	/**

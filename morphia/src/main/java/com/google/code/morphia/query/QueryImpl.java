@@ -182,6 +182,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 			log.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
 
 		DBCursor cursor = dbColl.find(query, fields);
+		cursor.setDecoderFactory( this.ds.getDecoderFact() );
+		
 		if (offset > 0)
 			cursor.skip(offset);
 		if (limit > 0)

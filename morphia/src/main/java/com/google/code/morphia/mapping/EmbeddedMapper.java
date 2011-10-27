@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.code.morphia.mapping.cache.EntityCache;
+import com.google.code.morphia.utils.IterHelper;
+import com.google.code.morphia.utils.IterHelper.MapIterCallback;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -19,7 +21,7 @@ import com.mongodb.DBObject;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 class EmbeddedMapper implements CustomMapper{
-	public void toDBObject(final Object entity, final MappedField mf, final BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
+	public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		String name = mf.getNameToStore();
 		
 		Object fieldValue = mf.getFieldValue(entity);
@@ -47,7 +49,7 @@ class EmbeddedMapper implements CustomMapper{
 		}
 	}
 
-	private void writeCollection(final MappedField mf, final BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
+	private void writeCollection(final MappedField mf, final DBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
 		Iterable coll = null;
 		
 		if (mf.isArray)
@@ -79,7 +81,7 @@ class EmbeddedMapper implements CustomMapper{
 		}
 	}
 
-	private void writeMap(final MappedField mf, final BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
+	private void writeMap(final MappedField mf, final DBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
 		Map<String, Object> map = (Map<String, Object>) fieldValue;
 		if (map != null) {
 			BasicDBObject values = new BasicDBObject();
@@ -188,13 +190,13 @@ class EmbeddedMapper implements CustomMapper{
 		}
 	}
 	
-	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, EntityCache cache, Mapper mapr) {
-		Map map = mapr.getOptions().objectFactory.createMap(mf);
+	private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache, final Mapper mapr) {
+		final Map map = mapr.getOptions().objectFactory.createMap(mf);
 		
-		BasicDBObject dbVal = (BasicDBObject) mf.getDbObjectValue(dbObject);
-		if (dbVal != null) {
-			for (Map.Entry entry : dbVal.entrySet()) {
-				Object val = entry.getValue();
+		DBObject dbObj = (DBObject) mf.getDbObjectValue(dbObject);
+		new IterHelper<Object, Object>().loopMap((Object)dbObj, new MapIterCallback<Object, Object>() {
+			@Override
+			public void eval(Object key, Object val) {
 				Object newEntity = null;
 				
 				//run converters
@@ -211,10 +213,9 @@ class EmbeddedMapper implements CustomMapper{
 					}
 				}
 
-				Object objKey = mapr.converters.decode(mf.getMapKeyClass(), entry.getKey());
-				map.put(objKey, newEntity);
-			}
-		}
+				Object objKey = mapr.converters.decode(mf.getMapKeyClass(), key);
+				map.put(objKey, newEntity);			}
+		});
 		
 		if (map.size() > 0) {
 			mf.setFieldValue(entity, map);

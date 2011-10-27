@@ -2,6 +2,7 @@ package com.google.code.morphia;
 
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
+import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.WriteConcern;
@@ -55,4 +56,8 @@ public interface AdvancedDatastore extends Datastore {
 
 	
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind, DBObject ops);
+	
+	DBDecoderFactory setDecoderFact(DBDecoderFactory fact);
+	DBDecoderFactory getDecoderFact();
+	
 }

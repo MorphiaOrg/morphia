@@ -1,5 +1,6 @@
 package com.google.code.morphia;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Indexes;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -43,6 +45,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.Mongo;
@@ -64,6 +67,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	protected Mongo mongo;
 	protected DB db;
 	protected WriteConcern defConcern = WriteConcern.SAFE;
+	protected DBDecoderFactory decoderFactory = null;
 	
 	public DatastoreImpl(Mapper mapr, Mongo mongo, String dbName) {
 		this.mapr = mapr;
@@ -285,13 +289,16 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 			return;
 
 		//Ensure indexes from class annotation
-		Indexes idxs = (Indexes) mc.getAnnotation(Indexes.class);
-		if (idxs != null && idxs.value() != null && idxs.value().length > 0)
-			for(Index index : idxs.value()) {
-				BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapr, true);
-				ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background, index.sparse() ? index.sparse() : false );
+		ArrayList<Annotation> idxs = mc.getAnnotations(Indexes.class);
+		if (idxs != null)
+			for(Annotation ann : idxs) {
+				Indexes idx = (Indexes) ann;
+				if (idx != null && idx.value() != null && idx.value().length > 0)
+					for(Index index : idx.value()) {
+						BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapr, true);
+						ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(), index.background() ? index.background() : background, index.sparse() ? index.sparse() : false );
+					}
 			}
-
 		//Ensure indexes from field annotations, and embedded entities
 		for (MappedField mf : mc.getPersistenceFields()) {
 			if (mf.hasAnnotation(Indexed.class)) {
@@ -635,6 +642,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 
 		Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
 		for (T ent : entities) {
+			MappedClass mc = mapr.getMappedClass(ent);
+			if (mc.getAnnotation(NotSaved.class) != null)
+				throw new MappingException("Entity type: " + mc.getClazz().getName() + " is marked as NotSaved which means you should not try to save it!");
 			ents.add(entityToDBObj(ent, involvedObjects));
 		}
 		
@@ -743,7 +753,9 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	protected <T> Key<T> save(DBCollection dbColl, T entity, WriteConcern wc) {
 		MappedClass mc = mapr.getMappedClass(entity);
-		
+		if (mc.getAnnotation(NotSaved.class) != null)
+			throw new MappingException("Entity type: " + mc.getClazz().getName() + " is marked as NotSaved which means you should not try to save it!");
+
 		WriteResult wr = null;
 		
 		//involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
@@ -1122,6 +1134,7 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		cr.throwOnError();
 		MapreduceResults mrRes = (MapreduceResults) mapr.fromDBObject(MapreduceResults.class, cr, createCache());
 		
+		
 		QueryImpl baseQ = null;
 		if (!MapreduceType.INLINE.equals(type))
 			baseQ = new QueryImpl(outputType, db.getCollection(mrRes.getOutputCollectionName()), this);
@@ -1165,4 +1178,10 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 	
 	public WriteConcern getDefaultWriteConcern() {return defConcern;} 
 	public void setDefaultWriteConcern(WriteConcern wc) {defConcern = wc;}
+
+	@Override
+	public DBDecoderFactory setDecoderFact(DBDecoderFactory fact) { return decoderFactory = fact; }
+
+	@Override
+	public DBDecoderFactory getDecoderFact() { return decoderFactory != null ? decoderFactory : mongo.getMongoOptions().dbDecoderFactory; }
 }

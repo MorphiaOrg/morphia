@@ -3,7 +3,6 @@ package com.google.code.morphia.mapping;
 import java.util.Map;
 
 import com.google.code.morphia.mapping.cache.EntityCache;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
@@ -12,7 +11,7 @@ import com.mongodb.DBObject;
  *
  */
 class ValueMapper implements CustomMapper {
-	public void toDBObject(Object entity, MappedField mf, BasicDBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
+	public void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapr) {
 		try {
 			mapr.converters.toDBObject(entity, mf, dbObject, mapr.getOptions());
 		} catch (Exception e) {

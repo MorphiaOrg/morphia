@@ -23,7 +23,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Entity;
@@ -150,7 +149,7 @@ public class TestPerf  extends TestBase{
     			insertTime < (rawInsertTime * WriteFailFactor ));
     }
 
-	@Test @Ignore
+	@Test
     public void testAddressLoadPerf() throws Exception {
     	insertAddresses(5001, true, false);
     	

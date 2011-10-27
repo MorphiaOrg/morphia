@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import org.bson.BSONEncoder;
+import org.bson.BasicBSONEncoder;
 
 import com.google.code.morphia.EntityInterceptor;
 import com.google.code.morphia.Key;
@@ -373,6 +374,9 @@ public class Mapper {
 					}
 					mappedValue = refs;
 				} else {
+					if (value == null) 
+						mappedValue = null;
+					
 					Key<?> k = (value instanceof Key) ? (Key<?>)value : getKey(value);
 					mappedValue = keyToRef(k);
 					if (mappedValue == value)
@@ -454,14 +458,14 @@ public class Mapper {
 	
 	DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects, boolean lifecycle) {
 		
-		BasicDBObject dbObject = new BasicDBObject();
+		DBObject dbObject = new BasicDBObject();
 		MappedClass mc = getMappedClass(entity);
 		
 		if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored())
 			dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
 
 		if (lifecycle)
-			dbObject = (BasicDBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
+			dbObject = (DBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
 		
 		for (MappedField mf : mc.getPersistenceFields()) {
 			try {
@@ -500,7 +504,7 @@ public class Mapper {
 		
 		MappedClass mc = getMappedClass(entity);
 		
-		dbObject = (BasicDBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
+		dbObject = (DBObject) mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
 		try {
 			for (MappedField mf : mc.getPersistenceFields()) {
 				readMappedField(dbObject, mf, entity, cache);
@@ -530,7 +534,7 @@ public class Mapper {
 		}		
 	}
 
-	private void writeMappedField(BasicDBObject dbObject, MappedField mf, Object entity, Map<Object, DBObject> involvedObjects) {
+	private void writeMappedField(DBObject dbObject, MappedField mf, Object entity, Map<Object, DBObject> involvedObjects) {
 		Class<? extends Annotation> annType = null;
 		
 		//skip not saved fields.
@@ -603,7 +607,7 @@ public class Mapper {
 			return createKey(clazz, (Serializable) id);
 		
 		//TODO: cache the encoders, maybe use the pool version of the buffer that the driver does.
-		BSONEncoder enc = new BSONEncoder();
+		BSONEncoder enc = new BasicBSONEncoder();
 		return new Key<T>(clazz, enc.encode(toDBObject(id)));
 	}
 

@@ -297,6 +297,10 @@ public class TestMapping  extends TestBase {
 		private static final long serialVersionUID = 1L;
 		@Id ObjectId id;
 	}
+	
+	private class NonStaticInnerClass {
+		@Id long id = 1;
+	}
 
 	@Test
     public void testUUID() throws Exception {
@@ -637,7 +641,7 @@ public class TestMapping  extends TestBase {
 		morphia.map(ContainsbyteArray.class);
 		Key<ContainsbyteArray> savedKey = ds.save(new ContainsbyteArray());
 		ContainsbyteArray loaded = ds.get(ContainsbyteArray.class, savedKey.getId());
-		assertEquals(new String(loaded.bytes), new String((new ContainsbyteArray()).bytes));
+		assertEquals(new String((new ContainsbyteArray()).bytes), new String(loaded.bytes));
 		assertNotNull(loaded.id);        
 	}
 	@Test
@@ -742,7 +746,14 @@ public class TestMapping  extends TestBase {
         	allGood = true;
         }
         assertTrue("Validation: Missing @Id field not not caught", allGood);
-    }
+        
+        allGood = false;
+        try {
+        	morphia.map(NonStaticInnerClass.class);
+        } catch (MappingException e) {
+        	allGood = true;
+        }
+        assertTrue("Validation: Non-static inner class allowed", allGood);    }
     
     
     @Test

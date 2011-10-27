@@ -8,6 +8,7 @@ import org.junit.Before;
 
 import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
+import com.mongodb.LazyDBDecoder;
 import com.mongodb.Mongo;
 
 public abstract class TestBase
@@ -32,6 +33,7 @@ public abstract class TestBase
         this.db = this.mongo.getDB("morphia_test");
         this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
         this.ads = (AdvancedDatastore) ds;
+        ads.setDecoderFact(LazyDBDecoder.FACTORY);
     }
 	
     protected void cleanup() {

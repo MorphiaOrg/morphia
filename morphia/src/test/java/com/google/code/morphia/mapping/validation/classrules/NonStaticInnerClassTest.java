@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.mapping.validation.ConstraintViolationException;
+import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.testutil.AssertedFailure;
 
 /**
@@ -34,7 +34,7 @@ public class NonStaticInnerClassTest extends TestBase {
 	
 	@Test
 	public void testInValidInnerClass() throws Exception {
-		new AssertedFailure(ConstraintViolationException.class) {
+		new AssertedFailure(MappingException.class) {
 			@Override
 			protected void thisMustFail() throws Throwable {
 				morphia.map(InValid.class);

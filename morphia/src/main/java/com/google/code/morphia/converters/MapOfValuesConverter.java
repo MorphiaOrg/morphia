@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.utils.IterHelper;
+import com.google.code.morphia.utils.IterHelper.MapIterCallback;
 import com.google.code.morphia.utils.ReflectionUtils;
 
 /**
@@ -30,15 +32,18 @@ public class MapOfValuesConverter extends TypeConverter {
 	}
 	
 	@Override
-	public Object decode(Class targetClass, Object fromDBObject, MappedField mf) throws MappingException {
+	public Object decode(Class targetClass, Object fromDBObject, final MappedField mf) throws MappingException {
 		if (fromDBObject == null) return null;
 
-		Map<Object, Object> map = (Map<Object, Object>) fromDBObject;
-		Map values = mapr.getOptions().objectFactory.createMap(mf);
-		for (Map.Entry<Object, Object> entry : map.entrySet()) {
-			Object objKey = converters.decode(mf.getMapKeyClass(), entry.getKey());
-			values.put(objKey, converters.decode(mf.getSubClass(), entry.getValue()));
-		}
+
+		final Map values = mapr.getOptions().objectFactory.createMap(mf);
+		new IterHelper<Object, Object>().loopMap((Object)fromDBObject, new MapIterCallback<Object, Object>() {
+			@Override
+			public void eval(Object key, Object val) {
+					Object objKey = converters.decode(mf.getMapKeyClass(), key);
+					values.put(objKey, converters.decode(mf.getSubClass(), val));
+				}});
+		
 		return values;
 	}
 	

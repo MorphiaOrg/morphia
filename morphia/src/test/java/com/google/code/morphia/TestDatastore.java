@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -43,7 +42,10 @@ import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.AssertedFailure;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
+import com.mongodb.LazyDBDecoder;
+import com.mongodb.LazyWriteableDBDecoder;
 
 /**
  *
@@ -144,7 +146,8 @@ public class TestDatastore  extends TestBase {
 		@SuppressWarnings("rawtypes")
 		@PreLoad
 		DBObject PreLoadWithParamAndReturn(DBObject dbObj) {
-			DBObject retObj = new BasicDBObject((Map)dbObj);
+			BasicDBObject retObj = new BasicDBObject();
+			retObj.putAll(dbObj);
 			retObj.put("preLoadWithParamAndReturn", true);
 			return retObj;
 		}
@@ -187,30 +190,50 @@ public class TestDatastore  extends TestBase {
 	
 	@Test
     public void testLifecycle() throws Exception {
-		LifecycleTestObj life1 = new LifecycleTestObj();
-		((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
-		ds.save(life1);
-		assertTrue(life1.prePersist);
-		assertTrue(life1.prePersistWithParam);
-		assertTrue(life1.prePersistWithParamAndReturn);
-		assertTrue(life1.postPersist);
-		assertTrue(life1.postPersistWithParam);
+		DBDecoderFactory oldFactory = ads.setDecoderFact(LazyWriteableDBDecoder.FACTORY);
+
+		//only replace if using lazy decoder
+		if (!(oldFactory instanceof LazyDBDecoder))
+			ads.setDecoderFact(oldFactory);
 		
-		LifecycleTestObj loaded = ds.get(life1);
-		assertTrue(loaded.preLoad);
-		assertTrue(loaded.preLoadWithParam);
-		assertTrue(loaded.preLoadWithParamAndReturn);
-		assertTrue(loaded.postLoad);
-		assertTrue(loaded.postLoadWithParam);
+		try {
+			LifecycleTestObj life1 = new LifecycleTestObj();
+			((DatastoreImpl) ds).getMapper().addMappedClass(LifecycleTestObj.class);
+			ds.save(life1);
+			assertTrue(life1.prePersist);
+			assertTrue(life1.prePersistWithParam);
+			assertTrue(life1.prePersistWithParamAndReturn);
+			assertTrue(life1.postPersist);
+			assertTrue(life1.postPersistWithParam);
+
+			LifecycleTestObj loaded = ds.get(life1);
+			assertTrue(loaded.preLoad);
+			assertTrue(loaded.preLoadWithParam);
+			assertTrue(loaded.preLoadWithParamAndReturn);
+			assertTrue(loaded.postLoad);
+			assertTrue(loaded.postLoadWithParam);
+		} finally {
+			ads.setDecoderFact(oldFactory);
+		}
 	}
 	
 	@Test
     public void testLifecycleListeners() throws Exception {
-		LifecycleTestObj life1 = new LifecycleTestObj();
-		((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
-		ds.save(life1);
-		assertTrue(LifecycleListener.prePersist);
-		assertTrue(LifecycleListener.prePersistWithEntity);
+		DBDecoderFactory oldFactory = ads.setDecoderFact(LazyWriteableDBDecoder.FACTORY);
+
+		//only replace if using lazy decoder
+		if (!(oldFactory instanceof LazyDBDecoder))
+			ads.setDecoderFact(oldFactory);
+
+		try {
+			LifecycleTestObj life1 = new LifecycleTestObj();
+			((DatastoreImpl)ds).getMapper().addMappedClass(LifecycleTestObj.class);
+			ds.save(life1);
+			assertTrue(LifecycleListener.prePersist);
+			assertTrue(LifecycleListener.prePersistWithEntity);
+		} finally {
+			ads.setDecoderFact(oldFactory);
+		}
 	}
 	@Test
     public void testCollectionNames() throws Exception {

@@ -45,7 +45,7 @@ public class QueryInForReferencedList extends TestBase {
 	}
 
 	@Entity("docs")
-	private class Doc {
+	static private class Doc {
 		@Id
 		public long id = 4;
 	}

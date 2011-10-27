@@ -414,34 +414,44 @@ public class ReflectionUtils
         return false;
     }
 
+    public static <T> T getAnnotation(final Class c, final Class<T> annClass){
+    	ArrayList<T> found = getAnnotations(c, annClass);
+    	if (found != null && found.size()>0)
+    		return found.get(0);
+    	else 
+    		return null;
+    }
+    
     /**
      * Returns the (first) instance of the annotation, on the class (or any
      * superclass, or interfaces implemented).
      */
-    public static <T> T getAnnotation(final Class c, final Class<T> ann)
+    public static <T> ArrayList<T> getAnnotations(final Class c, final Class<T> annClass)
     {
+		ArrayList<T> found = new ArrayList<T>();
         // TODO isn't that actually breaking the contract of @Inherited?
-        if (c.isAnnotationPresent(ann))
+        if (c.isAnnotationPresent(annClass))
         {
-            return (T) c.getAnnotation(ann);
+             found.add((T) c.getAnnotation(annClass));
         }
-        else
-        {
+//        else
+//        {
             // need to check all superclasses
+    		
             Class parent = c.getSuperclass();
             while ((parent != null) && (parent != Object.class))
             {
-                if (parent.isAnnotationPresent(ann))
+                if (parent.isAnnotationPresent(annClass))
                 {
-                    return (T) parent.getAnnotation(ann);
+                    found.add((T) parent.getAnnotation(annClass));
                 }
 
                 // ...and interfaces that the superclass implements
                 for (Class interfaceClass : parent.getInterfaces())
                 {
-                    if (interfaceClass.isAnnotationPresent(ann))
+                    if (interfaceClass.isAnnotationPresent(annClass))
                     {
-                        return (T) interfaceClass.getAnnotation(ann);
+                    	found.add((T) interfaceClass.getAnnotation(annClass));
                     }
                 }
 
@@ -451,14 +461,14 @@ public class ReflectionUtils
             // ...and all implemented interfaces
             for (Class interfaceClass : c.getInterfaces())
             {
-                if (interfaceClass.isAnnotationPresent(ann))
+                if (interfaceClass.isAnnotationPresent(annClass))
                 {
-                    return (T) interfaceClass.getAnnotation(ann);
+                	found.add((T)interfaceClass.getAnnotation(annClass));
                 }
             }
-        }
+//        }
         // no annotation found, use the defaults
-        return null;
+        return found;
     }
 
     public static Embedded getClassEmbeddedAnnotation(final Class c)
@@ -650,7 +660,7 @@ public class ReflectionUtils
 		return ar;
 	}
 
-	public static Object convertToArray(final Class type, final ArrayList<?> values) {
+	public static Object convertToArray(final Class type, final List<?> values) {
 		Object exampleArray = Array.newInstance(type, values.size());
 		try {
 			Object[] array = values.toArray((Object[]) exampleArray);

@@ -26,7 +26,6 @@ import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
@@ -124,7 +123,7 @@ public class Morphia {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-			return (T) mapper.fromDBObject(entityClass, (BasicDBObject) dbObject, cache);
+			return (T) mapper.fromDBObject(entityClass, dbObject, cache);
         } catch ( Exception e ) {
             throw new MappingException("Could not map entity from DBObject", e); }
     }

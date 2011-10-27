@@ -53,7 +53,7 @@ public class QueryImplCloneTest extends TestBase {
 		return (superclass == null || sameState(superclass, q1, q2));
 	}
 	
-	class E1 {
+	static class E1 {
 		@Id
 		ObjectId id;
 		
@@ -63,7 +63,7 @@ public class QueryImplCloneTest extends TestBase {
 		E2 e2 = new E2();
 	}
 	
-	class E2 {
+	static class E2 {
 		String foo;
 	}
 	

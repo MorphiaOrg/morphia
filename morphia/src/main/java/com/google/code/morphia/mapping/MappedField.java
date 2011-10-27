@@ -260,6 +260,10 @@ public class MappedField {
 	public <T extends Annotation> T getAnnotation(Class<T> clazz) {
 		return (T) foundAnnotations.get(clazz);
 	}
+
+	public Map<Class<? extends Annotation>, Annotation> getAnnotations() {
+		return foundAnnotations;
+	}
 	
 	/** Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered) */
 	public boolean hasAnnotation(Class ann) {
@@ -270,6 +274,16 @@ public class MappedField {
 	public void addAnnotation(Class<? extends Annotation> clazz) {
 		if (field.isAnnotationPresent(clazz))
 			this.foundAnnotations.put(clazz, field.getAnnotation(clazz));
+	}
+	
+	/** Adds the annotation, if it exists on the field. */
+	public void addAnnotation(Class<? extends Annotation> clazz, Annotation ann) {
+		this.foundAnnotations.put(clazz, ann);
+	}
+	
+	/** Adds the annotation even if not on the declared class/field. */
+	public Annotation putAnnotation(Annotation ann) {
+		return this.foundAnnotations.put(ann.getClass(), ann);
 	}
 
 	/** returns the full name of the class plus java field name */

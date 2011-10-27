@@ -29,10 +29,11 @@ public class ReferencesWIgnoreMissingTests extends TestBase
     }
     
     @Test
-    public void TestMissingCase() throws Exception {
+    public void TestMissingReference() throws Exception {
     	Container c = new Container();
     	c.refs = new StringHolder[] {new StringHolder(), new StringHolder()};
-    	ds.save(c, c.refs[0]);
+    	ds.save(c);
+    	ds.save(c.refs[0]);
     	
     	Container reloadedContainer = ds.find(Container.class).get();
     	Assert.assertNotNull(reloadedContainer);
