@@ -2,6 +2,8 @@ package com.google.code.morphia.query;
 
 import org.bson.types.CodeWScope;
 
+import com.mongodb.ReadPreference;
+
 /**
  * @author Scott Hernandez
  */
@@ -109,6 +111,9 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 	/** Route query to primary node  */
 	Query<T> queryPrimaryOnly();
 
+	/** Route query ReadPreference */
+	Query<T> useReadPreference(ReadPreference readPref);
+	
 	/** Disables cursor timeout on server. */
 	Query<T> disableCursorTimeout();
 

@@ -19,4 +19,10 @@ public class WhereCriteria extends AbstractCriteria implements Criteria {
 	public void addTo(DBObject obj) {
 		obj.put(FilterOperator.WHERE.val(), this.js);
 	}
+
+	@Override
+	public String getFieldName() {
+		return FilterOperator.WHERE.val();
+	}
+
 }

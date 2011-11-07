@@ -43,6 +43,7 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
@@ -347,6 +348,43 @@ public class TestQuery  extends TestBase {
 
         Assert.assertEquals(1, q.countAll());
     }
+    
+    @Test
+    public void testFluentAndOrQuery() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+        
+        AdvancedDatastore ads = (AdvancedDatastore) ds;
+        Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class);
+        q.and(
+        		q.or(q.criteria("keywords.keyword").equal("scott")),
+        		q.or(q.criteria("keywords.keyword").equal("hernandez")));
+    
+        Assert.assertEquals(1, q.countAll());
+        QueryImpl<PhotoWithKeywords> qi = (QueryImpl<PhotoWithKeywords>)q;
+        DBObject realCriteria = qi.prepareCursor().getQuery();
+        Assert.assertTrue(realCriteria.containsField("$and"));
+        
+    }
+
+    @Test
+    public void testFluentAndQuery1() throws Exception {
+        PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
+        ds.save(pwk);
+        
+        AdvancedDatastore ads = (AdvancedDatastore) ds;
+        Query<PhotoWithKeywords> q = ads.createQuery(PhotoWithKeywords.class);
+        q.and(
+        		q.criteria("keywords.keyword").hasThisOne("scott"),
+        		q.criteria("keywords.keyword").hasAnyOf(Arrays.asList("scott", "hernandez")));
+        
+        Assert.assertEquals(1, q.countAll());
+        QueryImpl<PhotoWithKeywords> qi = (QueryImpl<PhotoWithKeywords>)q;
+        DBObject realCriteria = qi.prepareCursor().getQuery();
+        Assert.assertTrue(realCriteria.containsField("$and"));
+        
+    }
+
 
     @Test
     public void testFluentNotQuery() throws Exception {

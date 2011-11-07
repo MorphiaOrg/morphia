@@ -25,6 +25,7 @@ import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.ReadPreference;
 
 /**
  * <p>Implementation of Query</p>
@@ -52,10 +53,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 	private Class<T> clazz = null;
 	private BasicDBObject baseQuery = null;
 	private boolean snapshotted = false;
-	private boolean slaveOk = false;
 	private boolean noTimeout = false;
 	private boolean tail = false;
 	private boolean tail_await_data;
+	private ReadPreference readPref = null;
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds) {
 		super(CriteriaJoin.AND);
@@ -69,7 +70,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
 		Entity entAn = mc == null ? null : mc.getEntityAnnotation();
 		if (entAn != null)
-			this.slaveOk = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary();
+			this.readPref = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary() ? ReadPreference.SECONDARY : null;
 	}
 	
 	public QueryImpl(Class<T> clazz, DBCollection coll, Datastore ds, int offset, int limit) {
@@ -95,7 +96,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		n.noTimeout = noTimeout;
 		n.query = n; // feels weird, correct?
 		n.offset = offset;
-		n.slaveOk = slaveOk;
+		n.readPref = readPref;
 		n.snapshotted = snapshotted;
 		n.validateName = validateName;
 		n.validateType = validateType;
@@ -197,8 +198,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		if (indexHint != null)
 			cursor.hint(indexHint);
 
-		if (slaveOk) {
-			cursor.addOption(Bytes.QUERYOPTION_SLAVEOK);
+		if (null != readPref) {
+			cursor.setReadPreference(readPref);
 		}
 		
 		if (noTimeout) {
@@ -513,13 +514,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		return this;
 	}
 
+	public Query<T> useReadPreference(ReadPreference readPref) {
+		this.readPref = readPref;
+		return this;
+	}
+
 	public Query<T> queryNonPrimary() {
-		slaveOk = true;
+		readPref = ReadPreference.SECONDARY;
 		return this;
 	}
 
 	public Query<T> queryPrimaryOnly() {
-		slaveOk = false;
+		readPref = ReadPreference.PRIMARY;
 		return this;
 	}
 
@@ -534,5 +540,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 		noTimeout = false;
 		return this;
 	}
+	
+	@Override
+	public String getFieldName() {
+		return null;
+	}
+
 
 }

@@ -1,7 +1,9 @@
 package com.google.code.morphia.query;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -36,10 +38,31 @@ public class CriteriaContainerImpl extends AbstractCriteria implements Criteria,
 	
 	public void addTo(DBObject obj) {
 		if (this.joinMethod == CriteriaJoin.AND) {
+			Set<String> fields = new HashSet<String>();
+			int nonNullFieldNames = 0;
 			for (Criteria child: this.children) {
-				child.addTo(obj);
+				if (null != child.getFieldName()) {
+					fields.add(child.getFieldName());
+					nonNullFieldNames++;
+				}
 			}
-			
+			if(fields.size() < nonNullFieldNames) {
+				//use $and
+				BasicDBList and = new BasicDBList();
+
+				for (Criteria child: this.children) {
+					BasicDBObject container = new BasicDBObject();
+					child.addTo(container);
+					and.add(container);
+				}
+				
+				obj.put("$and", and);
+			} else {
+				//no dup field names, don't use $and
+				for (Criteria child: this.children) {
+					child.addTo(obj);
+				}
+			}
 		} else if (this.joinMethod == CriteriaJoin.OR) {
 			BasicDBList or = new BasicDBList();
 
@@ -78,5 +101,10 @@ public class CriteriaContainerImpl extends AbstractCriteria implements Criteria,
 	
 	private FieldEnd<? extends CriteriaContainer> criteria(String field, boolean validateName) {
 		return new FieldEndImpl<CriteriaContainerImpl>(this.query, field, this, validateName);
+	}
+
+	@Override
+	public String getFieldName() {
+		return joinMethod.toString();
 	}
 }

@@ -82,6 +82,11 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 			((Map<String, Object>)inner).put(operator.val(), val);
 		}
 	}
+	
+	@Override
+	public String getFieldName() {
+		return field;
+	}
 
 	@Override
 	public String toString() {
