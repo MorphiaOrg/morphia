@@ -350,6 +350,16 @@ public class Mapper {
 		}
 	}
 	
+
+	/**
+	 * <p>
+	 * Converts a java object to a mongo-compatible object (possibly a DBObject
+	 * for complex mappings). Very similar to {@link Mapper.toDBObject}
+	 * </p>
+	 * <p>
+	 * Used (mainly) by query/update operations
+	 * </p>
+	 */
 	public Object toMongoObject(MappedField mf, MappedClass mc, Object value) {
 		Object mappedValue = value;
 		
