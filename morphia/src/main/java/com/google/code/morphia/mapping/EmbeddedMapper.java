@@ -52,10 +52,11 @@ class EmbeddedMapper implements CustomMapper{
 	private void writeCollection(final MappedField mf, final DBObject dbObject, Map<Object, DBObject> involvedObjects, String name, Object fieldValue, Mapper mapr) {
 		Iterable coll = null;
 		
-		if (mf.isArray)
-			coll =  Arrays.asList((Object[])fieldValue);
-		else
-			coll = (Iterable) fieldValue;
+		if (fieldValue != null)
+			if (mf.isArray)
+				coll =  Arrays.asList((Object[])fieldValue);
+			else
+				coll = (Iterable) fieldValue;
 		
 		if (coll != null) {
 			List values = new ArrayList();
