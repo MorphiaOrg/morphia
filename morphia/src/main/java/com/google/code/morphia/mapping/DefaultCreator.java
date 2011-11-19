@@ -81,7 +81,7 @@ public class DefaultCreator implements ObjectFactory {
 			// try to Class.forName(className) as defined in the dbObject first,
 			// otherwise return the entityClass
 			try {
-				c = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+				c = Class.forName(className, true, getClassLoaderForClass(className, dbObj));
 			} catch (ClassNotFoundException e) {
 				if (log.isWarningEnabled())
 					log.warning("Class not found defined in dbObj: " , e);
@@ -90,6 +90,10 @@ public class DefaultCreator implements ObjectFactory {
 		return c;
 	}
 
+	protected ClassLoader getClassLoaderForClass(String clazz, DBObject object) {
+		return Thread.currentThread().getContextClassLoader();
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.ObjectFactory#createMap(com.google.code.morphia.mapping.MappedField)
 	 */
