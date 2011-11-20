@@ -16,6 +16,7 @@
 
 package com.google.code.morphia.ext;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.lang.annotation.Annotation;
@@ -27,6 +28,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -40,12 +42,22 @@ import com.google.code.morphia.mapping.Mapper;
  */
 public class ExternalMapperExtTest extends TestBase {
 	
+	/**
+	 * The skeleton to apply from.
+	 * @author skot
+	 *
+	 */
 	@Entity("special")
-	private static class Template {
+	private static class Skeleton {
 		@Id String id;
 	}
 	
-	private static class Dest {
+	/**
+	 * Uneditable class
+	 * @author skot
+	 *
+	 */
+	private static class EntityWithNoAnnotations {
 		String id;
 	}
 	
@@ -93,17 +105,23 @@ public class ExternalMapperExtTest extends TestBase {
 		}
 		
 	@Test
-	public void testParamIdEntity() throws Exception {
+	public void testExternalMapping() throws Exception {
 		Mapper mapr = morphia.getMapper();
 		ExternalMapperExtTest.CloneMapper helper = new CloneMapper(mapr);
-		helper.map(Template.class, Dest.class);
-		MappedClass mc = mapr.getMappedClass(Dest.class); 
+		helper.map(Skeleton.class, EntityWithNoAnnotations.class);
+		MappedClass mc = mapr.getMappedClass(EntityWithNoAnnotations.class); 
 		mc.update();
 		assertNotNull(mc.getIdField());
 		assertNotNull(mc.getEntityAnnotation());
 		Assert.assertEquals("special", mc.getEntityAnnotation().value());
 		
-		
+		EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
+		ent.id = "test";
+		Key<EntityWithNoAnnotations> k = ds.save(ent);
+		assertNotNull(k);
+		ent = ds.get(EntityWithNoAnnotations.class, "test");
+		assertNotNull(ent);
+		assertEquals("test", ent.id);
 	}
 }
 

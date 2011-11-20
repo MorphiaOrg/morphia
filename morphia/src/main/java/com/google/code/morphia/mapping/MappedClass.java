@@ -89,9 +89,6 @@ public class MappedClass {
 	/** Methods which are life-cycle events */
 	private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 	
-	/** the collectionName based on the type and @Entity value(); this can be overridden by the @CollectionName field on the instance*/
-	private String collName;
-	
 	/** a list of the fields to map */
 	private List<MappedField> persistenceFields = new ArrayList<MappedField>();
 	
@@ -120,6 +117,10 @@ public class MappedClass {
 			throw new MappingException("Cannot use non-static inner class: " + clazz + ". Please make static.");
 	}
 	
+	/*
+	 * Update mappings based on fields/annotations. 
+	 */
+	// TODO: Remove this and make these fields dynamic or auto-set some other way
 	public void update(){
 		embeddedAn = (Embedded) getAnnotation(Embedded.class);
 		entityAn = (Entity)getAnnotation(Entity.class);
@@ -155,7 +156,6 @@ public class MappedClass {
 		}
 		
 		update();
-		collName = (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 		
 		for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
 			field.setAccessible(true);
@@ -432,7 +432,7 @@ public class MappedClass {
 	 * @return the collName
 	 */
 	public String getCollectionName() {
-		return collName;
+		return (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
 	}
 	
 	/**

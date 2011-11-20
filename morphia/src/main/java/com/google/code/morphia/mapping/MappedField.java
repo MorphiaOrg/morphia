@@ -57,7 +57,6 @@ public class MappedField {
 	protected Field field; // the field :)
 	protected Class realType; // the real type
 	protected Constructor ctor; // the constructor for the type
-	protected String name; // the name to store in mongodb {name:value}
 	// Annotations that have been found relevant to mapping
 	protected Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
 	protected Type subType = null; // the type (T) for the Collection<T>/T[]/Map<?,T>
@@ -85,8 +84,6 @@ public class MappedField {
 	protected void discover() {
 		for (Class<? extends Annotation> clazz : interestingAnnotations)
 			addAnnotation(clazz);
-		
-		name = getMappedFieldName();
 		
 		//type must be discovered before the constructor.
 		realType = discoverType();
@@ -216,13 +213,13 @@ public class MappedField {
 	
 	/** Returns the name of the field's (key)name for mongodb */
 	public String getNameToStore() {
-		return name;
+		return getMappedFieldName();
 	}
 	
 	/** Returns the name of the field's (key)name for mongodb, in order of loading. */
 	public List<String> getLoadNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		names.add(name);
+		names.add(getMappedFieldName());
 		
 		AlsoLoad al = (AlsoLoad)this.foundAnnotations.get(AlsoLoad.class);
 		if (al != null && al.value() != null && al.value().length > 0)
@@ -325,7 +322,7 @@ public class MappedField {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(name).append(" (");
+		sb.append(getMappedFieldName()).append(" (");
 		sb.append(" type:").append(realType.getSimpleName()).append(",");
 		
 		if(isSingleValue())
