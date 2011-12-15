@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Index;
+import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DBCollection;
@@ -38,6 +39,8 @@ public class TestIndexInheritence extends TestBase {
 	private static abstract class Shape {
 		@Id ObjectId id;
 		String description;
+		@Indexed
+		String foo;
 	}
 	
 	@Indexes(@Index("radius"))
@@ -51,17 +54,28 @@ public class TestIndexInheritence extends TestBase {
 	
 
     @Test
-    public void testParamEntity() throws Exception {
+    public void testClassIndexInherit() throws Exception {
+    	morphia.map(Circle.class).map(Shape.class);
     	MappedClass mc = morphia.getMapper().getMappedClass(Circle.class);
     	assertNotNull(mc);
     	
     	assertEquals(2, mc.getAnnotations(Indexes.class).size());
     	
-    	ds.ensureIndexes(Circle.class);
+    	ds.ensureIndexes();
     	DBCollection coll = ds.getCollection(Circle.class);
     	
-    	assertEquals(3, coll.getIndexInfo().size());
+    	assertEquals(4, coll.getIndexInfo().size());
+	}
+
+    @Test
+    public void testInheritedFieldIndex() throws Exception {
+    	morphia.map(Circle.class).map(Shape.class);
+    	MappedClass mc = morphia.getMapper().getMappedClass(Circle.class);
     	
-}
+    	ds.ensureIndexes();
+    	DBCollection coll = ds.getCollection(Circle.class);
+    	
+    	assertEquals(4, coll.getIndexInfo().size());
+	}
     
 }
