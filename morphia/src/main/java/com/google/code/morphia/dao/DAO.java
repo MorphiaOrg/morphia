@@ -53,11 +53,11 @@ public interface DAO<T, K> {
 	/** Finds the entities Key<T> by the criteria {key:value}*/
 	public List<T> findIds(String key, Object value);
 	
-	/** Finds the entities Key<T>s*/
-	public List<Key<T>> findIds();
+	/** Finds the entities Ts*/
+	public List<T> findIds();
 	
-	/** Finds the entities Key<T>s by the criteria {key:value}*/
-	public List<Key<T>> findIds(Query<T> q);
+	/** Finds the entities Ts by the criteria {key:value}*/
+	public List<T> findIds(Query<T> q);
 	
 	/** checks for entities which match criteria {key:value}*/
 	public boolean exists(String key, Object value);
