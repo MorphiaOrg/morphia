@@ -34,14 +34,12 @@ import com.google.code.morphia.TestQuery.ContainsPic;
 import com.google.code.morphia.TestQuery.Pic;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.testmodel.Circle;
 import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.StandardTests;
-import com.mongodb.MongoException;
 import com.mongodb.WriteConcern;
 
 /**

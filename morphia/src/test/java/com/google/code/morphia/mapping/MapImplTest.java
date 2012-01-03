@@ -12,7 +12,6 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.TestBase;
@@ -114,7 +113,7 @@ public class MapImplTest extends TestBase{
     	assertTrue("className should be here.", hasF);
     }
 
-    @Test @Ignore("waiting on issue 184")
+    @Test //@Ignore("waiting on issue 184")
     public void testEmbeddedMapUpdateOperations() throws Exception {
         morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
     	Goo g1 = new Goo("Scott");

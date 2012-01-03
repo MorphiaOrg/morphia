@@ -77,6 +77,7 @@ public class TestMapping  extends TestBase {
 
 		public BaseEntity() {}
 	
+		// generally a bad thing but left over...
 		@Id ObjectId id;
 		public String getId() {
 			return id.toString();
@@ -758,130 +759,120 @@ public class TestMapping  extends TestBase {
     
     @Test
     public void testBasicMapping() throws Exception {
-        try {
-            DBCollection hotels = db.getCollection("hotels");
-            DBCollection agencies = db.getCollection("agencies");
+        DBCollection hotels = db.getCollection("hotels");
+        DBCollection agencies = db.getCollection("agencies");
 
-            morphia.map(Hotel.class);
-            morphia.map(TravelAgency.class);
+        morphia.map(Hotel.class);
+        morphia.map(TravelAgency.class);
 
-            Hotel borg = Hotel.create();
-            borg.setName("Hotel Borg");
-            borg.setStars(4);
-            borg.setTakesCreditCards(true);
-            borg.setStartDate(new Date());
-            borg.setType(Hotel.Type.LEISURE);
-            borg.getTags().add("Swimming pool");
-            borg.getTags().add("Room service");
-            borg.setTemp("A temporary transient value");
-            borg.getPhoneNumbers().add(new PhoneNumber(354,5152233,PhoneNumber.Type.PHONE));
-            borg.getPhoneNumbers().add(new PhoneNumber(354,5152244,PhoneNumber.Type.FAX));
+        Hotel borg = Hotel.create();
+        borg.setName("Hotel Borg");
+        borg.setStars(4);
+        borg.setTakesCreditCards(true);
+        borg.setStartDate(new Date());
+        borg.setType(Hotel.Type.LEISURE);
+        borg.getTags().add("Swimming pool");
+        borg.getTags().add("Room service");
+        borg.setTemp("A temporary transient value");
+        borg.getPhoneNumbers().add(new PhoneNumber(354,5152233,PhoneNumber.Type.PHONE));
+        borg.getPhoneNumbers().add(new PhoneNumber(354,5152244,PhoneNumber.Type.FAX));
 
-            Address borgAddr = new Address();
-            borgAddr.setStreet("Posthusstraeti 11");
-            borgAddr.setPostCode("101");
-            borg.setAddress(borgAddr);
-            
-            BasicDBObject hotelDbObj = (BasicDBObject) morphia.toDBObject(borg);
-            assertTrue( !( ((DBObject)((List)hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)) ); 
-            
-            
-            hotels.save(hotelDbObj);
+        Address borgAddr = new Address();
+        borgAddr.setStreet("Posthusstraeti 11");
+        borgAddr.setPostCode("101");
+        borg.setAddress(borgAddr);
+        
+        BasicDBObject hotelDbObj = (BasicDBObject) morphia.toDBObject(borg);
+        assertTrue( !( ((DBObject)((List)hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)) ); 
+        
+        
+        hotels.save(hotelDbObj);
 
-			Hotel borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
+		Hotel borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
 
-            assertEquals(borg.getName(), borgLoaded.getName());
-            assertEquals(borg.getStars(), borgLoaded.getStars());
-            assertEquals(borg.getStartDate(), borgLoaded.getStartDate());
-            assertEquals(borg.getType(), borgLoaded.getType());
-            assertEquals(borg.getAddress().getStreet(), borgLoaded.getAddress().getStreet());
-            assertEquals(borg.getTags().size(), borgLoaded.getTags().size());
-            assertEquals(borg.getTags(), borgLoaded.getTags());
-            assertEquals(borg.getPhoneNumbers().size(), borgLoaded.getPhoneNumbers().size());
-            assertEquals(borg.getPhoneNumbers().get(1), borgLoaded.getPhoneNumbers().get(1));
-            assertNull(borgLoaded.getTemp());
-            assertTrue(borgLoaded.getPhoneNumbers() instanceof Vector);
-            assertNotNull(borgLoaded.getId());
+        assertEquals(borg.getName(), borgLoaded.getName());
+        assertEquals(borg.getStars(), borgLoaded.getStars());
+        assertEquals(borg.getStartDate(), borgLoaded.getStartDate());
+        assertEquals(borg.getType(), borgLoaded.getType());
+        assertEquals(borg.getAddress().getStreet(), borgLoaded.getAddress().getStreet());
+        assertEquals(borg.getTags().size(), borgLoaded.getTags().size());
+        assertEquals(borg.getTags(), borgLoaded.getTags());
+        assertEquals(borg.getPhoneNumbers().size(), borgLoaded.getPhoneNumbers().size());
+        assertEquals(borg.getPhoneNumbers().get(1), borgLoaded.getPhoneNumbers().get(1));
+        assertNull(borgLoaded.getTemp());
+        assertTrue(borgLoaded.getPhoneNumbers() instanceof Vector);
+        assertNotNull(borgLoaded.getId());
 
-            TravelAgency agency = new TravelAgency();
-            agency.setName("Lastminute.com");
-            agency.getHotels().add(borgLoaded);
-            
-            BasicDBObject agencyDbObj = (BasicDBObject) morphia.toDBObject(agency);
-            agencies.save(agencyDbObj);
+        TravelAgency agency = new TravelAgency();
+        agency.setName("Lastminute.com");
+        agency.getHotels().add(borgLoaded);
+        
+        BasicDBObject agencyDbObj = (BasicDBObject) morphia.toDBObject(agency);
+        agencies.save(agencyDbObj);
 
-			TravelAgency agencyLoaded = morphia.fromDBObject(TravelAgency.class,
-					(BasicDBObject) agencies.findOne(new BasicDBObject(Mapper.ID_KEY, agencyDbObj.get(Mapper.ID_KEY))),
-					new DefaultEntityCache());
+		TravelAgency agencyLoaded = morphia.fromDBObject(TravelAgency.class,
+				(BasicDBObject) agencies.findOne(new BasicDBObject(Mapper.ID_KEY, agencyDbObj.get(Mapper.ID_KEY))),
+				new DefaultEntityCache());
 
-            assertEquals(agency.getName(), agencyLoaded.getName());
-            assertEquals(agency.getHotels().size(), 1);
-            assertEquals(agency.getHotels().get(0).getName(), borg.getName());
+        assertEquals(agency.getName(), agencyLoaded.getName());
+        assertEquals(agency.getHotels().size(), 1);
+        assertEquals(agency.getHotels().get(0).getName(), borg.getName());
 
-            // try clearing values
-            borgLoaded.setAddress(null);
-            borgLoaded.getPhoneNumbers().clear();
-            borgLoaded.setName(null);
+        // try clearing values
+        borgLoaded.setAddress(null);
+        borgLoaded.getPhoneNumbers().clear();
+        borgLoaded.setName(null);
 
-            hotelDbObj = (BasicDBObject) morphia.toDBObject(borgLoaded);
-            hotels.save(hotelDbObj);
+        hotelDbObj = (BasicDBObject) morphia.toDBObject(borgLoaded);
+        hotels.save(hotelDbObj);
 
-            hotelDbObj = (BasicDBObject)hotels.findOne(new BasicDBObject(Mapper.ID_KEY, hotelDbObj.get(Mapper.ID_KEY)));
+        hotelDbObj = (BasicDBObject)hotels.findOne(new BasicDBObject(Mapper.ID_KEY, hotelDbObj.get(Mapper.ID_KEY)));
 
-			borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
-            assertNull(borgLoaded.getAddress());
-            assertEquals(0, borgLoaded.getPhoneNumbers().size());
-            assertNull(borgLoaded.getName());
-
-        } finally {
-            db.dropDatabase();
-        }
+		borgLoaded = morphia.fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
+        assertNull(borgLoaded.getAddress());
+        assertEquals(0, borgLoaded.getPhoneNumbers().size());
+        assertNull(borgLoaded.getName());
     }
     
     @Test
     public void testMaps() throws Exception {
-        try {
-            DBCollection articles = db.getCollection("articles");
-            morphia.map(Article.class).map(Translation.class).map(Circle.class);
+        DBCollection articles = db.getCollection("articles");
+        morphia.map(Article.class).map(Translation.class).map(Circle.class);
 
-            Article related = new Article();
-            BasicDBObject relatedDbObj = (BasicDBObject) morphia.toDBObject(related);
-            articles.save(relatedDbObj);
+        Article related = new Article();
+        BasicDBObject relatedDbObj = (BasicDBObject) morphia.toDBObject(related);
+        articles.save(relatedDbObj);
 
-			Article relatedLoaded = morphia
-					.fromDBObject(Article.class, (BasicDBObject) articles.findOne(new BasicDBObject(Mapper.ID_KEY,
-							relatedDbObj.get(Mapper.ID_KEY))), new DefaultEntityCache());
+		Article relatedLoaded = morphia
+				.fromDBObject(Article.class, (BasicDBObject) articles.findOne(new BasicDBObject(Mapper.ID_KEY,
+						relatedDbObj.get(Mapper.ID_KEY))), new DefaultEntityCache());
 
-            Article article = new Article();
-            article.setTranslation("en", new Translation("Hello World", "Just a test"));
-            article.setTranslation("is", new Translation("Halló heimur", "Bara að prófa"));
+        Article article = new Article();
+        article.setTranslation("en", new Translation("Hello World", "Just a test"));
+        article.setTranslation("is", new Translation("Halló heimur", "Bara að prófa"));
 
-            article.setAttribute("myDate", new Date());
-            article.setAttribute("myString", "Test");
-            article.setAttribute("myInt", 123);
+        article.setAttribute("myDate", new Date());
+        article.setAttribute("myString", "Test");
+        article.setAttribute("myInt", 123);
 
-            article.putRelated("test", relatedLoaded);
+        article.putRelated("test", relatedLoaded);
 
-            BasicDBObject articleDbObj = (BasicDBObject) morphia.toDBObject(article);
-            articles.save(articleDbObj);
+        BasicDBObject articleDbObj = (BasicDBObject) morphia.toDBObject(article);
+        articles.save(articleDbObj);
 
-			Article articleLoaded = morphia
-					.fromDBObject(Article.class, (BasicDBObject) articles.findOne(new BasicDBObject(Mapper.ID_KEY,
-							articleDbObj.get(Mapper.ID_KEY))), new DefaultEntityCache());
+		Article articleLoaded = morphia
+				.fromDBObject(Article.class, (BasicDBObject) articles.findOne(new BasicDBObject(Mapper.ID_KEY,
+						articleDbObj.get(Mapper.ID_KEY))), new DefaultEntityCache());
 
-            assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
-            assertEquals(article.getTranslation("en").getTitle(), articleLoaded.getTranslation("en").getTitle());
-            assertEquals(article.getTranslation("is").getBody(), articleLoaded.getTranslation("is").getBody());
-            assertEquals(article.getAttributes().size(), articleLoaded.getAttributes().size());
-            assertEquals(article.getAttribute("myDate"), articleLoaded.getAttribute("myDate"));
-            assertEquals(article.getAttribute("myString"), articleLoaded.getAttribute("myString"));
-            assertEquals(article.getAttribute("myInt"), articleLoaded.getAttribute("myInt"));
-            assertEquals(article.getRelated().size(), articleLoaded.getRelated().size());
-            assertEquals(article.getRelated("test").getId(), articleLoaded.getRelated("test").getId());
-
-        } finally {
-            db.dropDatabase();
-        }
+        assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
+        assertEquals(article.getTranslation("en").getTitle(), articleLoaded.getTranslation("en").getTitle());
+        assertEquals(article.getTranslation("is").getBody(), articleLoaded.getTranslation("is").getBody());
+        assertEquals(article.getAttributes().size(), articleLoaded.getAttributes().size());
+        assertEquals(article.getAttribute("myDate"), articleLoaded.getAttribute("myDate"));
+        assertEquals(article.getAttribute("myString"), articleLoaded.getAttribute("myString"));
+        assertEquals(article.getAttribute("myInt"), articleLoaded.getAttribute("myInt"));
+        assertEquals(article.getRelated().size(), articleLoaded.getRelated().size());
+        assertEquals(article.getRelated("test").getId(), articleLoaded.getRelated("test").getId());
     }
 
     
