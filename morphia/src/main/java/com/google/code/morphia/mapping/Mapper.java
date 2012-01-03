@@ -390,7 +390,7 @@ public class Mapper {
 					Key<?> k = (value instanceof Key) ? (Key<?>)value : getKey(value);
 					mappedValue = keyToRef(k);
 					if (mappedValue == value)
-						throw new ValidationException("cannnot map to @Reference/Key<T>/DBRef field");
+						throw new ValidationException("cannnot map to @Reference/Key<T>/DBRef field: " + value);
 				}
 			} catch (Exception e) {
 				log.error("Error converting value(" + value + ") to reference.", e);
@@ -416,6 +416,7 @@ public class Mapper {
 	}
 
 	public Object getId(Object entity) {
+		if (entity == null) return null;
 		entity = ProxyHelper.unwrap(entity);
 //		String keyClassName = entity.getClass().getName();
 		MappedClass mc = getMappedClass(entity.getClass());
@@ -586,11 +587,13 @@ public class Mapper {
 	}
 	
 	public <T> Key<T> refToKey(DBRef ref) {
+		if (ref == null) return null;
 		Key<T> key = new Key<T>(ref.getRef(), ref.getId());
 		return key;
 	}
 	
 	public DBRef keyToRef(Key key) {
+		if (key == null) return null;
 		if (key.getKindClass() == null && key.getKind() == null) 
 			throw new IllegalStateException("How can it be missing both?");
 		if (key.getKind() == null)
