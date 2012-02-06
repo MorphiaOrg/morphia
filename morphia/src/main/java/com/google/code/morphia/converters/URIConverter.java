@@ -18,6 +18,8 @@ public class URIConverter extends TypeConverter implements SimpleValueConverter{
 	protected URIConverter(Class clazz) { super(clazz); }
 	@Override
 	public String encode(Object uri, MappedField optionalExtraInfo) {
+		if (uri == null) return null;
+		
 		return ((URI)uri).toString().replace(".", "%46");
 	}
 	
