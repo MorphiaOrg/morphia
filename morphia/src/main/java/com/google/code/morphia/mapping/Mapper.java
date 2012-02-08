@@ -83,7 +83,7 @@ public class Mapper {
 
 	/** Set of classes that registered by this mapper */
 	private final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
-	private final Map<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
+	private final ConcurrentHashMap<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
 	
 	//EntityInterceptors; these are called before EntityListeners and lifecycle methods on an Entity, for all Entities
 	private final List<EntityInterceptor> interceptors = new LinkedList<EntityInterceptor>();
@@ -165,7 +165,7 @@ public class Mapper {
 		Set<MappedClass> mcs = mappedClassesByCollection.get(mc.getCollectionName());
 		if (mcs == null) {
 			mcs = new HashSet();
-			mappedClassesByCollection.put(mc.getCollectionName(), mcs);
+			mappedClassesByCollection.putIfAbsent(mc.getCollectionName(), mcs);
 		}
 		mcs.add(mc);
 
