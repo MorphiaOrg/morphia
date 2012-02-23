@@ -32,8 +32,14 @@ public class TestMandatoryId extends TestBase {
 	
 	@Test
 	public final void testMissingIdNoImplicitMapCall() {
-		Key<E> save = ds.save(new E());
-		E byKey = ds.getByKey(E.class, save);
+		final Key<E> save = ds.save(new E());
+		
+		new AssertedFailure() {
+			@Override
+			protected void thisMustFail() throws Throwable {
+				E byKey = ds.getByKey(E.class, save);
+			}
+		};
 	}
 
 }
