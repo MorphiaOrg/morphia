@@ -153,6 +153,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 			field = sb.toString();
 			fieldsFilter.put(field, (includeFields ? 1 : 0));
 		}
+		
+		//Add className field just in case.
+		if (includeFields)
+			fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
+		
 		return new BasicDBObject(fieldsFilter);
 	}
 	
