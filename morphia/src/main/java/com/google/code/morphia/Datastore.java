@@ -11,6 +11,7 @@ import com.google.code.morphia.utils.IndexFieldDef;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
+import com.mongodb.MapReduceCommand;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
@@ -160,6 +161,17 @@ public interface Datastore {
 	 * @return counts and stuff
 	 */
 	<T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize, Map<String, Object> scopeFields, Class<T> outputType);
+	
+	/**
+	 * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
+	 * @param <T> The type of resulting data
+	 * @param type MapreduceType
+	 * @param q The query (only the criteria, limit and sort will be used)
+	 * @param outputType The type of resulting data; inline is not working yet
+	 * @param baseCommand The base command to fill in and send to the server
+	 * @return counts and stuff
+	 */
+	<T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, Class<T> outputType, MapReduceCommand baseCommand);
 	
 	/** The builder for all update operations */
 	<T> UpdateOperations<T> createUpdateOperations(Class<T> kind);
