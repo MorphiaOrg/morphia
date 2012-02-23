@@ -17,6 +17,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.logging.Logr;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.mapping.MappedClass;
+import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.mongodb.BasicDBObject;
@@ -500,6 +501,16 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T>, Cri
 			throw new IllegalStateException("You cannot mix include and excluded fields together!");
 		this.includeFields = include;
 		this.fields = fields;
+		return this;
+	}
+
+	public Query<T> retrieveKnownFields(){
+		MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
+		ArrayList<String> fields = new ArrayList<String>(mc.getPersistenceFields().size()+1);
+		for(MappedField mf : mc.getPersistenceFields()) {
+			fields.add(mf.getNameToStore());
+		}
+		retrievedFields(true, (String[]) fields.toArray());
 		return this;
 	}
 

@@ -96,6 +96,9 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 	/** Limits the fields retrieved */
 	Query<T> retrievedFields(boolean include, String...fields);
 
+	/** Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes*/
+	Query<T> retrieveKnownFields();
+
 	/** Enabled snapshotted mode where duplicate results 
 	 * (which may be updated during the lifetime of the cursor) 
 	 *  will not be returned. Not compatible with order/sort and hint. **/
