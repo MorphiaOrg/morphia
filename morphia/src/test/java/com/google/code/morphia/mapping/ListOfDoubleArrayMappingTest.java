@@ -33,6 +33,9 @@ public class ListOfDoubleArrayMappingTest extends TestBase {
 		ds.save(ent);
 		ContainsListDoubleArray loaded = ds.get(ent);
 		Assert.assertNotNull(loaded.id);
+//		Assert.assertEquals(1.1D, loaded.points.get(0)[0], 0);
+//		Assert.assertEquals(2.2D, loaded.points.get(0)[1], 0);
+		
 	}
 	
 	
