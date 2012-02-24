@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import com.google.code.morphia.AdvancedDatastore;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
@@ -18,6 +19,7 @@ import com.google.code.morphia.annotations.Id;
 /**
  * @author scott hernandez
  */
+@SuppressWarnings("unused")
 public class CompoundId extends TestBase{
 	
 	@Embedded
@@ -25,7 +27,6 @@ public class CompoundId extends TestBase{
 		static final long serialVersionUID = 1L;
 		ObjectId id = new ObjectId();
 		String name;		
-		@SuppressWarnings("unused")
 		CId() {}
 		CId(String n) {name=n;}
 		@Override
@@ -53,4 +54,23 @@ public class CompoundId extends TestBase{
 		Assert.assertEquals("test", e.id.name);
 		Assert.assertNotNull(e.id.id);
 	}
+
+	@Test
+	public void testDelete() throws Exception {
+		E e = new E();
+		e.id = new CId("test");
+		
+		Key<E> key = ds.save(e);
+		ds.delete(E.class, e.id);
+	}
+
+	@Test
+	public void testOtherDelete() throws Exception {
+		E e = new E();
+		e.id = new CId("test");
+		
+		Key<E> key = ds.save(e);
+		((AdvancedDatastore)ds).delete(ds.getCollection(E.class).getName(), E.class, e.id);
+	}
+
 }

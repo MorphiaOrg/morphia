@@ -33,7 +33,10 @@ public interface AdvancedDatastore extends Datastore {
 	<T> Query<T> find(String kind, Class<T> clazz);
 	<T,V> Query<T> find(String kind, Class<T> clazz, String property, V value, int offset, int size);
 	<T> Key<T> save(String kind, T entity);
+	/** No validation or conversion is done to the id*/
+	@Deprecated
 	<T> WriteResult delete(String kind, T id);
+	<T, V> WriteResult delete(String kind, Class<T> clazz, V id);
 	
 	<T> Key<T> insert(String kind, T entity);
 	
@@ -47,7 +50,7 @@ public interface AdvancedDatastore extends Datastore {
 
 
 	<T> Query<T> createQuery(String kind, Class<T> clazz);
-	//DBObject implementations; incase we don't have features impl'd yet
+	//DBObject implementations; in case we don't have features impl'd yet
 	<T> Query<T> createQuery(Class<T> kind, DBObject q);
 	<T> Query<T> createQuery(String kind, Class<T> clazz, DBObject q);
 	

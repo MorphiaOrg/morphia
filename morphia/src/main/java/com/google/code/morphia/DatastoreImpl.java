@@ -128,27 +128,19 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 		return mapr.getKey(entity);
 	}
 	
-	protected <T, V> WriteResult delete(DBCollection dbColl, V id, WriteConcern wc) {
-		WriteResult wr;
-		if (wc == null)
-			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
-		else
-			wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get(), wc);
-		
-		throwOnError(wc, wr);
-		
-		return wr;
-	}
-	
-
 	public <T> WriteResult delete(String kind, T id) {
 		DBCollection dbColl = getCollection(kind);
-		return delete(dbColl, id, defConcern);
+		WriteResult wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
+		throwOnError(null, wr);
+		return wr;
+	}
+
+	public <T, V> WriteResult delete(String kind, Class<T> clazz, V id) {
+		return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
 	}
 	
 	public <T, V> WriteResult delete(Class<T> clazz, V id, WriteConcern wc) {
-		DBCollection dbColl = getCollection(clazz);
-		return delete(dbColl, id, wc);
+		return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
 	}
 
 	public <T, V> WriteResult delete(Class<T> clazz, V id) {
@@ -821,12 +813,13 @@ public class DatastoreImpl implements Datastore, AdvancedDatastore {
 				cr.throwOnError();
 		}
 	}
+	
 	public <T> Key<T> save(String kind, T entity) {
 		entity = ProxyHelper.unwrap(entity);
 		DBCollection dbColl = getCollection(kind);
 		return save(dbColl, entity, getWriteConcern(entity));
 	}
-	
+
 	public <T> Key<T> save(T entity) {
 		return save(entity, getWriteConcern(entity));
 	}
