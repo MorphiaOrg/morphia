@@ -154,7 +154,6 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 	}
 
 	public T sizeEq(int val) {
-		Assert.parametersNotNull("val",val);
 		return addCrit(FilterOperator.SIZE, val);
 	}
 	
