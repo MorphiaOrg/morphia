@@ -103,7 +103,6 @@ public class CriteriaContainerImpl extends AbstractCriteria implements Criteria,
 		return new FieldEndImpl<CriteriaContainerImpl>(this.query, field, this, validateName);
 	}
 
-	@Override
 	public String getFieldName() {
 		return joinMethod.toString();
 	}

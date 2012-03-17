@@ -20,7 +20,6 @@ public class WhereCriteria extends AbstractCriteria implements Criteria {
 		obj.put(FilterOperator.WHERE.val(), this.js);
 	}
 
-	@Override
 	public String getFieldName() {
 		return FilterOperator.WHERE.val();
 	}

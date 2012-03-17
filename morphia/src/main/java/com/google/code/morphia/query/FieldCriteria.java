@@ -83,7 +83,6 @@ public class FieldCriteria extends AbstractCriteria implements Criteria {
 		}
 	}
 	
-	@Override
 	public String getFieldName() {
 		return field;
 	}

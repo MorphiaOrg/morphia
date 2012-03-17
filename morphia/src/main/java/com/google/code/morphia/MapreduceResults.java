@@ -65,7 +65,6 @@ public class MapreduceResults<T> implements Iterable<T> {
 		public int getOutputCount() { return output; }
 	}
 
-	@Override
 	public Iterator<T> iterator() {
 		if (type == MapreduceType.INLINE)
 			return getInlineResults();
