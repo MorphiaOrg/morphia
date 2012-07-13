@@ -167,22 +167,22 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#findIds(java.lang.String, java.lang.Object)
 	 */
-	public List<T> findIds(String key, Object value) {
-		return (List<T>) keysToIds(ds.find(entityClazz, key, value).asKeyList());
+	public List<K> findIds(String key, Object value) {
+		return (List<K>) keysToIds(ds.find(entityClazz, key, value).asKeyList());
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#findIds()
 	 */
-	public List<T> findIds() {
-		return (List<T>) keysToIds(ds.find(entityClazz).asKeyList());
+	public List<K> findIds() {
+		return (List<K>) keysToIds(ds.find(entityClazz).asKeyList());
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.google.code.morphia.DAO#findIds(com.google.code.morphia.query.Query)
 	 */
-	public List<T> findIds(Query<T> q) {
-		return (List<T>) keysToIds(q.asKeyList());
+	public List<K> findIds(Query<T> q) {
+		return (List<K>) keysToIds(q.asKeyList());
 	}
 	
 	/* (non-Javadoc)
