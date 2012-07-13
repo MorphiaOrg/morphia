@@ -61,7 +61,9 @@ class EmbeddedMapper implements CustomMapper{
 		if (coll != null) {
 			List values = new ArrayList();
 			for (Object o : coll) {
-				if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(o.getClass()))
+				if (null == o)
+					values.add(null);
+				else if (mapr.converters.hasSimpleValueConverter(mf) || mapr.converters.hasSimpleValueConverter(o.getClass()))
 					values.add(mapr.converters.encode(o));
 				else {
 					Object val;
