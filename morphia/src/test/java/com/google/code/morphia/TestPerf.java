@@ -16,6 +16,7 @@
 
 package com.google.code.morphia;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,12 +42,12 @@ import com.mongodb.WriteConcern;
  *
  * @author Scott Hernandez
  */
-//@Ignore 
+//@Ignore
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
 	static double WriteFailFactor = 1.10;
 	static double ReadFailFactor = 1.75;
-	
+	static DecimalFormat DF = new DecimalFormat("#.##");
 	@Entity
 	public static class Address {
 		@Id ObjectId id;
@@ -56,9 +57,9 @@ public class TestPerf  extends TestBase{
 		String state = "CA";
 		int zip = 90266;
 		Date added = new Date();
-		
+
 		public Address() {}
-		
+
 		public Address(BasicDBObject dbObj) {
 			name = dbObj.getString("name");
 			street = dbObj.getString("street");
@@ -67,7 +68,7 @@ public class TestPerf  extends TestBase{
 			zip = dbObj.getInt("zip");
 			added = (Date) dbObj.get("added");
 		}
-		
+
 		public DBObject toDBObject() {
 			DBObject dbObj = new BasicDBObject();
 			dbObj.put("name", name);
@@ -79,7 +80,7 @@ public class TestPerf  extends TestBase{
 			return dbObj;
 		}
 	}
-	
+
 	public static class Address2 extends ReflectionDBObject{
 		public String getname() {
 			return name;
@@ -117,7 +118,7 @@ public class TestPerf  extends TestBase{
 		public void setadded(Date added) {
 			this.added = added;
 		}
-		
+
 		String name = "Scott";
 		String street = "3400 Maple";
 		String city = "Manhattan Beach";
@@ -134,26 +135,26 @@ public class TestPerf  extends TestBase{
     	insertAddresses(count, true, strict);
     	long endTicks = new Date().getTime();
     	long rawInsertTime = endTicks - startTicks;
-    	
+
     	ds.delete(ds.find(Address.class));
     	startTicks = new Date().getTime();
     	insertAddresses(count, false, strict);
     	endTicks = new Date().getTime();
     	long insertTime = endTicks - startTicks;
-    	
-    	String msg = String.format("Insert (%s) performance is too slow: %sX slower (%s/%s)", 
+
+    	String msg = String.format("Insert (%s) performance is too slow: %sX slower (%s/%s)",
     							count,
-    							String.valueOf((double)insertTime/rawInsertTime).subSequence(0, 4),
+    							DF.format((double)insertTime/rawInsertTime),
     							insertTime,
     							rawInsertTime);
-    	Assert.assertTrue(msg, 
+    	Assert.assertTrue(msg,
     			insertTime < (rawInsertTime * WriteFailFactor ));
     }
 
 	@Test @Ignore
     public void testAddressLoadPerf() throws Exception {
     	insertAddresses(5001, true, false);
-    	
+
 		int count = 5000;
     	boolean strict = false;
     	long startTicks = new Date().getTime();
@@ -171,25 +172,25 @@ public class TestPerf  extends TestBase{
     	endTicks = new Date().getTime();
     	long reflectLoadTime = endTicks - startTicks;
 
-    	String msg = String.format("Load (%s) performance is too slow compared to ReflectionDBObject: %sX slower (%s/%s)", 
+    	String msg = String.format("Load (%s) performance is too slow compared to ReflectionDBObject: %sX slower (%s/%s)",
 				count,
-				String.valueOf((double)morphiaLoadTime/reflectLoadTime).subSequence(0, 4),
+				DF.format((double)morphiaLoadTime/reflectLoadTime),
 				morphiaLoadTime,
-				reflectLoadTime);    	
+				reflectLoadTime);
     	Assert.assertTrue(msg, morphiaLoadTime < (reflectLoadTime * ReadFailFactor ));
 
-    	msg = String.format("Load (%s) performance is too slow compared to raw: %sX slower (%s/%s)", 
+    	msg = String.format("Load (%s) performance is too slow compared to raw: %sX slower (%s/%s)",
 				count,
-				String.valueOf((double)morphiaLoadTime/rawLoadTime).subSequence(0, 4),
+				DF.format((double)morphiaLoadTime/rawLoadTime),
 				morphiaLoadTime,
-				rawLoadTime);    	
+				rawLoadTime);
 		Assert.assertTrue(msg, morphiaLoadTime < (rawLoadTime * ReadFailFactor ));
 
     }
-	
+
 	public void loadAddresses(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
-    	
+
     	for(int i=0;i<count;i++) {
     		if(raw) {
     			new Address((BasicDBObject) dbColl.findOne());
@@ -202,7 +203,7 @@ public class TestPerf  extends TestBase{
 	public void loadAddresses2(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
     	Iterable it = raw ? dbColl.find().limit(count) : ds.find(Address.class).limit(count).fetch();
-    	
+
     	for(Object o : it)
     		if(raw) {
     			new Address((BasicDBObject) o);
@@ -217,17 +218,16 @@ public class TestPerf  extends TestBase{
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
     	Iterable it = raw ? dbColl.find().limit(count) : ds.find(Address.class).limit(count).fetch();
 
-    	if (raw) 
+    	if (raw)
     		dbColl.setObjectClass(Address2.class);
 
     	for(Object o : it)
     		if(raw) {
-    			Address2 addr = (Address2)o;
     		}else {
     			//no-op; already happened during iteration
     		}
-    	
-//    	if (raw) 
+
+//    	if (raw)
 //    		dbColl.setObjectClass(null);
 
     	if (!raw)
@@ -236,7 +236,7 @@ public class TestPerf  extends TestBase{
 
 	public void insertAddresses(int count, boolean raw, boolean strict) {
     	DBCollection dbColl = db.getCollection(((DatastoreImpl)ds).getMapper().getCollectionName(Address.class));
-    	
+
     	for(int i=0;i<count;i++) {
 			Address addr = new Address();
     		if(raw) {
@@ -253,14 +253,14 @@ public class TestPerf  extends TestBase{
     		}
     	}
     }
-	
+
 	@Entity(value="imageMeta", noClassnameStored=true)
 	public static class TestObj {
 		@Id public ObjectId id = new ObjectId();
 		public long var1;
 		public long var2;
 	}
-	
+
 	@Test
 	public void testDifference() {
         try {
@@ -276,12 +276,12 @@ public class TestPerf  extends TestBase{
                         obj.var2 = 6785678l+i;
                         objList.add(obj);
                 }
-                
+
                 long start = System.currentTimeMillis();
                 for(TestObj to : objList)
                 	ds.insert(to, WriteConcern.SAFE);
                 System.out.println("Time taken morphia: "+(System.currentTimeMillis()-start)+"ms");
-                
+
                 Mongo mongoConn = new Mongo("localhost" , 27017 );
                 DB mongoDB = mongoConn.getDB("my_database");
                 List<DBObject> batchPush = new ArrayList<DBObject>();
@@ -307,12 +307,12 @@ public class TestPerf  extends TestBase{
                         obj.var2 = 6785678l+i;
                         objList.add(obj);
                 }
-                
+
                 start = System.currentTimeMillis();
                 ds.insert(objList, WriteConcern.SAFE);
                 System.out.println("Time taken batch morphia: "+(System.currentTimeMillis()-start)+"ms");
 
-                
+
                 batchPush = new ArrayList<DBObject>();
                 for (int i=0; i<1000; i++){
                 	DBObject doc = new BasicDBObject();
@@ -324,10 +324,10 @@ public class TestPerf  extends TestBase{
 
                 start = System.currentTimeMillis();
                 c.insert(batchPush);
-                System.out.println("Time taken batch regular: "+(System.currentTimeMillis()-start)+"ms");                
+                System.out.println("Time taken batch regular: "+(System.currentTimeMillis()-start)+"ms");
         }catch(Exception ex){
         	ex.printStackTrace();
         }
-        
+
 	}
 }
