@@ -48,10 +48,13 @@ public class Morphia {
             map(c);
         }
     }
-
-    public synchronized Morphia map(Class entityClass) {
-        if ( !mapper.isMapped(entityClass) ) {
-            mapper.addMappedClass(entityClass);
+	
+    public synchronized Morphia map(Class... entityClasses) {
+    	if ( entityClasses != null && entityClasses.length > 0)
+    		for(Class entityClass : entityClasses) {
+		        if ( !mapper.isMapped(entityClass) ) {
+		            mapper.addMappedClass(entityClass);
+		        }
         }
         return this;
     }
