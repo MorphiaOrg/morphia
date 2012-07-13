@@ -19,6 +19,7 @@ package com.google.code.morphia;
 import java.util.ConcurrentModificationException;
 
 import org.bson.types.ObjectId;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Id;
@@ -28,6 +29,7 @@ import com.google.code.morphia.annotations.Version;
  *
  * @author Scott Hernandez
  */
+
 public class VersionAnnotationTest extends TestBase {
 
 	private static class B {
@@ -35,7 +37,7 @@ public class VersionAnnotationTest extends TestBase {
 		@Version long version;
 	}
 
-	@Test(expected=ConcurrentModificationException.class)
+	@Ignore @Test(expected=ConcurrentModificationException.class)
 	public void testVersion() throws Exception {
 
 		B b1 = new B();
