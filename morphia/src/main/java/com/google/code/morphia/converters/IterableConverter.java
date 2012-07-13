@@ -106,7 +106,7 @@ public class IterableConverter extends TypeConverter {
 				values.add(chain.encode(o));
 			}
 		}
-		if (values.size() > 0) {
+		if (values.size() > 0 || mapr.getOptions().storeEmpties) {
 			return values;
 		} else
 			return null;
