@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import com.google.code.morphia.dao.BasicDAO;
 import com.google.code.morphia.dao.DAO;
+import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.testdaos.HotelDAO;
 import com.google.code.morphia.testmodel.Address;
@@ -56,6 +57,7 @@ public class TestDAO extends TestBase {
         borgAddr.setPostCode("101");
         borg.setAddress(borgAddr);
 
+        hotelDAO.deleteByQuery((Query)hotelDAO.find());
         hotelDAO.save(borg);
         assertEquals(1, hotelDAO.count());
         assertNotNull(borg.getId());
