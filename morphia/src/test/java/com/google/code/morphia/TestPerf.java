@@ -16,17 +16,6 @@
 
 package com.google.code.morphia;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import junit.framework.Assert;
-
-import org.bson.types.ObjectId;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.MorphiaIterator;
@@ -37,6 +26,15 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.ReflectionDBObject;
 import com.mongodb.WriteConcern;
+import junit.framework.Assert;
+import org.bson.types.ObjectId;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -45,7 +43,7 @@ import com.mongodb.WriteConcern;
 //@Ignore
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf  extends TestBase{
-	static double WriteFailFactor = 1.10;
+	static double WriteFailFactor = 1.75;
 	static double ReadFailFactor = 1.75;
 	static DecimalFormat DF = new DecimalFormat("#.##");
 	@Entity
