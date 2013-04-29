@@ -5,6 +5,12 @@
 	<version>1.3.0-RC1</version>
 	<packaging>pom</packaging>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
 	<name>Morphia Build</name>
 	<description>Build Project for Morphia</description>
 
@@ -18,11 +24,11 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<url>http://code.google.com/p/morphia/source/browse</url>
-		<connection>scm:svn:http://morphia.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://morphia.googlecode.com/svn/trunk</developerConnection>
-	</scm>
+    <scm>
+        <connection>scm:git:git@github.com:mongodb/morphia.git</connection>
+        <developerConnection>scm:git:git@github.com:mongodb/morphia.git</developerConnection>
+        <url>git@github.com:mongodb/morphia.git</url>
+    </scm>
 
 	<developers>
 		<developer>
@@ -174,23 +180,6 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-	<distributionManagement>
-		<site>
-			<id>morphia-googlecode</id>
-			<url>svn:https://morphia.googlecode.com/svn/site</url>
-		</site>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>morphia-googlecode</id>
-			<url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>morphia-googlecode</id>
-			<url>svn:https://morphia.googlecode.com/svn/mavenrepo</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<modules>
 		<module>morphia</module>
