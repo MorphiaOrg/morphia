@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,27 +27,35 @@ import java.lang.annotation.Target;
 
 import com.google.code.morphia.mapping.Mapper;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@Documented @Inherited
+@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Reference {
-    /**
-     * The name of the Mongo value to store the field.
-     * Defaults to the name of the field being annotated.
-     *
-     * @return the name of the Mongo value storing the field value
-     */
-    String value() default Mapper.IGNORED_FIELDNAME;
-    /** Specify the concrete class to instantiate. */
-    Class<?> concreteClass() default Object.class;
-    /** Ignore any reference that don't resolve (aren't in mongodb) */
-    boolean ignoreMissing() default false;
+  /**
+   * The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
+   *
+   * @return the name of the Mongo value storing the field value
+   */
+  String value() default Mapper.IGNORED_FIELDNAME;
 
-    /** Create a proxy around the reference which will be resolved on the first method call. */
-    boolean lazy() default false;
+  /**
+   * Specify the concrete class to instantiate.
+   */
+  Class<?> concreteClass() default Object.class;
+
+  /**
+   * Ignore any reference that don't resolve (aren't in mongodb)
+   */
+  boolean ignoreMissing() default false;
+
+  /**
+   * Create a proxy around the reference which will be resolved on the first method call.
+   */
+  boolean lazy() default false;
 }

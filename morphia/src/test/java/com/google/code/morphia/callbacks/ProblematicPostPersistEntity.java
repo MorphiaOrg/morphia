@@ -1,31 +1,29 @@
 package com.google.code.morphia.callbacks;
 
-import org.bson.types.ObjectId;
 
+import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostPersist;
 
+
 public class ProblematicPostPersistEntity {
-	@Id
-	ObjectId id;
+  @Id ObjectId id;
 
-	Inner i = new Inner();
+  final Inner i = new Inner();
 
-	boolean called;
+  boolean called;
 
-	@PostPersist
-	void m1() {
-		called = true;
-	}
+  @PostPersist void m1() {
+    called = true;
+  }
 
-	static class Inner {
-		boolean called;
+  static class Inner {
+    boolean called;
 
-		String foo = "foo";
+    String foo = "foo";
 
-		@PostPersist
-		void m2() {
-			called = true;
-		}
-	}
+    @PostPersist void m2() {
+      called = true;
+    }
+  }
 }

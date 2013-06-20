@@ -1,4 +1,3 @@
-package com.google.code.morphia.converters;
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  *
@@ -16,50 +15,45 @@ package com.google.code.morphia.converters;
  */
 
 
+package com.google.code.morphia.converters;
+
+
+import org.junit.Before;
+import org.junit.Test;
+import com.google.code.morphia.TestBase;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import com.google.code.morphia.TestBase;
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+public class IterableConverterNullPointerExceptionTest extends TestBase {
+  @Entity
+  static class TestEntity {
+    @Id String id;
+    String[] array;
+  }
 
-/**
- *
- */
-public class IterableConverterNullPointerExceptionTest extends TestBase
-{
-	@Entity
-	static class TestEntity {
-		@Id String id;
-		String[] array;
-	}
+  @Before @Override
+  public void setUp() {
+    super.setUp();
+    morphia.map(TestEntity.class);
+  }
 
-	@Before @Override
-	public void setUp() {
-		super.setUp();
-		morphia.map(TestEntity.class);
-	}
+  @Test
+  public void testIt() throws Exception {
+    final TestEntity te = new TestEntity();
+    te.array = new String[] {null, "notNull", null};
+    ds.save(te);
 
-	@Test
-    public void testIt() throws Exception
-    {
-        TestEntity te = new TestEntity();
-        te.array = new String[]{ null, "notNull", null };
-    	ds.save(te);
-
-        TestEntity te2 = null;
-        try {
-            te2 = ds.find(TestEntity.class).get();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            fail();
-        }
-        assertArrayEquals(te.array, te2.array);
+    TestEntity te2 = null;
+    try {
+      te2 = ds.find(TestEntity.class).get();
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+      fail();
     }
+    assertArrayEquals(te.array, te2.array);
+  }
 }

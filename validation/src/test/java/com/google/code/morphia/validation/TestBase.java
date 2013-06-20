@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.google.code.morphia.validation;
 
 import org.junit.After;
@@ -16,7 +13,7 @@ public abstract class TestBase {
 	protected DB db;
 	protected Datastore ds;
 	protected Morphia morphia = new Morphia();
-	
+
 	protected TestBase() {
 		try {
 			this.mongo = new Mongo();
@@ -24,14 +21,14 @@ public abstract class TestBase {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Before
 	public void setUp() {
 		this.mongo.dropDatabase("morphia_test");
 		this.db = this.mongo.getDB("morphia_test");
 		this.ds = this.morphia.createDatastore(this.mongo, this.db.getName());
 	}
-	
+
 	@After
 	public void tearDown() {
 		// new ScopedFirstLevelCacheProvider().release();

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.google.code.morphia.ext.entityscanner;
 
 import org.bson.types.ObjectId;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.google.code.morphia.logging.slf4j;
 
 import java.io.ByteArrayOutputStream;

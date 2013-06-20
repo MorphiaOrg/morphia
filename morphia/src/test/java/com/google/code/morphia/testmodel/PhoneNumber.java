@@ -14,89 +14,91 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
+
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Embedded
 public class PhoneNumber {
 
-    public enum Type { PHONE, FAX }
+  public enum Type {
+    PHONE,
+    FAX
+  }
 
-    @Property
-    private int countryCode;
-    @Property
-    private int localExtension;
-    @Property
-    private Type type;
+  @Property
+  private int countryCode;
+  @Property
+  private int localExtension;
+  @Property
+  private Type type;
 
-    public PhoneNumber() {
-        this.type = Type.PHONE;
+  public PhoneNumber() {
+    type = Type.PHONE;
+  }
+
+  public PhoneNumber(final int countryCode, final int localExtension, final Type type) {
+    this.countryCode = countryCode;
+    this.localExtension = localExtension;
+    this.type = type;
+  }
+
+  public int getCountryCode() {
+    return countryCode;
+  }
+
+  public void setCountryCode(final int countryCode) {
+    this.countryCode = countryCode;
+  }
+
+  public int getLocalExtension() {
+    return localExtension;
+  }
+
+  public void setLocalExtension(final int localExtension) {
+    this.localExtension = localExtension;
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(final Type type) {
+    this.type = type;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == null) {
+      return false;
     }
-
-    public PhoneNumber( int countryCode, int localExtension, Type type ) {
-        this.countryCode = countryCode;
-        this.localExtension = localExtension;
-        this.type = type;
+    if (getClass() != obj.getClass()) {
+      return false;
     }
-
-    public int getCountryCode() {
-        return countryCode;
+    final PhoneNumber other = (PhoneNumber) obj;
+    if (countryCode != other.countryCode) {
+      return false;
     }
-
-    public void setCountryCode(int countryCode) {
-        this.countryCode = countryCode;
+    if (localExtension != other.localExtension) {
+      return false;
     }
+    return type == other.type;
+  }
 
-    public int getLocalExtension() {
-        return localExtension;
-    }
-
-    public void setLocalExtension(int localExtension) {
-        this.localExtension = localExtension;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PhoneNumber other = (PhoneNumber) obj;
-        if (this.countryCode != other.countryCode) {
-            return false;
-        }
-        if (this.localExtension != other.localExtension) {
-            return false;
-        }
-        if (this.type != other.type) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 43 * hash + this.countryCode;
-        hash = 43 * hash + this.localExtension;
-        hash = 43 * hash + this.type.hashCode();
-        return hash;
-    }
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 43 * hash + countryCode;
+    hash = 43 * hash + localExtension;
+    hash = 43 * hash + type.hashCode();
+    return hash;
+  }
 
 }

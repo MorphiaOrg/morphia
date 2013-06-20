@@ -1,82 +1,82 @@
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.testutil.TestEntity;
+
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("articles")
 @SuppressWarnings("unchecked")
 public class Article extends TestEntity {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Embedded
-    private Map<String,Translation> translations;
-	@Property
-    private Map attributes;
-    @Reference
-    private Map<String,Article> related;
+  @Embedded
+  private Map<String, Translation> translations;
+  @Property
+  private Map                      attributes;
+  @Reference
+  private Map<String, Article>     related;
 
-    public Article() {
-        super();
-        translations = new HashMap<String,Translation>();
-        attributes = new HashMap<String,Object>();
-        related = new HashMap<String,Article>();
-    }
+  public Article() {
+    translations = new HashMap<String, Translation>();
+    attributes = new HashMap<String, Object>();
+    related = new HashMap<String, Article>();
+  }
 
-    public Map<String, Translation> getTranslations() {
-        return translations;
-    }
+  public Map<String, Translation> getTranslations() {
+    return translations;
+  }
 
-    public void setTranslations(Map<String, Translation> translations) {
-        this.translations = translations;
-    }
+  public void setTranslations(final Map<String, Translation> translations) {
+    this.translations = translations;
+  }
 
-    public void setTranslation( String langCode, Translation t ) {
-        translations.put(langCode, t);
-    }
+  public void setTranslation(final String langCode, final Translation t) {
+    translations.put(langCode, t);
+  }
 
-    public Translation getTranslation( String langCode ) {
-        return translations.get(langCode);
-    }
+  public Translation getTranslation(final String langCode) {
+    return translations.get(langCode);
+  }
 
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
+  public Map<String, Object> getAttributes() {
+    return attributes;
+  }
 
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
+  public void setAttributes(final Map<String, Object> attributes) {
+    this.attributes = attributes;
+  }
 
-    public void setAttribute( String name, Object value ) {
-        attributes.put(name, value);
-    }
+  public void setAttribute(final String name, final Object value) {
+    attributes.put(name, value);
+  }
 
-    public Object getAttribute( String name ) {
-        return attributes.get(name);
-    }
+  public Object getAttribute(final String name) {
+    return attributes.get(name);
+  }
 
-    public Map<String, Article> getRelated() {
-        return related;
-    }
+  public Map<String, Article> getRelated() {
+    return related;
+  }
 
-    public void setRelated(Map<String, Article> related) {
-        this.related = related;
-    }
+  public void setRelated(final Map<String, Article> related) {
+    this.related = related;
+  }
 
-    public void putRelated(String name, Article a) {
-        related.put(name, a);
-    }
+  public void putRelated(final String name, final Article a) {
+    related.put(name, a);
+  }
 
-    public Article getRelated( String name ) {
-        return related.get(name);
-    }
+  public Article getRelated(final String name) {
+    return related.get(name);
+  }
 }

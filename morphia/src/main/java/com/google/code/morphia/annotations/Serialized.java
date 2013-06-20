@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -24,9 +26,10 @@ import java.lang.annotation.Target;
 
 import com.google.code.morphia.mapping.Mapper;
 
+
 /**
  * Marker for fields that should be (java) serialized
- * 
+ *
  * @author Scott Hernandez
  */
 @Documented
@@ -34,7 +37,7 @@ import com.google.code.morphia.mapping.Mapper;
 @Target(ElementType.FIELD)
 public @interface Serialized {
 
-	boolean disableCompression() default false;
-	
-	String value() default Mapper.IGNORED_FIELDNAME;
+  boolean disableCompression() default false;
+
+  String value() default Mapper.IGNORED_FIELDNAME;
 }

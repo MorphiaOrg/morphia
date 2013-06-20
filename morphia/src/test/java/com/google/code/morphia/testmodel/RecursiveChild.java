@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
+
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.testutil.TestEntity;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("stuff")
 public class RecursiveChild extends TestEntity {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Reference
-    private RecursiveParent parent;
+  @Reference
+  private RecursiveParent parent;
 
-    public RecursiveChild() {
-        super();
-    }
+  public RecursiveParent getParent() {
+    return parent;
+  }
 
-    public RecursiveParent getParent() {
-        return parent;
-    }
-
-    public void setParent(RecursiveParent parent) {
-        this.parent = parent;
-    }
+  public void setParent(final RecursiveParent parent) {
+    this.parent = parent;
+  }
 }

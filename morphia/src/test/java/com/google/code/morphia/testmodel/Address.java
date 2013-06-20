@@ -14,41 +14,39 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
+
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Embedded
 public class Address {
 
-    @Property("address_street")
-    private String street;
+  @Property("address_street")
+  private String street;
 
-    @Property
-    private String postCode;
+  @Property
+  private String postCode;
 
-    public Address() {
-        super();
-    }
+  public String getStreet() {
+    return street;
+  }
 
-    public String getStreet() {
-        return street;
-    }
+  public void setStreet(final String street) {
+    this.street = street;
+  }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+  public String getPostCode() {
+    return postCode;
+  }
 
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
+  public void setPostCode(final String postCode) {
+    this.postCode = postCode;
+  }
 }

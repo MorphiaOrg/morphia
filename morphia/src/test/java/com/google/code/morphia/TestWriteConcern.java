@@ -14,70 +14,77 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.mongodb.WriteConcern;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+
 /**
- *
  * @author Scott Hernandez
  */
-public class TestWriteConcern  extends TestBase{
+public class TestWriteConcern extends TestBase {
 
-	@Entity(concern="Safe")
-	static class Simple {
-		@Id String id;
-		public Simple(String id) {this(); this.id = id;}
-		private Simple() {}
-	}
+  @Entity(concern = "Safe")
+  static class Simple {
+    @Id String id;
 
-	@Test
-    public void testDuplicateInsertWDefaultWriteConcern() throws Exception {
-		boolean failed = false;
-		AdvancedDatastore aDs = (AdvancedDatastore)ds; 
-		try {
-			aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
-			aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
-		} catch (Exception e) {
-			failed = true;
-		}
-		assertEquals(1L, ds.getCount(Simple.class));
-		assertTrue("Duplicate Exception was not raised!", failed);
-	}
+    public Simple(final String id) {
+      this();
+      this.id = id;
+    }
 
-	@Test
-    public void testDuplicateInsertWSafeWriteConcern() throws Exception {
-		boolean failed = false;
-		AdvancedDatastore aDs = (AdvancedDatastore)ds; 
-		try {
-			aDs.insert(new Simple("simple"));
-			aDs.insert(new Simple("simple"), WriteConcern.SAFE);
-		} catch (Exception e) {
-			failed = true;
-		}
-		assertEquals(1L, ds.getCount(Simple.class));
-		assertTrue("Duplicate Exception was not raised!", failed);
-	}
+    private Simple() {
+    }
+  }
 
-	@Test
-    public void testDuplicateInsertWEntityWriteConcern() throws Exception {
-		boolean failed = false;
-		AdvancedDatastore aDs = (AdvancedDatastore)ds; 
-		ds.setDefaultWriteConcern(WriteConcern.NONE);
-		try {
-			aDs.insert(new Simple("simple"));
-			aDs.insert(new Simple("simple"));
-		} catch (Exception e) {
-			failed = true;
-		}
-		assertEquals(1L, ds.getCount(Simple.class));
-		assertTrue("Duplicate Exception was not raised!", failed);
-	}
+  @Test
+  public void testDuplicateInsertWDefaultWriteConcern() throws Exception {
+    boolean failed = false;
+    final AdvancedDatastore aDs = (AdvancedDatastore) ds;
+    try {
+      aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
+      aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
+    } catch (Exception e) {
+      failed = true;
+    }
+    assertEquals(1L, ds.getCount(Simple.class));
+    assertTrue("Duplicate Exception was not raised!", failed);
+  }
+
+  @Test
+  public void testDuplicateInsertWSafeWriteConcern() throws Exception {
+    boolean failed = false;
+    final AdvancedDatastore aDs = (AdvancedDatastore) ds;
+    try {
+      aDs.insert(new Simple("simple"));
+      aDs.insert(new Simple("simple"), WriteConcern.SAFE);
+    } catch (Exception e) {
+      failed = true;
+    }
+    assertEquals(1L, ds.getCount(Simple.class));
+    assertTrue("Duplicate Exception was not raised!", failed);
+  }
+
+  @Test
+  public void testDuplicateInsertWEntityWriteConcern() throws Exception {
+    boolean failed = false;
+    final AdvancedDatastore aDs = (AdvancedDatastore) ds;
+    ds.setDefaultWriteConcern(WriteConcern.NONE);
+    try {
+      aDs.insert(new Simple("simple"));
+      aDs.insert(new Simple("simple"));
+    } catch (Exception e) {
+      failed = true;
+    }
+    assertEquals(1L, ds.getCount(Simple.class));
+    assertTrue("Duplicate Exception was not raised!", failed);
+  }
 }

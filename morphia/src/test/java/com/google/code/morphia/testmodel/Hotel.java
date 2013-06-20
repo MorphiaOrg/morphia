@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Transient;
-import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,112 +24,119 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Transient;
+import com.google.code.morphia.testutil.TestEntity;
+
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("hotels")
 public class Hotel extends TestEntity {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public static Hotel create() {
-		return new Hotel();
-	}
-	
-    public enum Type { BUSINESS, LEISURE }
+  public static Hotel create() {
+    return new Hotel();
+  }
 
-    private String name;
-    private Date startDate;
-    private int stars;
-    private boolean takesCreditCards;
-    private Type type;
-    private Set<String> tags;
+  public enum Type {
+    BUSINESS,
+    LEISURE
+  }
 
-    @Transient
-    private String temp;
+  private String      name;
+  private Date        startDate;
+  private int         stars;
+  private boolean     takesCreditCards;
+  private Type        type;
+  private Set<String> tags;
 
-    @Embedded
-    private Address address;
+  @Transient
+  private String temp;
 
-    @Embedded(concreteClass = Vector.class)
-    private List<PhoneNumber> phoneNumbers;
+  @Embedded
+  private Address address;
 
-    private Hotel() {
-        super();
-        tags = new HashSet<String>();
-        phoneNumbers = new Vector<PhoneNumber>();
-    }
+  @Embedded(concreteClass = Vector.class)
+  private List<PhoneNumber> phoneNumbers;
 
-    
-    public Address getAddress() {
-        return address;
-    }
+  private Hotel() {
+    tags = new HashSet<String>();
+    phoneNumbers = new Vector<PhoneNumber>();
+  }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
 
-    public String getName() {
-        return name;
-    }
+  public Address getAddress() {
+    return address;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setAddress(final Address address) {
+    this.address = address;
+  }
 
-    public int getStars() {
-        return stars;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setStars(int stars) {
-        this.stars = stars;
-    }
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-    public Date getStartDate() {
-        return startDate;
-    }
+  public int getStars() {
+    return stars;
+  }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+  public void setStars(final int stars) {
+    this.stars = stars;
+  }
 
-    public boolean isTakesCreditCards() {
-        return takesCreditCards;
-    }
+  public Date getStartDate() {
+    return startDate;
+  }
 
-    public void setTakesCreditCards(boolean takesCreditCards) {
-        this.takesCreditCards = takesCreditCards;
-    }
+  public void setStartDate(final Date startDate) {
+    this.startDate = startDate;
+  }
 
-    public Type getType() {
-        return type;
-    }
+  public boolean isTakesCreditCards() {
+    return takesCreditCards;
+  }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
+  public void setTakesCreditCards(final boolean takesCreditCards) {
+    this.takesCreditCards = takesCreditCards;
+  }
 
-    public Set<String> getTags() {
-        return tags;
-    }
+  public Type getType() {
+    return type;
+  }
 
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
-    }
+  public void setType(final Type type) {
+    this.type = type;
+  }
 
-    public List<PhoneNumber> getPhoneNumbers() {
-        return phoneNumbers;
-    }
+  public Set<String> getTags() {
+    return tags;
+  }
 
-    public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
-    }
+  public void setTags(final Set<String> tags) {
+    this.tags = tags;
+  }
 
-    public String getTemp() {
-        return temp;
-    }
+  public List<PhoneNumber> getPhoneNumbers() {
+    return phoneNumbers;
+  }
 
-    public void setTemp(String temp) {
-        this.temp = temp;
-    }
+  public void setPhoneNumbers(final List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = phoneNumbers;
+  }
+
+  public String getTemp() {
+    return temp;
+  }
+
+  public void setTemp(final String temp) {
+    this.temp = temp;
+  }
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,20 +27,26 @@ import java.lang.annotation.Target;
 
 import com.google.code.morphia.mapping.Mapper;
 
+
 /**
- * Optional annotation for specifying persistence behavior 
- * 
+ * Optional annotation for specifying persistence behavior
+ *
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@Documented @Inherited
+@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Property {
 
-    /** The name of the key to store the field in; Defaults to the field name. */
-    String value() default Mapper.IGNORED_FIELDNAME;
- 
-    /** Specify the concrete class to instantiate. */
-    Class<?> concreteClass() default Object.class;
+  /**
+   * The name of the key to store the field in; Defaults to the field name.
+   */
+  String value() default Mapper.IGNORED_FIELDNAME;
+
+  /**
+   * Specify the concrete class to instantiate.
+   */
+  Class<?> concreteClass() default Object.class;
 }

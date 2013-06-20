@@ -1,5 +1,6 @@
 package com.google.code.morphia.issue173;
 
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,49 +13,50 @@ import com.google.code.morphia.converters.TypeConverter;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 
+
 @SuppressWarnings("rawtypes")
 public class CalendarConverter extends TypeConverter implements SimpleValueConverter {
-	public CalendarConverter() {
-		super(Calendar.class);
-	}
+  public CalendarConverter() {
+    super(Calendar.class);
+  }
 
-	@Override
-	public Object encode(Object val, MappedField optionalExtraInfo) {
-		if (val == null) {
-			return null;
-		}
-		Calendar calendar = (Calendar) val;
-		long millis = calendar.getTimeInMillis();
-		// . a date so that we can see it clearly in MongoVue
-		// . the date is UTC because
-		//   . timeZone.getOffset(millis) - timeZone.getOffset(newMillis)  may not be 0 (if we're close to DST limits)
-		//   . and it's like that inside GregorianCalendar => more natural
-		Date utcDate = new Date(millis);
-		List<Object> vals = new ArrayList<Object>();
-		vals.add(utcDate);
-		vals.add(calendar.getTimeZone().getID());
-		return vals;
-	}
-	
-	@Override
-	public Object decode(Class type, Object o, MappedField mf) throws MappingException {
-		if (o == null) {
-			return null;
-		}
-		List vals = (List) o;
-		if (vals.size() < 2) {
-			return null;
-		}
-		//-- date --//
-		Date utcDate = (Date) vals.get(0);
-		long millis = utcDate.getTime();
-		
-		//-- TimeZone --//
-		String timeZoneId = (String) vals.get(1);
-		TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
-		//-- GregorianCalendar construction --//
-        GregorianCalendar calendar = new GregorianCalendar(timeZone);
-        calendar.setTimeInMillis(millis);
-		return calendar;
-	}
+  @Override
+  public Object encode(final Object val, final MappedField optionalExtraInfo) {
+    if (val == null) {
+      return null;
+    }
+    final Calendar calendar = (Calendar) val;
+    final long millis = calendar.getTimeInMillis();
+    // . a date so that we can see it clearly in MongoVue
+    // . the date is UTC because
+    //   . timeZone.getOffset(millis) - timeZone.getOffset(newMillis)  may not be 0 (if we're close to DST limits)
+    //   . and it's like that inside GregorianCalendar => more natural
+    final Date utcDate = new Date(millis);
+    final List<Object> values = new ArrayList<Object>();
+    values.add(utcDate);
+    values.add(calendar.getTimeZone().getID());
+    return values;
+  }
+
+  @Override
+  public Object decode(final Class type, final Object o, final MappedField mf) throws MappingException {
+    if (o == null) {
+      return null;
+    }
+    final List values = (List) o;
+    if (values.size() < 2) {
+      return null;
+    }
+    //-- date --//
+    final Date utcDate = (Date) values.get(0);
+    final long millis = utcDate.getTime();
+
+    //-- TimeZone --//
+    final String timeZoneId = (String) values.get(1);
+    final TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+    //-- GregorianCalendar construction --//
+    final GregorianCalendar calendar = new GregorianCalendar(timeZone);
+    calendar.setTimeInMillis(millis);
+    return calendar;
+  }
 }

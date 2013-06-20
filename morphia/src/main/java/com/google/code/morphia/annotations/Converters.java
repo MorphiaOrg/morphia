@@ -15,7 +15,9 @@
  *  under the License.
  */
 
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -26,13 +28,16 @@ import java.lang.annotation.Target;
 
 import com.google.code.morphia.converters.TypeConverter;
 
+
 /**
  * Declares converters required for this entity/class; converters are registered globally at time of the meta-data discovery.
+ *
  * @author Scott Hernandez
  */
-@Documented @Inherited
+@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Converters {
-	Class<? extends TypeConverter>[] value();
+  Class<? extends TypeConverter>[] value();
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.ext;
+
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +27,6 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Entity;
@@ -34,60 +35,59 @@ import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 
+
 /**
- *
  * @author Scott Hernandez
  */
 public class IgnoreFieldsAnnotationTest extends TestBase {
 
-	public IgnoreFieldsAnnotationTest () {
-		super();
-	}
-	
-	Transient transAnn;
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.TYPE})
-	static @interface IgnoreFields {
-		String value();
-	}
-	
-	@Entity
-	@IgnoreFields("ignored")
-	static class User {
-		@Id ObjectId id;
-		String email;
-		String ignored = "never, never";
-	}
+  Transient transAnn;
 
-	@Before
-	public void setUp() {
-		super.setUp();
-		MappedClass.interestingAnnotations.add(IgnoreFields.class);
-		this.morphia.map(User.class);
-		processIgnoreFieldsAnnotations();
-	}
-	
-	//remove any MappedField specified in @IngoreFields on the class.
-	void processIgnoreFieldsAnnotations(){
-		DatastoreImpl dsi = (DatastoreImpl) ds;
-		for(MappedClass mc : dsi.getMapper().getMappedClasses()) {
-			IgnoreFields ignores = (IgnoreFields) mc.getAnnotation(IgnoreFields.class);
-			if (ignores != null) {
-				for(String field : ignores.value().split(",")) {
-					MappedField mf = mc.getMappedFieldByJavaField(field);
-					mc.getPersistenceFields().remove(mf);
-				}
-			}
-		}
-	}
-	@Test
-	public void testIt() {
-		User u = new User();
-		u.email = "ScottHernandez@gmail.com";
-		u.ignored = "test";
-		ds.save(u);
-		
-		User uLoaded = ds.find(User.class).get();
-		Assert.assertEquals("never, never", uLoaded.ignored);
-	}
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ ElementType.TYPE })
+  @interface IgnoreFields {
+    String value();
+  }
+
+  @Entity
+  @IgnoreFields("ignored")
+  static class User {
+    @Id ObjectId id;
+    String email;
+    String ignored = "never, never";
+  }
+
+  @Override
+  @Before
+  public void setUp() {
+    super.setUp();
+    MappedClass.interestingAnnotations.add(IgnoreFields.class);
+    morphia.map(User.class);
+    processIgnoreFieldsAnnotations();
+  }
+
+  //remove any MappedField specified in @IgnoreFields on the class.
+  void processIgnoreFieldsAnnotations() {
+    final DatastoreImpl dsi = (DatastoreImpl) ds;
+    for (final MappedClass mc : dsi.getMapper().getMappedClasses()) {
+      final IgnoreFields ignores = (IgnoreFields) mc.getAnnotation(IgnoreFields.class);
+      if (ignores != null) {
+        for (final String field : ignores.value().split(",")) {
+          final MappedField mf = mc.getMappedFieldByJavaField(field);
+          mc.getPersistenceFields().remove(mf);
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testIt() {
+    final User u = new User();
+    u.email = "ScottHernandez@gmail.com";
+    u.ignored = "test";
+    ds.save(u);
+
+    final User uLoaded = ds.find(User.class).get();
+    Assert.assertEquals("never, never", uLoaded.ignored);
+  }
 }

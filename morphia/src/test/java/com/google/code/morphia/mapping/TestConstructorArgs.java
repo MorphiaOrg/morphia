@@ -14,47 +14,47 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.mapping;
 
-import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
-
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.ConstructorArgs;
 import com.google.code.morphia.annotations.Id;
+import junit.framework.Assert;
+
 
 /**
- *
  * @author Scott Hernandez
  */
-public class TestConstructorArgs  extends TestBase {
+public class TestConstructorArgs extends TestBase {
 
-	@SuppressWarnings("unused")
-	private static class Normal {
-		@Id ObjectId id = new ObjectId();
-		@ConstructorArgs("_id")
-		ArgsConstructor ac = new ArgsConstructor(new ObjectId());
-	}
+  private static class Normal {
+    @Id                     ObjectId        id = new ObjectId();
+    @ConstructorArgs("_id")
+    final ArgsConstructor ac = new ArgsConstructor(new ObjectId());
+  }
 
-	private static class ArgsConstructor{
-		final @Id ObjectId id;
-		
-		private ArgsConstructor(ObjectId id){
-			this.id = id;
-		}
-	}
+  private static class ArgsConstructor {
+    @Id
+    final ObjectId id;
 
-	@Test
-    public void testBasic() throws Exception {
-		Normal n = new Normal();
-		ObjectId acId = n.ac.id;
-		
-		ds.save(n);
-		n = ds.find(Normal.class).get();
-		Assert.assertNotNull(n);
-		Assert.assertNotNull(n.ac);
-		Assert.assertEquals(acId, n.ac.id);
-	}
+    private ArgsConstructor(final ObjectId id) {
+      this.id = id;
+    }
+  }
+
+  @Test
+  public void testBasic() throws Exception {
+    Normal n = new Normal();
+    final ObjectId acId = n.ac.id;
+
+    ds.save(n);
+    n = ds.find(Normal.class).get();
+    Assert.assertNotNull(n);
+    Assert.assertNotNull(n.ac);
+    Assert.assertEquals(acId, n.ac.id);
+  }
 }

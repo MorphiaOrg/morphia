@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.google.code.morphia.ext.entityscanner;
 
 import junit.framework.TestCase;
@@ -13,7 +10,7 @@ import com.google.common.base.Predicates;
 
 /**
  * @author us@thomas-daily.de
- * 
+ *
  */
 public class EntityScannerTest extends TestCase {
 	@Test
@@ -24,13 +21,13 @@ public class EntityScannerTest extends TestCase {
 		assertTrue(m.isMapped(E.class));
 		assertFalse(m.isMapped(F.class));
 		new EntityScanner(m, new Predicate<String>() {
-			
+
 			public boolean apply(final String input) {
 				return input.startsWith(EntityScannerTest.class.getPackage().getName());
 			}
 		});
 		assertTrue(m.isMapped(F.class));
-		
+
 	}
-	
+
 }

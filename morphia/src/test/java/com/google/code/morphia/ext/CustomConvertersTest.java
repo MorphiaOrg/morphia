@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.ext;
 
-import static org.junit.Assert.assertEquals;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.annotations.Embedded;
@@ -41,269 +40,256 @@ import com.mongodb.DBObject;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.DefaultDBEncoder;
 
+import static org.junit.Assert.assertEquals;
+
+
 /**
- *
  * @author Scott Hernandez
  */
 public class CustomConvertersTest extends TestBase {
 
-	@SuppressWarnings("rawtypes") 
-	static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
-		public CharacterToByteConverter() { super(Character.class, char.class); }
-		
-		@Override
-		public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) throws MappingException {
-			if (fromDBObject == null) return null;
-			IntegerConverter intConv = new IntegerConverter();
-			Integer i = (Integer)intConv.decode(targetClass, fromDBObject, optionalExtraInfo);
-			return new Character((char)i.intValue());
-		}
-		
-		@Override
-		public Object encode(Object value, MappedField optionalExtraInfo) {
-			Character c = (Character)value;
-			return (int)c.charValue();
-		}
-	}
-	
-	@Converters(CharacterToByteConverter.class)
-	static class CharEntity {
-		@Id ObjectId id = new ObjectId();
-		Character c = 'a';
-	}
+  @SuppressWarnings("rawtypes")
+  static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
+    public CharacterToByteConverter() {
+      super(Character.class, char.class);
+    }
 
-	@Test
-	public void testIt() {
-		morphia.map(CharEntity.class);
-		
-		ds.save(new CharEntity());
-		CharEntity ce = ds.find(CharEntity.class).get();
-		Assert.assertNotNull(ce.c);
-		Assert.assertEquals(ce.c.charValue() , 'a');
-		
-		BasicDBObject dbObj = (BasicDBObject) ds.getCollection(CharEntity.class).findOne();
-		Assert.assertTrue(dbObj.getInt("c") == (int)'a');
-	}
-	
-	/**
-	 * This test shows an issue with an <code>@Embedded</code> class A
-	 * inheriting from an <code>@Embedded</code> class B that both have a
-	 * Converter assigned (A has AConverter, B has BConverter).
-	 * <p>
-	 * When an object (here MyEntity) has a property/field of type A and is
-	 * deserialized, the deserialization fails with a
-	 * "com.google.code.morphia.mapping.MappingException: No usable constructor for A"
-	 * .
-	 * </p>
-	 */
+    @Override
+    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+      if (fromDBObject == null) {
+        return null;
+      }
+      final IntegerConverter intConverter = new IntegerConverter();
+      final Integer i = (Integer) intConverter.decode(targetClass, fromDBObject, optionalExtraInfo);
+      return (char) i.intValue();
+    }
 
-	@Entity(noClassnameStored = true)
-	private static class MyEntity {
+    @Override
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+      final Character c = (Character) value;
+      return (int) c.charValue();
+    }
+  }
 
-		@Id
-		private Long id;
-		@Embedded
-		private A a;
+  @Converters(CharacterToByteConverter.class)
+  static class CharEntity {
+    @Id ObjectId id = new ObjectId();
+    final Character c = 'a';
+  }
 
-		public MyEntity() {
-		}
+  @Test
+  public void testIt() {
+    morphia.map(CharEntity.class);
 
-		public MyEntity(final Long id, final A a) {
-			this.id = id;
-			this.a = a;
-		}
+    ds.save(new CharEntity());
+    final CharEntity ce = ds.find(CharEntity.class).get();
+    Assert.assertNotNull(ce.c);
+    assertEquals('a', ce.c.charValue());
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((id == null) ? 0 : id.hashCode());
-			result = prime * result + ((a == null) ? 0 : a.hashCode());
-			return result;
-		}
+    final BasicDBObject dbObj = (BasicDBObject) ds.getCollection(CharEntity.class).findOne();
+    Assert.assertTrue(dbObj.getInt("c") == (int) 'a');
+  }
 
-		@Override
-		public boolean equals(final Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			final MyEntity other = (MyEntity) obj;
-			if (id == null) {
-				if (other.id != null) {
-					return false;
-				}
-			} else if (!id.equals(other.id)) {
-				return false;
-			}
-			if (a == null) {
-				if (other.a != null) {
-					return false;
-				}
-			} else if (!a.equals(other.a)) {
-				return false;
-			}
-			return true;
-		}
+  /**
+   * This test shows an issue with an {@code @Embedded} class A inheriting from an {@code @Embedded} class B that both have a
+   * Converter assigned (A has AConverter, B has BConverter). <p> When an object (here MyEntity) has a property/field of type A and is
+   * deserialized, the deserialization fails with a "com.google.code.morphia.mapping.MappingException: No usable constructor for A" . </p>
+   */
 
-	}
+  @Entity(noClassnameStored = true)
+  private static class MyEntity {
 
-	@Converters(B.BConverter.class)
-	@Embedded
-	private static class B {
+    @Id
+    private Long id;
+    @Embedded
+    private A    a;
 
-		static class BConverter extends TypeConverter implements
-				SimpleValueConverter {
+    public MyEntity() {
+    }
 
-			public BConverter() {
-				this(B.class);
-			}
+    public MyEntity(final Long id, final A a) {
+      this.id = id;
+      this.a = a;
+    }
 
-			public BConverter(final Class<? extends B> clazz) {
-				super(clazz);
-			}
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+      result = prime * result + ((a == null) ? 0 : a.hashCode());
+      return result;
+    }
 
-			@SuppressWarnings({ "rawtypes" })
-			@Override
-			public B decode(final Class targetClass, final Object fromDBObject,
-					final MappedField optionalExtraInfo)
-					throws MappingException {
-				if (fromDBObject == null) {
-					return null;
-				}
-				final Long source = (Long) fromDBObject;
-				return create(source);
-			}
+    @Override
+    public boolean equals(final Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
+      final MyEntity other = (MyEntity) obj;
+      if (id == null) {
+        if (other.id != null) {
+          return false;
+        }
+      } else if (!id.equals(other.id)) {
+        return false;
+      }
+      if (a == null) {
+        if (other.a != null) {
+          return false;
+        }
+      } else if (!a.equals(other.a)) {
+        return false;
+      }
+      return true;
+    }
 
-			protected B create(final Long source) {
-				return new B(source);
-			}
+  }
 
-			@Override
-			public Long encode(final Object value,
-					final MappedField optionalExtraInfo) {
-				if (value == null) {
-					return null;
-				}
-				final B source = (B) value;
-				return source.value;
-			}
+  @Converters(B.BConverter.class)
+  @Embedded
+  private static class B {
 
-		}
+    static class BConverter extends TypeConverter implements SimpleValueConverter {
 
-		private final long value;
+      public BConverter() {
+        this(B.class);
+      }
 
-		public B(final long value) {
-			super();
-			this.value = value;
-		}
+      public BConverter(final Class<? extends B> clazz) {
+        super(clazz);
+      }
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + (int) (value ^ (value >>> 32));
-			return result;
-		}
+      @SuppressWarnings({ "rawtypes" }) @Override
+      public B decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+        if (fromDBObject == null) {
+          return null;
+        }
+        final Long source = (Long) fromDBObject;
+        return create(source);
+      }
 
-		@Override
-		public boolean equals(final Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			final B other = (B) obj;
-			if (value != other.value) {
-				return false;
-			}
-			return true;
-		}
+      protected B create(final Long source) {
+        return new B(source);
+      }
 
-		@Override
-		public String toString() {
-			return getClass().getSimpleName() + " [value=" + value + "]";
-		}
+      @Override
+      public Long encode(final Object value, final MappedField optionalExtraInfo) {
+        if (value == null) {
+          return null;
+        }
+        final B source = (B) value;
+        return source.value;
+      }
 
-	}
+    }
 
-	@Converters(A.AConverter.class)
-	@Embedded
-	private static class A extends B {
+    private final long value;
 
-		static final class AConverter extends B.BConverter {
+    public B(final long value) {
+      this.value = value;
+    }
 
-			public AConverter() {
-				super(A.class);
-			}
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + (int) (value ^ (value >>> 32));
+      return result;
+    }
 
-			@Override
-			protected A create(final Long source) {
-				return new A(source);
-			}
+    @Override
+    public boolean equals(final Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
+      final B other = (B) obj;
+      return value == other.value;
+    }
 
-		}
+    @Override
+    public String toString() {
+      return getClass().getSimpleName() + " [value=" + value + "]";
+    }
 
-		public A(final long value) {
-			super(value);
-		}
-	}
+  }
 
-	@Before
-	public void setup() {
-		morphia.map(MyEntity.class);
-		morphia.map(B.class);
-		morphia.map(A.class);
-	}
+  @Converters(A.AConverter.class)
+  @Embedded
+  private static class A extends B {
 
-	/**
-	 * This test is green when {@link MyEntity#a} is annotated with
-	 * <code>@Property</code>, as in this case the field is not serialized at
-	 * all. However, the bson encoder would fail to encode the object of type A
-	 * (as shown by {@link #testFullBSONSerialization()}).
-	 */
-	@Test @Ignore
-	public void testDBObjectSerialization() {
-		final MyEntity entity = new MyEntity(1l, new A(2));
-		final DBObject dbObject = morphia.toDBObject(entity);
-		assertEquals(BasicDBObjectBuilder.start("_id", 1l).add("a", 2l).get(),
-				dbObject);
-		// fails with a
-		// com.google.code.morphia.mapping.MappingException: No usable
-		// constructor
-		// for InheritanceTest$A
-		final MyEntity actual = morphia.fromDBObject(MyEntity.class, dbObject);
-		assertEquals(entity, actual);
-	}
+    static final class AConverter extends BConverter {
 
-	/**
-	 * This test shows the full serialization, including bson encoding/decoding.
-	 */
-	@Test @Ignore
-	public void testFullBSONSerialization() {
-		final MyEntity entity = new MyEntity(1l, new A(2));
-		final DBObject dbObject = morphia.toDBObject(entity);
+      public AConverter() {
+        super(A.class);
+      }
 
-		final byte[] data = new DefaultDBEncoder().encode(dbObject);
+      @Override
+      protected A create(final Long source) {
+        return new A(source);
+      }
 
-		final DBObject decoded = new DefaultDBDecoder().decode(data,
-				(DBCollection) null);
-		// fails with a
-		// com.google.code.morphia.mapping.MappingException: No usable
-		// constructor
-		// for InheritanceTest$A
-		final MyEntity actual = morphia.fromDBObject(MyEntity.class, decoded);
-		assertEquals(entity, actual);
-	}
+    }
+
+    public A(final long value) {
+      super(value);
+    }
+  }
+
+  @Before
+  public void setup() {
+    morphia.map(MyEntity.class);
+    morphia.map(B.class);
+    morphia.map(A.class);
+  }
+
+  /**
+   * This test is green when {@link MyEntity#a} is annotated with {@code @Property}, as in this case the field is not serialized at
+   * all. However, the bson encoder would fail to encode the object of type A (as shown by {@link #testFullBSONSerialization()}).
+   */
+  @Test @Ignore
+  public void testDBObjectSerialization() {
+    final MyEntity entity = new MyEntity(1l, new A(2));
+    final DBObject dbObject = morphia.toDBObject(entity);
+    assertEquals(BasicDBObjectBuilder.start("_id", 1l).add("a", 2l).get(), dbObject);
+    // fails with a
+    // com.google.code.morphia.mapping.MappingException: No usable
+    // constructor
+    // for InheritanceTest$A
+    final MyEntity actual = morphia.fromDBObject(MyEntity.class, dbObject);
+    assertEquals(entity, actual);
+  }
+
+  /**
+   * This test shows the full serialization, including bson encoding/decoding.
+   */
+  @Test @Ignore
+  public void testFullBSONSerialization() {
+    final MyEntity entity = new MyEntity(1l, new A(2));
+    final DBObject dbObject = morphia.toDBObject(entity);
+
+    final byte[] data = new DefaultDBEncoder().encode(dbObject);
+
+    final DBObject decoded = new DefaultDBDecoder().decode(data, (DBCollection) null);
+    // fails with a
+    // com.google.code.morphia.mapping.MappingException: No usable
+    // constructor
+    // for InheritanceTest$A
+    final MyEntity actual = morphia.fromDBObject(MyEntity.class, decoded);
+    assertEquals(entity, actual);
+  }
 
 }
 

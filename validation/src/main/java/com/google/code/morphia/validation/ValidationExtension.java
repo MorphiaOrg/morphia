@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.google.code.morphia.validation;
 
 import java.util.Set;
@@ -37,7 +34,7 @@ public class ValidationExtension extends AbstractEntityInterceptor
     }
 
     @Override
-    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapr)
+    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper)
     {
         final Set validate = this.validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty())

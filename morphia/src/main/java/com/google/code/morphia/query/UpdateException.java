@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.query;
 
-/** Error during update. 
- *  @author ScottHernandez */
+
+/**
+ * Error during update.
+ *
+ * @author ScottHernandez
+ */
 public class UpdateException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public UpdateException( String message ) {
-            super(message);
-    }
+  public UpdateException(final String message) {
+    super(message);
+  }
 
-    public UpdateException( String message, Throwable cause ) {
-            super(message, cause);
-    }
+  public UpdateException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 
 }

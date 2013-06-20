@@ -14,49 +14,51 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.testutil.TestEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.testutil.TestEntity;
+
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 @Entity("agencies")
 public class TravelAgency extends TestEntity {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Property
-    private String name;
+  @Property
+  private String name;
 
-    @Reference
-    private List<Hotel> hotels;
+  @Reference
+  private List<Hotel> hotels;
 
-    public TravelAgency() {
-        hotels = new ArrayList<Hotel>();
-    }
+  public TravelAgency() {
+    hotels = new ArrayList<Hotel>();
+  }
 
-    public List<Hotel> getHotels() {
-        return hotels;
-    }
+  public List<Hotel> getHotels() {
+    return hotels;
+  }
 
-    public void setHotels(List<Hotel> hotels) {
-        this.hotels = hotels;
-    }
+  public void setHotels(final List<Hotel> hotels) {
+    this.hotels = hotels;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(final String name) {
+    this.name = name;
+  }
 
 
 }

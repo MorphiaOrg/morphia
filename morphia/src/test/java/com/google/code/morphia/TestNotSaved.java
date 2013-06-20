@@ -14,53 +14,59 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia;
 
-import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
+import junit.framework.Assert;
+
 
 /**
- *
  * @author Scott Hernandez
  */
-public class TestNotSaved  extends TestBase {
+public class TestNotSaved extends TestBase {
 
-	@Entity(value="Normal", noClassnameStored=true)
-	static class Normal {
-		@Id ObjectId id = new ObjectId();
-		String name;
-		public Normal(String name) {this.name = name;}
-		protected Normal() {}
-	}
+  @Entity(value = "Normal", noClassnameStored = true)
+  static class Normal {
+    @Id ObjectId id = new ObjectId();
+    String name;
 
-	@Entity(value="Normal", noClassnameStored=true)
-	static class NormalWithNotSaved{
-		@Id ObjectId id = new ObjectId();
-		@NotSaved String name = "never";
-	}
+    public Normal(final String name) {
+      this.name = name;
+    }
 
-	@Test
-    public void testBasic() throws Exception {
-		ds.save(new Normal("value"));
-		Normal n = ds.find(Normal.class).get();
-		Assert.assertNotNull(n);
-		Assert.assertNotNull(n.name);
-		ds.delete(n);
-		ds.save(new NormalWithNotSaved());
-		n = ds.find(Normal.class).get();
-		Assert.assertNotNull(n);
-		Assert.assertNull(n.name);
-		ds.delete(n);
-		ds.save(new Normal("value21"));
-		NormalWithNotSaved nwns = ds.find(NormalWithNotSaved.class).get();
-		Assert.assertNotNull(nwns);
-		Assert.assertNotNull(nwns.name);
-		Assert.assertEquals("value21", nwns.name);
-	}
+    protected Normal() {
+    }
+  }
+
+  @Entity(value = "Normal", noClassnameStored = true)
+  static class NormalWithNotSaved {
+    @Id       ObjectId id   = new ObjectId();
+    @NotSaved
+    final String   name = "never";
+  }
+
+  @Test
+  public void testBasic() throws Exception {
+    ds.save(new Normal("value"));
+    Normal n = ds.find(Normal.class).get();
+    Assert.assertNotNull(n);
+    Assert.assertNotNull(n.name);
+    ds.delete(n);
+    ds.save(new NormalWithNotSaved());
+    n = ds.find(Normal.class).get();
+    Assert.assertNotNull(n);
+    Assert.assertNull(n.name);
+    ds.delete(n);
+    ds.save(new Normal("value21"));
+    final NormalWithNotSaved notSaved = ds.find(NormalWithNotSaved.class).get();
+    Assert.assertNotNull(notSaved);
+    Assert.assertNotNull(notSaved.name);
+    Assert.assertEquals("never", notSaved.name);
+  }
 }

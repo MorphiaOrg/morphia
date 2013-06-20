@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
 import com.google.code.morphia.mapping.Mapper;
 import com.google.code.morphia.mapping.cache.DefaultEntityCache;
 import com.google.code.morphia.testmodel.Circle;
@@ -32,53 +29,57 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 public class TestInterfaces extends TestBase {
 
-    @Test
-    public void testDynamicInstantiation() throws Exception {
-        DBCollection shapes = db.getCollection("shapes");
-        DBCollection shapeshifters = db.getCollection("shapeshifters");
+  @Test
+  public void testDynamicInstantiation() throws Exception {
+    final DBCollection shapes = db.getCollection("shapes");
+    final DBCollection shapeshifters = db.getCollection("shapeshifters");
 
-        morphia.map(Circle.class)
-                .map(Rectangle.class)
-                .map(ShapeShifter.class);
+    morphia.map(Circle.class).map(Rectangle.class).map(ShapeShifter.class);
 
-        Shape rectangle = new Rectangle(2,5);
-        
-        DBObject rectangleDbObj = morphia.toDBObject(rectangle);
-        shapes.save(rectangleDbObj);
+    final Shape rectangle = new Rectangle(2, 5);
 
-        BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject(Mapper.ID_KEY, rectangleDbObj.get(Mapper.ID_KEY)));
-		Shape rectangleLoaded = morphia.fromDBObject(Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
+    final DBObject rectangleDbObj = morphia.toDBObject(rectangle);
+    shapes.save(rectangleDbObj);
 
-        assertTrue(rectangle.getArea() == rectangleLoaded.getArea());
-        assertTrue(rectangleLoaded instanceof Rectangle);
+    final BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject(Mapper.ID_KEY, rectangleDbObj.get(
+      Mapper.ID_KEY)));
+    final Shape rectangleLoaded = morphia.fromDBObject(Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
 
-        ShapeShifter shifter = new ShapeShifter();
-        shifter.setReferencedShape(rectangleLoaded);
-        shifter.setMainShape(new Circle(2.2));
-        shifter.getAvailableShapes().add(new Rectangle(3,3));
-        shifter.getAvailableShapes().add(new Circle(4.4));
+    assertTrue(rectangle.getArea() == rectangleLoaded.getArea());
+    assertTrue(rectangleLoaded instanceof Rectangle);
 
-        DBObject shifterDbObj = morphia.toDBObject(shifter);
-        shapeshifters.save(shifterDbObj);
+    final ShapeShifter shifter = new ShapeShifter();
+    shifter.setReferencedShape(rectangleLoaded);
+    shifter.setMainShape(new Circle(2.2));
+    shifter.getAvailableShapes().add(new Rectangle(3, 3));
+    shifter.getAvailableShapes().add(new Circle(4.4));
 
-        BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Mapper.ID_KEY, shifterDbObj.get(Mapper.ID_KEY)));
-		ShapeShifter shifterLoaded = morphia.fromDBObject(ShapeShifter.class, shifterDbObjLoaded, new DefaultEntityCache());
+    final DBObject shifterDbObj = morphia.toDBObject(shifter);
+    shapeshifters.save(shifterDbObj);
 
-        assertNotNull(shifterLoaded);
-        assertNotNull(shifterLoaded.getReferencedShape());
-        assertNotNull(shifterLoaded.getReferencedShape().getArea());
-        assertNotNull(rectangle);
-        assertNotNull(rectangle.getArea());
+    final BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Mapper.ID_KEY, shifterDbObj.get(
+      Mapper.ID_KEY)));
+    final ShapeShifter shifterLoaded = morphia.fromDBObject(ShapeShifter.class, shifterDbObjLoaded, new DefaultEntityCache());
 
-        assertTrue(rectangle.getArea() == shifterLoaded.getReferencedShape().getArea());
-        assertTrue(shifterLoaded.getReferencedShape() instanceof Rectangle);
-        assertTrue(shifter.getMainShape().getArea() == shifterLoaded.getMainShape().getArea());
-        assertEquals(shifter.getAvailableShapes().size(), shifterLoaded.getAvailableShapes().size());
-    }
+    assertNotNull(shifterLoaded);
+    assertNotNull(shifterLoaded.getReferencedShape());
+    assertNotNull(shifterLoaded.getReferencedShape().getArea());
+    assertNotNull(rectangle);
+    assertNotNull(rectangle.getArea());
+
+    assertTrue(rectangle.getArea() == shifterLoaded.getReferencedShape().getArea());
+    assertTrue(shifterLoaded.getReferencedShape() instanceof Rectangle);
+    assertTrue(shifter.getMainShape().getArea() == shifterLoaded.getMainShape().getArea());
+    assertEquals(shifter.getAvailableShapes().size(), shifterLoaded.getAvailableShapes().size());
+  }
 }

@@ -14,42 +14,42 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
+
 
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.testutil.TestEntity;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 public class Rectangle extends TestEntity implements Shape {
-	private static final long serialVersionUID = 1L;
-	
-	@Property("h")
-    private double height;
-    @Property("w")
-    private double width;
+  private static final long serialVersionUID = 1L;
 
-    public Rectangle() {
-        super();
-    }
+  @Property("h")
+  private double height;
+  @Property("w")
+  private double width;
 
-    public Rectangle(double height, double width) {
-        super();
-        this.height = height;
-        this.width = width;
-    }
+  public Rectangle() {
+  }
 
-    public double getArea() {
-        return height * width;
-    }
+  public Rectangle(final double height, final double width) {
+    this.height = height;
+    this.width = width;
+  }
 
-    public double getHeight() {
-        return height;
-    }
+  public double getArea() {
+    return height * width;
+  }
 
-    public double getWidth() {
-        return width;
-    }
+  public double getHeight() {
+    return height;
+  }
+
+  public double getWidth() {
+    return width;
+  }
 }

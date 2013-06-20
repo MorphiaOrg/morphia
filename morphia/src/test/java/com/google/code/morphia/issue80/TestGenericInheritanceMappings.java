@@ -1,4 +1,3 @@
-package com.google.code.morphia.issue80;
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  *
@@ -16,69 +15,72 @@ package com.google.code.morphia.issue80;
  */
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+package com.google.code.morphia.issue80;
+
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+
 /**
- *
  * @author Scott Hernandez
  */
 public class TestGenericInheritanceMappings extends TestBase {
 
-	static class GenericHolder<T> {
-		@Property
-		T thing;
-	}
-	
-	@Embedded
-	static class HoldsAString extends GenericHolder<String>{}
+  static class GenericHolder<T> {
+    @Property T thing;
+  }
 
-	@Embedded
-	static class HoldsAnInteger extends GenericHolder<Integer>{}
-	
-	@Entity
-	static class ContainsThings {
-		@Id String id;
-		HoldsAString stringThing;
-		HoldsAnInteger integerThing;
-	}
-	
-	
-	@Before @Override
-	public void setUp() {
-		super.setUp();
-		morphia.map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
-	}
+  @Embedded
+  static class HoldsAString extends GenericHolder<String> {
+  }
 
-	//Waiting on issue 80
-    @Test @Ignore
-    public void testIt() throws Exception {
-    	ContainsThings ct = new ContainsThings();
-    	HoldsAnInteger hai = new HoldsAnInteger();
-    	hai.thing = 7;
-    	HoldsAString has = new HoldsAString();
-    	has.thing = "tr";
-    	ct.stringThing = has;
-    	ct.integerThing = hai;
-    	
-    	ds.save(ct);
-    	assertNotNull(ct.id);
-    	assertEquals(ds.getCount(ContainsThings.class), 1);    	
-    	ContainsThings ctLoaded = ds.find(ContainsThings.class).get();
-    	assertNotNull(ctLoaded);
-    	assertNotNull(ctLoaded.id);
-    	assertNotNull(ctLoaded.stringThing);
-    	assertNotNull(ctLoaded.integerThing);
-    }
-    
+  @Embedded
+  static class HoldsAnInteger extends GenericHolder<Integer> {
+  }
+
+  @Entity
+  static class ContainsThings {
+    @Id String id;
+    HoldsAString   stringThing;
+    HoldsAnInteger integerThing;
+  }
+
+
+  @Before @Override
+  public void setUp() {
+    super.setUp();
+    morphia.map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
+  }
+
+  //Waiting on issue 80
+  @Test @Ignore
+  public void testIt() throws Exception {
+    final ContainsThings ct = new ContainsThings();
+    final HoldsAnInteger hai = new HoldsAnInteger();
+    hai.thing = 7;
+    final HoldsAString has = new HoldsAString();
+    has.thing = "tr";
+    ct.stringThing = has;
+    ct.integerThing = hai;
+
+    ds.save(ct);
+    assertNotNull(ct.id);
+    assertEquals(1, ds.getCount(ContainsThings.class));
+    final ContainsThings ctLoaded = ds.find(ContainsThings.class).get();
+    assertNotNull(ctLoaded);
+    assertNotNull(ctLoaded.id);
+    assertNotNull(ctLoaded.stringThing);
+    assertNotNull(ctLoaded.integerThing);
+  }
+
 }

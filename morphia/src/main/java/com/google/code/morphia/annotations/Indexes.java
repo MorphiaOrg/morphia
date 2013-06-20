@@ -15,7 +15,9 @@
  *  under the License.
  */
 
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -24,13 +26,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
  * Defines indexes for this entity type (on the collection)
+ *
  * @author Scott Hernandez
  */
-@Documented @Inherited
+@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Indexes {
-	Index[] value();
+  Index[] value();
 }

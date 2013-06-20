@@ -1,27 +1,28 @@
 package com.google.code.morphia.query;
 
-import org.bson.types.CodeWScope;
 
+import org.bson.types.CodeWScope;
 import com.mongodb.DBObject;
 
-public class WhereCriteria extends AbstractCriteria implements Criteria {
 
-	private Object js;
+public class WhereCriteria extends AbstractCriteria {
 
-	public WhereCriteria(String js) {
-		this.js = js;
-	}
+  private final Object js;
 
-	public WhereCriteria(CodeWScope js) {
-		this.js = js;
-	}
+  public WhereCriteria(final String js) {
+    this.js = js;
+  }
 
-	public void addTo(DBObject obj) {
-		obj.put(FilterOperator.WHERE.val(), this.js);
-	}
+  public WhereCriteria(final CodeWScope js) {
+    this.js = js;
+  }
 
-	public String getFieldName() {
-		return FilterOperator.WHERE.val();
-	}
+  public void addTo(final DBObject obj) {
+    obj.put(FilterOperator.WHERE.val(), js);
+  }
+
+  public String getFieldName() {
+    return FilterOperator.WHERE.val();
+  }
 
 }

@@ -18,8 +18,6 @@
 package com.google.code.morphia;
 
 
-import java.util.Set;
-
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Id;
@@ -36,31 +34,48 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Scott Hernandez
  */
-public class TestEmbeddedArrayIndexes extends TestBase {
-  @Indexes({ @Index("b.bar, b.car") })
-  private static class A {
-    @Id ObjectId id = new ObjectId();
-    Set<B> b;
+public class TestIndexInheritance extends TestBase {
+
+  @Indexes(@Index("description"))
+  private abstract static class Shape {
+    @Id ObjectId id;
+    String description;
     @Indexed String foo;
   }
 
-  private static class B {
-    String bar;
-    String car;
+  @Indexes(@Index("radius"))
+  private static class Circle extends Shape {
+    double radius = 1;
+
+    public Circle() {
+      description = "Circles are round and can be rolled along the ground.";
+    }
+  }
+
+
+  @Test
+  public void testClassIndexInherit() throws Exception {
+    morphia.map(Circle.class).map(Shape.class);
+    final MappedClass mc = morphia.getMapper().getMappedClass(Circle.class);
+    assertNotNull(mc);
+
+    assertEquals(2, mc.getAnnotations(Indexes.class).size());
+
+    ds.ensureIndexes();
+    final DBCollection coll = ds.getCollection(Circle.class);
+
+    assertEquals(4, coll.getIndexInfo().size());
   }
 
   @Test
-  public void testParamEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(A.class);
-    assertNotNull(mc);
+  public void testInheritedFieldIndex() throws Exception {
+    morphia.map(Circle.class).map(Shape.class);
+    morphia.getMapper().getMappedClass(Circle.class);
 
-    assertEquals(1, mc.getAnnotations(Indexes.class).size());
+    ds.ensureIndexes();
+    final DBCollection coll = ds.getCollection(Circle.class);
 
-    ds.ensureIndexes(A.class);
-    final DBCollection coll = ds.getCollection(A.class);
-
-    assertEquals("indexes found: coll.getIndexInfo()" + coll.getIndexInfo(), 3, coll.getIndexInfo().size());
-
+    assertEquals(4, coll.getIndexInfo().size());
   }
 
 }

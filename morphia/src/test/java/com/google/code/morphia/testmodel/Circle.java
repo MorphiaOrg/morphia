@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.testmodel;
+
 
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.testutil.TestEntity;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 public class Circle extends TestEntity implements Shape {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Property
-    private double radius;
+  @Property
+  private double radius;
 
-    public Circle() {
-        super();
-    }
+  public Circle() {
+  }
 
-    public Circle(double radius) {
-        super();
-        this.radius = radius;
-    }
+  public Circle(final double radius) {
+    this.radius = radius;
+  }
 
-    public double getArea() {
-        return Math.PI * (radius * radius);
-    }
+  public double getArea() {
+    return Math.PI * (radius * radius);
+  }
 
-    public double getRadius() {
-        return radius;
-    }
+  public double getRadius() {
+    return radius;
+  }
 }

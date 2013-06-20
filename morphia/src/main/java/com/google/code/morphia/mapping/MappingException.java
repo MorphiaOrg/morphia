@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
+
 package com.google.code.morphia.mapping;
 
+
 /**
- *
  * @author Olafur Gauti Gudmundsson
  */
 public class MappingException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public MappingException( String message ) {
-            super(message);
-    }
+  public MappingException(final String message) {
+    super(message);
+  }
 
-    public MappingException( String message, Throwable cause ) {
-            super(message, cause);
-    }
-
+  public MappingException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 }

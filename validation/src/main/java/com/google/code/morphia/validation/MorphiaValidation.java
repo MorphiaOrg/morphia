@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.google.code.morphia.validation;
 
 @Deprecated

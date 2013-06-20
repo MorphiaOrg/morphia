@@ -1,106 +1,103 @@
-/**
- * 
- */
 package com.google.code.morphia.mapping;
+
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.bson.types.ObjectId;
 import org.junit.Test;
-
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Id;
+import junit.framework.Assert;
+
 
 /**
  * @author scotthernandez
  */
-public class NestedMapOrCollTest extends TestBase{
-	
+public class NestedMapOrCollTest extends TestBase {
 
-	@SuppressWarnings({"rawtypes", "unchecked", "unused"})
-	private static class HasMapOfMap {
-		@Id ObjectId id;
 
-		@Embedded
-		Map<String, Map<String, String>> mom = new HashMap();
-	}
+  @SuppressWarnings({"unchecked"})
+  private static class HashMapOfMap {
+    @Id ObjectId id;
 
-	@SuppressWarnings({"rawtypes", "unchecked", "unused"})
-	private static class HasMapOfList {
-		@Id ObjectId id;
+    @Embedded
+    final Map<String, Map<String, String>> mom = new HashMap();
+  }
 
-		@Embedded
-		Map<String, List<String>> mol = new HashMap();
-	}
+  @SuppressWarnings({"unchecked"})
+  private static class HashMapOfList {
+    @Id ObjectId id;
 
-	@SuppressWarnings({"rawtypes", "unchecked", "unused"})
-	private static class HasMapOfListOfMapMap {
-		@Id ObjectId id;
+    @Embedded
+    final Map<String, List<String>> mol = new HashMap();
+  }
 
-		@Embedded
-		Map<String, List<NestedMapOrCollTest.HasMapOfMap>> mol = new HashMap();
-	}
-	
-	@Test
-	public void testMapOfMap() throws Exception {
-		HasMapOfMap hmom = new HasMapOfMap();
-		Map<String, String> dmap = new HashMap<String, String>();
-		hmom.mom.put("root", dmap);
-		dmap.put("deep", "values");
-		dmap.put("peer", "lame");
-		
-		ds.save(hmom);
-		hmom = ds.find(HasMapOfMap.class).get();
-		Assert.assertNotNull(hmom.mom);
-		Assert.assertNotNull(hmom.mom.get("root"));
-		Assert.assertNotNull(hmom.mom.get("root").get("deep"));
-		Assert.assertEquals("values", hmom.mom.get("root").get("deep"));
-		Assert.assertNotNull("lame", hmom.mom.get("root").get("peer"));
-	}
+  @SuppressWarnings({"unchecked"})
+  private static class HashMapOfListOfMapMap {
+    @Id ObjectId id;
 
-	@Test
-	public void testMapOfList() throws Exception {
-		HasMapOfList hmol = new HasMapOfList();
-		hmol.mol.put("entry1", Collections.singletonList("val1"));
-		hmol.mol.put("entry2", Collections.singletonList("val2"));
-		
-		ds.save(hmol);
-		hmol = ds.find(HasMapOfList.class).get();
-		Assert.assertNotNull(hmol.mol);
-		Assert.assertNotNull(hmol.mol.get("entry1"));
-		Assert.assertNotNull(hmol.mol.get("entry1").get(0));
-		Assert.assertEquals("val1", hmol.mol.get("entry1").get(0));
-		Assert.assertNotNull("val2", hmol.mol.get("entry2").get(0));
-	}
+    @Embedded
+    final Map<String, List<HashMapOfMap>> mol = new HashMap();
+  }
 
-	@Test
-	public void testMapOfListOfMapMap() throws Exception {
-		HasMapOfMap hmom = new HasMapOfMap();
-		Map<String, String> dmap = new HashMap<String, String>();
-		hmom.mom.put("root", dmap);
-		dmap.put("deep", "values");
-		dmap.put("peer", "lame");
+  @Test
+  public void testMapOfMap() throws Exception {
+    HashMapOfMap mapOfMap = new HashMapOfMap();
+    final Map<String, String> map = new HashMap<String, String>();
+    mapOfMap.mom.put("root", map);
+    map.put("deep", "values");
+    map.put("peer", "lame");
 
-		
-		HasMapOfListOfMapMap hmolomm = new HasMapOfListOfMapMap();
-		hmolomm.mol.put("r1", Collections.singletonList(hmom));
-		hmolomm.mol.put("r2", Collections.singletonList(hmom));
-		
-		ds.save(hmolomm);
-		hmolomm = ds.find(HasMapOfListOfMapMap.class).get();
-		Assert.assertNotNull(hmolomm.mol);
-		Assert.assertNotNull(hmolomm.mol.get("r1"));
-		Assert.assertNotNull(hmolomm.mol.get("r1").get(0));
-		Assert.assertNotNull(hmolomm.mol.get("r1").get(0).mom);
-		Assert.assertEquals("values", hmolomm.mol.get("r1").get(0).mom.get("root").get("deep"));
-		Assert.assertEquals("lame", hmolomm.mol.get("r1").get(0).mom.get("root").get("peer"));
-		Assert.assertEquals("values", hmolomm.mol.get("r2").get(0).mom.get("root").get("deep"));
-		Assert.assertEquals("lame", hmolomm.mol.get("r2").get(0).mom.get("root").get("peer"));
-	}
+    ds.save(mapOfMap);
+    mapOfMap = ds.find(HashMapOfMap.class).get();
+    Assert.assertNotNull(mapOfMap.mom);
+    Assert.assertNotNull(mapOfMap.mom.get("root"));
+    Assert.assertNotNull(mapOfMap.mom.get("root").get("deep"));
+    Assert.assertEquals("values", mapOfMap.mom.get("root").get("deep"));
+    Assert.assertNotNull("lame", mapOfMap.mom.get("root").get("peer"));
+  }
+
+  @Test
+  public void testMapOfList() throws Exception {
+    HashMapOfList map = new HashMapOfList();
+    map.mol.put("entry1", Collections.singletonList("val1"));
+    map.mol.put("entry2", Collections.singletonList("val2"));
+
+    ds.save(map);
+    map = ds.find(HashMapOfList.class).get();
+    Assert.assertNotNull(map.mol);
+    Assert.assertNotNull(map.mol.get("entry1"));
+    Assert.assertNotNull(map.mol.get("entry1").get(0));
+    Assert.assertEquals("val1", map.mol.get("entry1").get(0));
+    Assert.assertNotNull("val2", map.mol.get("entry2").get(0));
+  }
+
+  @Test
+  public void testMapOfListOfMapMap() throws Exception {
+    final HashMapOfMap mapOfMap = new HashMapOfMap();
+    final Map<String, String> map = new HashMap<String, String>();
+    mapOfMap.mom.put("root", map);
+    map.put("deep", "values");
+    map.put("peer", "lame");
+
+
+    HashMapOfListOfMapMap mapMap = new HashMapOfListOfMapMap();
+    mapMap.mol.put("r1", Collections.singletonList(mapOfMap));
+    mapMap.mol.put("r2", Collections.singletonList(mapOfMap));
+
+    ds.save(mapMap);
+    mapMap = ds.find(HashMapOfListOfMapMap.class).get();
+    Assert.assertNotNull(mapMap.mol);
+    Assert.assertNotNull(mapMap.mol.get("r1"));
+    Assert.assertNotNull(mapMap.mol.get("r1").get(0));
+    Assert.assertNotNull(mapMap.mol.get("r1").get(0).mom);
+    Assert.assertEquals("values", mapMap.mol.get("r1").get(0).mom.get("root").get("deep"));
+    Assert.assertEquals("lame", mapMap.mol.get("r1").get(0).mom.get("root").get("peer"));
+    Assert.assertEquals("values", mapMap.mol.get("r2").get(0).mom.get("root").get("deep"));
+    Assert.assertEquals("lame", mapMap.mol.get("r2").get(0).mom.get("root").get("peer"));
+  }
 }

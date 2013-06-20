@@ -15,7 +15,9 @@
  *  under the License.
  */
 
+
 package com.google.code.morphia.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -24,15 +26,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
- * Specifies that this class is part of an inheritance structure.
- * This implies that we have to store the full class name in the Mongo
+ * Specifies that this class is part of an inheritance structure. This implies that we have to store the full class name in the Mongo
  * object.
  *
  * @author Olafur Gauti Gudmundsson
  */
-@Documented @Inherited
+@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Polymorphic {
 }
