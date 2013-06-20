@@ -15,7 +15,8 @@ import junit.framework.Assert;
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
   public static class E {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
 
     @Embedded
     final A a1 = new A();
