@@ -1,5 +1,7 @@
 # Morphia
 
+[![Build Status](https://jenkins.10gen.com/job/morphia/badge/icon)](https://jenkins.10gen.com/job/morphia/)
+
 **Morphia** is a lightweight type-safe library for mapping Java objects to/from [MongoDB](http://www.mongodb.org/):
 
 - Easy to use, and very **lightweight**; reflection is used once per type and cached for **good performance**.
