@@ -1,6 +1,7 @@
 package com.google.code.morphia.mapping.lazy;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class TestReferenceMap extends ProxyTestBase {
     final Map<String, B> bs = new HashMap<String, B>();
   }
 
-  public static class B {
+  public static class B implements Serializable {
     @Id
     private final String id = new ObjectId().toStringMongod();
 
