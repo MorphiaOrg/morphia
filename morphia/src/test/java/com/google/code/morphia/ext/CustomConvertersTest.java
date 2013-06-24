@@ -190,7 +190,10 @@ public class CustomConvertersTest extends TestBase {
 
     }
 
-    private final long value;
+    private long value;
+
+    public B() {
+    }
 
     public B(final long value) {
       this.value = value;
@@ -243,6 +246,9 @@ public class CustomConvertersTest extends TestBase {
 
     }
 
+    public A() {
+    }
+
     public A(final long value) {
       super(value);
     }
@@ -275,7 +281,7 @@ public class CustomConvertersTest extends TestBase {
   /**
    * This test shows the full serialization, including bson encoding/decoding.
    */
-  @Test @Ignore
+  @Test
   public void testFullBSONSerialization() {
     final MyEntity entity = new MyEntity(1l, new A(2));
     final DBObject dbObject = morphia.toDBObject(entity);
