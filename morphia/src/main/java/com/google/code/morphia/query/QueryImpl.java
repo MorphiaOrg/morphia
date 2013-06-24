@@ -441,7 +441,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     //reset order
-    if (condition == null || condition.trim().isEmpty()) {
+    if (condition == null || condition.trim().length() == 0) {
       sort = null;
     }
     sort = parseFieldsString(condition, clazz, ds.getMapper(), validateName);

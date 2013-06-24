@@ -233,7 +233,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
     final boolean dropDupsOnCreate, final boolean background, final boolean sparse) {
     final BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
-    if (name != null && !name.isEmpty()) {
+    if (name != null && name.length() != 0) {
       keyOpts.add("name", name);
     }
     if (unique) {
@@ -866,7 +866,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   protected void throwOnError(final WriteConcern wc, final WriteResult wr) {
     if (wc == null && wr.getLastConcern() == null) {
       final CommandResult cr = wr.getLastError();
-      if (cr != null && cr.getErrorMessage() != null && !cr.getErrorMessage().isEmpty()) {
+      if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() != 0) {
         cr.throwOnError();
       }
     }
@@ -1248,7 +1248,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       cmd.setSort(qi.getSortObject());
     }
 
-    if (finalize != null && !finalize.isEmpty()) {
+    if (finalize != null && finalize.length() != 0) {
       cmd.setFinalize(finalize);
     }
 
@@ -1292,7 +1292,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     WriteConcern wc = defConcern;
     if (clazzOrEntity != null) {
       final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-      if (entityAnn != null && entityAnn.concern() != null && !entityAnn.concern().isEmpty()) {
+      if (entityAnn != null && entityAnn.concern() != null && entityAnn.concern().length() != 0) {
         wc = WriteConcern.valueOf(entityAnn.concern());
       }
     }

@@ -34,7 +34,7 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
   }
 
   public static Locale parseLocale(final String localeString) {
-    if ((localeString != null) && (!localeString.isEmpty())) {
+    if ((localeString != null) && (localeString.length() != 0)) {
       final StringTokenizer st = new StringTokenizer(localeString, "_");
       final String language = st.hasMoreElements() ? st.nextToken() : Locale.getDefault().getLanguage();
       final String country = st.hasMoreElements() ? st.nextToken() : "";

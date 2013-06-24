@@ -27,7 +27,7 @@ public final class Assert {
   }
 
   public static void isNotNullAndNotEmpty(final String reference, final String msg) {
-    if ((reference == null) || (reference.isEmpty())) {
+    if ((reference == null) || (reference.length() == 0)) {
       raiseError(msg);
     }
   }
@@ -197,7 +197,7 @@ public final class Assert {
 
   public static void parameterNotEmpty(final String reference, final String nameOfParameter) {
 
-    if (reference != null && reference.isEmpty()) {
+    if (reference != null && reference.length() == 0) {
       raiseError("Parameter '" + nameOfParameter + "' is expected to NOT be empty.");
     }
   }

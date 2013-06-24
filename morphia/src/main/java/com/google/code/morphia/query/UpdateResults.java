@@ -17,7 +17,7 @@ public class UpdateResults<T> {
 
   public boolean getHadError() {
     final String error = getError();
-    return error != null && !error.isEmpty();
+    return error != null && error.length() != 0;
   }
 
   /**
