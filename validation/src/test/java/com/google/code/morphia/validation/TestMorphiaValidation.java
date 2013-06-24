@@ -1,10 +1,15 @@
 package com.google.code.morphia.validation;
 
+import java.lang.Object;
+
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
 import org.junit.Test;
 
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.mapping.Mapper;
+import com.mongodb.DBObject;
+
 
 /**
  * @author doc
@@ -21,9 +26,7 @@ public class TestMorphiaValidation extends TestBase
     }
 
     /**
-     * Test method for
-     * {@link com.google.code.morphia.validation.MorphiaValidationExtension#prePersist(java.lang.Object, com.mongodb.DBObject, com.google.code.morphia.mapping.Mapper)}
-     * .
+     * Test method for {@link ValidationExtension#prePersist(Object, DBObject, Mapper)}.
      */
     @Test
     public final void testPrePersist()
