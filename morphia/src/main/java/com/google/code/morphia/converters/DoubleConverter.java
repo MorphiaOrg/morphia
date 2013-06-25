@@ -37,7 +37,7 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
 
     //FixMe: super-hacky
     if (val instanceof LazyBSONList || val instanceof ArrayList) {
-      return ReflectionUtils.convertToArray(double.class, (List<?>) val);
+      return ReflectionUtils.convertToArray(Double.class, (List<?>) val);
     }
 
     final String sVal = val.toString();

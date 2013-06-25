@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
@@ -22,7 +21,7 @@ public class ListOfDoubleArrayMappingTest extends TestBase {
   }
 
 
-  @Test @Ignore("Java7 reflection changes https://github.com/mongodb/morphia/issues/457")
+  @Test
   public void testMapping() throws Exception {
     morphia.map(ContainsListDoubleArray.class);
     final ContainsListDoubleArray ent = new ContainsListDoubleArray();
