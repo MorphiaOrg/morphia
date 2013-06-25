@@ -3,24 +3,21 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>morphia-parent</artifactId>
-		<groupId>com.google.code.morphia</groupId>
-		<version>1.3.0-RC1</version>
+    <groupId>com.google.code.morphia</groupId>
+    <artifactId>morphia-parent</artifactId>
+		<version>0.101.0-RC1</version>
 		<relativePath>../</relativePath>
 	</parent>
 
-	<groupId>com.google.code.morphia</groupId>
 	<artifactId>morphia-logging-slf4j</artifactId>
-	<version>0.101.0-RC1</version>
 	<name>Logging via SLF4J</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<!--  automatically looses the optional dependencies -->
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
-			<version>0.101.0-RC1</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
