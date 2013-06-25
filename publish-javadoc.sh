@@ -9,7 +9,6 @@ initWiki() {
 }
 
 updateIndex() {
-	pwd
 	echo "[Current](https://rawgithub.com/wiki/mongodb/morphia/javadoc/${TAG}/apidocs/index.html)" > Javadoc.md
 	for i in `ls -t javadoc/`
 	do
@@ -29,7 +28,7 @@ do
 	git checkout -q $TAG
 	echo Building javadoc
 	mvn -q -f morphia/pom.xml javadoc:javadoc
-	APIDIR=${WIKIDIR}/javadoc/${TAG} 
+	APIDIR=${WIKIDIR}/javadoc/${TAG}
 	if [ -d ${APIDIR} ]
 	then
 		cd ${APIDIR}/..
@@ -42,8 +41,8 @@ do
 	cd ${WIKIDIR}
 	updateIndex
 	git add .
-	git commit -a -m "adding javadoc for the ${TAG} release" 
-	git push 
+	git commit -a -m "adding javadoc for the ${TAG} release"
+	git push
 	cd ${START}
 	git checkout master
 	exit
