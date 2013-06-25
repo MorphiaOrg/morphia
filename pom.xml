@@ -27,7 +27,7 @@
 
   <scm>
     <connection>scm:git:https://github.com/mongodb/morphia.git</connection>
-    <developerConnection>scm:git:https://github.com/mongodb/morphia.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:mongodb/morphia.git</developerConnection>
     <url>https://github.com/mongodb/morphia.git</url>
   </scm>
 
