@@ -22,6 +22,7 @@ Please continue by reading the QuickStart or looking at a list of [[the annotati
 
 ### Including morphia in your build
 **maven**
+
     <parent>
         <groupId>com.google.code.morphia</groupId>
         <artifactId>morphia</artifactId>
