@@ -18,7 +18,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 public class DoubleConverter extends TypeConverter implements SimpleValueConverter {
 
   public DoubleConverter() {
-    super(double.class, Double.class);
+    super(double.class, Double.class, Double[].class, double[].class);
   }
 
   @Override
