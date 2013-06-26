@@ -31,7 +31,7 @@ Please continue by reading the QuickStart or looking at a list of [the annotatio
 </parent>
 ```
 
-See the [[dependencies|Dependencies]] page for more detail.
+See the [dependencies](https://github.com/mongodb/morphia/wiki/Dependencies) page for more detail.
 
 ### Sample code
 ```java
