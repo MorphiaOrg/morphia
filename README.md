@@ -18,10 +18,10 @@ experience.
 
 Please continue by reading the QuickStart or looking at a list of [[the annotations|AllAnnotations]].
 
-##Quick start
+## Quick start
 
 ### Including morphia in your build
-**maven**
+**Maven**
 
     <parent>
         <groupId>com.google.code.morphia</groupId>
