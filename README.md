@@ -16,7 +16,7 @@ experience.
 - GWT support (entities are just POJOs) -- (GWT ignores annotations)
 - Advanced mapper which allows raw conversion, `void toObject(DBObject)` or ` DBObject fromObject(Object)`
 
-Please continue by reading the QuickStart or looking at a list of [[the annotations|AllAnnotations]].
+Please continue by reading the QuickStart or looking at a list of [the annotations](https://github.com/mongodb/morphia/wiki/AllAnnotations).
 
 ## Quick start
 
