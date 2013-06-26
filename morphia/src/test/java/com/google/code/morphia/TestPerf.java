@@ -42,7 +42,7 @@ import junit.framework.Assert;
 /**
  * @author Scott Hernandez
  */
-//@Ignore
+@Ignore("This seems an arbitrary boundary to check against and fails intermittenly on jenkins")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestPerf extends TestBase {
   static final double        WriteFailFactor = 1.75;
