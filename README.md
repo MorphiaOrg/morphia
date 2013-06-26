@@ -23,11 +23,15 @@ Please continue by reading the QuickStart or looking at a list of [[the annotati
 ### Including morphia in your build
 **Maven**
 
-    <parent>
-        <groupId>com.google.code.morphia</groupId>
-        <artifactId>morphia</artifactId>
-        <version>###</version>
-    </parent>
+```xml
+<parent>
+    <groupId>com.google.code.morphia</groupId>
+    <artifactId>morphia</artifactId>
+    <version>###</version>
+</parent>
+```
+
+See the [[dependencies|Dependencies]] page for more detail.
 
 ### Sample code
 ```java

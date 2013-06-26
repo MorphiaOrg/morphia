@@ -86,14 +86,12 @@ public class MappedClass {
   /**
    * Annotations we were interested in, and found.
    */
-  private final Map<Class<? extends Annotation>, ArrayList<Annotation>> foundAnnotations
-    = new HashMap<Class<? extends Annotation>, ArrayList<Annotation>>();
+  private final Map<Class<? extends Annotation>, ArrayList<Annotation>> foundAnnotations = new HashMap<Class<? extends Annotation>, ArrayList<Annotation>>();
 
   /**
    * Methods which are life-cycle events
    */
-  private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods
-    = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
+  private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 
   /**
    * a list of the fields to map
@@ -144,8 +142,6 @@ public class MappedClass {
     if (fields != null && !fields.isEmpty()) {
       idField = fields.get(0).field;
     }
-
-
   }
 
   /**
@@ -218,6 +214,9 @@ public class MappedClass {
     }
   }
 
+  /**
+   * Adds the given Annotation to the internal list for the given Class.
+   */
   public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
     if (ann == null || clazz == null) {
       return;
@@ -426,8 +425,8 @@ public class MappedClass {
 
   }
 
-  private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj, final Mapper mapper,
-    final Collection<EntityInterceptor> interceptors) {
+  private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
+    final Mapper mapper, final Collection<EntityInterceptor> interceptors) {
     for (final EntityInterceptor ei : interceptors) {
       if (log.isDebugEnabled()) {
         log.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
@@ -476,15 +475,25 @@ public class MappedClass {
   }
 
   /**
-   * @return the instance if it was found, if more than onw was found, the last one added
+   * Returns the first found Annotation, or null.
+   * @param clazz The Annotation to find.
+   * @return First found Annotation or null of none found.
    */
-  public Annotation getAnnotation(final Class<? extends Annotation> clazz) {
-    final ArrayList<Annotation> found = foundAnnotations.get(clazz);
-    return (found != null && !found.isEmpty()) ? found.get(found.size() - 1) : null;
+  public Annotation getFirstAnnotation(final Class<? extends Annotation> clazz) {
+    final List<Annotation> found = foundAnnotations.get(clazz);
+    return found == null || found.isEmpty() ? null : found.get(0);
   }
 
   /**
-   * @return the instance if it was found, if more than onw was found, the last one added
+   * @return the instance if it was found, if more than one was found, the last one added
+   */
+  public Annotation getAnnotation(final Class<? extends Annotation> clazz) {
+    final ArrayList<Annotation> found = foundAnnotations.get(clazz);
+    return found == null || found.isEmpty() ? null : found.get(found.size() - 1);
+  }
+
+  /**
+   * @return the instance if it was found, if more than one was found, the last one added
    */
   public ArrayList<Annotation> getAnnotations(final Class<? extends Annotation> clazz) {
     return foundAnnotations.get(clazz);
