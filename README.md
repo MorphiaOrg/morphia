@@ -2,35 +2,72 @@
 
 [![Build Status](https://jenkins.10gen.com/job/morphia/badge/icon)](https://jenkins.10gen.com/job/morphia/)
 
-**Morphia** is a lightweight type-safe library for mapping Java objects to/from [MongoDB](http://www.mongodb.org/):
+Morphia is a lightweight type-safe library for mapping Java objects to/from [MongoDB](http://www.mongodb.org/).  Morphia provides a
+typesafe, and fluent [Query](https://github.com/mongodb/morphia/wiki/Query) API support with (runtime) validation.  Morphia
+uses annotations so there are no XML files to manage or update.  Morphia should feel very comfortable for any developer with JPA
+experience.
 
-- Easy to use, and very **lightweight**; reflection is used once per type and cached for **good performance**.
-- [Datastore](https://github.com/mongodb/morphia/wiki/Datastore) and [DAO](https://github.com/mongodb/morphia/wiki/DAOSupport)<T,V> access abstractions, or roll your own...
-- **Type-safe**, and Fluent [Query](https://github.com/mongodb/morphia/wiki/Query) support with (runtime) validation
-- **Annotations** based mapping behavior; there are no XML files.
-- Extensions: [Validation (jsr303)](https://github.com/mongodb/morphia/wiki/ValidationExtension), and [SLF4J Logging](https://github.com/mongodb/morphia/wiki/SLF4JExtension)
 
+##Features
+- [Lifecycle Method/Event](LifecycleMethods) Support
+- Works great with Guice, Spring, and other DI frameworks.
+- Many extension points (new annotations, converters, mapping behavior, logging, etc.)
+- Does not store Null/Empty values (by default).
+- GWT support (entities are just POJOs) -- (GWT ignores annotations)
+- Advanced mapper which allows raw conversion, `void toObject(DBObject)` or ` DBObject fromObject(Object)`
+
+Please continue by reading the QuickStart or looking at a list of [[the annotations|AllAnnotations]].
+
+##Quick start
+
+### Including morphia in your build
+**maven**
+    <parent>
+        <groupId>com.google.code.morphia</groupId>
+        <artifactId>morphia</artifactId>
+        <version>###</version>
+    </parent>
+
+### Sample code
 ```java
 @Entity("employees")
 class Employee {
-  @Id ObjectId id; // auto-generated, if not set (see ObjectId)
-  String firstName, lastName; // value types are automatically persisted
-  Long salary = null; // only non-null values are stored 
+  // auto-generated, if not set (see ObjectId)
+  @Id ObjectId id;
 
-  Address address; // by default fields are @Embedded
+  // value types are automatically persisted
+  String firstName, lastName;
 
-  Key<Employee> manager; //references can be saved without automatic loading
-  @Reference List<Employee> underlings = new ArrayList<Employee>(); //refs are stored*, and loaded automatically
+  // only non-null values are stored
+  Long salary = null;
 
-  @Serialized EncryptedReviews; // stored in one binary field 
- 
-  @Property("started") Date startDate; //fields can be renamed
+  // by default fields are @Embedded
+  Address address;
+
+  //references can be saved without automatic loading
+  Key<Employee> manager;
+
+  //refs are stored**, and loaded automatically
+  @Reference List<Employee> underlings = new ArrayList<Employee>();
+
+  // stored in one binary field
+  @Serialized EncryptedReviews;
+
+  //fields can be renamed
+  @Property("started") Date startDate;
   @Property("left") Date endDate;
 
-  @Indexed boolean active = false; //fields can be indexed for better performance
-  @NotSaved string readButNotStored; //fields can loaded, but not saved
-  @Transient int notStored; //fields can be ignored (no load/save)
-  transient boolean stored = true; //not @Transient, will be ignored by Serialization/GWT for example.
+  //fields can be indexed for better performance
+  @Indexed boolean active = false;
+
+  //fields can loaded, but not saved
+  @NotSaved string readButNotStored;
+
+  //fields can be ignored (no load/save)
+  @Transient int notStored;
+
+  //not @Transient, will be ignored by Serialization/GWT for example.
+  transient boolean stored = true;
 
   //Lifecycle methods -- Pre/PostLoad, Pre/PostPersist...
   @PostLoad void postLoad(DBObject dbObj) { ... }
@@ -43,27 +80,25 @@ morphia.map(Employee.class);
 
 ds.save(new Employee("Mister", "GOD", null, 0));
 
-Employee boss = ds.find(Employee.class).field("manager").equal(null).get(); // get an employee without a manager
+// get an employee without a manager
+Employee boss = ds.find(Employee.class).field("manager").equal(null).get();
 
-Key<Employee> scottsKey = ds.save(new Employee("Scott", "Hernandez", ds.getKey(boss), 150*1000));
+Key<Employee> scottsKey =
+  ds.save(new Employee("Scott", "Hernandez", ds.getKey(boss), 150**1000));
 
 //add Scott as an employee of his manager
-UpdateResults<Employee> res = ds.update(boss, ds.createUpdateOperations(Employee.class).add("underlings", scottsKey)); 
+UpdateResults<Employee> res =
+  ds.update(
+    boss,
+    ds.createUpdateOperations(Employee.class).add("underlings", scottsKey)
+  );
 
 // get Scott's boss; the same as the one above.
-Employee scottsBoss = ds.find(Employee.class).filter("underlings", scottsKey).get(); 
+Employee scottsBoss =
+  ds.find(Employee.class).filter("underlings", scottsKey).get();
 
 for (Employee e : ds.find(Employee.class, "manager", boss))
    print(e);
 ```
-
-- [Lifecycle Method/Event](https://github.com/mongodb/morphia/wiki/LifecycleMethods) Support
-- Works great with Guice, Spring, and other DI frameworks.
-- Many extension points (new annotations, converters, mapping behavior, logging, etc.)
-- Does not store Null/Empty values (by default).
-- GWT support (entities are just POJOs) -- (GWT ignores annotations)
-- Advanced mapper which allows raw conversion, void toObject(DBObject) or DBObject fromObject(Object)
-
-Please continue by reading the [QuickStart](https://github.com/mongodb/morphia/wiki/QuickStart) or looking at a list of AllAnnotation.
 
 **Note**: @Reference will not save objects, just a reference to them; You must save them yourself.
