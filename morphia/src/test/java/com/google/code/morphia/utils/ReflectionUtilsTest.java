@@ -13,7 +13,7 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.mapping.Mapper;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

@@ -1,13 +1,13 @@
 package com.google.code.morphia.issue47;
 
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
 
 
 public class TestEmbedLoop extends TestBase {

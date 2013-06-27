@@ -7,7 +7,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 public class TestEmptyEntityMapping extends TestBase {

@@ -7,7 +7,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

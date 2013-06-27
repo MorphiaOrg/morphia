@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 @SuppressWarnings("unchecked")

@@ -3,11 +3,11 @@ package com.google.code.morphia.converters;
 
 import java.util.EnumSet;
 
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
 
 
 /**

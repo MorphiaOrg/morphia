@@ -6,7 +6,7 @@ import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PreSave;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

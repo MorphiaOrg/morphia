@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.AbstractEntityInterceptor;
 import com.google.code.morphia.TestBase;
@@ -19,7 +20,6 @@ import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
-import junit.framework.Assert;
 
 
 /**

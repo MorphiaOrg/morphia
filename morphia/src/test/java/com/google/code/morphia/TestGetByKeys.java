@@ -4,9 +4,9 @@ package com.google.code.morphia;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
 
 
 /**

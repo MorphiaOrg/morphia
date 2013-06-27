@@ -1,9 +1,9 @@
 package com.google.code.morphia.callbacks;
 
 
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
-import junit.framework.Assert;
 
 
 public class TestProblematicPostPersistEntity extends TestBase {

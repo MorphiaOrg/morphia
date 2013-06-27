@@ -9,7 +9,7 @@ import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Converters;
 import com.google.code.morphia.testutil.TestEntity;
 import com.mongodb.WriteConcern;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 public class TestIdTwice extends TestBase {

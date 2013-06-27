@@ -2,13 +2,13 @@ package com.google.code.morphia.callbacks;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.Transient;
-import junit.framework.Assert;
 
 
 public class TestMultipleCallbacksPerMethod extends TestBase {

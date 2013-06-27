@@ -12,7 +12,7 @@ import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.validation.ConstraintViolationException;
 import com.google.code.morphia.testutil.AssertedFailure;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

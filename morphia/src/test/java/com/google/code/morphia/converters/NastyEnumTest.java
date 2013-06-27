@@ -4,7 +4,7 @@ package com.google.code.morphia.converters;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.testutil.TestEntity;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

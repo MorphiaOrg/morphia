@@ -2,6 +2,7 @@ package com.google.code.morphia.callbacks;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
@@ -9,7 +10,6 @@ import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
-import junit.framework.Assert;
 
 
 public class TestMultipleCallbackMethods extends TestBase {

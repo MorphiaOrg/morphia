@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
@@ -36,7 +37,6 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.ReflectionDBObject;
 import com.mongodb.WriteConcern;
-import junit.framework.Assert;
 
 
 /**

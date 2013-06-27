@@ -8,7 +8,7 @@ import com.google.code.morphia.annotations.Serialized;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.testutil.TestEntity;
 import com.mongodb.DBObject;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

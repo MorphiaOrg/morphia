@@ -19,11 +19,11 @@ package com.google.code.morphia;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
-import junit.framework.Assert;
 
 
 /**

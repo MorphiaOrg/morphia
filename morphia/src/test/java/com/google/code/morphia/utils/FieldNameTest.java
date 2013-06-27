@@ -3,7 +3,7 @@ package com.google.code.morphia.utils;
 
 import org.junit.Test;
 import com.google.code.morphia.testutil.AssertedFailure;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 public class FieldNameTest {

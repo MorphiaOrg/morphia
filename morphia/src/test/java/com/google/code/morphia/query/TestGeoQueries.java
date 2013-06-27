@@ -10,7 +10,7 @@ import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.utils.IndexDirection;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 public class TestGeoQueries extends TestBase {

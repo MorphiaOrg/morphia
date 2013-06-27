@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
@@ -16,7 +17,6 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.PreSave;
 import com.google.code.morphia.annotations.Transient;
-import junit.framework.Assert;
 
 
 public class TestCallbackEscalation extends TestBase {

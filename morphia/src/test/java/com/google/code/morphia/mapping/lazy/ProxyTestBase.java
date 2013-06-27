@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import org.junit.Ignore;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.mapping.lazy.proxy.ProxiedReference;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

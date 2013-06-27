@@ -4,7 +4,7 @@ package com.google.code.morphia.issue155;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

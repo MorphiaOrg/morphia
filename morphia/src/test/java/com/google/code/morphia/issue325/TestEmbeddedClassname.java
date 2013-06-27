@@ -13,7 +13,7 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 public class TestEmbeddedClassname extends TestBase {

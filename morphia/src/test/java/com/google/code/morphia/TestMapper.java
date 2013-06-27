@@ -4,6 +4,7 @@ package com.google.code.morphia;
 import java.io.Serializable;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
@@ -12,7 +13,6 @@ import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.mapping.lazy.LazyFeatureDependencies;
-import junit.framework.Assert;
 
 
 /**

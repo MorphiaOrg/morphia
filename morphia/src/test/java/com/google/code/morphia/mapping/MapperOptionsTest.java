@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
 import com.mongodb.DBObject;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

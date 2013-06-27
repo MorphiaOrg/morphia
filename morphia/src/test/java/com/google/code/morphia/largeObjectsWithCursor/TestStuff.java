@@ -9,7 +9,7 @@ import com.google.code.morphia.TestBase;
 import com.google.code.morphia.TestMapping.BaseEntity;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.query.Query;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**
