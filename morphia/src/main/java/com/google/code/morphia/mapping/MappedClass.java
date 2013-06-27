@@ -136,7 +136,7 @@ public class MappedClass {
   // TODO: Remove this and make these fields dynamic or auto-set some other way
   public void update() {
     embeddedAn = (Embedded) getAnnotation(Embedded.class);
-    entityAn = (Entity) getAnnotation(Entity.class);
+    entityAn = (Entity) getFirstAnnotation(Entity.class);
     // polymorphicAn = (Polymorphic) getAnnotation(Polymorphic.class);
     final List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
     if (fields != null && !fields.isEmpty()) {
