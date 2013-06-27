@@ -47,8 +47,8 @@ public class CollectionOfValuesTest extends TestBase {
     morphia.map(ContainsListOfList.class);
     ds.delete(ds.find(ContainsListOfList.class));
     final ContainsListOfList entity = new ContainsListOfList();
-    final ArrayList<List<String>> testList = new ArrayList<List<String>>();
-    final ArrayList<String> element1 = new ArrayList<String>();
+    final List<List<String>> testList = new ArrayList<List<String>>();
+    final List<String> element1 = new ArrayList<String>();
     element1.add("element1");
     testList.add(element1);
 
