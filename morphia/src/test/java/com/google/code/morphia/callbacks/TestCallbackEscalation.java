@@ -22,9 +22,11 @@ import junit.framework.Assert;
 public class TestCallbackEscalation extends TestBase {
   @Entity
   static class A extends Callbacks {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
 
-    @Embedded B b;
+    @Embedded
+    B b;
 
     @Embedded
     final List<B> bs = new LinkedList<B>();
@@ -39,7 +41,8 @@ public class TestCallbackEscalation extends TestBase {
   }
 
   static class Callbacks {
-    @Transient boolean prePersist;
+    @Transient
+    boolean prePersist;
     @Transient
     boolean postPersist;
     @Transient
@@ -49,23 +52,28 @@ public class TestCallbackEscalation extends TestBase {
     @Transient
     boolean preSave;
 
-    @PrePersist void prePersist() {
+    @PrePersist
+    void prePersist() {
       prePersist = true;
     }
 
-    @PostPersist void postPersist() {
+    @PostPersist
+    void postPersist() {
       postPersist = true;
     }
 
-    @PreLoad void preLoad() {
+    @PreLoad
+    void preLoad() {
       preLoad = true;
     }
 
-    @PostLoad void postLoad() {
+    @PostLoad
+    void postLoad() {
       postLoad = true;
     }
 
-    @PreSave void preSave() {
+    @PreSave
+    void preSave() {
       preSave = true;
     }
   }

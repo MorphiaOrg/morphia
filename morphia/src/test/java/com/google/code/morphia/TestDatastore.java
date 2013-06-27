@@ -43,10 +43,7 @@ import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -56,7 +53,8 @@ public class TestDatastore extends TestBase {
 
   @Entity("facebook_users")
   public static class FacebookUser {
-    @Id long id;
+    @Id
+    long id;
     String username;
 
     public FacebookUser() {
@@ -73,11 +71,13 @@ public class TestDatastore extends TestBase {
     static boolean prePersist;
     static boolean prePersistWithEntity;
 
-    @PrePersist void PrePersist() {
+    @PrePersist
+    void prePersist() {
       prePersist = true;
     }
 
-    @PrePersist void PrePersist(final LifecycleTestObj obj) {
+    @PrePersist
+    void prePersist(final LifecycleTestObj obj) {
       if (obj == null) {
         throw new RuntimeException();
       }
@@ -88,8 +88,10 @@ public class TestDatastore extends TestBase {
 
   @EntityListeners(LifecycleListener.class)
   public static class LifecycleTestObj {
-    @Id        ObjectId id;
-    @Transient boolean  prePersist;
+    @Id
+    ObjectId id;
+    @Transient
+    boolean prePersist;
     @Transient
     boolean postPersist;
     @Transient
@@ -104,7 +106,8 @@ public class TestDatastore extends TestBase {
     boolean preLoadWithParamAndReturn;
     boolean preLoadWithParam;
 
-    @PrePersist void PrePersist() {
+    @PrePersist
+    void prePersist() {
       if (prePersist) {
         throw new RuntimeException("already called");
       }
@@ -113,7 +116,7 @@ public class TestDatastore extends TestBase {
     }
 
     @PrePersist
-    protected void PrePersistWithParam(final DBObject dbObj) {
+    protected void prePersistWithParam(final DBObject dbObj) {
       if (prePersistWithParam) {
         throw new RuntimeException("already called");
       }
@@ -121,7 +124,7 @@ public class TestDatastore extends TestBase {
     }
 
     @PrePersist
-    public DBObject PrePersistWithParamAndReturn(final DBObject dbObj) {
+    public DBObject prePersistWithParamAndReturn(final DBObject dbObj) {
       if (prePersistWithParamAndReturn) {
         throw new RuntimeException("already called");
       }
@@ -133,7 +136,7 @@ public class TestDatastore extends TestBase {
     }
 
     @PostPersist
-    private void PostPersistPersist() {
+    private void postPersistPersist() {
       if (postPersist) {
         throw new RuntimeException("already called");
       }
@@ -141,7 +144,8 @@ public class TestDatastore extends TestBase {
 
     }
 
-    @PostPersist void PostPersistWithParam(final DBObject dbObj) {
+    @PostPersist
+    void postPersistWithParam(final DBObject dbObj) {
       //			dbObj.put("postPersistWithParam", true);
       postPersistWithParam = true;
       if (!dbObj.containsField(Mapper.ID_KEY)) {
@@ -149,7 +153,8 @@ public class TestDatastore extends TestBase {
       }
     }
 
-    @PreLoad void PreLoad() {
+    @PreLoad
+    void preLoad() {
       if (preLoad) {
         throw new RuntimeException("already called");
       }
@@ -157,18 +162,21 @@ public class TestDatastore extends TestBase {
       preLoad = true;
     }
 
-    @PreLoad void PreLoadWithParam(final DBObject dbObj) {
+    @PreLoad
+    void preLoadWithParam(final DBObject dbObj) {
       dbObj.put("preLoadWithParam", true);
     }
 
-    @PreLoad DBObject PreLoadWithParamAndReturn(final DBObject dbObj) {
+    @PreLoad
+    DBObject preLoadWithParamAndReturn(final DBObject dbObj) {
       final BasicDBObject retObj = new BasicDBObject();
       retObj.putAll(dbObj);
       retObj.put("preLoadWithParamAndReturn", true);
       return retObj;
     }
 
-    @PostLoad void PostLoad() {
+    @PostLoad
+    void postLoad() {
       if (postLoad) {
         throw new RuntimeException("already called");
       }
@@ -176,7 +184,8 @@ public class TestDatastore extends TestBase {
       postLoad = true;
     }
 
-    @PreLoad void PostLoadWithParam(final DBObject dbObj) {
+    @PreLoad
+    void postLoadWithParam(final DBObject dbObj) {
       if (postLoadWithParam) {
         throw new RuntimeException("already called");
       }
@@ -186,9 +195,10 @@ public class TestDatastore extends TestBase {
   }
 
   public static class KeysKeysKeys {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
     List<Key<FacebookUser>> users;
-    Key<Rectangle>          rect;
+    Key<Rectangle> rect;
 
     protected KeysKeysKeys() {
     }
