@@ -13,6 +13,8 @@ import junit.framework.Assert;
 
 
 public class TestMultipleCallbackMethods extends TestBase {
+  private static int loading;
+
   abstract static class CallbackAbstractEntity {
     @Id
     private final ObjectId _id = new ObjectId();
@@ -22,7 +24,6 @@ public class TestMultipleCallbackMethods extends TestBase {
     }
 
     int foo;
-    int loading;
 
     @PrePersist
     void prePersist1() {
@@ -80,14 +81,13 @@ public class TestMultipleCallbackMethods extends TestBase {
     ds.save(entity);
 
     Assert.assertEquals(4, entity.foo);
-    Assert.assertEquals(0, entity.loading);
+    Assert.assertEquals(0, loading);
 
     final SomeEntity someEntity = ds.find(SomeEntity.class, "_id", entity.getId()).get();
 
     Assert.assertEquals(4, entity.foo);
-    Assert.assertEquals(0, entity.loading);
 
     Assert.assertEquals(-1, someEntity.foo);
-//    Assert.assertEquals(2, someEntity.loading);
+    Assert.assertEquals(2, loading);
   }
 }
