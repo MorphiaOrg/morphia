@@ -285,7 +285,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     if (log.isTraceEnabled()) {
-      log.trace(String.format("\nasList: %s \t %d entities, iterator time: driver %n ms, mapper %n ms \n cache: %s \n for $s \n ",
+      log.trace(String.format("asList: %s \t %d entities, iterator time: driver %n ms, mapper %n ms \n\t cache: %s \n\t for %s",
         dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats().toString(), getQueryObject()));
     }
 
