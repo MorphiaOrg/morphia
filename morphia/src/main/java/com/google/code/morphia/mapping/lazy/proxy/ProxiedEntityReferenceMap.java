@@ -11,7 +11,7 @@ import com.google.code.morphia.Key;
  */
 public interface ProxiedEntityReferenceMap extends ProxiedReference {
 
-  void __put(String key, Key<?> referenceKey);
+  void __put(Object key, Key<?> referenceKey);
 
-  Map<String, Key<?>> __getReferenceMap();
+  Map<Object, Key<?>> __getReferenceMap();
 }

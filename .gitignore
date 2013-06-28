@@ -2,3 +2,5 @@
 *.sw*
 .idea
 release.sh
+**/target/**
+entityscanner-plug/dependency-reduced-pom.xml

@@ -73,6 +73,9 @@ public class TestQuery extends TestBase {
     @Embedded
     List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
 
+    public PhotoWithKeywords() {
+    }
+
     public PhotoWithKeywords(final String... words) {
       keywords = new ArrayList<Keyword>((int) (words.length));
       for (final String word : words) {
@@ -776,7 +779,8 @@ public class TestQuery extends TestBase {
     assertNotNull(photoFound);
   }
 
-  @Test @Ignore("https://github.com/mongodb/morphia/issues/464")
+  @Test
+  @Ignore("https://github.com/mongodb/morphia/issues/464")
   public void testInQueryWithObjects() throws Exception {
     ds.save(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah"));
 

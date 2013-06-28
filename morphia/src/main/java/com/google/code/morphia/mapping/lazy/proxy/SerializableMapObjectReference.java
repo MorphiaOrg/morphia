@@ -17,17 +17,17 @@ import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 public class SerializableMapObjectReference extends AbstractReference implements ProxiedEntityReferenceMap {
 
   private static final long serialVersionUID = 1L;
-  private final HashMap<String, Key<?>> keyMap;
+  private final HashMap<Object, Key<?>> keyMap;
 
   public SerializableMapObjectReference(final Map mapToProxy, final Class referenceObjClass, final boolean ignoreMissing,
     final DatastoreProvider p) {
 
     super(p, referenceObjClass, ignoreMissing);
     object = mapToProxy;
-    keyMap = new LinkedHashMap<String, Key<?>>();
+    keyMap = new LinkedHashMap<Object, Key<?>>();
   }
 
-  public void __put(final String key, final Key k) {
+  public void __put(final Object key, final Key k) {
     keyMap.put(key, k);
   }
 
@@ -59,13 +59,13 @@ public class SerializableMapObjectReference extends AbstractReference implements
     final Datastore ds = p.get();
 
     keyMap.clear();
-    final Map<String, Object> map = (Map) object;
-    for (final Map.Entry<String, Object> e : map.entrySet()) {
+    final Map<Object, Object> map = (Map) object;
+    for (final Map.Entry<Object, Object> e : map.entrySet()) {
       keyMap.put(e.getKey(), ds.getKey(e.getValue()));
     }
   }
 
-  public Map<String, Key<?>> __getReferenceMap() {
+  public Map<Object, Key<?>> __getReferenceMap() {
     return keyMap;
   }
 

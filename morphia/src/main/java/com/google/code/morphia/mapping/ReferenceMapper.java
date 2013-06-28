@@ -110,10 +110,10 @@ class ReferenceMapper implements CustomMapper {
       if (ProxyHelper.isProxy(map) && ProxyHelper.isUnFetched(map)) {
         final ProxiedEntityReferenceMap proxy = (ProxiedEntityReferenceMap) map;
 
-        final Map<String, Key<?>> refMap = proxy.__getReferenceMap();
-        for (final Map.Entry<String, Key<?>> entry : refMap.entrySet()) {
-          final String strKey = entry.getKey();
-          values.put(strKey, mapper.keyToRef(entry.getValue()));
+        final Map<Object, Key<?>> refMap = proxy.__getReferenceMap();
+        for (final Map.Entry<Object, Key<?>> entry : refMap.entrySet()) {
+          final Object key = entry.getKey();
+          values.put(key, mapper.keyToRef(entry.getValue()));
         }
       } else {
         for (final Map.Entry<Object, Object> entry : map.entrySet()) {
@@ -320,17 +320,19 @@ class ReferenceMapper implements CustomMapper {
       }
 
       final Map map = m;
-      new IterHelper<String, Object>().loopMap(dbVal, new MapIterCallback<String, Object>() {
+      new IterHelper<Object, Object>().loopMap(dbVal, new MapIterCallback<Object, Object>() {
         @Override
-        public void eval(final String key, final Object val) {
+        public void eval(final Object key, final Object val) {
           final DBRef dbRef = (DBRef) val;
+
+          final Object objKey = mapper.converters.decode(mf.getMapKeyClass(), key);
 
           if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
             final ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
-            proxiedMap.__put(key, mapper.refToKey(dbRef));
+            proxiedMap.__put(objKey, mapper.refToKey(dbRef));
           } else {
             final Object resolvedObject = resolveObject(dbRef, mf, cache, mapper);
-            map.put(key, resolvedObject);
+            map.put(objKey, resolvedObject);
           }
         }
       });
