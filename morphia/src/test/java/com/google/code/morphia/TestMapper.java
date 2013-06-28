@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -132,8 +131,9 @@ public class TestMapper extends TestBase {
     String text;
   }
 
-  @Test @Ignore("Test looks wonky. disabling until after 0.101")
-  public void SingleLookup() throws Exception {
+  @Test
+  public void singleLookup() throws Exception {
+    A.loadCount = 0;
     final A a = new A();
     HoldsMultipleA holder = new HoldsMultipleA();
     holder.a1 = a;
@@ -145,7 +145,7 @@ public class TestMapper extends TestBase {
   }
 
   @Test
-  public void SingleProxy() throws Exception {
+  public void singleProxy() throws Exception {
     // TODO us: exclusion does not work properly with maven + junit4
     if (!LazyFeatureDependencies.testDependencyFullFilled()) {
       return;
@@ -172,7 +172,7 @@ public class TestMapper extends TestBase {
   }
 
   @Test
-  public void SerializableId() throws Exception {
+  public void serializableId() throws Exception {
     final CustomId cId = new CustomId();
     cId.id = new ObjectId();
     cId.type = "banker";
