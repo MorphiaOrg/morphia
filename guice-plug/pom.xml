@@ -10,17 +10,15 @@
 	<name>Guice Plugin</name>
 	<packaging>jar</packaging>
 	<dependencies>
-		<!-- automatically looses the optional dependencies -->
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
 			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>2.0</version>
+			<version>3.0</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
