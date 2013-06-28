@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -41,7 +42,14 @@ public class EntityScanner {
 		final Set<URL> s = new HashSet<URL>();
 		s.addAll(ClasspathHelper.forClassLoader());
 		s.addAll(Arrays.asList(ClasspathUrlFinder.findClassPaths()));
-		conf.setUrls(new ArrayList<URL>(s));
+    final Iterator<URL> iterator = s.iterator();
+    while (iterator.hasNext()) {
+      final URL url = iterator.next();
+      if (url.getPath().endsWith("jnilib")) {
+        iterator.remove();
+      }
+    }
+    conf.setUrls(new ArrayList<URL>(s));
 
 		conf.filterInputsBy(predicate);
 
