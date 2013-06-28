@@ -16,6 +16,7 @@ import org.scannotation.ClasspathUrlFinder;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.utils.Assert;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
@@ -29,7 +30,7 @@ public class EntityScanner {
 
 	}
 
-	public EntityScanner(final Morphia m, com.google.common.base.Predicate<String> predicate) {
+	public EntityScanner(final Morphia m, Predicate<String> predicate) {
 		if (predicate == null) {
 			predicate = Predicates.alwaysTrue();
 		}
@@ -38,9 +39,9 @@ public class EntityScanner {
 		conf.setScanners(new TypesScanner(), new TypeAnnotationsScanner());
 
 		final Set<URL> s = new HashSet<URL>();
-		s.addAll(ClasspathHelper.getUrlsForCurrentClasspath());
+		s.addAll(ClasspathHelper.forClassLoader());
 		s.addAll(Arrays.asList(ClasspathUrlFinder.findClassPaths()));
-		conf.setUrls(new ArrayList(s));
+		conf.setUrls(new ArrayList<URL>(s));
 
 		conf.filterInputsBy(predicate);
 

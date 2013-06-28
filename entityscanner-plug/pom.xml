@@ -13,7 +13,7 @@
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
-			<version>0.9.5-RC2</version>
+			<version>0.9.8</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>servlet-api</artifactId>
