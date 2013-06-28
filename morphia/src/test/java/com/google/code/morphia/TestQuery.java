@@ -21,13 +21,16 @@ package com.google.code.morphia;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestDatastore.FacebookUser;
 import com.google.code.morphia.TestDatastore.KeysKeysKeys;
@@ -48,10 +51,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -61,20 +61,20 @@ public class TestQuery extends TestBase {
 
   @Entity
   public static class Photo {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
     List<String> keywords = Collections.singletonList("amazing");
   }
 
 
   public static class PhotoWithKeywords {
-    @Id ObjectId id;
-    @Embedded List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
-
-    public PhotoWithKeywords() {
-    }
+    @Id
+    ObjectId id;
+    @Embedded
+    List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
 
     public PhotoWithKeywords(final String... words) {
-      keywords = new ArrayList<Keyword>((int) (words.length * 1.3));
+      keywords = new ArrayList<Keyword>((int) (words.length));
       for (final String word : words) {
         keywords.add(new Keyword(word));
       }
@@ -118,14 +118,16 @@ public class TestQuery extends TestBase {
     @Id
     private ObjectId id;
     String name = "test";
-    @Reference              Pic pic;
+    @Reference
+    Pic pic;
     @Reference(lazy = true)
     private Pic lazyPic;
   }
 
   @Entity
   public static class Pic {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
     String name;
 
     String getName() {
@@ -138,9 +140,12 @@ public class TestQuery extends TestBase {
   }
 
   public static class ContainsRenamedFields {
-    @Id ObjectId id;
-    @Property("first_name") String firstName = "Scott";
-    @Property("last_name")  String lastName  = "Hernandez";
+    @Id
+    ObjectId id;
+    @Property("first_name")
+    String firstName = "Scott";
+    @Property("last_name")
+    String lastName = "Hernandez";
   }
 
   @Test
@@ -463,7 +468,7 @@ public class TestQuery extends TestBase {
     object.id = cId;
     object.text = "hllo";
     ds.save(object);
-    UsesCustomIdObject loaded;
+    final UsesCustomIdObject loaded;
 
     //		Add back if/when query by example for embedded fields is supported (require dotting each field).
     //    	CustomId exId = new CustomId();
@@ -616,7 +621,8 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testSimpleSort() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10,
+      1),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -632,7 +638,8 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testAliasedFieldSort() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10,
+      1),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -648,7 +655,8 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testCompoundSort() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10,
+      1),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -666,7 +674,8 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testQueryCount() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10, 10), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10,
+      10),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -683,7 +692,8 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testDeleteQuery() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10, 10), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10,
+      10),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -703,7 +713,7 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testRangeQuery() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -716,7 +726,7 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testComplexRangeQuery() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -727,7 +737,7 @@ public class TestQuery extends TestBase {
 
   @Test
   public void testCombinationQuery() throws Exception {
-    final Rectangle[] array = { new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4), };
+    final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4),};
     for (final Rectangle rect : array) {
       ds.save(rect);
     }
@@ -750,4 +760,30 @@ public class TestQuery extends TestBase {
     assertEquals(3, ds.getCount(q));
   }
 
+  @Test
+  public void testInQuery() throws Exception {
+    final Photo photo = new Photo();
+    photo.keywords = new ArrayList<String>();
+    photo.keywords.add("red");
+    photo.keywords.add("blue");
+    photo.keywords.add("green");
+    ds.save(photo);
+
+    final Set<String> keywords = new HashSet<String>();
+    keywords.add("red");
+    keywords.add("yellow");
+    final Photo photoFound = ds.find(Photo.class).field("keywords").in(keywords).get();
+    assertNotNull(photoFound);
+  }
+
+  @Test @Ignore("https://github.com/mongodb/morphia/issues/464")
+  public void testInQueryWithObjects() throws Exception {
+    ds.save(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah"));
+
+    final Set<Keyword> keywords = new HashSet<Keyword>();
+    keywords.add(new Keyword("Scott"));
+    keywords.add(new Keyword("Randy"));
+    final PhotoWithKeywords pwkFound = ds.find(PhotoWithKeywords.class).field("keywords").in(keywords).get();
+    assertNotNull(pwkFound);
+  }
 }
