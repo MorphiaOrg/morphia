@@ -1,91 +1,73 @@
 package com.google.code.morphia.mapping;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
-import com.google.code.morphia.Key;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
-import org.junit.Assert;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class CharacterMappingTest extends TestBase {
-  public static class ContainsChar {
+  public static class Characters {
     @Id ObjectId id;
     char c;
-  }
-
-  public static class ContainsCharacter {
-    @Id ObjectId id;
-    Character c;
-  }
-
-  public static class ContainsCharArray {
-    @Id ObjectId id;
-    char c[];
-  }
-
-  public static class ContainsCharacterArray {
-    @Id ObjectId id;
-    Character c[];
-  }
-
-
-  @Test
-  public void testCharMapping() throws Exception {
-    morphia.map(ContainsChar.class);
-    final ContainsChar entity = new ContainsChar();
-    final char testChar = 'a';
-    entity.c = testChar;
-    final Key<ContainsChar> savedKey = ds.save(entity);
-    final ContainsChar loaded = ds.get(ContainsChar.class, savedKey.getId());
-    Assert.assertEquals(testChar, loaded.c);
-    Assert.assertNotNull(loaded.id);
+    Character character;
+    char charArray[];
+    Character characters[];
+    List<char[]> charList;
+    List<Character> characterList;
+    List<Character[]> characterArrayList;
   }
 
   @Test
-  public void testCharacterMapping() throws Exception {
-    morphia.map(ContainsCharacter.class);
-    final ContainsCharacter entity = new ContainsCharacter();
-    final Character testChar = 'a';
-    entity.c = testChar;
-    final Key<ContainsCharacter> savedKey = ds.save(entity);
-    final ContainsCharacter loaded = ds.get(ContainsCharacter.class, savedKey.getId());
-    Assert.assertEquals(testChar, loaded.c);
-    Assert.assertNotNull(loaded.id);
-  }
-
-  @Test
-  public void testCharArrayMapping() throws Exception {
-    morphia.map(ContainsCharArray.class);
-    ContainsCharArray entity = new ContainsCharArray();
-    final char[] testChar = "My Hovercraft is full of eels".toCharArray();
-    entity.c = testChar;
+  public void mapping() throws Exception {
+    morphia.map(Characters.class);
+    final Characters entity = new Characters();
+    entity.c = 'a';
+    entity.character = 'b';
+    entity.charArray = new char[] {'a', 'b'};
+    entity.characters = new Character[] { 'X', 'y', 'Z'};
+    entity.charList = new ArrayList<char[]>(Arrays.asList(new char[] {'1', 'd', 'z'}));
     ds.save(entity);
-    entity = ds.get(entity);
 
-    for (int i = 0; i < testChar.length; i++) {
-      final char c = testChar[i];
-      Assert.assertEquals(c, entity.c[i]);
-    }
-    Assert.assertNotNull(entity.id);
+    final Characters loaded = ds.get(entity);
+    Assert.assertNotNull(loaded.id);
+    Assert.assertEquals(entity.c, loaded.c);
+    Assert.assertEquals(entity.character, loaded.character);
+    Assert.assertArrayEquals(entity.charArray, loaded.charArray);
+    Assert.assertArrayEquals(entity.characters, loaded.characters);
   }
 
   @Test
-  public void testCharacterArrayMapping() throws Exception {
-    morphia.map(ContainsCharacterArray.class);
-    ContainsCharacterArray entity = new ContainsCharacterArray();
-    final Character[] testChar = new Character[] {'a', 'b'};
-    entity.c = testChar;
-    ds.save(entity);
-    entity = ds.get(entity);
+  public void legacyStrings() {
+    morphia.map(Characters.class);
 
-    Assert.assertEquals(testChar[0], entity.c[0]);
-    Assert.assertEquals(testChar[1], entity.c[1]);
-    Assert.assertNotNull(entity.id);
+    final DBCollection collection = ds.getCollection(Characters.class);
+    collection.insert(new BasicDBObject("charArray", "bob"));
+
+    final Characters characters = ds.find(Characters.class).get();
+    Assert.assertArrayEquals("bob".toCharArray(), characters.charArray);
+    ds.save(characters, WriteConcern.FSYNCED);
+
+    final DBObject one = collection.findOne();
+    final Object charArray = one.get("charArray");
+    Assert.assertTrue(charArray instanceof List);
+
+    final List list = (List) charArray;
+    Assert.assertEquals("b", list.get(0));
+    Assert.assertEquals("o", list.get(1));
+    Assert.assertEquals("b", list.get(2));
   }
-
 }

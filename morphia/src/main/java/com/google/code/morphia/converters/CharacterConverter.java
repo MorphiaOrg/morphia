@@ -1,6 +1,9 @@
 package com.google.code.morphia.converters;
 
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 
@@ -9,10 +12,10 @@ import com.google.code.morphia.mapping.MappingException;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
+@SuppressWarnings({"rawtypes"})
 public class CharacterConverter extends TypeConverter implements SimpleValueConverter {
   public CharacterConverter() {
-    super(Character.class, char.class);
+    super(char.class, Character.class, char[].class, Character[].class);
   }
 
   @Override
@@ -21,12 +24,41 @@ public class CharacterConverter extends TypeConverter implements SimpleValueConv
       return null;
     }
 
+    if (fromDBObject instanceof String) {
+      final char[] chars = ((String) fromDBObject).toCharArray();
+      if ((targetClass == char.class || targetClass == Character.class)) {
+        if (chars.length == 1) {
+          return chars[0];
+        } else {
+          throw new MappingException("Trying to map multicharacter data to a single character: " + fromDBObject);
+        }
+      }
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return convert(type, chars);
+    }
+
+    if (fromDBObject instanceof List) {
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return convert(type, ((List<String>) fromDBObject).toArray(new String[0]));
+    }
+
     // TODO: Check length. Maybe "" should be null?
     return fromDBObject.toString().charAt(0);
   }
 
-  @Override
-  public Object encode(final Object value, final MappedField optionalExtraInfo) {
-    return String.valueOf(value);
+  private Object convert(final Class<?> type, final String[] values) {
+    final Object array = Array.newInstance(type, values.length);
+    for (int i = 0; i < values.length; i++) {
+      Array.set(array, i, decode(type, values[i]));
+    }
+    return array;
+  }
+
+  public static Object convert(final Class type, final char[] values) {
+    final Object array = Array.newInstance(type, values.length);
+    for (int i = 0; i < values.length; i++) {
+      Array.set(array, i, values[i]);
+    }
+    return array;
   }
 }

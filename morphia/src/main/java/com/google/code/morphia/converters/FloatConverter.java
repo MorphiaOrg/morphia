@@ -45,14 +45,14 @@ public class FloatConverter extends TypeConverter implements SimpleValueConverte
   }
 
   private Object convertToArray(final Class type, final List<?> values) {
-      final Object exampleArray = Array.newInstance(type, values.size());
+      final Object array = Array.newInstance(type, values.size());
       try {
-        return values.toArray((Object[]) exampleArray);
+        return values.toArray((Object[]) array);
       } catch (Exception e) {
         for (int i = 0; i < values.size(); i++) {
-          Array.set(exampleArray, i, decode(Float.class, values.get(i)));
+          Array.set(array, i, decode(Float.class, values.get(i)));
         }
-        return exampleArray;
+        return array;
       }
     }
 }

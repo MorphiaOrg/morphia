@@ -39,6 +39,7 @@ public class IntegerMappingTest extends TestBase {
     ent.primitiveArray = new int[] {5, 93};
     ent.wrapperArray = new Integer[] { 55, 16, 99 };
     ds.save(ent);
+
     final Integers loaded = ds.get(ent);
 
     Assert.assertNotNull(loaded.id);

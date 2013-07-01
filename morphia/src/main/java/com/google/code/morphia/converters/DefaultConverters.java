@@ -134,7 +134,7 @@ public class DefaultConverters {
         mf.setFieldValue(targetEntity, decodedValue);
       } catch (IllegalArgumentException e) {
         throw new MappingException("Error setting value from converter ("
-          + enc.getClass().getSimpleName() + ") for " + mf.getFullName() + " to " + decodedValue);
+          + enc.getClass().getSimpleName() + ") for " + mf.getFullName() + " to " + decodedValue, e);
       }
     }
   }

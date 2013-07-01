@@ -8,11 +8,13 @@ import com.google.code.morphia.mapping.MappingException;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
+ * @deprecated replaced by CharacterConverter
  */
 @SuppressWarnings({"rawtypes" })
+@Deprecated
 public class CharArrayConverter extends TypeConverter implements SimpleValueConverter {
   public CharArrayConverter() {
-    super(char[].class);
+    super();
   }
 
   @Override
