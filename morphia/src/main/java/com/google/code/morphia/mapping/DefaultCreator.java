@@ -2,6 +2,7 @@ package com.google.code.morphia.mapping;
 
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -122,8 +123,12 @@ public class DefaultCreator implements ObjectFactory {
   public static Object createInst(final Class clazz) {
     try {
       return getNoArgsConstructor(clazz).newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    } catch (InstantiationException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    } catch (InvocationTargetException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
 

@@ -18,7 +18,7 @@ import com.google.code.morphia.utils.ReflectionUtils;
 public class DoubleConverter extends TypeConverter implements SimpleValueConverter {
 
   public DoubleConverter() {
-    super(double.class, Double.class);
+    super(double.class, Double.class, double[].class, Double[].class);
   }
 
   @Override
@@ -37,7 +37,8 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
 
     //FixMe: super-hacky
     if (val instanceof LazyBSONList || val instanceof ArrayList) {
-      return ReflectionUtils.convertToArray(Double.class, (List<?>) val);
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return ReflectionUtils.convertToArray(type, (List<?>) val);
     }
 
     final String sVal = val.toString();
