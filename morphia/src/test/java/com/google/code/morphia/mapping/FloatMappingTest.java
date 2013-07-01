@@ -2,6 +2,7 @@ package com.google.code.morphia.mapping;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -17,6 +18,7 @@ public class FloatMappingTest extends TestBase {
     ObjectId id;
     final List<Float[]> floats = new ArrayList<Float[]>();
     final List<float[]> floatPrimitives = new ArrayList<float[]>();
+    final List<Float> list = new ArrayList<Float>();
     float singlePrimitive;
     Float singleWrapper;
     float[] primitiveArray;
@@ -30,6 +32,7 @@ public class FloatMappingTest extends TestBase {
     final Floats ent = new Floats();
     ent.floats.add(new Float[] {1.1f, 2.2f});
     ent.floatPrimitives.add(new float[] {2.0f, 3.6f, 12.4f});
+    ent.list.addAll(Arrays.asList(1.1f, 2.2f));
     ent.singlePrimitive = 100.0f;
     ent.singleWrapper = 40.7f;
     ent.primitiveArray = new float[] {5.0f, 93.5f};
@@ -40,6 +43,7 @@ public class FloatMappingTest extends TestBase {
     Assert.assertNotNull(loaded.id);
 
     compare("floats", ent.floats.get(0), loaded.floats.get(0));
+    compare("list", ent.list.toArray(new Float[0]), loaded.list.toArray(new Float[0]));
     Assert.assertArrayEquals(ent.floatPrimitives.get(0), loaded.floatPrimitives.get(0), 0.0f);
 
     Assert.assertEquals(ent.singlePrimitive, loaded.singlePrimitive, 0);
