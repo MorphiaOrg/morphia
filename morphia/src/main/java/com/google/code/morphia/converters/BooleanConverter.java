@@ -1,19 +1,22 @@
 package com.google.code.morphia.converters;
 
 
+import java.util.List;
+
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.utils.ReflectionUtils;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
+@SuppressWarnings({"rawtypes"})
 public class BooleanConverter extends TypeConverter implements SimpleValueConverter {
 
   public BooleanConverter() {
-    super(boolean.class, Boolean.class);
+    super(boolean.class, Boolean.class, boolean[].class, Boolean[].class);
   }
 
   @Override
@@ -28,10 +31,14 @@ public class BooleanConverter extends TypeConverter implements SimpleValueConver
 
     //handle the case for things like the ok field
     if (val instanceof Number) {
-      return ((Number) val).doubleValue() == 1D;
+      return ((Number) val).intValue() == 1;
     }
 
-    final String sVal = val.toString();
-    return Boolean.parseBoolean(sVal);
+    if (val instanceof List) {
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return ReflectionUtils.convertToArray(type, (List<?>) val);
+    }
+
+    return Boolean.parseBoolean(val.toString());
   }
 }

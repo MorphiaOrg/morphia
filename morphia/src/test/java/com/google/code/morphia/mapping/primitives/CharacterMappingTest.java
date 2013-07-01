@@ -1,4 +1,4 @@
-package com.google.code.morphia.mapping;
+package com.google.code.morphia.mapping.primitives;
 
 
 import java.util.ArrayList;

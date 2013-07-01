@@ -1,11 +1,11 @@
-package com.google.code.morphia.mapping;
+package com.google.code.morphia.mapping.primitives;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
-import org.junit.Assert;
 
 
 /**

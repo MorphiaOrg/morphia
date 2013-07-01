@@ -39,7 +39,6 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
       return ReflectionUtils.convertToArray(type, (List<?>) val);
     }
 
-    final String sVal = val.toString();
-    return Double.parseDouble(sVal);
+    return Double.parseDouble(val.toString());
   }
 }
