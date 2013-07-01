@@ -1,18 +1,21 @@
 package com.google.code.morphia.converters;
 
 
+import java.util.List;
+
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
+import com.google.code.morphia.utils.ReflectionUtils;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
+@SuppressWarnings({"rawtypes"})
 public class StringConverter extends TypeConverter implements SimpleValueConverter {
   public StringConverter() {
-    super(String.class);
+    super(String.class, String[].class);
   }
 
   @Override
@@ -23,6 +26,11 @@ public class StringConverter extends TypeConverter implements SimpleValueConvert
 
     if (fromDBObject instanceof String) {
       return fromDBObject;
+    }
+
+    if (fromDBObject instanceof List) {
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return ReflectionUtils.convertToArray(type, (List<?>) fromDBObject);
     }
 
     return fromDBObject.toString();
