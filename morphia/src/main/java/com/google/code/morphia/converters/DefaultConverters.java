@@ -41,7 +41,6 @@ public class DefaultConverters {
     //Pass-through DBObject or else the MapOfValuesConverter will process it.
     addConverter(new PassthroughConverter(DBObject.class, BasicDBObject.class));
     //Pass-through byte[] for the driver to handle
-    addConverter(new PassthroughConverter(byte[].class));
     addConverter(new EnumSetConverter());
     addConverter(new EnumConverter());
     addConverter(new StringConverter());
@@ -55,7 +54,6 @@ public class DefaultConverters {
     addConverter(new ShortConverter());
     addConverter(new IntegerConverter());
     addConverter(new SerializedObjectConverter());
-    addConverter(new CharArrayConverter());
     addConverter(new DateConverter());
     addConverter(new URIConverter());
     addConverter(new KeyConverter());

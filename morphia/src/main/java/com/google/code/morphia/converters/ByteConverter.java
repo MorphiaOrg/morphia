@@ -1,6 +1,8 @@
 package com.google.code.morphia.converters;
 
 
+import java.lang.reflect.Array;
+
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 
@@ -12,7 +14,7 @@ import com.google.code.morphia.mapping.MappingException;
 @SuppressWarnings({"rawtypes"})
 public class ByteConverter extends TypeConverter implements SimpleValueConverter {
   public ByteConverter() {
-    super(Byte.class, byte.class);
+    super(byte.class, Byte.class, byte[].class, Byte[].class);
   }
 
   @Override
@@ -21,11 +23,44 @@ public class ByteConverter extends TypeConverter implements SimpleValueConverter
       return null;
     }
 
+    if (val.getClass() == targetClass) {
+      return val;
+    }
+
     if (val instanceof Number) {
       return ((Number) val).byteValue();
     }
 
-    final String sVal = val.toString();
-    return Byte.parseByte(sVal);
+    if (targetClass.equals(Byte[].class) && val.getClass().equals(byte[].class)) {
+      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
+      return convertToWrapperArray((byte[]) val);
+    }
+    return Byte.parseByte(val.toString());
+  }
+
+  @Override
+  public Object encode(final Object value, final MappedField optionalExtraInfo) {
+    if (value instanceof Byte[]) {
+      return super.encode(convertToPrimitiveArray((Byte[]) value), optionalExtraInfo);
+    }
+    return super.encode(value, optionalExtraInfo);
+  }
+
+  public static Object convertToPrimitiveArray(final Byte[] values) {
+    final int length = values.length;
+    final Object array = Array.newInstance(byte.class, length);
+    for (int i = 0; i < length; i++) {
+      Array.set(array, i, values[i]);
+    }
+    return array;
+  }
+
+  public static Object convertToWrapperArray(final byte[] values) {
+    final int length = values.length;
+    final Object array = Array.newInstance(Byte.class, length);
+    for (int i = 0; i < length; i++) {
+      Array.set(array, i, new Byte(values[i]));
+    }
+    return array;
   }
 }

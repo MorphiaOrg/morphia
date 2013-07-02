@@ -181,15 +181,14 @@ class EmbeddedMapper implements CustomMapper {
 
       for (final Object o : dbValues) {
 
-        final DBObject dbObj = (DBObject) o;
         Object newEntity = null;
 
-        if (dbObj != null) {
+        if (o != null) {
           //run converters
           if (mapper.converters.hasSimpleValueConverter(mf) || mapper.converters.hasSimpleValueConverter(mf.getSubClass())) {
-            newEntity = mapper.converters.decode(mf.getSubClass(), dbObj, mf);
+            newEntity = mapper.converters.decode(mf.getSubClass(), o, mf);
           } else {
-            newEntity = readMapOrCollectionOrEntity(dbObj, mf, cache, mapper);
+            newEntity = readMapOrCollectionOrEntity((DBObject) o, mf, cache, mapper);
           }
         }
 
