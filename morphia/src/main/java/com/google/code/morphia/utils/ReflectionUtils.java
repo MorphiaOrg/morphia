@@ -165,6 +165,9 @@ public class ReflectionUtils {
    * @return true if the class represents a valid property type
    */
   public static boolean isPropertyType(final Type type) {
+    if (type instanceof GenericArrayType) {
+      return isPropertyType(((GenericArrayType) type).getGenericComponentType());
+    }
     if (type instanceof ParameterizedType) {
       return isPropertyType(((ParameterizedType) type).getRawType());
     }
@@ -255,7 +258,7 @@ public class ReflectionUtils {
       }
       final Type paramType = type.getActualTypeArguments()[index];
       if (paramType instanceof GenericArrayType) {
-        return ((GenericArrayType) paramType).getGenericComponentType();
+        return paramType; //((GenericArrayType) paramType).getGenericComponentType();
       } else {
         if (paramType instanceof ParameterizedType) {
           return paramType;

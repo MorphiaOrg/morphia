@@ -24,13 +24,17 @@ public class StringConverter extends TypeConverter implements SimpleValueConvert
       return null;
     }
 
-    if (fromDBObject instanceof String) {
+    if (targetClass.equals(fromDBObject.getClass())) {
       return fromDBObject;
     }
 
     if (fromDBObject instanceof List) {
       final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return ReflectionUtils.convertToArray(type, (List<?>) fromDBObject);
+    }
+
+    if (targetClass.equals(String[].class)) {
+      return new String[] { fromDBObject.toString() };
     }
 
     return fromDBObject.toString();

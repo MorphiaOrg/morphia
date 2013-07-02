@@ -23,7 +23,7 @@ public class ByteConverter extends TypeConverter implements SimpleValueConverter
       return null;
     }
 
-    if (val.getClass() == targetClass) {
+    if (val.getClass().equals(targetClass)) {
       return val;
     }
 
@@ -31,7 +31,7 @@ public class ByteConverter extends TypeConverter implements SimpleValueConverter
       return ((Number) val).byteValue();
     }
 
-    if (targetClass.equals(Byte[].class) && val.getClass().equals(byte[].class)) {
+    if (targetClass.isArray() && val.getClass().equals(byte[].class)) {
       final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return convertToWrapperArray((byte[]) val);
     }

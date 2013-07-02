@@ -2,8 +2,10 @@ package com.google.code.morphia.mapping;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -131,7 +133,7 @@ public class MappedField {
       }
 
       // get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long
-      subType = (realType.isArray()) ? realType.getComponentType() : ReflectionUtils.getParameterizedType(field, (isMap) ? 1 : 0);
+      subType = (realType.isArray()) ? realType.getComponentType() : ReflectionUtils.getParameterizedType(field, isMap ? 1 : 0);
 
       if (isMap) {
         mapKeyType = ReflectionUtils.getParameterizedType(field, 0);
@@ -435,6 +437,9 @@ public class MappedField {
       return null;
     } else if (t instanceof Class) {
       return (Class) t;
+    } else if (t instanceof GenericArrayType) {
+      final Class type = (Class) ((GenericArrayType) t).getGenericComponentType();
+      return Array.newInstance(type, 0).getClass();
     } else if (t instanceof ParameterizedType) {
       return (Class) ((ParameterizedType) t).getRawType();
     } else if (t instanceof WildcardType) {
