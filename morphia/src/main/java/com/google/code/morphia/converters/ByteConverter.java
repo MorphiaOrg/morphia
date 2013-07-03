@@ -32,7 +32,6 @@ public class ByteConverter extends TypeConverter implements SimpleValueConverter
     }
 
     if (targetClass.isArray() && val.getClass().equals(byte[].class)) {
-      final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return convertToWrapperArray((byte[]) val);
     }
     return Byte.parseByte(val.toString());
