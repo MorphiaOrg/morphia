@@ -23,6 +23,8 @@ public class BooleanMappingTest extends TestBase {
     Boolean singleWrapper;
     boolean[] primitiveArray;
     Boolean[] wrapperArray;
+    boolean[][] nestedPrimitiveArray;
+    Boolean[][] nestedWrapperArray;
   }
 
 
@@ -37,7 +39,9 @@ public class BooleanMappingTest extends TestBase {
     ent.singlePrimitive = false;
     ent.singleWrapper = true;
     ent.primitiveArray = new boolean[] {false, true};
-    ent.wrapperArray = new Boolean[] { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE };
+    ent.wrapperArray = new Boolean[] {Boolean.FALSE, Boolean.FALSE, Boolean.TRUE};
+    ent.nestedPrimitiveArray = new boolean[][] {{false, false}, {false, true}};
+    ent.nestedWrapperArray = new Boolean[][] {{Boolean.FALSE, Boolean.TRUE, Boolean.FALSE}, {Boolean.FALSE, Boolean.FALSE, Boolean.TRUE}};
     ds.save(ent);
 
     final Booleans loaded = ds.get(ent);
@@ -53,12 +57,20 @@ public class BooleanMappingTest extends TestBase {
 
     compare("primitiveArray", ent.primitiveArray, loaded.primitiveArray);
     Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
+    compare("nestedPrimitiveArray", ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
+    Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
   }
 
+  private void compare(final String property, final boolean[][] expected, final boolean[][] received) {
+    Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
+    for (int i = 0; i < expected.length; i++) {
+      compare(property + "[" + i + "]", expected[i], received[i]);
+    }
+  }
   private void compare(final String property, final boolean[] expected, final boolean[] received) {
-     Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
-     for (int i = 0; i < expected.length; i++) {
-       Assert.assertEquals(String.format("%s[%s] should match", property, i), expected[i], received[i]);
-     }
-   }
+    Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
+    for (int i = 0; i < expected.length; i++) {
+      Assert.assertEquals(String.format("%s[%s] should match", property, i), expected[i], received[i]);
+    }
+  }
 }

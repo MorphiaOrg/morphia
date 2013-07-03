@@ -22,32 +22,43 @@ import com.mongodb.WriteConcern;
 public class CharacterMappingTest extends TestBase {
   public static class Characters {
     @Id ObjectId id;
-    char c;
-    Character character;
-    char charArray[];
-    Character characters[];
-    List<char[]> charList;
-    List<Character> characterList;
-    List<Character[]> characterArrayList;
+    List<Character[]> listWrapperArray  = new ArrayList<Character[]>();
+    List<char[]> listPrimitiveArray = new ArrayList<char[]>();
+    List<Character> listWrapper = new ArrayList<Character>();
+    char singlePrimitive;
+    Character singleWrapper;
+    char[] primitiveArray;
+    Character[] wrapperArray;
+    char[][] nestedPrimitiveArray;
+    Character[][] nestedWrapperArray;
   }
 
   @Test
   public void mapping() throws Exception {
     morphia.map(Characters.class);
     final Characters entity = new Characters();
-    entity.c = 'a';
-    entity.character = 'b';
-    entity.charArray = new char[] {'a', 'b'};
-    entity.characters = new Character[] { 'X', 'y', 'Z'};
-    entity.charList = new ArrayList<char[]>(Arrays.asList(new char[] {'1', 'd', 'z'}));
+    entity.listWrapperArray.add(new Character[] {'1', 'g', '#'});
+    entity.listPrimitiveArray.add(new char[] {'1', 'd', 'z'});
+    entity.listWrapper.addAll(Arrays.asList('[', ' ', '\u8888'));
+    entity.singlePrimitive = 'a';
+    entity.singleWrapper = 'b';
+    entity.primitiveArray = new char[] {'a', 'b'};
+    entity.wrapperArray = new Character[] { 'X', 'y', 'Z'};
+    entity.nestedPrimitiveArray = new char[][] {{'5', '-'}, {'a', 'b'}};
+    entity.nestedWrapperArray = new Character[][] {{'*', '$', '\u4824'}, { 'X', 'y', 'Z'}};
     ds.save(entity);
 
     final Characters loaded = ds.get(entity);
     Assert.assertNotNull(loaded.id);
-    Assert.assertEquals(entity.c, loaded.c);
-    Assert.assertEquals(entity.character, loaded.character);
-    Assert.assertArrayEquals(entity.charArray, loaded.charArray);
-    Assert.assertArrayEquals(entity.characters, loaded.characters);
+    Assert.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
+    Assert.assertArrayEquals(entity.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));
+    Assert.assertEquals(entity.listWrapper, loaded.listWrapper);
+    Assert.assertEquals(entity.singlePrimitive, loaded.singlePrimitive);
+    Assert.assertEquals(entity.singleWrapper, loaded.singleWrapper);
+    Assert.assertArrayEquals(entity.primitiveArray, loaded.primitiveArray);
+    Assert.assertArrayEquals(entity.wrapperArray, loaded.wrapperArray);
+    Assert.assertArrayEquals(entity.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
+    Assert.assertArrayEquals(entity.nestedWrapperArray, loaded.nestedWrapperArray);
   }
 
   @Test
@@ -55,14 +66,14 @@ public class CharacterMappingTest extends TestBase {
     morphia.map(Characters.class);
 
     final DBCollection collection = ds.getCollection(Characters.class);
-    collection.insert(new BasicDBObject("charArray", "bob"));
+    collection.insert(new BasicDBObject("primitiveArray", "bob"));
 
     final Characters characters = ds.find(Characters.class).get();
-    Assert.assertArrayEquals("bob".toCharArray(), characters.charArray);
+    Assert.assertArrayEquals("bob".toCharArray(), characters.primitiveArray);
     ds.save(characters, WriteConcern.FSYNCED);
 
     final DBObject one = collection.findOne();
-    final Object charArray = one.get("charArray");
+    final Object charArray = one.get("primitiveArray");
     Assert.assertTrue(charArray instanceof List);
 
     final List list = (List) charArray;
