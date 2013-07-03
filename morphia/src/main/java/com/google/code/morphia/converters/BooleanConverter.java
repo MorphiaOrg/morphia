@@ -31,7 +31,7 @@ public class BooleanConverter extends TypeConverter implements SimpleValueConver
 
     //handle the case for things like the ok field
     if (val instanceof Number) {
-      return ((Number) val).intValue() == 1;
+      return ((Number) val).intValue() != 0;
     }
 
     if (val instanceof List) {
