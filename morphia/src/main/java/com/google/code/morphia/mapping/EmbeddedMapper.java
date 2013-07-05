@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.morphia.mapping.cache.DisposeEntityCache;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.IterHelper;
 import com.google.code.morphia.utils.IterHelper.MapIterCallback;
@@ -20,7 +21,8 @@ import com.mongodb.DBObject;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 class EmbeddedMapper implements CustomMapper {
-  public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
+	protected EntityCache disposedCache = new DisposeEntityCache();
+    public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
     final Mapper mapper) {
     final String name = mf.getNameToStore();
 
@@ -149,7 +151,7 @@ class EmbeddedMapper implements CustomMapper {
               refObj = mapper.converters.decode(mf.getType(), dbVal, mf);
             } else {
               refObj = mapper.getOptions().objectFactory.createInstance(mapper, mf, ((DBObject) dbVal));
-              refObj = mapper.fromDb(((DBObject) dbVal), refObj, cache);
+              refObj = mapper.fromDb(((DBObject) dbVal), refObj, disposedCache);
             }
             if (refObj != null) {
               mf.setFieldValue(entity, refObj);
