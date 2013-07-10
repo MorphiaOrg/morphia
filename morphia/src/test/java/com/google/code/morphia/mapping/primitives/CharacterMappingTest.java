@@ -10,10 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.WriteConcern;
 
 
 /**
@@ -39,7 +35,7 @@ public class CharacterMappingTest extends TestBase {
     final Characters entity = new Characters();
     entity.listWrapperArray.add(new Character[] {'1', 'g', '#'});
     entity.listPrimitiveArray.add(new char[] {'1', 'd', 'z'});
-    entity.listWrapper.addAll(Arrays.asList('[', ' ', '\u8888'));
+    entity.listWrapper.addAll(Arrays.asList('*', ' ', '\u8888'));
     entity.singlePrimitive = 'a';
     entity.singleWrapper = 'b';
     entity.primitiveArray = new char[] {'a', 'b'};
@@ -59,26 +55,5 @@ public class CharacterMappingTest extends TestBase {
     Assert.assertArrayEquals(entity.wrapperArray, loaded.wrapperArray);
     Assert.assertArrayEquals(entity.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
     Assert.assertArrayEquals(entity.nestedWrapperArray, loaded.nestedWrapperArray);
-  }
-
-  @Test
-  public void legacyStrings() {
-    morphia.map(Characters.class);
-
-    final DBCollection collection = ds.getCollection(Characters.class);
-    collection.insert(new BasicDBObject("primitiveArray", "bob"));
-
-    final Characters characters = ds.find(Characters.class).get();
-    Assert.assertArrayEquals("bob".toCharArray(), characters.primitiveArray);
-    ds.save(characters, WriteConcern.FSYNCED);
-
-    final DBObject one = collection.findOne();
-    final Object charArray = one.get("primitiveArray");
-    Assert.assertTrue(charArray instanceof List);
-
-    final List list = (List) charArray;
-    Assert.assertEquals("b", list.get(0));
-    Assert.assertEquals("o", list.get(1));
-    Assert.assertEquals("b", list.get(2));
   }
 }

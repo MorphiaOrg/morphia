@@ -54,6 +54,7 @@ public class DefaultConverters {
     addConverter(new ShortConverter());
     addConverter(new IntegerConverter());
     addConverter(new SerializedObjectConverter());
+    addConverter(new CharArrayConverter());
     addConverter(new DateConverter());
     addConverter(new URIConverter());
     addConverter(new KeyConverter());
