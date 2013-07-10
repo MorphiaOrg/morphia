@@ -33,7 +33,6 @@ public class DoubleConverter extends TypeConverter implements SimpleValueConvert
       return ((Number) val).doubleValue();
     }
 
-    //FixMe: super-hacky
     if (val instanceof List) {
       final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return ReflectionUtils.convertToArray(type, (List<?>) val);

@@ -2,10 +2,8 @@ package com.google.code.morphia.converters;
 
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.bson.LazyBSONList;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 
@@ -35,8 +33,7 @@ public class FloatConverter extends TypeConverter implements SimpleValueConverte
       return ((Number) val).floatValue();
     }
 
-    //FixMe: super-hacky
-    if (val instanceof LazyBSONList || val instanceof ArrayList) {
+    if (val instanceof List) {
       final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return convertToArray(type, (List<?>) val);
     }

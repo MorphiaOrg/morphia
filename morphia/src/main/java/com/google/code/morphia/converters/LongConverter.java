@@ -1,10 +1,8 @@
 package com.google.code.morphia.converters;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.bson.LazyBSONList;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.utils.ReflectionUtils;
@@ -35,8 +33,7 @@ public class LongConverter extends TypeConverter implements SimpleValueConverter
       return ((Number) val).longValue();
     }
 
-    //FixMe: super-hacky
-    if (val instanceof LazyBSONList || val instanceof ArrayList) {
+    if (val instanceof List) {
       final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
       return ReflectionUtils.convertToArray(type, (List<?>) val);
     }
