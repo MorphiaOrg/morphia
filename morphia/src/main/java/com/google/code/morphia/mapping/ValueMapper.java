@@ -13,22 +13,17 @@ import com.mongodb.DBObject;
  * @author Scott Hernnadez
  */
 class ValueMapper implements CustomMapper {
-  public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
-    final Mapper mapper) {
-    try {
-      mapper.converters.toDBObject(entity, mf, dbObject, mapper.getOptions());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
-    final Mapper mapper) {
-    try {
-      mapper.converters.fromDBObject(dbObject, mf, entity);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
+        final Mapper mapper) {
+        try {
+            mapper.converters.toDBObject(entity, mf, dbObject, mapper.getOptions());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-  }
+    public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
+        final Mapper mapper) {
+        mapper.converters.fromDBObject(dbObject, mf, entity);
+    }
 }

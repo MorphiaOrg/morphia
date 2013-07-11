@@ -25,11 +25,13 @@ public class CharacterConverter extends TypeConverter implements SimpleValueConv
 
         if (fromDBObject instanceof String) {
             final char[] chars = ((String) fromDBObject).toCharArray();
-            if ((targetClass == char.class || targetClass == Character.class) && chars.length == 1) {
+            if (chars.length == 1) {
                 return chars[0];
+            } else if (chars.length == 0) {
+                return (char)0;
             }
         }
-        throw new MappingException("Trying to map multicharacter data to a single character: " + fromDBObject);
+        throw new MappingException("Trying to map multi-character data to a single character: " + fromDBObject);
     }
 
     @Override
