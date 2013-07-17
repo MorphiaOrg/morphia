@@ -2,19 +2,17 @@ package com.google.code.morphia.utils;
 
 
 public enum IndexDirection {
-  ASC,
-  DESC,
-  GEO2D;
+    ASC(1),
+    DESC(-1),
+    GEO2D("2d");
 
-  public Object toIndexValue() {
-    if (name().equals(ASC.name())) {
-      return 1;
-    } else if (name().equals(DESC.name())) {
-      return -1;
-    } else if (name().equals(GEO2D.name())) {
-      return "2d";
-    } else {
-      throw new RuntimeException("Invalid!");
+    private final Object direction;
+
+    IndexDirection(final Object o) {
+        direction = o;
     }
-  }
+
+    public Object toIndexValue() {
+        return direction;
+    }
 }
