@@ -851,16 +851,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             return wr;
         }
 
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
-        //remove (immutable) _id field for update.
-        dbObj.removeField(Mapper.ID_KEY);
-
         final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
         final String versionKeyName = mfVersion.getNameToStore();
         final Long oldVersion = (Long) mfVersion.getFieldValue(entity);
         final long newVersion = VersionHelper.nextValue(oldVersion);
         dbObj.put(versionKeyName, newVersion);
         if (oldVersion != null && oldVersion > 0) {
+            final Object idValue = dbObj.get(Mapper.ID_KEY);
 
             final UpdateResults<T> res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue).filter(
                 versionKeyName, oldVersion), dbObj, false, false, wc);
@@ -1004,6 +1001,9 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
+        //remove (immutable) _id field for update.
+        dbObj.removeField(Mapper.ID_KEY);
+
         WriteResult wr;
 
         final MappedClass mc = mapper.getMappedClass(unwrapped);
@@ -1011,9 +1011,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         //try to do an update if there is a @Version field
         wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, wc, db, mc);
-
-        //remove (immutable) _id field for update.
-        dbObj.removeField(Mapper.ID_KEY);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
