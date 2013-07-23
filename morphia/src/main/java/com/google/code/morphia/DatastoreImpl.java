@@ -834,7 +834,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBObject dbObj = entityToDBObj(entity, involvedObjects);
 
         //try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, entity, dbObj, wc, db, mc);
+        final Object idValue = dbObj.get(Mapper.ID_KEY);
+        wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, db, mc);
 
         if (wr == null) {
             if (wc == null) {
@@ -848,8 +849,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
     }
 
-    protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final WriteConcern wc,
-        final DB database, final MappedClass mc) {
+    protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, 
+    		final Object idValue, final WriteConcern wc, final DB database, final MappedClass mc) {
         WriteResult wr = null;
         if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
             return wr;
@@ -861,8 +862,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         final long newVersion = VersionHelper.nextValue(oldVersion);
         dbObj.put(versionKeyName, newVersion);
         if (oldVersion != null && oldVersion > 0) {
-            final Object idValue = dbObj.get(Mapper.ID_KEY);
-
             final UpdateResults<T> res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue).filter(
                 versionKeyName, oldVersion), dbObj, false, false, wc);
 
@@ -1009,6 +1008,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         //remove (immutable) _id field for update.
+        final Object idValue = dbObj.get(Mapper.ID_KEY);
         dbObj.removeField(Mapper.ID_KEY);
 
         WriteResult wr;
@@ -1017,7 +1017,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = getCollection(unwrapped);
 
         //try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, wc, db, mc);
+        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, db, mc);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);

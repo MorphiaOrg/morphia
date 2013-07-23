@@ -1,4 +1,7 @@
 *.iml
+.classpath
+.project
+.settings
 *.sw*
 .idea
 release.sh
