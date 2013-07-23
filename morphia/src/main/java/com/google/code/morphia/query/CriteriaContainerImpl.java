@@ -2,9 +2,9 @@ package com.google.code.morphia.query;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -39,50 +39,43 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
   }
 
   public void addTo(final DBObject obj) {
-	if (joinMethod == CriteriaJoin.AND) {
-		Map<String,Integer> fields = new HashMap<String,Integer>();      
-		for (final Criteria child : children) {
-			String field = child.getFieldName();
-			if (null != field) {
-				if (fields.containsKey(field))
-					fields.put(field, fields.get(field)+1);
-				else
-					fields.put(field, 1);
-        	}
-      	}
-		List<Criteria> ands = new ArrayList<Criteria>();
-		for (Criteria child: this.children) {
-			String field = child.getFieldName();
-			if (null != field || fields.get(field) <= 1) {
-				child.addTo(obj);
-			}
-			else {
-				ands.add(child);
-			}
-		}
-		if (ands.size()>0) {
-        	//use $and
-        	final BasicDBList and = new BasicDBList();
+    if (joinMethod == CriteriaJoin.AND) {
+      final Set<String> fields = new HashSet<String>();
+      int nonNullFieldNames = 0;
+      for (final Criteria child : children) {
+        if (null != child.getFieldName()) {
+          fields.add(child.getFieldName());
+          nonNullFieldNames++;
+        }
+      }
+      if (fields.size() < nonNullFieldNames) {
+        //use $and
+        final BasicDBList and = new BasicDBList();
 
-        	for (final Criteria child : ands) {
-        		final BasicDBObject container = new BasicDBObject();
-        		child.addTo(container);
-        		and.add(container);
-        	}
+        for (final Criteria child : children) {
+          final BasicDBObject container = new BasicDBObject();
+          child.addTo(container);
+          and.add(container);
+        }
 
-        	obj.put("$and", and);
-      	}
-	} else if (joinMethod == CriteriaJoin.OR) {
-      	final BasicDBList or = new BasicDBList();
+        obj.put("$and", and);
+      } else {
+        //no dup field names, don't use $and
+        for (final Criteria child : children) {
+          child.addTo(obj);
+        }
+      }
+    } else if (joinMethod == CriteriaJoin.OR) {
+      final BasicDBList or = new BasicDBList();
 
-      	for (final Criteria child : children) {
-        	final BasicDBObject container = new BasicDBObject();
-        	child.addTo(container);
-        	or.add(container);
-      	}
+      for (final Criteria child : children) {
+        final BasicDBObject container = new BasicDBObject();
+        child.addTo(container);
+        or.add(container);
+      }
 
-      	obj.put("$or", or);
-	}
+      obj.put("$or", or);
+    }
   }
 
   public CriteriaContainer and(final Criteria... criteria) {
