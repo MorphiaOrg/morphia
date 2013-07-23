@@ -45,12 +45,16 @@ public interface AdvancedDatastore extends Datastore {
 
   <T> Key<T> save(String kind, T entity);
 
+  <T> Key<T> save(String kind, T entity, WriteConcern wc);
+
   /**
    * No validation or conversion is done to the id
    */
   @Deprecated <T> WriteResult delete(String kind, T id);
 
   <T, V> WriteResult delete(String kind, Class<T> clazz, V id);
+
+  <T, V> WriteResult delete(String kind, Class<T> clazz, V id, WriteConcern wc);
 
   <T> Key<T> insert(String kind, T entity);
 

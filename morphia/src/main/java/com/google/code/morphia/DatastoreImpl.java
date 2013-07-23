@@ -144,12 +144,16 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
     }
 
-    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
+    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
     }
 
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
         return delete(clazz, id, getWriteConcern(clazz));
+    }
+
+    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
     }
 
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
@@ -889,14 +893,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    public <T> Key<T> save(final String kind, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(kind);
-        return save(dbColl, unwrapped, getWriteConcern(unwrapped));
-    }
-
     public <T> Key<T> save(final T entity) {
         return save(entity, getWriteConcern(entity));
+    }
+
+    public <T> Key<T> save(final String kind, final T entity) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        return save(kind, entity, getWriteConcern(unwrapped));
+    }
+
+    public <T> Key<T> save(final String kind, final T entity, WriteConcern wc) {
+        return save(getCollection(kind), ProxyHelper.unwrap(entity), wc);
     }
 
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
