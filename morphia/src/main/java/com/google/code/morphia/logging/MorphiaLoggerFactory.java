@@ -12,8 +12,10 @@ import com.google.code.morphia.logging.jdk.JDKLoggerFactory;
 public final class MorphiaLoggerFactory {
   private static LogrFactory loggerFactory;
 
-  private static final List<String> factories = new ArrayList(Arrays.asList(JDKLoggerFactory.class.getName(),
-    "com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory"));
+  private static List<String> factories = new ArrayList(Arrays.asList(
+     "com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory",
+     JDKLoggerFactory.class.getName()
+     ));
 
   private static synchronized void init() {
     if (loggerFactory == null) {
