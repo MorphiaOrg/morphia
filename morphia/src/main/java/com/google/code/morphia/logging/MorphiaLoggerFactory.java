@@ -39,9 +39,8 @@ public final class MorphiaLoggerFactory {
       final Class<?> c = Class.forName(f);
       return (LogrFactory) c.newInstance();
     } catch (Throwable ignore) {
-      ignore.printStackTrace();
+        return null;
     }
-    return null;
   }
 
   public static Logr get(final Class<?> c) {

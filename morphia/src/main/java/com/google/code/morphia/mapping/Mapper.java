@@ -207,7 +207,8 @@ public class Mapper {
     }
 
     /**
-     * <p> Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating). </p>
+     * <p> Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     * </p>
      */
     public MappedClass getMappedClass(final Object obj) {
         if (obj == null) {
@@ -381,43 +382,32 @@ public class Mapper {
         Object mappedValue = value;
 
         //convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
-        if ((mf != null && (mf.hasAnnotation(Reference.class) ||
-            mf.getType().isAssignableFrom(Key.class) ||
-            mf.getType().isAssignableFrom(DBRef.class) ||
-            //Collection/Array/???
-            (value instanceof Iterable && mf.isMultipleValues() && (mf.getSubClass().isAssignableFrom(Key.class) || mf.getSubClass()
-                .isAssignableFrom(DBRef.class))))) || (mc != null && mc.getEntityAnnotation() != null)) {
+        if (isAssignable(mf, value) || isEntity(mc)) {
             try {
                 if (value instanceof Iterable) {
-                    final ArrayList<DBRef> refs = new ArrayList<DBRef>();
-                    final Iterable it = (Iterable) value;
-                    for (final Object o : it) {
-                        final Key<?> k = (o instanceof Key) ? (Key<?>) o : getKey(o);
-                        final DBRef dbref = keyToRef(k);
-                        refs.add(dbref);
-                    }
-                    mappedValue = refs;
+                    mappedValue = getDBRefs((Iterable) value);
                 } else {
-                    final Key<?> k = (value instanceof Key) ? (Key<?>) value : getKey(value);
-                    mappedValue = keyToRef(k);
-                    if (mappedValue == value) {
-                        throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
+                    final Key<?> key = (value instanceof Key) ? (Key<?>) value : getKey(value);
+                    if (key == null) {
+                        mappedValue = toMongoObject(value, false);
+                    } else {
+                        mappedValue = keyToRef(key);
+                        if (mappedValue == value) {
+                            throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
+                        }
                     }
                 }
             } catch (Exception e) {
                 log.error("Error converting value(" + value + ") to reference.", e);
                 mappedValue = toMongoObject(value, false);
             }
-        }//serialized
-        else if (mf != null && mf.hasAnnotation(Serialized.class)) {
+        } else if (mf != null && mf.hasAnnotation(Serialized.class)) { //serialized
             try {
                 mappedValue = Serializer.serialize(value, !mf.getAnnotation(Serialized.class).disableCompression());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-        //pass-through
-        else if (value instanceof DBObject) {
+        } else if (value instanceof DBObject) {  //pass-through
             mappedValue = value;
         } else {
             mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf));
@@ -427,6 +417,36 @@ public class Mapper {
         }
 
         return mappedValue;
+    }
+
+    private Object getDBRefs(final Iterable value) {
+        final Object mappedValue;
+        final ArrayList<DBRef> refs = new ArrayList<DBRef>();
+        for (final Object o : (Iterable) value) {
+            final Key<?> key = (o instanceof Key) ? (Key<?>) o : getKey(o);
+            refs.add(keyToRef(key));
+        }
+        mappedValue = refs;
+        return mappedValue;
+    }
+
+    private boolean isAssignable(final MappedField mf, final Object value) {
+        if (mf == null) {
+            return false;
+        }
+
+        return (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class) || mf.getType().isAssignableFrom(DBRef.class)
+            || isMultiValued(mf, value));
+    }
+
+    private boolean isMultiValued(final MappedField mf, final Object value) {
+        final Class subClass = mf.getSubClass();
+        return value instanceof Iterable && mf.isMultipleValues() && (subClass.isAssignableFrom(Key.class) || subClass.isAssignableFrom(
+            DBRef.class));
+    }
+
+    private boolean isEntity(final MappedClass mc) {
+        return (mc != null && mc.getEntityAnnotation() != null);
     }
 
     public Object getId(final Object entity) {
@@ -462,10 +482,7 @@ public class Mapper {
         }
 
         final Object id = getId(unwrapped);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
-        }
-        return new Key<T>((Class<T>) unwrapped.getClass(), id);
+        return id == null ? null : new Key<T>((Class<T>) unwrapped.getClass(), id);
     }
 
     /**
@@ -479,8 +496,8 @@ public class Mapper {
     }
 
     /**
-     * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the class:
-     * {@link Mapper#CLASS_NAME_FIELDNAME} </p>
+     * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the
+     * class: {@link Mapper#CLASS_NAME_FIELDNAME} </p>
      *
      * @param entity The POJO
      * @param involvedObjects A Map of (already converted) POJOs

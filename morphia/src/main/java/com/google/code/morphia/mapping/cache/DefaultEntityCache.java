@@ -34,8 +34,10 @@ public class DefaultEntityCache implements EntityCache {
   }
 
   public void notifyExists(final Key<?> k, final boolean exists) {
-    existenceMap.put(k, exists);
-    stats.entities++;
+      final Boolean put = existenceMap.put(k, exists);
+      if(put == null || !put) {
+          stats.entities++;
+      }
   }
 
   public <T> T getEntity(final Key<T> k) {
