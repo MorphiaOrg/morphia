@@ -33,6 +33,7 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.query.UpdateException;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
@@ -43,7 +44,10 @@ import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -431,8 +435,13 @@ public class TestDatastore extends TestBase {
       @Override
       protected void thisMustFail() {
         morphia.createDatastore(mongo, db.getName(), "SomeWeirdUserName" + System.nanoTime(),
-          ("SomeWeirdPassword" + System.nanoTime()).toCharArray());
+            ("SomeWeirdPassword" + System.nanoTime()).toCharArray());
       }
     };
+  }
+
+  @Test(expected = UpdateException.class)
+  public void saveNull() {
+    ds.save(null);
   }
 }
