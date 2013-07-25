@@ -442,6 +442,6 @@ public class TestDatastore extends TestBase {
 
   @Test(expected = UpdateException.class)
   public void saveNull() {
-    ds.save(null);
+    ds.save((Hotel)null);
   }
 }
