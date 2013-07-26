@@ -16,6 +16,7 @@ package com.google.code.morphia.mapping;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,6 +60,7 @@ import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.google.code.morphia.query.FilterOperator;
 import com.google.code.morphia.query.ValidationException;
 import com.google.code.morphia.utils.ReflectionUtils;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
@@ -207,8 +209,7 @@ public class Mapper {
     }
 
     /**
-     * <p> Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     * </p>
+     * <p> Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating). </p>
      */
     public MappedClass getMappedClass(final Object obj) {
         if (obj == null) {
@@ -355,7 +356,7 @@ public class Mapper {
                 }
                 //Set/List but needs elements converted
             } else if (!isSingleValue && !ReflectionUtils.isPropertyType(subType)) {
-                final ArrayList<Object> values = new ArrayList<Object>();
+                final List<Object> values = new BasicDBList();
                 if (type.isArray()) {
                     for (final Object obj : (Object[]) newObj) {
                         values.add(toMongoObject(obj, includeClassName));
@@ -411,12 +412,27 @@ public class Mapper {
             mappedValue = value;
         } else {
             mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf));
-            if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
+            if (mappedValue instanceof BasicDBList) {
+                final BasicDBList list = (BasicDBList) mappedValue;
+                if (list.size() != 0) {
+                    if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
+                        for (Object o : list) {
+                            if (o instanceof DBObject) {
+                                ((DBObject) o).removeField(CLASS_NAME_FIELDNAME);
+                            }
+                        }
+                    }
+                }
+            } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
                 ((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
             }
         }
 
         return mappedValue;
+    }
+
+    private Object extractFirstElement(final Object value) {
+        return value.getClass().isArray() ? Array.get(value, 0) : ((Iterable) value).iterator().next();
     }
 
     private Object getDBRefs(final Iterable value) {
@@ -496,8 +512,8 @@ public class Mapper {
     }
 
     /**
-     * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the
-     * class: {@link Mapper#CLASS_NAME_FIELDNAME} </p>
+     * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the class:
+     * {@link Mapper#CLASS_NAME_FIELDNAME} </p>
      *
      * @param entity The POJO
      * @param involvedObjects A Map of (already converted) POJOs

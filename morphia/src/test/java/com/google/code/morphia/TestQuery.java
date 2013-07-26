@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestDatastore.FacebookUser;
 import com.google.code.morphia.TestDatastore.KeysKeysKeys;
@@ -87,7 +86,7 @@ public class TestQuery extends TestBase {
     }
   }
 
-  @Embedded
+  @Embedded(concreteClass = Keyword.class)
   public static class Keyword {
     String keyword;
     int score = 12;
@@ -783,7 +782,6 @@ public class TestQuery extends TestBase {
   }
 
   @Test
-  @Ignore("https://github.com/mongodb/morphia/issues/464")
   public void testInQueryWithObjects() throws Exception {
     ds.save(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah"));
 
