@@ -41,86 +41,90 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestIdField extends TestBase {
 
-  @Entity
-  private static class ReferenceAsId {
-    @Id @Reference Rectangle id;
+    @Entity
+    private static class ReferenceAsId {
+        @Id
+        @Reference
+        Rectangle id;
 
-    protected ReferenceAsId() {
+        protected ReferenceAsId() {
+        }
+
+        public ReferenceAsId(final Rectangle key) {
+            id = key;
+        }
     }
 
-    public ReferenceAsId(final Rectangle key) {
-      id = key;
+    @Entity
+    private static class KeyAsId {
+        @Id
+        Key<?> id;
+
+        protected KeyAsId() {
+        }
+
+        public KeyAsId(final Key<?> key) {
+            id = key;
+        }
     }
-  }
 
-  @Entity
-  private static class KeyAsId {
-    @Id Key<?> id;
-
-    protected KeyAsId() {
+    @Entity
+    private static class MapAsId {
+        @Id
+        final Map<String, String> id = new HashMap<String, String>();
     }
 
-    public KeyAsId(final Key<?> key) {
-      id = key;
+    @Test
+    @Ignore("need to set the _db in the dbRef for this to work... see issue 90, ")
+    public void testReferenceAsId() throws Exception {
+        morphia.map(ReferenceAsId.class);
+
+        final Rectangle r = new Rectangle(1, 1);
+        final Key<Rectangle> rKey = ds.save(r);
+
+        final ReferenceAsId rai = new ReferenceAsId(r);
+        final Key<ReferenceAsId> raiKey = ds.save(rai);
+        final ReferenceAsId raiLoaded = ds.get(ReferenceAsId.class, rKey);
+        assertNotNull(raiLoaded);
+        assertEquals(raiLoaded.id.getArea(), r.getArea(), 0);
+
+        assertNotNull(raiKey);
     }
-  }
 
-  @Entity
-  private static class MapAsId {
-    @Id
-    final Map<String, String> id = new HashMap<String, String>();
-  }
+    @Test
+    public void testKeyAsId() throws Exception {
+        morphia.map(KeyAsId.class);
 
-  @Test @Ignore("need to set the _db in the dbRef for this to work... see issue 90, ")
-  public void testReferenceAsId() throws Exception {
-    morphia.map(ReferenceAsId.class);
+        final Rectangle r = new Rectangle(1, 1);
+        //        Rectangle r2 = new Rectangle(11,11);
 
-    final Rectangle r = new Rectangle(1, 1);
-    final Key<Rectangle> rKey = ds.save(r);
+        final Key<Rectangle> rKey = ds.save(r);
+        //        Key<Rectangle> r2Key = ds.save(r2);
+        final KeyAsId kai = new KeyAsId(rKey);
+        final Key<KeyAsId> kaiKey = ds.save(kai);
+        final KeyAsId kaiLoaded = ds.get(KeyAsId.class, rKey);
+        assertNotNull(kaiLoaded);
+        assertNotNull(kaiKey);
+    }
 
-    final ReferenceAsId rai = new ReferenceAsId(r);
-    final Key<ReferenceAsId> raiKey = ds.save(rai);
-    final ReferenceAsId raiLoaded = ds.get(ReferenceAsId.class, rKey);
-    assertNotNull(raiLoaded);
-    assertEquals(raiLoaded.id.getArea(), r.getArea(), 0);
+    @Test
+    public void testMapAsId() throws Exception {
+        morphia.map(MapAsId.class);
 
-    assertNotNull(raiKey);
-  }
+        final MapAsId mai = new MapAsId();
+        mai.id.put("test", "string");
+        final Key<MapAsId> maiKey = ds.save(mai);
+        final MapAsId maiLoaded = ds.get(MapAsId.class, new BasicDBObject("test", "string"));
+        assertNotNull(maiLoaded);
+        assertNotNull(maiKey);
+    }
 
-  @Test
-  public void testKeyAsId() throws Exception {
-    morphia.map(KeyAsId.class);
-
-    final Rectangle r = new Rectangle(1, 1);
-    //        Rectangle r2 = new Rectangle(11,11);
-
-    final Key<Rectangle> rKey = ds.save(r);
-    //        Key<Rectangle> r2Key = ds.save(r2);
-    final KeyAsId kai = new KeyAsId(rKey);
-    final Key<KeyAsId> kaiKey = ds.save(kai);
-    final KeyAsId kaiLoaded = ds.get(KeyAsId.class, rKey);
-    assertNotNull(kaiLoaded);
-    assertNotNull(kaiKey);
-  }
-
-  @Test
-  public void testMapAsId() throws Exception {
-    morphia.map(MapAsId.class);
-
-    final MapAsId mai = new MapAsId();
-    mai.id.put("test", "string");
-    final Key<MapAsId> maiKey = ds.save(mai);
-    final MapAsId maiLoaded = ds.get(MapAsId.class, new BasicDBObject("test", "string"));
-    assertNotNull(maiLoaded);
-    assertNotNull(maiKey);
-  }
-
-  @Test
-  public void testIdFieldNameMapping() throws Exception {
-    final Rectangle r = new Rectangle(1, 12);
-    final BasicDBObject dbObj = (BasicDBObject) morphia.toDBObject(r);
-    assertFalse(dbObj.containsField("id"));
-    assertTrue(dbObj.containsField(Mapper.ID_KEY));
-    assertEquals(4, dbObj.size()); //_id, h, w, className
-  }
+    @Test
+    public void testIdFieldNameMapping() throws Exception {
+        final Rectangle r = new Rectangle(1, 12);
+        final BasicDBObject dbObj = (BasicDBObject) morphia.toDBObject(r);
+        assertFalse(dbObj.containsField("id"));
+        assertTrue(dbObj.containsField(Mapper.ID_KEY));
+        assertEquals(4, dbObj.size()); //_id, h, w, className
+    }
 }
