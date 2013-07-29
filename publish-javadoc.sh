@@ -45,5 +45,6 @@ do
 	git push
 	cd ${START}
 	git checkout master
+	mvn clean
 	exit
 done
