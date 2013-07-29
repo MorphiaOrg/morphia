@@ -237,7 +237,6 @@ public interface Datastore {
    */
   <T> T findAndModify(Query<T> q, UpdateOperations<T> ops, boolean oldVersion, boolean createIfMissing);
 
-  @SuppressWarnings("rawtypes")
   /**
    * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
    * @param <T> The type of resulting data

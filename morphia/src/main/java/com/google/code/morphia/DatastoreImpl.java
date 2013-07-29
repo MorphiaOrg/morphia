@@ -1181,16 +1181,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     Assert.parametersNotNull("reduce", baseCommand.getReduce());
     Assert.parameterNotEmpty(baseCommand.getMap(), "reduce");
 
-
-    if (MapreduceType.INLINE.equals(type)) {
-      throw new IllegalArgumentException("Inline map/reduce is not supported.");
-    }
-
     final QueryImpl<T> qi = (QueryImpl<T>) q;
     if (qi.getOffset() != 0 || qi.getFieldsObject() != null) {
       throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
     }
-
 
     OutputType outType;
     switch (type) {
@@ -1227,16 +1221,17 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     final MapReduceOutput mpo = dbColl.mapReduce(baseCommand);
-    final MapreduceResults mrRes = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getRaw(), createCache());
+    final EntityCache cache = createCache();
+    final MapreduceResults results = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getRaw(), cache);
 
-    QueryImpl baseQ = null;
-    if (!MapreduceType.INLINE.equals(type)) {
-      baseQ = new QueryImpl(outputType, db.getCollection(mrRes.getOutputCollectionName()), this);
+    results.setType(type);
+    if (MapreduceType.INLINE.equals(type)) {
+      results.setInlineRequiredOptions(outputType, getMapper(), cache);
+    } else {
+      results.setQuery(new QueryImpl(outputType, db.getCollection(results.getOutputCollectionName()), this));
     }
-    //TODO Handle inline case and create an iterator/able.
 
-    mrRes.setBits(type, baseQ);
-    return mrRes;
+    return results;
 
   }
 

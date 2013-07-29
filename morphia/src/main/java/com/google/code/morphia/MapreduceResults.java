@@ -8,10 +8,11 @@ import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.mapping.Mapper;
+import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.query.MorphiaIterator;
 import com.google.code.morphia.query.Query;
-import com.google.code.morphia.query.QueryImpl;
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 
 
@@ -27,7 +28,7 @@ public class MapreduceResults<T> implements Iterable<T> {
   private boolean ok;
   private String err;
   private MapreduceType type;
-  private QueryImpl baseQuery;
+  private Query query;
   //inline stuff
   @Transient
   private Class<T> clazz;
@@ -57,7 +58,10 @@ public class MapreduceResults<T> implements Iterable<T> {
   }
 
   public Query<T> createQuery() {
-    return baseQuery.clone();
+    if (type == MapreduceType.INLINE) {
+      throw new MappingException("No collection available for inline mapreduce jobs");
+    }
+    return query.clone();
   }
 
   public void setInlineRequiredOptions(final Class<T> clazz, final Mapper mapper, final EntityCache cache) {
@@ -68,16 +72,21 @@ public class MapreduceResults<T> implements Iterable<T> {
 
   //Inline stuff
   public Iterator<T> getInlineResults() {
-    return new MorphiaIterator<T, T>((Iterator<DBObject>) rawResults.get("results"), mapper, clazz, null, cache);
+    final BasicDBList results = (BasicDBList) rawResults.get("results");
+    final Object iterator = results.iterator();
+    return new MorphiaIterator<T, T>((Iterator<DBObject>) iterator, mapper, clazz, null, cache);
   }
 
   String getOutputCollectionName() {
     return outColl;
   }
 
-  void setBits(final MapreduceType t, final QueryImpl baseQ) {
-    type = t;
-    baseQuery = baseQ;
+  public void setType(final MapreduceType type) {
+    this.type = type;
+  }
+
+  public void setQuery(final Query query) {
+    this.query = query;
   }
 
   @PreLoad

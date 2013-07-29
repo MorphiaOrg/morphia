@@ -1,6 +1,7 @@
 package com.google.code.morphia;
 
 
+import java.util.Iterator;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -18,7 +19,7 @@ import com.mongodb.DBObject;
 
 public class TestMapreduce extends TestBase {
 
-  @Entity("mr-results")
+  @Entity("mr_results")
   private static class ResultEntity extends ResultBase<String, HasCount> {
   }
 
@@ -33,10 +34,12 @@ public class TestMapreduce extends TestBase {
 
   @Entity("mr-results")
   private static class ResultEntity2 {
-    @Id String type;
+    @Id
+    String type;
     double count;
 
-    @PreLoad void preLoad(final BasicDBObject dbObj) {
+    @PreLoad
+    void preLoad(final BasicDBObject dbObj) {
       //pull all the fields from value field into the parent.
       dbObj.putAll((DBObject) dbObj.get("value"));
     }
@@ -56,10 +59,23 @@ public class TestMapreduce extends TestBase {
     final String map = "function () { if(this['radius']) { emit('circle', {count:1}); return; } emit('rect', {count:1}); }";
     final String reduce
       = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} return { count : total }; }";
+
     final MapreduceResults<ResultEntity> mrRes = ds.mapReduce(MapreduceType.REPLACE, ads.createQuery(Shape.class), map, reduce, null, null,
       ResultEntity.class);
     Assert.assertEquals(2, mrRes.createQuery().countAll());
     Assert.assertEquals(100, mrRes.createQuery().get().value.count, 0);
+
+
+    final MapreduceResults<ResultEntity> inline = ds.mapReduce(MapreduceType.INLINE, ads.createQuery(Shape.class), map, reduce, null, null,
+      ResultEntity.class);
+    final Iterator<ResultEntity> iterator = inline.iterator();
+    int count = 0;
+    while (iterator.hasNext()) {
+      iterator.next();
+      count++;
+    }
+    Assert.assertEquals(2, count);
+    Assert.assertEquals(100, inline.iterator().next().value.count, 0);
   }
 
 }
