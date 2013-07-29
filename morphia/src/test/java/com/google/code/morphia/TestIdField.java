@@ -18,11 +18,14 @@
 package com.google.code.morphia;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
@@ -74,8 +77,66 @@ public class TestIdField extends TestBase {
         final Map<String, String> id = new HashMap<String, String>();
     }
 
+    @Entity(noClassnameStored = true)
+    public static class EmbeddedId {
+
+        @Id
+        private MyId id;
+        private String data;
+
+        public EmbeddedId() {
+        }
+
+        public EmbeddedId(final MyId myId, final String data) {
+            id = myId;
+            this.data = data;
+        }
+    }
+
+    @Embedded
+    public static class MyId {
+        private String myIdPart1;
+        private String myIdPart2;
+
+        public MyId() {
+        }
+
+        public MyId(final String myIdPart1, final String myIdPart2) {
+            this.myIdPart1 = myIdPart1;
+            this.myIdPart2 = myIdPart2;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final MyId myId = (MyId) o;
+
+            if (!myIdPart1.equals(myId.myIdPart1)) {
+                return false;
+            }
+            if (!myIdPart2.equals(myId.myIdPart2)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = myIdPart1.hashCode();
+            result = 31 * result + myIdPart2.hashCode();
+            return result;
+        }
+    }
+
     @Test
-    @Ignore("need to set the _db in the dbRef for this to work... see issue 90, ")
+    @Ignore("need to set the _db in the dbRef for this to work... see issue 90")
     public void testReferenceAsId() throws Exception {
         morphia.map(ReferenceAsId.class);
 
@@ -126,5 +187,22 @@ public class TestIdField extends TestBase {
         assertFalse(dbObj.containsField("id"));
         assertTrue(dbObj.containsField(Mapper.ID_KEY));
         assertEquals(4, dbObj.size()); //_id, h, w, className
+    }
+
+    @Test
+    public void embeddedIds() {
+        final MyId id = new MyId("1", "2");
+
+        final EmbeddedId a = new EmbeddedId(id, "data");
+        final EmbeddedId b = new EmbeddedId(new MyId("2", "3"), "data, too");
+
+        ds.save(a);
+        ds.save(b);
+
+        Assert.assertEquals(a.data, ds.get(EmbeddedId.class, id).data);
+
+        final EmbeddedId embeddedId = ds.find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).asList().get(0);
+        Assert.assertEquals(a.data, embeddedId.data);
+        Assert.assertEquals(a.id, embeddedId.id);
     }
 }
