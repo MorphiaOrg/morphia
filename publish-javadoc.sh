@@ -9,7 +9,7 @@ initWiki() {
 }
 
 updateIndex() {
-	echo "[Current](https://rawgithub.com/wiki/mongodb/morphia/javadoc/${TAG}/apidocs/index.html)\n" > Javadoc.md
+	echo "## [Current](https://rawgithub.com/wiki/mongodb/morphia/javadoc/${TAG}/apidocs/index.html)\n" > Javadoc.md
 	for i in `ls -t javadoc/`
 	do
 		if [ "$i" != "${TAG}" ]
