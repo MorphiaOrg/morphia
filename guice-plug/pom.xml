@@ -3,7 +3,7 @@
 	<parent>
     <groupId>com.google.code.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
-		<version>0.102-SNAPSHOT</version>
+		<version>0.102</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<artifactId>morphia-guice-plug</artifactId>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.code.morphia</groupId>
   <artifactId>morphia-parent</artifactId>
-  <version>0.102-SNAPSHOT</version>
+  <version>0.102</version>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -50,7 +50,7 @@
     <connection>scm:git:https://github.com/mongodb/morphia.git</connection>
     <developerConnection>scm:git:git@github.com:mongodb/morphia.git</developerConnection>
     <url>https://github.com/mongodb/morphia.git</url>
-    <tag>HEAD</tag>
+    <tag>0.102</tag>
   </scm>
 
   <developers>
