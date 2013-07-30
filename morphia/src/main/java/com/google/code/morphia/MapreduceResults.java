@@ -81,11 +81,11 @@ public class MapreduceResults<T> implements Iterable<T> {
     return outColl;
   }
 
-  public void setType(final MapreduceType type) {
+  void setType(final MapreduceType type) {
     this.type = type;
   }
 
-  public void setQuery(final Query query) {
+  void setQuery(final Query query) {
     this.query = query;
   }
 

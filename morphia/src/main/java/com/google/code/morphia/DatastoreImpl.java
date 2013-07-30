@@ -1222,7 +1222,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     final MapReduceOutput mpo = dbColl.mapReduce(baseCommand);
     final EntityCache cache = createCache();
-    final MapreduceResults results = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getRaw(), cache);
+    final MapreduceResults results = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getCommandResult(), cache);
 
     results.setType(type);
     if (MapreduceType.INLINE.equals(type)) {
@@ -1244,7 +1244,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     final String outColl = mapper.getCollectionName(outputType);
 
-    OutputType outType;
+    final OutputType outType;
     switch (type) {
       case REDUCE:
         outType = OutputType.REDUCE;
