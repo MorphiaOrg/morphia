@@ -239,6 +239,7 @@ public interface Datastore {
 
   /**
    * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
+   *
    * @param <T> The type of resulting data
    * @param outputType The type of resulting data; inline is not working yet
    * @param type MapreduceType
@@ -287,12 +288,14 @@ public interface Datastore {
   /**
    * Ensures (creating if necessary) the index including the field(s) + directions
    */
-  @Deprecated <T> void ensureIndex(Class<T> clazz, IndexFieldDef... fields);
+  @Deprecated
+  <T> void ensureIndex(Class<T> clazz, IndexFieldDef... fields);
 
   /**
    * Ensures (creating if necessary) the index including the field(s) + directions
    */
-  @Deprecated <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
+  @Deprecated
+  <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
 
   /**
    * Ensures (creating if necessary) the index including the field(s) + directions; eg fields = "field1, -field2" ({field1:1, field2:-1})
