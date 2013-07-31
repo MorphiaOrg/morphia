@@ -386,7 +386,11 @@ public class Mapper {
         if (isAssignable(mf, value) || isEntity(mc)) {
             try {
                 if (value instanceof Iterable) {
-                    mappedValue = getDBRefs((Iterable) value);
+                    if(isMapped(mf.getSubClass())) {
+                      mappedValue = getDBRefs((Iterable) value);
+                    } else {
+                      mappedValue = value;
+                    }
                 } else {
                     final Key<?> key = (value instanceof Key) ? (Key<?>) value : getKey(value);
                     if (key == null) {
