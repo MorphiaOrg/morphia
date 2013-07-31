@@ -38,6 +38,7 @@ import com.google.code.morphia.TestMapper.UsesCustomIdObject;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
@@ -790,5 +791,35 @@ public class TestQuery extends TestBase {
     keywords.add(new Keyword("Randy"));
     final PhotoWithKeywords pwkFound = ds.find(PhotoWithKeywords.class).field("keywords").in(keywords).get();
     assertNotNull(pwkFound);
+  }
+
+  @Entity
+  static class KeyValue {
+    @Id
+    public ObjectId Id;
+    /**
+     * The list of keys for this value.
+     */
+    @Indexed(unique = true)
+    public List<Object> key;
+    /**
+     * The id of the value document
+     */
+    @Indexed
+    public ObjectId value;
+  }
+
+  @Test
+  public void multiKeyValueQueries() {
+    morphia.map(KeyValue.class);
+    ds.ensureIndexes(KeyValue.class);
+    final KeyValue value = new KeyValue();
+    final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+    value.key = keys;
+    ds.save(value);
+
+    final Query<KeyValue> query = ds.createQuery(KeyValue.class).field("key").hasAnyOf(keys);
+    Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
+    Assert.assertEquals(query.get().Id, value.Id);
   }
 }
