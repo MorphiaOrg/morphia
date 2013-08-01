@@ -6,17 +6,17 @@ import org.junit.Before;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 
 public abstract class TestBase {
-	protected Mongo mongo;
+	protected MongoClient mongo;
 	protected DB db;
 	protected Datastore ds;
 	protected Morphia morphia = new Morphia();
 
 	protected TestBase() {
 		try {
-			this.mongo = new Mongo();
+			this.mongo = new MongoClient();
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}

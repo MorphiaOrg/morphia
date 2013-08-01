@@ -21,7 +21,7 @@ package com.google.code.morphia.testdaos;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.dao.BasicDAO;
 import com.google.code.morphia.testmodel.Hotel;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 
 
 /**
@@ -29,7 +29,7 @@ import com.mongodb.Mongo;
  */
 public class HotelDAO extends BasicDAO<Hotel, String> {
 
-  public HotelDAO(final Morphia morphia, final Mongo mongo) {
+  public HotelDAO(final Morphia morphia, final MongoClient mongo) {
     super(mongo, morphia, "morphia_test");
   }
 }

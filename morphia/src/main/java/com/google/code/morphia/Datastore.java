@@ -13,7 +13,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBRef;
 import com.mongodb.MapReduceCommand;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
@@ -334,7 +334,7 @@ public interface Datastore {
 
   DB getDB();
 
-  Mongo getMongo();
+  MongoClient getMongoClient();
 
   DBCollection getCollection(Class<?> c);
 
