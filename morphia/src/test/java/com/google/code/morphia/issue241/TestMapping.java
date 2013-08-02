@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import org.bson.types.ObjectId;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import com.google.code.morphia.DatastoreImpl;
@@ -13,9 +14,9 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.dao.BasicDAO;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
-import com.mongodb.MongoURI;
-import org.junit.Assert;
 
 
 /**
@@ -27,13 +28,13 @@ public class TestMapping {
 
   Mongo         mongo;
   DatastoreImpl datastore;
-  final MongoURI uri = new MongoURI("mongodb://127.0.0.1:27017");
+  final MongoClientURI uri = new MongoClientURI("mongodb://127.0.0.1:27017");
 
 
   @Before
   public void setUp() {
     try {
-      mongo = new Mongo(uri);
+      mongo = new MongoClient(uri);
       datastore = new DatastoreImpl(morphia, mongo, "MY_DB");
     } catch (UnknownHostException unknownHostException) {
     } catch (MongoException mongoException) {

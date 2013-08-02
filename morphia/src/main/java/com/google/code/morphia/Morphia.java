@@ -19,6 +19,7 @@ package com.google.code.morphia;
 
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -30,15 +31,20 @@ import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 
 
 /**
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Morphia {
   private final Mapper mapper;
+  private MongoClient mongoClient;
 
   public Morphia() {
     this(Collections.<Class>emptySet());
@@ -148,7 +154,7 @@ public class Morphia {
    */
   @Deprecated
   public Datastore createDatastore(final String dbName) {
-    return createDatastore(dbName, null, null);
+    return createDatastore(getDefaultMongoClient(), dbName, null, null);
   }
 
   /**
@@ -157,10 +163,33 @@ public class Morphia {
   @Deprecated
   public Datastore createDatastore(final String dbName, final String user, final char[] pw) {
     try {
-      return createDatastore(new Mongo(), dbName, user, pw);
+      return createDatastore(getDefaultMongoClient(), dbName, user, pw);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private MongoClient getDefaultMongoClient() {
+    if (mongoClient == null) {
+      final MongoClientOptions.Builder builder = MongoClientOptions.builder();
+      builder.connectionsPerHost(100);
+      builder.threadsAllowedToBlockForConnectionMultiplier(5);
+      builder.maxWaitTime(1000 * 60 * 2);
+      builder.connectTimeout(1000 * 10);
+      builder.socketTimeout(0);
+      builder.socketKeepAlive(false);
+      builder.autoConnectRetry(false);
+      builder.maxAutoConnectRetryTime(0);
+      builder.readPreference(ReadPreference.primary());
+      builder.writeConcern(WriteConcern.ACKNOWLEDGED);
+
+      try {
+        mongoClient = new MongoClient("localhost", builder.build());
+      } catch (UnknownHostException e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
+    }
+    return mongoClient;
   }
 
   /**

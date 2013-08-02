@@ -49,6 +49,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
@@ -86,16 +87,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     this(morphia, mongo, null);
   }
 
+  /**
+   * @deprecated Authentication is already handled by the Mongo instance
+   */
   public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName, final String username, final char[] password) {
     this(morphia.getMapper(), mongo, dbName);
-
-    if (username != null) {
-      if (!db.authenticate(username, password)) {
-        throw new AuthenticationException(
-            "User '" + username + "' cannot be authenticated with the given password for database '" + dbName + "'");
-      }
-    }
-
   }
 
   public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName) {
@@ -1335,6 +1331,6 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public DBDecoderFactory getDecoderFact() {
-    return decoderFactory != null ? decoderFactory : mongo.getMongoOptions().dbDecoderFactory;
+    return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
   }
 }

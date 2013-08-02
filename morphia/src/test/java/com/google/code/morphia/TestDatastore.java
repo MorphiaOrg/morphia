@@ -37,7 +37,6 @@ import com.google.code.morphia.query.UpdateException;
 import com.google.code.morphia.testmodel.Address;
 import com.google.code.morphia.testmodel.Hotel;
 import com.google.code.morphia.testmodel.Rectangle;
-import com.google.code.morphia.testutil.AssertedFailure;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
@@ -428,20 +427,8 @@ public class TestDatastore extends TestBase {
     assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
   }
 
-  @Test
-  public void testAuthentication() throws Exception {
-    new AssertedFailure(AuthenticationException.class) {
-
-      @Override
-      protected void thisMustFail() {
-        morphia.createDatastore(mongo, db.getName(), "SomeWeirdUserName" + System.nanoTime(),
-            ("SomeWeirdPassword" + System.nanoTime()).toCharArray());
-      }
-    };
-  }
-
   @Test(expected = UpdateException.class)
   public void saveNull() {
-    ds.save((Hotel)null);
+    ds.save((Hotel) null);
   }
 }

@@ -23,6 +23,7 @@ import com.google.code.morphia.annotations.Version;
 import com.google.code.morphia.dao.BasicDAO;
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 
@@ -188,7 +189,7 @@ public class ExampleServiceTest {
 
     public MongoConnectionManager(final String host, final int port) {
       try {
-        final Mongo m = new Mongo(host, port);
+        final Mongo m = new MongoClient(host, port);
         db = new Morphia().map(BookingDetail.class).createDatastore(m, DB_NAME);
         db.ensureIndexes();
       } catch (Exception e) {
@@ -308,8 +309,8 @@ public class ExampleServiceTest {
       }
     }
 
-    public final void setMongoConnectionManager(final MongoConnectionManager mongoConnectionManager) {
-      this.mongoConnectionManager = mongoConnectionManager;
+    public final void setMongoConnectionManager(final MongoConnectionManager manager) {
+      this.mongoConnectionManager = manager;
     }
 
     // Creates two slots.

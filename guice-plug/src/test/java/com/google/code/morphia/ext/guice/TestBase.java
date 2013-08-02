@@ -9,6 +9,8 @@ import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+
 
 public abstract class TestBase {
 	protected Mongo mongo;
@@ -19,7 +21,7 @@ public abstract class TestBase {
 
 	protected TestBase() {
 		try {
-			this.mongo = new Mongo();
+			this.mongo = new MongoClient();
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}

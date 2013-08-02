@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.testutil.TestEntity;
-import org.junit.Assert;
 
 
 public class TestReferenceMap extends ProxyTestBase {
@@ -73,7 +73,7 @@ public class TestReferenceMap extends ProxyTestBase {
 
   public static class B implements Serializable {
     @Id
-    private final String id = new ObjectId().toStringMongod();
+    private final String id = new ObjectId().toString();
 
     @Override
     public int hashCode() {
