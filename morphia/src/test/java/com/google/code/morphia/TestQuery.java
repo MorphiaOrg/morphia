@@ -136,6 +136,13 @@ public class TestQuery extends TestBase {
     ObjectId id;
     String name;
 
+    public Pic() {
+    }
+
+    public Pic(final String name) {
+      this.name = name;
+    }
+
     String getName() {
       return name;
     }
@@ -154,6 +161,57 @@ public class TestQuery extends TestBase {
     String lastName = "Hernandez";
   }
 
+  @Entity
+  static class KeyValue {
+    @Id
+    public ObjectId Id;
+    /**
+     * The list of keys for this value.
+     */
+    @Indexed(unique = true)
+    public List<Object> key;
+    /**
+     * The id of the value document
+     */
+    @Indexed
+    public ObjectId value;
+  }
+    
+  @Entity
+  static class ReferenceKeyValue {
+    @Id
+    public  ReferenceKey id;
+    /**
+     * The list of keys for this value.
+     */
+    @Indexed(unique = true)
+    @Reference
+    public List<Pic> key;
+    /**
+     * The id of the value document
+     */
+    @Indexed
+    public ObjectId value;
+  }
+
+  static class ReferenceKey {
+    @Id
+    ObjectId id;
+    String name;
+
+    ReferenceKey() {
+    }
+
+    ReferenceKey(final String name) {
+      this.name = name;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      return id.equals(((ReferenceKey) obj).id);
+    }
+  }
+    
   @Test
   public void testRenamedFieldQuery() throws Exception {
     ds.save(new ContainsRenamedFields());
@@ -793,22 +851,6 @@ public class TestQuery extends TestBase {
     assertNotNull(pwkFound);
   }
 
-  @Entity
-  static class KeyValue {
-    @Id
-    public ObjectId Id;
-    /**
-     * The list of keys for this value.
-     */
-    @Indexed(unique = true)
-    public List<Object> key;
-    /**
-     * The id of the value document
-     */
-    @Indexed
-    public ObjectId value;
-  }
-
   @Test
   public void multiKeyValueQueries() {
     morphia.map(KeyValue.class);
@@ -821,5 +863,24 @@ public class TestQuery extends TestBase {
     final Query<KeyValue> query = ds.createQuery(KeyValue.class).field("key").hasAnyOf(keys);
     Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
     Assert.assertEquals(query.get().Id, value.Id);
+  }
+    
+  @Test
+  public void referenceKeys() {
+    final ReferenceKey key1 = new ReferenceKey("key1");
+      
+    final Pic pic1 = new Pic("pic1");
+    final Pic pic2 = new Pic("pic2");
+    final Pic pic3 = new Pic("pic3");
+    final Pic pic4 = new Pic("pic4");
+    ds.save(key1, pic1, pic2, pic3, pic4);
+
+    final ReferenceKeyValue value = new ReferenceKeyValue();
+    value.id = key1;
+
+    final Key<ReferenceKeyValue> key = ds.save(value);
+
+    final ReferenceKeyValue byKey = ds.getByKey(ReferenceKeyValue.class, key);
+    Assert.assertEquals(value.id, byKey.id);
   }
 }
