@@ -1,14 +1,12 @@
 package com.google.code.morphia.converters;
 
 
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.testutil.TestEntity;
-
-import static junit.framework.Assert.*;
-
 
 /**
  * @author Uwe Schaefer
@@ -77,12 +75,11 @@ public class CustomConverterDefault extends TestBase {
     e.foo = new Foo("test");
     ds.save(e);
 
-    assertTrue(fc.didConversion());
+    Assert.assertTrue(fc.didConversion());
 
     e = ds.find(E.class).get();
-    assertNotNull(e.foo);
-    assertEquals("test", e.foo.string);
-
+    Assert.assertNotNull(e.foo);
+    Assert.assertEquals("test", e.foo.string);
   }
 
 }

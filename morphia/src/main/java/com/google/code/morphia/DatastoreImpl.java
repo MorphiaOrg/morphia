@@ -215,6 +215,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     ensureIndex(type, null, fields, false, false);
   }
 
+  /**
+    * @deprecated IndexFieldDef is deprecated
+    */
   public <T> void ensureIndex(final Class<T> clazz, final String name, final IndexFieldDef[] definitions, final boolean unique,
       final boolean dropDupsOnCreate) {
     ensureIndex(clazz, name, definitions, unique, dropDupsOnCreate, false);
@@ -266,6 +269,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
   }
 
+    /**
+      * @deprecated IndexFieldDef is deprecated
+      */
   @SuppressWarnings({"rawtypes"})
   public void ensureIndex(final Class clazz, final String name, final IndexFieldDef[] definitions, final boolean unique,
       final boolean dropDupsOnCreate, final boolean background) {

@@ -1,7 +1,7 @@
 package com.google.code.morphia.validation;
 
-import java.util.Set;
 
+import java.util.Set;
 import javax.validation.Configuration;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
@@ -11,22 +11,21 @@ import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
 
+
 /**
  * @author us@thomas-daily.de
  */
-public class ValidationExtension extends AbstractEntityInterceptor
-{
+public class ValidationExtension extends AbstractEntityInterceptor {
     private ValidatorFactory validationFactory;
     private Mapper mapper;
 
-    @Deprecated
-    public ValidationExtension()
-    {
-        // use the new ValidationExtension(morphia) convention
+    /**
+     * @deprecated use the new ValidationExtension(morphia) convention
+     */
+    public ValidationExtension() {
     }
 
-    public ValidationExtension(final Morphia m)
-    {
+    public ValidationExtension(final Morphia m) {
         final Configuration<?> configuration = Validation.byDefaultProvider().configure();
         this.validationFactory = configuration.buildValidatorFactory();
 
@@ -34,11 +33,9 @@ public class ValidationExtension extends AbstractEntityInterceptor
     }
 
     @Override
-    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper)
-    {
+    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
         final Set validate = this.validationFactory.getValidator().validate(ent);
-        if (!validate.isEmpty())
-        {
+        if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);
         }
     }

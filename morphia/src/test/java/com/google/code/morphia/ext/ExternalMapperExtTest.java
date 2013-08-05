@@ -31,7 +31,6 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.mapping.MappedClass;
 import com.google.code.morphia.mapping.MappedField;
 import com.google.code.morphia.mapping.Mapper;
-import org.junit.Assert;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,32 +78,13 @@ public class ExternalMapperExtTest extends TestBase {
         final Map<Class<? extends Annotation>, Annotation> annMap = mf.getAnnotations();
         final MappedField destMF = destMC.getMappedFieldByJavaField(mf.getJavaFieldName());
         if (destMF != null && annMap != null && !annMap.isEmpty()) {
-          for (final Entry e : annMap.entrySet()) {
-            destMF.addAnnotation((Class) e.getKey(), (Annotation) e.getValue());
+          for (final Entry<Class<? extends Annotation>, Annotation> e : annMap.entrySet()) {
+            destMF.addAnnotation(e.getKey(), e.getValue());
           }
         }
       }
 
     }
-
-    MappedClass addAnnotation(final Class clazz, final String field, final Annotation... annotations) {
-      if (annotations == null || annotations.length == 0) {
-        throw new IllegalArgumentException("Must specify annotations");
-      }
-
-      final MappedClass mc = mapper.getMappedClass(clazz);
-      final MappedField mf = mc.getMappedFieldByJavaField(field);
-      if (mf == null) {
-        throw new IllegalArgumentException("Field \"" + field + "\" does not exist on: " + mc);
-      }
-
-      for (final Annotation an : annotations) {
-        mf.putAnnotation(an);
-      }
-
-      return mc;
-    }
-
   }
 
   @Test
@@ -116,7 +96,7 @@ public class ExternalMapperExtTest extends TestBase {
     mc.update();
     assertNotNull(mc.getIdField());
     assertNotNull(mc.getEntityAnnotation());
-    Assert.assertEquals("special", mc.getEntityAnnotation().value());
+    assertEquals("special", mc.getEntityAnnotation().value());
 
     EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
     ent.id = "test";

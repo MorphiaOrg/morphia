@@ -151,16 +151,16 @@ public class Morphia {
 
   /**
    * This will create a new Mongo instance; it is best to use a Mongo singleton instance
+   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
    */
-  @Deprecated
   public Datastore createDatastore(final String dbName) {
     return createDatastore(getDefaultMongoClient(), dbName, null, null);
   }
 
   /**
    * This will create a new Mongo instance; it is best to use a Mongo singleton instance
+   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
    */
-  @Deprecated
   public Datastore createDatastore(final String dbName, final String user, final char[] pw) {
     try {
       return createDatastore(getDefaultMongoClient(), dbName, user, pw);
@@ -193,14 +193,15 @@ public class Morphia {
   }
 
   /**
-   * It is best to use a Mongo singleton instance here*
+   * It is best to use a Mongo singleton instance here.
+   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
    */
   public Datastore createDatastore(final Mongo mon, final String dbName, final String user, final char[] pw) {
     return new DatastoreImpl(this, mon, dbName, user, pw);
   }
 
   /**
-   * It is best to use a Mongo singleton instance here*
+   * It is best to use a Mongo singleton instance here.
    */
   public Datastore createDatastore(final Mongo mongo, final String dbName) {
     return createDatastore(mongo, dbName, null, null);
