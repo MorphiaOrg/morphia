@@ -17,6 +17,7 @@
 package com.google.code.morphia;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -28,6 +29,9 @@ import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 
 /**
  * @author Olafur Gauti Gudmundsson
@@ -36,6 +40,7 @@ import com.mongodb.MongoClient;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Morphia {
 	private final Mapper mapper;
+	private MongoClient mongoClient;
 
 	public Morphia() {
 		this(Collections.<Class> emptySet());
@@ -85,15 +90,12 @@ public class Morphia {
 	 *            be mapped
 	 * @return the Morphia instance
 	 */
-	public synchronized Morphia mapPackage(final String packageName,
-			final boolean ignoreInvalidClasses) {
+	public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
 		try {
 			for (final Class c : ReflectionUtils.getClasses(packageName)) {
 				try {
-					final Embedded embeddedAnn = ReflectionUtils
-							.getClassEmbeddedAnnotation(c);
-					final Entity entityAnn = ReflectionUtils
-							.getClassEntityAnnotation(c);
+					final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(c);
+					final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(c);
 					if (entityAnn != null || embeddedAnn != null) {
 						map(c);
 					}
@@ -105,11 +107,9 @@ public class Morphia {
 			}
 			return this;
 		} catch (IOException e) {
-			throw new MappingException(
-					"Could not get map classes from package " + packageName, e);
+			throw new MappingException("Could not get map classes from package " + packageName, e);
 		} catch (ClassNotFoundException e) {
-			throw new MappingException(
-					"Could not get map classes from package " + packageName, e);
+			throw new MappingException("Could not get map classes from package " + packageName, e);
 		}
 	}
 
@@ -124,16 +124,13 @@ public class Morphia {
 		return mapper.isMapped(entityClass);
 	}
 
-	public <T> T fromDBObject(final Class<T> entityClass,
-			final DBObject dbObject) {
+	public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject) {
 		return fromDBObject(entityClass, dbObject, mapper.createEntityCache());
 	}
 
-	public <T> T fromDBObject(final Class<T> entityClass,
-			final DBObject dbObject, final EntityCache cache) {
+	public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
 		if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
-			throw new MappingException("Trying to map to an unmapped class: "
-					+ entityClass.getName());
+			throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
 		}
 		try {
 			return (T) mapper.fromDBObject(entityClass, dbObject, cache);
@@ -155,39 +152,62 @@ public class Morphia {
 	}
 
 	/**
-	 * This will create a new MongoClient instance; it is best to use a MongoClient
+	 * This will create a new Mongo instance; it is best to use a Mongo
 	 * singleton instance
+	 * 
+	 * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String)
+	 *             which a MongoClient instance which will authenticate for you
 	 */
-	@Deprecated
 	public Datastore createDatastore(final String dbName) {
-		return createDatastore(dbName, null, null);
+		return createDatastore(getDefaultMongoClient(), dbName, null, null);
 	}
 
 	/**
-	 * This will create a new MongoClient instance; it is best to use a MongoClient
+	 * This will create a new Mongo instance; it is best to use a Mongo
 	 * singleton instance
+	 * 
+	 * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String)
+	 *             which a MongoClient instance which will authenticate for you
 	 */
-	@Deprecated
-	public Datastore createDatastore(final String dbName, final String user,
-			final char[] pw) {
+	public Datastore createDatastore(final String dbName, final String user, final char[] pw) {
 		try {
-			return createDatastore(new MongoClient(), dbName, user, pw);
+			return createDatastore(getDefaultMongoClient(), dbName, user, pw);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	private MongoClient getDefaultMongoClient() {
+		if (mongoClient == null) {
+			final MongoClientOptions.Builder builder = MongoClientOptions.builder();
+			builder.connectionsPerHost(100);
+			builder.threadsAllowedToBlockForConnectionMultiplier(5);
+			builder.maxWaitTime(1000 * 60 * 2);
+			builder.connectTimeout(1000 * 10);
+			builder.socketTimeout(0);
+			builder.socketKeepAlive(false);
+			builder.autoConnectRetry(false);
+			builder.maxAutoConnectRetryTime(0);
+			builder.readPreference(ReadPreference.primary());
+			builder.writeConcern(WriteConcern.ACKNOWLEDGED);
 
+			try {
+				mongoClient = new MongoClient("localhost", builder.build());
+			} catch (UnknownHostException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+		return mongoClient;
+	}
+
+	public Datastore createDatastore(final MongoClient mon, final String dbName) {
+		return new DatastoreImpl(this, mon, dbName, null, null);
+	}
+	
 	/**
 	 * It is best to use a MongoClient singleton instance here*
 	 */
-	public Datastore createDatastore(final MongoClient mon, final String dbName,
-			final String user, final char[] pw) {
+	public Datastore createDatastore(final MongoClient mon, final String dbName, final String user, final char[] pw) {
 		return new DatastoreImpl(this, mon, dbName, user, pw);
-	}
-
-	public Datastore createDatastore(final MongoClient mongo,
-			final String dbName) {
-		return createDatastore(mongo, dbName, null, null);
 	}
 }

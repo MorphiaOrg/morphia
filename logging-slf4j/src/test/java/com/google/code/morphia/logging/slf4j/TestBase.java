@@ -1,5 +1,6 @@
 package com.google.code.morphia.logging.slf4j;
 
+
 import org.junit.Before;
 
 import com.google.code.morphia.Datastore;

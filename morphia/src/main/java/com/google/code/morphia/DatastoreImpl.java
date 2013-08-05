@@ -49,6 +49,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
@@ -86,16 +87,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     this(morphia, mongo, null);
   }
 
+  /**
+   * @deprecated Authentication is already handled by the Mongo instance
+   */
   public DatastoreImpl(final Morphia morphia, final MongoClient mongo, final String dbName, final String username, final char[] password) {
     this(morphia.getMapper(), mongo, dbName);
-
-    if (username != null) {
-      if (!db.authenticate(username, password)) {
-        throw new AuthenticationException(
-            "User '" + username + "' cannot be authenticated with the given password for database '" + dbName + "'");
-      }
-    }
-
   }
 
   public DatastoreImpl(final Morphia morphia, final MongoClient mongo, final String dbName) {
@@ -219,6 +215,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     ensureIndex(type, null, fields, false, false);
   }
 
+  /**
+    * @deprecated IndexFieldDef is deprecated
+    */
   public <T> void ensureIndex(final Class<T> clazz, final String name, final IndexFieldDef[] definitions, final boolean unique,
       final boolean dropDupsOnCreate) {
     ensureIndex(clazz, name, definitions, unique, dropDupsOnCreate, false);
@@ -270,6 +269,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
   }
 
+    /**
+      * @deprecated IndexFieldDef is deprecated
+      */
   @SuppressWarnings({"rawtypes"})
   public void ensureIndex(final Class clazz, final String name, final IndexFieldDef[] definitions, final boolean unique,
       final boolean dropDupsOnCreate, final boolean background) {
@@ -1335,6 +1337,6 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public DBDecoderFactory getDecoderFact() {
-    return decoderFactory != null ? decoderFactory : mongo.getMongoOptions().dbDecoderFactory;
+    return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
   }
 }
