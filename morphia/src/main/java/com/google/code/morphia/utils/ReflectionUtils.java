@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
+
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
@@ -247,7 +248,9 @@ public class ReflectionUtils {
         }
       }
     }
-    return null;
+
+    // Not defined on field, but may be on class or super class...
+	return getParameterizedClass(field.getType());
   }
 
   public static Type getParameterizedType(final Field field, final int index) {
@@ -277,7 +280,9 @@ public class ReflectionUtils {
         }
       }
     }
-    return null;
+
+    // Not defined on field, but may be on class or super class...
+	return getParameterizedClass(field.getType());
   }
 
   public static Class getTypeArgumentOfParameterizedClass(final Field field, final int index, final int typeIndex) {
@@ -314,6 +319,9 @@ public class ReflectionUtils {
       } else {
         return null;
       }
+    } else if (c.getGenericSuperclass() instanceof ParameterizedType) {
+      final Type[] actualTypeArguments = ((ParameterizedType) c.getGenericSuperclass()).getActualTypeArguments();
+	  return actualTypeArguments.length > index ? (Class<?>)actualTypeArguments[index] : null;
     } else {
       return null;
     }

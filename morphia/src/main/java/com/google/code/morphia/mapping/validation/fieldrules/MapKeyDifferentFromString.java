@@ -22,7 +22,8 @@ public class MapKeyDifferentFromString extends FieldConstraint {
   protected void check(final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
     if (mf.isMap() && (!mf.hasAnnotation(Serialized.class))) {
       final Class<?> aClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
-      if (aClass == null) {
+      // WARN if not parameterized : null or Object...
+      if (aClass == null || Object.class.equals(aClass)) {
         ve.add(new ConstraintViolation(Level.WARNING, mc, mf, getClass(),
           "Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported " + supportedExample));
       } else if (!aClass.equals(String.class) && !aClass.equals(ObjectId.class) && !ReflectionUtils.isPrimitiveLike(
