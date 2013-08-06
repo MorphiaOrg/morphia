@@ -10,7 +10,9 @@ import com.google.code.morphia.mapping.MappingException;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
+ * @deprecated replaced by CharacterConverter
  */
+@SuppressWarnings({"rawtypes"})
 public class CharArrayConverter extends TypeConverter implements SimpleValueConverter {
     public CharArrayConverter() {
         super(char[].class, Character[].class);
@@ -33,7 +35,7 @@ public class CharArrayConverter extends TypeConverter implements SimpleValueConv
         final int length = values.length;
         final Object array = Array.newInstance(Character.class, length);
         for (int i = 0; i < length; i++) {
-            Array.set(array, i, values[i]);
+            Array.set(array, i, new Character(values[i]));
         }
         return array;
     }

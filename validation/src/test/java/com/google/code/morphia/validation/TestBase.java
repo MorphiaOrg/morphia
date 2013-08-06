@@ -3,15 +3,14 @@ package com.google.code.morphia.validation;
 
 import org.junit.After;
 import org.junit.Before;
+
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
-
 public abstract class TestBase {
-	protected Mongo mongo;
+	protected MongoClient mongo;
 	protected DB db;
 	protected Datastore ds;
 	protected Morphia morphia = new Morphia();

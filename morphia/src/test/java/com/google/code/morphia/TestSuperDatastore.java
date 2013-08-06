@@ -50,9 +50,9 @@ public class TestSuperDatastore extends TestBase {
     //test delete(entity, id)
     ads.save(ns, rect);
     assertEquals(1, ads.getCount(ns));
-    ads.delete(ns, Rectangle.class, 1);
+    ads.delete(ns, 1);
     assertEquals(1, ads.getCount(ns));
-    ads.delete(ns,  Rectangle.class, "1");
+    ads.delete(ns, "1");
     assertEquals(0, ads.getCount(ns));
   }
 

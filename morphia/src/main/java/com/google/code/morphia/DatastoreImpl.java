@@ -53,7 +53,7 @@ import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
@@ -69,12 +69,12 @@ public class DatastoreImpl implements AdvancedDatastore {
   private static final Logr LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
   protected final Mapper mapper;
-  protected final Mongo mongo;
+  protected final MongoClient mongo;
   protected final DB db;
   protected WriteConcern defConcern = WriteConcern.SAFE;
   protected DBDecoderFactory decoderFactory;
 
-  public DatastoreImpl(final Mapper mapper, final Mongo mongo, final String dbName) {
+  public DatastoreImpl(final Mapper mapper, final MongoClient mongo, final String dbName) {
     this.mapper = mapper;
     this.mongo = mongo;
     db = mongo.getDB(dbName);
@@ -83,18 +83,18 @@ public class DatastoreImpl implements AdvancedDatastore {
     DatastoreHolder.getInstance().set(this);
   }
 
-  public DatastoreImpl(final Morphia morphia, final Mongo mongo) {
+  public DatastoreImpl(final Morphia morphia, final MongoClient mongo) {
     this(morphia, mongo, null);
   }
 
   /**
    * @deprecated Authentication is already handled by the Mongo instance
    */
-  public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName, final String username, final char[] password) {
+  public DatastoreImpl(final Morphia morphia, final MongoClient mongo, final String dbName, final String username, final char[] password) {
     this(morphia.getMapper(), mongo, dbName);
   }
 
-  public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName) {
+  public DatastoreImpl(final Morphia morphia, final MongoClient mongo, final String dbName) {
     this(morphia.getMapper(), mongo, dbName);
   }
 
@@ -661,7 +661,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
 
-  public Mongo getMongo() {
+  public MongoClient getMongoClient() {
     return mongo;
   }
 

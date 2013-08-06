@@ -8,12 +8,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.dao.BasicDAO;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
@@ -26,7 +26,7 @@ public class TestMapping {
 
   final Morphia morphia = new Morphia();
 
-  Mongo         mongo;
+  MongoClient         mongo;
   DatastoreImpl datastore;
   final MongoClientURI uri = new MongoClientURI("mongodb://127.0.0.1:27017");
 

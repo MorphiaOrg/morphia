@@ -3,14 +3,14 @@ package com.google.code.morphia;
 
 import org.junit.After;
 import org.junit.Before;
+
 import com.google.code.morphia.mapping.MappedClass;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 
 public abstract class TestBase {
-  protected Mongo             mongo;
+  protected MongoClient             mongo;
   protected DB                db;
   protected Datastore         ds;
   protected AdvancedDatastore ads;

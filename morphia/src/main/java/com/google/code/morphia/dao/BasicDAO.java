@@ -14,7 +14,7 @@ import com.google.code.morphia.query.QueryResults;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
@@ -29,7 +29,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
   protected Class<T>      entityClazz;
   protected DatastoreImpl ds;
 
-  public BasicDAO(final Class<T> entityClass, final Mongo mongo, final Morphia morphia, final String dbName) {
+  public BasicDAO(final Class<T> entityClass, final MongoClient mongo, final Morphia morphia, final String dbName) {
     initDS(mongo, morphia, dbName);
     initType(entityClass);
   }
@@ -43,7 +43,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
    * <p> Only calls this from your derived class when you explicitly declare the generic types with concrete classes </p> <p> {@code class
    * MyDao extends DAO<MyEntity, String>} </p>
    */
-  protected BasicDAO(final Mongo mongo, final Morphia morphia, final String dbName) {
+  protected BasicDAO(final MongoClient mongo, final Morphia morphia, final String dbName) {
     initDS(mongo, morphia, dbName);
     initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
   }
@@ -58,7 +58,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     ds.getMapper().addMappedClass(type);
   }
 
-  protected void initDS(final Mongo mon, final Morphia mor, final String db) {
+  protected void initDS(final MongoClient mon, final Morphia mor, final String db) {
     ds = new DatastoreImpl(mor, mon, db);
   }
 
