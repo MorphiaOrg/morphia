@@ -3,6 +3,7 @@ package com.google.code.morphia.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,6 +46,20 @@ public class ReflectionUtilsTest extends TestBase {
     Assert.assertEquals(Mapper.IGNORED_FIELDNAME, ReflectionUtils.getClassEntityAnnotation(Fooble.class).value());
   }
 
+  @Test
+  public void testGetParameterizedClass_inherence() throws Exception {
+    // Work before fix...
+    Assert.assertEquals(Object.class, ReflectionUtils.getParameterizedClass(Set.class));
+    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")));
+
+    // Works now...
+    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")));
+
+    Authors authors = new Authors();
+    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(authors.getClass()));
+
+  }
+
   @Entity("Base")
   @Indexes(@Index("id"))
   private static class Foo {
@@ -60,5 +75,20 @@ public class ReflectionUtilsTest extends TestBase {
 
   @Entity()
   private static class Fooble extends Foobie {
+  }
+
+  private class Author {
+  }
+
+  @SuppressWarnings("serial")
+  private class Authors extends HashSet<Author> {
+    // Can contain utils methods
+  }
+
+  @SuppressWarnings("unused")
+  private class Book {
+    private Authors authors;
+
+    private Set<Author> authorsSet;
   }
 }
