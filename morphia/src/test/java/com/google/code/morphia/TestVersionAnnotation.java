@@ -23,6 +23,7 @@ import java.util.ConcurrentModificationException;
 import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Version;
 
@@ -31,14 +32,35 @@ import com.google.code.morphia.annotations.Version;
  * @author Scott Hernandez
  */
 
-public class VersionAnnotationTest extends TestBase {
+public class TestVersionAnnotation extends TestBase {
 
   private static class B {
-    @Id ObjectId id = new ObjectId();
-    @Version long version;
+    @Id
+    ObjectId id = new ObjectId();
+    @Version
+    long version;
   }
 
-  @Ignore @Test(expected = ConcurrentModificationException.class)
+  @Entity("Test")
+  public abstract static class BaseFoo {
+    @Id
+    private ObjectId id;
+    @Version
+    private long version;
+    private String name;
+
+    // getters/setters ...
+  }
+
+  @Entity("Test")
+  public static class Foo extends BaseFoo {
+    private int value;
+
+    // getters/setters ...
+  }
+
+  @Ignore
+  @Test(expected = ConcurrentModificationException.class)
   public void testVersion() throws Exception {
 
     final B b1 = new B();
@@ -51,6 +73,11 @@ public class VersionAnnotationTest extends TestBase {
     b2.id = b1.id;
     ds.save(b2);
   }
-
-
+  
+  @Test
+  public void abstractParent() {
+    morphia.map(Foo.class);
+    morphia.mapPackage(Foo.class.getPackage()
+      .toString());
+  }
 }

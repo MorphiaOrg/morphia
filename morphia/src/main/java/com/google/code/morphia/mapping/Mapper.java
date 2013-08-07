@@ -149,8 +149,7 @@ public class Mapper {
      * Creates a MappedClass and validates it.
      */
     public MappedClass addMappedClass(final Class c) {
-        final MappedClass mc = new MappedClass(c, this);
-        return addMappedClass(mc, true);
+      return addMappedClass(new MappedClass(c, this), true);
     }
 
     /**
