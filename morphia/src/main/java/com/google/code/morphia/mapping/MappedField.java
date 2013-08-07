@@ -110,7 +110,7 @@ public class MappedField {
           + "' is a possible heterogeneous collection. It cannot be verified. Please declare a valid type to get rid of this warning. "
           + subType);
       }
-      isMongoType = true; // Why ? It's probably NOT a Mongo type, and Mongo Driver will be crash on it...
+      isMongoType = true;
     }
   }
 

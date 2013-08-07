@@ -248,8 +248,6 @@ public class ReflectionUtils {
         }
       }
     }
-
-    // Not defined on field, but may be on class or super class...
 	return getParameterizedClass(field.getType());
   }
 

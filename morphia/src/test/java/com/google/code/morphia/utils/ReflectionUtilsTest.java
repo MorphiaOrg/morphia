@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Entity;
@@ -14,7 +15,6 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexes;
 import com.google.code.morphia.mapping.Mapper;
-import org.junit.Assert;
 
 
 /**
@@ -47,7 +47,7 @@ public class ReflectionUtilsTest extends TestBase {
   }
 
   @Test
-  public void testGetParameterizedClass_inherence() throws Exception {
+  public void testGetParameterizedClassInheritance() throws Exception {
     // Work before fix...
     Assert.assertEquals(Object.class, ReflectionUtils.getParameterizedClass(Set.class));
     Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")));
@@ -55,8 +55,7 @@ public class ReflectionUtilsTest extends TestBase {
     // Works now...
     Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")));
 
-    Authors authors = new Authors();
-    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(authors.getClass()));
+    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Authors.class));
 
   }
 
@@ -77,16 +76,14 @@ public class ReflectionUtilsTest extends TestBase {
   private static class Fooble extends Foobie {
   }
 
-  private class Author {
+  private static class Author {
   }
 
-  @SuppressWarnings("serial")
-  private class Authors extends HashSet<Author> {
+  private static class Authors extends HashSet<Author> {
     // Can contain utils methods
   }
 
-  @SuppressWarnings("unused")
-  private class Book {
+  private static class Book {
     private Authors authors;
 
     private Set<Author> authorsSet;
