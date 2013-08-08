@@ -36,7 +36,7 @@ public class CharacterConverter extends TypeConverter implements SimpleValueConv
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        return String.valueOf(value);
+        return value == null || value.equals('\0') ? null : String.valueOf(value);
     }
 
     private Object convert(final Class<?> type, final String[] values) {
