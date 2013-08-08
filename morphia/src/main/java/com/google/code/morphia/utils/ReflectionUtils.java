@@ -48,7 +48,6 @@ import java.util.regex.Pattern;
 
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
-
 import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
@@ -63,7 +62,7 @@ import com.mongodb.DBRef;
  *
  * @author Olafur Gauti Gudmundsson
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ReflectionUtils {
 
   /**
@@ -227,7 +226,8 @@ public class ReflectionUtils {
       final Type paramType = type.getActualTypeArguments()[index];
       if (paramType instanceof GenericArrayType) {
         final Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
-        return Array.newInstance(arrayType, 0).getClass();
+        return Array.newInstance(arrayType, 0)
+          .getClass();
       } else {
         if (paramType instanceof ParameterizedType) {
           final ParameterizedType paramPType = (ParameterizedType) paramType;
@@ -237,9 +237,8 @@ public class ReflectionUtils {
             // TODO: Figure out what to do... Walk back up the to
             // the parent class and try to get the variable type
             // from the T/V/X
-            throw new MappingException(
-              "Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = " + ((TypeVariable) paramType)
-                .getBounds()[0]);
+            throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = "
+              + ((TypeVariable) paramType).getBounds()[0]);
           } else if (paramType instanceof Class) {
             return (Class) paramType;
           } else {
@@ -248,7 +247,7 @@ public class ReflectionUtils {
         }
       }
     }
-	return getParameterizedClass(field.getType());
+    return getParameterizedClass(field.getType());
   }
 
   public static Type getParameterizedType(final Field field, final int index) {
@@ -280,7 +279,7 @@ public class ReflectionUtils {
     }
 
     // Not defined on field, but may be on class or super class...
-	return getParameterizedClass(field.getType());
+    return getParameterizedClass(field.getType());
   }
 
   public static Class getTypeArgumentOfParameterizedClass(final Field field, final int index, final int typeIndex) {
@@ -317,11 +316,16 @@ public class ReflectionUtils {
       } else {
         return null;
       }
-    } else if (c.getGenericSuperclass() instanceof ParameterizedType) {
-      final Type[] actualTypeArguments = ((ParameterizedType) c.getGenericSuperclass()).getActualTypeArguments();
-	  return actualTypeArguments.length > index ? (Class<?>)actualTypeArguments[index] : null;
     } else {
-      return null;
+      final Type superclass = c.getGenericSuperclass();
+      if (superclass instanceof ParameterizedType) {
+        final Type[] actualTypeArguments = ((ParameterizedType) superclass).getActualTypeArguments();
+        return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index] : null;
+      } else if (!Object.class.equals(superclass)) {
+        return getParameterizedClass((Class) superclass);
+      } else {
+        return null;
+      }
     }
   }
 
@@ -445,8 +449,7 @@ public class ReflectionUtils {
     return classes;
   }
 
-  public static Set<Class<?>> getFromJARFile(final String jar, final String packageName)
-    throws IOException, ClassNotFoundException {
+  public static Set<Class<?>> getFromJARFile(final String jar, final String packageName) throws IOException, ClassNotFoundException {
     final Set<Class<?>> classes = new HashSet<Class<?>>();
     final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
     JarEntry jarEntry;
@@ -461,13 +464,13 @@ public class ReflectionUtils {
           }
         }
       }
-    }
-    while (jarEntry != null);
+    } while (jarEntry != null);
     return classes;
   }
 
   public static Set<Class<?>> getClasses(final String packageName) throws IOException, ClassNotFoundException {
-    final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    final ClassLoader loader = Thread.currentThread()
+      .getContextClassLoader();
     return getClasses(loader, packageName);
   }
 
@@ -477,7 +480,8 @@ public class ReflectionUtils {
     final Enumeration<URL> resources = loader.getResources(path);
     if (resources != null) {
       while (resources.hasMoreElements()) {
-        String filePath = resources.nextElement().getFile();
+        String filePath = resources.nextElement()
+          .getFile();
         // WINDOWS HACK
         if (filePath.indexOf("%20") > 0) {
           filePath = filePath.replaceAll("%20", " ");
@@ -489,7 +493,8 @@ public class ReflectionUtils {
 
         if (filePath != null) {
           if ((filePath.indexOf("!") > 0) & (filePath.indexOf(".jar") > 0)) {
-            String jarPath = filePath.substring(0, filePath.indexOf("!")).substring(filePath.indexOf(":") + 1);
+            String jarPath = filePath.substring(0, filePath.indexOf("!"))
+              .substring(filePath.indexOf(":") + 1);
             // WINDOWS HACK
             if (jarPath.contains(":")) {
               jarPath = jarPath.substring(1);
@@ -610,7 +615,8 @@ public class ReflectionUtils {
       final Type componentType = ((GenericArrayType) type).getGenericComponentType();
       final Class<?> componentClass = getClass(componentType);
       if (componentClass != null) {
-        return Array.newInstance(componentClass, 0).getClass();
+        return Array.newInstance(componentClass, 0)
+          .getClass();
       } else {
         return null;
       }

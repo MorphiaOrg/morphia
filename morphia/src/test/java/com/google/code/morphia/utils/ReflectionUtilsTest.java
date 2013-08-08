@@ -56,7 +56,8 @@ public class ReflectionUtilsTest extends TestBase {
     Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")));
 
     Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Authors.class));
-
+    
+    Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(WritingTeam.class));
   }
 
   @Entity("Base")
@@ -81,6 +82,9 @@ public class ReflectionUtilsTest extends TestBase {
 
   private static class Authors extends HashSet<Author> {
     // Can contain utils methods
+  }
+  
+  private static class WritingTeam extends Authors {
   }
 
   private static class Book {
