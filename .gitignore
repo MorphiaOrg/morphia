@@ -8,3 +8,5 @@ release.sh
 **/target/**
 entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
+target
+bin
