@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
+
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
@@ -76,13 +77,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
     }
 
+    // Nothing in the Morphia codebase is using these. You shouldn't either!
+    @Deprecated
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds, final int offset, final int limit) {
         this(clazz, coll, ds);
         this.offset = offset;
         this.limit = limit;
     }
 
-    public QueryImpl(final Class<T> clazz, final DBCollection coll, final DatastoreImpl ds, final DBObject baseQuery) {
+    // Nothing in the Morphia codebase is using these. You shouldn't either!
+    @Deprecated
+    public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds, final DBObject baseQuery) {
         this(clazz, coll, ds);
         this.baseQuery = (BasicDBObject) baseQuery;
     }
