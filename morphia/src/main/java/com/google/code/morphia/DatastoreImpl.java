@@ -1002,7 +1002,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public <T> Key<T> merge(final T entity, final WriteConcern wc) {
     T unwrapped = entity;
-    final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+    final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
     final DBObject dbObj = mapper.toDBObject(unwrapped, involvedObjects);
     final Key<T> key = getKey(unwrapped);
     unwrapped = ProxyHelper.unwrap(unwrapped);
