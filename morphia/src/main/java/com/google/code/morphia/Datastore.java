@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryFactory;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
 import com.google.code.morphia.utils.IndexDirection;
@@ -341,5 +342,18 @@ public interface Datastore {
   WriteConcern getDefaultWriteConcern();
 
   void setDefaultWriteConcern(WriteConcern wc);
-
+  
+  /**
+   * Replaces the current {@link QueryFactory} with the given value.
+   * 
+   * @see QueryFactory
+   */
+  void setQueryFactory(QueryFactory queryFactory);
+  
+  /**
+   * Returns the current {@link QueryFactory}.
+   * 
+   * @see QueryFactory
+   */
+  QueryFactory getQueryFactory();
 }

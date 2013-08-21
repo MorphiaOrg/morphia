@@ -31,8 +31,10 @@ import com.google.code.morphia.mapping.MappingException;
 import com.google.code.morphia.mapping.cache.EntityCache;
 import com.google.code.morphia.mapping.lazy.DatastoreHolder;
 import com.google.code.morphia.mapping.lazy.proxy.ProxyHelper;
+import com.google.code.morphia.query.DefaultQueryFactory;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.QueryException;
+import com.google.code.morphia.query.QueryFactory;
 import com.google.code.morphia.query.QueryImpl;
 import com.google.code.morphia.query.UpdateException;
 import com.google.code.morphia.query.UpdateOperations;
@@ -74,6 +76,8 @@ public class DatastoreImpl implements AdvancedDatastore {
   protected WriteConcern defConcern = WriteConcern.SAFE;
   protected DBDecoderFactory decoderFactory;
 
+  private volatile QueryFactory queryFactory = new DefaultQueryFactory();
+  
   public DatastoreImpl(final Mapper mapper, final Mongo mongo, final String dbName) {
     this.mapper = mapper;
     this.mongo = mongo;
@@ -416,6 +420,24 @@ public class DatastoreImpl implements AdvancedDatastore {
       }
     }
   }
+  
+  /**
+   * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
+   * 
+   * @see QueryFactory#createQuery(Datastore, DBCollection, Class)
+   */
+  private <T> Query<T> newQuery(Class<T> type, DBCollection collection) {
+    return getQueryFactory().createQuery(this, collection, type);
+  }
+  
+  /**
+   * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
+   * 
+   * @see QueryFactory#createQuery(Datastore, DBCollection, Class, DBObject)
+   */
+  private <T> Query<T> newQuery(Class<T> type, DBCollection collection, DBObject query) {
+    return getQueryFactory().createQuery(this, collection, type, query);
+  }
 
   public <T> Query<T> queryByExample(final T ex) {
     return queryByExample(getCollection(ex), ex);
@@ -427,42 +449,40 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   private <T> Query<T> queryByExample(final DBCollection coll, final T example) {
     //TODO: think about remove className from baseQuery param below.
-    return new QueryImpl<T>((Class<T>) example.getClass(), coll, this, entityToDBObj(example, new HashMap<Object, DBObject>()));
-
+    Class<T> type = (Class<T>)example.getClass();
+    DBObject query = entityToDBObj(example, new HashMap<Object, DBObject>());
+    return createQuery(type, query);
   }
 
-  public <T> Query<T> createQuery(final Class<T> clazz) {
-    return new QueryImpl<T>(clazz, getCollection(clazz), this);
+  public <T> Query<T> createQuery(Class<T> type) {
+    return newQuery(type, getCollection(type));
+  }
+  
+  public <T> Query<T> createQuery(String kind, Class<T> type) {
+    return newQuery(type, db.getCollection(kind));
   }
 
-  public <T> Query<T> createQuery(final Class<T> kind, final DBObject q) {
-    return new QueryImpl<T>(kind, getCollection(kind), this, q);
+  public <T> Query<T> createQuery(Class<T> type, DBObject q) {
+    return newQuery(type, getCollection(type), q);
   }
 
-  public <T> Query<T> createQuery(final String kind, final Class<T> clazz, final DBObject q) {
-    return new QueryImpl<T>(clazz, db.getCollection(kind), this, q);
+  public <T> Query<T> createQuery(String kind, Class<T> type, DBObject q) {
+    return newQuery(type, getCollection(kind), q);
   }
-
-  public <T> Query<T> createQuery(final String kind, final Class<T> clazz) {
-    return new QueryImpl<T>(clazz, db.getCollection(kind), this);
+  
+  public <T> Query<T> find(String kind, Class<T> clazz) {
+    return createQuery(kind, clazz);
   }
-
-  public <T> Query<T> find(final String kind, final Class<T> clazz) {
-    return new QueryImpl<T>(clazz, getCollection(kind), this);
-  }
-
-
-  public <T> Query<T> find(final Class<T> clazz) {
+  
+  public <T> Query<T> find(Class<T> clazz) {
     return createQuery(clazz);
   }
-
-
+  
   public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
     final Query<T> query = createQuery(clazz);
     return query.filter(property, value);
   }
-
-
+  
   public <T, V> Query<T> find(final String kind, final Class<T> clazz, final String property, final V value, final int offset,
       final int size) {
     return find(kind, clazz, property, value, offset, size, true);
@@ -1230,7 +1250,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     if (MapreduceType.INLINE.equals(type)) {
       results.setInlineRequiredOptions(outputType, getMapper(), cache);
     } else {
-      results.setQuery(new QueryImpl(outputType, db.getCollection(results.getOutputCollectionName()), this));
+      results.setQuery(newQuery(outputType, db.getCollection(results.getOutputCollectionName())));
     }
 
     return results;
@@ -1338,5 +1358,13 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public DBDecoderFactory getDecoderFact() {
     return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
+  }
+
+  public void setQueryFactory(QueryFactory queryFactory) {
+    this.queryFactory = queryFactory;
+  }
+
+  public QueryFactory getQueryFactory() {
+    return queryFactory;
   }
 }
