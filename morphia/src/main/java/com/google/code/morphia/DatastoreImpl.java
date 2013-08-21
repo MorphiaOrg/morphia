@@ -426,7 +426,7 @@ public class DatastoreImpl implements AdvancedDatastore {
    * 
    * @see QueryFactory#createQuery(Datastore, DBCollection, Class)
    */
-  private <T> Query<T> newQuery(Class<T> type, DBCollection collection) {
+  private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection) {
     return getQueryFactory().createQuery(this, collection, type);
   }
   
@@ -435,7 +435,7 @@ public class DatastoreImpl implements AdvancedDatastore {
    * 
    * @see QueryFactory#createQuery(Datastore, DBCollection, Class, DBObject)
    */
-  private <T> Query<T> newQuery(Class<T> type, DBCollection collection, DBObject query) {
+  private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection, final DBObject query) {
     return getQueryFactory().createQuery(this, collection, type, query);
   }
 
@@ -449,32 +449,32 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   private <T> Query<T> queryByExample(final DBCollection coll, final T example) {
     //TODO: think about remove className from baseQuery param below.
-    Class<T> type = (Class<T>)example.getClass();
-    DBObject query = entityToDBObj(example, new HashMap<Object, DBObject>());
+    final Class<T> type = (Class<T>)example.getClass();
+    final DBObject query = entityToDBObj(example, new HashMap<Object, DBObject>());
     return createQuery(type, query);
   }
 
-  public <T> Query<T> createQuery(Class<T> type) {
+  public <T> Query<T> createQuery(final Class<T> type) {
     return newQuery(type, getCollection(type));
   }
   
-  public <T> Query<T> createQuery(String kind, Class<T> type) {
+  public <T> Query<T> createQuery(final String kind, final Class<T> type) {
     return newQuery(type, db.getCollection(kind));
   }
 
-  public <T> Query<T> createQuery(Class<T> type, DBObject q) {
+  public <T> Query<T> createQuery(final Class<T> type, final DBObject q) {
     return newQuery(type, getCollection(type), q);
   }
 
-  public <T> Query<T> createQuery(String kind, Class<T> type, DBObject q) {
+  public <T> Query<T> createQuery(final String kind, final Class<T> type, final DBObject q) {
     return newQuery(type, getCollection(kind), q);
   }
   
-  public <T> Query<T> find(String kind, Class<T> clazz) {
+  public <T> Query<T> find(final String kind, final Class<T> clazz) {
     return createQuery(kind, clazz);
   }
   
-  public <T> Query<T> find(Class<T> clazz) {
+  public <T> Query<T> find(final Class<T> clazz) {
     return createQuery(clazz);
   }
   
@@ -925,7 +925,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     return save(kind, entity, getWriteConcern(unwrapped));
   }
 
-  public <T> Key<T> save(final String kind, final T entity, WriteConcern wc) {
+  public <T> Key<T> save(final String kind, final T entity, final WriteConcern wc) {
     return save(getCollection(kind), ProxyHelper.unwrap(entity), wc);
   }
 
@@ -1022,7 +1022,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public <T> Key<T> merge(final T entity, final WriteConcern wc) {
     T unwrapped = entity;
-    final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+    final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
     final DBObject dbObj = mapper.toDBObject(unwrapped, involvedObjects);
     final Key<T> key = getKey(unwrapped);
     unwrapped = ProxyHelper.unwrap(unwrapped);
@@ -1208,7 +1208,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
     }
 
-    OutputType outType;
+    final OutputType outType;
     switch (type) {
       case REDUCE:
         outType = OutputType.REDUCE;
@@ -1360,7 +1360,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
   }
 
-  public void setQueryFactory(QueryFactory queryFactory) {
+  public void setQueryFactory(final QueryFactory queryFactory) {
     this.queryFactory = queryFactory;
   }
 
