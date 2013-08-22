@@ -116,7 +116,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public <T> DBRef createRef(final T entity) {
     final T wrapped = ProxyHelper.unwrap(entity);
-    final Object id = getId(wrapped);
+    final Object id = mapper.getId(wrapped);
     if (id == null) {
       throw new MappingException("Could not get id for " + wrapped.getClass().getName());
     }
@@ -171,7 +171,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
     }
     try {
-      final Object id = getId(wrapped);
+      final Object id = mapper.getId(wrapped);
       return delete(wrapped.getClass(), id, wc);
 
     } catch (Exception e) {
@@ -306,8 +306,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
   }
 
-  protected void ensureIndexes(final MappedClass mc, final boolean background, final ArrayList<MappedClass> parentMCs,
-      final ArrayList<MappedField> parentMFs) {
+  protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
+      final List<MappedField> parentMFs) {
     if (parentMCs.contains(mc)) {
       return;
     }
@@ -323,8 +323,8 @@ public class DatastoreImpl implements AdvancedDatastore {
   /**
    * Ensure indexes from field annotations, and embedded entities
    */
-  private void processEmbeddedAnnotations(final MappedClass mc, final boolean background, final ArrayList<MappedClass> parentMCs,
-      final ArrayList<MappedField> parentMFs) {
+  private void processEmbeddedAnnotations(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
+      final List<MappedField> parentMFs) {
     for (final MappedField mf : mc.getPersistenceFields()) {
       if (mf.hasAnnotation(Indexed.class)) {
         final Indexed index = mf.getAnnotation(Indexed.class);
@@ -343,8 +343,8 @@ public class DatastoreImpl implements AdvancedDatastore {
       }
 
       if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)) {
-        final ArrayList<MappedClass> newParentClasses = (ArrayList<MappedClass>) parentMCs.clone();
-        final ArrayList<MappedField> newParents = (ArrayList<MappedField>) parentMFs.clone();
+        final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
+        final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
         newParentClasses.add(mc);
         newParents.add(mf);
         ensureIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background, newParentClasses,
@@ -355,7 +355,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   private void processClassAnnotations(final MappedClass mc, final boolean background) {
     //Ensure indexes from class annotation
-    final ArrayList<Annotation> indexes = mc.getAnnotations(Indexes.class);
+    final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
     if (indexes != null) {
       for (final Annotation ann : indexes) {
         final Indexes idx = (Indexes) ann;
@@ -521,7 +521,7 @@ public class DatastoreImpl implements AdvancedDatastore {
    * Queries the server to check for each DBRef
    */
   public <T> List<Key<T>> getKeysByRefs(final List<DBRef> refs) {
-    final ArrayList<Key<T>> tempKeys = new ArrayList<Key<T>>(refs.size());
+    final List<Key<T>> tempKeys = new ArrayList<Key<T>>(refs.size());
 
     final Map<String, List<DBRef>> kindMap = new HashMap<String, List<DBRef>>();
     for (final DBRef ref : refs) {
@@ -542,7 +542,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     //put them back in order, minus the missing ones.
-    final ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+    final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
     for (final DBRef ref : refs) {
       final Key<T> testKey = mapper.refToKey(ref);
       if (tempKeys.contains(testKey)) {
@@ -618,7 +618,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public <T> T get(final T entity) {
     final T unwrapped = ProxyHelper.unwrap(entity);
-    final Object id = getId(unwrapped);
+    final Object id = mapper.getId(unwrapped);
     if (id == null) {
       throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
     }
@@ -627,7 +627,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public Key<?> exists(final Object entityOrKey) {
     final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
-    final Key<?> key = getKey(unwrapped);
+    final Key<?> key = mapper.getKey(unwrapped);
     final Object id = key.getId();
     if (id == null) {
       throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
@@ -717,7 +717,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-    final ArrayList<DBObject> list = entities instanceof List
+    final List<DBObject> list = entities instanceof List
         ? new ArrayList<DBObject>(((List<T>) entities).size())
         : new ArrayList<DBObject>();
 
@@ -738,7 +738,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     throwOnError(wc, wr);
 
-    final ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
+    final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
     final Iterator<T> entitiesIT = entities.iterator();
     final Iterator<DBObject> dbObjectsIT = list.iterator();
 
@@ -807,7 +807,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     postSaveOperations(entity, dbObj, involvedObjects);
-    final Key<T> key = new Key<T>(dbColl.getName(), getId(entity));
+    final Key<T> key = new Key<T>(dbColl.getName(), mapper.getId(entity));
     key.setKindClass((Class<? extends T>) entity.getClass());
 
     return key;
@@ -824,7 +824,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
-    final ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
+    final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
     for (final T ent : entities) {
       savedKeys.add(save(ent, wc));
     }
@@ -833,7 +833,7 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public <T> Iterable<Key<T>> save(final T... entities) {
-    final ArrayList<Key<T>> savedKeys = new ArrayList<Key<T>>();
+    final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
     for (final T ent : entities) {
       savedKeys.add(save(ent));
     }
@@ -961,7 +961,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     final MappedClass mc = mapper.getMappedClass(ent);
     final Query<T> q = (Query<T>) createQuery(mc.getClazz());
-    q.disableValidation().filter(Mapper.ID_KEY, getId(ent));
+    q.disableValidation().filter(Mapper.ID_KEY, mapper.getId(ent));
 
     if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
       final MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
@@ -1024,9 +1024,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     T unwrapped = entity;
     final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
     final DBObject dbObj = mapper.toDBObject(unwrapped, involvedObjects);
-    final Key<T> key = getKey(unwrapped);
+    final Key<T> key = mapper.getKey(unwrapped);
     unwrapped = ProxyHelper.unwrap(unwrapped);
-    final Object id = getId(unwrapped);
+    final Object id = mapper.getId(unwrapped);
     if (id == null) {
       throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
     }
@@ -1306,7 +1306,7 @@ public class DatastoreImpl implements AdvancedDatastore {
    * Converts a list of keys to refs
    */
   public static <T> List<DBRef> keysAsRefs(final List<Key<T>> keys, final Mapper mapper) {
-    final ArrayList<DBRef> refs = new ArrayList<DBRef>(keys.size());
+    final List<DBRef> refs = new ArrayList<DBRef>(keys.size());
     for (final Key<T> key : keys) {
       refs.add(mapper.keyToRef(key));
     }
@@ -1317,7 +1317,7 @@ public class DatastoreImpl implements AdvancedDatastore {
    * Converts a list of refs to keys
    */
   public static <T> List<Key<T>> refsToKeys(final Mapper mapper, final List<DBRef> refs, final Class<T> c) {
-    final ArrayList<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+    final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
     for (final DBRef ref : refs) {
       keys.add((Key<T>) mapper.refToKey(ref));
     }
