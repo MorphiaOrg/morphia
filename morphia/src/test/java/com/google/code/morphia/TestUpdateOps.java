@@ -38,7 +38,10 @@ import com.google.code.morphia.testmodel.Rectangle;
 import com.google.code.morphia.testutil.StandardTests;
 import com.mongodb.WriteConcern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 
 /**
@@ -148,9 +151,13 @@ public class TestUpdateOps extends TestBase {
 
   @Test
   public void testInsertUpdatesUnsafe() throws Exception {
-    final UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class).field("radius").equal(0), ds.createUpdateOperations(
-      Circle.class).inc("radius", 1D), true, WriteConcern.NONE);
-    assertInserted(res);
+    if (mongo.getVersion().startsWith("2.")) {
+      final UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class)
+        .field("radius")
+        .equal(0), ds.createUpdateOperations(Circle.class)
+        .inc("radius", 1D), true, WriteConcern.NONE);
+      assertInserted(res);
+    }
   }
 
   @Test
