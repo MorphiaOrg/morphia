@@ -58,7 +58,7 @@ public class TestDAO extends TestBase {
     address.setPostCode("101");
     borg.setAddress(address);
 
-    hotelDAO.deleteByQuery((Query) hotelDAO.find());
+    hotelDAO.deleteByQuery((Query<Hotel>) hotelDAO.find());
     hotelDAO.save(borg);
     assertEquals(1, hotelDAO.count());
     assertNotNull(borg.getId());
