@@ -30,6 +30,7 @@ public class DefaultConverters {
   private final List<TypeConverter>                  untypedTypeEncoders        = new LinkedList<TypeConverter>();
   private final Map<Class, List<TypeConverter>>      tcMap                      = new ConcurrentHashMap<Class, List<TypeConverter>>();
   private final List<Class<? extends TypeConverter>> registeredConverterClasses = new LinkedList<Class<? extends TypeConverter>>();
+  private final PassthroughConverter passthroughConverter;
 
   private Mapper mapper;
 
@@ -65,7 +66,7 @@ public class DefaultConverters {
     addConverter(new TimestampConverter());
 
     //generic converter that will just pass things through.
-    addConverter(new PassthroughConverter());
+    passthroughConverter = new PassthroughConverter();
   }
 
   /**
@@ -116,7 +117,7 @@ public class DefaultConverters {
       tcMap.get(type).add(0, tc);
       LOG.warning("Added duplicate converter for " + type + " ; " + tcMap.get(type));
     } else {
-      final ArrayList<TypeConverter> values = new ArrayList<TypeConverter>();
+      final List<TypeConverter> values = new ArrayList<TypeConverter>();
       values.add(tc);
       tcMap.put(type, values);
     }
@@ -170,6 +171,9 @@ public class DefaultConverters {
         return tc;
       }
     }
+    if (passthroughConverter.canHandle(mf) || (val != null && passthroughConverter.isSupported(val.getClass(), mf))) {
+      return passthroughConverter;
+    }
 
     throw new ConverterNotFoundException("Cannot find encoder for " + mf.getType() + " as need for " + mf.getFullName());
   }
@@ -187,6 +191,9 @@ public class DefaultConverters {
       if (tc.canHandle(c)) {
         return tc;
       }
+    }
+    if (passthroughConverter.canHandle(c)) {
+      return passthroughConverter;
     }
 
     throw new ConverterNotFoundException("Cannot find encoder for " + c.getName());
@@ -235,6 +242,7 @@ public class DefaultConverters {
     for (final TypeConverter tc : untypedTypeEncoders) {
       tc.setMapper(mapper);
     }
+    passthroughConverter.setMapper(mapper);
   }
 
   public boolean hasSimpleValueConverter(final MappedField c) {
