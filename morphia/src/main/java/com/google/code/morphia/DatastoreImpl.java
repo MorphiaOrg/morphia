@@ -57,6 +57,7 @@ import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
@@ -626,6 +627,19 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public Key<?> exists(final Object entityOrKey) {
+    final Query<?> query = buildExistsQuery(entityOrKey);
+    return query.getKey();
+  }
+
+  public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
+    final Query<?> query = buildExistsQuery(entityOrKey);
+    if(readPreference != null) {
+      query.useReadPreference(readPreference);
+    }
+    return query.getKey();
+  }
+
+  private Query<?> buildExistsQuery(final Object entityOrKey) {
     final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
     final Key<?> key = mapper.getKey(unwrapped);
     final Object id = key.getId();
@@ -638,7 +652,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       collName = getCollection(key.getKindClass()).getName();
     }
 
-    return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId()).getKey();
+    return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId());
   }
 
   @SuppressWarnings("rawtypes")

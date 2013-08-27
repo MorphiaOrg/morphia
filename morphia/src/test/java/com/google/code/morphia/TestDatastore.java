@@ -42,6 +42,7 @@ import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
+import com.mongodb.ReadPreference;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -303,6 +304,9 @@ public class TestDatastore extends TestBase {
     assertEquals(1, ds.getCount(FacebookUser.class));
     assertNotNull(ds.get(FacebookUser.class, 1));
     assertNotNull(ds.exists(k));
+    assertNotNull(((AdvancedDatastore) ds).exists(k, ReadPreference.secondary()));
+    assertNotNull(((AdvancedDatastore) ds).exists(k, ReadPreference.secondaryPreferred()));
+    assertNotNull(((AdvancedDatastore) ds).exists(k, ReadPreference.nearest()));
     assertNotNull(ds.getByKey(FacebookUser.class, k));
     ds.delete(ds.find(FacebookUser.class));
     assertEquals(0, ds.getCount(FacebookUser.class));

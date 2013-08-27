@@ -6,6 +6,7 @@ import com.google.code.morphia.query.UpdateOperations;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
@@ -17,6 +18,15 @@ import com.mongodb.WriteResult;
  * @author ScottHernandez
  */
 public interface AdvancedDatastore extends Datastore {
+
+  /**
+   * @see #exists(Object) 
+   * 
+   * @param readPreference Uses the supplied ReadPreference for the check.  If readPreference is null the preference is taken from the 
+   * annotation or uses the default preference.
+   */
+  Key<?> exists(Object keyOrEntity, ReadPreference readPreference);
+
   /**
    * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)
    */
