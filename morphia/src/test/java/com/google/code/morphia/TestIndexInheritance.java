@@ -19,7 +19,9 @@ package com.google.code.morphia;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
+import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Index;
 import com.google.code.morphia.annotations.Indexed;
@@ -38,9 +40,11 @@ public class TestIndexInheritance extends TestBase {
 
   @Indexes(@Index("description"))
   private abstract static class Shape {
-    @Id ObjectId id;
+    @Id
+    ObjectId id;
     String description;
-    @Indexed String foo;
+    @Indexed
+    String foo;
   }
 
   @Indexes(@Index("radius"))
@@ -52,30 +56,79 @@ public class TestIndexInheritance extends TestBase {
     }
   }
 
+  @Entity
+  private static class Child extends Father {
+    private Child() {
+    }
+
+    private Child(final String name) {
+      super(name);
+    }
+  }
+
+  @Entity
+  private static class Father extends GrandFather {
+    private Father() {
+    }
+
+    private Father(final String name) {
+      super(name);
+    }
+  }
+
+  @Entity
+  private static class GrandFather {
+    @Id
+    ObjectId id;
+    String name;
+
+    private GrandFather() {
+    }
+
+    private GrandFather(final String name) {
+      this.name = name;
+    }
+  }
 
   @Test
   public void testClassIndexInherit() throws Exception {
-    morphia.map(Circle.class).map(Shape.class);
-    final MappedClass mc = morphia.getMapper().getMappedClass(Circle.class);
+    morphia.map(Circle.class)
+      .map(Shape.class);
+    final MappedClass mc = morphia.getMapper()
+      .getMappedClass(Circle.class);
     assertNotNull(mc);
 
-    assertEquals(2, mc.getAnnotations(Indexes.class).size());
+    assertEquals(2, mc.getAnnotations(Indexes.class)
+      .size());
 
     ds.ensureIndexes();
     final DBCollection coll = ds.getCollection(Circle.class);
 
-    assertEquals(4, coll.getIndexInfo().size());
+    assertEquals(4, coll.getIndexInfo()
+      .size());
   }
 
   @Test
   public void testInheritedFieldIndex() throws Exception {
-    morphia.map(Circle.class).map(Shape.class);
-    morphia.getMapper().getMappedClass(Circle.class);
+    morphia.map(Circle.class)
+      .map(Shape.class);
+    morphia.getMapper()
+      .getMappedClass(Circle.class);
 
     ds.ensureIndexes();
     final DBCollection coll = ds.getCollection(Circle.class);
 
-    assertEquals(4, coll.getIndexInfo().size());
+    assertEquals(4, coll.getIndexInfo()
+      .size());
   }
 
+  @Test
+  public void deepTree() {
+    final Child jimmy = new Child("Jimmy");
+    ds.save(jimmy);
+
+    final Child loaded = ds.get(Child.class, jimmy.id);
+    Assert.assertNotNull(loaded);
+    Assert.assertEquals(jimmy.name, loaded.name);
+  }
 }
