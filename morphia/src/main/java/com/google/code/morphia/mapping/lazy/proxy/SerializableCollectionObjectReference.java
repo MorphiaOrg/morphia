@@ -15,7 +15,7 @@ import com.google.code.morphia.mapping.lazy.DatastoreProvider;
 public class SerializableCollectionObjectReference<T> extends AbstractReference implements ProxiedEntityReferenceList {
 
   private static final long serialVersionUID = 1L;
-  private final ArrayList<Key<?>> listOfKeys;
+  private final List<Key<?>> listOfKeys;
 
   public SerializableCollectionObjectReference(final Collection<T> type, final Class<T> referenceObjClass, final boolean ignoreMissing,
     final DatastoreProvider p) {

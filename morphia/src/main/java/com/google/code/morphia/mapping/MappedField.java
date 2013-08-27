@@ -243,7 +243,7 @@ public class MappedField {
    * Returns the name of the field's (key)name for mongodb, in order of loading.
    */
   public List<String> getLoadNames() {
-    final ArrayList<String> names = new ArrayList<String>();
+    final List<String> names = new ArrayList<String>();
     names.add(getMappedFieldName());
 
     final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);

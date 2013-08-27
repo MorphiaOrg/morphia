@@ -86,7 +86,7 @@ public class MappedClass {
   /**
    * Annotations we were interested in, and found.
    */
-  private final Map<Class<? extends Annotation>, ArrayList<Annotation>> foundAnnotations = new HashMap<Class<? extends Annotation>, ArrayList<Annotation>>();
+  private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations = new HashMap<Class<? extends Annotation>, List<Annotation>>();
 
   /**
    * Methods which are life-cycle events
@@ -208,7 +208,7 @@ public class MappedClass {
     if (lifecycleMethods.containsKey(lceClazz)) {
       lifecycleMethods.get(lceClazz).add(cm);
     } else {
-      final ArrayList<ClassMethodPair> methods = new ArrayList<ClassMethodPair>();
+      final List<ClassMethodPair> methods = new ArrayList<ClassMethodPair>();
       methods.add(cm);
       lifecycleMethods.put(lceClazz, methods);
     }
@@ -223,7 +223,7 @@ public class MappedClass {
     }
 
     if (!foundAnnotations.containsKey(clazz)) {
-      final ArrayList<Annotation> list = new ArrayList<Annotation>();
+      final List<Annotation> list = new ArrayList<Annotation>();
       foundAnnotations.put(clazz, list);
     }
 
@@ -238,7 +238,7 @@ public class MappedClass {
    * Adds the annotation, if it exists on the field.
    */
   private void addAnnotation(final Class<? extends Annotation> clazz) {
-    final ArrayList<? extends Annotation> annotations = ReflectionUtils.getAnnotations(getClazz(), clazz);
+    final List<? extends Annotation> annotations = ReflectionUtils.getAnnotations(getClazz(), clazz);
     for (final Annotation ann : annotations) {
       addAnnotation(clazz, ann);
     }
@@ -470,7 +470,7 @@ public class MappedClass {
   /**
    * @return the relevantAnnotations
    */
-  public Map<Class<? extends Annotation>, ArrayList<Annotation>> getRelevantAnnotations() {
+  public Map<Class<? extends Annotation>, List<Annotation>> getRelevantAnnotations() {
     return foundAnnotations;
   }
 
@@ -488,14 +488,14 @@ public class MappedClass {
    * @return the instance if it was found, if more than one was found, the last one added
    */
   public Annotation getAnnotation(final Class<? extends Annotation> clazz) {
-    final ArrayList<Annotation> found = foundAnnotations.get(clazz);
+    final List<Annotation> found = foundAnnotations.get(clazz);
     return found == null || found.isEmpty() ? null : found.get(found.size() - 1);
   }
 
   /**
    * @return the instance if it was found, if more than one was found, the last one added
    */
-  public ArrayList<Annotation> getAnnotations(final Class<? extends Annotation> clazz) {
+  public List<Annotation> getAnnotations(final Class<? extends Annotation> clazz) {
     return foundAnnotations.get(clazz);
   }
 

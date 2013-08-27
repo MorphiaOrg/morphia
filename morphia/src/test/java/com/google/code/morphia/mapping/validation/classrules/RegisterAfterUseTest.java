@@ -1,15 +1,15 @@
 package com.google.code.morphia.mapping.validation.classrules;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.testutil.TestEntity;
-import org.junit.Assert;
 
 
 /**
@@ -22,10 +22,13 @@ public class RegisterAfterUseTest extends TestBase {
      *
      */
     private static final long serialVersionUID = 1L;
-    @Property("foo") @Embedded("bar") ArrayList l;
+    @Property("foo")
+    @Embedded("bar")
+    List l;
   }
 
-  @Test @Ignore(value = "not yet implemented")
+  @Test
+  @Ignore(value = "not yet implemented")
   public void testRegisterAfterUse() throws Exception {
 
     // this would have failed: morphia.map(Broken.class);

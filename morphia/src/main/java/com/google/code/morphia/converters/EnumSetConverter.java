@@ -35,7 +35,7 @@ public class EnumSetConverter extends TypeConverter implements SimpleValueConver
       return EnumSet.noneOf(enumType);
     }
 
-    final ArrayList enums = new ArrayList();
+    final List enums = new ArrayList();
     for (final Object object : l) {
       enums.add(ec.decode(enumType, object));
     }
@@ -48,7 +48,7 @@ public class EnumSetConverter extends TypeConverter implements SimpleValueConver
       return null;
     }
 
-    final ArrayList values = new ArrayList();
+    final List values = new ArrayList();
 
     final EnumSet s = (EnumSet) value;
     final Object[] array = s.toArray();

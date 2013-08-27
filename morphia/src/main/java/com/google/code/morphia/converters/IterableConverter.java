@@ -62,7 +62,7 @@ public class IterableConverter extends TypeConverter {
 
     //convert to and array if that is the destination type (not a list/set)
     if (mf.getType().isArray()) {
-      return ReflectionUtils.convertToArray(subtypeDest, (ArrayList) values);
+      return ReflectionUtils.convertToArray(subtypeDest, (List) values);
     } else {
       return values;
     }

@@ -440,7 +440,7 @@ public class Mapper {
 
     private Object getDBRefs(final Iterable value) {
         final Object mappedValue;
-        final ArrayList<DBRef> refs = new ArrayList<DBRef>();
+        final List<DBRef> refs = new ArrayList<DBRef>();
         for (final Object o : (Iterable) value) {
             final Key<?> key = (o instanceof Key) ? (Key<?>) o : getKey(o);
             refs.add(keyToRef(key));

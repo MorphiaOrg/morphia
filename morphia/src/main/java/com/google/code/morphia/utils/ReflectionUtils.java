@@ -371,7 +371,7 @@ public class ReflectionUtils {
   }
 
   public static <T> T getAnnotation(final Class c, final Class<T> annClass) {
-    final ArrayList<T> found = getAnnotations(c, annClass);
+    final List<T> found = getAnnotations(c, annClass);
     if (found != null && !found.isEmpty()) {
       return found.get(0);
     } else {
@@ -382,8 +382,8 @@ public class ReflectionUtils {
   /**
    * Returns the (first) instance of the annotation, on the class (or any superclass, or interfaces implemented).
    */
-  public static <T> ArrayList<T> getAnnotations(final Class c, final Class<T> annClass) {
-    final ArrayList<T> found = new ArrayList<T>();
+  public static <T> List<T> getAnnotations(final Class c, final Class<T> annClass) {
+    final List<T> found = new ArrayList<T>();
     // TODO isn't that actually breaking the contract of @Inherited?
     if (c.isAnnotationPresent(annClass)) {
       found.add((T) c.getAnnotation(annClass));
@@ -571,15 +571,15 @@ public class ReflectionUtils {
   //			throw new MappingException("No usable constructor for " + type.getName(), e);
   //		}
   //	}
-  public static ArrayList iterToList(final Iterable it) {
-    if (it instanceof ArrayList) {
-      return (ArrayList) it;
+  public static List iterToList(final Iterable it) {
+    if (it instanceof List) {
+      return (List) it;
     }
     if (it == null) {
       return null;
     }
 
-    final ArrayList ar = new ArrayList();
+    final List ar = new ArrayList();
     for (final Object o : it) {
       ar.add(o);
     }

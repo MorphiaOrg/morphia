@@ -64,7 +64,7 @@ public class MappingValidator {
       }
 
       // sort by class to make it more readable
-      final ArrayList<LogLine> l = new ArrayList<LogLine>();
+      final List<LogLine> l = new ArrayList<LogLine>();
       for (final ConstraintViolation v : ve) {
         l.add(new LogLine(v));
       }

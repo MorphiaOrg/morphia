@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -612,7 +613,7 @@ public class ReferenceMap extends AbstractMap {
 
       @Override
       public Object[] toArray(final Object[] arr) {
-        final ArrayList list = new ArrayList();
+        final List list = new ArrayList();
         final Iterator iterator = iterator();
         while (iterator.hasNext()) {
           final Entry e = (Entry) iterator.next();

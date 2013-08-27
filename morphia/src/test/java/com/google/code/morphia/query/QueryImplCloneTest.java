@@ -6,16 +6,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import com.google.code.morphia.TestBase;
 import com.google.code.morphia.annotations.Id;
-import org.junit.Assert;
+import com.google.code.morphia.logging.Logr;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
 
 
 /**
  * @author doc
  */
 public class QueryImplCloneTest extends TestBase {
+  private static final Logr LOG = MorphiaLoggerFactory.get(QueryImplCloneTest.class);
+
   private static final List<String> AllowedChangingFields = Arrays.asList("cache", "query");
 
   private boolean sameState(final Query q1, final Query q2) throws IllegalArgumentException, IllegalAccessException {
@@ -31,7 +35,7 @@ public class QueryImplCloneTest extends TestBase {
       final Object v1 = f.get(q1);
       final Object v2 = f.get(q2);
 
-      System.out.println("checking field " + f.getName() + " v1=" + v1 + " v2=" + v2);
+      LOG.debug("checking field " + f.getName() + " v1=" + v1 + " v2=" + v2);
 
       if (v1 == null && v2 == null) {
         continue;

@@ -19,7 +19,7 @@ package com.google.code.morphia.ext;
 
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -66,7 +66,7 @@ public class ExternalMapperExtTest extends TestBase {
       final MappedClass destMC = mapper.getMappedClass(destClass);
       final MappedClass sourceMC = mapper.getMappedClass(sourceClass);
       //copy the class level annotations
-      for (final Entry<Class<? extends Annotation>, ArrayList<Annotation>> e : sourceMC.getRelevantAnnotations().entrySet()) {
+      for (final Entry<Class<? extends Annotation>, List<Annotation>> e : sourceMC.getRelevantAnnotations().entrySet()) {
         if (e.getValue() != null && !e.getValue().isEmpty()) {
           for (final Annotation ann : e.getValue()) {
             destMC.addAnnotation(e.getKey(), ann);
