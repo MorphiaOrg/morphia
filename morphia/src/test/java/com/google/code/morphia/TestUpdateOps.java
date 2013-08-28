@@ -151,12 +151,17 @@ public class TestUpdateOps extends TestBase {
 
   @Test
   public void testInsertUpdatesUnsafe() throws Exception {
-    if (mongo.getVersion().startsWith("2.")) {
-      final UpdateResults<Circle> res = ds.update(ds.createQuery(Circle.class)
+    ds.getDB()
+      .requestStart();
+    try {
+      ds.update(ds.createQuery(Circle.class)
         .field("radius")
         .equal(0), ds.createUpdateOperations(Circle.class)
         .inc("radius", 1D), true, WriteConcern.NONE);
-      assertInserted(res);
+      assertEquals(1, ds.getCount(Circle.class));
+    } finally {
+      ds.getDB()
+        .requestDone();
     }
   }
 
@@ -337,7 +342,7 @@ public class TestUpdateOps extends TestBase {
 
 
     //test with Key<Pic>
-    UpdateResults<ContainsPic> res = ds.updateFirst(ds.find(ContainsPic.class, "name", cp.name), ds.createUpdateOperations(
+    final UpdateResults<ContainsPic> res = ds.updateFirst(ds.find(ContainsPic.class, "name", cp.name), ds.createUpdateOperations(
       ContainsPic.class).set("pic", pic));
 
     assertEquals(1, res.getUpdatedCount());
@@ -375,7 +380,7 @@ public class TestUpdateOps extends TestBase {
 
 
     //test with Key<Pic>
-    UpdateResults<ContainsPicKey> res = ds.updateFirst(ds.find(ContainsPicKey.class, "name", cpk.name), ds.createUpdateOperations(
+    final UpdateResults<ContainsPicKey> res = ds.updateFirst(ds.find(ContainsPicKey.class, "name", cpk.name), ds.createUpdateOperations(
       ContainsPicKey.class).set("pic", pic));
 
     assertEquals(1, res.getUpdatedCount());
