@@ -10,13 +10,22 @@ import com.mongodb.ReadPreference;
  */
 public interface Query<T> extends QueryResults<T>, Cloneable {
   /**
-   * <p>Create a filter based on the specified condition and value. </p><p> <b>Note</b>: Property is in the form of "name op" ("age >").
-   * </p><p> Valid operators are ["=", "==","!=", "<>", ">", "<", ">=", "<=", "in", "nin", "all", "size", "exists"] </p> <p>Examples:</p>
+   * <p>Create a filter based on the specified condition and value. </p>
+   * <p><b>Note</b>: Property is in the form of "name op" ("age >").</p>
+   * <p>Valid operators are ["=", "==","!=", "<>", ">", "<", ">=", "<=", "in", "nin", "all", "size", "exists"] </p>
+   * <p>Examples:</p>
    * <p/>
-   * <ul> <li>{@code filter("yearsOfOperation >", 5)}</li> <li>{@code filter("rooms.maxBeds >=", 2)}</li> <li>{@code filter("rooms.bathrooms
-   *exists", 1)}</li> <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li> <li>{@code filter("age >=",
-   *age)}</li> <li>{@code filter("age =", age)}</li> <li>{@code filter("age", age)} (if no operator, = is assumed)</li> <li>{@code
-   * filter("age !=", age)}</li> <li>{@code filter("age in", ageList)}</li> <li>{@code filter("customers.loyaltyYears in", yearsList)}</li>
+   * <ul>
+   *   <li>{@code filter("yearsOfOperation >", 5)}</li>
+   *   <li>{@code filter("rooms.maxBeds >=", 2)}</li>
+   *   <li>{@code filter("rooms.bathrooms exists", 1)}</li>
+   *   <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li>
+   *   <li>{@code filter("age >=", age)}</li>
+   *   <li>{@code filter("age =", age)}</li>
+   *   <li>{@code filter("age", age)} (if no operator, = is assumed)</li>
+   *   <li>{@code filter("age !=", age)}</li>
+   *   <li>{@code filter("age in", ageList)}</li>
+   *   <li>{@code filter("customers.loyaltyYears in", yearsList)}</li>
    * </ul>
    * <p/>
    * <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
