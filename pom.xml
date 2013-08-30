@@ -227,6 +227,7 @@
     <module>jrebel-plug</module>
     <module>guice-plug</module>
     <module>entityscanner-plug</module>
+    <module>gwt</module>
   </modules>
 
   <properties>
