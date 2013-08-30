@@ -1,17 +1,21 @@
+<!-- 
+	Modified by:Ozgur Aydinli (ozgur@hive.com.tr) 
+				Ismet Ozalp (ismet@hive.com.tr)
+ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<artifactId>morphia-gwt</artifactId>
+	<name>Morphia Google Web Toolkit Extension</name>
+	<packaging>jar</packaging>
 
 	<parent>
-    <groupId>com.google.code.morphia</groupId>
-    <artifactId>morphia-parent</artifactId>
-		<version>0.101.0-SNAPSHOT</version>
+    	<groupId>com.google.code.morphia</groupId>
+    	<artifactId>morphia-parent</artifactId>
+		<version>0.104-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 
-	<artifactId>gwt</artifactId>
-	<name>Morphia Google Web Toolkit Extension</name>
-	<packaging>jar</packaging>
 
 	<properties>
 		<gwt.version>2.1.0</gwt.version>
@@ -20,55 +24,25 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/gwt-java</directory>
+				<directory>src/main/java</directory>
 				<includes>
-					<include>**/*</include>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/super</directory>
+				<includes>
+					<include>**/*.java</include>
 				</includes>
 			</resource>
 		</resources>
-	<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwt.version}</version>
-				<!--				<executions>-->
-				<!--					<execution>-->
-				<!--						<goals>-->
-				<!--							<goal>compile</goal>-->
-				<!--							<goal>resources</goal>-->
-				<!--						</goals>-->
-				<!--					</execution>-->
-				<!--				</executions>-->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.8</version>
-				<configuration>
-					<sourceExcludes>
-						<sourceExclude>**/emul/**/*.java</sourceExclude>
-					</sourceExcludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<excludes>
-						<exclude>gwt-java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
-      <version>${project.version}</version>
+      		<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -76,20 +50,6 @@
 			<version>${gwt.version}</version>
 			<type>jar</type>
 		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>${gwt.version}</version>
-			<type>jar</type>
-		</dependency>
 	</dependencies>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwt.version}</version>
-			</plugin>
-		</plugins>
-	</reporting>
+
 </project>
