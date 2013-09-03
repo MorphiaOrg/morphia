@@ -199,11 +199,12 @@ public class DatastoreImpl implements AdvancedDatastore {
       throw new QueryException("Delete does not allow sort/offset/limit query options.");
     }
 
-    if (q.getQueryObject() != null) {
+    DBObject queryObject = q.getQueryObject();
+    if (queryObject != null) {
       if (wc == null) {
-        wr = dbColl.remove(q.getQueryObject());
+        wr = dbColl.remove(queryObject);
       } else {
-        wr = dbColl.remove(q.getQueryObject(), wc);
+        wr = dbColl.remove(queryObject, wc);
       }
     } else if (wc == null) {
       wr = dbColl.remove(new BasicDBObject());
