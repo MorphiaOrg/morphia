@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
-
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
@@ -287,14 +286,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public List<T> asList() {
         final List<T> results = new ArrayList<T>();
-        
-        final Iterable<T> elements = fetch();
-        for (final T ent : elements) {
+        final MorphiaIterator<T, T> iter = (MorphiaIterator<T, T>) fetch().iterator();
+        for (final T ent : iter) {
             results.add(ent);
         }
+        iter.close();
 
-        if (log.isTraceEnabled() && (elements instanceof MorphiaIterator<?, ?>)) {
-            MorphiaIterator<?, ?> iter = (MorphiaIterator<?, ?>)elements;
+        if (log.isTraceEnabled()) {
             log.trace(String.format("asList: %s \t %d entities, iterator time: driver %n ms, mapper %n ms \n\t cache: %s \n\t for %s",
                 dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats().toString(), getQueryObject()));
         }
