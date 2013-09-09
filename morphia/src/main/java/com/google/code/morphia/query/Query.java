@@ -2,6 +2,9 @@ package com.google.code.morphia.query;
 
 
 import org.bson.types.CodeWScope;
+
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 
 
@@ -161,7 +164,54 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    */
   String toString();
 
+  /**
+   * Returns the entity {@link Class}.
+   */
   Class<T> getEntityClass();
+  
+  /**
+   * Returns the offset.
+   * 
+   * @see #offset(int)
+   */
+  int getOffset();
+  
+  /**
+   * Returns the limit
+   * 
+   * @see #limit(int)
+   */
+  int getLimit();
+  
+  /**
+   * Returns the batch size
+   * 
+   * @see #batchSize(int)
+   */
+  int getBatchSize();
+  
+  /**
+   * Returns the Mongo query {@link DBObject}.
+   */
+  DBObject getQueryObject();
+  
+  /**
+   * Returns the Mongo sort {@link DBObject}.
+   */
+  DBObject getSortObject();
+  
+  /**
+   * Returns the Mongo fields {@link DBObject}.
+   */
+  DBObject getFieldsObject();
+  
+  /**
+   * Returns the {@link DBCollection} of the {@link Query}.
+   */
+  DBCollection getCollection();
 
+  /**
+   * Creates and returns a copy of this {@link Query}.
+   */
   Query<T> clone();
 }
