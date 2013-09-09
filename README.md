@@ -17,6 +17,7 @@ experience.
 - Advanced mapper which allows raw conversion, `void toObject(DBObject)` or ` DBObject fromObject(Object)`
 
 Please continue by reading the QuickStart or looking at a list of [the annotations](https://github.com/mongodb/morphia/wiki/AllAnnotations).
+If you have further questions, please reach out to us on our [mailing list](https://groups.google.com/forum/#!forum/morphia).
 
 ## Quick start
 
