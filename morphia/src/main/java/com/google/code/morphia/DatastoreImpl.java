@@ -185,25 +185,25 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
-    final QueryImpl<T> q = (QueryImpl<T>) query;
 
-    DBCollection dbColl = q.getCollection();
+    DBCollection dbColl = query.getCollection();
     //TODO remove this after testing.
     if (dbColl == null) {
-      dbColl = getCollection(q.getEntityClass());
+      dbColl = getCollection(query.getEntityClass());
     }
 
     final WriteResult wr;
 
-    if (q.getSortObject() != null || q.getOffset() != 0 || q.getLimit() > 0) {
+    if (query.getSortObject() != null || query.getOffset() != 0 || query.getLimit() > 0) {
       throw new QueryException("Delete does not allow sort/offset/limit query options.");
     }
 
-    if (q.getQueryObject() != null) {
+    DBObject queryObject = query.getQueryObject();
+    if (queryObject != null) {
       if (wc == null) {
-        wr = dbColl.remove(q.getQueryObject());
+        wr = dbColl.remove(queryObject);
       } else {
-        wr = dbColl.remove(q.getQueryObject(), wc);
+        wr = dbColl.remove(queryObject, wc);
       }
     } else if (wc == null) {
       wr = dbColl.remove(new BasicDBObject());
@@ -1108,25 +1108,24 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   private <T> UpdateResults<T> update(final Query<T> query, final DBObject u, final boolean createIfMissing, final boolean multi,
       final WriteConcern wc) {
-    final QueryImpl<T> qi = (QueryImpl<T>) query;
 
-    DBCollection dbColl = qi.getCollection();
+    DBCollection dbColl = query.getCollection();
     //TODO remove this after testing.
     if (dbColl == null) {
-      dbColl = getCollection(qi.getEntityClass());
+      dbColl = getCollection(query.getEntityClass());
     }
 
-    if (qi.getSortObject() != null && qi.getSortObject().keySet() != null && !qi.getSortObject().keySet().isEmpty()) {
+    if (query.getSortObject() != null && query.getSortObject().keySet() != null && !query.getSortObject().keySet().isEmpty()) {
       throw new QueryException("sorting is not allowed for updates.");
     }
-    if (qi.getOffset() > 0) {
+    if (query.getOffset() > 0) {
       throw new QueryException("a query offset is not allowed for updates.");
     }
-    if (qi.getLimit() > 0) {
+    if (query.getLimit() > 0) {
       throw new QueryException("a query limit is not allowed for updates.");
     }
 
-    DBObject q = qi.getQueryObject();
+    DBObject q = query.getQueryObject();
     if (q == null) {
       q = new BasicDBObject();
     }
@@ -1148,14 +1147,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     return new UpdateResults<T>(wr);
   }
 
-  public <T> T findAndDelete(final Query<T> query) {
-    DBCollection dbColl = ((QueryImpl<T>) query).getCollection();
+  public <T> T findAndDelete(final Query<T> qi) {
+    DBCollection dbColl = qi.getCollection();
     //TODO remove this after testing.
     if (dbColl == null) {
-      dbColl = getCollection(query.getEntityClass());
+      dbColl = getCollection(qi.getEntityClass());
     }
-
-    final QueryImpl<T> qi = ((QueryImpl<T>) query);
+    
     final EntityCache cache = createCache();
 
     if (LOG.isTraceEnabled()) {
@@ -1179,9 +1177,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     return findAndModify(query, ops, oldVersion, false);
   }
 
-  public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> ops, final boolean oldVersion, final boolean createIfMissing) {
-    final QueryImpl<T> qi = (QueryImpl<T>) query;
-
+  public <T> T findAndModify(final Query<T> qi, final UpdateOperations<T> ops, final boolean oldVersion, final boolean createIfMissing) {
+    
     DBCollection dbColl = qi.getCollection();
     //TODO remove this after testing.
     if (dbColl == null) {
@@ -1209,16 +1206,15 @@ public class DatastoreImpl implements AdvancedDatastore {
   }
 
   @SuppressWarnings("rawtypes")
-  public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query q, final Class<T> outputType,
+  public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
       final MapReduceCommand baseCommand) {
 
     Assert.parametersNotNull("map", baseCommand.getMap());
     Assert.parameterNotEmpty(baseCommand.getMap(), "map");
     Assert.parametersNotNull("reduce", baseCommand.getReduce());
     Assert.parameterNotEmpty(baseCommand.getMap(), "reduce");
-
-    final QueryImpl<T> qi = (QueryImpl<T>) q;
-    if (qi.getOffset() != 0 || qi.getFieldsObject() != null) {
+    
+    if (query.getOffset() != 0 || query.getFieldsObject() != null) {
       throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
     }
 
@@ -1238,18 +1234,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         break;
     }
 
-    final DBCollection dbColl = qi.getCollection();
+    final DBCollection dbColl = query.getCollection();
 
     final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(), baseCommand.getOutputTarget(),
-        outType, qi.getQueryObject());
+        outType, query.getQueryObject());
     cmd.setFinalize(baseCommand.getFinalize());
     cmd.setScope(baseCommand.getScope());
 
-    if (qi.getLimit() > 0) {
-      cmd.setLimit(qi.getLimit());
+    if (query.getLimit() > 0) {
+      cmd.setLimit(query.getLimit());
     }
-    if (qi.getSortObject() != null) {
-      cmd.setSort(qi.getSortObject());
+    if (query.getSortObject() != null) {
+      cmd.setSort(query.getSortObject());
     }
 
     if (LOG.isTraceEnabled()) {
@@ -1274,9 +1270,8 @@ public class DatastoreImpl implements AdvancedDatastore {
   @SuppressWarnings("rawtypes")
   public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
       final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
-
-    final QueryImpl<T> qi = (QueryImpl<T>) query;
-    final DBCollection dbColl = qi.getCollection();
+    
+    final DBCollection dbColl = query.getCollection();
 
     final String outColl = mapper.getCollectionName(outputType);
 
@@ -1296,13 +1291,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         break;
     }
 
-    final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, outType, qi.getQueryObject());
+    final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, outType, query.getQueryObject());
 
-    if (qi.getLimit() > 0) {
-      cmd.setLimit(qi.getLimit());
+    if (query.getLimit() > 0) {
+      cmd.setLimit(query.getLimit());
     }
-    if (qi.getSortObject() != null) {
-      cmd.setSort(qi.getSortObject());
+    if (query.getSortObject() != null) {
+      cmd.setSort(query.getSortObject());
     }
 
     if (finalize != null && finalize.length() != 0) {
