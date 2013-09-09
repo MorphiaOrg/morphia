@@ -28,6 +28,4 @@ Talk To Us
 ----------
 
 If you want to work on something or have questions / complaints please reach
-out to us by creating a Question issue at (https://github.com/mongodb/morphia/issues/new).
-We also have a [mailing list](https://groups.google.com/forum/#!forum/morphia)
- where both users and developers can ask (or answer) questions.
+out to us on our [mailing list](https://groups.google.com/forum/#!forum/morphia).
