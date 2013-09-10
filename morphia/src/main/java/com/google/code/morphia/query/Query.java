@@ -23,6 +23,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    *   <li>{@code filter("rooms.maxBeds >=", 2)}</li>
    *   <li>{@code filter("rooms.bathrooms exists", 1)}</li>
    *   <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li>
+   *   <li>{@code filter("quantity mod", new Long[]{4, 0}) // customers ordered in packs of 4)}</li>
    *   <li>{@code filter("age >=", age)}</li>
    *   <li>{@code filter("age =", age)}</li>
    *   <li>{@code filter("age", age)} (if no operator, = is assumed)</li>
