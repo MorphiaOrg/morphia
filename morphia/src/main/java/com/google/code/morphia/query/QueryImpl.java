@@ -344,6 +344,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             final String lower = trimmed.toLowerCase();
             if ("in".equals(lower)) {
                 return FilterOperator.IN;
+            } else if ("mod".equals(lower)) {
+                return FilterOperator.MOD;
             } else if ("nin".equals(lower)) {
                 return FilterOperator.NOT_IN;
             } else if ("all".equals(lower)) {

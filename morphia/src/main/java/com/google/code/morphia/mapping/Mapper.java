@@ -809,23 +809,33 @@ public class Mapper {
         } else if (op.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
             || Map.class.isAssignableFrom(value.getClass()))) {
             return true;
-        } else if (op.equals(FilterOperator.ALL) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
+        } else {
+          if (op.equals(FilterOperator.MOD) && value.getClass().isArray()) {
+            return ReflectionUtils.isIntegerType(Array.get(value, 0) .getClass());
+          } else if (op.equals(FilterOperator.ALL) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
             || Map.class.isAssignableFrom(value.getClass()))) {
             return true;
-        } else if (value instanceof Integer && (int.class.equals(type) || long.class.equals(type) || Long.class.equals(type))) {
+          } else if (value instanceof Integer && (int.class.equals(type) || long.class.equals(type) || Long.class.equals(type))) {
             return true;
-        } else if ((value instanceof Integer || value instanceof Long) && (double.class.equals(type) || Double.class.equals(type))) {
+          } else if ((value instanceof Integer || value instanceof Long) && (double.class.equals(type) || Double.class.equals(type))) {
             return true;
-        } else if (value instanceof Pattern && String.class.equals(type)) {
+          } else if (value instanceof Pattern && String.class.equals(type)) {
             return true;
-        } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
+          } else if (value.getClass()
+            .getAnnotation(Entity.class) != null && Key.class.equals(type)) {
             return true;
-        } else if (value instanceof List<?>) {
+          } else if (value instanceof List<?>) {
             return true;
-        } else if (!value.getClass().isAssignableFrom(type) &&
+          } else if (!value.getClass()
+            .isAssignableFrom(type) &&
             //hack to let Long match long, and so on
-            !value.getClass().getSimpleName().toLowerCase().equals(type.getSimpleName().toLowerCase())) {
+            !value.getClass()
+              .getSimpleName()
+              .toLowerCase()
+              .equals(type.getSimpleName()
+                .toLowerCase())) {
             return false;
+          }
         }
         return true;
     }

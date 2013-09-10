@@ -131,6 +131,10 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return hasAnyOf(values);
   }
 
+  public T mod(final long divisor, final long remainder) {
+    return addCriteria(FilterOperator.MOD, new long[] {divisor, remainder});
+  }
+
   public T hasThisElement(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.ELEMENT_MATCH, val);
@@ -198,12 +202,4 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     opts.put(s, v);
     return opts;
   }
-
-  private Map<String, Object> opts(final String s1, final Object v1, final String s2, final Object v2) {
-    final Map<String, Object> opts = new HashMap<String, Object>();
-    opts.put(s1, v1);
-    opts.put(s2, v2);
-    return opts;
-  }
-
 }

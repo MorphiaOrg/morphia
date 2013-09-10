@@ -33,6 +33,7 @@ import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -144,20 +145,18 @@ public class ReflectionUtils {
     return interfaceClass.isAssignableFrom(type);
   }
 
-  /**
-   * Check if a class extends a specific class.
-   *
-   * @param type
-   *            the class we want to check
-   * @param superClass
-   *            the super class we want to check against
-   * @return true if type implements superClass, else false
-   */
-  //    public static boolean extendsClass(final Class type, final Class superClass)
-  //    {
-  //        return superClass.isAssignableFrom(type);
-  //    }
 
+  /**
+   * Checks if the class is an integer type, i.e., is numeric but not a floating point type.
+   * 
+   * @param type the class we want to check
+   * @return true if the type is an integral type
+   */
+  public static boolean isIntegerType(final Class type) {
+    return Arrays.asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class, 
+      byte.class).contains(type);  
+  }
+  
   /**
    * Check if the class supplied represents a valid property type.
    *
