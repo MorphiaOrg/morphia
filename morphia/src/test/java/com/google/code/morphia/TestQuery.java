@@ -176,7 +176,20 @@ public class TestQuery extends TestBase {
     @Indexed
     public ObjectId value;
   }
-    
+  
+  @Entity
+  static class GenericKeyValue<T> {
+  
+      @Id
+      public ObjectId id;
+  
+      @Indexed(unique = true)
+      public List<Object> key;
+  
+      @Embedded
+      public T value;
+  }    
+  
   @Entity
   static class ReferenceKeyValue {
     @Id
@@ -863,6 +876,20 @@ public class TestQuery extends TestBase {
     final Query<KeyValue> query = ds.createQuery(KeyValue.class).field("key").hasAnyOf(keys);
     Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
     Assert.assertEquals(query.get().Id, value.Id);
+  }
+    
+  @Test
+  public void genericMultiKeyValueQueries() {
+    morphia.map(GenericKeyValue.class);
+    ds.ensureIndexes(GenericKeyValue.class);
+    final GenericKeyValue<String> value = new GenericKeyValue<String>();
+    final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+    value.key = keys;
+    ds.save(value);
+
+    final Query<GenericKeyValue> query = ds.createQuery(GenericKeyValue.class).field("key").hasAnyOf(keys);
+    Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
+    Assert.assertEquals(query.get().id, value.id);
   }
     
   @Test

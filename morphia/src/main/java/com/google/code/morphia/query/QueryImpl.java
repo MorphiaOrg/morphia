@@ -293,7 +293,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         iter.close();
 
         if (log.isTraceEnabled()) {
-            log.trace(String.format("asList: %s \t %d entities, iterator time: driver %n ms, mapper %n ms \n\t cache: %s \n\t for %s",
+            log.trace(String.format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms \n\t cache: %s \n\t for %s",
                 dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats().toString(), getQueryObject()));
         }
 
@@ -395,16 +395,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Query<T> disableValidation() {
         validateName = validateType = false;
-        return this;
-    }
-
-    QueryImpl<T> validateNames() {
-        validateName = true;
-        return this;
-    }
-
-    QueryImpl<T> disableTypeValidation() {
-        validateType = false;
         return this;
     }
 
@@ -541,12 +531,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public Query<T> retrievedFields(final boolean include, final String... fields) {
+    public Query<T> retrievedFields(final boolean include, final String... list) {
         if (includeFields != null && include != includeFields) {
             throw new IllegalStateException("You cannot mix include and excluded fields together!");
         }
         includeFields = include;
-        this.fields = fields;
+        fields = list;
         return this;
     }
 
