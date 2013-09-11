@@ -45,12 +45,6 @@ public interface FieldEnd<T> {
 
   T notIn(Iterable<?> values);
 
-  T sizeEq(int val);
-
-  T startsWith(String prefix);
-
-  T startsWithIgnoreCase(String prefix);
-
   T near(double x, double y);
 
   T near(double x, double y, boolean spherical);
@@ -59,9 +53,27 @@ public interface FieldEnd<T> {
 
   T near(double x, double y, double radius, boolean spherical);
 
+  T sizeEq(int val);
+
+  T startsWith(String prefix);
+
+  T startsWithIgnoreCase(String prefix);
+
+  /**
+   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
+   */
   T within(double x, double y, double radius);
 
-  T within(double x, double y, double radius, boolean spherical);
-
+  /**
+   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
+   */
   T within(double x1, double y1, double x2, double y2);
+
+  /**
+   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
+   */
+  T within(double x, double y, double radius, boolean spherical);
 }
