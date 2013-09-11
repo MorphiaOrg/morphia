@@ -17,8 +17,6 @@ public interface FieldEnd<T> {
 
   T exists();
   
-  T geoWithin(Shape shape);
-
   T greaterThan(Object val);
 
   T greaterThanOrEq(Object val);
@@ -38,7 +36,7 @@ public interface FieldEnd<T> {
   T lessThanOrEq(Object val);
 
   T in(Iterable<?> values);
-  
+
   T mod(long divisor, long remainder);
 
   FieldEnd<T> not();
@@ -60,6 +58,11 @@ public interface FieldEnd<T> {
   T startsWith(String prefix);
 
   T startsWithIgnoreCase(String prefix);
+
+  /**
+   * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
+   */
+  T within(Shape shape);
 
   /**
    * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.

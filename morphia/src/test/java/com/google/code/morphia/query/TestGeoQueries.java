@@ -106,7 +106,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.centerSphere(new Point(0.5, 0.5), 0.77))
+      .within(Shape.centerSphere(new Point(0.5, 0.5), 0.77))
       .get();
     Assert.assertNotNull(found);
   }
@@ -118,7 +118,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.center(new Point(0, 1), 1.1))
+      .within(Shape.center(new Point(0, 1), 1.1))
       .get();
     Assert.assertNotNull(found);
   }
@@ -154,7 +154,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.centerSphere(new Point(0, 1), 1))
+      .within(Shape.centerSphere(new Point(0, 1), 1))
       .get();
     Assert.assertNotNull(found);
   }
@@ -201,7 +201,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.box(new Point(0, 0), new Point(2, 2)))
+      .within(Shape.box(new Point(0, 0), new Point(2, 2)))
       .get();
     Assert.assertNotNull(found);
   }
@@ -213,7 +213,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.box(new Point(0, 0), new Point(.4, .5)))
+      .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
       .get();
     Assert.assertNull(found);
   }
@@ -224,7 +224,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0))  )
+      .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
       .get();
     Assert.assertNotNull(found);
   }
@@ -235,7 +235,7 @@ public class TestGeoQueries extends TestBase {
     ds.save(place1);
     final Place found = ds.find(Place.class)
       .field("loc")
-      .geoWithin(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0))  )
+      .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
       .get();
     Assert.assertNull(found);
   }
