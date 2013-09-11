@@ -16,6 +16,8 @@ public interface FieldEnd<T> {
   T equal(Object val);
 
   T exists();
+  
+  T geoWithin(Shape shape);
 
   T greaterThan(Object val);
 

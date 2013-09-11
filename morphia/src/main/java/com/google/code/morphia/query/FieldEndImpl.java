@@ -96,6 +96,11 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return addCriteria(FilterOperator.EQUAL, val);
   }
 
+  public T geoWithin(final Shape shape) {
+    Assert.parametersNotNull("shape", shape);
+    return addCriteria(FilterOperator.GEO_WITHIN, shape.toDBObject());
+  }
+
   public T greaterThan(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.GREATER_THAN, val);

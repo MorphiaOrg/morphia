@@ -12,6 +12,7 @@ public enum FilterOperator {
   WITHIN_CIRCLE_SPHERE("$centerSphere"),
   WITHIN_BOX("$box"),
   EQUAL("$eq"),
+  GEO_WITHIN("$geoWithin"),
   GREATER_THAN("$gt"),
   GREATER_THAN_OR_EQUAL("$gte"),
   LESS_THAN("$lt"),
