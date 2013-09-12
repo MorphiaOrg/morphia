@@ -2,8 +2,7 @@
 	Modified by:Ozgur Aydinli (ozgur@hive.com.tr) 
 				Ismet Ozalp (ismet@hive.com.tr)
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>morphia-gwt</artifactId>
 	<name>Morphia Google Web Toolkit Extension</name>
@@ -12,7 +11,7 @@
 	<parent>
     	<groupId>com.google.code.morphia</groupId>
     	<artifactId>morphia-parent</artifactId>
-		<version>0.104-SNAPSHOT</version>
+		<version>0.104</version>
 		<relativePath>../</relativePath>
 	</parent>
 
