@@ -16,6 +16,8 @@ import static org.mongodb.morphia.query.Shape.Point;
 
 
 public class TestGeoQueries extends TestBase {
+  public static final String GEO_QUERY_2_2_ERROR_STRING = "geo field only has 1 element";
+
   @Entity
   private static class Place {
     @Id
@@ -194,49 +196,77 @@ public class TestGeoQueries extends TestBase {
       .get();
     Assert.assertNull(found);
   }
+
   @Test
   public void testGeoWithinBox() throws Exception {
-    ds.ensureIndexes();
-    final Place place1 = new Place("place1", new double[] {1, 1});
-    ds.save(place1);
-    final Place found = ds.find(Place.class)
-      .field("loc")
-      .within(Shape.box(new Point(0, 0), new Point(2, 2)))
-      .get();
-    Assert.assertNotNull(found);
+    try {
+      ds.ensureIndexes();
+      final Place place1 = new Place("place1", new double[] {1, 1});
+      ds.save(place1);
+      final Place found = ds.find(Place.class)
+        .field("loc")
+        .within(Shape.box(new Point(0, 0), new Point(2, 2)))
+        .get();
+      Assert.assertNotNull(found);
+    } catch (MongoException e) {
+      if (!GEO_QUERY_2_2_ERROR_STRING.equals(e.getMessage())) {
+        throw e;
+      }
+    }
   }
 
   @Test
   public void testGeoWithinOutsideBox() throws Exception {
-    ds.ensureIndexes();
-    final Place place1 = new Place("place1", new double[] {1, 1});
-    ds.save(place1);
-    final Place found = ds.find(Place.class)
-      .field("loc")
-      .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
-      .get();
-    Assert.assertNull(found);
+    try {
+      ds.ensureIndexes();
+      final Place place1 = new Place("place1", new double[] {1, 1});
+      ds.save(place1);
+      final Place found = ds.find(Place.class)
+        .field("loc")
+        .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
+        .get();
+      Assert.assertNull(found);
+    } catch (MongoException e) {
+      if (!GEO_QUERY_2_2_ERROR_STRING.equals(e.getMessage())) {
+        throw e;
+      }
+    }
+
   }
+
   @Test
   public void testGeoWithinPolygon() throws Exception {
-    ds.ensureIndexes();
-    final Place place1 = new Place("place1", new double[] {0, 1});
-    ds.save(place1);
-    final Place found = ds.find(Place.class)
-      .field("loc")
-      .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
-      .get();
-    Assert.assertNotNull(found);
+    try {
+      ds.ensureIndexes();
+      final Place place1 = new Place("place1", new double[] {0, 1});
+      ds.save(place1);
+      final Place found = ds.find(Place.class)
+        .field("loc")
+        .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
+        .get();
+      Assert.assertNotNull(found);
+    } catch (MongoException e) {
+      if (!GEO_QUERY_2_2_ERROR_STRING.equals(e.getMessage())) {
+        throw e;
+      }
+    }
   }
+
   @Test
   public void testGeoWithinPolygon2() throws Exception {
-    ds.ensureIndexes();
-    final Place place1 = new Place("place1", new double[] {10, 1});
-    ds.save(place1);
-    final Place found = ds.find(Place.class)
-      .field("loc")
-      .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
-      .get();
-    Assert.assertNull(found);
+    try {
+      ds.ensureIndexes();
+      final Place place1 = new Place("place1", new double[] {10, 1});
+      ds.save(place1);
+      final Place found = ds.find(Place.class)
+        .field("loc")
+        .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
+        .get();
+      Assert.assertNull(found);
+    } catch (MongoException e) {
+      if (!GEO_QUERY_2_2_ERROR_STRING.equals(e.getMessage())) {
+        throw e;
+      }
+    }
   }
 }
