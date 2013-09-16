@@ -1,4 +1,4 @@
-package com.google.code.morphia;
+package org.mongodb.morphia;
 
 import java.io.Serializable;
 
