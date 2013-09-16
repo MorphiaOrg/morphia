@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-    <groupId>com.google.code.morphia</groupId>
+    <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
 		<version>0.105-SNAPSHOT</version>
 		<relativePath>../</relativePath>
@@ -12,7 +12,7 @@
 	<dependencies>
 		<!-- automatically looses the optional dependencies -->
 		<dependency>
-			<groupId>com.google.code.morphia</groupId>
+			<groupId>org.mongodb.morphia</groupId>
 			<artifactId>morphia</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
@@ -38,7 +38,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<JavaRebel-Plugin>com.google.code.morphia.ext.jrebel.JRebelPlugin</JavaRebel-Plugin>
+							<JavaRebel-Plugin>org.mongodb.morphia.ext.jrebel.JRebelPlugin</JavaRebel-Plugin>
 						</manifestEntries>
 					</archive>
 				</configuration>

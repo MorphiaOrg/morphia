@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-    <groupId>com.google.code.morphia</groupId>
+    <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
 		<version>0.105-SNAPSHOT</version>
 		<relativePath>../</relativePath>
@@ -34,7 +34,7 @@
 	<dependencies>
 		<!--  automatically looses the optional dependencies -->
 		<dependency>
-			<groupId>com.google.code.morphia</groupId>
+			<groupId>org.mongodb.morphia</groupId>
 			<artifactId>morphia</artifactId>
       <version>${project.version}</version>
 		</dependency>

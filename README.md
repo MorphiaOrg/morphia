@@ -26,7 +26,7 @@ If you have further questions, please reach out to us on our [mailing list](http
 
 ```xml
 <parent>
-    <groupId>com.google.code.morphia</groupId>
+    <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia</artifactId>
     <version>###</version>
 </parent>

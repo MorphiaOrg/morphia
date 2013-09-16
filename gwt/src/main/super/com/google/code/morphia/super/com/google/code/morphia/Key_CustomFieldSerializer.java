@@ -2,7 +2,7 @@ package com.google.code.morphia;
 
 import java.io.Serializable;
 
-import com.google.code.morphia.Key;
+import org.mongodb.morphia.Key;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
