@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
-    <version>0.105</version>
+    <version>0.106-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
   <artifactId>morphia-entityscanner-plug</artifactId>
