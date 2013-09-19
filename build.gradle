@@ -1,0 +1,75 @@
+configure(subprojects) {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    group = 'org.mongodb.morphia'
+    version = '0.106-SNAPSHOT'
+
+    sourceCompatibility = '1.5'
+    targetCompatibility = '1.5'
+
+    configurations {
+        compileOnly
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        testCompile 'org.junit:junit:4.11'
+        compile 'org.mongodb:mongo-java-driver:[2.10.1,3.0.0)'
+    }
+
+    sourceSets.main.compileClasspath += configurations.compileOnly
+    sourceSets.test.compileClasspath += configurations.compileOnly
+}
+
+project(':morphia') {
+    dependencies {
+        compileOnly 'cglib:cglib-nodep:[2.1_3,3.0)'
+        compileOnly 'com.thoughtworks.proxytoys:proxytoys:1.0'
+    }
+}
+
+project(':validation') {
+    dependencies {
+        compile 'javax.validation:validation-api:1.0.0.GA'
+        compile project(':morphia')
+    }
+}
+
+project(':entityscanner-plug') {
+    dependencies {
+        compile('org.reflections:reflections:0.9.8') {
+            'servlet-api:javax.servlet'
+            'com.google.code.gson:gson'
+            'logback-classic:ch.qos.logback'
+            'xml-apis:xml-apis'
+        }
+        compile 'com.google.collections:google-collections:1.0'
+        compile('net.sf.scannotation:scannotation:1.0.2') {
+            'javassist:javassist'
+        }
+        testCompile 'org.slf4j:slf4j-simple:1.5.6'
+        compile project(':morphia')
+    }
+}
+
+project(':guice-plug') {
+    dependencies {
+        compileOnly 'com.google.inject:guice:3.0'
+        compile project(':morphia')
+    }
+}
+
+project(':jrebel-plug') {}
+
+project(':gwt') {
+    sourceSets {
+        main {
+            java { srcDirs = [] }
+        }
+    }
+}
