@@ -1205,7 +1205,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
   }
 
-  @SuppressWarnings("rawtypes")
   public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
       final MapReduceCommand baseCommand) {
 
@@ -1267,7 +1266,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   }
 
-  @SuppressWarnings("rawtypes")
   public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
       final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
     
