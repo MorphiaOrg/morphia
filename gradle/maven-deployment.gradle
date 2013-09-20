@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-configure {
+configure(subprojects) {
     apply plugin: 'maven'
     apply plugin: 'signing'
 

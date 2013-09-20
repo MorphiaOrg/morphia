@@ -1,3 +1,5 @@
+def configDir = new File(rootDir, 'config')
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.7'
 }
@@ -5,6 +7,8 @@ task wrapper(type: Wrapper) {
 configure(subprojects) {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
 
     group = 'org.mongodb.morphia'
     version = '0.106-SNAPSHOT'
@@ -33,6 +37,29 @@ configure(subprojects) {
         tasks.withType(Compile) {
             options.compilerArgs << "-Xlint:unchecked"
         }
+    }
+    
+    project.ext.buildingWith = { n -> project.hasProperty(n) && project.property(n).toBoolean()
+    }
+
+    /* Code quality */
+    checkstyle {
+        configFile = new File("$configDir/checkstyle.xml")
+    }
+
+    findbugs { excludeFilter = new File("$configDir/findbugs-exclude.xml") }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled = project.buildingWith('xmlReports.enabled')
+            html.enabled = !project.buildingWith('xmlReports.enabled')
+        }
+    }
+    
+    javadoc {
+        options.author = true
+        options.version = true
+        options.links 'http://docs.oracle.com/javase/7/docs/api/'
     }
 }
 
@@ -84,3 +111,7 @@ project(':gwt') {
         }
     }
 }
+
+apply from: 'gradle/ide-settings.gradle'
+apply from: 'gradle/maven-deployment.gradle'
+//apply from: 'gradle/osgi-compatibility.gradle'
