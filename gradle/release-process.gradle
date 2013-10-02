@@ -1,0 +1,57 @@
+apply from: 'gradle/maven-deployment.gradle'
+apply from: 'gradle/osgi-compatibility.gradle'
+apply plugin: 'release'
+apply plugin: 'console'
+apply plugin: 'github'
+
+version = project('driver').version
+
+def bumpVersion(String v) {
+    v.replaceAll(
+            /(\d+)\.(\d+)\.(\d+).*/,
+            { m -> "${m[1]}.${m[2]}.${(m[3] as int) + 1}-SNAPSHOT" }
+    )
+}
+
+github {
+    repo = 'git@github.com:mongodb/morphia.git'
+
+    wiki {
+        from(project(':morphia').javadoc.outputs.files) {
+            into 'morphia/javadoc'
+        }
+        into { "javadoc/$project.release.version" }
+    }
+
+    release {
+        tag = { "r$project.release.version" }
+        name = { "$project.release.version" }
+    }
+}
+
+release {
+
+    doFirst {
+        if (!project.git.status().isEmpty()) {
+            throw new GradleException('You have uncommitted changes.')
+        }
+    }
+
+    version = { console.prompt(' > Please enter release version:', project.version - '-SNAPSHOT') }
+    tag = { "r$project.release.version" }
+    commitMessage = { "Release $project.release.version" }
+
+    update {
+        file project.file('build.gradle')
+        projects allprojects
+    }
+
+    next {
+        version = { console.prompt(' > Please enter next version:', bumpVersion(project.release.version)) }
+        commitMessage = { "Bumping version to $project.release.next.version" }
+    }
+
+    dependsOn subprojects.install
+    dependsOn publishWiki
+    dependsOn draftGhRelease
+}
