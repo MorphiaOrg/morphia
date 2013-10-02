@@ -97,6 +97,6 @@ idea {
     }
     
     module {
-        scopes.COMPILE.plus += configurations.compileOnly
-    }
+        scopes.RUNTIME.plus += configurations.provided
+    } 
 }
