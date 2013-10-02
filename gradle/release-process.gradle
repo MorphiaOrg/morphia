@@ -4,7 +4,7 @@ apply plugin: 'release'
 apply plugin: 'console'
 apply plugin: 'github'
 
-version = project('driver').version
+version = project('morphia').version
 
 def bumpVersion(String v) {
     v.replaceAll(

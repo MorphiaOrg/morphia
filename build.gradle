@@ -134,6 +134,4 @@ project(':gwt') {
 }
 
 apply from: 'gradle/ide-settings.gradle'
-apply from: 'gradle/maven-deployment.gradle'
-apply from: 'gradle/osgi-compatibility.gradle'
 apply from: 'gradle/release-process.gradle'
