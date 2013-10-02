@@ -32,7 +32,7 @@ github {
 release {
 
     doFirst {
-        if (!project.git.status().uncommitted.isEmpty()) {
+        if (project.git.status().uncommitted) {
             throw new GradleException('You have uncommitted changes.')
         }
     }
