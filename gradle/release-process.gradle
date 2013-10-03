@@ -53,5 +53,5 @@ release {
 
     dependsOn subprojects.install
     dependsOn publishWiki
-//    dependsOn draftGhRelease
+    dependsOn draftGhRelease
 }
