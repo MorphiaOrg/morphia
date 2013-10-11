@@ -240,6 +240,37 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
       final boolean dropDupsOnCreate, final boolean background, final boolean sparse, final int expireAfterSeconds) {
+    final DBCollection dbColl = getCollection(clazz);
+    ensureIndex(dbColl, clazz, name, fields, unique, dropDupsOnCreate,
+        background, sparse, expireAfterSeconds);
+  }
+
+  public <T> void ensureIndex(final String collName, final Class<T> type,
+      final String fields) {
+    ensureIndex(collName, type, null, fields, false, false);
+  }
+
+  public <T> void ensureIndex(final String collName, final Class<T> clazz,
+      final String name, final String fields, final boolean unique,
+      final boolean dropDupsOnCreate) {
+    ensureIndex(getCollection(collName), clazz, name,
+        QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique,
+        dropDupsOnCreate, false, false, -1);
+  }
+
+  public <T> void ensureIndex(final String collName, final Class<T> clazz,
+      final String name, final String fields, final boolean unique,
+      final boolean dropDupsOnCreate, final boolean background) {
+    ensureIndex(getCollection(collName), clazz, name,
+        QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique,
+        dropDupsOnCreate, background, false, -1);
+  }
+
+  protected <T> void ensureIndex(final DBCollection dbColl,
+      final Class<T> clazz, final String name, final BasicDBObject fields,
+      final boolean unique, final boolean dropDupsOnCreate,
+      final boolean background, final boolean sparse,
+      final int expireAfterSeconds) {
     final BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
     if (name != null && name.length() != 0) {
       keyOpts.add("name", name);
@@ -261,8 +292,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     if (expireAfterSeconds > -1) {
       keyOpts.add("expireAfterSeconds", expireAfterSeconds);
     }
-
-    final DBCollection dbColl = getCollection(clazz);
 
     final BasicDBObject opts = (BasicDBObject) keyOpts.get();
     if (opts.isEmpty()) {
@@ -309,6 +338,16 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
       final List<MappedField> parentMFs) {
+    ensureIndexes(getCollection(mc.getClazz()), mc, background, parentMCs, parentMFs);
+  }
+
+  protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
+          ensureIndexes(getCollection(collName), mc, background, new ArrayList<MappedClass>(),
+                          new ArrayList<MappedField>());
+  }
+
+  protected void ensureIndexes(final DBCollection dbColl, final MappedClass mc, final boolean background, 
+      final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
     if (parentMCs.contains(mc)) {
       return;
     }
@@ -316,15 +355,15 @@ public class DatastoreImpl implements AdvancedDatastore {
     if (mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
       return;
     }
-    processClassAnnotations(mc, background);
+    processClassAnnotations(dbColl, mc, background);
 
-    processEmbeddedAnnotations(mc, background, parentMCs, parentMFs);
+    processEmbeddedAnnotations(dbColl, mc, background, parentMCs, parentMFs);
   }
 
   /**
    * Ensure indexes from field annotations, and embedded entities
    */
-  private void processEmbeddedAnnotations(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
+  private void processEmbeddedAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
       final List<MappedField> parentMFs) {
     for (final MappedField mf : mc.getPersistenceFields()) {
       if (mf.hasAnnotation(Indexed.class)) {
@@ -339,7 +378,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         field.append(mf.getNameToStore());
 
-        ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(),
+        ensureIndex(dbColl, indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(),
             index.dropDups(), index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
       }
 
@@ -348,13 +387,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
         newParentClasses.add(mc);
         newParents.add(mf);
-        ensureIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background, newParentClasses,
+        ensureIndexes(dbColl, mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background, newParentClasses,
             newParents);
       }
     }
   }
 
-  private void processClassAnnotations(final MappedClass mc, final boolean background) {
+  private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background) {
     //Ensure indexes from class annotation
     final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
     if (indexes != null) {
@@ -363,7 +402,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (idx != null && idx.value() != null && idx.value().length > 0) {
           for (final Index index : idx.value()) {
             final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapper, !index.disableValidation());
-            ensureIndex(mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(),
+            ensureIndex(dbColl, mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(),
                 index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
           }
         }
@@ -392,6 +431,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
   }
 
+  public <T> void ensureIndexes(String collName, Class<T> clazz) {
+      ensureIndexes(collName, clazz, false);
+  }
+
+  public <T> void ensureIndexes(String collName, Class<T> clazz, boolean background) {
+      final MappedClass mc = mapper.getMappedClass(clazz);
+      ensureIndexes(collName, mc, background);    
+  }
 
   public void ensureCaps() {
     for (final MappedClass mc : mapper.getMappedClasses()) {
