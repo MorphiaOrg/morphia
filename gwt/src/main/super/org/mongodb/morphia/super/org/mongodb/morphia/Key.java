@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * gwt client impl. 
- * @see org.mongodb.morphia.Key
+ * @see com.google.code.morphia.Key
  * @author Scott Hernandez (adapted to morphia/mongodb)
  */
-public class Key<T> implements Serializable, Comparable<org.mongodb.morphia.Key<?>> {
+public class Key<T> implements Serializable, Comparable<Key<?>> {
   private static final long serialVersionUID = 1L;
   
   /**
@@ -54,7 +54,7 @@ public class Key<T> implements Serializable, Comparable<org.mongodb.morphia.Key<
     kind = newKind;
   }
   
-  private void checkState(org.mongodb.morphia.Key k) {
+  private void checkState(Key k) {
     if (k.kind == null)
       throw new IllegalStateException("Kind must be specified (or a class).");
     if (k.id == null && k.idBytes == null)
@@ -70,7 +70,7 @@ public class Key<T> implements Serializable, Comparable<org.mongodb.morphia.Key<
    * </ol>
    */
   @SuppressWarnings("unchecked")
-  public int compareTo(org.mongodb.morphia.Key<?> other)
+  public int compareTo(Key<?> other)
   {
     checkState(this);
     checkState(other);
@@ -99,10 +99,10 @@ public class Key<T> implements Serializable, Comparable<org.mongodb.morphia.Key<
     if (obj == null)
       return false;
     
-    if (!(obj instanceof org.mongodb.morphia.Key<?>))
+    if (!(obj instanceof Key<?>))
       return false;
     
-    return this.compareTo((org.mongodb.morphia.Key<?>)obj) == 0;
+    return this.compareTo((Key<?>)obj) == 0;
   }
   
   /** */
