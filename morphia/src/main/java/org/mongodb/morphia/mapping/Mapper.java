@@ -580,24 +580,32 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         dbObject = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
-        try {
-            for (MappedField mf : mc.getPersistenceFields()) {
+
+        for (MappedField mf : mc.getPersistenceFields()) {
+            try {
                 readMappedField(dbObject, mf, entity, cache);
+            } catch (Exception e) {
+
+                String id = "(unknown)";
+                String entityName = "(unknown)";
+
+                try {
+                    id = dbObject.get(ID_KEY).toString();
+                    entityName = entity.getClass().getName();
+                } catch (Exception ex) {
+                    //Whatever if it doesnt work
+                }
+                
+                if (entity.getClass().isAssignableFrom(MapperReferenceExceptionHandler.class)){
+                    MapperReferenceExceptionHandler entityHandler = (MapperReferenceExceptionHandler) entity;
+                    entityHandler.handleMappedFieldException(dbObject, mf, entity, cache, e);
+                }else{
+                    throw new RuntimeException("Could not map " + entityName + " entity ID: " + id + " - no MapperReferenceExceptionHandler present on class", e);
+                }
+
+                
+
             }
-        } catch (Exception e) {
-            
-            String id = "(unknown)";
-            String entityName = "(unknown)";
-            
-            try{
-                id = dbObject.get(ID_KEY).toString();
-                entityName = entity.getClass().getName();
-            }catch(Exception ex){
-                //The varibles are defined regardless of whether or not that fails
-            }
-            
-            throw new RuntimeException("Could not map " + entityName + " entity ID: " + id,e);
-            
         }
 
         if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
