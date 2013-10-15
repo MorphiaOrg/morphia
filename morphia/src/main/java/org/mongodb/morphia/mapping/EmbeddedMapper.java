@@ -139,12 +139,12 @@ class EmbeddedMapper implements CustomMapper {
 
         final Object dbVal = mf.getDbObjectValue(dbObject);
         if (dbVal != null) {
-          final boolean isDBObject = dbVal instanceof DBObject && !(dbVal instanceof BasicDBList);
+          final boolean isDBObject = dbVal instanceof DBObject;
 
           //run converters
           if (isDBObject && (mapper.getConverters().hasDbObjectConverter(mf) 
                              || mapper.getConverters().hasDbObjectConverter(mf.getType()))) {
-            mapper.getConverters().fromDBObject(((DBObject) dbVal), mf, entity);
+            mapper.getConverters().fromDBObject(dbObject, mf, entity);
           } else {
             Object refObj;
             if (mapper.getConverters().hasSimpleValueConverter(mf) || mapper.getConverters().hasSimpleValueConverter(mf.getType())) {
