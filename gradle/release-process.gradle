@@ -14,7 +14,7 @@ def bumpVersion(String v) {
 }
 
 github {
-    repo = 'git@github.com:mongodb/morphia.git'
+    repo = 'git@github.com:evanchooly/morphia.git'
 
     wiki {
         from(project(':morphia').javadoc.outputs.files) {
@@ -54,6 +54,6 @@ release {
     }
 
     dependsOn subprojects.install
-    dependsOn publishWiki
-    dependsOn draftGhRelease
+//    dependsOn publishWiki
+//    dependsOn draftGhRelease
 }
