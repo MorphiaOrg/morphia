@@ -67,6 +67,7 @@ configure(subprojects) {
 
     pom {
         project {
+            version = project.version
             scm {
                 url 'https://github.com/mongodb/morphia.git'
                 connection 'scm:git:https://github.com/mongodb/morphia.git'
