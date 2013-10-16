@@ -2,8 +2,8 @@ def configDir = new File(rootDir, 'config')
 
 buildscript {
     repositories {
-        mavenCentral()
         mavenLocal()
+        mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
@@ -32,7 +32,7 @@ configure(subprojects) {
     apply plugin: 'findbugs'
 
     group = 'org.mongodb.morphia'
-    version = '0.113-SNAPSHOT'
+    version = '0.113'
 
     sourceCompatibility = '1.5'
     targetCompatibility = '1.5'
