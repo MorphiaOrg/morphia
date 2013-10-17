@@ -17,9 +17,7 @@ github {
     repo = 'git@github.com:evanchooly/morphia.git'
 
     wiki {
-        from(project(':morphia').javadoc.outputs.files) {
-            into 'morphia/javadoc'
-        }
+        from(project(':morphia').javadoc.outputs.files)
         into { "javadoc/$project.release.version" }
     }
 
@@ -54,6 +52,6 @@ release {
     }
 
     dependsOn subprojects.install
-    dependsOn publishWiki
-//    dependsOn draftGhRelease
+//    dependsOn publishWiki
+    dependsOn draftGhRelease
 }
