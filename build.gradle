@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'me.trnl:clirr-gradle-plugin:0.4'
-        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC1'
+        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC2'
     }
 }
 
@@ -32,7 +32,7 @@ configure(subprojects) {
     apply plugin: 'findbugs'
 
     group = 'org.mongodb.morphia'
-    version = '0.107-SNAPSHOT-SNAPSHOT'
+    version = '0.106-SNAPSHOT'
 
     sourceCompatibility = '1.5'
     targetCompatibility = '1.5'
