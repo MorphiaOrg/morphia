@@ -19,6 +19,7 @@ import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.Bytes;
@@ -195,7 +196,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (log.isTraceEnabled()) {
             log.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
         }
-        return dbColl.getCount(query);
+        return getCount(dbColl, query);
+    }
+    
+    /**
+     * @see DBCollection#getCount(DBObject)
+     */
+    protected long getCount(DBCollection collection, DBObject query) {
+      return collection.getCount(query);
     }
 
     public DBCursor prepareCursor() {
@@ -206,7 +214,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             log.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
         }
 
-        final DBCursor cursor = dbColl.find(query, fields);
+        final DBCursor cursor = find(dbColl, query, fields);
         cursor.setDecoderFactory(ds.getDecoderFact());
 
         if (offset > 0) {
@@ -255,8 +263,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return cursor;
     }
-
-
+    
+    /**
+     * @see DBCollection#find(DBObject, DBObject)
+     */
+    protected DBCursor find(DBCollection collection, DBObject query, DBObject fields) {
+      return collection.find(query, fields);
+    }
+    
     public Iterable<T> fetch() {
         final DBCursor cursor = prepareCursor();
         if (log.isTraceEnabled()) {

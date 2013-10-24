@@ -43,6 +43,7 @@ import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexFieldDef;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
@@ -136,7 +137,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   public <T> WriteResult delete(final String kind, final T id) {
     final DBCollection dbColl = getCollection(kind);
-    final WriteResult wr = dbColl.remove(BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get());
+    final WriteResult wr = remove(dbColl, BasicDBObjectBuilder.start().add(Mapper.ID_KEY, id).get(), null);
     throwOnError(null, wr);
     return wr;
   }
@@ -200,20 +201,28 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     DBObject queryObject = query.getQueryObject();
     if (queryObject != null) {
-      if (wc == null) {
-        wr = dbColl.remove(queryObject);
-      } else {
-        wr = dbColl.remove(queryObject, wc);
-      }
-    } else if (wc == null) {
-      wr = dbColl.remove(new BasicDBObject());
-    } else {
-      wr = dbColl.remove(new BasicDBObject(), wc);
+      wr = remove(dbColl, queryObject, wc);
+    } else  {
+      wr = remove(dbColl, new BasicDBObject(), wc);
     }
 
     throwOnError(wc, wr);
 
     return wr;
+  }
+  
+  /**
+   * Called by all the various {@code delete(...)} methods.
+   * 
+   * @see DBCollection#remove(DBObject)
+   * @see DBCollection#remove(DBObject, WriteConcern)
+   */
+  protected WriteResult remove(DBCollection collection, DBObject query, WriteConcern concern) {
+    if (concern != null) {
+      return collection.remove(query, concern);
+    }
+    
+    return collection.remove(query);
   }
 
   public <T> void ensureIndex(final Class<T> type, final String fields) {
@@ -266,14 +275,34 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     final BasicDBObject opts = (BasicDBObject) keyOpts.get();
     if (opts.isEmpty()) {
-      LOG.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields);
-      dbColl.ensureIndex(fields);
+      ensureIndex(dbColl, fields, null);
     } else {
-      LOG.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields + " and opts:" + opts);
-      dbColl.ensureIndex(fields, opts);
+      ensureIndex(dbColl, fields, opts);
     }
   }
 
+  /**
+   * Called by all the various {@code ensureIndex(...)} methods.
+   * 
+   * @see DBCollection#ensureIndex(DBObject)
+   * @see DBCollection#ensureIndex(DBObject, DBObject)
+   */
+  protected void ensureIndex(DBCollection collection, DBObject keys, DBObject options) {
+    if (options != null) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Ensuring index for " + collection.getName() + " with keys:" + keys + " and opts:" + options);
+      }
+      
+      collection.ensureIndex(keys, options);
+    }
+    
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Ensuring index for " + collection.getName() + " with keys:" + keys);
+    }
+    
+    collection.ensureIndex(keys);
+  }
+  
     /**
       * @deprecated IndexFieldDef is deprecated
       */
@@ -748,8 +777,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     final WriteResult wr = null;
 
     final DBObject[] dbObjects = new DBObject[list.size()];
-    dbColl.insert(list.toArray(dbObjects), wc);
-
+    insert(dbColl, list.toArray(dbObjects), wc);
+    
     throwOnError(wc, wr);
 
     final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
@@ -794,17 +823,25 @@ public class DatastoreImpl implements AdvancedDatastore {
   protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final WriteConcern wc) {
     final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
     final DBObject dbObj = entityToDBObj(entity, involvedObjects);
-    final WriteResult wr;
-    if (wc == null) {
-      wr = dbColl.insert(dbObj);
-    } else {
-      wr = dbColl.insert(dbObj, wc);
-    }
-
+    final WriteResult wr = insert(dbColl, new DBObject[] { dbObj }, wc);
     throwOnError(wc, wr);
 
     return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
 
+  }
+  
+  /**
+   * Called for all the various {@code insert(...)} methods.
+   * 
+   * @see DBCollection#insert(DBObject...)
+   * @see DBCollection#insert(DBObject[], WriteConcern)
+   */
+  protected WriteResult insert(DBCollection collection, DBObject[] values, WriteConcern concern) {
+    if (concern != null) {
+      return collection.insert(values, concern);
+    }
+    
+    return collection.insert(values);
   }
 
   protected DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
@@ -876,17 +913,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, db, mc);
 
     if (wr == null) {
-      if (wc == null) {
-        wr = dbColl.save(dbObj);
-      } else {
-        wr = dbColl.save(dbObj, wc);
-      }
+      wr = save(dbColl, dbObj, wc);
     }
 
     throwOnError(wc, wr);
     return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
   }
-
+  
   protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
       final WriteConcern wc, final DB database, final MappedClass mc) {
     WriteResult wr = null;
@@ -910,15 +943,27 @@ public class DatastoreImpl implements AdvancedDatastore {
             "Entity of class " + entity.getClass().getName() + " (id='" + idValue + "',version='" + oldVersion
                 + "') was concurrently updated.");
       }
-    } else if (wc == null) {
-      wr = dbColl.save(dbObj);
     } else {
-      wr = dbColl.save(dbObj, wc);
+      wr = save(dbColl, dbObj, wc);
     }
 
     //update the version.
     mfVersion.setFieldValue(entity, newVersion);
     return wr;
+  }
+  
+  /**
+   *  Called for all the various {@code save(...)} methods.
+   *  
+   * @see DBCollection#save(DBObject)
+   * @see DBCollection#save(DBObject, WriteConcern)
+   */
+  protected WriteResult save(DBCollection collection, DBObject value, WriteConcern concern) {
+    if (concern != null) {
+      return collection.save(value, concern);
+    }
+    
+    return collection.save(value);
   }
 
   protected void throwOnError(final WriteConcern wc, final WriteResult wr) {
@@ -1135,16 +1180,28 @@ public class DatastoreImpl implements AdvancedDatastore {
           + createIfMissing);
     }
 
-    final WriteResult wr;
-    if (wc == null) {
-      wr = dbColl.update(q, u, createIfMissing, multi);
-    } else {
-      wr = dbColl.update(q, u, createIfMissing, multi, wc);
-    }
-
+    final WriteResult wr = update(dbColl, q, u, createIfMissing, multi, wc);
     throwOnError(wc, wr);
 
     return new UpdateResults<T>(wr);
+  }
+  
+  /**
+   * Called for all the various {@code update(...)} methods.
+   * 
+   * NOTE: This is also being called from the {@code updateFirst(...)} and {@code merge(...)} methods.
+   * 
+   * @see DBCollection#update(DBObject, DBObject, boolean, boolean)
+   * @see DBCollection#update(DBObject, DBObject, boolean, boolean, WriteConcern)
+   */
+  protected WriteResult update(DBCollection collection, DBObject query, DBObject update, 
+      boolean upsert, boolean multi, WriteConcern concern) {
+    
+    if (concern != null) {
+      return collection.update(query, update, upsert, multi, concern);
+    }
+    
+    return collection.update(query, update, upsert, multi);
   }
 
   public <T> T findAndDelete(final Query<T> qi) {
@@ -1160,7 +1217,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
     }
 
-    final DBObject result = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false, false);
+    final DBObject result = findAndModify(dbColl, qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false, false);
 
     if (result != null) {
       return (T) mapper.fromDBObject(qi.getEntityClass(), result, cache);
@@ -1190,7 +1247,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
     DBObject res = null;
     try {
-      res = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), false, ((UpdateOpsImpl<T>) ops).getOps(),
+      res = findAndModify(dbColl, qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), false, ((UpdateOpsImpl<T>) ops).getOps(),
           !oldVersion, createIfMissing);
     } catch (MongoException e) {
       if (e.getMessage() == null || !e.getMessage().contains("matching")) {
@@ -1203,6 +1260,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     } else {
       return (T) mapper.fromDBObject(qi.getEntityClass(), res, createCache());
     }
+  }
+  
+  /**
+   * Called for all the various {@code findAndModify(...)} methods.
+   * 
+   * NOTE: This is also being called from {@link #findAndDelete(Query)}.
+   * 
+   * @see DBCollection#findAndModify(DBObject, DBObject, DBObject, boolean, DBObject, boolean, boolean)
+   */
+  protected DBObject findAndModify(DBCollection collection, DBObject query, DBObject fields, DBObject sort, 
+      boolean remove, DBObject update, boolean returnNew, boolean upsert) {
+    
+    return collection.findAndModify(query, fields, sort, remove, update, returnNew, upsert);
   }
 
   @SuppressWarnings("rawtypes")
@@ -1252,7 +1322,7 @@ public class DatastoreImpl implements AdvancedDatastore {
       LOG.info("Executing " + cmd.toString());
     }
 
-    final MapReduceOutput mpo = dbColl.mapReduce(baseCommand);
+    final MapReduceOutput mpo = mapReduce(dbColl, baseCommand);
     final EntityCache cache = createCache();
     final MapreduceResults results = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getCommandResult(), cache);
 
@@ -1309,6 +1379,15 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     return mapReduce(type, query, outputType, cmd);
+  }
+  
+  /**
+   * Called for all the various {@code mapReduce(...)} methods.
+   *  
+   * @see DBCollection#mapReduce(MapReduceCommand)
+   */
+  protected MapReduceOutput mapReduce(DBCollection collection, MapReduceCommand baseCommand) {
+    return collection.mapReduce(baseCommand);
   }
 
   /**
