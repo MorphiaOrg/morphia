@@ -20,6 +20,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'maven'
 
     configurations {
         provided
@@ -32,7 +33,7 @@ configure(subprojects) {
     apply plugin: 'findbugs'
 
     group = 'org.mongodb.morphia'
-    version = '0.107-SNAPSHOT-SNAPSHOT'
+    version = '0.106-SNAPSHOT'
 
     sourceCompatibility = '1.5'
     targetCompatibility = '1.5'
@@ -114,6 +115,12 @@ project(':entityscanner-plug') {
         }
         testCompile 'org.slf4j:slf4j-simple:1.5.6'
         compile project(':morphia')
+    }
+
+    pom {
+        withXml {
+            asNode().appendNode('description', 'A demonstration of maven POM customization')
+        }
     }
 }
 
