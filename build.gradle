@@ -116,10 +116,6 @@ project(':entityscanner-plug') {
         testCompile 'org.slf4j:slf4j-simple:1.5.6'
         compile project(':morphia')
     }
-
-    pom {
-        'description' 'A demonstration of maven POM customization'
-    }
 }
 
 project(':guice-plug') {
