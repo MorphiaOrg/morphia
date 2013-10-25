@@ -118,9 +118,7 @@ project(':entityscanner-plug') {
     }
 
     pom {
-        withXml {
-            asNode().appendNode('description', 'A demonstration of maven POM customization')
-        }
+        'description' 'A demonstration of maven POM customization'
     }
 }
 
