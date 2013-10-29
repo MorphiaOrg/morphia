@@ -1,5 +1,3 @@
-apply from: 'gradle/maven-deployment.gradle'
-apply from: 'gradle/osgi-compatibility.gradle'
 apply plugin: 'release'
 apply plugin: 'console'
 apply plugin: 'github'
@@ -51,7 +49,16 @@ release {
         commitMessage = { "Bumping version to $project.release.next.version" }
     }
 
+/*
+    githubRelease {
+        releaseNotes = { "We're too good for default notes.  Here's ${project.release.version}." }
+    }
+*/
+
+    project.version = version
+    dependsOn subprojects.clean
     dependsOn subprojects.install
+    dependsOn subprojects.uploadArchives
 //    dependsOn publishWiki
-    dependsOn draftGhRelease
+//    dependsOn draftGhRelease
 }

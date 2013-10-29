@@ -6,7 +6,7 @@
 .idea
 release.sh
 **/target/**
-**/build/**
+build
 entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
 target
