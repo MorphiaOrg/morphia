@@ -33,7 +33,7 @@ configure(subprojects) {
     apply plugin: 'findbugs'
 
     group = 'org.mongodb.releasetest-morphia'
-    version = '0.107-SNAPSHOT'
+    version = '0.106-SNAPSHOT'
 
     sourceCompatibility = '1.5'
     targetCompatibility = '1.5'
