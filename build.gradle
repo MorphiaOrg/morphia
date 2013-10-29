@@ -32,7 +32,7 @@ configure(subprojects) {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
 
-    group = 'org.mongodb.morphia'
+    group = 'org.mongodb.releasetest-morphia'
     version = '0.106'
 
     sourceCompatibility = '1.5'
