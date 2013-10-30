@@ -6,9 +6,11 @@ buildscript {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
+    
     dependencies {
         classpath 'me.trnl:clirr-gradle-plugin:0.4'
-        classpath 'me.trnl:github-release-gradle-plugin:0.1'
+        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC2'
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
     }
 }
 
@@ -59,7 +61,7 @@ configure(subprojects) {
             options.compilerArgs << "-Xlint:unchecked"
         }
     }
-    
+
     project.ext.buildingWith = { n -> project.hasProperty(n) && project.property(n).toBoolean()
     }
 
@@ -76,7 +78,7 @@ configure(subprojects) {
             html.enabled = !project.buildingWith('xmlReports.enabled')
         }
     }
-    
+
     javadoc {
         options.author = true
         options.version = true
@@ -135,4 +137,6 @@ project(':gwt') {
 }
 
 apply from: 'gradle/ide-settings.gradle'
+apply from: 'gradle/maven-deployment.gradle'
+apply from: 'gradle/osgi-compatibility.gradle'
 apply from: 'gradle/release-process.gradle'
