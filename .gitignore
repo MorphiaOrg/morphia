@@ -6,7 +6,9 @@
 .idea
 release.sh
 **/target/**
+**/build/**
 entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
 target
 bin
+.gradle

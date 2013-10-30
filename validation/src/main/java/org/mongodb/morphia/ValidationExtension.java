@@ -15,7 +15,6 @@ import com.mongodb.DBObject;
  */
 public class ValidationExtension extends AbstractEntityInterceptor {
     private ValidatorFactory validationFactory;
-    private Mapper mapper;
 
     /**
      * @deprecated use the new ValidationExtension(morphia) convention
