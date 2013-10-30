@@ -29,16 +29,16 @@ configure(subprojects) {
 
     uploadArchives {
         project.mavenDeployers << repositories.mavenDeployer {
-            def sonatypeCredentials = [
-                userName: project.properties.sonatypeUsername,
-                password: project.properties.sonatypePassword
+            def nexusCredentials = [
+                userName: project.properties.nexusUsername,
+                password: project.properties.nexusPassword
             ]
 
             snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-                authentication(sonatypeCredentials)
+                authentication(nexusCredentials)
             }
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                authentication(sonatypeCredentials)
+                authentication(nexusCredentials)
             }
         }
         repositories {
