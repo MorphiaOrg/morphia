@@ -43,6 +43,8 @@ configure(subprojects) {
         provided
     }
 
+    project.archivesBaseName = "morphia-${project.name}"
+    
     repositories {
         mavenCentral()
         mavenLocal()
@@ -87,6 +89,8 @@ configure(subprojects) {
 }
 
 project(':morphia') {
+    archivesBaseName = 'morphia'
+    
     dependencies {
         compile 'cglib:cglib-nodep:[2.1_3,3.0)'
         compile 'com.thoughtworks.proxytoys:proxytoys:1.0'

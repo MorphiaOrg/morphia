@@ -52,10 +52,10 @@
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <!-- TODO: This has to be enabled at some point before we release -->
         <!--<module name="JavadocType">-->
-            <!--<property name="scope" value="public"/>-->
+        <!--<property name="scope" value="public"/>-->
         <!--</module>-->
         <!--<module name="JavadocMethod">-->
-            <!--<property name="scope" value="public"/>-->
+        <!--<property name="scope" value="public"/>-->
         <!--</module>-->
         <!--<module name="JavadocVariable"/>-->
         <!--<module name="JavadocStyle"/>-->
@@ -142,16 +142,11 @@
         <module name="EqualsHashCode"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!--<module name="MagicNumber"/>-->
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
-
-        <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true"/>
-            <property name="ignoreSetter" value="true"/>
-        </module>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
@@ -165,19 +160,34 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <!--<module name="FinalParameters"/>-->
+        <module name="FinalParameters"/>
         <!-- Too many failures with this while we work on the new API -->
         <!--<module name="TodoComment"/>-->
         <module name="UpperEll"/>
 
         <module name="FileContentsHolder"/>
-      
-        <module name="Indentation">
-            <property name="basicOffset" value="2"/>
-            <property name="caseIndent" value="2"/>
+
+        <!--System.out.println not allowed-->
+        <module name="Regexp">
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+
+        <!--System.err.println not allowed-->
+        <module name="Regexp">
+            <property name="format" value="System\.err\.println"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+
+        <!--e.printStackTrace(); not allowed-->
+        <module name="Regexp">
+            <property name="format" value="printStackTrace"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
         </module>
     </module>
-
     <module name="SuppressionCommentFilter"/>
 
 </module>
