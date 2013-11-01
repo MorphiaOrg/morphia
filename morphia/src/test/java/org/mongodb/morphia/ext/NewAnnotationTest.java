@@ -18,12 +18,7 @@
 package org.mongodb.morphia.ext;
 
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
-
+import com.mongodb.DBObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.EntityInterceptor;
@@ -32,7 +27,12 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
-import com.mongodb.DBObject;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.List;
 
 
 /**
@@ -40,55 +40,56 @@ import com.mongodb.DBObject;
  */
 public class NewAnnotationTest extends TestBase {
 
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target({ ElementType.FIELD })
-  @interface Lowercase {
-  }
-
-  private static class User {
-    @Id        String id;
-    @Lowercase String email;
-  }
-
-  private static class ToLowercaseHelper implements EntityInterceptor {
-    public void postLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    @interface Lowercase {
     }
 
-    public void postPersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+    private static class User {
+        @Id
+        private String id;
+        @Lowercase
+        private String email;
     }
 
-    public void preSave(final Object ent, final DBObject dbObj, final Mapper mapper) {
-    }
-
-    public void preLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
-    }
-
-    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
-      final MappedClass mc = mapper.getMappedClass(ent);
-      final List<MappedField> toLowercase = mc.getFieldsAnnotatedWith(Lowercase.class);
-      for (final MappedField mf : toLowercase) {
-        try {
-          final Object fieldValue = mf.getFieldValue(ent);
-          dbObj.put(mf.getNameToStore() + "_lowercase", fieldValue.toString().toLowerCase());
-        } catch (Exception e) {
-          throw new RuntimeException(e);
+    private static class ToLowercaseHelper implements EntityInterceptor {
+        public void postLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
         }
-      }
+
+        public void postPersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        }
+
+        public void preSave(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        }
+
+        public void preLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        }
+
+        public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+            final MappedClass mc = mapper.getMappedClass(ent);
+            final List<MappedField> toLowercase = mc.getFieldsAnnotatedWith(Lowercase.class);
+            for (final MappedField mf : toLowercase) {
+                try {
+                    final Object fieldValue = mf.getFieldValue(ent);
+                    dbObj.put(mf.getNameToStore() + "_lowercase", fieldValue.toString().toLowerCase());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
-  }
 
-  @Test
-  public void testIt() {
-    MappedField.interestingAnnotations.add(Lowercase.class);
-    morphia.getMapper().addInterceptor(new ToLowercaseHelper());
-    morphia.map(User.class);
-    final User u = new User();
-    u.email = "ScottHernandez@gmail.com";
+    @Test
+    public void testIt() {
+        MappedField.addInterestingAnnotation(Lowercase.class);
+        getMorphia().getMapper().addInterceptor(new ToLowercaseHelper());
+        getMorphia().map(User.class);
+        final User u = new User();
+        u.email = "ScottHernandez@gmail.com";
 
-    ds.save(u);
+        getDs().save(u);
 
-    final User uScott = ds.find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase()).get();
-    Assert.assertNotNull(uScott);
-
-  }
+        final User uScott = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase()).get();
+        Assert.assertNotNull(uScott);
+    }
 }

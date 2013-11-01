@@ -17,6 +17,7 @@
 
 package relocated.morphia.org.apache.commons.collections;
 
+//CHECKSTYLE:OFF
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -18,11 +18,10 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.WriteConcern;
 import org.junit.Test;
-import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import com.mongodb.WriteConcern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,7 +35,7 @@ public class TestAnnotatedWriteConcern extends TestBase {
     @Entity(concern = "Safe")
     static class Simple {
         @Id
-        String id;
+        private String id;
 
         public Simple(final String id) {
             this();
@@ -50,43 +49,40 @@ public class TestAnnotatedWriteConcern extends TestBase {
     @Test
     public void defaultWriteConcern() throws Exception {
         boolean failed = false;
-        final AdvancedDatastore aDs = (AdvancedDatastore) ds;
         try {
-            aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
-            aDs.insert(new Simple("simple"), ds.getDefaultWriteConcern());
+            getAds().insert(new Simple("simple"), getDs().getDefaultWriteConcern());
+            getAds().insert(new Simple("simple"), getDs().getDefaultWriteConcern());
         } catch (Exception e) {
             failed = true;
         }
-        assertEquals(1L, ds.getCount(Simple.class));
+        assertEquals(1L, getDs().getCount(Simple.class));
         assertTrue("Duplicate Exception was raised!", failed);
     }
 
     @Test
     public void safeWriteConcern() throws Exception {
         boolean failed = false;
-        final AdvancedDatastore aDs = (AdvancedDatastore) ds;
         try {
-            aDs.insert(new Simple("simple"));
-            aDs.insert(new Simple("simple"), WriteConcern.SAFE);
+            getAds().insert(new Simple("simple"));
+            getAds().insert(new Simple("simple"), WriteConcern.SAFE);
         } catch (Exception e) {
             failed = true;
         }
-        assertEquals(1L, ds.getCount(Simple.class));
+        assertEquals(1L, getDs().getCount(Simple.class));
         assertTrue("Duplicate Exception was raised!", failed);
     }
 
     @Test
     public void noneWriteConcern() throws Exception {
         boolean failed = false;
-        final AdvancedDatastore aDs = (AdvancedDatastore) ds;
-        ds.setDefaultWriteConcern(WriteConcern.NONE);
+        getDs().setDefaultWriteConcern(WriteConcern.NONE);
         try {
-            aDs.insert(new Simple("simple"));
-            aDs.insert(new Simple("simple"));
+            getAds().insert(new Simple("simple"));
+            getAds().insert(new Simple("simple"));
         } catch (Exception e) {
             failed = true;
         }
-        assertEquals(1L, ds.getCount(Simple.class));
+        assertEquals(1L, getDs().getCount(Simple.class));
         assertTrue("Duplicate Exception was raised!", failed);
     }
 }

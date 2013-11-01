@@ -17,7 +17,7 @@ public class ClassConverter extends TypeConverter implements SimpleValueConverte
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
     if (fromDBObject == null) {
       return null;
     }

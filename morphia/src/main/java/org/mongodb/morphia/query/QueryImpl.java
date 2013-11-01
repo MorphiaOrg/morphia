@@ -1,12 +1,13 @@
 package org.mongodb.morphia.query;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.Bytes;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.ReadPreference;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -19,13 +20,12 @@ import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.Bytes;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.ReadPreference;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,7 +35,7 @@ import com.mongodb.ReadPreference;
  * @author Scott Hernandez
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
-    private static final Logr log = MorphiaLoggerFactory.get(QueryImpl.class);
+    private static final Logr LOG = MorphiaLoggerFactory.get(QueryImpl.class);
 
     private EntityCache cache;
     private boolean validateName = true;
@@ -55,13 +55,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean snapshotted;
     private boolean noTimeout;
     private boolean tail;
-    private boolean tail_await_data;
+    private boolean tailAwaitData;
     private ReadPreference readPref;
 
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
 
-        query = this;
+        setQuery(this);
         this.clazz = clazz;
         this.ds = ((DatastoreImpl) ds);
         dbColl = coll;
@@ -71,24 +71,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
             readPref = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                ? ReadPreference.secondary()
-                : null;
+                       ? ReadPreference.secondary()
+                       : null;
         }
-    }
-
-    // Nothing in the Morphia codebase is using these. You shouldn't either!
-    @Deprecated
-    public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds, final int offset, final int limit) {
-        this(clazz, coll, ds);
-        this.offset = offset;
-        this.limit = limit;
-    }
-
-    // Nothing in the Morphia codebase is using these. You shouldn't either!
-    @Deprecated
-    public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds, final DBObject baseQuery) {
-        this(clazz, coll, ds);
-        this.baseQuery = (BasicDBObject) baseQuery;
     }
 
     @Override
@@ -101,7 +86,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.indexHint = indexHint;
         n.limit = limit;
         n.noTimeout = noTimeout;
-        n.query = n; // feels weird, correct?
+        n.setQuery(n); // feels weird, correct?
         n.offset = offset;
         n.readPref = readPref;
         n.snapshotted = snapshotted;
@@ -111,10 +96,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.baseQuery = (BasicDBObject) (baseQuery == null ? null : baseQuery.clone());
 
         // fields from superclass
-        n.attachedTo = attachedTo;
-        n.children = children == null ? null : new ArrayList<Criteria>(children);
+        n.setAttachedTo(getAttachedTo());
+        n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
         n.tail = tail;
-        n.tail_await_data = tail_await_data;
+        n.tailAwaitData = tailAwaitData;
         return n;
     }
 
@@ -164,7 +149,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
         for (String field : fields) {
             final StringBuffer sb = new StringBuffer(
-                field); //validate might modify prop string to translate java field name to db field name
+                                                    field); //validate might modify prop string to translate java field name to db field 
+            // name
             Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
             fieldsFilter.put(field, (includeFields ? 1 : 0));
@@ -192,8 +178,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public long countAll() {
         final DBObject query = getQueryObject();
-        if (log.isTraceEnabled()) {
-            log.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
         }
         return dbColl.getCount(query);
     }
@@ -202,8 +188,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final DBObject query = getQueryObject();
         final DBObject fields = getFieldsObject();
 
-        if (log.isTraceEnabled()) {
-            log.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
         }
 
         final DBCursor cursor = dbColl.find(query, fields);
@@ -238,19 +224,19 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         if (tail) {
             cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
-            if (tail_await_data) {
+            if (tailAwaitData) {
                 cursor.addOption(Bytes.QUERYOPTION_AWAITDATA);
             }
         }
 
         //Check for bad options.
         if (snapshotted && (sort != null || indexHint != null)) {
-            log.warning("Snapshotted query should not have hint/sort.");
+            LOG.warning("Snapshotted query should not have hint/sort.");
         }
 
         if (tail && (sort != null)) {
             // i don´t think that just warning is enough here, i´d favor a RTE, agree?
-            log.warning("Sorting on tail is not allowed.");
+            LOG.warning("Sorting on tail is not allowed.");
         }
 
         return cursor;
@@ -259,8 +245,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Iterable<T> fetch() {
         final DBCursor cursor = prepareCursor();
-        if (log.isTraceEnabled()) {
-            log.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
         }
 
         return new MorphiaIterator<T, T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
@@ -270,12 +256,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public Iterable<Key<T>> fetchKeys() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
-        fields = new String[] {Mapper.ID_KEY};
+        fields = new String[]{Mapper.ID_KEY};
         includeFields = true;
         final DBCursor cursor = prepareCursor();
 
-        if (log.isTraceEnabled()) {
-            log.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
         }
 
         fields = oldFields;
@@ -292,9 +278,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
         iter.close();
 
-        if (log.isTraceEnabled()) {
-            log.trace(String.format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms \n\t cache: %s \n\t for %s",
-                dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats().toString(), getQueryObject()));
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(String.format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms \n\t cache: %s \n\t for %s",
+                                    dbColl.getName(),
+                                    results.size(),
+                                    iter.getDriverTime(),
+                                    iter.getMapperTime(),
+                                    cache.stats().toString(),
+                                    getQueryObject()));
         }
 
         return results;
@@ -313,7 +304,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public Iterable<T> fetchEmptyEntities() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
-        fields = new String[] {Mapper.ID_KEY};
+        fields = new String[]{Mapper.ID_KEY};
         includeFields = true;
         final Iterable<T> res = fetch();
         fields = oldFields;
@@ -322,8 +313,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     /**
-     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and == are
-     * EQUAL.
+     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
+     * are EQUAL.
      */
     protected FilterOperator translate(final String operator) {
         final String trimmed = operator.trim();
@@ -391,12 +382,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     public Query<T> enableValidation() {
-        validateName = validateType = true;
+        validateName = true;
+        validateType = true;
         return this;
     }
 
     public Query<T> disableValidation() {
-        validateName = validateType = false;
+        validateName = false;
+        validateType = false;
         return this;
     }
 
@@ -460,7 +453,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     /**
      * parses the string and validates each part
      */
-    @SuppressWarnings("rawtypes")
     public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
         BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
         final String[] parts = str.split(",");
@@ -495,7 +487,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         //Create a new query for this, so the current one is not affected.
         final QueryImpl<T> tailQ = clone();
         tailQ.tail = true;
-        tailQ.tail_await_data = awaitData;
+        tailQ.tailAwaitData = awaitData;
         return tailQ.fetch().iterator();
     }
 

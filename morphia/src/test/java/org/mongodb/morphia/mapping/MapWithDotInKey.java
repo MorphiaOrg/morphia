@@ -1,15 +1,15 @@
 package org.mongodb.morphia.mapping;
 
 
-import java.io.Serializable;
-
+import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
-import com.mongodb.BasicDBObject;
-import org.junit.Assert;
+
+import java.io.Serializable;
 
 
 /**
@@ -17,45 +17,45 @@ import org.junit.Assert;
  */
 public class MapWithDotInKey extends TestBase {
 
-  private static class Goo implements Serializable {
-    static final long serialVersionUID = 1L;
-    @Id ObjectId id = new ObjectId();
-    String name;
+    private static class Goo implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
 
-    Goo() {
+        Goo() {
+        }
+
+        Goo(final String n) {
+            name = n;
+        }
     }
 
-    Goo(final String n) {
-      name = n;
-    }
-  }
+    private static class E {
+        @Id
+        private ObjectId id;
 
-  private static class E {
-    @Id ObjectId id;
-
-    @Embedded
-    final MyMap mymap = new MyMap();
-  }
-
-  private static class MyMap extends BasicDBObject {
-    private static final long serialVersionUID = 1L;
-  }
-
-  @Test
-  public void testMapping() throws Exception {
-    E e = new E();
-    e.mymap.put("a.b", "a");
-    e.mymap.put("c.e.g", "b");
-
-    try {
-      ds.save(e);
-    } catch (Exception ex) {
-      return;
+        @Embedded
+        private final MyMap mymap = new MyMap();
     }
 
-    Assert.assertFalse("Should have got rejection for dot in field names", true);
-    e = ds.get(e);
-    Assert.assertEquals("a", e.mymap.get("a.b"));
-    Assert.assertEquals("b", e.mymap.get("c.e.g"));
-  }
+    private static class MyMap extends BasicDBObject {
+    }
+
+    @Test
+    public void testMapping() throws Exception {
+        E e = new E();
+        e.mymap.put("a.b", "a");
+        e.mymap.put("c.e.g", "b");
+
+        try {
+            getDs().save(e);
+        } catch (Exception ex) {
+            return;
+        }
+
+        Assert.assertFalse("Should have got rejection for dot in field names", true);
+        e = getDs().get(e);
+        Assert.assertEquals("a", e.mymap.get("a.b"));
+        Assert.assertEquals("b", e.mymap.get("c.e.g"));
+    }
 }

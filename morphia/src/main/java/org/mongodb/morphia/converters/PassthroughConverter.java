@@ -2,14 +2,12 @@ package org.mongodb.morphia.converters;
 
 
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
 public class PassthroughConverter extends TypeConverter {
 
   public PassthroughConverter() {
@@ -25,7 +23,7 @@ public class PassthroughConverter extends TypeConverter {
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
     return fromDBObject;
   }
 }

@@ -1,13 +1,5 @@
 package org.mongodb.morphia.mapping.validation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
@@ -33,13 +25,21 @@ import org.mongodb.morphia.mapping.validation.fieldrules.MisplacedProperty;
 import org.mongodb.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import org.mongodb.morphia.mapping.validation.fieldrules.VersionMisuse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class MappingValidator {
 
-  private static final Logr logger = MorphiaLoggerFactory.get(MappingValidator.class);
+  private static final Logr LOG = MorphiaLoggerFactory.get(MappingValidator.class);
 
   public void validate(final List<MappedClass> classes) {
     final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
@@ -71,7 +71,7 @@ public class MappingValidator {
       Collections.sort(l);
 
       for (final LogLine line : l) {
-        line.log(logger);
+        line.log(LOG);
       }
     }
   }
@@ -91,7 +91,7 @@ public class MappingValidator {
     constraints.add(new EmbeddedAndValue());
     constraints.add(new EntityCannotBeMapOrIterable());
     constraints.add(new DuplicatedAttributeNames());
-    //		constraints.add(new ContainsEmbeddedWithId());
+    // constraints.add(new ContainsEmbeddedWithId());
     // field-level
     constraints.add(new MisplacedProperty());
     constraints.add(new ReferenceToUnidentifiable());

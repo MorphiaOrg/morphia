@@ -1,21 +1,21 @@
 package org.mongodb.morphia.mapping.lazy.proxy;
 
 
+import org.mongodb.morphia.Key;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.mongodb.morphia.Key;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public interface ProxiedEntityReferenceList extends ProxiedReference {
+    //CHECKSTYLE:OFF
+    void __add(Key<?> key);
 
-  void __add(Key<?> key);
+    void __addAll(Collection<? extends Key<?>> keys);
 
-  void __addAll(Collection<? extends Key<?>> keys);
-
-  List<Key<?>> __getKeysAsList();
-
+    List<Key<?>> __getKeysAsList();
+    //CHECKSTYLE:ON
 }

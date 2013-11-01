@@ -1,16 +1,15 @@
 package org.mongodb.morphia.mapping;
 
 
-import java.io.Serializable;
-
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
-import org.junit.Assert;
+
+import java.io.Serializable;
 
 
 /**
@@ -18,63 +17,70 @@ import org.junit.Assert;
  */
 public class AnonymousClass extends TestBase {
 
-  @Embedded
-  private static class CId implements Serializable {
-    static final long serialVersionUID = 1L;
-    final ObjectId id = new ObjectId();
-    String name;
+    @Embedded
+    private static class CId implements Serializable {
+        private final ObjectId id = new ObjectId();
+        private String name;
 
-    CId() {
+        CId() {
+        }
+
+        CId(final String n) {
+            name = n;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id.hashCode();
+            result = 31 * result + name.hashCode();
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof CId)) {
+                return false;
+            }
+            final CId other = ((CId) obj);
+            return other.id.equals(id) && other.name.equals(name);
+        }
+
     }
 
-    CId(final String n) {
-      name = n;
+    private static class E {
+        @Id
+        private CId id;
+        private String e;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-      if (!(obj instanceof CId)) {
-        return false;
-      }
-      final CId other = ((CId) obj);
-      return other.id.equals(id) && other.name.equals(name);
+
+    @Test
+    public void testMapping() throws Exception {
+        E e = new E();
+        e.id = new CId("test");
+
+        getDs().save(e);
+        e = getDs().get(e);
+        Assert.assertEquals("test", e.id.name);
+        Assert.assertNotNull(e.id.id);
     }
 
-  }
+    @Test
+    public void testDelete() throws Exception {
+        final E e = new E();
+        e.id = new CId("test");
 
-  private static class E {
-    @Id CId id;
-    String e;
-  }
+        final Key<E> key = getDs().save(e);
+        getDs().delete(E.class, e.id);
+    }
 
+    @Test
+    public void testOtherDelete() throws Exception {
+        final E e = new E();
+        e.id = new CId("test");
 
-  @Test
-  public void testMapping() throws Exception {
-    E e = new E();
-    e.id = new CId("test");
-
-    ds.save(e);
-    e = ds.get(e);
-    Assert.assertEquals("test", e.id.name);
-    Assert.assertNotNull(e.id.id);
-  }
-
-  @Test
-  public void testDelete() throws Exception {
-    final E e = new E();
-    e.id = new CId("test");
-
-    final Key<E> key = ds.save(e);
-    ds.delete(E.class, e.id);
-  }
-
-  @Test
-  public void testOtherDelete() throws Exception {
-    final E e = new E();
-    e.id = new CId("test");
-
-    ds.save(e);
-    ((AdvancedDatastore) ds).delete(ds.getCollection(E.class).getName(), E.class, e.id);
-  }
+        getDs().save(e);
+        getAds().delete(getDs().getCollection(E.class).getName(), E.class, e.id);
+    }
 
 }

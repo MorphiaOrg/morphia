@@ -36,51 +36,63 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestGenericInheritanceMappings extends TestBase {
 
-  static class GenericHolder<T> {
-    @Property T thing;
-  }
+    public static class GenericHolder<T> {
+        @Property
+        private T thing;
 
-  @Embedded
-  static class HoldsAString extends GenericHolder<String> {
-  }
+        public T getThing() {
+            return thing;
+        }
 
-  @Embedded
-  static class HoldsAnInteger extends GenericHolder<Integer> {
-  }
+        public void setThing(final T thing) {
+            this.thing = thing;
+        }
+    }
 
-  @Entity
-  static class ContainsThings {
-    @Id String id;
-    HoldsAString   stringThing;
-    HoldsAnInteger integerThing;
-  }
+    @Embedded
+    static class HoldsAString extends GenericHolder<String> {
+    }
+
+    @Embedded
+    static class HoldsAnInteger extends GenericHolder<Integer> {
+    }
+
+    @Entity
+    static class ContainsThings {
+        @Id
+        private String id;
+        private HoldsAString stringThing;
+        private HoldsAnInteger integerThing;
+    }
 
 
-  @Before @Override
-  public void setUp() {
-    super.setUp();
-    morphia.map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
-  }
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        getMorphia().map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
+    }
 
-  //Waiting on issue 80
-  @Test @Ignore
-  public void testIt() throws Exception {
-    final ContainsThings ct = new ContainsThings();
-    final HoldsAnInteger hai = new HoldsAnInteger();
-    hai.thing = 7;
-    final HoldsAString has = new HoldsAString();
-    has.thing = "tr";
-    ct.stringThing = has;
-    ct.integerThing = hai;
+    //Waiting on issue 80
+    @Test
+    @Ignore
+    public void testIt() throws Exception {
+        final ContainsThings ct = new ContainsThings();
+        final HoldsAnInteger hai = new HoldsAnInteger();
+        hai.setThing(7);
+        final HoldsAString has = new HoldsAString();
+        has.setThing("tr");
+        ct.stringThing = has;
+        ct.integerThing = hai;
 
-    ds.save(ct);
-    assertNotNull(ct.id);
-    assertEquals(1, ds.getCount(ContainsThings.class));
-    final ContainsThings ctLoaded = ds.find(ContainsThings.class).get();
-    assertNotNull(ctLoaded);
-    assertNotNull(ctLoaded.id);
-    assertNotNull(ctLoaded.stringThing);
-    assertNotNull(ctLoaded.integerThing);
-  }
+        getDs().save(ct);
+        assertNotNull(ct.id);
+        assertEquals(1, getDs().getCount(ContainsThings.class));
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).get();
+        assertNotNull(ctLoaded);
+        assertNotNull(ctLoaded.id);
+        assertNotNull(ctLoaded.stringThing);
+        assertNotNull(ctLoaded.integerThing);
+    }
 
 }

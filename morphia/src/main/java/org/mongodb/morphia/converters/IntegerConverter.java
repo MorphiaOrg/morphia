@@ -1,25 +1,23 @@
 package org.mongodb.morphia.converters;
 
 
-import java.util.List;
-
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.ReflectionUtils;
+
+import java.util.List;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
 public class IntegerConverter extends TypeConverter implements SimpleValueConverter {
   public IntegerConverter() {
     super(int.class, Integer.class, int[].class, Integer[].class);
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) {
     if (val == null) {
       return null;
     }

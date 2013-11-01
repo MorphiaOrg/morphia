@@ -18,8 +18,7 @@
 package org.mongodb.morphia;
 
 
-import java.util.Set;
-
+import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Id;
@@ -27,7 +26,8 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.MappedClass;
-import com.mongodb.DBCollection;
+
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,30 +37,32 @@ import static org.junit.Assert.assertNotNull;
  * @author Scott Hernandez
  */
 public class TestEmbeddedArrayIndexes extends TestBase {
-  @Indexes({ @Index("b.bar, b.car") })
-  private static class A {
-    @Id ObjectId id = new ObjectId();
-    Set<B> b;
-    @Indexed String foo;
-  }
+    @Indexes({@Index("b.bar, b.car")})
+    private static class A {
+        @Id
+        private ObjectId id = new ObjectId();
+        private Set<B> b;
+        @Indexed
+        private String foo;
+    }
 
-  private static class B {
-    String bar;
-    String car;
-  }
+    private static class B {
+        private String bar;
+        private String car;
+    }
 
-  @Test
-  public void testParamEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(A.class);
-    assertNotNull(mc);
+    @Test
+    public void testParamEntity() throws Exception {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(A.class);
+        assertNotNull(mc);
 
-    assertEquals(1, mc.getAnnotations(Indexes.class).size());
+        assertEquals(1, mc.getAnnotations(Indexes.class).size());
 
-    ds.ensureIndexes(A.class);
-    final DBCollection coll = ds.getCollection(A.class);
+        getDs().ensureIndexes(A.class);
+        final DBCollection coll = getDs().getCollection(A.class);
 
-    assertEquals("indexes found: coll.getIndexInfo()" + coll.getIndexInfo(), 3, coll.getIndexInfo().size());
+        assertEquals("indexes found: coll.getIndexInfo()" + coll.getIndexInfo(), 3, coll.getIndexInfo().size());
 
-  }
+    }
 
 }

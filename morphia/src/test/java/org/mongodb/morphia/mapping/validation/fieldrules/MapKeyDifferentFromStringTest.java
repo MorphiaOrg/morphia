@@ -1,60 +1,55 @@
 package org.mongodb.morphia.mapping.validation.fieldrules;
 
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.testutil.AssertedFailure;
+import org.mongodb.morphia.mapping.validation.ConstraintViolationException;
 import org.mongodb.morphia.testutil.TestEntity;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("unchecked")
 public class MapKeyDifferentFromStringTest extends TestBase {
 
-  public static class MapWithWrongKeyType1 extends TestEntity {
-    private static final long serialVersionUID = 1L;
-    @Serialized Map<Integer, Integer> shouldBeOk = new HashMap();
+    public static class MapWithWrongKeyType1 extends TestEntity {
+        @Serialized
+        private Map<Integer, Integer> shouldBeOk = new HashMap<Integer, Integer>();
 
-  }
+    }
 
-  public static class MapWithWrongKeyType2 extends TestEntity {
-    private static final long serialVersionUID = 1L;
-    @Reference Map<Integer, Integer> shouldBeOk = new HashMap();
+    public static class MapWithWrongKeyType2 extends TestEntity {
+        @Reference
+        private Map<Integer, Integer> shouldBeOk = new HashMap<Integer, Integer>();
 
-  }
+    }
 
-  public static class MapWithWrongKeyType3 extends TestEntity {
-    private static final long serialVersionUID = 1L;
-    @Embedded Map<BigDecimal, Integer> shouldBeOk = new HashMap();
+    public static class MapWithWrongKeyType3 extends TestEntity {
+        @Embedded
+        private Map<BigDecimal, Integer> shouldBeOk = new HashMap<BigDecimal, Integer>();
 
-  }
+    }
 
-  @Test
-  public void testCheck() {
-    morphia.map(MapWithWrongKeyType1.class);
+    @Test
+    public void testCheck() {
+        getMorphia().map(MapWithWrongKeyType1.class);
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
-        morphia.map(MapWithWrongKeyType2.class);
-      }
-    };
+    @Test(expected = ConstraintViolationException.class)
+    public void testInvalidReferenceType() {
+        getMorphia().map(MapWithWrongKeyType2.class);
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
-        morphia.map(MapWithWrongKeyType3.class);
-      }
-    };
-  }
+    @Test(expected = ConstraintViolationException.class)
+    public void testInvalidKeyType() {
+        getMorphia().map(MapWithWrongKeyType3.class);
+    }
 
 }

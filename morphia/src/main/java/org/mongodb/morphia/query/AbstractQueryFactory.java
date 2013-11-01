@@ -11,7 +11,7 @@ public abstract class AbstractQueryFactory implements QueryFactory {
   /**
    * @see #createQuery(Datastore, DBCollection, Class, com.mongodb.DBObject)
    */
-  public <T> Query<T> createQuery(Datastore datastore, DBCollection collection, Class<T> type) {
+  public <T> Query<T> createQuery(final Datastore datastore, final DBCollection collection, final Class<T> type) {
     return createQuery(datastore, collection, type, null);
   }
 }

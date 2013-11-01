@@ -1,126 +1,97 @@
 package org.mongodb.morphia.query;
 
 
-import java.util.Collections;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestMapping.BaseEntity;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.testutil.AssertedFailure;
+import org.mongodb.morphia.utils.Assert;
+
+import java.util.Collections;
 
 
 public class TestQueryParams extends TestBase {
-  @Entity
-  static class E extends BaseEntity {
+    private FieldEnd<?> e;
 
-  }
+    @Entity
+    static class E extends BaseEntity {
 
-  @Test
-  public void testNullAcceptance() throws Exception {
-    final Query<E> q = ds.createQuery(E.class);
-    final FieldEnd<?> e = q.field("_id");
+    }
 
-    // have to succeed:
-    e.equal(null);
-    e.notEqual(null);
-    e.hasThisOne(null);
+    @Before
+    public void createQ() {
+        e = getDs().createQuery(E.class).field("_id");
+    }
 
-    // have to fail:
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test
+    public void testNullAcceptance() {
+
+        // have to succeed:
+        e.equal(null);
+        e.notEqual(null);
+        e.hasThisOne(null);
+    }
+
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testGreaterThanNull() {
         e.greaterThan(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testGreaterThanOrEqualNull() {
         e.greaterThanOrEq(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testHasAllOfNull() {
         e.hasAllOf(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testAnyOfNull() {
         e.hasAnyOf(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testHasNoneOfNull() {
         e.hasNoneOf(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testHasThisNullElement() {
         e.hasThisElement(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testLessThanNull() {
         e.lessThan(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testLessThanOrEqualNull() {
         e.lessThanOrEq(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testStartsWithNull() {
         e.startsWith(null);
-      }
-    };
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testStartsWithIgnoreCaseNull() {
         e.startsWithIgnoreCase(null);
-      }
-    };
-  }
+    }
 
-  @Test
-  public void testEmptyCollectionAcceptance() throws Exception {
-    final Query<E> q = ds.createQuery(E.class);
-    final FieldEnd<?> e = q.field("_id");
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testHasAllOfEmptyList() {
+        final Query<E> q = getDs().createQuery(E.class);
+        q.field("_id").hasAllOf(Collections.emptyList());
+    }
 
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
-        e.hasAllOf(Collections.emptyList());
-      }
-    };
-
-    new AssertedFailure() {
-      @Override
-      public void thisMustFail() {
-        e.hasNoneOf(Collections.emptyList());
-      }
-    };
-
-    //		new AssertedFailure() {
-    //			public void thisMustFail() throws Throwable {
-    //				e.hasAnyOf(Collections.EMPTY_LIST);
-    //			}
-    //		};
-  }
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testNoneOfEmptyList() {
+        final Query<E> q = getDs().createQuery(E.class);
+        q.field("_id").hasNoneOf(Collections.emptyList());
+    }
 }

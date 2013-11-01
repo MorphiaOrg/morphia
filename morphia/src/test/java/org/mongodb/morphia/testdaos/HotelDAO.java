@@ -18,6 +18,7 @@
 package org.mongodb.morphia.testdaos;
 
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.testmodel.Hotel;
@@ -27,7 +28,7 @@ import com.mongodb.Mongo;
 /**
  * @author Olafur Gauti Gudmundsson
  */
-public class HotelDAO extends BasicDAO<Hotel, String> {
+public class HotelDAO extends BasicDAO<Hotel, ObjectId> {
 
   public HotelDAO(final Morphia morphia, final Mongo mongo) {
     super(mongo, morphia, "morphia_test");

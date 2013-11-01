@@ -1,7 +1,9 @@
 package org.mongodb.morphia.ext;
 
 
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Converters;
@@ -9,9 +11,6 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
-import com.mongodb.DBObject;
-import org.junit.Assert;
 
 
 /**
@@ -21,49 +20,49 @@ import org.junit.Assert;
  */
 public class EnumValueConverterTest extends TestBase {
 
-  @SuppressWarnings({"rawtypes"})
-  private static class AEnumConverter extends TypeConverter implements SimpleValueConverter {
+    private static class AEnumConverter extends TypeConverter implements SimpleValueConverter {
 
-    public AEnumConverter() {
-      super(AEnum.class);
+        public AEnumConverter() {
+            super(AEnum.class);
+        }
+
+        @Override
+        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+            if (fromDBObject == null) {
+                return null;
+            }
+            return AEnum.values()[(Integer) fromDBObject];
+        }
+
+        @Override
+        public Object encode(final Object value, final MappedField optionalExtraInfo) {
+            if (value == null) {
+                return null;
+            }
+
+            return ((Enum) value).ordinal();
+        }
     }
 
-    @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
-      if (fromDBObject == null) {
-        return null;
-      }
-      return AEnum.values()[(Integer) fromDBObject];
+    private enum AEnum {
+        One,
+        Two
+
     }
 
-    @Override
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
-      if (value == null) {
-        return null;
-      }
+    @Converters(AEnumConverter.class)
+    private static class EnumEntity {
+        @Id
+        private ObjectId id = new ObjectId();
+        private AEnum val = AEnum.Two;
 
-      return ((Enum) value).ordinal();
     }
-  }
 
-  private enum AEnum {
-    One,
-    Two
-
-  }
-
-  @Converters(AEnumConverter.class)
-  private static class EnumEntity {
-    @Id ObjectId id = new ObjectId();
-    AEnum val = AEnum.Two;
-
-  }
-
-  @Test
-  public void testEnum() {
-    final EnumEntity ee = new EnumEntity();
-    ds.save(ee);
-    final DBObject dbObj = ds.getCollection(EnumEntity.class).findOne();
-    Assert.assertEquals(1, dbObj.get("val"));
-  }
+    @Test
+    public void testEnum() {
+        final EnumEntity ee = new EnumEntity();
+        getDs().save(ee);
+        final DBObject dbObj = getDs().getCollection(EnumEntity.class).findOne();
+        Assert.assertEquals(1, dbObj.get("val"));
+    }
 }

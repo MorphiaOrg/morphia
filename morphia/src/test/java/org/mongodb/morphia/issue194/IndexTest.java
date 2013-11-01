@@ -70,36 +70,36 @@ public class IndexTest extends TestBase {
   @Before
   public void setUp() {
     super.setUp();
-    morphia.map(E1.class);
-    morphia.map(E2.class);
-    ds.ensureIndexes();
-    ds.ensureCaps();
+    getMorphia().map(E1.class);
+    getMorphia().map(E2.class);
+    getDs().ensureIndexes();
+    getDs().ensureCaps();
   }
 
   @Test(expected = MongoException.DuplicateKey.class)
-  public void TestDuplicate1() {
+  public void testDuplicate1() {
     final String name = "J. Doe";
 
     final E1 ent11 = new E1();
     ent11.setName(name);
-    ds.save(ent11);
+    getDs().save(ent11);
 
     final E1 ent12 = new E1();
     ent12.setName(name);
-    ds.save(ent12);
+    getDs().save(ent12);
 
   }
 
   @Test(expected = MongoException.DuplicateKey.class)
-  public void TestDuplicate2() {
+  public void testDuplicate2() {
     final String name = "J. Doe";
 
     final E2 ent21 = new E2();
     ent21.setName(name);
-    ds.save(ent21);
+    getDs().save(ent21);
 
     final E2 ent22 = new E2();
     ent22.setName(name);
-    ds.save(ent22);
+    getDs().save(ent22);
   }
 }

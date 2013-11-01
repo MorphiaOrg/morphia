@@ -1,19 +1,19 @@
 package org.mongodb.morphia.mapping.primitives;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.mapping.MappingException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.WriteConcern;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -22,34 +22,34 @@ import com.mongodb.WriteConcern;
 public class CharacterMappingTest extends TestBase {
     public static class Characters {
         @Id
-        ObjectId id;
-        List<Character[]> listWrapperArray = new ArrayList<Character[]>();
-        List<char[]> listPrimitiveArray = new ArrayList<char[]>();
-        List<Character> listWrapper = new ArrayList<Character>();
-        char singlePrimitive;
-        Character singleWrapper;
-        char[] primitiveArray;
-        Character[] wrapperArray;
-        char[][] nestedPrimitiveArray;
-        Character[][] nestedWrapperArray;
+        private ObjectId id;
+        private List<Character[]> listWrapperArray = new ArrayList<Character[]>();
+        private List<char[]> listPrimitiveArray = new ArrayList<char[]>();
+        private List<Character> listWrapper = new ArrayList<Character>();
+        private char singlePrimitive;
+        private Character singleWrapper;
+        private char[] primitiveArray;
+        private Character[] wrapperArray;
+        private char[][] nestedPrimitiveArray;
+        private Character[][] nestedWrapperArray;
     }
 
     @Test
     public void mapping() throws Exception {
-        morphia.map(Characters.class);
+        getMorphia().map(Characters.class);
         final Characters entity = new Characters();
-        entity.listWrapperArray.add(new Character[] {'1', 'g', '#'});
-        entity.listPrimitiveArray.add(new char[] {'1', 'd', 'z'});
+        entity.listWrapperArray.add(new Character[]{'1', 'g', '#'});
+        entity.listPrimitiveArray.add(new char[]{'1', 'd', 'z'});
         entity.listWrapper.addAll(Arrays.asList('*', ' ', '\u8888'));
         entity.singlePrimitive = 'a';
         entity.singleWrapper = 'b';
-        entity.primitiveArray = new char[] {'a', 'b'};
-        entity.wrapperArray = new Character[] {'X', 'y', 'Z'};
-        entity.nestedPrimitiveArray = new char[][] {{'5', '-'}, {'a', 'b'}};
-        entity.nestedWrapperArray = new Character[][] {{'*', '$', '\u4824'}, {'X', 'y', 'Z'}};
-        ds.save(entity);
+        entity.primitiveArray = new char[]{'a', 'b'};
+        entity.wrapperArray = new Character[]{'X', 'y', 'Z'};
+        entity.nestedPrimitiveArray = new char[][]{{'5', '-'}, {'a', 'b'}};
+        entity.nestedWrapperArray = new Character[][]{{'*', '$', '\u4824'}, {'X', 'y', 'Z'}};
+        getDs().save(entity);
 
-        final Characters loaded = ds.get(entity);
+        final Characters loaded = getDs().get(entity);
         Assert.assertNotNull(loaded.id);
         Assert.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
         Assert.assertArrayEquals(entity.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));
@@ -66,7 +66,7 @@ public class CharacterMappingTest extends TestBase {
     public void singleCharToPrimitiveArray() {
         final Characters characters = testMapping("primitiveArray", "a");
         Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
-        ds.save(characters, WriteConcern.FSYNCED);
+        getDs().save(characters, WriteConcern.FSYNCED);
     }
 
     @Test
@@ -134,12 +134,12 @@ public class CharacterMappingTest extends TestBase {
     }
 
     private Characters testMapping(final String field, final String value) {
-        morphia.map(Characters.class);
+        getMorphia().map(Characters.class);
 
-        final DBCollection collection = ds.getCollection(Characters.class);
+        final DBCollection collection = getDs().getCollection(Characters.class);
         collection.insert(new BasicDBObject(field, value));
 
-        return ds.find(Characters.class).get();
+        return getDs().find(Characters.class).get();
     }
 
     private void compare(final String abc, final Character[] wrapperArray) {

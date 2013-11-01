@@ -18,21 +18,20 @@
 package org.mongodb.morphia;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.mongodb.BasicDBObject;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.testmodel.Rectangle;
-import com.mongodb.BasicDBObject;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,7 +48,7 @@ public class TestIdField extends TestBase {
     private static class ReferenceAsId {
         @Id
         @Reference
-        Rectangle id;
+        private Rectangle id;
 
         protected ReferenceAsId() {
         }
@@ -62,7 +61,7 @@ public class TestIdField extends TestBase {
     @Entity
     private static class KeyAsId {
         @Id
-        Key<?> id;
+        private Key<?> id;
 
         protected KeyAsId() {
         }
@@ -75,7 +74,7 @@ public class TestIdField extends TestBase {
     @Entity
     private static class MapAsId {
         @Id
-        final Map<String, String> id = new HashMap<String, String>();
+        private final Map<String, String> id = new HashMap<String, String>();
     }
 
     @Entity(noClassnameStored = true)
@@ -139,14 +138,14 @@ public class TestIdField extends TestBase {
     @Test
     @Ignore("need to set the _db in the dbRef for this to work... see issue 90")
     public void testReferenceAsId() throws Exception {
-        morphia.map(ReferenceAsId.class);
+        getMorphia().map(ReferenceAsId.class);
 
         final Rectangle r = new Rectangle(1, 1);
-        final Key<Rectangle> rKey = ds.save(r);
+        final Key<Rectangle> rKey = getDs().save(r);
 
         final ReferenceAsId rai = new ReferenceAsId(r);
-        final Key<ReferenceAsId> raiKey = ds.save(rai);
-        final ReferenceAsId raiLoaded = ds.get(ReferenceAsId.class, rKey);
+        final Key<ReferenceAsId> raiKey = getDs().save(rai);
+        final ReferenceAsId raiLoaded = getDs().get(ReferenceAsId.class, rKey);
         assertNotNull(raiLoaded);
         assertEquals(raiLoaded.id.getArea(), r.getArea(), 0);
 
@@ -155,28 +154,28 @@ public class TestIdField extends TestBase {
 
     @Test
     public void testKeyAsId() throws Exception {
-        morphia.map(KeyAsId.class);
+        getMorphia().map(KeyAsId.class);
 
         final Rectangle r = new Rectangle(1, 1);
         //        Rectangle r2 = new Rectangle(11,11);
 
-        final Key<Rectangle> rKey = ds.save(r);
+        final Key<Rectangle> rKey = getDs().save(r);
         //        Key<Rectangle> r2Key = ds.save(r2);
         final KeyAsId kai = new KeyAsId(rKey);
-        final Key<KeyAsId> kaiKey = ds.save(kai);
-        final KeyAsId kaiLoaded = ds.get(KeyAsId.class, rKey);
+        final Key<KeyAsId> kaiKey = getDs().save(kai);
+        final KeyAsId kaiLoaded = getDs().get(KeyAsId.class, rKey);
         assertNotNull(kaiLoaded);
         assertNotNull(kaiKey);
     }
 
     @Test
     public void testMapAsId() throws Exception {
-        morphia.map(MapAsId.class);
+        getMorphia().map(MapAsId.class);
 
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
-        final Key<MapAsId> maiKey = ds.save(mai);
-        final MapAsId maiLoaded = ds.get(MapAsId.class, new BasicDBObject("test", "string"));
+        final Key<MapAsId> maiKey = getDs().save(mai);
+        final MapAsId maiLoaded = getDs().get(MapAsId.class, new BasicDBObject("test", "string"));
         assertNotNull(maiLoaded);
         assertNotNull(maiKey);
     }
@@ -184,7 +183,7 @@ public class TestIdField extends TestBase {
     @Test
     public void testIdFieldNameMapping() throws Exception {
         final Rectangle r = new Rectangle(1, 12);
-        final BasicDBObject dbObj = (BasicDBObject) morphia.toDBObject(r);
+        final BasicDBObject dbObj = (BasicDBObject) getMorphia().toDBObject(r);
         assertFalse(dbObj.containsField("id"));
         assertTrue(dbObj.containsField(Mapper.ID_KEY));
         assertEquals(4, dbObj.size()); //_id, h, w, className
@@ -197,12 +196,12 @@ public class TestIdField extends TestBase {
         final EmbeddedId a = new EmbeddedId(id, "data");
         final EmbeddedId b = new EmbeddedId(new MyId("2", "3"), "data, too");
 
-        ds.save(a);
-        ds.save(b);
+        getDs().save(a);
+        getDs().save(b);
 
-        assertEquals(a.data, ds.get(EmbeddedId.class, id).data);
+        assertEquals(a.data, getDs().get(EmbeddedId.class, id).data);
 
-        final EmbeddedId embeddedId = ds.find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).asList().get(0);
+        final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).asList().get(0);
         Assert.assertEquals(a.data, embeddedId.data);
         Assert.assertEquals(a.id, embeddedId.id);
     }

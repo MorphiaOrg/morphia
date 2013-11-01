@@ -1,20 +1,20 @@
 package org.mongodb.morphia.converters;
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.mongodb.morphia.logging.Logr;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MapperOptions;
 import org.mongodb.morphia.mapping.MappingException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -88,7 +88,7 @@ public class DefaultConverters {
   }
 
   public TypeConverter addConverter(final Class<? extends TypeConverter> clazz) {
-    return addConverter((TypeConverter) mapper.getOptions().objectFactory.createInstance(clazz));
+    return addConverter((TypeConverter) mapper.getOptions().getObjectFactory().createInstance(clazz));
   }
 
   /**
@@ -204,7 +204,7 @@ public class DefaultConverters {
     final TypeConverter enc = getEncoder(fieldValue, mf);
 
     final Object encoded = enc.encode(fieldValue, mf);
-    if (encoded != null || opts.storeNulls) {
+    if (encoded != null || opts.isStoreNulls()) {
       dbObj.put(mf.getNameToStore(), encoded);
     }
   }

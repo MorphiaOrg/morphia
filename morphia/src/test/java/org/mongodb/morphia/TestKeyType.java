@@ -20,7 +20,6 @@ package org.mongodb.morphia;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 
@@ -32,7 +31,7 @@ public class TestKeyType extends TestBase {
   public void testKeyComparisons() throws Exception {
     final Rectangle r = new Rectangle(2, 1);
     final Key<Rectangle> k1 = new Key<Rectangle>(Rectangle.class, r.getId());
-    final Key<Rectangle> k2 = ds.getKey(r);
+    final Key<Rectangle> k2 = getDs().getKey(r);
 
     Assert.assertTrue(k1.equals(k2));
     Assert.assertTrue(k2.equals(k1));
