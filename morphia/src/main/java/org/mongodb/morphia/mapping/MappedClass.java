@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 
 /**
  * Represents a mapped class between the MongoDB DBObject and the java POJO.
@@ -65,7 +67,7 @@ public class MappedClass {
      * Annotations we are interested in looking for.
      *
      * @deprecated use the method for this field instead.
-     * @see #addInterestingAnnotation(Class<? extends Annotation>)
+     * @see #addInterestingAnnotation
      */
     //CHECKSTYLE:OFF
     public static final List<Class<? extends Annotation>> interestingAnnotations
@@ -345,32 +347,6 @@ public class MappedClass {
         new MappingValidator().validate(this);
     }
 
-/*
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof Class<?>) {
-            return equals((Class<?>) obj);
-        } else if (obj instanceof MappedClass) {
-            return equals((MappedClass) obj);
-        } else {
-            return false;
-        }
-    }
-
-    public boolean equals(final MappedClass clazz) {
-        return getClazz().equals(clazz.getClazz());
-    }
-
-    public boolean equals(final Class<?> clazz) {
-        return getClazz().equals(clazz);
-    }
-
-    @Override
-    public int hashCode() {
-        return clazz.hashCode();
-    }
-*/
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -382,11 +358,8 @@ public class MappedClass {
 
         final MappedClass that = (MappedClass) o;
 
-        if (!clazz.equals(that.clazz)) {
-            return false;
-        }
+        return clazz.equals(that.clazz);
 
-        return true;
     }
 
     @Override
@@ -397,6 +370,7 @@ public class MappedClass {
     /**
      * Call the lifecycle methods
      */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("WMI_WRONG_MAP_ITERATOR")
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
                                          final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
@@ -416,13 +390,11 @@ public class MappedClass {
 
                 for (final ClassMethodPair cm : methodPairs) {
                     final Method method = cm.method;
-                    final Class<?> type = cm.clazz;
-
-                    final Object inst = toCall.get(type);
+                    final Object inst = toCall.get(cm.clazz);
                     method.setAccessible(true);
 
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Calling lifecycle method(@" + event.getSimpleName() + " " + method + ") on " + inst);
+                        LOG.debug(format("Calling lifecycle method(@%s %s) on %s", event.getSimpleName(), method, inst));
                     }
 
                     if (inst == null) {

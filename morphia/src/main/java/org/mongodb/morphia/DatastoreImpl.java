@@ -89,6 +89,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         DatastoreHolder.getInstance().set(this);
     }
 
+    /**
+     * @deprecated 
+     */
     public DatastoreImpl(final Morphia morphia, final Mongo mongo) {
         this(morphia, mongo, null);
     }
@@ -548,13 +551,14 @@ public class DatastoreImpl implements AdvancedDatastore {
                 kindMap.put(ref.getRef(), new ArrayList<DBRef>(Collections.singletonList(ref)));
             }
         }
-        for (final String kind : kindMap.keySet()) {
+        for (final Map.Entry<String, List<DBRef>> entry : kindMap.entrySet()) {
+            final List<DBRef> kindRefs = entry.getValue();
+            
             final List<Object> objIds = new ArrayList<Object>();
-            final List<DBRef> kindRefs = kindMap.get(kind);
             for (final DBRef key : kindRefs) {
                 objIds.add(key.getId());
             }
-            final List<Key<T>> kindResults = this.<T>find(kind, null).disableValidation().filter("_id in", objIds).asKeyList();
+            final List<Key<T>> kindResults = this.<T>find(entry.getKey(), null).disableValidation().filter("_id in", objIds).asKeyList();
             tempKeys.addAll(kindResults);
         }
 
@@ -594,13 +598,14 @@ public class DatastoreImpl implements AdvancedDatastore {
                 kindMap.put(key.getKind(), new ArrayList<Key>(Collections.singletonList((Key) key)));
             }
         }
-        for (final String kind : kindMap.keySet()) {
+        for (final Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
+            final List<Key> kindKeys = entry.getValue();
+
             final List<Object> objIds = new ArrayList<Object>();
-            final List<Key> kindKeys = kindMap.get(kind);
             for (final Key key : kindKeys) {
                 objIds.add(key.getId());
             }
-            final List kindResults = find(kind, null).disableValidation().filter("_id in", objIds).asList();
+            final List kindResults = find(entry.getKey(), null).disableValidation().filter("_id in", objIds).asList();
             entities.addAll(kindResults);
         }
 

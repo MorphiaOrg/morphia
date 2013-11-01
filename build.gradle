@@ -36,8 +36,8 @@ configure(subprojects) {
     group = 'org.mongodb.morphia'
     version = '0.106-SNAPSHOT'
 
-    sourceCompatibility = '1.5'
-    targetCompatibility = '1.5'
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
 
     configurations {
         provided
@@ -94,6 +94,7 @@ project(':morphia') {
     dependencies {
         compile 'cglib:cglib-nodep:[2.1_3,3.0)'
         compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
+        compile 'com.google.code.findbugs:findbugs:2.0.2'
     }
 
 }

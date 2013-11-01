@@ -33,121 +33,145 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.lang.String.format;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class MappingValidator {
 
-  private static final Logr LOG = MorphiaLoggerFactory.get(MappingValidator.class);
+    private static final Logr LOG = MorphiaLoggerFactory.get(MappingValidator.class);
 
-  public void validate(final List<MappedClass> classes) {
-    final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
+    public void validate(final List<MappedClass> classes) {
+        final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
 
-      public int compare(final ConstraintViolation o1, final ConstraintViolation o2) {
-        return o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1;
-      }
-    });
+            public int compare(final ConstraintViolation o1, final ConstraintViolation o2) {
+                return o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1;
+            }
+        });
 
-    final List<ClassConstraint> rules = getConstraints();
-    for (final MappedClass c : classes) {
-      for (final ClassConstraint v : rules) {
-        v.check(c, ve);
-      }
+        final List<ClassConstraint> rules = getConstraints();
+        for (final MappedClass c : classes) {
+            for (final ClassConstraint v : rules) {
+                v.check(c, ve);
+            }
+        }
+
+        if (!ve.isEmpty()) {
+            final ConstraintViolation worst = ve.iterator().next();
+            final Level maxLevel = worst.getLevel();
+            if (maxLevel.ordinal() >= Level.FATAL.ordinal()) {
+                throw new ConstraintViolationException(ve);
+            }
+
+            // sort by class to make it more readable
+            final List<LogLine> l = new ArrayList<LogLine>();
+            for (final ConstraintViolation v : ve) {
+                l.add(new LogLine(v));
+            }
+            Collections.sort(l);
+
+            for (final LogLine line : l) {
+                line.log(LOG);
+            }
+        }
     }
 
-    if (!ve.isEmpty()) {
-      final ConstraintViolation worst = ve.iterator().next();
-      final Level maxLevel = worst.getLevel();
-      if (maxLevel.ordinal() >= Level.FATAL.ordinal()) {
-        throw new ConstraintViolationException(ve);
-      }
+    private List<ClassConstraint> getConstraints() {
+        final List<ClassConstraint> constraints = new ArrayList<ClassConstraint>(32);
 
-      // sort by class to make it more readable
-      final List<LogLine> l = new ArrayList<LogLine>();
-      for (final ConstraintViolation v : ve) {
-        l.add(new LogLine(v));
-      }
-      Collections.sort(l);
+        // normally, i do this with scanning the classpath, but that´d bring
+        // another dependency ;)
 
-      for (final LogLine line : l) {
-        line.log(LOG);
-      }
-    }
-  }
+        // class-level
+        constraints.add(new MultipleId());
+        constraints.add(new MultipleVersions());
+        constraints.add(new NoId());
+        constraints.add(new EmbeddedAndId());
+        constraints.add(new EntityAndEmbed());
+        constraints.add(new EmbeddedAndValue());
+        constraints.add(new EntityCannotBeMapOrIterable());
+        constraints.add(new DuplicatedAttributeNames());
+        // constraints.add(new ContainsEmbeddedWithId());
+        // field-level
+        constraints.add(new MisplacedProperty());
+        constraints.add(new ReferenceToUnidentifiable());
+        constraints.add(new LazyReferenceMissingDependencies());
+        constraints.add(new LazyReferenceOnArray());
+        constraints.add(new MapKeyDifferentFromString());
+        constraints.add(new MapNotSerializable());
+        constraints.add(new VersionMisuse());
+        //
+        constraints.add(new ContradictingFieldAnnotation(Reference.class, Serialized.class));
+        constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));
+        constraints.add(new ContradictingFieldAnnotation(Reference.class, Embedded.class));
+        //
+        constraints.add(new ContradictingFieldAnnotation(Embedded.class, Serialized.class));
+        constraints.add(new ContradictingFieldAnnotation(Embedded.class, Property.class));
+        //
+        constraints.add(new ContradictingFieldAnnotation(Property.class, Serialized.class));
 
-  private List<ClassConstraint> getConstraints() {
-    final List<ClassConstraint> constraints = new ArrayList<ClassConstraint>(32);
-
-    // normally, i do this with scanning the classpath, but that´d bring
-    // another dependency ;)
-
-    // class-level
-    constraints.add(new MultipleId());
-    constraints.add(new MultipleVersions());
-    constraints.add(new NoId());
-    constraints.add(new EmbeddedAndId());
-    constraints.add(new EntityAndEmbed());
-    constraints.add(new EmbeddedAndValue());
-    constraints.add(new EntityCannotBeMapOrIterable());
-    constraints.add(new DuplicatedAttributeNames());
-    // constraints.add(new ContainsEmbeddedWithId());
-    // field-level
-    constraints.add(new MisplacedProperty());
-    constraints.add(new ReferenceToUnidentifiable());
-    constraints.add(new LazyReferenceMissingDependencies());
-    constraints.add(new LazyReferenceOnArray());
-    constraints.add(new MapKeyDifferentFromString());
-    constraints.add(new MapNotSerializable());
-    constraints.add(new VersionMisuse());
-    //
-    constraints.add(new ContradictingFieldAnnotation(Reference.class, Serialized.class));
-    constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));
-    constraints.add(new ContradictingFieldAnnotation(Reference.class, Embedded.class));
-    //
-    constraints.add(new ContradictingFieldAnnotation(Embedded.class, Serialized.class));
-    constraints.add(new ContradictingFieldAnnotation(Embedded.class, Property.class));
-    //
-    constraints.add(new ContradictingFieldAnnotation(Property.class, Serialized.class));
-
-    return constraints;
-  }
-
-  class LogLine implements Comparable<LogLine> {
-    private final ConstraintViolation v;
-
-    LogLine(final ConstraintViolation v) {
-      this.v = v;
+        return constraints;
     }
 
-    void log(final Logr logger) {
-      switch (v.getLevel()) {
-        case SEVERE:
-          logger.error(v.render());
-        case WARNING:
-          logger.warning(v.render());
-        case INFO:
-          logger.info(v.render());
-          break;
-        case MINOR:
-          logger.debug(v.render());
-          break;
+    static class LogLine implements Comparable<LogLine> {
+        private final ConstraintViolation v;
 
-        default:
-          throw new IllegalStateException("Cannot log " + ConstraintViolation.class.getSimpleName() + " of Level " + v.getLevel());
-      }
+        LogLine(final ConstraintViolation v) {
+            this.v = v;
+        }
+
+        void log(final Logr logger) {
+            switch (v.getLevel()) {
+                case SEVERE:
+                    logger.error(v.render());
+                    break;
+                case WARNING:
+                    logger.warning(v.render());
+                    break;
+                case INFO:
+                    logger.info(v.render());
+                    break;
+                case MINOR:
+                    logger.debug(v.render());
+                    break;
+                default:
+                    throw new IllegalStateException(format("Cannot log %s of Level %s", ConstraintViolation.class.getSimpleName(),
+                                                           v.getLevel()));
+            }
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final LogLine logLine = (LogLine) o;
+
+            return v.equals(logLine.v);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return v.hashCode();
+        }
+
+        public int compareTo(final LogLine o) {
+            return v.getPrefix().compareTo(o.v.getPrefix());
+        }
     }
 
-    public int compareTo(final LogLine o) {
-      return v.getPrefix().compareTo(o.v.getPrefix());
+    /**
+     * i definitely vote for all at once validation
+     */
+    @Deprecated
+    public void validate(final MappedClass mappedClass) {
+        validate(Arrays.asList(mappedClass));
     }
-  }
-
-  /**
-   * i definitely vote for all at once validation
-   */
-  @Deprecated
-  public void validate(final MappedClass mappedClass) {
-    validate(Arrays.asList(mappedClass));
-  }
 }

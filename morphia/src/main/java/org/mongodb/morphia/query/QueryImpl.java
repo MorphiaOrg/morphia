@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 
 /**
  * <p>Implementation of Query</p>
@@ -148,7 +150,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
         for (String field : fields) {
             final StringBuffer sb = new StringBuffer(
-                                                    field); //validate might modify prop string to translate java field name to db field 
+                                                        field); //validate might modify prop string to translate java field name to db 
+                                                        // field 
             // name
             Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
@@ -278,13 +281,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         iter.close();
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace(String.format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms \n\t cache: %s \n\t for %s",
-                                    dbColl.getName(),
-                                    results.size(),
-                                    iter.getDriverTime(),
-                                    iter.getMapperTime(),
-                                    cache.stats().toString(),
-                                    getQueryObject()));
+            LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
+                             dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats(),
+                             getQueryObject()));
         }
 
         return results;
@@ -439,11 +438,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (snapshotted) {
             throw new QueryException("order cannot be used on a snapshotted query.");
         }
-
-        //reset order
-        if (condition == null || condition.trim().length() == 0) {
-            sort = null;
-        }
         sort = parseFieldsString(condition, clazz, ds.getMapper(), validateName);
 
         return this;
@@ -539,7 +533,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         for (final MappedField mf : mc.getPersistenceFields()) {
             fields.add(mf.getNameToStore());
         }
-        retrievedFields(true, (String[]) fields.toArray(new String[0]));
+        retrievedFields(true, fields.toArray(new String[fields.size()]));
         return this;
     }
 

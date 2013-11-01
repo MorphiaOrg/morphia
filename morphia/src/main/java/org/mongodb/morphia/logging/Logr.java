@@ -1,10 +1,7 @@
 package org.mongodb.morphia.logging;
 
 
-import java.io.Serializable;
-
-
-public interface Logr extends Serializable {
+public interface Logr {
 
   boolean isTraceEnabled();
 

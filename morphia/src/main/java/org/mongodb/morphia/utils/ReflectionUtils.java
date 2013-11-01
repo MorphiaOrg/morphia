@@ -454,19 +454,23 @@ public final class ReflectionUtils {
     public static Set<Class<?>> getFromJARFile(final String jar, final String packageName) throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
-        JarEntry jarEntry;
-        do {
-            jarEntry = jarFile.getNextJarEntry();
-            if (jarEntry != null) {
-                String className = jarEntry.getName();
-                if (className.endsWith(".class")) {
-                    className = stripFilenameExtension(className);
-                    if (className.startsWith(packageName)) {
-                        classes.add(Class.forName(className.replace('/', '.')));
+        try {
+            JarEntry jarEntry;
+            do {
+                jarEntry = jarFile.getNextJarEntry();
+                if (jarEntry != null) {
+                    String className = jarEntry.getName();
+                    if (className.endsWith(".class")) {
+                        className = stripFilenameExtension(className);
+                        if (className.startsWith(packageName)) {
+                            classes.add(Class.forName(className.replace('/', '.')));
+                        }
                     }
                 }
-            }
-        } while (jarEntry != null);
+            } while (jarEntry != null);
+        } finally {
+            jarFile.close();
+        }
         return classes;
     }
 
@@ -494,7 +498,7 @@ public final class ReflectionUtils {
                 }
 
                 if (filePath != null) {
-                    if ((filePath.indexOf("!") > 0) & (filePath.indexOf(".jar") > 0)) {
+                    if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
                         String jarPath = filePath.substring(0, filePath.indexOf("!"))
                                                  .substring(filePath.indexOf(":") + 1);
                         // WINDOWS HACK

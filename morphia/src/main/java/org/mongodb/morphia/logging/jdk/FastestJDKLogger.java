@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("rawtypes")
 public class FastestJDKLogger implements Logr {
     private final Logger logger;
-    private final String className;
+    private final transient String className;
 
     public FastestJDKLogger(final Class c) {
         className = c.getName();
