@@ -35,7 +35,7 @@ public class TestMapping extends TestBase {
         K getK();
     }
 
-    private static class ClassLevelOne<K> implements InterfaceOne<K>, Cloneable, Serializable {
+    private static class ClassLevelOne<K> implements InterfaceOne<K>, Serializable {
         private K k;
 
         public K getK() {

@@ -13,8 +13,6 @@ import org.mongodb.morphia.testutil.TestEntity;
 public class CustomConverterDefault extends TestBase {
 
     private static class E extends TestEntity {
-        private static final long serialVersionUID = 1L;
-
         // FIXME issue 100 :
         // http://code.google.com/p/morphia/issues/detail?id=100
         // check default inspection: if not declared as property,

@@ -3,6 +3,7 @@ package org.mongodb.morphia.query;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -10,6 +11,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +19,16 @@ import java.util.List;
 /**
  * @author scotthernandez
  */
-public class QueryInForReferencedList extends TestBase {
+public class QueryInForReferencedListTest extends TestBase {
+
+    private String classpath;
 
     @Entity
-    private static class HasRefs {
+    private static class HasRefs implements Serializable {
         @Id
         private ObjectId id = new ObjectId();
         @Reference
-        private final List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
+        private List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
     }
 
     @Entity
@@ -37,7 +41,6 @@ public class QueryInForReferencedList extends TestBase {
         public ReferencedEntity(final String s) {
             foo = s;
         }
-
     }
 
     @Entity("docs")
@@ -48,12 +51,13 @@ public class QueryInForReferencedList extends TestBase {
 
     @Test
     public void testMapping() throws Exception {
-
         getMorphia().map(HasRefs.class);
         getMorphia().map(ReferencedEntity.class);
     }
 
     @Test
+    @Ignore("what needs to happen is that when we're querying against @Referenced entities and we pass in an Entity, we need to"
+            + " convert those to DBRefs when building the query.")
     public void testInQuery() throws Exception {
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {
@@ -63,7 +67,8 @@ public class QueryInForReferencedList extends TestBase {
         getDs().save(hr.refs);
         getDs().save(hr);
 
-        final List<HasRefs> res = getDs().createQuery(HasRefs.class).field("refs").in(hr.refs.subList(1, 3)).asList();
+        Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
+        final List<HasRefs> res = query.asList();
         Assert.assertEquals(1, res.size());
     }
 

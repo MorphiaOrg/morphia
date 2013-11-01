@@ -36,8 +36,8 @@ configure(subprojects) {
     group = 'org.mongodb.morphia'
     version = '0.106-SNAPSHOT'
 
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
+    sourceCompatibility = '1.5'
+    targetCompatibility = '1.5'
 
     configurations {
         provided
@@ -72,7 +72,10 @@ configure(subprojects) {
         configFile = new File("$configDir/checkstyle.xml")
     }
 
-    findbugs { excludeFilter = new File("$configDir/findbugs-exclude.xml") }
+    findbugs { 
+        excludeFilter = new File("$configDir/findbugs-exclude.xml") 
+        sourceSets = [sourceSets.main]
+    }
 
     tasks.withType(FindBugs) {
         reports {
@@ -96,7 +99,14 @@ project(':morphia') {
         compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
         compile 'com.google.code.findbugs:findbugs:2.0.2'
     }
+}
 
+project(':logging-slf4j') {
+    dependencies {
+        compile project(':morphia')
+        compile 'org.slf4j:slf4j-api:1.5.6'
+        testCompile 'org.slf4j:slf4j-simple:1.5.6'
+    }
 }
 
 project(':validation') {
@@ -104,6 +114,8 @@ project(':validation') {
         compile 'javax.validation:validation-api:1.0.0.GA'
         testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
         compile project(':morphia')
+        compile project(':logging-slf4j')
+        testCompile 'org.slf4j:slf4j-jdk14:1.5.6'
     }
 }
 
@@ -119,8 +131,8 @@ project(':entityscanner-plug') {
         compile('org.scannotation:scannotation:1.0.3') {
             'javassist:javassist'
         }
-        testCompile 'org.slf4j:slf4j-simple:1.5.6'
         compile project(':morphia')
+        testCompile 'org.slf4j:slf4j-simple:1.5.6'
     }
 }
 

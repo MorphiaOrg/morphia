@@ -40,7 +40,5 @@ public class TestMorphiaValidation extends TestBase {
 
         e.email = "foo@bar.com";
         getDs().save(e);
-
     }
-
 }
