@@ -1111,7 +1111,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                         final WriteConcern wc) {
         final DBObject u = ((UpdateOpsImpl) ops).getOps();
         if (((UpdateOpsImpl) ops).isIsolated()) {
-            final Query<T> q = query.clone();
+            final Query<T> q = query.cloneQuery();
             q.disableValidation().filter("$atomic", true);
             return update(q, u, createIfMissing, multi, wc);
         }

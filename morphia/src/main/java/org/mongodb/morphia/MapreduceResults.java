@@ -71,7 +71,7 @@ public class MapreduceResults<T> implements Iterable<T> {
         if (type == MapreduceType.INLINE) {
             throw new MappingException("No collection available for inline mapreduce jobs");
         }
-        return query.clone();
+        return query.cloneQuery();
     }
 
     public void setInlineRequiredOptions(final Class<T> clazz, final Mapper mapper, final EntityCache cache) {

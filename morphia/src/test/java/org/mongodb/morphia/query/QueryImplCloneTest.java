@@ -82,6 +82,6 @@ public class QueryImplCloneTest extends TestBase {
                             .hintIndex("a")
                             .order("a");
         q.disableValidation().filter("foo", "bar");
-        Assert.assertTrue(sameState(q, q.clone()));
+        Assert.assertTrue(sameState(q, q.cloneQuery()));
     }
 }

@@ -214,5 +214,5 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   /**
    * Creates and returns a copy of this {@link Query}.
    */
-  Query<T> clone();
+  Query<T> cloneQuery();
 }

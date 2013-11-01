@@ -76,8 +76,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
     }
 
-    @Override
-    public QueryImpl<T> clone() {
+    public QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
         n.batchSize = batchSize;
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
@@ -485,7 +484,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Iterator<T> tail(final boolean awaitData) {
         //Create a new query for this, so the current one is not affected.
-        final QueryImpl<T> tailQ = clone();
+        final QueryImpl<T> tailQ = cloneQuery();
         tailQ.tail = true;
         tailQ.tailAwaitData = awaitData;
         return tailQ.fetch().iterator();
