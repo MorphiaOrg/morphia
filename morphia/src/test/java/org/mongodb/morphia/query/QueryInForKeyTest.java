@@ -62,8 +62,7 @@ public class QueryInForKeyTest extends TestBase {
 
         Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("ref").in(refs);
         try {
-            final List<HasRefs> res = query.asList();
-            Assert.assertEquals(1, res.size());
+            Assert.assertEquals(1, query.asList().size());
         } catch (MongoException e) {
             LOG.debug("query = " + query);
             throw e;
