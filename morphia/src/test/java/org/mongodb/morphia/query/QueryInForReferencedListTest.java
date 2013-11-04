@@ -3,7 +3,6 @@ package org.mongodb.morphia.query;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -56,8 +55,8 @@ public class QueryInForReferencedListTest extends TestBase {
     }
 
     @Test
-    @Ignore("what needs to happen is that when we're querying against @Referenced entities and we pass in an Entity, we need to"
-            + " convert those to DBRefs when building the query.")
+//    @Ignore("what needs to happen is that when we're querying against @Referenced entities and we pass in an Entity, we need to"
+//            + " convert those to DBRefs when building the query.")
     public void testInQuery() throws Exception {
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {

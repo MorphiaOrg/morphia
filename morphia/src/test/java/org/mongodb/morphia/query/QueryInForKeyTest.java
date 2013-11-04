@@ -1,10 +1,7 @@
 package org.mongodb.morphia.query;
 
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,13 +10,20 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.testutil.TestEntity;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * @author marcosnils
  */
 public class QueryInForKeyTest extends TestBase {
+    private static final Logr LOG = MorphiaLoggerFactory.get(QueryInForKeyTest.class);
 
     private String classpath;
 
@@ -57,7 +61,12 @@ public class QueryInForKeyTest extends TestBase {
         getDs().save(hr);
 
         Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("ref").in(refs);
-        final List<HasRefs> res = query.asList();
-        Assert.assertEquals(1, res.size());
+        try {
+            final List<HasRefs> res = query.asList();
+            Assert.assertEquals(1, res.size());
+        } catch (MongoException e) {
+            LOG.debug("query = " + query);
+            throw e;
+        }
     }
 }
