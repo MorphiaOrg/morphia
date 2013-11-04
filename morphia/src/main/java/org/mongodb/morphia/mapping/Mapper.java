@@ -391,7 +391,7 @@ public class Mapper {
                     if (mapped != null && Key.class.isAssignableFrom(mapped.getClazz())) {
                         mappedValue = getDBRefs((Iterable) value);
                     } else {
-                        mappedValue = value;
+                        mappedValue = toMongoObject(value, false);
                     }
                 } else {
                     final Key<?> key = (value instanceof Key) ? (Key<?>) value : getKey(value);
