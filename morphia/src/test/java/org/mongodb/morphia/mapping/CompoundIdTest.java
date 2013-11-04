@@ -4,7 +4,7 @@ package org.mongodb.morphia.mapping;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.Key;
+import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
@@ -15,7 +15,7 @@ import java.io.Serializable;
 /**
  * @author scott hernandez
  */
-public class AnonymousClass extends TestBase {
+public class CompoundIdTest extends TestBase {
 
     @Embedded
     private static class CId implements Serializable {
@@ -70,7 +70,7 @@ public class AnonymousClass extends TestBase {
         final E e = new E();
         e.id = new CId("test");
 
-        final Key<E> key = getDs().save(e);
+        getDs().save(e);
         getDs().delete(E.class, e.id);
     }
 
@@ -80,7 +80,7 @@ public class AnonymousClass extends TestBase {
         e.id = new CId("test");
 
         getDs().save(e);
-        getAds().delete(getDs().getCollection(E.class).getName(), E.class, e.id);
+        ((AdvancedDatastore) getDs()).delete(getDs().getCollection(E.class).getName(), E.class, e.id);
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author scotthernandez
  */
-public class ReferencesWIgnoreMissingTests extends TestBase {
+public class ReferencesWIgnoreMissingTest extends TestBase {
     @Entity
     static class Container {
         @Id

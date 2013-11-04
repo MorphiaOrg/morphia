@@ -15,7 +15,7 @@ import java.io.Serializable;
 /**
  * @author scott hernandez
  */
-public class MapWithDotInKey extends TestBase {
+public class MapWithDotInKeyTest extends TestBase {
 
     private static class Goo implements Serializable {
         @Id

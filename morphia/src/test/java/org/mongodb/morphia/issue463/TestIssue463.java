@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 
-public class Issue463 extends TestBase {
+public class TestIssue463 extends TestBase {
     @Entity(value = "class1", noClassnameStored = true)
     public static class Class1 {
         @Id

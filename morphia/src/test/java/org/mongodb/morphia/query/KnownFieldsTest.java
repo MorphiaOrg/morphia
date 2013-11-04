@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 
 
-public class KnownFields extends TestBase {
+public class KnownFieldsTest extends TestBase {
 
     private static class A {
         private String foo;

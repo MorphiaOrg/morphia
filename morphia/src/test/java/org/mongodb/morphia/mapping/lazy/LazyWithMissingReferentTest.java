@@ -12,7 +12,7 @@ import org.mongodb.morphia.testutil.TestEntity;
 import java.util.Iterator;
 
 
-public class LazyWithMissingReferent extends TestBase {
+public class LazyWithMissingReferentTest extends TestBase {
 
     static class E {
         @Id

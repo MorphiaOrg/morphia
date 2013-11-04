@@ -23,7 +23,6 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.TestQuery.ContainsPic;
 import org.mongodb.morphia.TestQuery.Pic;
 import org.mongodb.morphia.annotations.Entity;
@@ -33,7 +32,6 @@ import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
-import org.mongodb.morphia.testutil.StandardTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Category(StandardTests.class)
     public void testIncDec() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10),
                                    new Rectangle(10, 10)};

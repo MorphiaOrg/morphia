@@ -7,26 +7,34 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+
 /**
  * @author Uwe Schaefer
  */
-public class CustomConverterDefault extends TestBase {
+@SuppressWarnings("rawtypes")
+public class CustomConverterInEmbedTest extends TestBase {
 
-    private static class E extends TestEntity {
-        // FIXME issue 100 :
-        // http://code.google.com/p/morphia/issues/detail?id=100
-        // check default inspection: if not declared as property,
-        // morphia fails due to defaulting to embedded and expecting a non-arg
-        // constructor.
-        //
-        // @Property
-        private Foo foo;
+    public static class E1 extends TestEntity {
+        private static final long serialVersionUID = 1L;
+        private final List<Foo> foo = new LinkedList<Foo>();
+    }
 
+    public static class E2 extends TestEntity {
+        private static final long serialVersionUID = 1L;
+        private final Map<String, Foo> foo = new HashMap<String, Foo>();
     }
 
     // unknown type to convert
-    private static class Foo {
-        private final String string;
+    public static class Foo {
+        private String string;
+
+        Foo() {
+        }
 
         public Foo(final String string) {
             this.string = string;
@@ -62,20 +70,33 @@ public class CustomConverterDefault extends TestBase {
         }
     }
 
+    //FIXME issue 101
+
     @Test
-    public void testConversion() throws Exception {
+    public void testConversionInList() throws Exception {
         final FooConverter fc = new FooConverter();
         getMorphia().getMapper().getConverters().addConverter(fc);
-        getMorphia().map(E.class);
-        E e = new E();
-        e.foo = new Foo("test");
+        final E1 e = new E1();
+        e.foo.add(new Foo("bar"));
+        getDs().save(e);
+        Assert.assertTrue(fc.didConversion());
+    }
+
+    @Test
+    public void testConversionInMap() throws Exception {
+        final FooConverter fc = new FooConverter();
+        getMorphia().getMapper().getConverters().addConverter(fc);
+        E2 e = new E2();
+        e.foo.put("bar", new Foo("bar"));
         getDs().save(e);
 
         Assert.assertTrue(fc.didConversion());
 
-        e = getDs().find(E.class).get();
+        e = getDs().find(E2.class).get();
         Assert.assertNotNull(e.foo);
-        Assert.assertEquals("test", e.foo.string);
+        Assert.assertFalse(e.foo.isEmpty());
+        Assert.assertTrue(e.foo.containsKey("bar"));
+        Assert.assertEquals("bar", e.foo.get("bar").string);
     }
 
 }
