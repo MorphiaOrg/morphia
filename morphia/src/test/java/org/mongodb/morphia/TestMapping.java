@@ -216,8 +216,8 @@ public class TestMapping extends TestBase {
         @Id
         private ObjectId id;
         @Embedded
-        private final Map<String, Long> embeddedValues = new HashMap();
-        private final Map<String, Long> values = new HashMap();
+        private final Map<String, Long> embeddedValues = new HashMap<String, Long>();
+        private final Map<String, Long> values = new HashMap<String, Long>();
     }
 
     private interface Foo {
@@ -235,7 +235,7 @@ public class TestMapping extends TestBase {
         @Id
         private ObjectId id;
         @Embedded
-        private final Map<String, Foo> embeddedValues = new HashMap();
+        private final Map<String, Foo> embeddedValues = new HashMap<String, Foo>();
     }
 
     private static class ContainsEmbeddedEntity {
@@ -542,12 +542,13 @@ public class TestMapping extends TestBase {
 
     @Test
     @Ignore("need to add this feature")
+    @SuppressWarnings("unchecked")
     public void testGenericKeyedMap() throws Exception {
         final ContainsXKeyMap<Integer> map = new ContainsXKeyMap<Integer>();
         map.values.put(1, "I'm 1");
         map.values.put(2, "I'm 2");
 
-        final Key<?> mapKey = getDs().save(map);
+        final Key<ContainsXKeyMap<Integer>> mapKey = getDs().save(map);
 
         final ContainsXKeyMap<Integer> mapLoaded = getDs().get(ContainsXKeyMap.class, mapKey.getId());
 
