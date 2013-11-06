@@ -1,33 +1,9 @@
 package org.mongodb.morphia;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.CommandResult;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBDecoderFactory;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.DefaultDBDecoder;
-import com.mongodb.MapReduceCommand;
+import com.mongodb.*;
 import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.MapReduceOutput;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
-import com.mongodb.ReadPreference;
-import com.mongodb.WriteConcern;
-import com.mongodb.WriteResult;
-import org.mongodb.morphia.annotations.CappedAt;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.annotations.NotSaved;
-import org.mongodb.morphia.annotations.PostPersist;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.annotations.Version;
+import org.mongodb.morphia.annotations.*;
 import org.mongodb.morphia.logging.Logr;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
@@ -37,29 +13,13 @@ import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.DatastoreHolder;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
-import org.mongodb.morphia.query.DefaultQueryFactory;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryException;
-import org.mongodb.morphia.query.QueryFactory;
-import org.mongodb.morphia.query.QueryImpl;
-import org.mongodb.morphia.query.UpdateException;
-import org.mongodb.morphia.query.UpdateOperations;
-import org.mongodb.morphia.query.UpdateOpsImpl;
-import org.mongodb.morphia.query.UpdateResults;
+import org.mongodb.morphia.query.*;
 import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexFieldDef;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -90,7 +50,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * @deprecated 
+     * @deprecated
      */
     public DatastoreImpl(final Morphia morphia, final Mongo mongo) {
         this(morphia, mongo, null);
@@ -553,7 +513,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         for (final Map.Entry<String, List<DBRef>> entry : kindMap.entrySet()) {
             final List<DBRef> kindRefs = entry.getValue();
-            
+
             final List<Object> objIds = new ArrayList<Object>();
             for (final DBRef key : kindRefs) {
                 objIds.add(key.getId());
@@ -849,127 +809,169 @@ public class DatastoreImpl implements AdvancedDatastore {
         return key;
     }
 
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        Object first = null;
-        try {
-            first = entities.iterator().next();
-        } catch (Exception e) {
-            //do nothing
-        }
-        return save(entities, getWriteConcern(first));
-    }
+				public <T> Iterable<Key<T>> save(final Map<Object, T> entities) {
+								Object first = null;
+								try {
+												first = entities.entrySet().iterator().next();
+								} catch (Exception e) {
+												//do nothing
+								}
+								return save(entities, getWriteConcern(first));
+				}
 
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        for (final T ent : entities) {
-            savedKeys.add(save(ent, wc));
-        }
-        return savedKeys;
+				public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
+								Object first = null;
+								try {
+												first = entities.iterator().next();
+								} catch (Exception e) {
+												//do nothing
+								}
+								return save(entities, getWriteConcern(first));
+				}
 
-    }
 
-    public <T> Iterable<Key<T>> save(final T... entities) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        for (final T ent : entities) {
-            savedKeys.add(save(ent));
-        }
-        return savedKeys;
-    }
+				public <T> Iterable<Key<T>> save(final Map<Object, T> entities, final WriteConcern wc) {
+								final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+								for (final Map.Entry<Object, T> ent : entities.entrySet()) {
+												savedKeys.add(save(ent.getValue(), wc, ent.getKey()));
+								}
+								return savedKeys;
 
-    protected <T> Key<T> save(final DBCollection dbColl, final T entity, final WriteConcern wc) {
-        if (entity == null) {
-            throw new UpdateException("Can not persist a null entity");
-        }
+				}
 
-        final MappedClass mc = mapper.getMappedClass(entity);
-        if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(
-                                          "Entity type: " + mc.getClazz().getName()
-                                          + " is marked as NotSaved which means you should not try to save it!");
-        }
+				public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
+								final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+								for (final T ent : entities) {
+												savedKeys.add(save(ent, wc, null));
+								}
+								return savedKeys;
 
-        WriteResult wr;
+				}
 
-        //involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
-        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = entityToDBObj(entity, involvedObjects);
+				public <T> Iterable<Key<T>> save(final T... entities) {
+								final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+								for (final T ent : entities) {
+												savedKeys.add(save(ent, null));
+								}
+								return savedKeys;
+				}
 
-        //try to do an update if there is a @Version field
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
-        wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, db, mc);
 
-        if (wr == null) {
-            if (wc == null) {
-                wr = dbColl.save(dbObj);
-            } else {
-                wr = dbColl.save(dbObj, wc);
-            }
-        }
+				public <T> Key<T> save(final String kind, final T entity, WriteConcern wc) {
+								return save(getCollection(kind), ProxyHelper.unwrap(entity), wc, null);
+				}
 
-        throwOnError(wc, wr);
-        return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
-    }
+				public <T> Key<T> save(final T entity) {
+								return save(entity, getWriteConcern(entity), null);
 
-    protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
-                                                 final WriteConcern wc, final DB database, final MappedClass mc) {
-        WriteResult wr = null;
-        if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            return wr;
-        }
+				}
 
-        final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
-        final String versionKeyName = mfVersion.getNameToStore();
-        final Long oldVersion = (Long) mfVersion.getFieldValue(entity);
-        final long newVersion = nextValue(oldVersion);
-        dbObj.put(versionKeyName, newVersion);
-        if (oldVersion != null && oldVersion > 0) {
-            final UpdateResults<T> res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue)
-                                                    .filter(versionKeyName, oldVersion), dbObj, false, false, wc);
+				public <T> Key<T> save(final T entity, final WriteConcern wc) {
+								final T unwrapped = ProxyHelper.unwrap(entity);
+								final DBCollection dbColl = getCollection(unwrapped);
+								return save(dbColl, unwrapped, wc, null);
 
-            wr = res.getWriteResult();
+				}
 
-            if (res.getUpdatedCount() != 1) {
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                                                                 entity.getClass().getName(), idValue, oldVersion));
-            }
-        } else if (wc == null) {
-            wr = dbColl.save(dbObj);
-        } else {
-            wr = dbColl.save(dbObj, wc);
-        }
 
-        //update the version.
-        mfVersion.setFieldValue(entity, newVersion);
-        return wr;
-    }
+				protected <T> Key<T> save(final DBCollection dbColl, final T entity, final WriteConcern wc, Object providedId) {
+								if (entity == null) {
+												throw new UpdateException("Can not persist a null entity");
+								}
 
-    protected void throwOnError(final WriteConcern wc, final WriteResult wr) {
-        if (wc == null && wr.getLastConcern() == null) {
-            final CommandResult cr = wr.getLastError();
-            if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() != 0) {
-                cr.throwOnError();
-            }
-        }
-    }
+								final MappedClass mc = mapper.getMappedClass(entity);
+								if (mc.getAnnotation(NotSaved.class) != null) {
+												throw new MappingException(
+																				"Entity type: " + mc.getClazz().getName()
+																												+ " is marked as NotSaved which means you should not try to save it!");
+								}
 
-    public <T> Key<T> save(final T entity) {
-        return save(entity, getWriteConcern(entity));
-    }
+								WriteResult wr;
 
-    public <T> Key<T> save(final String kind, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(kind, entity, getWriteConcern(unwrapped));
-    }
+								//involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
+								final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+								final DBObject dbObj = entityToDBObj(entity, involvedObjects);
 
-    public <T> Key<T> save(final String kind, final T entity, final WriteConcern wc) {
-        return save(getCollection(kind), ProxyHelper.unwrap(entity), wc);
-    }
+								Object idValue = dbObj.get(Mapper.ID_KEY);
+								if (providedId != null) {
+												idValue = providedId;
+								}
+								//try to do an update if there is a @Version field
+								wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, db, mc);
 
-    public <T> Key<T> save(final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(unwrapped);
-        return save(dbColl, unwrapped, wc);
-    }
+								if (wr == null) {
+												if (wc == null) {
+																wr = dbColl.save(dbObj);
+												} else {
+																wr = dbColl.save(dbObj, wc);
+												}
+								}
+
+								throwOnError(wc, wr);
+								return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
+				}
+
+				protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
+																																																	final WriteConcern wc, final DB database, final MappedClass mc) {
+								WriteResult wr = null;
+								if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
+												return wr;
+								}
+
+								final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
+								final String versionKeyName = mfVersion.getNameToStore();
+								final Long oldVersion = (Long) mfVersion.getFieldValue(entity);
+								final long newVersion = nextValue(oldVersion);
+								dbObj.put(versionKeyName, newVersion);
+								if (oldVersion != null && oldVersion > 0) {
+												final UpdateResults<T> res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue)
+																				.filter(versionKeyName, oldVersion), dbObj, false, false, wc);
+
+												wr = res.getWriteResult();
+
+												if (res.getUpdatedCount() != 1) {
+																throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
+																								entity.getClass().getName(), idValue, oldVersion));
+												}
+								} else if (wc == null) {
+												wr = dbColl.save(dbObj);
+								} else {
+												wr = dbColl.save(dbObj, wc);
+								}
+
+								//update the version.
+								mfVersion.setFieldValue(entity, newVersion);
+								return wr;
+				}
+
+				protected void throwOnError(final WriteConcern wc, final WriteResult wr) {
+								if (wc == null && wr.getLastConcern() == null) {
+												final CommandResult cr = wr.getLastError();
+												if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() != 0) {
+																cr.throwOnError();
+												}
+								}
+				}
+
+				public <T> Key<T> save(final T entity, Object providedId) {
+								return save(entity, getWriteConcern(entity), providedId);
+				}
+
+				public <T> Key<T> save(final String kind, final T entity) {
+								final T unwrapped = ProxyHelper.unwrap(entity);
+								return save(kind, entity, getWriteConcern(unwrapped), null);
+				}
+
+				public <T> Key<T> save(final String kind, final T entity, final WriteConcern wc, Object providedId) {
+								return save(getCollection(kind), ProxyHelper.unwrap(entity), wc, providedId);
+				}
+
+				public <T> Key<T> save(final T entity, final WriteConcern wc, Object providedId) {
+								final T unwrapped = ProxyHelper.unwrap(entity);
+								final DBCollection dbColl = getCollection(unwrapped);
+								return save(dbColl, unwrapped, wc, providedId);
+				}
+
 
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {
         return new UpdateOpsImpl<T>(clazz, getMapper());
