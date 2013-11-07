@@ -17,6 +17,7 @@
 
 package relocated.morphia.org.apache.commons.collections;
 
+//CHECKSTYLE:OFF
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -67,6 +68,7 @@ import java.util.Set;
  * @see Reference
  * @since 2.1
  */
+@edu.umd.cs.findbugs.annotations.SuppressWarnings
 public class ReferenceMap extends AbstractMap {
 
 

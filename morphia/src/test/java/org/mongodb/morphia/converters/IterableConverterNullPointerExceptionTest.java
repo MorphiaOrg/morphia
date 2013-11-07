@@ -29,31 +29,32 @@ import static org.junit.Assert.fail;
 
 
 public class IterableConverterNullPointerExceptionTest extends TestBase {
-  @Entity
-  static class TestEntity {
-    @Id String id;
-    String[] array;
-  }
-
-  @Before @Override
-  public void setUp() {
-    super.setUp();
-    morphia.map(TestEntity.class);
-  }
-
-  @Test
-  public void testIt() throws Exception {
-    final TestEntity te = new TestEntity();
-    te.array = new String[] {null, "notNull", null};
-    ds.save(te);
-
-    TestEntity te2 = null;
-    try {
-      te2 = ds.find(TestEntity.class).get();
-    } catch (RuntimeException e) {
-      e.printStackTrace();
-      fail();
+    @Entity
+    static class TestEntity {
+        @Id
+        private String id;
+        private String[] array;
     }
-    assertArrayEquals(te.array, te2.array);
-  }
+
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        getMorphia().map(TestEntity.class);
+    }
+
+    @Test
+    public void testIt() throws Exception {
+        final TestEntity te = new TestEntity();
+        te.array = new String[]{null, "notNull", null};
+        getDs().save(te);
+
+        TestEntity te2 = null;
+        try {
+            te2 = getDs().find(TestEntity.class).get();
+        } catch (RuntimeException e) {
+            fail(e.getMessage());
+        }
+        assertArrayEquals(te.array, te2.array);
+    }
 }

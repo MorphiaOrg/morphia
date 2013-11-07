@@ -1,17 +1,15 @@
 package org.mongodb.morphia.converters;
 
 
+import org.mongodb.morphia.mapping.MappedField;
+
 import java.sql.Timestamp;
 import java.util.Date;
-
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 
 
 /**
  * @author scotthernandez
  */
-@SuppressWarnings({ "rawtypes" })
 public class TimestampConverter extends DateConverter {
 
   public TimestampConverter() {
@@ -19,7 +17,7 @@ public class TimestampConverter extends DateConverter {
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) {
     final Date d = (Date) super.decode(targetClass, val, optionalExtraInfo);
     return new Timestamp(d.getTime());
   }
@@ -31,5 +29,4 @@ public class TimestampConverter extends DateConverter {
     }
     return new Date(((Timestamp) val).getTime());
   }
-
 }

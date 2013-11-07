@@ -1,9 +1,9 @@
 package org.mongodb.morphia;
 
 
-import java.util.Date;
-import java.util.List;
-
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,9 +12,9 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+
+import java.util.Date;
+import java.util.List;
 
 public class TestExpireAfterSeconds extends TestBase {
 
@@ -27,9 +27,9 @@ public class TestExpireAfterSeconds extends TestBase {
     }
 
     @Entity
-    @Indexes( {
-        @Index(value = "offerExpiresAt", expireAfterSeconds = 5)
-    })
+    @Indexes({
+                 @Index(value = "offerExpiresAt", expireAfterSeconds = 5)
+             })
     public static class ClassAnnotation {
         @Id
         private ObjectId id;
@@ -38,12 +38,12 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testIndexedField() throws InterruptedException {
-        morphia.map(HasExpiryField.class);
-        ds.ensureIndexes();
+        getMorphia().map(HasExpiryField.class);
+        getDs().ensureIndexes();
 
-        ds.save(new HasExpiryField());
+        getDs().save(new HasExpiryField());
 
-        final DB db = ds.getDB();
+        final DB db = getDs().getDB();
         final DBCollection dbCollection = db.getCollection("HasExpiryField");
         final List<DBObject> indexes = dbCollection.getIndexInfo();
 
@@ -61,12 +61,12 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testClassAnnotation() throws InterruptedException {
-        morphia.map(ClassAnnotation.class);
-        ds.ensureIndexes();
+        getMorphia().map(ClassAnnotation.class);
+        getDs().ensureIndexes();
 
-        ds.save(new ClassAnnotation());
+        getDs().save(new ClassAnnotation());
 
-        final DB db = ds.getDB();
+        final DB db = getDs().getDB();
         final DBCollection dbCollection = db.getCollection("ClassAnnotation");
         final List<DBObject> indexes = dbCollection.getIndexInfo();
 

@@ -1,7 +1,6 @@
 package org.mongodb.morphia.utils;
 
 
-import java.lang.IllegalStateException;
 import java.lang.reflect.Field;
 
 
@@ -16,63 +15,61 @@ import java.lang.reflect.Field;
  *
  * @author us@thomas-daily.de
  */
-public class FieldName {
-  public static String of(final String name) {
-    return of(callingClass(), name);
-  }
-
-  public static String of(final Class<?> clazz, final String name) {
-    Assert.parameterNotNull(clazz, "clazz");
-    Assert.parameterNotNull(name, "name");
-    if (hasField(clazz, name)) {
-      return name;
+public final class FieldName {
+    private FieldName() {
     }
-    throw new FieldNameNotFoundException("Field called '" + name + "' on class '" + clazz + "' was not found.");
-  }
 
-  private static boolean hasField(final Class<?> clazz, final String name) {
-    final Field[] fa = ReflectionUtils.getDeclaredAndInheritedFields(clazz, true);
-    for (final Field field : fa) {
-      if (name.equals(field.getName())) {
-        return true;
-      }
+    public static String of(final String name) {
+        return of(callingClass(), name);
     }
-    return false;
-  }
 
-  private static Class<?> callingClass() throws IllegalStateException {
-    return callingClass(FieldName.class);
-  }
-
-  private static Class<?> callingClass(final Class<?>... classesToExclude) {
-    final StackTraceElement[] stackTrace = new Exception().getStackTrace();
-    for (final StackTraceElement e : stackTrace) {
-      final String c = e.getClassName();
-
-      boolean exclude = false;
-      for (final Class<?> ec : classesToExclude) {
-        exclude |= c.equals(ec.getName());
-      }
-      if (!exclude) {
-        return forName(c);
-      }
+    public static String of(final Class<?> clazz, final String name) {
+        Assert.parameterNotNull(clazz, "clazz");
+        Assert.parameterNotNull(name, "name");
+        if (hasField(clazz, name)) {
+            return name;
+        }
+        throw new FieldNameNotFoundException("Field called '" + name + "' on class '" + clazz + "' was not found.");
     }
-    throw new IllegalStateException();
 
-  }
-
-  private static Class<?> forName(final String c) {
-    try {
-      return Class.forName(c);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Error when getting class for name '" + c + "'");
+    private static boolean hasField(final Class<?> clazz, final String name) {
+        final Field[] fa = ReflectionUtils.getDeclaredAndInheritedFields(clazz, true);
+        for (final Field field : fa) {
+            if (name.equals(field.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
 
-  public static class FieldNameNotFoundException extends RuntimeException {
-    public FieldNameNotFoundException(final String msg) {
-      super(msg);
+    /**
+     * @throws IllegalStateException
+     */
+    private static Class<?> callingClass() {
+        final StackTraceElement[] stackTrace = new Exception().getStackTrace();
+        for (final StackTraceElement e : stackTrace) {
+            final String c = e.getClassName();
+
+            if (!c.equals(FieldName.class.getName())) {
+                return forName(c);
+            }
+        }
+        throw new IllegalStateException();
+
     }
-  }
+
+    private static Class<?> forName(final String c) {
+        try {
+            return Class.forName(c);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Error when getting class for name '" + c + "'");
+        }
+    }
+
+    public static class FieldNameNotFoundException extends RuntimeException {
+        public FieldNameNotFoundException(final String msg) {
+            super(msg);
+        }
+    }
 
 }

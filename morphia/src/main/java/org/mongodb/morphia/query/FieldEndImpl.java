@@ -1,17 +1,17 @@
 package org.mongodb.morphia.query;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import org.mongodb.morphia.logging.Logr;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.Assert;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
-  private static final Logr log = MorphiaLoggerFactory.get(FieldEndImpl.class);
+  private static final Logr LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
   private final QueryImpl<?> query;
   private final String       field;
@@ -123,10 +123,9 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
   public T hasAnyOf(final Iterable<?> values) {
     Assert.parametersNotNull("values", values);
-    //		Assert.parameterNotEmpty(values,"values"); //it is valid but will never return any results.
-    if (log.isWarningEnabled()) {
+    if (LOG.isWarningEnabled()) {
       if (!values.iterator().hasNext()) {
-        log.warning("Specified an empty list/collection with the '" + field + "' criteria");
+        LOG.warning("Specified an empty list/collection with the '" + field + "' criteria");
       }
     }
     return addCriteria(FilterOperator.IN, values);

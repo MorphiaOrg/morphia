@@ -1,13 +1,12 @@
 package org.mongodb.morphia;
 
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.testutil.TestEntity;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -19,9 +18,9 @@ public class TestGetByKeys extends TestBase {
     final A a1 = new A();
     final A a2 = new A();
 
-    final Iterable<Key<A>> keys = ds.save(a1, a2);
+    final Iterable<Key<A>> keys = getDs().save(a1, a2);
 
-    final List<A> reloaded = ds.getByKeys(keys);
+    final List<A> reloaded = getDs().getByKeys(keys);
 
     final Iterator<A> i = reloaded.iterator();
     Assert.assertNotNull(i.next());
@@ -31,7 +30,7 @@ public class TestGetByKeys extends TestBase {
 
   public static class A extends TestEntity {
     private static final long serialVersionUID = 1L;
-    String foo = "bar";
+    private String foo = "bar";
   }
 
 }

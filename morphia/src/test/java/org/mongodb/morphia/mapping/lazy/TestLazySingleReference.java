@@ -1,6 +1,7 @@
 package org.mongodb.morphia.mapping.lazy;
 
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
@@ -8,201 +9,197 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import org.mongodb.morphia.testutil.TestEntity;
-import org.junit.Assert;
 
 
 public class TestLazySingleReference extends ProxyTestBase {
-  @Test
-  public final void testCreateProxy() {
+    @Test
+    public final void testCreateProxy() {
 
-    // TODO us: exclusion does not work properly with maven + junit4
-    if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-      return;
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity referenced = new ReferencedEntity();
+
+        root.r = referenced;
+        root.r.setFoo("bar");
+
+        getDs().save(referenced);
+        getDs().save(root);
+
+        root = getDs().get(root);
+
+        assertNotFetched(root.r);
+        Assert.assertEquals("bar", root.r.getFoo());
+        assertFetched(root.r);
+        Assert.assertEquals("bar", root.r.getFoo());
+
+        // now remove it from DB
+        getDs().delete(root.r);
+
+        root = deserialize(root);
+        assertNotFetched(root.r);
+
+        try {
+            // must fail
+            root.r.getFoo();
+            Assert.fail("Expected Exception did not happen");
+        } catch (LazyReferenceFetchingException expected) {
+            // fine
+        }
+
     }
 
-    RootEntity root = new RootEntity();
-    final ReferencedEntity referenced = new ReferencedEntity();
+    @Test
+    public final void testShortcutInterface() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
 
-    root.r = referenced;
-    root.r.setFoo("bar");
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
 
-    ds.save(referenced);
-    ds.save(root);
+        root.r = reference;
+        reference.setFoo("bar");
 
-    root = ds.get(root);
+        final Key<ReferencedEntity> k = getDs().save(reference);
+        final String keyAsString = k.getId().toString();
+        getDs().save(root);
 
-    assertNotFetched(root.r);
-    Assert.assertEquals("bar", root.r.getFoo());
-    assertFetched(root.r);
-    Assert.assertEquals("bar", root.r.getFoo());
+        root = getDs().get(root);
 
-    // now remove it from DB
-    ds.delete(root.r);
+        ReferencedEntity p = root.r;
 
-    root = deserialize(root);
-    assertNotFetched(root.r);
+        assertIsProxy(p);
+        assertNotFetched(p);
+        Assert.assertEquals(keyAsString, ((ProxiedEntityReference) p).__getKey().getId().toString());
+        // still not fetched?
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
 
-    try {
-      // must fail
-      root.r.getFoo();
-      Assert.fail("Expected Exception did not happen");
-    } catch (LazyReferenceFetchingException expected) {
-      // fine
+        root = deserialize(root);
+        p = root.r;
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
+        root = getDs().get(root);
+        p = root.r;
+        assertNotFetched(p);
+        getDs().save(root);
+        assertNotFetched(p);
     }
 
-  }
+    @Test
+    @Ignore
+    // FIXME us
+    public final void testSameProxy() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
 
-  @Test
-  public final void testShortcutInterface() {
-    // TODO us: exclusion does not work properly with maven + junit4
-    if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-      return;
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+
+        root.r = reference;
+        root.secondReference = reference;
+        reference.setFoo("bar");
+
+        getDs().save(reference);
+        getDs().save(root);
+
+        root = getDs().get(root);
+        Assert.assertSame(root.r, root.secondReference);
     }
 
-    RootEntity root = new RootEntity();
-    final ReferencedEntity reference = new ReferencedEntity();
+    @Test
+    public final void testSerialization() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
 
-    root.r = reference;
-    reference.setFoo("bar");
+        RootEntity e1 = new RootEntity();
+        final ReferencedEntity e2 = new ReferencedEntity();
 
-    final Key<ReferencedEntity> k = ds.save(reference);
-    final String keyAsString = k.getId().toString();
-    ds.save(root);
+        e1.r = e2;
+        e2.setFoo("bar");
 
-    root = ds.get(root);
+        getDs().save(e2);
+        getDs().save(e1);
 
-    ReferencedEntity p = root.r;
+        e1 = deserialize(getDs().get(e1));
 
-    assertIsProxy(p);
-    assertNotFetched(p);
-    Assert.assertEquals(keyAsString, ((ProxiedEntityReference) p).__getKey().getId().toString());
-    // still not fetched?
-    assertNotFetched(p);
-    p.getFoo();
-    // should be fetched now.
-    assertFetched(p);
+        assertNotFetched(e1.r);
+        Assert.assertEquals("bar", e1.r.getFoo());
+        assertFetched(e1.r);
 
-    root = deserialize(root);
-    p = root.r;
-    assertNotFetched(p);
-    p.getFoo();
-    // should be fetched now.
-    assertFetched(p);
+        e1 = deserialize(e1);
+        assertNotFetched(e1.r);
+        Assert.assertEquals("bar", e1.r.getFoo());
+        assertFetched(e1.r);
 
-    root = ds.get(root);
-    p = root.r;
-    assertNotFetched(p);
-    ds.save(root);
-    assertNotFetched(p);
-  }
-
-  @Test @Ignore
-  // FIXME us
-  public final void testSameProxy() {
-    // TODO us: exclusion does not work properly with maven + junit4
-    if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-      return;
     }
 
-    RootEntity root = new RootEntity();
-    final ReferencedEntity reference = new ReferencedEntity();
+    @Test
+    public final void testGetKeyWithoutFetching() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
 
-    root.r = reference;
-    root.secondReference = reference;
-    reference.setFoo("bar");
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
 
-    ds.save(reference);
-    ds.save(root);
+        root.r = reference;
+        reference.setFoo("bar");
 
-    root = ds.get(root);
-    Assert.assertSame(root.r, root.secondReference);
-  }
+        final Key<ReferencedEntity> k = getDs().save(reference);
+        final String keyAsString = k.getId().toString();
+        getDs().save(root);
 
-  @Test
-  public final void testSerialization() {
-    // TODO us: exclusion does not work properly with maven + junit4
-    if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-      return;
+        root = getDs().get(root);
+
+        final ReferencedEntity p = root.r;
+
+        assertIsProxy(p);
+        assertNotFetched(p);
+        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
+        // still not fetched?
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
     }
 
-    RootEntity e1 = new RootEntity();
-    final ReferencedEntity e2 = new ReferencedEntity();
+    public static class RootEntity extends TestEntity {
+        private static final long serialVersionUID = 1L;
+        @Reference(lazy = true)
+        private ReferencedEntity r;
+        @Reference(lazy = true)
+        private ReferencedEntity secondReference;
 
-    e1.r = e2;
-    e2.setFoo("bar");
-
-    ds.save(e2);
-    ds.save(e1);
-
-    e1 = deserialize(ds.get(e1));
-
-    assertNotFetched(e1.r);
-    Assert.assertEquals("bar", e1.r.getFoo());
-    assertFetched(e1.r);
-
-    e1 = deserialize(e1);
-    assertNotFetched(e1.r);
-    Assert.assertEquals("bar", e1.r.getFoo());
-    assertFetched(e1.r);
-
-  }
-
-  @Test
-  public final void testGetKeyWithoutFetching() {
-    // TODO us: exclusion does not work properly with maven + junit4
-    if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-      return;
     }
 
-    RootEntity root = new RootEntity();
-    final ReferencedEntity reference = new ReferencedEntity();
+    public static class ReferencedEntity extends TestEntity {
+        private static final long serialVersionUID = 1L;
+        private String foo;
 
-    root.r = reference;
-    reference.setFoo("bar");
+        public void setFoo(final String string) {
+            foo = string;
+        }
 
-    final Key<ReferencedEntity> k = ds.save(reference);
-    final String keyAsString = k.getId().toString();
-    ds.save(root);
-
-    root = ds.get(root);
-
-    final ReferencedEntity p = root.r;
-
-    assertIsProxy(p);
-    assertNotFetched(p);
-    Assert.assertEquals(keyAsString, ds.getKey(p).getId().toString());
-    // still not fetched?
-    assertNotFetched(p);
-    p.getFoo();
-    // should be fetched now.
-    assertFetched(p);
-
-  }
-
-  public static class RootEntity extends TestEntity {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    @Reference(lazy = true) ReferencedEntity r;
-    @Reference(lazy = true) ReferencedEntity secondReference;
-
-  }
-
-  public static class ReferencedEntity extends TestEntity {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    private String foo;
-
-    public void setFoo(final String string) {
-      foo = string;
+        public String getFoo() {
+            return foo;
+        }
     }
-
-    public String getFoo() {
-      return foo;
-    }
-  }
 
 }

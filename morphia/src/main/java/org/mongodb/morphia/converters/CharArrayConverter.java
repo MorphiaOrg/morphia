@@ -1,10 +1,9 @@
 package org.mongodb.morphia.converters;
 
 
-import java.lang.reflect.Array;
-
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
+
+import java.lang.reflect.Array;
 
 
 /**
@@ -17,7 +16,7 @@ public class CharArrayConverter extends TypeConverter implements SimpleValueConv
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) throws MappingException {
+    public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) {
         if (val == null) {
             return null;
         }

@@ -18,8 +18,7 @@
 package org.mongodb.morphia;
 
 
-import java.util.List;
-
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +33,8 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexFieldDef;
-import com.mongodb.DBObject;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,199 +45,214 @@ import static org.junit.Assert.assertTrue;
  * @author Scott Hernandez
  */
 public class TestIndexedCapped extends TestBase {
-  @Entity(cap = @CappedAt(count = 1))
-  private static class CurrentStatus {
-    @Id ObjectId id;
-    String message;
+    @Entity(cap = @CappedAt(count = 1))
+    private static class CurrentStatus {
+        @Id
+        private ObjectId id;
+        private String message;
 
-    private CurrentStatus() {
+        private CurrentStatus() {
+        }
+
+        public CurrentStatus(final String msg) {
+            message = msg;
+        }
     }
 
-    public CurrentStatus(final String msg) {
-      message = msg;
-    }
-  }
-
-  private static class IndexedClass {
-    @Id ObjectId id;
-    @Indexed long l = 4;
-  }
-
-  @Entity
-  private static class NamedIndexClass {
-    @Id ObjectId id;
-    @Indexed(name = "l_ascending") long l = 4;
-  }
-
-  @Entity
-  private static class UniqueIndexClass {
-    @Id ObjectId id;
-    @Indexed(name = "l_ascending", unique = true) long l = 4;
-    String name;
-
-    UniqueIndexClass() {
+    private static class IndexedClass {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private long l = 4;
     }
 
-    UniqueIndexClass(final String name) {
-      this.name = name;
+    @Entity
+    private static class NamedIndexClass {
+        @Id
+        private ObjectId id;
+        @Indexed(name = "l_ascending")
+        private long l = 4;
     }
-  }
 
-  private static class Ad {
-    @Id
-    public long id;
+    @Entity
+    private static class UniqueIndexClass {
+        @Id
+        private ObjectId id;
+        @Indexed(name = "l_ascending", unique = true)
+        private long l = 4;
+        private String name;
 
-    @Property("lastMod") @Indexed
-    public long lastModified;
+        UniqueIndexClass() {
+        }
 
-    @Indexed
-    public boolean active;
-  }
-
-  @Indexes(@Index("active,-lastModified"))
-  private static class Ad2 {
-    @Id
-    public long id;
-
-    @Property("lastMod") @Indexed
-    public long lastModified;
-
-    @Indexed
-    public boolean active;
-  }
-
-  @Embedded
-  private static class IndexedEmbed {
-    @Indexed(IndexDirection.DESC) String name;
-  }
-
-  private static class ContainsIndexedEmbed {
-    @Id ObjectId id;
-    IndexedEmbed e;
-  }
-
-  private static class CircularEmbeddedEntity {
-    @Id ObjectId id = new ObjectId();
-    String name;
-    @Indexed CircularEmbeddedEntity a;
-  }
-
-  @Before @Override
-  public void setUp() {
-    super.setUp();
-    morphia.map(CurrentStatus.class).map(UniqueIndexClass.class).map(IndexedClass.class).map(NamedIndexClass.class);
-  }
-
-  @Test
-  public void testCappedEntity() throws Exception {
-    ds.ensureCaps();
-    final CurrentStatus cs = new CurrentStatus("All Good");
-    ds.save(cs);
-    assertEquals(1, ds.getCount(CurrentStatus.class));
-    ds.save(new CurrentStatus("Kinda Bad"));
-    assertEquals(1, ds.getCount(CurrentStatus.class));
-    assertTrue(ds.find(CurrentStatus.class).limit(1).get().message.contains("Bad"));
-    ds.save(new CurrentStatus("Kinda Bad2"));
-    assertEquals(1, ds.getCount(CurrentStatus.class));
-    ds.save(new CurrentStatus("Kinda Bad3"));
-    assertEquals(1, ds.getCount(CurrentStatus.class));
-    ds.save(new CurrentStatus("Kinda Bad4"));
-    assertEquals(1, ds.getCount(CurrentStatus.class));
-  }
-
-  @Test
-  public void testIndexes() {
-    final MappedClass mc = morphia.getMapper().addMappedClass(Ad2.class);
-
-    assertFalse(hasNamedIndex("active_1_lastMod_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.ensureIndexes(Ad2.class);
-    assertTrue(hasNamedIndex("active_1_lastMod_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testEmbeddedIndex() {
-    final MappedClass mc = morphia.getMapper().addMappedClass(ContainsIndexedEmbed.class);
-
-    assertFalse(hasNamedIndex("e.name_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.ensureIndexes(ContainsIndexedEmbed.class);
-    assertTrue(hasNamedIndex("e.name_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testMultipleIndexedFields() {
-    final MappedClass mc = morphia.getMapper().getMappedClass(Ad.class);
-    morphia.map(Ad.class);
-
-    final IndexFieldDef[] definitions = { new IndexFieldDef("lastMod"), new IndexFieldDef("active", IndexDirection.DESC) };
-    assertFalse(hasNamedIndex("lastMod_1_active_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.ensureIndex(Ad.class, definitions);
-    assertTrue(hasNamedIndex("lastMod_1_active_-1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testIndexedRecursiveEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(CircularEmbeddedEntity.class);
-    ds.ensureIndexes();
-    assertTrue(hasNamedIndex("a_1", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testIndexedEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(IndexedClass.class);
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.save(new IndexedClass());
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testUniqueIndexedEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(UniqueIndexClass.class);
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.save(new UniqueIndexClass("a"));
-
-    try {
-      // this should throw...
-      ds.save(new UniqueIndexClass("v"));
-      assertTrue(false);
-      // } catch (MappingException me) {}
-    } catch (Throwable me) {
-    } // currently is masked by java.lang.RuntimeException: json can't
-    // serialize type : class com.mongodb.DBTimestamp
-
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  @Test
-  public void testNamedIndexEntity() throws Exception {
-    final MappedClass mc = morphia.getMapper().getMappedClass(NamedIndexClass.class);
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-    ds.save(new IndexedClass());
-    ds.ensureIndexes();
-    assertTrue(hasIndexedField("l", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-
-    assertTrue(hasNamedIndex("l_ascending", db.getCollection(mc.getCollectionName()).getIndexInfo()));
-  }
-
-  protected boolean hasNamedIndex(final String name, final List<DBObject> indexes) {
-    for (final DBObject dbObj : indexes) {
-      if (dbObj.get("name").equals(name)) {
-        return true;
-      }
+        UniqueIndexClass(final String name) {
+            this.name = name;
+        }
     }
-    return false;
-  }
 
-  protected boolean hasIndexedField(final String name, final List<DBObject> indexes) {
-    for (final DBObject dbObj : indexes) {
-      if (((DBObject) dbObj.get("key")).containsField(name)) {
-        return true;
-      }
+    private static class Ad {
+        @Id
+        private long id;
+
+        @Property("lastMod")
+        @Indexed
+        private long lastModified;
+
+        @Indexed
+        private boolean active;
     }
-    return false;
-  }
+
+    @Indexes(@Index("active,-lastModified"))
+    private static class Ad2 {
+        @Id
+        private long id;
+
+        @Property("lastMod")
+        @Indexed
+        private long lastModified;
+
+        @Indexed
+        private boolean active;
+    }
+
+    @Embedded
+    private static class IndexedEmbed {
+        @Indexed(IndexDirection.DESC)
+        private String name;
+    }
+
+    private static class ContainsIndexedEmbed {
+        @Id
+        private ObjectId id;
+        private IndexedEmbed e;
+    }
+
+    private static class CircularEmbeddedEntity {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Indexed
+        private CircularEmbeddedEntity a;
+    }
+
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        getMorphia().map(CurrentStatus.class).map(UniqueIndexClass.class).map(IndexedClass.class).map(NamedIndexClass.class);
+    }
+
+    @Test
+    public void testCappedEntity() throws Exception {
+        getDs().ensureCaps();
+        final CurrentStatus cs = new CurrentStatus("All Good");
+        getDs().save(cs);
+        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        getDs().save(new CurrentStatus("Kinda Bad"));
+        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertTrue(getDs().find(CurrentStatus.class).limit(1).get().message.contains("Bad"));
+        getDs().save(new CurrentStatus("Kinda Bad2"));
+        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        getDs().save(new CurrentStatus("Kinda Bad3"));
+        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        getDs().save(new CurrentStatus("Kinda Bad4"));
+        assertEquals(1, getDs().getCount(CurrentStatus.class));
+    }
+
+    @Test
+    public void testIndexes() {
+        final MappedClass mc = getMorphia().getMapper().addMappedClass(Ad2.class);
+
+        assertFalse(hasNamedIndex("active_1_lastMod_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().ensureIndexes(Ad2.class);
+        assertTrue(hasNamedIndex("active_1_lastMod_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testEmbeddedIndex() {
+        final MappedClass mc = getMorphia().getMapper().addMappedClass(ContainsIndexedEmbed.class);
+
+        assertFalse(hasNamedIndex("e.name_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().ensureIndexes(ContainsIndexedEmbed.class);
+        assertTrue(hasNamedIndex("e.name_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testMultipleIndexedFields() {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(Ad.class);
+        getMorphia().map(Ad.class);
+
+        final IndexFieldDef[] definitions = {new IndexFieldDef("lastMod"), new IndexFieldDef("active", IndexDirection.DESC)};
+        assertFalse(hasNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().ensureIndex(Ad.class, definitions);
+        assertTrue(hasNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testIndexedRecursiveEntity() throws Exception {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(CircularEmbeddedEntity.class);
+        getDs().ensureIndexes();
+        assertTrue(hasNamedIndex("a_1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testIndexedEntity() throws Exception {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().save(new IndexedClass());
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testUniqueIndexedEntity() throws Exception {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(UniqueIndexClass.class);
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().save(new UniqueIndexClass("a"));
+
+        try {
+            // this should throw...
+            getDs().save(new UniqueIndexClass("v"));
+            assertTrue(false);
+            // } catch (MappingException me) {}
+        } catch (Throwable me) {
+            // currently is masked by java.lang.RuntimeException: json can't
+        } 
+        // serialize type : class com.mongodb.DBTimestamp
+
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    @Test
+    public void testNamedIndexEntity() throws Exception {
+        final MappedClass mc = getMorphia().getMapper().getMappedClass(NamedIndexClass.class);
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+        getDs().save(new IndexedClass());
+        getDs().ensureIndexes();
+        assertTrue(hasIndexedField("l", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+
+        assertTrue(hasNamedIndex("l_ascending", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
+    }
+
+    protected boolean hasNamedIndex(final String name, final List<DBObject> indexes) {
+        for (final DBObject dbObj : indexes) {
+            if (dbObj.get("name").equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean hasIndexedField(final String name, final List<DBObject> indexes) {
+        for (final DBObject dbObj : indexes) {
+            if (((DBObject) dbObj.get("key")).containsField(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

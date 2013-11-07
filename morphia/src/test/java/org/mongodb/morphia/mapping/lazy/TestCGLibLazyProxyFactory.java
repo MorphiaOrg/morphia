@@ -17,7 +17,7 @@ public class TestCGLibLazyProxyFactory extends ProxyTestBase {
 
     final E e = new E();
     e.setFoo("bar");
-    final Key<E> key = ds.save(e);
+    final Key<E> key = getDs().save(e);
     E eProxy = new CGLibLazyProxyFactory().createProxy(E.class, key, new DefaultDatastoreProvider());
 
     assertNotFetched(eProxy);

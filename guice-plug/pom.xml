@@ -19,7 +19,6 @@
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<version>3.0</version>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

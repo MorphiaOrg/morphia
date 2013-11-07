@@ -18,16 +18,16 @@
 package org.mongodb.morphia.testmodel;
 
 
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.testutil.TestEntity;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.testutil.TestEntity;
 
 
 /**
@@ -35,108 +35,104 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 @Entity("hotels")
 public class Hotel extends TestEntity {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public static Hotel create() {
-    return new Hotel();
-  }
+    public enum Type {
+        BUSINESS,
+        LEISURE
+    }
 
-  public enum Type {
-    BUSINESS,
-    LEISURE
-  }
+    private String name;
+    private Date startDate;
+    private int stars;
+    private boolean takesCreditCards;
+    private Type type;
+    private Set<String> tags;
 
-  private String      name;
-  private Date        startDate;
-  private int         stars;
-  private boolean     takesCreditCards;
-  private Type        type;
-  private Set<String> tags;
+    @Transient
+    private String temp;
 
-  @Transient
-  private String temp;
+    @Embedded
+    private Address address;
 
-  @Embedded
-  private Address address;
+    @Embedded(concreteClass = Vector.class)
+    private List<PhoneNumber> phoneNumbers;
 
-  @Embedded(concreteClass = Vector.class)
-  private List<PhoneNumber> phoneNumbers;
-
-  private Hotel() {
-    tags = new HashSet<String>();
-    phoneNumbers = new Vector<PhoneNumber>();
-  }
+    public Hotel() {
+        tags = new HashSet<String>();
+        phoneNumbers = new Vector<PhoneNumber>();
+    }
 
 
-  public Address getAddress() {
-    return address;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public void setAddress(final Address address) {
-    this.address = address;
-  }
+    public void setAddress(final Address address) {
+        this.address = address;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-  public int getStars() {
-    return stars;
-  }
+    public int getStars() {
+        return stars;
+    }
 
-  public void setStars(final int stars) {
-    this.stars = stars;
-  }
+    public void setStars(final int stars) {
+        this.stars = stars;
+    }
 
-  public Date getStartDate() {
-    return startDate;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-  public void setStartDate(final Date startDate) {
-    this.startDate = startDate;
-  }
+    public void setStartDate(final Date startDate) {
+        this.startDate = startDate;
+    }
 
-  public boolean isTakesCreditCards() {
-    return takesCreditCards;
-  }
+    public boolean isTakesCreditCards() {
+        return takesCreditCards;
+    }
 
-  public void setTakesCreditCards(final boolean takesCreditCards) {
-    this.takesCreditCards = takesCreditCards;
-  }
+    public void setTakesCreditCards(final boolean takesCreditCards) {
+        this.takesCreditCards = takesCreditCards;
+    }
 
-  public Type getType() {
-    return type;
-  }
+    public Type getType() {
+        return type;
+    }
 
-  public void setType(final Type type) {
-    this.type = type;
-  }
+    public void setType(final Type type) {
+        this.type = type;
+    }
 
-  public Set<String> getTags() {
-    return tags;
-  }
+    public Set<String> getTags() {
+        return tags;
+    }
 
-  public void setTags(final Set<String> tags) {
-    this.tags = tags;
-  }
+    public void setTags(final Set<String> tags) {
+        this.tags = tags;
+    }
 
-  public List<PhoneNumber> getPhoneNumbers() {
-    return phoneNumbers;
-  }
+    public List<PhoneNumber> getPhoneNumbers() {
+        return phoneNumbers;
+    }
 
-  public void setPhoneNumbers(final List<PhoneNumber> phoneNumbers) {
-    this.phoneNumbers = phoneNumbers;
-  }
+    public void setPhoneNumbers(final List<PhoneNumber> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
 
-  public String getTemp() {
-    return temp;
-  }
+    public String getTemp() {
+        return temp;
+    }
 
-  public void setTemp(final String temp) {
-    this.temp = temp;
-  }
+    public void setTemp(final String temp) {
+        this.temp = temp;
+    }
 }

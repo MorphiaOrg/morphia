@@ -1,9 +1,6 @@
 package org.mongodb.morphia.callbacks;
 
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,148 +15,171 @@ import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.PreSave;
 import org.mongodb.morphia.annotations.Transient;
 
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class TestCallbackEscalation extends TestBase {
-  @Entity
-  static class A extends Callbacks {
-    @Id
-    ObjectId id;
+    @Entity
+    static class A extends Callbacks {
+        @Id
+        private ObjectId id;
+
+        @Embedded
+        private B b;
+
+        @Embedded
+        private final List<B> bs = new LinkedList<B>();
+    }
 
     @Embedded
-    B b;
-
-    @Embedded
-    final List<B> bs = new LinkedList<B>();
-  }
-
-  @Embedded
-  static class B extends Callbacks {
-    // minor issue: i realized, that if B does not bring anything to map,
-    // morphia behaves significantly different, is this wanted ?
-    // see TestEmptyEntityMapping
-    String someProperty = "someThing";
-  }
-
-  static class Callbacks {
-    @Transient
-    boolean prePersist;
-    @Transient
-    boolean postPersist;
-    @Transient
-    boolean preLoad;
-    @Transient
-    boolean postLoad;
-    @Transient
-    boolean preSave;
-
-    @PrePersist
-    void prePersist() {
-      prePersist = true;
+    static class B extends Callbacks {
+        // minor issue: i realized, that if B does not bring anything to map,
+        // morphia behaves significantly different, is this wanted ?
+        // see TestEmptyEntityMapping
+        private String someProperty = "someThing";
     }
 
-    @PostPersist
-    void postPersist() {
-      postPersist = true;
+    static class Callbacks {
+        @Transient
+        private boolean prePersist;
+        @Transient
+        private boolean postPersist;
+        @Transient
+        private boolean preLoad;
+        @Transient
+        private boolean postLoad;
+        @Transient
+        private boolean preSave;
+
+        @PrePersist
+        void prePersist() {
+            prePersist = true;
+        }
+
+        @PostPersist
+        void postPersist() {
+            postPersist = true;
+        }
+
+        @PreLoad
+        void preLoad() {
+            preLoad = true;
+        }
+
+        @PostLoad
+        void postLoad() {
+            postLoad = true;
+        }
+
+        @PreSave
+        void preSave() {
+            preSave = true;
+        }
+
+        boolean isPostLoad() {
+            return postLoad;
+        }
+
+        boolean isPostPersist() {
+            return postPersist;
+        }
+
+        boolean isPreLoad() {
+            return preLoad;
+        }
+
+        boolean isPrePersist() {
+            return prePersist;
+        }
+
+        boolean isPreSave() {
+            return preSave;
+        }
     }
 
-    @PreLoad
-    void preLoad() {
-      preLoad = true;
+    @Test
+    public void testPrePersistEscalation() throws Exception {
+        final A a = new A();
+        a.b = new B();
+        a.bs.add(new B());
+
+        Assert.assertFalse(a.isPrePersist());
+        Assert.assertFalse(a.b.isPrePersist());
+        Assert.assertFalse(a.bs.get(0).isPrePersist());
+
+        getDs().save(a);
+
+        Assert.assertTrue(a.isPrePersist());
+        Assert.assertTrue(a.b.isPrePersist());
+        Assert.assertTrue(a.bs.get(0).isPrePersist());
     }
 
-    @PostLoad
-    void postLoad() {
-      postLoad = true;
+    @Test
+    public void testPostPersistEscalation() throws Exception {
+        final A a = new A();
+        a.b = new B();
+        a.bs.add(new B());
+
+        Assert.assertFalse(a.isPostPersist());
+        Assert.assertFalse(a.b.isPostPersist());
+        Assert.assertFalse(a.bs.get(0).isPostPersist());
+
+        getDs().save(a);
+
+        Assert.assertTrue(a.isPreSave());
+        Assert.assertTrue(a.isPostPersist());
+        Assert.assertTrue(a.b.isPreSave());
+        Assert.assertTrue(a.b.isPostPersist()); //PostPersist in not only called on entities
+        Assert.assertTrue(a.bs.get(0).isPreSave());
+        Assert.assertTrue(a.bs.get(0).isPostPersist()); //PostPersist is not only called on entities
     }
 
-    @PreSave
-    void preSave() {
-      preSave = true;
+    @Test
+    public void testPreLoadEscalation() throws Exception {
+        A a = new A();
+        a.b = new B();
+        a.bs.add(new B());
+
+        Assert.assertFalse(a.isPreLoad());
+        Assert.assertFalse(a.b.isPreLoad());
+        Assert.assertFalse(a.bs.get(0).isPreLoad());
+
+        getDs().save(a);
+
+        Assert.assertFalse(a.isPreLoad());
+        Assert.assertFalse(a.b.isPreLoad());
+        Assert.assertFalse(a.bs.get(0).isPreLoad());
+
+        a = getDs().find(A.class, "_id", a.id).get();
+
+        Assert.assertTrue(a.isPreLoad());
+        Assert.assertTrue(a.b.isPreLoad());
+        Assert.assertTrue(a.bs.get(0).isPreLoad());
+
     }
-  }
 
-  @Test
-  public void testPrePersistEscalation() throws Exception {
-    final A a = new A();
-    a.b = new B();
-    a.bs.add(new B());
+    @Test
+    public void testPostLoadEscalation() throws Exception {
+        A a = new A();
+        a.b = new B();
+        a.bs.add(new B());
 
-    Assert.assertFalse(a.prePersist);
-    Assert.assertFalse(a.b.prePersist);
-    Assert.assertFalse(a.bs.get(0).prePersist);
+        Assert.assertFalse(a.isPostLoad());
+        Assert.assertFalse(a.b.isPostLoad());
+        Assert.assertFalse(a.bs.get(0).isPostLoad());
 
-    ds.save(a);
+        getDs().save(a);
 
-    Assert.assertTrue(a.prePersist);
-    Assert.assertTrue(a.b.prePersist);
-    Assert.assertTrue(a.bs.get(0).prePersist);
-  }
+        Assert.assertFalse(a.isPreLoad());
+        Assert.assertFalse(a.b.isPreLoad());
+        Assert.assertFalse(a.bs.get(0).isPreLoad());
 
-  @Test
-  public void testPostPersistEscalation() throws Exception {
-    final A a = new A();
-    a.b = new B();
-    a.bs.add(new B());
+        a = getDs().find(A.class, "_id", a.id).get();
 
-    Assert.assertFalse(a.postPersist);
-    Assert.assertFalse(a.b.postPersist);
-    Assert.assertFalse(a.bs.get(0).postPersist);
+        Assert.assertTrue(a.isPostLoad());
+        Assert.assertTrue(a.b.isPostLoad());
+        Assert.assertTrue(a.bs.get(0).isPostLoad());
 
-    ds.save(a);
-
-    Assert.assertTrue(a.preSave);
-    Assert.assertTrue(a.postPersist);
-    Assert.assertTrue(a.b.preSave);
-    Assert.assertTrue(a.b.postPersist); //PostPersist in not only called on entities
-    Assert.assertTrue(a.bs.get(0).preSave);
-    Assert.assertTrue(a.bs.get(0).postPersist); //PostPersist is not only called on entities
-  }
-
-  @Test
-  public void testPreLoadEscalation() throws Exception {
-    A a = new A();
-    a.b = new B();
-    a.bs.add(new B());
-
-    Assert.assertFalse(a.preLoad);
-    Assert.assertFalse(a.b.preLoad);
-    Assert.assertFalse(a.bs.get(0).preLoad);
-
-    ds.save(a);
-
-    Assert.assertFalse(a.preLoad);
-    Assert.assertFalse(a.b.preLoad);
-    Assert.assertFalse(a.bs.get(0).preLoad);
-
-    a = ds.find(A.class, "_id", a.id).get();
-
-    Assert.assertTrue(a.preLoad);
-    Assert.assertTrue(a.b.preLoad);
-    Assert.assertTrue(a.bs.get(0).preLoad);
-
-  }
-
-  @Test
-  public void testPostLoadEscalation() throws Exception {
-    A a = new A();
-    a.b = new B();
-    a.bs.add(new B());
-
-    Assert.assertFalse(a.postLoad);
-    Assert.assertFalse(a.b.postLoad);
-    Assert.assertFalse(a.bs.get(0).postLoad);
-
-    ds.save(a);
-
-    Assert.assertFalse(a.preLoad);
-    Assert.assertFalse(a.b.preLoad);
-    Assert.assertFalse(a.bs.get(0).preLoad);
-
-    a = ds.find(A.class, "_id", a.id).get();
-
-    Assert.assertTrue(a.postLoad);
-    Assert.assertTrue(a.b.postLoad);
-    Assert.assertTrue(a.bs.get(0).postLoad);
-
-  }
+    }
 }

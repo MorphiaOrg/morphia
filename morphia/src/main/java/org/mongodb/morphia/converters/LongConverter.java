@@ -1,18 +1,16 @@
 package org.mongodb.morphia.converters;
 
 
-import java.util.List;
-
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.ReflectionUtils;
+
+import java.util.List;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
 public class LongConverter extends TypeConverter implements SimpleValueConverter {
 
   public LongConverter() {
@@ -20,7 +18,7 @@ public class LongConverter extends TypeConverter implements SimpleValueConverter
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) {
     if (val == null) {
       return null;
     }

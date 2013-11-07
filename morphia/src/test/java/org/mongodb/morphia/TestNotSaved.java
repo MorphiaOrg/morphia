@@ -31,42 +31,44 @@ import org.mongodb.morphia.annotations.NotSaved;
  */
 public class TestNotSaved extends TestBase {
 
-  @Entity(value = "Normal", noClassnameStored = true)
-  static class Normal {
-    @Id ObjectId id = new ObjectId();
-    String name;
+    @Entity(value = "Normal", noClassnameStored = true)
+    static class Normal {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
 
-    public Normal(final String name) {
-      this.name = name;
+        public Normal(final String name) {
+            this.name = name;
+        }
+
+        protected Normal() {
+        }
     }
 
-    protected Normal() {
+    @Entity(value = "Normal", noClassnameStored = true)
+    static class NormalWithNotSaved {
+        @Id
+        private ObjectId id = new ObjectId();
+        @NotSaved
+        private final String name = "never";
     }
-  }
 
-  @Entity(value = "Normal", noClassnameStored = true)
-  static class NormalWithNotSaved {
-    @Id       ObjectId id   = new ObjectId();
-    @NotSaved
-    final String   name = "never";
-  }
-
-  @Test
-  public void testBasic() throws Exception {
-    ds.save(new Normal("value"));
-    Normal n = ds.find(Normal.class).get();
-    Assert.assertNotNull(n);
-    Assert.assertNotNull(n.name);
-    ds.delete(n);
-    ds.save(new NormalWithNotSaved());
-    n = ds.find(Normal.class).get();
-    Assert.assertNotNull(n);
-    Assert.assertNull(n.name);
-    ds.delete(n);
-    ds.save(new Normal("value21"));
-    final NormalWithNotSaved notSaved = ds.find(NormalWithNotSaved.class).get();
-    Assert.assertNotNull(notSaved);
-    Assert.assertNotNull(notSaved.name);
-    Assert.assertEquals("never", notSaved.name);
-  }
+    @Test
+    public void testBasic() throws Exception {
+        getDs().save(new Normal("value"));
+        Normal n = getDs().find(Normal.class).get();
+        Assert.assertNotNull(n);
+        Assert.assertNotNull(n.name);
+        getDs().delete(n);
+        getDs().save(new NormalWithNotSaved());
+        n = getDs().find(Normal.class).get();
+        Assert.assertNotNull(n);
+        Assert.assertNull(n.name);
+        getDs().delete(n);
+        getDs().save(new Normal("value21"));
+        final NormalWithNotSaved notSaved = getDs().find(NormalWithNotSaved.class).get();
+        Assert.assertNotNull(notSaved);
+        Assert.assertNotNull(notSaved.name);
+        Assert.assertEquals("never", notSaved.name);
+    }
 }
