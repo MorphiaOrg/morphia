@@ -1,76 +1,84 @@
 package org.mongodb.morphia.mapping.lazy.proxy;
 
 
+import com.thoughtworks.proxy.kit.ObjectReference;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-import com.thoughtworks.proxy.kit.ObjectReference;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings({"rawtypes" })
+@SuppressWarnings({"rawtypes"})
 public abstract class AbstractReference implements Serializable, ObjectReference, ProxiedReference {
 
-  private static final long serialVersionUID = 1L;
-  protected final DatastoreProvider p;
-  protected final boolean           ignoreMissing;
-  protected       Object            object;
-  private boolean isFetched;
-  protected final Class referenceObjClass;
+    private static final long serialVersionUID = 1L;
+    //CHECKSTYLE:OFF
+    protected final DatastoreProvider p;
+    protected final boolean ignoreMissing;
+    protected Object object;
+    protected final Class referenceObjClass;
+    //CHECKSTYLE:ON
+    private boolean isFetched;
 
-  protected AbstractReference(final DatastoreProvider p, final Class referenceObjClass, final boolean ignoreMissing) {
-    this.p = p;
-    this.referenceObjClass = referenceObjClass;
-    this.ignoreMissing = ignoreMissing;
-  }
-
-  public final synchronized Object get() {
-    if (isFetched) {
-      return object;
+    protected AbstractReference(final DatastoreProvider p, final Class referenceObjClass, final boolean ignoreMissing) {
+        this.p = p;
+        this.referenceObjClass = referenceObjClass;
+        this.ignoreMissing = ignoreMissing;
     }
 
-    object = fetch();
-    isFetched = true;
-    return object;
-  }
+    public final synchronized Object get() {
+        if (isFetched) {
+            return object;
+        }
 
-  protected abstract Object fetch();
+        object = fetch();
+        isFetched = true;
+        return object;
+    }
 
-  public final void set(final Object arg0) {
-    throw new UnsupportedOperationException();
-  }
+    protected abstract Object fetch();
 
-  public final boolean __isFetched() {
-    return isFetched;
-  }
+    public final void set(final Object arg0) {
+        throw new UnsupportedOperationException();
+    }
 
-  protected final Object fetch(final Key<?> id) {
-    return p.get().getByKey(referenceObjClass, id);
-  }
+    //CHECKSTYLE:OFF
+    public final boolean __isFetched() {
+    //CHECKSTYLE:ON
+        return isFetched;
+    }
+
+    protected final Object fetch(final Key<?> id) {
+        return p.get().getByKey(referenceObjClass, id);
+    }
 
 
-  private void writeObject(final ObjectOutputStream out) throws IOException {
-    // excessive hoop-jumping in order not to have to recreate the
-    // instance.
-    // as soon as weÂ´d have an ObjectFactory, that would be unnecessary
-    beforeWriteObject();
-    isFetched = false;
-    out.defaultWriteObject();
-  }
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        // excessive hoop-jumping in order not to have to recreate the
+        // instance.
+        // as soon as weÂ´d have an ObjectFactory, that would be unnecessary
+        beforeWriteObject();
+        isFetched = false;
+        out.defaultWriteObject();
+    }
 
-  protected void beforeWriteObject() {
-  }
+    protected void beforeWriteObject() {
+    }
 
-  public final Class __getReferenceObjClass() {
-    return referenceObjClass;
-  }
+    //CHECKSTYLE:OFF
+    public final Class __getReferenceObjClass() {
+    //CHECKSTYLE:ON
+        return referenceObjClass;
+    }
 
-  public Object __unwrap() {
-    return get();
-  }
+    //CHECKSTYLE:OFF
+    public Object __unwrap() {
+    //CHECKSTYLE:ON
+        return get();
+    }
 }

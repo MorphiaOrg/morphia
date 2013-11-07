@@ -18,11 +18,6 @@
 package org.mongodb.morphia.ext;
 
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
@@ -31,6 +26,11 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
+
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,70 +41,71 @@ import static org.junit.Assert.assertNotNull;
  */
 public class ExternalMapperExtTest extends TestBase {
 
-  /**
-   * The skeleton to apply from.
-   *
-   * @author skot
-   */
-  @Entity("special")
-  private static class Skeleton {
-    @Id String id;
-  }
-
-  private static class EntityWithNoAnnotations {
-    String id;
-  }
-
-  private static class CloneMapper {
-    final Mapper mapper;
-
-    public CloneMapper(final Mapper mapper) {
-      this.mapper = mapper;
+    /**
+     * The skeleton to apply from.
+     *
+     * @author skot
+     */
+    @Entity("special")
+    private static class Skeleton {
+        @Id
+        private String id;
     }
 
-    void map(final Class sourceClass, final Class destClass) {
-      final MappedClass destMC = mapper.getMappedClass(destClass);
-      final MappedClass sourceMC = mapper.getMappedClass(sourceClass);
-      //copy the class level annotations
-      for (final Entry<Class<? extends Annotation>, List<Annotation>> e : sourceMC.getRelevantAnnotations().entrySet()) {
-        if (e.getValue() != null && !e.getValue().isEmpty()) {
-          for (final Annotation ann : e.getValue()) {
-            destMC.addAnnotation(e.getKey(), ann);
-          }
-        }
-      }
-      //copy the fields.
-      for (final MappedField mf : sourceMC.getPersistenceFields()) {
-        final Map<Class<? extends Annotation>, Annotation> annMap = mf.getAnnotations();
-        final MappedField destMF = destMC.getMappedFieldByJavaField(mf.getJavaFieldName());
-        if (destMF != null && annMap != null && !annMap.isEmpty()) {
-          for (final Entry<Class<? extends Annotation>, Annotation> e : annMap.entrySet()) {
-            destMF.addAnnotation(e.getKey(), e.getValue());
-          }
-        }
-      }
-
+    private static class EntityWithNoAnnotations {
+        private String id;
     }
-  }
 
-  @Test
-  public void testExternalMapping() throws Exception {
-    final Mapper mapper = morphia.getMapper();
-    final CloneMapper helper = new CloneMapper(mapper);
-    helper.map(Skeleton.class, EntityWithNoAnnotations.class);
-    final MappedClass mc = mapper.getMappedClass(EntityWithNoAnnotations.class);
-    mc.update();
-    assertNotNull(mc.getIdField());
-    assertNotNull(mc.getEntityAnnotation());
-    assertEquals("special", mc.getEntityAnnotation().value());
+    private static class CloneMapper {
+        private final Mapper mapper;
 
-    EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
-    ent.id = "test";
-    final Key<EntityWithNoAnnotations> k = ds.save(ent);
-    assertNotNull(k);
-    ent = ds.get(EntityWithNoAnnotations.class, "test");
-    assertNotNull(ent);
-    assertEquals("test", ent.id);
-  }
+        public CloneMapper(final Mapper mapper) {
+            this.mapper = mapper;
+        }
+
+        void map(final Class sourceClass, final Class destClass) {
+            final MappedClass destMC = mapper.getMappedClass(destClass);
+            final MappedClass sourceMC = mapper.getMappedClass(sourceClass);
+            //copy the class level annotations
+            for (final Entry<Class<? extends Annotation>, List<Annotation>> e : sourceMC.getRelevantAnnotations().entrySet()) {
+                if (e.getValue() != null && !e.getValue().isEmpty()) {
+                    for (final Annotation ann : e.getValue()) {
+                        destMC.addAnnotation(e.getKey(), ann);
+                    }
+                }
+            }
+            //copy the fields.
+            for (final MappedField mf : sourceMC.getPersistenceFields()) {
+                final Map<Class<? extends Annotation>, Annotation> annMap = mf.getAnnotations();
+                final MappedField destMF = destMC.getMappedFieldByJavaField(mf.getJavaFieldName());
+                if (destMF != null && annMap != null && !annMap.isEmpty()) {
+                    for (final Entry<Class<? extends Annotation>, Annotation> e : annMap.entrySet()) {
+                        destMF.addAnnotation(e.getKey(), e.getValue());
+                    }
+                }
+            }
+
+        }
+    }
+
+    @Test
+    public void testExternalMapping() throws Exception {
+        final Mapper mapper = getMorphia().getMapper();
+        final CloneMapper helper = new CloneMapper(mapper);
+        helper.map(Skeleton.class, EntityWithNoAnnotations.class);
+        final MappedClass mc = mapper.getMappedClass(EntityWithNoAnnotations.class);
+        mc.update();
+        assertNotNull(mc.getIdField());
+        assertNotNull(mc.getEntityAnnotation());
+        assertEquals("special", mc.getEntityAnnotation().value());
+
+        EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
+        ent.id = "test";
+        final Key<EntityWithNoAnnotations> k = getDs().save(ent);
+        assertNotNull(k);
+        ent = getDs().get(EntityWithNoAnnotations.class, "test");
+        assertNotNull(ent);
+        assertEquals("test", ent.id);
+    }
 }
 

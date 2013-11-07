@@ -1,0 +1,51 @@
+<FindBugsFilter>
+    <!-- specific excludes which should be fixed -->
+    <Match>
+        <Class name="org.bson.JSONWriterSettings"/>
+    </Match>
+    <Match>
+        <Bug code="EI,EI2"/>
+    </Match>
+
+    <!-- ignore driver-compat for now - this should be addressed after bson/driver warnings fixed -->
+    <Match>
+        <Package name="~com\.mongodb.*"/>
+    </Match>
+
+    <!-- these specific issues are deliberate design decisions -->
+    <Match>
+        <Class name="com.mongodb.codecs.DocumentCodec">
+            <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
+        </Class>
+    </Match>
+    <Match>
+        <Class name="org.mongodb.DatabaseTestCase">
+            <Bug pattern="MS_PKGPROTECT"/>
+        </Class>
+    </Match>
+    <Match>
+        <Class name="org.mongodb.FunctionalSpecification">
+            <Bug pattern="MS_PKGPROTECT"/>
+        </Class>
+    </Match>
+    <Match>
+        <Class name="com.mongodb.DatabaseTestCase">
+            <Bug pattern="MS_PKGPROTECT"/>
+        </Class>
+    </Match>
+
+    <!-- Spock tests seem to fail the serial version ID test when stubbing.  Annoying. -->
+    <Match>
+        <Class name="~.*\.*Specification.*"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <!-- All bugs in test classes, except for JUnit-specific bugs -->
+    <Match>
+        <Class name="~.*\.*Test"/>
+        <Not>
+            <Bug code="IJU"/>
+        </Not>
+    </Match>
+
+</FindBugsFilter>

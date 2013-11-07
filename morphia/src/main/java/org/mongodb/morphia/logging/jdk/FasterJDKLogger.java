@@ -15,7 +15,7 @@ public class FasterJDKLogger extends FastestJDKLogger {
   private String getCallingMethod() {
     final StackTraceElement[] stack = (new Throwable()).getStackTrace();
     for (final StackTraceElement ste : stack) {
-      if (className.equals(ste.getClassName())) {
+      if (getClassName().equals(ste.getClassName())) {
         return ste.getMethodName();
       }
     }
@@ -25,15 +25,15 @@ public class FasterJDKLogger extends FastestJDKLogger {
 
   @Override
   protected void log(final Level l, final String m, final Throwable t) {
-    if (logger.isLoggable(l)) {
-      logger.logp(l, className, getCallingMethod(), m, t);
+    if (getLogger().isLoggable(l)) {
+        getLogger().logp(l, getClassName(), getCallingMethod(), m, t);
     }
   }
 
   @Override
   protected void log(final Level l, final String f, final Object... a) {
-    if (logger.isLoggable(l)) {
-      logger.logp(l, className, getCallingMethod(), f, a);
+    if (getLogger().isLoggable(l)) {
+        getLogger().logp(l, getClassName(), getCallingMethod(), f, a);
     }
   }
 }

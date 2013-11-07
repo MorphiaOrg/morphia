@@ -6,15 +6,15 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 
 
-public class KnownFields extends TestBase {
+public class KnownFieldsTest extends TestBase {
 
     private static class A {
-        String foo;
-        String bar;
+        private String foo;
+        private String bar;
     }
 
     @Test
     public void testKnownFields() {
-        Assert.assertNotNull(ds.createQuery(A.class).retrieveKnownFields());
+        Assert.assertNotNull(getDs().createQuery(A.class).retrieveKnownFields());
     }
 }

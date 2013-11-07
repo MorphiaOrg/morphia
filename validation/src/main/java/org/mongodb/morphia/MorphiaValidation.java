@@ -1,10 +1,12 @@
 package org.mongodb.morphia;
 
 
-@Deprecated
 /**
  * @deprecated renamed to ValidationExtension
  */
-public class MorphiaValidation extends ValidationExtension
-{
+@Deprecated
+public class MorphiaValidation extends ValidationExtension {
+    public MorphiaValidation(final Morphia m) {
+        super(m);
+    }
 }

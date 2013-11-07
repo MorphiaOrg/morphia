@@ -1,18 +1,16 @@
 package org.mongodb.morphia.converters;
 
 
+import org.mongodb.morphia.mapping.MappedField;
+
 import java.util.Locale;
 import java.util.StringTokenizer;
-
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
 public class LocaleConverter extends TypeConverter implements SimpleValueConverter {
 
   public LocaleConverter() {
@@ -20,7 +18,7 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
   }
 
   @Override
-  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
     return parseLocale(fromDBObject.toString());
   }
 

@@ -1,16 +1,16 @@
 package org.mongodb.morphia.mapping.lazy;
 
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TestReferenceMap extends ProxyTestBase {
@@ -29,8 +29,8 @@ public class TestReferenceMap extends ProxyTestBase {
     a.bs.put("b1+", b1);
     a.bs.put("b2", b2);
 
-    ds.save(b2, b1, a);
-    a = ds.get(a);
+    getDs().save(b2, b1, a);
+    a = getDs().get(a);
 
     assertIsProxy(a.bs);
     assertNotFetched(a.bs);
@@ -57,7 +57,7 @@ public class TestReferenceMap extends ProxyTestBase {
     // make sure, saving does not fetch
     a = deserialize(a);
     assertNotFetched(a.bs);
-    ds.save(a);
+    getDs().save(a);
     assertNotFetched(a.bs);
   }
 
@@ -68,7 +68,7 @@ public class TestReferenceMap extends ProxyTestBase {
      */
     private static final long serialVersionUID = 1L;
     @Reference(lazy = true)
-    final Map<String, B> bs = new HashMap<String, B>();
+    private final Map<String, B> bs = new HashMap<String, B>();
   }
 
   public static class B implements Serializable {

@@ -10,7 +10,7 @@ public enum MapreduceType {
   public static MapreduceType fromString(final String val) {
     for (int i = 0; i < values().length; i++) {
       final MapreduceType fo = values()[i];
-      if (fo.equals(val)) {
+      if (fo.name().equals(val)) {
         return fo;
       }
     }

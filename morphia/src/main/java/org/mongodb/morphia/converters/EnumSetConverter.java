@@ -1,61 +1,60 @@
 package org.mongodb.morphia.converters;
 
 
+import org.mongodb.morphia.mapping.MappedField;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class EnumSetConverter extends TypeConverter implements SimpleValueConverter {
 
-  private final EnumConverter ec = new EnumConverter();
+    private final EnumConverter ec = new EnumConverter();
 
-  public EnumSetConverter() {
-    super(EnumSet.class);
-  }
-
-  @Override
-  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
-    if (fromDBObject == null) {
-      return null;
+    public EnumSetConverter() {
+        super(EnumSet.class);
     }
 
-    final Class enumType = optionalExtraInfo.getSubClass();
+    @Override
+    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        if (fromDBObject == null) {
+            return null;
+        }
 
-    final List l = (List) fromDBObject;
-    if (l.isEmpty()) {
-      return EnumSet.noneOf(enumType);
+        final Class enumType = optionalExtraInfo.getSubClass();
+
+        final List l = (List) fromDBObject;
+        if (l.isEmpty()) {
+            return EnumSet.noneOf(enumType);
+        }
+
+        final List enums = new ArrayList();
+        for (final Object object : l) {
+            enums.add(ec.decode(enumType, object));
+        }
+        return EnumSet.copyOf(enums);
     }
 
-    final List enums = new ArrayList();
-    for (final Object object : l) {
-      enums.add(ec.decode(enumType, object));
+    @Override
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+        if (value == null) {
+            return null;
+        }
+
+        final List values = new ArrayList();
+
+        final EnumSet s = (EnumSet) value;
+        final Object[] array = s.toArray();
+        for (final Object anArray : array) {
+            values.add(ec.encode(anArray));
+        }
+
+        return values;
     }
-    return EnumSet.copyOf(enums);
-  }
-
-  @Override
-  public Object encode(final Object value, final MappedField optionalExtraInfo) {
-    if (value == null) {
-      return null;
-    }
-
-    final List values = new ArrayList();
-
-    final EnumSet s = (EnumSet) value;
-    final Object[] array = s.toArray();
-    for (final Object anArray : array) {
-      values.add(ec.encode(anArray));
-    }
-
-    return values;
-  }
 }

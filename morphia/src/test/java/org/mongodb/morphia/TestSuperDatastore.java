@@ -18,11 +18,11 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.BasicDBObject;
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
-import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.testmodel.Rectangle;
-import com.mongodb.BasicDBObject;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,81 +32,78 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestSuperDatastore extends TestBase {
 
-  AdvancedDatastore ads;
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+    }
 
-  @Before @Override
-  public void setUp() {
-    super.setUp();
-    ads = (AdvancedDatastore) ds;
-  }
+    @Test
+    public void testSaveAndDelete() throws Exception {
+        final String ns = "hotels";
+        final Rectangle rect = new Rectangle(10, 10);
+        ObjectId id = new ObjectId();
+        rect.setId(id);
 
-  @Test
-  public void testSaveAndDelete() throws Exception {
-    final String ns = "hotels";
-    final Rectangle rect = new Rectangle(10, 10);
-    rect.setId("1");
+        getDb().getCollection(ns).remove(new BasicDBObject());
 
-    db.getCollection(ns).remove(new BasicDBObject());
+        //test delete(entity, id)
+        getAds().save(ns, rect);
+        assertEquals(1, getAds().getCount(ns));
+        getAds().delete(ns, Rectangle.class, 1);
+        assertEquals(1, getAds().getCount(ns));
+        getAds().delete(ns, Rectangle.class, id);
+        assertEquals(0, getAds().getCount(ns));
+    }
 
-    //test delete(entity, id)
-    ads.save(ns, rect);
-    assertEquals(1, ads.getCount(ns));
-    ads.delete(ns, Rectangle.class, 1);
-    assertEquals(1, ads.getCount(ns));
-    ads.delete(ns,  Rectangle.class, "1");
-    assertEquals(0, ads.getCount(ns));
-  }
+    @Test
+    public void testGet() throws Exception {
+        final String ns = "hotels";
+        final Rectangle rect = new Rectangle(10, 10);
 
-  @Test
-  public void testGet() throws Exception {
-    final String ns = "hotels";
-    final Rectangle rect = new Rectangle(10, 10);
-    rect.setId("1");
+        getDb().getCollection(ns).remove(new BasicDBObject());
 
-    db.getCollection(ns).remove(new BasicDBObject());
+        //test delete(entity, id)
+        getAds().save(ns, rect);
+        assertEquals(1, getAds().getCount(ns));
+        final Rectangle rectLoaded = getAds().get(ns, Rectangle.class, rect.getId());
+        assertEquals(rect.getId(), rectLoaded.getId());
+        assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
+    }
 
-    //test delete(entity, id)
-    ads.save(ns, rect);
-    assertEquals(1, ads.getCount(ns));
-    final Rectangle rectLoaded = ads.get(ns, Rectangle.class, rect.getId());
-    assertEquals(rect.getId(), rectLoaded.getId());
-    assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
-  }
+    @Test
+    public void testFind() throws Exception {
+        final String ns = "hotels";
+        Rectangle rect = new Rectangle(10, 10);
+        ObjectId id = new ObjectId();
+        rect.setId(id);
 
-  @Test
-  public void testFind() throws Exception {
-    final String ns = "hotels";
-    Rectangle rect = new Rectangle(10, 10);
-    rect.setId("1");
+        getDb().getCollection(ns).remove(new BasicDBObject());
 
-    db.getCollection(ns).remove(new BasicDBObject());
+        //test delete(entity, id)
+        getAds().save(ns, rect);
+        assertEquals(1, getAds().getCount(ns));
+        Rectangle rectLoaded = getAds().find(ns, Rectangle.class).get();
+        assertEquals(rect.getId(), rectLoaded.getId());
+        assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 
-    //test delete(entity, id)
-    ads.save(ns, rect);
-    assertEquals(1, ads.getCount(ns));
-    Rectangle rectLoaded = ads.find(ns, Rectangle.class).get();
-    assertEquals(rect.getId(), rectLoaded.getId());
-    assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
+        rect = new Rectangle(2, 1);
+        getAds().save(rect); //saved to default collection name (kind)
+        assertEquals(1, getAds().getCount(rect));
 
-    rect = new Rectangle(2, 1);
-    rect.setId("2");
-    ads.save(rect); //saved to default collection name (kind)
-    assertEquals(1, ads.getCount(rect));
+        rect.setId(null);
+        getAds().save(rect); //saved to default collection name (kind)
+        assertEquals(2, getAds().getCount(rect));
 
-    rect.setId("3");
-    ads.save(rect); //saved to default collection name (kind)
-    assertEquals(2, ads.getCount(rect));
+        rect = new Rectangle(4, 3);
+        getAds().save(ns, rect);
+        assertEquals(2, getAds().getCount(ns));
 
-    rect = new Rectangle(4, 3);
-    rect.setId("3");
-    ads.save(ns, rect);
-    assertEquals(2, ads.getCount(ns));
+        rectLoaded = getAds().find(ns, Rectangle.class).asList().get(1);
+        assertEquals(rect.getId(), rectLoaded.getId());
+        assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 
-    rectLoaded = ads.find(ns, Rectangle.class).asList().get(1);
-    assertEquals(rect.getId(), rectLoaded.getId());
-    assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
+        getAds().find(ns, Rectangle.class, "_id !=", "-1", 1, 1).get();
 
-    ads.find(ns, Rectangle.class, "_id !=", "-1", 1, 1).get();
-
-  }
+    }
 }

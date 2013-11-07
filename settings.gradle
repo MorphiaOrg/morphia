@@ -1,0 +1,1 @@
+include 'morphia', 'logging-slf4j', 'validation', 'entityscanner-plug', 'guice-plug', 'jrebel-plug', 'gwt'

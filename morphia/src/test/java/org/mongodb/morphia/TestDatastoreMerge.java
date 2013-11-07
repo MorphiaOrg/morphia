@@ -30,32 +30,33 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestDatastoreMerge extends TestBase {
 
-  private static class TestEntity {
-    @Id ObjectId id;
-    String name;
-    String foo;
-    int position;
-  }
+    private static class TestEntity {
+        @Id
+        private ObjectId id;
+        private String name;
+        private String foo;
+        private int position;
+    }
 
-  @Test
-  public void testMerge() throws Exception {
-    final TestEntity te = new TestEntity();
-    te.name = "test1";
-    te.foo = "bar";
-    te.position = 1;
-    ds.save(te);
+    @Test
+    public void testMerge() throws Exception {
+        final TestEntity te = new TestEntity();
+        te.name = "test1";
+        te.foo = "bar";
+        te.position = 1;
+        getDs().save(te);
 
-    assertEquals(1, ds.getCount(te));
+        assertEquals(1, getDs().getCount(te));
 
-    //only update the position field with merge, normally save would override the whole object.
-    final TestEntity te2 = new TestEntity();
-    te2.id = te.id;
-    te2.position = 5;
-    ds.merge(te2);
+        //only update the position field with merge, normally save would override the whole object.
+        final TestEntity te2 = new TestEntity();
+        te2.id = te.id;
+        te2.position = 5;
+        getDs().merge(te2);
 
-    final TestEntity teLoaded = ds.get(te);
-    assertEquals(teLoaded.name, te.name);
-    assertEquals(teLoaded.foo, te.foo);
-    assertEquals(teLoaded.position, te2.position);
-  }
+        final TestEntity teLoaded = getDs().get(te);
+        assertEquals(teLoaded.name, te.name);
+        assertEquals(teLoaded.foo, te.foo);
+        assertEquals(teLoaded.position, te2.position);
+    }
 }

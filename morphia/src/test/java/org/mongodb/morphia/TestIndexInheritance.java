@@ -18,6 +18,7 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +28,6 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.MappedClass;
-import com.mongodb.DBCollection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,97 +38,137 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestIndexInheritance extends TestBase {
 
-  @Indexes(@Index("description"))
-  private abstract static class Shape {
-    @Id
-    ObjectId id;
-    String description;
-    @Indexed
-    String foo;
-  }
+    @Indexes(@Index("description"))
+    public abstract static class Shape {
+        @Id
+        private ObjectId id;
+        private String description;
+        @Indexed
+        private String foo;
 
-  @Indexes(@Index("radius"))
-  private static class Circle extends Shape {
-    double radius = 1;
+        public String getDescription() {
+            return description;
+        }
 
-    public Circle() {
-      description = "Circles are round and can be rolled along the ground.";
-    }
-  }
+        public void setDescription(final String description) {
+            this.description = description;
+        }
 
-  @Entity
-  private static class Child extends Father {
-    private Child() {
-    }
+        public String getFoo() {
+            return foo;
+        }
 
-    private Child(final String name) {
-      super(name);
-    }
-  }
+        public void setFoo(final String foo) {
+            this.foo = foo;
+        }
 
-  @Entity
-  private static class Father extends GrandFather {
-    private Father() {
-    }
+        public ObjectId getId() {
+            return id;
+        }
 
-    private Father(final String name) {
-      super(name);
-    }
-  }
-
-  @Entity
-  private static class GrandFather {
-    @Id
-    ObjectId id;
-    String name;
-
-    private GrandFather() {
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
     }
 
-    private GrandFather(final String name) {
-      this.name = name;
+    @Indexes(@Index("radius"))
+    private static class Circle extends Shape {
+        private double radius = 1;
+
+        public Circle() {
+            setDescription("Circles are round and can be rolled along the ground.");
+        }
     }
-  }
 
-  @Test
-  public void testClassIndexInherit() throws Exception {
-    morphia.map(Circle.class)
-      .map(Shape.class);
-    final MappedClass mc = morphia.getMapper()
-      .getMappedClass(Circle.class);
-    assertNotNull(mc);
+    @Entity
+    public static class Child extends Father {
+        public Child() {
+        }
 
-    assertEquals(2, mc.getAnnotations(Indexes.class)
-      .size());
+        public Child(final String name) {
+            super(name);
+        }
+    }
 
-    ds.ensureIndexes();
-    final DBCollection coll = ds.getCollection(Circle.class);
+    @Entity
+    public static class Father extends GrandFather {
+        public Father() {
+        }
 
-    assertEquals(4, coll.getIndexInfo()
-      .size());
-  }
+        public Father(final String name) {
+            super(name);
+        }
+    }
 
-  @Test
-  public void testInheritedFieldIndex() throws Exception {
-    morphia.map(Circle.class)
-      .map(Shape.class);
-    morphia.getMapper()
-      .getMappedClass(Circle.class);
+    @Entity
+    public static class GrandFather {
+        @Id
+        private ObjectId id;
+        private String name;
 
-    ds.ensureIndexes();
-    final DBCollection coll = ds.getCollection(Circle.class);
+        public GrandFather() {
+        }
 
-    assertEquals(4, coll.getIndexInfo()
-      .size());
-  }
+        public GrandFather(final String name) {
+            this.name = name;
+        }
 
-  @Test
-  public void deepTree() {
-    final Child jimmy = new Child("Jimmy");
-    ds.save(jimmy);
+        public ObjectId getId() {
+            return id;
+        }
 
-    final Child loaded = ds.get(Child.class, jimmy.id);
-    Assert.assertNotNull(loaded);
-    Assert.assertEquals(jimmy.name, loaded.name);
-  }
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+    }
+
+    @Test
+    public void testClassIndexInherit() throws Exception {
+        getMorphia().map(Circle.class)
+            .map(Shape.class);
+        final MappedClass mc = getMorphia().getMapper()
+                                   .getMappedClass(Circle.class);
+        assertNotNull(mc);
+
+        assertEquals(2, mc.getAnnotations(Indexes.class)
+                          .size());
+
+        getDs().ensureIndexes();
+        final DBCollection coll = getDs().getCollection(Circle.class);
+
+        assertEquals(4, coll.getIndexInfo()
+                            .size());
+    }
+
+    @Test
+    public void testInheritedFieldIndex() throws Exception {
+        getMorphia().map(Circle.class)
+            .map(Shape.class);
+        getMorphia().getMapper()
+            .getMappedClass(Circle.class);
+
+        getDs().ensureIndexes();
+        final DBCollection coll = getDs().getCollection(Circle.class);
+
+        assertEquals(4, coll.getIndexInfo()
+                            .size());
+    }
+
+    @Test
+    public void deepTree() {
+        final Child jimmy = new Child("Jimmy");
+        getDs().save(jimmy);
+
+        final Child loaded = getDs().get(Child.class, jimmy.getId());
+        Assert.assertNotNull(loaded);
+        Assert.assertEquals(jimmy.getName(), loaded.getName());
+    }
 }

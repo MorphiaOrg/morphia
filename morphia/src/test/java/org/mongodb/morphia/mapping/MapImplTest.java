@@ -1,17 +1,17 @@
 package org.mongodb.morphia.mapping;
 
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
-import com.mongodb.BasicDBObject;
-import org.junit.Assert;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
@@ -22,117 +22,128 @@ import static org.junit.Assert.assertTrue;
  */
 public class MapImplTest extends TestBase {
 
-  private static class ContainsMapOfEmbeddedInterfaces {
-    @Id ObjectId id;
-    @Embedded
-    final Map<String, Serializable> values = new HashMap<String, Serializable>();
-  }
-
-  private static class ContainsMapOfEmbeddedGoos {
-    @Id ObjectId id;
-    @Embedded
-    final Map<String, Goo> values = new HashMap<String, Goo>();
-  }
-
-  private static class Goo implements Serializable {
-    static final long serialVersionUID = 1L;
-    @Id ObjectId id;
-    String name;
-
-    Goo() {
+    private static class ContainsMapOfEmbeddedInterfaces {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private final Map<String, Serializable> values = new HashMap<String, Serializable>();
     }
 
-    Goo(final String n) {
-      name = n;
+    private static class ContainsMapOfEmbeddedGoos {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private final Map<String, Goo> values = new HashMap<String, Goo>();
     }
-  }
 
-  private static class E {
-    @Id ObjectId id;
+    private static class Goo implements Serializable {
+        @Id
+        private ObjectId id;
+        private String name;
 
-    @Embedded
-    final MyMap mymap = new MyMap();
-  }
+        Goo() {
+        }
 
-  private static class MyMap extends HashMap<String, String> {
-    private static final long serialVersionUID = 1L;
-  }
+        Goo(final String n) {
+            name = n;
+        }
+    }
 
-  @Test
-  public void testMapping() throws Exception {
-    E e = new E();
-    e.mymap.put("1", "a");
-    e.mymap.put("2", "b");
+    private static class E {
+        @Id
+        private ObjectId id;
 
-    ds.save(e);
+        @Embedded
+        private final MyMap mymap = new MyMap();
+    }
 
-    e = ds.get(e);
-    Assert.assertEquals("a", e.mymap.get("1"));
-    Assert.assertEquals("b", e.mymap.get("2"));
-  }
+    private static class MyMap extends HashMap<String, String> {
+        private static final long serialVersionUID = 1L;
+    }
 
-  @Test
-  public void testEmbeddedMap() throws Exception {
-    morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
-    final Goo g1 = new Goo("Scott");
-    final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
-    cmoeg.values.put("first", g1);
-    ds.save(cmoeg);
-    //check className in the map values.
+    @Test
+    public void testMapping() throws Exception {
+        E e = new E();
+        e.mymap.put("1", "a");
+        e.mymap.put("2", "b");
 
-    final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedGoos.class).findOne().get("values")).get(
-      "first");
-    final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    assertTrue(!hasF);
-  }
+        getDs().save(e);
 
-  @Test
-  public void testEmbeddedMapWithValueInterface() throws Exception {
-    morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
-    final Goo g1 = new Goo("Scott");
+        e = getDs().get(e);
+        Assert.assertEquals("a", e.mymap.get("1"));
+        Assert.assertEquals("b", e.mymap.get("2"));
+    }
 
-    final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
-    cmoei.values.put("first", g1);
-    ds.save(cmoei);
-    //check className in the map values.
-    final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedInterfaces.class).findOne().get("values"))
-      .get("first");
-    final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    assertTrue(hasF);
-  }
+    @Test
+    public void testEmbeddedMap() throws Exception {
+        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        final Goo g1 = new Goo("Scott");
+        final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
+        cmoeg.values.put("first", g1);
+        getDs().save(cmoeg);
+        //check className in the map values.
 
-  @Test
-  public void testEmbeddedMapUpdateOperationsOnInterfaceValue() throws Exception {
-    morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
-    final Goo g1 = new Goo("Scott");
-    final Goo g2 = new Goo("Ralph");
+        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
+                                                                     .findOne()
+                                                                     .get("values")).get(
+                                                                                        "first");
+        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        assertTrue(!hasF);
+    }
 
-    final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
-    cmoei.values.put("first", g1);
-    ds.save(cmoei);
-    ds.update(cmoei, ds.createUpdateOperations(ContainsMapOfEmbeddedInterfaces.class).set("values.second", g2));
-    //check className in the map values.
-    final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedInterfaces.class).findOne().get("values"))
-      .get("second");
-    final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    assertTrue("className should be here.", hasF);
-  }
+    @Test
+    public void testEmbeddedMapWithValueInterface() throws Exception {
+        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        final Goo g1 = new Goo("Scott");
 
-  @Test //@Ignore("waiting on issue 184")
-  public void testEmbeddedMapUpdateOperations() throws Exception {
-    morphia.map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
-    final Goo g1 = new Goo("Scott");
-    final Goo g2 = new Goo("Ralph");
+        final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
+        cmoei.values.put("first", g1);
+        getDs().save(cmoei);
+        //check className in the map values.
+        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+                                                                     .findOne()
+                                                                     .get("values"))
+                                                  .get("first");
+        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        assertTrue(hasF);
+    }
 
-    final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
-    cmoeg.values.put("first", g1);
-    ds.save(cmoeg);
-    ds.update(cmoeg, ds.createUpdateOperations(ContainsMapOfEmbeddedGoos.class).set("values.second", g2));
-    //check className in the map values.
+    @Test
+    public void testEmbeddedMapUpdateOperationsOnInterfaceValue() throws Exception {
+        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        final Goo g1 = new Goo("Scott");
+        final Goo g2 = new Goo("Ralph");
 
-    final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) ds.getCollection(ContainsMapOfEmbeddedGoos.class).findOne().get("values")).get(
-      "second");
-    final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-    assertTrue("className should not be here.", !hasF);
-  }
+        final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
+        cmoei.values.put("first", g1);
+        getDs().save(cmoei);
+        getDs().update(cmoei, getDs().createUpdateOperations(ContainsMapOfEmbeddedInterfaces.class).set("values.second", g2));
+        //check className in the map values.
+        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+                                                                     .findOne()
+                                                                     .get("values"))
+                                                  .get("second");
+        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        assertTrue("className should be here.", hasF);
+    }
+
+    @Test //@Ignore("waiting on issue 184")
+    public void testEmbeddedMapUpdateOperations() throws Exception {
+        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        final Goo g1 = new Goo("Scott");
+        final Goo g2 = new Goo("Ralph");
+
+        final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
+        cmoeg.values.put("first", g1);
+        getDs().save(cmoeg);
+        getDs().update(cmoeg, getDs().createUpdateOperations(ContainsMapOfEmbeddedGoos.class).set("values.second", g2));
+        //check className in the map values.
+
+        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
+                                                                     .findOne()
+                                                                     .get("values")).get(
+                                                                                        "second");
+        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        assertTrue("className should not be here.", !hasF);
+    }
 }

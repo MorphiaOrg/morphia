@@ -12,23 +12,22 @@ import static org.junit.Assert.fail;
 
 public class TestIdTwice extends TestBase {
 
-  @Test
-  public final void testRedundantId() {
-    try {
-      morphia.map(A.class);
-      fail();
-    } catch (ConstraintViolationException expected) {
-      // fine
+    @Test
+    public final void testRedundantId() {
+        try {
+            getMorphia().map(A.class);
+            fail();
+        } catch (ConstraintViolationException expected) {
+            // fine
+        }
     }
-  }
 
-  public static class A extends TestEntity {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    @Id String extraId;
-    @Id String broken;
-  }
+    public static class A extends TestEntity {
+        private static final long serialVersionUID = 1L;
+        @Id
+        private String extraId;
+        @Id
+        private String broken;
+    }
 
 }

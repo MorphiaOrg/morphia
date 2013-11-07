@@ -1,52 +1,52 @@
 package org.mongodb.morphia.mapping.primitives;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class ByteMappingTest extends TestBase {
     private static class Bytes {
         @Id
-        ObjectId id;
-        final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
-        final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
-        List<Byte> listWrapper = new ArrayList<Byte>();
-        byte singlePrimitive;
-        Byte singleWrapper;
-        byte[] primitiveArray;
-        Byte[] wrapperArray;
-        byte[][] nestedPrimitiveArray;
-        Byte[][] nestedWrapperArray;
+        private ObjectId id;
+        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
+        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
+        private List<Byte> listWrapper = new ArrayList<Byte>();
+        private byte singlePrimitive;
+        private Byte singleWrapper;
+        private byte[] primitiveArray;
+        private Byte[] wrapperArray;
+        private byte[][] nestedPrimitiveArray;
+        private Byte[][] nestedWrapperArray;
     }
 
     private static class MbbDocument {
         @Id
-        ObjectId id;
+        private ObjectId id;
     }
 
     @Test
     public void testMapping() throws Exception {
-        morphia.map(Bytes.class);
+        getMorphia().map(Bytes.class);
         final Bytes ent = new Bytes();
-        ent.listWrapperArray.add(new Byte[] {1, 2});
-        ent.listPrimitiveArray.add(new byte[] {2, 3, 12});
+        ent.listWrapperArray.add(new Byte[]{1, 2});
+        ent.listPrimitiveArray.add(new byte[]{2, 3, 12});
         ent.listWrapper.addAll(Arrays.asList((byte) 148, (byte) 6, (byte) 255));
         ent.singlePrimitive = 100;
         ent.singleWrapper = 47;
-        ent.primitiveArray = new byte[] {5, 93};
-        ent.wrapperArray = new Byte[] {55, 16, 99};
-        ent.nestedPrimitiveArray = new byte[][] {{1, 2}, {3, 4}};
-        ent.nestedWrapperArray = new Byte[][] {{1, 2}, {3, 4}};
-        ds.save(ent);
-        final Bytes loaded = ds.get(ent);
+        ent.primitiveArray = new byte[]{5, 93};
+        ent.wrapperArray = new Byte[]{55, 16, 99};
+        ent.nestedPrimitiveArray = new byte[][]{{1, 2}, {3, 4}};
+        ent.nestedWrapperArray = new Byte[][]{{1, 2}, {3, 4}};
+        getDs().save(ent);
+        final Bytes loaded = getDs().get(ent);
 
         Assert.assertNotNull(loaded.id);
 
@@ -65,10 +65,10 @@ public class ByteMappingTest extends TestBase {
 
     @Test
     public void blobs() {
-        morphia.map(Bytes.class);
+        getMorphia().map(Bytes.class);
         final String data = "{ \"primitiveArray\": BinData(0, "
-            + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
-        db.eval("db.Bytes.insert(" + data + ")");
-        final Bytes loaded = ds.find(Bytes.class).get() ;
+                            + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
+        getDb().eval("db.Bytes.insert(" + data + ")");
+        final Bytes loaded = getDs().find(Bytes.class).get();
     }
 }

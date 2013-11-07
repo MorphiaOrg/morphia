@@ -1,9 +1,6 @@
 package org.mongodb.morphia.query;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,60 +10,64 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author scotthernandez
  */
-public class QueryInForReferencedList extends TestBase {
+public class QueryInForReferencedListTest extends TestBase {
+
+    private String classpath;
 
     @Entity
-    private static class HasRefs {
-        private static final long serialVersionUID = 1L;
-
+    private static class HasRefs implements Serializable {
         @Id
-        ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         @Reference
-        final List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
+        private List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
     }
 
     @Entity
     private static class ReferencedEntity extends TestEntity {
-        private static final long serialVersionUID = 1L;
-        String foo;
-
-        public ReferencedEntity(final String s) {
-            foo = s;
-        }
+        private String foo;
 
         public ReferencedEntity() {
         }
 
+        public ReferencedEntity(final String s) {
+            foo = s;
+        }
     }
 
     @Entity("docs")
     private static class Doc {
         @Id
-        public long id = 4;
+        private long id = 4;
     }
 
     @Test
     public void testMapping() throws Exception {
-
-        morphia.map(HasRefs.class);
-        morphia.map(ReferencedEntity.class);
+        getMorphia().map(HasRefs.class);
+        getMorphia().map(ReferencedEntity.class);
     }
 
     @Test
+//    @Ignore("what needs to happen is that when we're querying against @Referenced entities and we pass in an Entity, we need to"
+//            + " convert those to DBRefs when building the query.")
     public void testInQuery() throws Exception {
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {
             final ReferencedEntity re = new ReferencedEntity("" + x);
             hr.refs.add(re);
         }
-        ds.save(hr.refs);
-        ds.save(hr);
+        getDs().save(hr.refs);
+        getDs().save(hr);
 
-        final List<HasRefs> res = ds.createQuery(HasRefs.class).field("refs").in(hr.refs.subList(1, 3)).asList();
+        Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
+        final List<HasRefs> res = query.asList();
         Assert.assertEquals(1, res.size());
     }
 
@@ -74,24 +75,24 @@ public class QueryInForReferencedList extends TestBase {
     public void testInQuery2() throws Exception {
         final Doc doc = new Doc();
         doc.id = 1;
-        ds.save(doc);
+        getDs().save(doc);
 
         // this works
-        ds.find(Doc.class).field("_id").equal(1).asList();
+        getDs().find(Doc.class).field("_id").equal(1).asList();
 
         final List<Long> idList = new ArrayList<Long>();
         idList.add(1L);
         // this causes an NPE
-        ds.find(Doc.class).field("_id").in(idList).asList();
+        getDs().find(Doc.class).field("_id").in(idList).asList();
 
     }
 
     @Test
     public void testReferenceDoesNotExist() {
         final HasRefs hr = new HasRefs();
-        ds.save(hr);
+        getDs().save(hr);
 
-        final Query<HasRefs> q = ds.createQuery(HasRefs.class);
+        final Query<HasRefs> q = getDs().createQuery(HasRefs.class);
         q.field("refs").doesNotExist();
         final List<HasRefs> found = q.asList();
         Assert.assertNotNull(found);

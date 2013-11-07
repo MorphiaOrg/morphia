@@ -19,11 +19,11 @@ package org.mongodb.morphia.mapping;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.annotations.Id;
-import org.junit.Assert;
 
 
 /**
@@ -31,30 +31,32 @@ import org.junit.Assert;
  */
 public class TestConstructorArgs extends TestBase {
 
-  private static class Normal {
-    @Id                     ObjectId        id = new ObjectId();
-    @ConstructorArgs("_id")
-    final ArgsConstructor ac = new ArgsConstructor(new ObjectId());
-  }
-
-  private static class ArgsConstructor {
-    @Id
-    final ObjectId id;
-
-    private ArgsConstructor(final ObjectId id) {
-      this.id = id;
+    private static class Normal {
+        @Id
+        private ObjectId id = new ObjectId();
+        
+        @ConstructorArgs("_id")
+        private final ArgsConstructor ac = new ArgsConstructor(new ObjectId());
     }
-  }
 
-  @Test
-  public void testBasic() throws Exception {
-    Normal n = new Normal();
-    final ObjectId acId = n.ac.id;
+    private static final class ArgsConstructor {
+        @Id
+        private final ObjectId id;
 
-    ds.save(n);
-    n = ds.find(Normal.class).get();
-    Assert.assertNotNull(n);
-    Assert.assertNotNull(n.ac);
-    Assert.assertEquals(acId, n.ac.id);
-  }
+        private ArgsConstructor(final ObjectId id) {
+            this.id = id;
+        }
+    }
+
+    @Test
+    public void testBasic() throws Exception {
+        Normal n = new Normal();
+        final ObjectId acId = n.ac.id;
+
+        getDs().save(n);
+        n = getDs().find(Normal.class).get();
+        Assert.assertNotNull(n);
+        Assert.assertNotNull(n.ac);
+        Assert.assertEquals(acId, n.ac.id);
+    }
 }

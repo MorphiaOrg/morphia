@@ -32,66 +32,71 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestDatatypes extends TestBase {
 
-  public static class ContainsFloat {
-    @Id ObjectId id;
-    final float val0 = 1.1F;
-    final Float val1 = 1.1F;
-  }
+    public static class ContainsFloat {
+        @Id
+        private ObjectId id;
+        private final float val0 = 1.1F;
+        private final Float val1 = 1.1F;
+    }
 
-  public static class ContainsDouble {
-    @Id ObjectId id;
-    double val0 = 1.1D;
-    Double val1 = 1.1D;
-  }
+    public static class ContainsDouble {
+        @Id
+        private ObjectId id;
+        private double val0 = 1.1D;
+        private Double val1 = 1.1D;
+    }
 
-  public static class ContainsShort {
-    @Id ObjectId id;
-    final short val0 = 1;
-    final Short val1 = 1;
-  }
+    public static class ContainsShort {
+        @Id
+        private ObjectId id;
+        private final short val0 = 1;
+        private final Short val1 = 1;
+    }
 
-  public static class ContainsByte {
-    @Id ObjectId id;
-    final byte val0 = 1;
-    final Byte val1 = 1;
-  }
+    public static class ContainsByte {
+        @Id
+        private ObjectId id;
+        private final byte val0 = 1;
+        private final Byte val1 = 1;
+    }
 
-  @Before @Override
-  public void setUp() {
-    super.setUp();
-    morphia.map(ContainsByte.class).map(ContainsDouble.class).map(ContainsFloat.class).map(ContainsShort.class);
-  }
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        getMorphia().map(ContainsByte.class).map(ContainsDouble.class).map(ContainsFloat.class).map(ContainsShort.class);
+    }
 
-  @Test
-  public void testByte() throws Exception {
-    final ContainsByte cb = new ContainsByte();
-    ds.save(cb);
-    final ContainsByte loaded = ds.get(cb);
+    @Test
+    public void testByte() throws Exception {
+        final ContainsByte cb = new ContainsByte();
+        getDs().save(cb);
+        final ContainsByte loaded = getDs().get(cb);
 
-    assertNotNull(loaded);
-    assertTrue(loaded.val0 == cb.val0);
-    assertTrue(loaded.val1.equals(cb.val1));
-  }
+        assertNotNull(loaded);
+        assertTrue(loaded.val0 == cb.val0);
+        assertTrue(loaded.val1.equals(cb.val1));
+    }
 
-  @Test
-  public void testShort() throws Exception {
-    final ContainsShort cs = new ContainsShort();
-    ds.save(cs);
-    final ContainsShort loaded = ds.get(cs);
+    @Test
+    public void testShort() throws Exception {
+        final ContainsShort cs = new ContainsShort();
+        getDs().save(cs);
+        final ContainsShort loaded = getDs().get(cs);
 
-    assertNotNull(loaded);
-    assertTrue(loaded.val0 == cs.val0);
-    assertTrue(loaded.val1.equals(cs.val1));
-  }
+        assertNotNull(loaded);
+        assertTrue(loaded.val0 == cs.val0);
+        assertTrue(loaded.val1.equals(cs.val1));
+    }
 
-  @Test
-  public void testFloat() throws Exception {
-    final ContainsFloat cf = new ContainsFloat();
-    ds.save(cf);
-    final ContainsFloat loaded = ds.get(cf);
+    @Test
+    public void testFloat() throws Exception {
+        final ContainsFloat cf = new ContainsFloat();
+        getDs().save(cf);
+        final ContainsFloat loaded = getDs().get(cf);
 
-    assertNotNull(loaded);
-    assertTrue(loaded.val0 == cf.val0);
-    assertTrue(loaded.val1.equals(cf.val1));
-  }
+        assertNotNull(loaded);
+        assertTrue(loaded.val0 == cf.val0);
+        assertTrue(loaded.val1.equals(cf.val1));
+    }
 }

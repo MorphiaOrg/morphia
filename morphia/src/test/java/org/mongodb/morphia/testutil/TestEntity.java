@@ -18,10 +18,10 @@
 package org.mongodb.morphia.testutil;
 
 
-import java.io.Serializable;
-
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
+
+import java.io.Serializable;
 
 
 /**
@@ -33,17 +33,14 @@ import org.mongodb.morphia.annotations.Id;
 public abstract class TestEntity implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * The id for this instance
-   */
   @Id
-  protected String id = new ObjectId().toString();
+  private ObjectId id = new ObjectId();
 
-  public String getId() {
+  public ObjectId getId() {
     return id;
   }
 
-  public void setId(final String id) {
+  public void setId(final ObjectId id) {
     this.id = id;
   }
 }

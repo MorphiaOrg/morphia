@@ -14,10 +14,10 @@ import org.mongodb.morphia.annotations.Transient;
 public class TestMultipleCallbacksPerMethod extends TestBase {
   abstract static class CallbackAbstractEntity {
     @Id
-    private final String _id = new ObjectId().toStringMongod();
+    private final String id = new ObjectId().toStringMongod();
 
     public String getId() {
-      return _id;
+      return id;
     }
 
     @Transient
@@ -40,9 +40,9 @@ public class TestMultipleCallbacksPerMethod extends TestBase {
   public void testMultipleCallbackAnnotation() throws Exception {
     final SomeEntity entity = new SomeEntity();
     Assert.assertFalse(entity.isPersistent());
-    ds.save(entity);
+    getDs().save(entity);
     Assert.assertTrue(entity.isPersistent());
-    final SomeEntity reloaded = ds.find(SomeEntity.class, "_id", entity.getId()).get();
+    final SomeEntity reloaded = getDs().find(SomeEntity.class, "id", entity.getId()).get();
     Assert.assertTrue(reloaded.isPersistent());
   }
 }
