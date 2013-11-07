@@ -11,6 +11,8 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 
+import com.mongodb.DB;
+
 
 /**
  * 
@@ -56,6 +58,9 @@ public class TestIndexCollections extends TestBase {
    */
   @Test
   public void testA() {
+    AdvancedDatastore ads = getAds();
+    DB db = getDb();
+
     ads.ensureIndexes("a_1", A.class);
     assertEquals(2, db.getCollection("a_1").getIndexInfo().size());
 
@@ -75,7 +80,8 @@ public class TestIndexCollections extends TestBase {
 
   @Test
   public void testEmbedded() {
-    AdvancedDatastore ads = ((AdvancedDatastore)ds);
+    AdvancedDatastore ads = getAds();
+    DB db = getDb();
     
     // Make collection, but not the index
     ads.save("b_1", new B(new BB("test")));
@@ -87,6 +93,7 @@ public class TestIndexCollections extends TestBase {
   
   protected void cleanup() {
     super.cleanup();
+    DB db = getDb();
     db.getCollection("a_1").drop();
     db.getCollection("a_2").drop();
     db.getCollection("a_3").drop();
