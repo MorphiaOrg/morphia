@@ -6,6 +6,7 @@ package org.mongodb.morphia.query;
  */
 public enum UpdateOperator {
   SET("$set"),
+  SET_ON_INSERT("$setOnInsert"),
   UNSET("$unset"),
   PULL("$pull"),
   PULL_ALL("$pullAll"),

@@ -146,6 +146,15 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         add(UpdateOperator.SET, fieldExpr, value, true);
         return this;
     }
+    
+    public UpdateOperations<T> setOnInsert(final String fieldExpr, final Object value) {
+        if(value == null) {
+            throw new QueryException("Value cannot be null.");
+        }
+        
+        add(UpdateOperator.SET_ON_INSERT, fieldExpr, value, true);
+        return this;
+    }
 
     public UpdateOperations<T> unset(final String fieldExpr) {
         add(UpdateOperator.UNSET, fieldExpr, 1, false);

@@ -15,6 +15,11 @@ public interface UpdateOperations<T> {
   UpdateOperations<T> set(String fieldExpr, Object value);
 
   /**
+   * sets the field on insert.
+   */
+  UpdateOperations<T> setOnInsert(String fieldExpr, Object value);
+
+  /**
    * removes the field
    */
   UpdateOperations<T> unset(String fieldExpr);

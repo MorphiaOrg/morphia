@@ -130,6 +130,42 @@ public class TestUpdateOps extends TestBase {
         final Circle c2 = getDs().getByKey(Circle.class, key);
         assertEquals(0D, c2.getRadius(), 0);
     }
+    
+    @Test
+    public void testSetOnInsertWhenInserting() throws Exception {
+        ObjectId id = new ObjectId();
+        UpdateResults<Circle> res = getDs().updateFirst(
+                getDs().createQuery(Circle.class).field("id").equal(id), 
+                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
+        
+        assertInserted(res);
+        
+        final Circle c = getDs().get(Circle.class, id);
+        
+        assertNotNull(c);
+        assertEquals(2D, c.getRadius(), 0);
+    }
+    
+    @Test
+    public void testSetOnInsertWhenUpdating() throws Exception {
+        ObjectId id = new ObjectId();
+        UpdateResults<Circle> res = getDs().updateFirst(
+                getDs().createQuery(Circle.class).field("id").equal(id), 
+                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
+        
+        assertInserted(res);
+        
+        res = getDs().updateFirst(
+                getDs().createQuery(Circle.class).field("id").equal(id), 
+                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
+        
+        assertUpdated(res, 1);
+        
+        final Circle c = getDs().get(Circle.class, id);
+        
+        assertNotNull(c);
+        assertEquals(1D, c.getRadius(), 0);
+    }
 
 
     @Test(expected = ValidationException.class)
