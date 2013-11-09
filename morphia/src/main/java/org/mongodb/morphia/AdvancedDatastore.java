@@ -80,10 +80,19 @@ public interface AdvancedDatastore extends Datastore {
 
   <T> Iterable<Key<T>> insert(String kind, Iterable<T> entities, WriteConcern wc);
 
-
+  /**
+   * @param kind the name of the collection that should be queried
+   * @param clazz the class of objects to be returned
+   * @return Query for the specified class clazz
+   */
   <T> Query<T> createQuery(String kind, Class<T> clazz);
 
-  //DBObject implementations; in case we don't have features implemented yet
+  /**
+   * 
+   * @param kind the class of objects to be returned
+   * @param q the query which will be passed to a {@link QueryFactory}
+   * @return Query for the specified class clazz
+   */
   <T> Query<T> createQuery(Class<T> kind, DBObject q);
 
   <T> Query<T> createQuery(String kind, Class<T> clazz, DBObject q);
