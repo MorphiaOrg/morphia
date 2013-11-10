@@ -7,6 +7,7 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -71,15 +72,13 @@ public interface Datastore {
 
     /**
      * <p> Find all instances by collectionName, and filter property. </p><p> This is the same as: {@code find(clazzOrEntity).filter
-     * (property,
-     *value); } </p>
+     * (property, value); } </p>
      */
     <T, V> Query<T> find(Class<T> clazz, String property, V value);
 
     /**
      * <p> Find all instances by collectionName, and filter property. </p><p> This is the same as: {@code find(clazzOrEntity).filter
-     * (property,
-     *value).offset(offset).limit(size); } </p>
+     * (property, value).offset(offset).limit(size); } </p>
      */
     <T, V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
 
@@ -275,6 +274,11 @@ public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      */
+    <T, U> AggregationPipeline<T, U> createAggregation(Class<T> source, Class<U> target);
+
+    /**
+     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     */
     <T> Query<T> createQuery(Class<T> kind);
 
     /**
@@ -315,7 +319,8 @@ public interface Datastore {
     void ensureIndexes();
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the background
+     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the
+     * background
      */
     void ensureIndexes(boolean background);
 
@@ -325,7 +330,8 @@ public interface Datastore {
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the background
+     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the
+     * background
      */
     <T> void ensureIndexes(Class<T> clazz, boolean background);
 

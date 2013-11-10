@@ -1,36 +1,58 @@
 package org.mongodb.morphia.aggregation;
 
 
-public interface Projection<T, U> {
-  void suppress();
-  
-  void targetName(String field);
-  
-  AggregationOperator<T, U> calculate();
+public class Projection<T, U> /*implements ExpressionOperation*/ {
 
-  /**
-   * Computes the sum of an array of numbers.
-   */
-  void add(int... values);
+    private final String sourceField;
+    private final String projectedField;
+    private Projection projection;
+    private boolean suppressed = false;
 
-  /**
-   * Takes two numbers and divides the first number by the second.
-   */
-  void divide(int numerator, int divisor);
+    private Projection(final String field) {
+        this.sourceField = field;
+        projectedField = null;
+    }
 
-  /**
-   * Takes two numbers and calculates the modulo of the first number divided by the second.
-   */
-  void mod(int first, int second);
+    private Projection(final String field, final String projectedField) {
+        this.sourceField = field;
+        this.projectedField = projectedField;
+    }
 
-  /**
-   * Computes the product of an array of numbers.
-   */
-  void multiply(int... values);
+    private Projection(final String field, final Projection projection) {
+        this(field);
+        this.projection = projection;
+    }
 
-  /**
-   * Takes two numbers and subtracts the second number from the first.
-   */
-  void subtract(int first, int second);
-  
+    public static <T, U> Projection<T, U> project(final String name) {
+        return new Projection<T, U>(name);
+    }
+
+    public static <T, U> Projection<T, U> project(final String field, final String projectedField) {
+        return new Projection<T, U>(field, projectedField);
+    }
+
+    public static <T, U> Projection<T, U> project(final String field, final Projection projection) {
+        return new Projection<T, U>(field, projection);
+    }
+
+    public Projection<T, U> suppress() {
+        suppressed = true;
+        return this;
+    }
+
+    public String getProjectedField() {
+        return projectedField;
+    }
+
+    public String getSourceField() {
+        return sourceField;
+    }
+
+    public boolean isSuppressed() {
+        return suppressed;
+    }
+
+    public Projection getProjection() {
+        return projection;
+    }
 }
