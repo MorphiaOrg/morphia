@@ -6,6 +6,7 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.mongodb.morphia.mapping.MappedClass;
 
@@ -45,6 +46,19 @@ public abstract class TestBase {
         getMongo().close();
     }
 
+    /**
+     * @param version  must be a major version, e.g. 1.8, 2,0, 2.2
+     * @return true if server is at least specified version
+     */
+    protected boolean serverIsAtLeastVersion(double version) {
+        String serverVersion = (String) getMongo().getDB("admin").command("serverStatus").get("version");
+        return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
+    }
+
+    protected void checkServerVersion(double version) {
+        Assume.assumeTrue(serverIsAtLeastVersion(version));
+    }
+    
     public AdvancedDatastore getAds() {
         return ads;
     }
