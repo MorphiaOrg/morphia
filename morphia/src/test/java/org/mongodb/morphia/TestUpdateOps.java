@@ -133,6 +133,7 @@ public class TestUpdateOps extends TestBase {
     
     @Test
     public void testSetOnInsertWhenInserting() throws Exception {
+        checkServerVersion(2.4);
         ObjectId id = new ObjectId();
         UpdateResults<Circle> res = getDs().updateFirst(
                 getDs().createQuery(Circle.class).field("id").equal(id), 
