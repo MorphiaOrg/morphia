@@ -50,12 +50,12 @@ public abstract class TestBase {
      * @param version  must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtLeastVersion(double version) {
+    protected boolean serverIsAtLeastVersion(final double version) {
         String serverVersion = (String) getMongo().getDB("admin").command("serverStatus").get("version");
         return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
     }
 
-    protected void checkServerVersion(double version) {
+    protected void checkServerVersion(final double version) {
         Assume.assumeTrue(serverIsAtLeastVersion(version));
     }
     
