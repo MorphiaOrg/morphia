@@ -52,7 +52,7 @@ configure(subprojects) {
 
     dependencies {
         testCompile 'junit:junit:4.11'
-        compile 'org.mongodb:mongo-java-driver:[2.10.1,2.15]'
+        compile 'org.mongodb:mongo-java-driver:[2.10.1,2.11.3]'
     }
 
     sourceSets.main.compileClasspath += configurations.provided
