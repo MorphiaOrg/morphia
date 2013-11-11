@@ -92,7 +92,7 @@ configure(subprojects) {
 
     tasks.withType(Test) {
         // set heap size for the test JVM(s)
-        minHeapSize = "128m"
+        minHeapSize = "256m"
         maxHeapSize = "512m"
 
         // set JVM arguments for the test JVM(s)
