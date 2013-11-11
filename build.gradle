@@ -90,7 +90,7 @@ configure(subprojects) {
         options.links 'http://docs.oracle.com/javase/7/docs/api/'
     }
 
-    tasks.withType(Test) {
+    test {
         // set heap size for the test JVM(s)
         minHeapSize = "256m"
         maxHeapSize = "512m"
