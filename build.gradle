@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
-    
+
     dependencies {
         classpath 'me.trnl:clirr-gradle-plugin:0.4'
         classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC2'
@@ -44,7 +44,7 @@ configure(subprojects) {
     }
 
     project.archivesBaseName = "morphia-${project.name}"
-    
+
     repositories {
         mavenCentral()
         mavenLocal()
@@ -72,8 +72,8 @@ configure(subprojects) {
         configFile = new File("$configDir/checkstyle.xml")
     }
 
-    findbugs { 
-        excludeFilter = new File("$configDir/findbugs-exclude.xml") 
+    findbugs {
+        excludeFilter = new File("$configDir/findbugs-exclude.xml")
         sourceSets = [sourceSets.main]
     }
 
@@ -89,11 +89,21 @@ configure(subprojects) {
         options.version = true
         options.links 'http://docs.oracle.com/javase/7/docs/api/'
     }
+
+    tasks.withType(Test) {
+        // set heap size for the test JVM(s)
+        minHeapSize = "128m"
+        maxHeapSize = "512m"
+
+        // set JVM arguments for the test JVM(s)
+        jvmArgs '-XX:MaxPermSize=256m'
+    }
+
 }
 
 project(':morphia') {
     archivesBaseName = 'morphia'
-    
+
     dependencies {
         compile 'cglib:cglib-nodep:[2.1_3,3.0)'
         compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
