@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         classpath 'me.trnl:clirr-gradle-plugin:0.4'
-        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC2'
+        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0-RC3'
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
     }
 }
@@ -73,6 +73,7 @@ configure(subprojects) {
     }
 
     findbugs {
+        toolVersion = "2.0.2"
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
         sourceSets = [sourceSets.main]
     }
@@ -107,7 +108,7 @@ project(':morphia') {
     dependencies {
         compile 'cglib:cglib-nodep:[2.1_3,3.0)'
         compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
-        compile 'com.google.code.findbugs:findbugs:2.0.2'
+        provided 'com.google.code.findbugs:findbugs:2.0.2'
     }
 }
 
