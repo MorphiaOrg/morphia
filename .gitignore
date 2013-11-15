@@ -1,4 +1,6 @@
 *.iml
+*.iws
+*.ipr
 .classpath
 .project
 .settings
@@ -12,3 +14,4 @@ codereview.rc
 target
 bin
 .gradle
+out/
