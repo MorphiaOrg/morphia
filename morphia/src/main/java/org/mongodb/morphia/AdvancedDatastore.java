@@ -10,6 +10,8 @@ import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
+import java.util.Map;
+
 
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
@@ -20,9 +22,9 @@ import com.mongodb.WriteResult;
 public interface AdvancedDatastore extends Datastore {
 
   /**
-   * @see #exists(Object) 
-   * 
-   * @param readPreference Uses the supplied ReadPreference for the check.  If readPreference is null the preference is taken from the 
+   * @see #exists(Object)
+   *
+   * @param readPreference Uses the supplied ReadPreference for the check.  If readPreference is null the preference is taken from the
    * annotation or uses the default preference.
    */
   Key<?> exists(Object keyOrEntity, ReadPreference readPreference);
@@ -56,6 +58,17 @@ public interface AdvancedDatastore extends Datastore {
   <T> Key<T> save(String kind, T entity);
 
   <T> Key<T> save(String kind, T entity, WriteConcern wc);
+
+  /**
+			* Used when we want to provide a custom Id for every entity that we don't want to keep in the entity
+			*/
+		<T> Iterable<Key<T>> save(final Map<Object, T> entities);
+
+		/**
+			* Used when we want to provide a custom that we don't want to keep in the entity
+			*/
+		<T> Key<T> save(final T entity, Object providedId);
+
 
   /**
    * No validation or conversion is done to the id
