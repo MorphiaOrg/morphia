@@ -1,6 +1,7 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.DBCollection;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -21,33 +22,33 @@ import java.util.concurrent.TimeoutException;
 
 import static org.mongodb.morphia.aggregation.Group.field;
 import static org.mongodb.morphia.aggregation.Group.sum;
+import static org.mongodb.morphia.aggregation.Matcher.match;
 
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
-    private static final File download = new File(System.getProperty("java.io.tmpdir"), "zips.json");
-
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
         LOG.info("ZipCodeDataSetTest.installSampleData");
-        if (!download.exists()) {
-            download();
+        File file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
+        if (!file.exists()) {
+            download(new URL("http://media.mongodb.org/zips.json"), file);
         }
         DBCollection zips = getDb().getCollection("zips");
         if (zips.count() == 0) {
             new ProcessExecutor().command("/usr/local/bin/mongoimport",
                                           "--db", getDb().getName(),
                                           "--collection", "zipcodes",
-                                          "--file", download.getAbsolutePath())
+                                          "--file", file.getAbsolutePath())
                 .redirectError(System.err)
                      //                                 .redirectOutput(System.out)
                 .execute();
         }
     }
 
-    private void download() throws IOException {
-        URL url = new URL("http://media.mongodb.org/zips.json");
+    private void download(final URL url, final File file) throws IOException {
+        LOG.info("Downloading zip data set");
         InputStream inputStream = url.openStream();
-        FileOutputStream outputStream = new FileOutputStream(download);
+        FileOutputStream outputStream = new FileOutputStream(file);
         try {
             byte[] read = new byte[49152];
             int count;
@@ -64,17 +65,24 @@ public class ZipCodeDataSetTest extends TestBase {
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         installSampleData();
         MorphiaIterator<Population, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                   .group("state", field("totalPop", sum("pop")))
-                                                   .match("state", field("totalPop", sum("pop")))
-                                                   .aggregate();
+                                                               .group("state", field("totalPop", sum("pop")))
+                                                               .match(match("totalPop").greaterThanEqual(10000000))
+                                                               .aggregate();
+        boolean caFound = false;
         for (Population population : pipeline) {
-            System.out.println("population = " + population);
+            if (population.getState().equals("CA")) {
+                caFound = true;
+                Assert.assertEquals(new Long(29760021), population.getPopulation());
+            }
+            LOG.debug("population = " + population);
         }
+        Assert.assertTrue("Should have found CA", caFound);
+
         pipeline.close();
     }
 
     @Entity(value = "zipcodes", noClassnameStored = true)
-    private static class City {
+    public static final class City {
         @Id
         private String id;
         @Property("city")
@@ -140,13 +148,18 @@ public class ZipCodeDataSetTest extends TestBase {
             sb.append('}');
             return sb.toString();
         }
-        
+
     }
-    
+
     public static class Population {
         @Id
-        String state;
-        Long population;
+        private String state;
+        @Property("totalPop")
+        private Long population;
+
+        public String getState() {
+            return state;
+        }
 
         public Long getPopulation() {
             return population;
@@ -154,6 +167,15 @@ public class ZipCodeDataSetTest extends TestBase {
 
         public void setPopulation(final Long population) {
             this.population = population;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Population{");
+            sb.append("population=").append(population);
+            sb.append(", state='").append(state).append('\'');
+            sb.append('}');
+            return sb.toString();
         }
     }
 }

@@ -9,4 +9,6 @@ public interface AggregationPipeline<T, U> {
     AggregationPipeline<T, U> group(String id, Group... projections);
 
     MorphiaIterator<U, U> aggregate();
+
+    AggregationPipeline<T, U> match(Matcher... criterion);
 }

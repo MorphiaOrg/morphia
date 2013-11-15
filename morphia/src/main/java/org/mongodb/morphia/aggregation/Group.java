@@ -9,7 +9,15 @@ public class Group<T, U> {
         this.accumulator = accumulator;
     }
 
-    public static Group field(final String name, Accumulator accumulator) {
+    public Accumulator getAccumulator() {
+        return accumulator;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static Group field(final String name, final Accumulator accumulator) {
         return new Group(name, accumulator);
     }
 
