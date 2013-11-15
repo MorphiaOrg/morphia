@@ -109,4 +109,32 @@ public interface AdvancedDatastore extends Datastore {
 
   DBDecoderFactory getDecoderFact();
 
+  /**
+   * Ensures (creating if necessary) the indexes found during class mapping
+   * (using {@code @Indexed, @Indexes)} on the given collection name.
+   */
+  <T> void ensureIndexes(String collName, Class<T> clazz);
+
+  /**
+   * Ensures (creating if necessary) the indexes found during class mapping
+   * (using {@code @Indexed, @Indexes)} on the given collection name, possibly
+   * in the background
+   */
+  <T> void ensureIndexes(String collName, Class<T> clazz, boolean background);
+
+  /**
+   * Ensures (creating if necessary) the index including the field(s) +
+   * directions on the given collection name; eg fields = "field1, -field2"
+   * ({field1:1, field2:-1})
+   */
+  <T> void ensureIndex(String collName, Class<T> clazz, String fields);
+
+  /**
+   * Ensures (creating if necessary) the index including the field(s) +
+   * directions on the given collection name; eg fields = "field1, -field2"
+   * ({field1:1, field2:-1})
+   */
+  <T> void ensureIndex(String collName, Class<T> clazz, String name,
+      String fields, boolean unique, boolean dropDupsOnCreate);
+
 }
