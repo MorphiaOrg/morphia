@@ -66,6 +66,21 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
+    public AggregationPipeline<T, U> group(final List<Group> id, final Group... groupings) {
+        DBObject idGroup = new BasicDBObject();
+        for (Group group : id) {
+            idGroup.put(group.getName(), "$" + group.getSourceField());
+        }
+        DBObject group = new BasicDBObject("_id", idGroup);
+        for (Group grouping : groupings) {
+            Accumulator accumulator = grouping.getAccumulator();
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), "$" + accumulator.getField()));
+        }
+
+        stages.add(new BasicDBObject("$group", group));
+        return this;
+    }
+
     public AggregationPipeline<T, U> match(final Matcher... matchers) {
         LOG.info("stages = " + stages);
         DBObject matches = new BasicDBObject();

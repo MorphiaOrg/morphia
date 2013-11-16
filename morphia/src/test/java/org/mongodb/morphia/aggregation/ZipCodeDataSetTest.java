@@ -4,6 +4,7 @@ import com.mongodb.DBCollection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.concurrent.TimeoutException;
 
+import static org.mongodb.morphia.aggregation.Group.average;
 import static org.mongodb.morphia.aggregation.Group.field;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Matcher.match;
@@ -79,6 +81,27 @@ public class ZipCodeDataSetTest extends TestBase {
         Assert.assertTrue("Should have found CA", caFound);
 
         pipeline.close();
+    }
+
+    @Test
+    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
+        installSampleData();
+        MorphiaIterator<Population, Population> pipeline = getDs().createAggregation(City.class, Population.class)
+                                                               .group(Group.id(field("state"), field("city")), field("pop", sum("pop")))
+                                                               .group("_id.state", field("avgCityPop", average("pop")))
+                                                               .aggregate();
+        boolean found = false;
+        for (Population population : pipeline) {
+            if (population.getState().equals("MN")) {
+                found = true;
+                Assert.assertEquals(new Long(5335), population.getPopulation());
+            }
+            LOG.info("population = " + population);
+        }
+        Assert.assertTrue("Should have found MN", found);
+
+        pipeline.close();
+
     }
 
     @Entity(value = "zipcodes", noClassnameStored = true)
@@ -155,6 +178,7 @@ public class ZipCodeDataSetTest extends TestBase {
         @Id
         private String state;
         @Property("totalPop")
+        @AlsoLoad("avgCityPop")
         private Long population;
 
         public String getState() {

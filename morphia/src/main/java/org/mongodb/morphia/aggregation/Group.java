@@ -1,12 +1,21 @@
 package org.mongodb.morphia.aggregation;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Group<T, U> {
-    private final Accumulator accumulator;
+    private Accumulator accumulator;
     private final String name;
+    private String sourceField;
 
     private Group(final String name, final Accumulator accumulator) {
         this.name = name;
         this.accumulator = accumulator;
+    }
+
+    public Group(final String name, final String sourceField) {
+        this.name = name;
+        this.sourceField = sourceField;
     }
 
     public Accumulator getAccumulator() {
@@ -17,6 +26,22 @@ public class Group<T, U> {
         return name;
     }
 
+    public String getSourceField() {
+        return sourceField;
+    }
+
+    public static List<Group> id(final Group... field) {
+        return Arrays.asList(field);
+    }
+
+    public static Group field(final String name) {
+        return field(name, name);
+    }
+
+    public static Group field(final String name, final String sourceField) {
+        return new Group(name, sourceField);
+    }
+    
     public static Group field(final String name, final Accumulator accumulator) {
         return new Group(name, accumulator);
     }
