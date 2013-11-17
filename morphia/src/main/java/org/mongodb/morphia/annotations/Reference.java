@@ -58,4 +58,9 @@ public @interface Reference {
    * Create a proxy around the reference which will be resolved on the first method call.
    */
   boolean lazy() default false;
+
+  /**
+   * Specifies whether only _id should be stored versus storing a DBRef
+   */
+  boolean idOnly() default false;
 }
