@@ -15,7 +15,7 @@ public class Group<T, U> {
 
     public Group(final String name, final String sourceField) {
         this.name = name;
-        this.sourceField = sourceField;
+        this.sourceField = "$" + sourceField;
     }
 
     public Accumulator getAccumulator() {

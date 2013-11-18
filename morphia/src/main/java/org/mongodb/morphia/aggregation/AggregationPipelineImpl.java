@@ -23,6 +23,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     private final Class<U> target;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
+    private boolean firstStage = false;
 
     public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source, final Class<U> target) {
         this.collection = datastore.getCollection(source);
@@ -32,21 +33,30 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public DBObject toDBObject(final Projection projection) {
-        MappedField field = mapper.getMappedClass(source).getMappedField(projection.getSourceField());
-        String sourceFieldName = field.getNameToStore();
-        if (!stages.isEmpty()) {
-            sourceFieldName = "$" + sourceFieldName;
+        String sourceFieldName;
+        if (firstStage) {
+            MappedField field = mapper.getMappedClass(source).getMappedField(projection.getSourceField());
+            sourceFieldName = field.getNameToStore();
+        } else {
+            sourceFieldName = projection.getSourceField();
         }
-        if (projection.getProjection() != null) {
-            return new BasicDBObject(projection.getProjectedField(), toDBObject(projection.getProjection()));
+        
+        if (projection.getProjections() != null) {
+            List<Projection> list = projection.getProjections();
+            DBObject projections = new BasicDBObject();
+            for (Projection proj : list) {
+                projections.putAll(toDBObject(proj));
+            }
+            return new BasicDBObject(sourceFieldName, projections);
         } else if (projection.getProjectedField() != null) {
             return new BasicDBObject(sourceFieldName, projection.getProjectedField());
         } else {
-            return new BasicDBObject(field.getNameToStore(), projection.isSuppressed() ? 0 : 1);
+            return new BasicDBObject(sourceFieldName, projection.isSuppressed() ? 0 : 1);
         }
     }
 
     public AggregationPipeline<T, U> project(final Projection... projections) {
+        firstStage = stages.isEmpty();
         DBObject proj = new BasicDBObject();
         for (Projection projection : projections) {
             proj.putAll(toDBObject(projection));
@@ -59,7 +69,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         DBObject group = new BasicDBObject("_id", "$" + id);
         for (Group grouping : groupings) {
             Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), "$" + accumulator.getField()));
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
         }
 
         stages.add(new BasicDBObject("$group", group));
@@ -69,12 +79,12 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     public AggregationPipeline<T, U> group(final List<Group> id, final Group... groupings) {
         DBObject idGroup = new BasicDBObject();
         for (Group group : id) {
-            idGroup.put(group.getName(), "$" + group.getSourceField());
+            idGroup.put(group.getName(), group.getSourceField());
         }
         DBObject group = new BasicDBObject("_id", idGroup);
         for (Group grouping : groupings) {
             Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), "$" + accumulator.getField()));
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
         }
 
         stages.add(new BasicDBObject("$group", group));
@@ -89,6 +99,17 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         }
 
         stages.add(new BasicDBObject("$match", matches));
+        return this;
+    }
+
+    public AggregationPipeline<T, U> sort(final Sort... sorts) {
+        LOG.info("stages = " + stages);
+        DBObject sortList = new BasicDBObject();
+        for (Sort sort : sorts) {
+            sortList.put(sort.getField(), sort.getDirection());
+        }
+
+        stages.add(new BasicDBObject("$sort", sortList));
         return this;
     }
 

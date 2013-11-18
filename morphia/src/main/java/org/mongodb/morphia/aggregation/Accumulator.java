@@ -6,7 +6,7 @@ public class Accumulator {
 
     public Accumulator(final String operation, final String field) {
         this.operation = operation;
-        this.field = field;
+        this.field = "$" + field;
     }
 
     public String getField() {

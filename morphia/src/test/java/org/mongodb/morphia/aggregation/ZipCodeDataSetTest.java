@@ -1,10 +1,12 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.DBCollection;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.AlsoLoad;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
@@ -19,12 +21,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static org.mongodb.morphia.aggregation.Group.average;
 import static org.mongodb.morphia.aggregation.Group.field;
+import static org.mongodb.morphia.aggregation.Group.first;
+import static org.mongodb.morphia.aggregation.Group.id;
+import static org.mongodb.morphia.aggregation.Group.last;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Matcher.match;
+import static org.mongodb.morphia.aggregation.Projection.projection;
+import static org.mongodb.morphia.aggregation.Sort.ascending;
 
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
@@ -66,42 +75,73 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         installSampleData();
-        MorphiaIterator<Population, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                               .group("state", field("totalPop", sum("pop")))
-                                                               .match(match("totalPop").greaterThanEqual(10000000))
-                                                               .aggregate();
-        boolean caFound = false;
-        for (Population population : pipeline) {
-            if (population.getState().equals("CA")) {
-                caFound = true;
-                Assert.assertEquals(new Long(29760021), population.getPopulation());
-            }
-            LOG.debug("population = " + population);
-        }
-        Assert.assertTrue("Should have found CA", caFound);
-
-        pipeline.close();
+        AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
+                                                             .group("state", field("totalPop", sum("pop")))
+                                                             .match(match("totalPop").greaterThanEqual(10000000));
+        validate(pipeline.aggregate(), "CA", 29760021);
+        validate(pipeline.aggregate(), "OH", 10847115);
     }
 
     @Test
     public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
         installSampleData();
-        MorphiaIterator<Population, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                               .group(Group.id(field("state"), field("city")), field("pop", sum("pop")))
-                                                               .group("_id.state", field("avgCityPop", average("pop")))
-                                                               .aggregate();
+        AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
+                                                             .group(id(field("state"), field("city")), field("pop", sum("pop")))
+                                                             .group("_id.state", field("avgCityPop", average("pop")));
+        validate(pipeline.aggregate(), "MN", 5335);
+    }
+
+    @Test
+    public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
+        installSampleData();
+        getMorphia().mapPackage(getClass().getPackage().getName());
+        AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
+                                                        .group(id(field("state"), field("city")), field("pop", sum("pop")))
+                                                        .sort(ascending("pop"))
+                                                        .group("_id.state",
+                                                               field("biggestCity", last("_id.city")),
+                                                               field("biggestPop", last("pop")),
+                                                               field("smallestCity", first("_id.city")),
+                                                               field("smallestPop", first("pop"))
+                                                              )
+                                                        .project(projection("_id").suppress(),
+                                                                 projection("state", "_id"),
+                                                                 projection("biggestCity",
+                                                                            projection("name", "biggestCity"),
+                                                                            projection("pop", "biggestPop")
+                                                                           ),
+                                                                 projection("smallestCity",
+                                                                            projection("name", "smallestCity"),
+                                                                            projection("pop", "smallestPop")
+                                                                           )
+                                                                );
+        MorphiaIterator<State, State> iterator = pipeline.aggregate();
+        Map<String, State> states = new HashMap<String, State>();
+        while (iterator.hasNext()) {
+            State state = iterator.next();
+            states.put(state.getState(), state);
+        }
+
+        State state = states.get("SD");
+
+        Assert.assertEquals("SIOUX FALLS", state.getBiggest().getName());
+        Assert.assertEquals(102046, state.getBiggest().getPopulation().longValue());
+
+        Assert.assertEquals("ZEONA", state.getSmallest().getName());
+        Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
+    }
+
+    private void validate(final MorphiaIterator<Population, Population> pipeline, final String state, final long value) {
         boolean found = false;
         for (Population population : pipeline) {
-            if (population.getState().equals("MN")) {
+            if (population.getState().equals(state)) {
                 found = true;
-                Assert.assertEquals(new Long(5335), population.getPopulation());
+                Assert.assertEquals(new Long(value), population.getPopulation());
             }
             LOG.info("population = " + population);
         }
-        Assert.assertTrue("Should have found MN", found);
-
+        Assert.assertTrue("Should have found " + state, found);
         pipeline.close();
-
     }
 
     @Entity(value = "zipcodes", noClassnameStored = true)
@@ -113,7 +153,7 @@ public class ZipCodeDataSetTest extends TestBase {
         @Property("loc")
         private double[] location;
         @Property("pop")
-        private double population;
+        private Double population;
         @Property("state")
         private String state;
 
@@ -144,11 +184,11 @@ public class ZipCodeDataSetTest extends TestBase {
             this.name = name;
         }
 
-        private double getPopulation() {
+        private Double getPopulation() {
             return population;
         }
 
-        private void setPopulation(final double population) {
+        private void setPopulation(final Double population) {
             this.population = population;
         }
 
@@ -174,6 +214,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
     }
 
+    @Entity
     public static class Population {
         @Id
         private String state;
@@ -198,6 +239,64 @@ public class ZipCodeDataSetTest extends TestBase {
             final StringBuilder sb = new StringBuilder("Population{");
             sb.append("population=").append(population);
             sb.append(", state='").append(state).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+
+    @Embedded
+    public static class CityPopulation {
+        @Property("name")
+        private String name;
+        @Property("pop")
+        private Long population;
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getPopulation() {
+            return population;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("CityPopulation{");
+            sb.append("name='").append(name).append('\'');
+            sb.append(", population=").append(population);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+    @Entity
+    public static class State {
+        @Id
+        private ObjectId id;
+        @Property("state")
+        private String state;
+        @Embedded("biggestCity")
+        private CityPopulation biggest;
+        @Embedded("smallestCity")
+        private CityPopulation smallest;
+
+        public CityPopulation getBiggest() {
+            return biggest;
+        }
+
+        public CityPopulation getSmallest() {
+            return smallest;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("State{");
+            sb.append("state='").append(state).append('\'');
+            sb.append(", biggest=").append(biggest);
+            sb.append(", smallest=").append(smallest);
             sb.append('}');
             return sb.toString();
         }
