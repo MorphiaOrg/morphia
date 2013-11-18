@@ -107,7 +107,8 @@ public class AggregationTest extends TestBase {
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
         MorphiaIterator<User, User> aggregate = getDs().createAggregation(User.class, User.class)
-                                                    .project(projection("name"), projection("joined"), projection("likes"))
+                                                    .project(projection("_id").suppress(), projection("name"), projection("joined"), 
+                                                             projection("likes"))
                                                     .unwind("likes")
                                                     .aggregate();
         int count = 0;
