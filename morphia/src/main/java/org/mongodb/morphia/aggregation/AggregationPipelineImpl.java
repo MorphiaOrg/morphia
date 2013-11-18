@@ -142,7 +142,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options) {
-        LOG.debug("stages = " + stages);
+        LOG.info("stages = " + stages);
 
         MongoCursor cursor = collection.aggregate(stages, options);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());

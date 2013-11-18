@@ -22,12 +22,23 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import static org.mongodb.morphia.aggregation.Group.grouping;
+import static org.mongodb.morphia.aggregation.Group.push;
+import static org.mongodb.morphia.aggregation.Projection.projection;
+
 public class AggregationTest extends TestBase {
+    private static final Logr LOG = MorphiaLoggerFactory.get(AggregationTest.class);
+
     @Test
     public void testOut() {
         getDs().save(new Book("The Banquet", "Dante", 2),
@@ -37,7 +48,7 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         MorphiaIterator<Author, Author> aggregate = getDs().createAggregation(Book.class, Author.class)
-                                                        .group("author", Group.grouping("books", Group.push("title")))
+                                                        .group("author", grouping("books", push("title")))
                                                         .out()
                                                         .aggregate();
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
@@ -46,7 +57,7 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.getBooks());
 
         getDs().createAggregation(Book.class, Author.class)
-            .group("author", Group.grouping("books", Group.push("title")))
+            .group("author", grouping("books", push("title")))
             .out("different")
             .aggregate();
 
@@ -90,26 +101,49 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testUnwind() {
-        getDs().save(new Book("The Banquet", "Dante", 2, "not as famous", "haven't heard of it", "probably still good, though"),
-                     new Book("Divine Comedy", "Dante", 1, "medieval", "hell"),
-                     new Book("Eclogues", "Dante", 2, "come again?", "italian?"),
-                     new Book("The Odyssey", "Homer", 10, "classic", "mythology", "poem", " Odysseus", "Ulysses", "sequel"),
-                     new Book("Iliad", "Homer", 10, "classic", "mythology", "poem", "Troy", "trojans"));
+    public void testUnwind() throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
+                     new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().createAggregation(Book.class, Book.class)
-                                                    .unwind("tags")
+        MorphiaIterator<User, User> aggregate = getDs().createAggregation(User.class, User.class)
+                                                    .project(projection("name"), projection("joined"), projection("likes"))
+                                                    .unwind("likes")
                                                     .aggregate();
         int count = 0;
         while (aggregate.hasNext()) {
-            aggregate.next();
+            User user = aggregate.next();
+            LOG.info(user.toString());
+            switch (count) {
+                case 0:
+                    Assert.assertEquals("jane", user.getName());
+                    Assert.assertEquals("golf", user.getLikes().get(0));
+                    break;
+                case 1:
+                    Assert.assertEquals("jane", user.getName());
+                    Assert.assertEquals("racquetball", user.getLikes().get(0));
+                    break;
+                case 2:
+                    Assert.assertEquals("joe", user.getName());
+                    Assert.assertEquals("tennis", user.getLikes().get(0));
+                    break;
+                case 3:
+                    Assert.assertEquals("joe", user.getName());
+                    Assert.assertEquals("golf", user.getLikes().get(0));
+                    break;
+                case 4:
+                    Assert.assertEquals("joe", user.getName());
+                    Assert.assertEquals("swimming", user.getLikes().get(0));
+                    break;
+                default:
+                    Assert.fail("Should only find 5 elements");
+            }
             count++;
         }
-        Assert.assertEquals(18, count);
     }
 
     @Entity("books")
-    private static class Book {
+    private static final class Book {
         @Id
         private ObjectId id;
         private String title;
@@ -166,6 +200,17 @@ public class AggregationTest extends TestBase {
         private void setTags(final List<String> tags) {
             this.tags = tags;
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Book{");
+            sb.append("title='").append(title).append('\'');
+            sb.append(", author='").append(author).append('\'');
+            sb.append(", copies=").append(copies);
+            sb.append(", tags=").append(tags);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     @Entity("authors")
@@ -188,6 +233,58 @@ public class AggregationTest extends TestBase {
 
         private void setBooks(final List<String> books) {
             this.books = books;
+        }
+    }
+
+    @Entity("users")
+    private static final class User {
+        @Id
+        private ObjectId id;
+        private String name;
+        private Date joined;
+        private List<String> likes;
+
+        private User() {
+        }
+
+        private User(final String name, final Date joined, final String... likes) {
+            this.name = name;
+            this.joined = joined;
+            this.likes = Arrays.asList(likes);
+        }
+
+        private String getName() {
+            return name;
+        }
+
+        private void setName(final String name) {
+            this.name = name;
+        }
+
+        private Date getJoined() {
+            return joined;
+        }
+
+        private void setJoined(final Date joined) {
+            this.joined = joined;
+        }
+
+        private List<String> getLikes() {
+            return likes;
+        }
+
+        private void setLikes(final List<String> likes) {
+            this.likes = likes;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("User{");
+            sb.append("name='").append(name).append('\'');
+            sb.append(", joined=").append(joined);
+            sb.append(", likes=").append(likes);
+            sb.append('}');
+            return sb.toString();
         }
     }
 }
