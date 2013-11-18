@@ -24,9 +24,11 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     private final Class<U> target;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
+    private final DatastoreImpl datastore;
     private boolean firstStage = false;
 
     public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source, final Class<U> target) {
+        this.datastore = datastore;
         this.collection = datastore.getCollection(source);
         mapper = datastore.getMapper();
         this.source = source;
@@ -41,7 +43,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         } else {
             sourceFieldName = projection.getSourceField();
         }
-        
+
         if (projection.getProjections() != null) {
             List<Projection> list = projection.getProjections();
             DBObject projections = new BasicDBObject();
@@ -112,21 +114,40 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
+    public AggregationPipeline<T, U> limit(final int count) {
+        stages.add(new BasicDBObject("$limit", count));
+        return this;
+    }
+
+    public AggregationPipeline<T, U> skip(final int count) {
+        stages.add(new BasicDBObject("$skip", count));
+        return this;
+    }
+
+    public AggregationPipeline<T, U> out(final String collectionName) {
+        stages.add(new BasicDBObject("$out", collectionName));
+        return this;
+    }
+
+    public AggregationPipeline<T, U> out() {
+        return out(datastore.getCollection(target).getName());
+    }
+
     public MorphiaIterator<U, U> aggregate() {
         return aggregate(AggregationOptions.builder().build());
     }
-    
+
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options) {
         LOG.debug("stages = " + stages);
 
         MongoCursor cursor = collection.aggregate(stages, options);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
-    
+
     public MorphiaIterator<U, U> aggregate(final ReadPreference readPreference) {
         return aggregate(AggregationOptions.builder().build(), readPreference);
     }
-    
+
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options, final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
