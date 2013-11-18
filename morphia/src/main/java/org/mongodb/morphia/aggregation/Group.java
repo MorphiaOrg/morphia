@@ -34,15 +34,15 @@ public class Group<T, U> {
         return Arrays.asList(field);
     }
 
-    public static Group field(final String name) {
-        return field(name, name);
+    public static Group grouping(final String name) {
+        return grouping(name, name);
     }
 
-    public static Group field(final String name, final String sourceField) {
+    public static Group grouping(final String name, final String sourceField) {
         return new Group(name, sourceField);
     }
     
-    public static Group field(final String name, final Accumulator accumulator) {
+    public static Group grouping(final String name, final Accumulator accumulator) {
         return new Group(name, accumulator);
     }
 

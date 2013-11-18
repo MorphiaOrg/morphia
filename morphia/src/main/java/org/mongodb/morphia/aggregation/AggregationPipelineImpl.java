@@ -92,7 +92,6 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public AggregationPipeline<T, U> match(final Matcher... matchers) {
-        LOG.info("stages = " + stages);
         DBObject matches = new BasicDBObject();
         for (Matcher match : matchers) {
             matches.put(match.getField(), new BasicDBObject(match.getOperation(), match.getOperand()));
@@ -103,7 +102,6 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public AggregationPipeline<T, U> sort(final Sort... sorts) {
-        LOG.info("stages = " + stages);
         DBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
             sortList.put(sort.getField(), sort.getDirection());
@@ -114,7 +112,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public MorphiaIterator<U, U> aggregate() {
-        LOG.info("stages = " + stages);
+        LOG.debug("stages = " + stages);
 
         MongoCursor cursor = collection.aggregate(stages, AggregationOptions.builder().build());
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());

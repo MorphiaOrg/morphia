@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static org.mongodb.morphia.aggregation.Group.average;
-import static org.mongodb.morphia.aggregation.Group.field;
 import static org.mongodb.morphia.aggregation.Group.first;
+import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.id;
 import static org.mongodb.morphia.aggregation.Group.last;
 import static org.mongodb.morphia.aggregation.Group.sum;
@@ -39,7 +39,6 @@ public class ZipCodeDataSetTest extends TestBase {
     private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
-        LOG.info("ZipCodeDataSetTest.installSampleData");
         File file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
         if (!file.exists()) {
             download(new URL("http://media.mongodb.org/zips.json"), file);
@@ -50,9 +49,8 @@ public class ZipCodeDataSetTest extends TestBase {
                                           "--db", getDb().getName(),
                                           "--collection", "zipcodes",
                                           "--file", file.getAbsolutePath())
-                .redirectError(System.err)
-                     //                                 .redirectOutput(System.out)
-                .execute();
+                                 .redirectError(System.err)
+                                 .execute();
         }
     }
 
@@ -76,7 +74,7 @@ public class ZipCodeDataSetTest extends TestBase {
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         installSampleData();
         AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                             .group("state", field("totalPop", sum("pop")))
+                                                             .group("state", grouping("totalPop", sum("pop")))
                                                              .match(match("totalPop").greaterThanEqual(10000000));
         validate(pipeline.aggregate(), "CA", 29760021);
         validate(pipeline.aggregate(), "OH", 10847115);
@@ -86,8 +84,8 @@ public class ZipCodeDataSetTest extends TestBase {
     public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
         installSampleData();
         AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                             .group(id(field("state"), field("city")), field("pop", sum("pop")))
-                                                             .group("_id.state", field("avgCityPop", average("pop")));
+                                                             .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+                                                             .group("_id.state", grouping("avgCityPop", average("pop")));
         validate(pipeline.aggregate(), "MN", 5335);
     }
 
@@ -96,13 +94,13 @@ public class ZipCodeDataSetTest extends TestBase {
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
         AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
-                                                        .group(id(field("state"), field("city")), field("pop", sum("pop")))
+                                                        .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
                                                         .sort(ascending("pop"))
                                                         .group("_id.state",
-                                                               field("biggestCity", last("_id.city")),
-                                                               field("biggestPop", last("pop")),
-                                                               field("smallestCity", first("_id.city")),
-                                                               field("smallestPop", first("pop"))
+                                                               grouping("biggestCity", last("_id.city")),
+                                                               grouping("biggestPop", last("pop")),
+                                                               grouping("smallestCity", first("_id.city")),
+                                                               grouping("smallestPop", first("pop"))
                                                               )
                                                         .project(projection("_id").suppress(),
                                                                  projection("state", "_id"),
@@ -115,6 +113,7 @@ public class ZipCodeDataSetTest extends TestBase {
                                                                             projection("pop", "smallestPop")
                                                                            )
                                                                 );
+
         MorphiaIterator<State, State> iterator = pipeline.aggregate();
         Map<String, State> states = new HashMap<String, State>();
         while (iterator.hasNext()) {
@@ -129,6 +128,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
         Assert.assertEquals("ZEONA", state.getSmallest().getName());
         Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
+        iterator.close();
     }
 
     private void validate(final MorphiaIterator<Population, Population> pipeline, final String state, final long value) {
@@ -138,7 +138,7 @@ public class ZipCodeDataSetTest extends TestBase {
                 found = true;
                 Assert.assertEquals(new Long(value), population.getPopulation());
             }
-            LOG.info("population = " + population);
+            LOG.debug("population = " + population);
         }
         Assert.assertTrue("Should have found " + state, found);
         pipeline.close();
@@ -268,6 +268,7 @@ public class ZipCodeDataSetTest extends TestBase {
             return sb.toString();
         }
     }
+
     @Entity
     public static class State {
         @Id
