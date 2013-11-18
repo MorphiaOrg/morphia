@@ -128,6 +128,10 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
+    public AggregationPipeline<T, U> geoNear(final GeoNear geoNear) {
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
     public AggregationPipeline<T, U> out(final String collectionName) {
         stages.add(new BasicDBObject("$out", collectionName));
         return this;

@@ -24,9 +24,9 @@ public interface AggregationPipeline<T, U> {
 
     AggregationPipeline<T, U> unwind(String field);
     
-    //    AggregationPipeline<T, U> geoNear();
-    //
-
+    AggregationPipeline<T, U> geoNear(GeoNear geoNear);
+    
+    
     /**
      * Places the output of the aggregation in the collection mapped by the target type.
      * 
