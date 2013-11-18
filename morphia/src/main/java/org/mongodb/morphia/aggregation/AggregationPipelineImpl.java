@@ -123,6 +123,10 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         stages.add(new BasicDBObject("$skip", count));
         return this;
     }
+    public AggregationPipeline<T, U> unwind(final String field) {
+        stages.add(new BasicDBObject("$unwind", "$" + field));
+        return this;
+    }
 
     public AggregationPipeline<T, U> out(final String collectionName) {
         stages.add(new BasicDBObject("$out", collectionName));

@@ -22,8 +22,8 @@ public interface AggregationPipeline<T, U> {
 
     AggregationPipeline<T, U> skip(int count);
 
-    //    AggregationPipeline<T, U> unwind();
-    //
+    AggregationPipeline<T, U> unwind(String field);
+    
     //    AggregationPipeline<T, U> geoNear();
     //
 

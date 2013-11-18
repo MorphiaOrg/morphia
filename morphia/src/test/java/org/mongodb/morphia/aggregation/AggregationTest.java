@@ -89,6 +89,25 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(2, book.getCopies().intValue());
     }
 
+    @Test
+    public void testUnwind() {
+        getDs().save(new Book("The Banquet", "Dante", 2, "not as famous", "haven't heard of it", "probably still good, though"),
+                     new Book("Divine Comedy", "Dante", 1, "medieval", "hell"),
+                     new Book("Eclogues", "Dante", 2, "come again?", "italian?"),
+                     new Book("The Odyssey", "Homer", 10, "classic", "mythology", "poem", " Odysseus", "Ulysses", "sequel"),
+                     new Book("Iliad", "Homer", 10, "classic", "mythology", "poem", "Troy", "trojans"));
+
+        MorphiaIterator<Book, Book> aggregate = getDs().createAggregation(Book.class, Book.class)
+                                                    .unwind("tags")
+                                                    .aggregate();
+        int count = 0;
+        while (aggregate.hasNext()) {
+            aggregate.next();
+            count++;
+        }
+        Assert.assertEquals(18, count);
+    }
+
     @Entity("books")
     private static class Book {
         @Id
@@ -96,14 +115,16 @@ public class AggregationTest extends TestBase {
         private String title;
         private String author;
         private Integer copies;
+        private List<String> tags;
 
         private Book() {
         }
 
-        private Book(final String title, final String author, final Integer copies) {
+        private Book(final String title, final String author, final Integer copies, final String... tags) {
             this.title = title;
             this.author = author;
             this.copies = copies;
+            this.tags = Arrays.asList(tags);
         }
 
         private ObjectId getId() {
@@ -136,6 +157,14 @@ public class AggregationTest extends TestBase {
 
         private void setCopies(final Integer copies) {
             this.copies = copies;
+        }
+
+        private List<String> getTags() {
+            return tags;
+        }
+
+        private void setTags(final List<String> tags) {
+            this.tags = tags;
         }
     }
 
