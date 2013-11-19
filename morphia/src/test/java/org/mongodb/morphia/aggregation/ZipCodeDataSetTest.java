@@ -35,6 +35,11 @@ import static org.mongodb.morphia.aggregation.Matcher.match;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.aggregation.Sort.ascending;
 
+/**
+ * These tests recreate the example zip code data set aggregations as found in the official documentation.
+ * 
+ * @see <a href="http://docs.mongodb.org/manual/tutorial/aggregation-zip-code-data-set/">Aggregation with the Zip Code Data Set</a>
+ */
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
@@ -73,9 +78,10 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         installSampleData();
-        AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                             .group("state", grouping("totalPop", sum("pop")))
-                                                             .match(match("totalPop").greaterThanEqual(10000000));
+        AggregationPipeline<City, Population> pipeline
+            = getDs().createAggregation(City.class, Population.class)
+                 .group("state", grouping("totalPop", sum("pop")))
+                 .match(match("totalPop").greaterThanEqual(10000000));
         validate(pipeline.aggregate(), "CA", 29760021);
         validate(pipeline.aggregate(), "OH", 10847115);
     }
