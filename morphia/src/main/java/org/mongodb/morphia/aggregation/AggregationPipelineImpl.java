@@ -12,6 +12,7 @@ import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,11 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
+    public AggregationPipeline<T, U> match(final Query query) {
+        stages.add(new BasicDBObject("$match", query.getQueryObject()));
+        return this;
+    }
+
     public AggregationPipeline<T, U> sort(final Sort... sorts) {
         DBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
@@ -123,13 +129,33 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         stages.add(new BasicDBObject("$skip", count));
         return this;
     }
+
     public AggregationPipeline<T, U> unwind(final String field) {
         stages.add(new BasicDBObject("$unwind", "$" + field));
         return this;
     }
 
     public AggregationPipeline<T, U> geoNear(final GeoNear geoNear) {
-        throw new UnsupportedOperationException("Not implemented yet!");
+        DBObject geo = new BasicDBObject();
+        putIfNull(geo, "near", geoNear.getNear());
+        putIfNull(geo, "distanceField", geoNear.getDistanceField());
+        putIfNull(geo, "limit", geoNear.getLimit());
+        putIfNull(geo, "num", geoNear.getMaxDocuments());
+        putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
+        putIfNull(geo, "query", geoNear.getQuery());
+        putIfNull(geo, "spherical", geoNear.getSpherical());
+        putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
+        putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
+        putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
+        stages.add(new BasicDBObject("$geoNear", geo));
+        
+        return this;
+    }
+
+    private void putIfNull(final DBObject dbObject, final String name, final Object value) {
+        if (value != null) {
+            dbObject.put(name, value);
+        }
     }
 
     public AggregationPipeline<T, U> out(final String collectionName) {
@@ -146,7 +172,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options) {
-        LOG.info("stages = " + stages);
+        LOG.debug("stages = " + stages);
 
         MongoCursor cursor = collection.aggregate(stages, options);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());

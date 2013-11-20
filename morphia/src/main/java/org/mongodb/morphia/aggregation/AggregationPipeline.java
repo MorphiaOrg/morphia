@@ -4,6 +4,7 @@ package org.mongodb.morphia.aggregation;
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.Query;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface AggregationPipeline<T, U> {
     AggregationPipeline<T, U> group(List<Group> id, Group... groupings);
 
     AggregationPipeline<T, U> match(Matcher... criterion);
+    
+    AggregationPipeline<T, U> match(Query query);
 
     AggregationPipeline<T, U> sort(Sort... sorts);
 

@@ -23,4 +23,9 @@ public interface QueryFactory {
    * and may be {@code null}.
    */
   <T> Query<T> createQuery(Datastore datastore, DBCollection collection, Class<T> type, DBObject query);
+
+  /**
+   * Creates an unvalidated {@link Query} typically for use in aggregation pipelines.
+   */
+  <T> Query<T> createQuery(Datastore datastore);
 }

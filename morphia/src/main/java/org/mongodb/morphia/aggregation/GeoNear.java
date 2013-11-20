@@ -17,9 +17,10 @@
 package org.mongodb.morphia.aggregation;
 
 public final class GeoNear {
+    private final double[] near;
     private final String distanceField;
     private final Long limit;
-    private final Long num;
+    private final Long maxDocuments;
     private final Double maxDistance;
     private final Object query;
     private final Boolean spherical;
@@ -28,15 +29,20 @@ public final class GeoNear {
     private final Boolean uniqueDocuments;
 
     private GeoNear(final GeoNearBuilder builder) {
+        near = builder.near;
         distanceField = builder.distanceField;
         limit = builder.limit;
-        num = builder.num;
+        maxDocuments = builder.maxDocuments;
         maxDistance = builder.maxDistance;
         query = builder.query;
         spherical = builder.spherical;
         distanceMultiplier = builder.distanceMultiplier;
         includeLocations = builder.includeLocations;
         uniqueDocuments = builder.uniqueDocuments;
+    }
+
+    public double[] getNear() {
+        return near;
     }
 
     public String getDistanceField() {
@@ -47,8 +53,8 @@ public final class GeoNear {
         return limit;
     }
 
-    public Long getNum() {
-        return num;
+    public Long getMaxDocuments() {
+        return maxDocuments;
     }
 
     public Double getMaxDistance() {
@@ -82,13 +88,14 @@ public final class GeoNear {
     public static class GeoNearBuilder {
         private final String distanceField;
         private Long limit;
-        private Long num;
+        private Long maxDocuments;
         private Double maxDistance;
         private Object query;
         private Boolean spherical;
         private Double distanceMultiplier;
         private String includeLocations;
         private Boolean uniqueDocuments;
+        private double[] near;
 
         /**
          * @param distanceField The output field that contains the calculated distance. To specify a field within a subdocument, use dot
@@ -99,10 +106,15 @@ public final class GeoNear {
             this.distanceField = distanceField;
         }
 
+        public GeoNearBuilder setNear(final double latitude, final double longitude) {
+            this.near = new double[]{latitude, longitude};
+            return this;
+        }
+
         /**
          * The maximum number of documents to return. The default value is 100.
          *
-         * @see #setNum(Long).
+         * @see #setMaxDocuments(Long).
          */
         public GeoNearBuilder setLimit(final Long limit) {
             this.limit = limit;
@@ -110,11 +122,11 @@ public final class GeoNear {
         }
 
         /**
-         * The num option provides the same function as the limit option. Both define the maximum number of documents to return. If both
-         * options are included, the num value overrides the limit value.
+         * The maxDocuments option provides the same function as the limit option. Both define the maximum number of documents to return. If
+         * both options are included, this value overrides the limit value.
          */
-        public GeoNearBuilder setNum(final Long num) {
-            this.num = num;
+        public GeoNearBuilder setMaxDocuments(final Long num) {
+            this.maxDocuments = num;
             return this;
         }
 
@@ -176,7 +188,7 @@ public final class GeoNear {
             this.uniqueDocuments = uniqueDocuments;
             return this;
         }
-        
+
         public GeoNear build() {
             return new GeoNear(this);
         }

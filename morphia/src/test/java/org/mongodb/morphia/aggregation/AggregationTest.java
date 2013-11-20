@@ -16,6 +16,7 @@
 
 package org.mongodb.morphia.aggregation;
 
+import com.mongodb.DBCursor;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
+import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 
 public class AggregationTest extends TestBase {
@@ -107,14 +109,13 @@ public class AggregationTest extends TestBase {
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
         MorphiaIterator<User, User> aggregate = getDs().createAggregation(User.class, User.class)
-                                                    .project(projection("_id").suppress(), projection("name"), projection("joined"), 
+                                                    .project(projection("_id").suppress(), projection("name"), projection("joined"),
                                                              projection("likes"))
                                                     .unwind("likes")
                                                     .aggregate();
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
-            LOG.info(user.toString());
             switch (count) {
                 case 0:
                     Assert.assertEquals("jane", user.getName());
@@ -143,7 +144,30 @@ public class AggregationTest extends TestBase {
         }
     }
 
-    @Entity("books")
+    @Test
+    public void testMatch() {
+        getDs().save(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
+                     new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
+                     new Book("Eclogues", "Dante", 2, "Italian", ""),
+                     new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
+                     new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel"));
+
+        MorphiaIterator<Book, Book> aggregate = getDs().createAggregation(Book.class, Book.class)
+                                                    .match(getDs().getQueryFactory().createQuery(getDs())
+                                                               .field("author").equal("Homer"))
+                                                    .group("author", Group.grouping("copies", sum("copies")))
+                                                    .out("testAverage")
+                                                    .aggregate();
+        DBCursor testAverage = getDb().getCollection("testAverage").find();
+        Assert.assertNotNull(testAverage);
+        try {
+            Assert.assertEquals(20, testAverage.next().get("copies"));
+        } finally {
+            testAverage.close();
+        }
+    }
+
+    @Entity(value = "books", noClassnameStored = true)
     private static final class Book {
         @Id
         private ObjectId id;

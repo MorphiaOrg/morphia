@@ -14,4 +14,8 @@ public abstract class AbstractQueryFactory implements QueryFactory {
   public <T> Query<T> createQuery(final Datastore datastore, final DBCollection collection, final Class<T> type) {
     return createQuery(datastore, collection, type, null);
   }
+
+    public <T> Query<T> createQuery(final Datastore datastore) {
+        return new QueryImpl<T>(null, null, datastore);        
+    }
 }
