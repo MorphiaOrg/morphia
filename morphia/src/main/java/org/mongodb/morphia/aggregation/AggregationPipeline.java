@@ -15,8 +15,6 @@ public interface AggregationPipeline<T, U> {
 
     AggregationPipeline<T, U> group(List<Group> id, Group... groupings);
 
-    AggregationPipeline<T, U> match(Matcher... criterion);
-    
     AggregationPipeline<T, U> match(Query query);
 
     AggregationPipeline<T, U> sort(Sort... sorts);

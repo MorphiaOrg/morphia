@@ -167,6 +167,17 @@ public class AggregationTest extends TestBase {
         }
     }
 
+    @Test
+    public void testGeoNear() {
+        // Given
+        
+
+        // When
+
+        // Then
+    }
+
+
     @Entity(value = "books", noClassnameStored = true)
     private static final class Book {
         @Id

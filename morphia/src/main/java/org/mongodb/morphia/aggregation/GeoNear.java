@@ -16,13 +16,15 @@
 
 package org.mongodb.morphia.aggregation;
 
+import org.mongodb.morphia.query.Query;
+
 public final class GeoNear {
     private final double[] near;
     private final String distanceField;
     private final Long limit;
     private final Long maxDocuments;
     private final Double maxDistance;
-    private final Object query;
+    private final Query query;
     private final Boolean spherical;
     private final Double distanceMultiplier;
     private final String includeLocations;
@@ -61,7 +63,7 @@ public final class GeoNear {
         return maxDistance;
     }
 
-    public Object getQuery() {
+    public Query getQuery() {
         return query;
     }
 
@@ -90,7 +92,7 @@ public final class GeoNear {
         private Long limit;
         private Long maxDocuments;
         private Double maxDistance;
-        private Object query;
+        private Query query;
         private Boolean spherical;
         private Double distanceMultiplier;
         private String includeLocations;
@@ -145,8 +147,9 @@ public final class GeoNear {
          * @see <a href="http://docs.mongodb.org/manual/tutorial/query-documents/#read-operations-query-argument">MongoDB read operation
          *      query syntax</a>
          */
-        public GeoNearBuilder setQuery(final Object query) {
-            throw new UnsupportedOperationException("This option has not been implemented yet.");
+        public GeoNearBuilder setQuery(final Query query) {
+            this.query = query;
+            return this;
         }
 
         /**

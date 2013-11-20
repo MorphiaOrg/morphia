@@ -31,22 +31,24 @@ import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.id;
 import static org.mongodb.morphia.aggregation.Group.last;
 import static org.mongodb.morphia.aggregation.Group.sum;
-import static org.mongodb.morphia.aggregation.Matcher.match;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.aggregation.Sort.ascending;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
- * 
+ *
  * @see <a href="http://docs.mongodb.org/manual/tutorial/aggregation-zip-code-data-set/">Aggregation with the Zip Code Data Set</a>
  */
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
-        File file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
+        File file = new File("zips.json");
         if (!file.exists()) {
-            download(new URL("http://media.mongodb.org/zips.json"), file);
+            file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
+            if (!file.exists()) {
+                download(new URL("http://media.mongodb.org/zips.json"), file);
+            }
         }
         DBCollection zips = getDb().getCollection("zips");
         if (zips.count() == 0) {
@@ -60,7 +62,7 @@ public class ZipCodeDataSetTest extends TestBase {
     }
 
     private void download(final URL url, final File file) throws IOException {
-        LOG.info("Downloading zip data set");
+        LOG.info("Downloading zip data set to " + file);
         InputStream inputStream = url.openStream();
         FileOutputStream outputStream = new FileOutputStream(file);
         try {
@@ -80,8 +82,8 @@ public class ZipCodeDataSetTest extends TestBase {
         installSampleData();
         AggregationPipeline<City, Population> pipeline
             = getDs().createAggregation(City.class, Population.class)
-                 .group("state", grouping("totalPop", sum("pop")))
-                 .match(match("totalPop").greaterThanEqual(10000000));
+                  .group("state", grouping("totalPop", sum("pop")))
+                  .match(getDs().getQueryFactory().createQuery(getDs()).field("totalPop").greaterThanOrEq(10000000));
         validate(pipeline.aggregate(), "CA", 29760021);
         validate(pipeline.aggregate(), "OH", 10847115);
     }

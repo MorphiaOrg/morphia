@@ -95,16 +95,6 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
-    public AggregationPipeline<T, U> match(final Matcher... matchers) {
-        DBObject matches = new BasicDBObject();
-        for (Matcher match : matchers) {
-            matches.put(match.getField(), new BasicDBObject(match.getOperation(), match.getOperand()));
-        }
-
-        stages.add(new BasicDBObject("$match", matches));
-        return this;
-    }
-
     public AggregationPipeline<T, U> match(final Query query) {
         stages.add(new BasicDBObject("$match", query.getQueryObject()));
         return this;
@@ -142,13 +132,15 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         putIfNull(geo, "limit", geoNear.getLimit());
         putIfNull(geo, "num", geoNear.getMaxDocuments());
         putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
-        putIfNull(geo, "query", geoNear.getQuery());
+        if (geoNear.getQuery() != null) {
+            geo.put("query", geoNear.getQuery().getQueryObject());
+        }
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
         putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
         putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
         stages.add(new BasicDBObject("$geoNear", geo));
-        
+
         return this;
     }
 
