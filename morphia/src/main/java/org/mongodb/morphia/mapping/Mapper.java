@@ -703,7 +703,7 @@ public class Mapper {
             MappedClass mc = mapper.getMappedClass(clazz);
             //CHECKSTYLE:OFF
             for (int i = 0; ; ) {
-            //CHECKSTYLE:ON
+                //CHECKSTYLE:ON
                 final String part = parts[i];
                 mf = mc.getMappedField(part);
 
@@ -727,10 +727,8 @@ public class Mapper {
 
                 //catch people trying to search/update into @Reference/@Serialized fields
                 if (i < parts.length && !canQueryPast(mf)) {
-                    throw new ValidationException(
-                                                     "Can not use dot-notation past '" + part + "' could not be found in '"
-                                                     + clazz.getName() + "' while validating - "
-                                                     + prop);
+                    throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
+                                                         + " validating - %s", part, clazz.getName(), prop));
                 }
 
                 if (i >= parts.length) {
@@ -752,22 +750,13 @@ public class Mapper {
 
             if (validateTypes) {
                 if ((mf.isSingleValue() && !isCompatibleForOperator(mf.getType(), op, val))
-                    || ((mf.isMultipleValues() && !(isCompatibleForOperator(mf.getSubClass(), op, val)
-                                                    || isCompatibleForOperator(mf.getType(), op, val))))) {
-
+                    || ((mf.isMultipleValues()
+                         && !(isCompatibleForOperator(mf.getSubClass(), op, val) || isCompatibleForOperator(mf.getType(), op, val))))) {
 
                     if (LOG.isWarningEnabled()) {
-                        final Throwable t = new Throwable();
-                        final StackTraceElement ste = getFirstClientLine(t);
-                        LOG.warning(
-                                       "The type(s) for the query/update may be inconsistent; using an instance of type '" + val.getClass()
-                                                                                                                                .getName()
-                                       + "' for the field '" + mf.getDeclaringClass().getName() + "." + mf.getJavaFieldName()
-                                       + "' which is declared as '" + mf.getType().getName() + (ste == null ? "'" : "'\r\n --@--" + ste));
-
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Location of warning:\r\n", t);
-                        }
+                        LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
+                                           + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
+                                           mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()));
                     }
                 }
             }
@@ -781,9 +770,9 @@ public class Mapper {
     private static StackTraceElement getFirstClientLine(final Throwable t) {
         for (final StackTraceElement ste : t.getStackTrace()) {
             if (!ste.getClassName().startsWith("org.mongodb.morphia")
-                && !ste.getClassName().startsWith("sun.reflect") 
-                && !ste.getClassName().startsWith("org.junit") 
-                && !ste.getClassName().startsWith("org.eclipse") 
+                && !ste.getClassName().startsWith("sun.reflect")
+                && !ste.getClassName().startsWith("org.junit")
+                && !ste.getClassName().startsWith("org.eclipse")
                 && !ste.getClassName().startsWith("java.lang")) {
                 return ste;
             }
@@ -827,11 +816,12 @@ public class Mapper {
                 return true;
             } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
                 return true;
+            } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
+                return true;
             } else if (value instanceof List<?>) {
                 return true;
             } else if (!value.getClass().isAssignableFrom(type)
-                       && !value.getClass().getSimpleName().toLowerCase().equals(type.getSimpleName().toLowerCase())) {
-                //hack to let Long match long, and so on
+                       && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
                 return false;
             }
         }

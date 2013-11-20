@@ -10,7 +10,6 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.query.Query;
 
 
-//@Ignore //https://github.com/mongodb/morphia/issues/62
 public class TestQueriesOnReferences extends TestBase {
     @Entity
     public static class ContainsPic {
@@ -80,6 +79,21 @@ public class TestQueriesOnReferences extends TestBase {
         Assert.assertNotNull(query.field("lazyObjectIdPic")
                                   .equal(withObjectId)
                                   .get());
+    }
+    
+    @Test
+    public void testWithKeyQuery() {
+        final ContainsPic cpk = new ContainsPic();
+        final Pic p = new Pic();
+        cpk.pic = p;
+        getDs().save(p);
+        getDs().save(cpk);
+
+        ContainsPic containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, p.id)).get();
+        Assert.assertEquals(cpk.id, containsPic.id);
+        
+        containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>("Pic", p.id)).get();
+        Assert.assertEquals(cpk.id, containsPic.id);
     }
 }
 
