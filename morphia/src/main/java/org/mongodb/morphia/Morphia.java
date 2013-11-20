@@ -18,23 +18,23 @@
 package org.mongodb.morphia;
 
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.Set;
-
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.mapping.MappingException;
-import org.mongodb.morphia.mapping.cache.EntityCache;
-import org.mongodb.morphia.utils.ReflectionUtils;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.mapping.MappingException;
+import org.mongodb.morphia.mapping.cache.EntityCache;
+import org.mongodb.morphia.utils.ReflectionUtils;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Set;
 
 
 /**
@@ -47,11 +47,19 @@ public class Morphia {
   private MongoClient mongoClient;
 
   public Morphia() {
-    this(Collections.<Class>emptySet());
+    this(new Mapper(), Collections.<Class>emptySet());  
+  }
+  
+  public Morphia(final Mapper mapper) {
+    this(mapper , Collections.<Class>emptySet());
   }
 
   public Morphia(final Set<Class> classesToMap) {
-    mapper = new Mapper();
+   this(new Mapper(), classesToMap);
+  }
+
+  public Morphia(final Mapper mapper, final Set<Class> classesToMap) {
+    this.mapper = mapper;
     for (final Class c : classesToMap) {
       map(c);
     }
