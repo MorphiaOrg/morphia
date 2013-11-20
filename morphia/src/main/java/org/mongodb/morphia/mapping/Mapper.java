@@ -576,8 +576,14 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            readMappedField(updated, mf, entity, cache);
+        try {
+            for (final MappedField mf : mc.getPersistenceFields()) {
+                readMappedField(updated, mf, entity, cache);
+            }
+        } catch (MappingException e) {
+            String id = dbObject.get(ID_KEY).toString();
+            String entityName = entity.getClass().getName();
+            throw new MappingException(format("Could not map %s with ID: %s", entityName, id), e);
         }
 
         if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {

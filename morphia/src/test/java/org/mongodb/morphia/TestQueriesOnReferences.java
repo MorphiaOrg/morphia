@@ -7,7 +7,10 @@ import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.query.Query;
+
+import java.util.List;
 
 
 public class TestQueriesOnReferences extends TestBase {
@@ -94,6 +97,19 @@ public class TestQueriesOnReferences extends TestBase {
         
         containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>("Pic", p.id)).get();
         Assert.assertEquals(cpk.id, containsPic.id);
+    }
+    
+    @Test(expected = MappingException.class)
+    public void testMissingReferences() {
+        final ContainsPic cpk = new ContainsPic();
+        final Pic p = new Pic();
+        cpk.pic = p;
+        getDs().save(p);
+        getDs().save(cpk);
+
+        getDs().delete(p);
+
+        List<ContainsPic> list = getDs().createQuery(ContainsPic.class).asList();
     }
 }
 
