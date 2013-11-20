@@ -49,6 +49,15 @@ public class Morphia {
   public Morphia() {
     this(Collections.<Class>emptySet());
   }
+  
+  /**
+   * Constrauctor to configure your own mapper
+   * @param myMapper
+   */
+  public Morphia( final Mapper myMapper) {
+    this(Collections.<Class>emptySet());
+    mapper = myMapper;
+  }
 
   public Morphia(final Set<Class> classesToMap) {
     mapper = new Mapper();
