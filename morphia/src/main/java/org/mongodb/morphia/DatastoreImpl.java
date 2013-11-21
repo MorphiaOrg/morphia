@@ -56,10 +56,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -589,10 +591,32 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
+     * Queries the server to check for each manual ref
+     */
+    public <T> List<Key<T>> getKeysByManualRefs(final Class<T> kindClass, final List<Object> refs) {
+        final Set<Key<T>> tempKeys = new HashSet<Key<T>>(refs.size());
+        tempKeys.addAll(this.<T>find(kindClass).disableValidation().filter("_id in", refs).asKeyList());
+
+        // keys returned by query use collection name rather than class
+        final String kind = getCollection(kindClass).getName();
+
+        // put back in order
+        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+        for (final Object ref : refs) {
+            final Key<T> key = mapper.manualRefToKey(kind, ref);
+            if (tempKeys.contains(key)) {
+                keys.add(key);
+            }
+        }
+
+        return keys;
+    }
+
+    /**
      * Queries the server to check for each DBRef
      */
     public <T> List<Key<T>> getKeysByRefs(final List<DBRef> refs) {
-        final List<Key<T>> tempKeys = new ArrayList<Key<T>>(refs.size());
+        final Set<Key<T>> tempKeys = new HashSet<Key<T>>(refs.size());
 
         final Map<String, List<DBRef>> kindMap = new HashMap<String, List<DBRef>>();
         for (final DBRef ref : refs) {

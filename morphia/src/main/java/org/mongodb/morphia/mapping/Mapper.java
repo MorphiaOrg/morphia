@@ -651,6 +651,14 @@ public class Mapper {
         return ref == null ? null : new Key<T>(ref.getRef(), ref.getId());
     }
 
+    public <T> Key<T> manualRefToKey(final Class<T> kindClass, final Object id) {
+        return id == null ? null : new Key<T>(kindClass, id);
+    }
+
+    public <T> Key<T> manualRefToKey(final String kind, final Object id) {
+        return id == null ? null : new Key<T>(kind, id);
+    }
+
     public DBRef keyToRef(final Key key) {
         if (key == null) {
             return null;
@@ -663,6 +671,10 @@ public class Mapper {
         }
 
         return new DBRef(null, key.getKind(), key.getId());
+    }
+
+    public Object keyToManualRef(final Key key) {
+        return key == null ? null : key.getId();
     }
 
     public String updateKind(final Key key) {
