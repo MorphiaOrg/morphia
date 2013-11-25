@@ -13,6 +13,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.logging.Logr;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.Query;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import java.io.File;
@@ -80,10 +81,14 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         installSampleData();
+        Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
+ 
         AggregationPipeline<City, Population> pipeline
             = getDs().createAggregation(City.class, Population.class)
                   .group("state", grouping("totalPop", sum("pop")))
-                  .match(getDs().getQueryFactory().createQuery(getDs()).field("totalPop").greaterThanOrEq(10000000));
+                  .match(query.field("totalPop").greaterThanOrEq(10000000));
+
+
         validate(pipeline.aggregate(), "CA", 29760021);
         validate(pipeline.aggregate(), "OH", 10847115);
     }
@@ -102,14 +107,18 @@ public class ZipCodeDataSetTest extends TestBase {
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
         AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
+                                                        
                                                         .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+                                                        
                                                         .sort(ascending("pop"))
+                                                        
                                                         .group("_id.state",
                                                                grouping("biggestCity", last("_id.city")),
                                                                grouping("biggestPop", last("pop")),
                                                                grouping("smallestCity", first("_id.city")),
                                                                grouping("smallestPop", first("pop"))
                                                               )
+                                                        
                                                         .project(projection("_id").suppress(),
                                                                  projection("state", "_id"),
                                                                  projection("biggestCity",
