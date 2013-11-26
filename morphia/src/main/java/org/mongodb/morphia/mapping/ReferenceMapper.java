@@ -4,6 +4,7 @@ package org.mongodb.morphia.mapping;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
@@ -60,8 +61,8 @@ class ReferenceMapper implements CustomMapper {
         }
 
         dbObject.put(name, refAnn.idOnly()
-                            ? mapper.keyToManualRef(getKey(fieldValue, mapper))
-                            : mapper.keyToRef(getKey(fieldValue, mapper)));
+                           ? mapper.keyToManualRef(getKey(fieldValue, mapper))
+                           : mapper.keyToRef(getKey(fieldValue, mapper)));
     }
 
     private void writeCollection(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,
@@ -100,11 +101,11 @@ class ReferenceMapper implements CustomMapper {
         }
 
         final Key key = o instanceof Key
-                    ? (Key) o
-                    : getKey(o, mapper);
+                        ? (Key) o
+                        : getKey(o, mapper);
         values.add(idOnly
-                        ? mapper.keyToManualRef(key)
-                        : mapper.keyToRef(key));
+                   ? mapper.keyToManualRef(key)
+                   : mapper.keyToRef(key));
     }
 
     private void writeMap(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,
@@ -120,15 +121,15 @@ class ReferenceMapper implements CustomMapper {
                 for (final Map.Entry<Object, Key<?>> entry : refMap.entrySet()) {
                     final Object key = entry.getKey();
                     values.put(key, refAnn.idOnly()
-                                        ? mapper.keyToManualRef(entry.getValue())
-                                        : mapper.keyToRef(entry.getValue()));
+                                    ? mapper.keyToManualRef(entry.getValue())
+                                    : mapper.keyToRef(entry.getValue()));
                 }
             } else {
                 for (final Map.Entry<Object, Object> entry : map.entrySet()) {
                     final String strKey = mapper.getConverters().encode(entry.getKey()).toString();
                     values.put(strKey, refAnn.idOnly()
-                                        ? mapper.keyToManualRef(getKey(entry.getValue(), mapper))
-                                        : mapper.keyToRef(getKey(entry.getValue(), mapper)));
+                                       ? mapper.keyToManualRef(getKey(entry.getValue(), mapper))
+                                       : mapper.keyToRef(getKey(entry.getValue(), mapper)));
                 }
             }
             if (!values.isEmpty() || mapper.getOptions().isStoreEmpties()) {
@@ -221,8 +222,8 @@ class ReferenceMapper implements CustomMapper {
                     final List<DBRef> dbRefList = (List) dbVal;
                     final DatastoreImpl dsi = (DatastoreImpl) mapper.getDatastoreProvider().get();
                     final List<Key<Object>> keys = refAnn.idOnly()
-                                                    ? dsi.getKeysByManualRefs(referenceObjClass, refList)
-                                                    : dsi.getKeysByRefs(dbRefList);
+                                                   ? dsi.getKeysByManualRefs(referenceObjClass, refList)
+                                                   : dsi.getKeysByRefs(dbRefList);
 
                     if (keys.size() != refList.size()) {
                         final String msg = "Some of the references could not be fetched for " + mf.getFullName() + ". " + refList + " != "
@@ -308,7 +309,7 @@ class ReferenceMapper implements CustomMapper {
         final DBRef dbRef = idOnly ? null : (DBRef) ref;
         final Key key = mapper.createKey(mf.isSingleValue() ? mf.getType() : mf.getSubClass(),
                                          idOnly ? ref : dbRef.getId());
-        final DatastoreImpl dsi = idOnly ? (DatastoreImpl) mapper.getDatastoreProvider().get() : null;
+        final Datastore ds = idOnly ? mapper.getDatastoreProvider().get() : null;
 
         final Object cached = cache.getEntity(key);
         if (cached != null) {
@@ -316,7 +317,7 @@ class ReferenceMapper implements CustomMapper {
         }
 
         //TODO: if _db is null, set it?
-        final DBObject refDbObject = idOnly ? dsi.getCollection(key.getKindClass()).findOne(ref) : dbRef.fetch();
+        final DBObject refDbObject = idOnly ? ds.getCollection(key.getKindClass()).findOne(ref) : dbRef.fetch();
 
         if (refDbObject != null) {
             Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDbObject);
@@ -356,8 +357,8 @@ class ReferenceMapper implements CustomMapper {
                     if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
                         final ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
                         proxiedMap.__put(objKey, refAnn.idOnly()
-                                                    ? mapper.manualRefToKey(referenceObjClass, val)
-                                                    : mapper.refToKey((DBRef) val));
+                                                 ? mapper.manualRefToKey(referenceObjClass, val)
+                                                 : mapper.refToKey((DBRef) val));
                     } else {
                         final Object resolvedObject = resolveObject(val, mf, cache, mapper, refAnn.idOnly());
                         map.put(objKey, resolvedObject);
