@@ -41,6 +41,7 @@ configure(subprojects) {
 
     configurations {
         provided
+        provided.extendsFrom(compile)
     }
 
     project.archivesBaseName = "morphia-${project.name}"
@@ -57,6 +58,7 @@ configure(subprojects) {
 
     sourceSets.main.compileClasspath += configurations.provided
     sourceSets.test.compileClasspath += configurations.provided
+    sourceSets.test.runtimeClasspath += configurations.provided
 
     if (properties['xlint']) {
         tasks.withType(Compile) {
@@ -106,8 +108,8 @@ project(':morphia') {
     archivesBaseName = 'morphia'
 
     dependencies {
-        compile 'cglib:cglib-nodep:[2.1_3,3.0)'
-        compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
+        provided 'cglib:cglib-nodep:[2.1_3,3.0)'
+        provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
         provided 'com.google.code.findbugs:findbugs:2.0.2'
     }
 }
@@ -155,6 +157,18 @@ project(':guice-plug') {
 }
 
 project(':jrebel-plug') {}
+
+project(':no-proxy-deps-tests') {
+    dependencies {
+        compile project(':morphia')
+    }
+    sourceSets {
+        test {
+            output.classesDir '../morphia/build/classes/test'
+        }
+    }
+    
+}
 
 project(':gwt') {
     sourceSets {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
 
 /**
  * @author Gene Trog, (eternal0@github.com)
@@ -168,7 +169,9 @@ public class ReferencesNotUsingDBRefTest extends ProxyTestBase {
         final Container retrieved = getDs().getByKey(Container.class, key);
 
         assertEquals(refs[0], retrieved.getSingleRef());
-        assertIsProxy(retrieved.getLazySingleRef());
+        if (testDependencyFullFilled()) {
+            assertIsProxy(retrieved.getLazySingleRef());
+        }
         assertEquals(refs[0], unwrap(retrieved.getLazySingleRef()));
 
         final List<Ref> expectedRefList = new ArrayList<Ref>();

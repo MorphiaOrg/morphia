@@ -22,6 +22,9 @@ allprojects {
 
 project('morphia') {
     idea.module {
+        name = 'core'
+        scopes.PROVIDED.plus += configurations.provided
+        
         iml {
             withXml { provider ->
 
@@ -97,6 +100,7 @@ idea {
     }
     
     module {
-        scopes.RUNTIME.plus += configurations.provided
+        scopes.PROVIDED.plus += configurations.provided
+        downloadSources = true
     } 
 }
