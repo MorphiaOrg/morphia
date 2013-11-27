@@ -39,8 +39,8 @@ public class CollectionOfValuesTest extends TestBase {
         private ObjectId id;
         private String name;
         @Embedded
-        private int[] array;
-        private byte[][] cells = new byte[2][2];
+        private byte[] array;
+        private int[][] cells = new int[2][2];
     }
 
     @Test
@@ -49,10 +49,10 @@ public class CollectionOfValuesTest extends TestBase {
 
         City city = new City();
         city.name = "My city";
-        city.array = new int[]{4, 5};
+        city.array = new byte[]{4, 5};
         for (byte i = 0; i < 2; i++) {
             for (byte j = 0; j < 2; j++) {
-                city.cells[i][j] = (byte) (i * 100 + j);
+                city.cells[i][j] = (i * 100 + j);
             }
         }
 
