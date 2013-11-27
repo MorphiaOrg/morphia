@@ -151,6 +151,13 @@ public class DefaultConverters {
 
     List<TypeConverter> tcs = null;
 
+    // 1st check for @Serialized etc.:
+    for (final TypeConverter tc : untypedTypeEncoders) {
+      if (tc.canHandle(mf) || (val != null && tc.isSupported(val.getClass(), mf))) {
+        return tc;
+      }
+    }
+
     if (val != null) {
       tcs = tcMap.get(val.getClass());
     }
@@ -165,12 +172,12 @@ public class DefaultConverters {
       }
       return tcs.get(0);
     }
-
-    for (final TypeConverter tc : untypedTypeEncoders) {
-      if (tc.canHandle(mf) || (val != null && tc.isSupported(val.getClass(), mf))) {
-        return tc;
-      }
-    }
+// moved up:
+//    for (final TypeConverter tc : untypedTypeEncoders) {
+//      if (tc.canHandle(mf) || (val != null && tc.isSupported(val.getClass(), mf))) {
+//        return tc;
+//      }
+//    }
     if (passthroughConverter.canHandle(mf) || (val != null && passthroughConverter.isSupported(val.getClass(), mf))) {
       return passthroughConverter;
     }
@@ -179,6 +186,14 @@ public class DefaultConverters {
   }
 
   private TypeConverter getEncoder(final Class c) {
+
+    // Moving up necessary here as well?
+    for (final TypeConverter tc : untypedTypeEncoders) {
+      if (tc.canHandle(c)) {
+        return tc;
+      }
+    }
+    
     final List<TypeConverter> tcs = tcMap.get(c);
     if (tcs != null) {
       if (tcs.size() > 1) {
@@ -186,12 +201,12 @@ public class DefaultConverters {
       }
       return tcs.get(0);
     }
-
-    for (final TypeConverter tc : untypedTypeEncoders) {
-      if (tc.canHandle(c)) {
-        return tc;
-      }
-    }
+// moved up:
+//    for (final TypeConverter tc : untypedTypeEncoders) {
+//      if (tc.canHandle(c)) {
+//        return tc;
+//      }
+//    }
     if (passthroughConverter.canHandle(c)) {
       return passthroughConverter;
     }
