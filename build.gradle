@@ -53,7 +53,6 @@ configure(subprojects) {
 
     dependencies {
         testCompile 'junit:junit:4.11'
-        compile 'org.mongodb:mongo-java-driver:[2.10.1,2.11.3]'
     }
 
     sourceSets.main.compileClasspath += configurations.provided
@@ -78,6 +77,12 @@ configure(subprojects) {
         toolVersion = "2.0.2"
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
         sourceSets = [sourceSets.main]
+    }
+
+    tasks.withType(Test) { 
+        if (project.hasProperty('3.x')) {
+            systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
+        }
     }
 
     tasks.withType(FindBugs) {
@@ -108,6 +113,12 @@ project(':morphia') {
     archivesBaseName = 'morphia'
 
     dependencies {
+        if (project.hasProperty('3.x')) {
+            compile 'org.mongodb:mongo-java-driver:[3.0.0-SNAPSHOT, 3.1)'
+        } else {
+            compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
+        }
+
         provided 'cglib:cglib-nodep:[2.1_3,3.0)'
         provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
         provided 'com.google.code.findbugs:findbugs:2.0.2'
@@ -167,7 +178,7 @@ project(':no-proxy-deps-tests') {
             output.classesDir '../morphia/build/classes/test'
         }
     }
-    
+
 }
 
 project(':gwt') {
