@@ -1,37 +1,38 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>org.mongodb.morphia</groupId>
-		<artifactId>morphia-parent</artifactId>
-		<version>0.106-SNAPSHOT</version>
-		<relativePath>../</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.mongodb.morphia</groupId>
+        <artifactId>morphia-parent</artifactId>
+        <version>0.106-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-  <artifactId>morphia</artifactId>
-	<packaging>jar</packaging>
-	<name>morphia</name>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>morphia</artifactId>
+    <packaging>jar</packaging>
+    <name>morphia</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-			<version>[2.1_3,3.0)</version>
-			<type>jar</type>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.thoughtworks.proxytoys</groupId>
-			<artifactId>proxytoys</artifactId>
-			<version>1.0</version>
-			<type>jar</type>
-			<optional>true</optional>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>[2.1_3,3.0)</version>
+            <type>jar</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.proxytoys</groupId>
+            <artifactId>proxytoys</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>findbugs</artifactId>
             <version>2.0.2</version>
             <scope>compile</scope>
         </dependency>
-	</dependencies>
+    </dependencies>
 </project>
