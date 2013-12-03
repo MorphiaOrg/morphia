@@ -103,6 +103,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinRadius2() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{1, 1});
@@ -121,6 +122,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinRadius() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{1, 1});
@@ -163,6 +165,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinRadiusSphere() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{1, 1});
@@ -217,6 +220,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinBox() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{1, 1});
@@ -235,6 +239,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinOutsideBox() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{1, 1});
@@ -254,6 +259,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinPolygon() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{0, 1});
@@ -272,6 +278,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testGeoWithinPolygon2() throws Exception {
+        checkServerVersion(2.4);
         try {
             getDs().ensureIndexes();
             final Place place1 = new Place("place1", new double[]{10, 1});

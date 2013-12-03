@@ -4,7 +4,6 @@ package org.mongodb.morphia.query;
 import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
@@ -50,7 +49,7 @@ public class QueryInForKeyTest extends TestBase {
 
     @Test
     public void testInQueryByKey() throws Exception {
-        Assume.assumeFalse(serverIsAtLeastVersion(2.5));
+        checkServerVersion(2.5);
         final HasRefs hr = new HasRefs();
         List<Key<ReferencedEntity>> refs = new ArrayList<Key<ReferencedEntity>>();
         for (int x = 0; x < 10; x++) {
@@ -59,7 +58,7 @@ public class QueryInForKeyTest extends TestBase {
             refs.add(new Key<QueryInForKeyTest.ReferencedEntity>(ReferencedEntity.class.getName(), re.getId()));
         }
         hr.ref = refs.get(0);
-        
+
         getDs().save(hr);
 
         Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("ref").in(refs);
