@@ -239,6 +239,17 @@
             </activation>
             <properties>
                 <java-driver.version>3.0.0-SNAPSHOT</java-driver.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>rs_enabled</id>
+            <activation>
+                <property>
+                    <name>env.RS_ENABLED</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
                 <mongo.uri>mongodb://localhost:27017,localhost:27018,localhost:27019</mongo.uri>
             </properties>
         </profile>
