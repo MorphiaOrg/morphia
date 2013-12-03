@@ -81,7 +81,7 @@ configure(subprojects) {
     }
 
     tasks.withType(Test) { 
-        if (project.hasProperty('3.x')) {
+        if (System.getenv()['RS_ENABLED'] == "true") {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
     }
