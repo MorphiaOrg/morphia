@@ -49,6 +49,7 @@ configure(subprojects) {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
@@ -114,7 +115,7 @@ project(':morphia') {
 
     dependencies {
         if (project.hasProperty('3.x')) {
-            compile 'org.mongodb:mongo-java-driver:[3.0.0-SNAPSHOT, 3.1)'
+            compile 'org.mongodb:mongo-java-driver:3.0.0-SNAPSHOT'
         } else {
             compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
         }
