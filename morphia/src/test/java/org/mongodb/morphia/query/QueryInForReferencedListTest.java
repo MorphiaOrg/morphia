@@ -56,7 +56,7 @@ public class QueryInForReferencedListTest extends TestBase {
 
     @Test
     public void testInQuery() throws Exception {
-        checkServerVersion(2.5);
+        checkMinServerVersion(2.5);
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {
             final ReferencedEntity re = new ReferencedEntity("" + x);

@@ -4,6 +4,7 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -66,7 +67,7 @@ public class TestMapreduce extends TestBase {
 
     @Test
     public void testMR() throws Exception {
-
+        Assume.assumeFalse(getMongo().getVersion().startsWith("3."));
         final Random rnd = new Random();
 
         //create 100 circles and rectangles

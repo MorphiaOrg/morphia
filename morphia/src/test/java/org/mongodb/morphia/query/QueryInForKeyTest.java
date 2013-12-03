@@ -49,7 +49,7 @@ public class QueryInForKeyTest extends TestBase {
 
     @Test
     public void testInQueryByKey() throws Exception {
-        checkServerVersion(2.5);
+        checkMinServerVersion(2.5);
         final HasRefs hr = new HasRefs();
         List<Key<ReferencedEntity>> refs = new ArrayList<Key<ReferencedEntity>>();
         for (int x = 0; x < 10; x++) {
