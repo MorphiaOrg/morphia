@@ -115,7 +115,7 @@ project(':morphia') {
 
     dependencies {
         if (project.hasProperty('3.x')) {
-            compile 'org.mongodb:mongo-java-driver:3.0.0-SNAPSHOT'
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
         } else {
             compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
         }
