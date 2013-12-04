@@ -316,9 +316,10 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testExists() throws Exception {
-        final Key<FacebookUser> k = getDs().save(new FacebookUser(1, "user 1"));
+        int id = 10000;
+        final Key<FacebookUser> k = getDs().save(new FacebookUser(id, "user 1"));
         assertEquals(1, getDs().getCount(FacebookUser.class));
-        assertNotNull(getDs().get(FacebookUser.class, 1));
+        assertNotNull(getDs().get(FacebookUser.class, id));
         assertNotNull(getDs().exists(k));
 
         assertNotNull(getAds().exists(k, ReadPreference.secondaryPreferred()));
