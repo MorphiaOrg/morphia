@@ -327,20 +327,20 @@ public class TestDatastore extends TestBase {
         
         List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
         System.out.println("************* users = " + users);
-        
-        Key<?> exists = getAds().exists(k, ReadPreference.secondaryPreferred());
-        System.out.println("************* exists = " + exists);
-        assertNotNull(exists);
+
+        System.out.println("************* secondaryPreferred = " + getAds().exists(k, ReadPreference.secondaryPreferred()));
+        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(k, ReadPreference.secondaryPreferred()));
         ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
         if (replicaSetStatus != null) {
-            assertNotNull(getAds().exists(k, ReadPreference.secondary()));
+            assertNotNull("Should exist when using secondary", getAds().exists(k, ReadPreference.secondary()));
         }
-        assertNotNull(getAds().exists(k, ReadPreference.nearest()));
+        System.out.println("************* nearest = " + getAds().exists(k, ReadPreference.nearest()));
+        assertNotNull("Should exist when using nearest", getAds().exists(k, ReadPreference.nearest()));
 
-        assertNotNull(getDs().getByKey(FacebookUser.class, k));
+        assertNotNull("Should be able to getByKey()", getDs().getByKey(FacebookUser.class, k));
         getDs().delete(getDs().find(FacebookUser.class));
-        assertEquals(0, getDs().getCount(FacebookUser.class));
-        assertNull(getDs().exists(k));
+        assertEquals("Should be no more users", 0, getDs().getCount(FacebookUser.class));
+        assertNull("Shouldn't exist after delete", getDs().exists(k));
     }
 
     @Test
