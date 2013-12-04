@@ -35,6 +35,8 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.testmodel.Address;
@@ -56,6 +58,7 @@ import static org.junit.Assert.assertTrue;
  * @author Scott Hernandez
  */
 public class TestDatastore extends TestBase {
+    private static final Logr LOG = MorphiaLoggerFactory.get(TestDatastore.class);
 
     @Entity("facebook_users")
     public static class FacebookUser {
@@ -322,7 +325,9 @@ public class TestDatastore extends TestBase {
         assertNotNull(getDs().get(FacebookUser.class, id));
         assertNotNull(getDs().exists(k));
 
-        assertNotNull(getAds().exists(k, ReadPreference.secondaryPreferred()));
+        Key<?> exists = getAds().exists(k, ReadPreference.secondaryPreferred());
+        LOG.info("exists = " + exists);
+        assertNotNull(exists);
         ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
         if (replicaSetStatus != null) {
             assertNotNull(getAds().exists(k, ReadPreference.secondary()));
