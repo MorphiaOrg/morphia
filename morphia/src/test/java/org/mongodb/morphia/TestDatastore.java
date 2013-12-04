@@ -326,7 +326,7 @@ public class TestDatastore extends TestBase {
         assertNotNull(getDs().exists(k));
 
         Key<?> exists = getAds().exists(k, ReadPreference.secondaryPreferred());
-        LOG.info("exists = " + exists);
+        System.out.println("************* exists = " + exists);
         assertNotNull(exists);
         ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
         if (replicaSetStatus != null) {
