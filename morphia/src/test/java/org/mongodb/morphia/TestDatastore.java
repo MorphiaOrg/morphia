@@ -24,6 +24,7 @@ import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
 import com.mongodb.ReadPreference;
+import com.mongodb.ReplicaSetStatus;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
@@ -208,7 +209,7 @@ public class TestDatastore extends TestBase {
         private List<Key<FacebookUser>> users;
         private Key<Rectangle> rect;
 
-        protected KeysKeysKeys() {
+        private KeysKeysKeys() {
         }
 
         public KeysKeysKeys(final Key<Rectangle> rectKey, final List<Key<FacebookUser>> users) {
@@ -245,7 +246,7 @@ public class TestDatastore extends TestBase {
 
         try {
             final LifecycleTestObj life1 = new LifecycleTestObj();
-            ((DatastoreImpl) getDs()).getMapper().addMappedClass(LifecycleTestObj.class);
+            getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
             getDs().save(life1);
             assertTrue(life1.prePersist);
             assertTrue(life1.prePersistWithParam);
@@ -275,7 +276,7 @@ public class TestDatastore extends TestBase {
 
         try {
             final LifecycleTestObj life1 = new LifecycleTestObj();
-            ((DatastoreImpl) getDs()).getMapper().addMappedClass(LifecycleTestObj.class);
+            getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
             getDs().save(life1);
             assertTrue(LifecycleListener.prePersist);
             assertTrue(LifecycleListener.prePersistWithEntity);
@@ -319,14 +320,18 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
         assertNotNull(getDs().exists(k));
-        assertNotNull(((AdvancedDatastore) getDs()).exists(k, ReadPreference.secondary()));
-        assertNotNull(((AdvancedDatastore) getDs()).exists(k, ReadPreference.secondaryPreferred()));
-        assertNotNull(((AdvancedDatastore) getDs()).exists(k, ReadPreference.nearest()));
+
+        assertNotNull(getAds().exists(k, ReadPreference.secondaryPreferred()));
+        ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
+        if (replicaSetStatus != null) {
+            assertNotNull(getAds().exists(k, ReadPreference.secondary()));
+        }
+        assertNotNull(getAds().exists(k, ReadPreference.nearest()));
+
         assertNotNull(getDs().getByKey(FacebookUser.class, k));
         getDs().delete(getDs().find(FacebookUser.class));
         assertEquals(0, getDs().getCount(FacebookUser.class));
         assertNull(getDs().exists(k));
-
     }
 
     @Test
