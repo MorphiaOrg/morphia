@@ -324,7 +324,10 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, id));
         assertNotNull(getDs().exists(k));
-
+        
+        List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
+        System.out.println("************* users = " + users);
+        
         Key<?> exists = getAds().exists(k, ReadPreference.secondaryPreferred());
         System.out.println("************* exists = " + exists);
         assertNotNull(exists);
