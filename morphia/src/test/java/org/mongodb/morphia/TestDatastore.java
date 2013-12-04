@@ -326,15 +326,12 @@ public class TestDatastore extends TestBase {
         assertNotNull(getDs().exists(k));
         
         List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
-        System.out.println("************* users = " + users);
 
-        System.out.println("************* secondaryPreferred = " + getAds().exists(k, ReadPreference.secondaryPreferred()));
         assertNotNull("Should exist when using secondaryPreferred", getAds().exists(k, ReadPreference.secondaryPreferred()));
         ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
         if (replicaSetStatus != null) {
             assertNotNull("Should exist when using secondary", getAds().exists(k, ReadPreference.secondary()));
         }
-        System.out.println("************* nearest = " + getAds().exists(k, ReadPreference.nearest()));
         assertNotNull("Should exist when using nearest", getAds().exists(k, ReadPreference.nearest()));
 
         assertNotNull("Should be able to getByKey()", getDs().getByKey(FacebookUser.class, k));
