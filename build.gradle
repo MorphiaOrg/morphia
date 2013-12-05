@@ -171,15 +171,15 @@ project(':guice-plug') {
 project(':jrebel-plug') {}
 
 project(':no-proxy-deps-tests') {
-    dependencies {
-        compile project(':morphia')
-    }
+   
     sourceSets {
-        test {
+        main {
             output.classesDir '../morphia/build/classes/test'
         }
     }
-
+    dependencies {
+        compile project(':morphia')
+    }
 }
 
 project(':gwt') {

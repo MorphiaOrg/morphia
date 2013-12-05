@@ -1,6 +1,11 @@
 package org.mongodb.morphia.mapping.lazy;
 
 
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.mapping.lazy.proxy.ProxiedReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -9,11 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Ignore;
-import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.mapping.lazy.proxy.ProxiedReference;
-import org.junit.Assert;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -71,7 +71,11 @@ public class ProxyTestBase extends TestBase {
   }
 
   protected void assertIsProxy(final Object p) {
-    Assert.assertTrue(p instanceof ProxiedReference);
+    Assert.assertTrue("Should be a proxy", p instanceof ProxiedReference);
+  }
+    
+  protected void assertNotProxy(final Object p) {
+    Assert.assertFalse("Should not be a proxy", p instanceof ProxiedReference);
   }
 
   protected <T> T deserialize(final Object t) {
