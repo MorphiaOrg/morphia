@@ -5,7 +5,7 @@ project(':morphia') {
         name = 'Morphia Core'
         symbolicName = 'org.mongodb.morphia'
         
-        instruction 'Import-Package', 'org.mongodb'
+        instruction 'Import-Package', '*'
         instruction 'Bundle-License', 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     }
-}
+} 
