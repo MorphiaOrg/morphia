@@ -1,15 +1,11 @@
 project(':morphia') {
     apply plugin: 'osgi'
-    
-    jar {
-        manifest {
-            attributes(
-                    'Bundle-License': 'http://www.apache.org/licenses/LICENSE-2.0.txt',
-                    'Bundle-Name': 'Morphia',
-                    'Bundle-SymbolicName': 'org.mongodb.morphia',
-                    'Import-Package': 'org.mongodb',
 
-            )
-        }
+    configure(jar.manifest) {
+        name = 'Morphia Core'
+        symbolicName = 'org.mongodb.morphia'
+        
+        instruction 'Import-Package', 'org.mongodb'
+        instruction 'Bundle-License', 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     }
 }
