@@ -19,4 +19,4 @@ branches:
   - master
   - aggfluent
 
-script: ./gradlew -q check
+script: ./gradlew check

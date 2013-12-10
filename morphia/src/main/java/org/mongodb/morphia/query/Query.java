@@ -83,6 +83,15 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   Query<T> batchSize(int value);
 
   /**
+   * Constrains the query to only scan the specified number of documents when fulfilling the query.
+   *
+   * @see http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan
+   * 
+   * @param value must be > 0.  A value < 0 indicates no limit
+   */
+  Query<T> maxScan(int value);
+
+  /**
    * Starts the query results at a particular zero-based offset.
    *
    * @param value must be >= 0

@@ -59,6 +59,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tail;
     private boolean tailAwaitData;
     private ReadPreference readPref;
+    private Integer maxScan;
 
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
@@ -151,7 +152,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         for (String field : fields) {
             final StringBuffer sb = new StringBuffer(
                                                         field); //validate might modify prop string to translate java field name to db 
-                                                        // field 
+            // field 
             // name
             Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
@@ -241,6 +242,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.warning("Sorting on tail is not allowed.");
         }
 
+        if (maxScan != null) {
+            cursor.addSpecial("$maxScan", maxScan);
+        }
         return cursor;
     }
 
@@ -416,6 +420,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Query<T> batchSize(final int value) {
         batchSize = value;
+        return this;
+    }
+
+    @Override
+    public Query<T> maxScan(final int value) {
+        maxScan = value > 0 ? value : null;
         return this;
     }
 
