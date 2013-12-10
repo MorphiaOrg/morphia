@@ -112,18 +112,26 @@ public class ReferencesNotUsingDBRefTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object obj) {
-            if (obj == null || obj.getClass() != Ref.class) {
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Ref)) {
                 return false;
             }
 
-            Ref other = (Ref) obj;
-            return id.equals(other.id);
+            final Ref ref = (Ref) o;
+
+            if (id != null ? !id.equals(ref.id) : ref.id != null) {
+                return false;
+            }
+
+            return true;
         }
 
         @Override
         public int hashCode() {
-            return id.hashCode();
+            return id != null ? id.hashCode() : 0;
         }
 
         @Override

@@ -4,6 +4,7 @@ package org.mongodb.morphia.converters;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.testutil.TestEntity;
 
@@ -12,20 +13,14 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 public class CustomConverterDefaultTest extends TestBase {
 
-    private static class E extends TestEntity {
-        // FIXME issue 100 :
-        // http://code.google.com/p/morphia/issues/detail?id=100
-        // check default inspection: if not declared as property,
-        // morphia fails due to defaulting to embedded and expecting a non-arg
-        // constructor.
-        //
-        // @Property
+    public static class E extends TestEntity {
+        @Property
         private Foo foo;
 
     }
 
     // unknown type to convert
-    private static class Foo {
+    public static class Foo {
         private final String string;
 
         public Foo(final String string) {
