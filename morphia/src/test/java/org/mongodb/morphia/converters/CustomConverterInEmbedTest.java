@@ -1,12 +1,14 @@
 package org.mongodb.morphia.converters;
 
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
@@ -14,12 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * @author Uwe Schaefer
@@ -109,29 +108,29 @@ public class CustomConverterInEmbedTest extends TestBase {
 
     /**
      * A type that contains a complex custom type, represented as an object.
-     * 
+     *
      * @author Christian Trimble
      */
     @Converters(ComplexFooConverter.class)
     public static class ComplexBar extends TestEntity {
         private static final long serialVersionUID = 1L;
-        public ComplexFoo foo;
+        private ComplexFoo foo;
     }
 
     /**
      * A type that contains a complex custom type, represented as an array.
-     * 
+     *
      * @author Christian Trimble
      */
     @Converters(ComplexArrayFooConverter.class)
     public static class ArrayBar extends TestEntity {
         private static final long serialVersionUID = 1L;
-        public ArrayFoo foo;
+        private ArrayFoo foo;
     }
 
     /**
      * A complex embedded type, represented as an object
-     * 
+     *
      * @author Christian Trimble
      */
     public static class ComplexFoo {
@@ -157,7 +156,7 @@ public class CustomConverterInEmbedTest extends TestBase {
 
     /**
      * A complex embedded type, represented as an array
-     * 
+     *
      * @author Christian Trimble
      */
     public static class ArrayFoo {
@@ -182,9 +181,8 @@ public class CustomConverterInEmbedTest extends TestBase {
     }
 
     /**
-     * A converter that does not implement SimpleValueConverter and converts
-     * ComplexFoo into an object type.
-     * 
+     * A converter that does not implement SimpleValueConverter and converts ComplexFoo into an object type.
+     *
      * @author Christian Trimble
      */
     public static class ComplexFooConverter extends TypeConverter {
@@ -193,7 +191,7 @@ public class CustomConverterInEmbedTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
             DBObject dbObject = (DBObject) fromDBObject;
             return new ComplexFoo((String) dbObject.get("first"), (String) dbObject.get("second"));
         }
@@ -209,9 +207,8 @@ public class CustomConverterInEmbedTest extends TestBase {
     }
 
     /**
-     * A converter that does not implement SimpleValueConverter and converts
-     * ArrayFoo into an array type.
-     * 
+     * A converter that does not implement SimpleValueConverter and converts ArrayFoo into an array type.
+     *
      * @author Christian Trimble
      */
     public static class ComplexArrayFooConverter extends TypeConverter {
@@ -220,7 +217,7 @@ public class CustomConverterInEmbedTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) throws MappingException {
+        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
             BasicDBList dbObject = (BasicDBList) fromDBObject;
             return new ArrayFoo((String) dbObject.get(1), (String) dbObject.get(2));
         }
