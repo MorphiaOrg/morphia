@@ -20,5 +20,5 @@ branches:
   - master
   - aggfluent
 
-install: ./gradlew -q assemble
+install: ./gradlew -q jar
 script: ./gradlew -q check
