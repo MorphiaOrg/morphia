@@ -1,3 +1,5 @@
+@groovy.transform.Field
+private java.lang.String s
 def configDir = new File(rootDir, 'config')
 
 buildscript {
@@ -28,6 +30,8 @@ allprojects {
         provided.extendsFrom(compile)
     }
 }
+
+def slf4jVersion = '1.7.5'
 
 configure(subprojects) {
     apply plugin: 'checkstyle'
@@ -131,8 +135,9 @@ project(':morphia') {
 project(':logging-slf4j') {
     dependencies {
         compile project(':morphia')
-        compile 'org.slf4j:slf4j-api:1.7.5'
-        testCompile 'org.slf4j:slf4j-simple:1.7.5'
+
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 }
 
@@ -142,7 +147,7 @@ project(':validation') {
         testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
         compile project(':morphia')
         compile project(':logging-slf4j')
-        testCompile 'org.slf4j:slf4j-jdk14:1.5.6'
+        testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
     }
 }
 
@@ -159,7 +164,7 @@ project(':entityscanner-plug') {
             'javassist:javassist'
         }
         compile project(':morphia')
-        testCompile 'org.slf4j:slf4j-simple:1.5.6'
+        testCompile "org.slf4j:slf4j-simple:${slf4jVersion}"
     }
 }
 
