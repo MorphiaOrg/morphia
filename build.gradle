@@ -79,9 +79,7 @@ configure(subprojects) {
     }
 
     findbugs {
-        toolVersion = "2.0.2"
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
-        sourceSets = [sourceSets.main]
     }
 
     tasks.withType(Test) { 

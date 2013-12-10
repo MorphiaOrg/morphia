@@ -21,12 +21,14 @@ package org.mongodb.morphia.testmodel;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
+import java.io.Serializable;
+
 
 /**
  * @author Olafur Gauti Gudmundsson
  */
 @Embedded
-public class PhoneNumber {
+public class PhoneNumber implements Serializable {
 
   public enum Type {
     PHONE,
