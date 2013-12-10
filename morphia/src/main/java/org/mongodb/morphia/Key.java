@@ -28,7 +28,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     protected Object id;
     protected byte[] idBytes;
     //CHECKSTYLE:ON
-    
+
     /**
      * For GWT serialization
      */
@@ -48,7 +48,9 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
      */
     public Key(final Class<? extends T> kind, final byte[] idBytes) {
         kindClass = kind;
-        this.idBytes = idBytes;
+
+        this.idBytes = new byte[idBytes.length];
+        System.arraycopy(idBytes, 0, this.idBytes, 0, idBytes.length);
     }
 
     /**

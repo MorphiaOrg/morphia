@@ -37,7 +37,13 @@ public class Shape {
     }
 
     public Point[] getPoints() {
-        return points;
+        return copy(points);
+    }
+
+    private Point[] copy(final Point[] array) {
+        Point[] copy = new Point[array.length];
+        System.arraycopy(array, 0, copy, 0, array.length);
+        return copy;
     }
 
     public DBObject toDBObject() {

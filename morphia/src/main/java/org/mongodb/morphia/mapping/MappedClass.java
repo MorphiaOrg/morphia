@@ -66,8 +66,8 @@ public class MappedClass {
     /**
      * Annotations we are interested in looking for.
      *
-     * @deprecated use the method for this field instead.
      * @see #addInterestingAnnotation
+     * @deprecated use the method for this field instead.
      */
     //CHECKSTYLE:OFF
     public static final List<Class<? extends Annotation>> interestingAnnotations
@@ -85,7 +85,6 @@ public class MappedClass {
      */
     private Entity entityAn;
     private Embedded embeddedAn;
-    //    private Polymorphic polymorphicAn;
 
     /**
      * Annotations interesting for life-cycle events
@@ -118,7 +117,9 @@ public class MappedClass {
     private final Mapper mapper;
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
+        //CHECKSTYLE:OFF
         interestingAnnotations.add(annotation);
+        //CHECKSTYLE:ON
     }
 
     /**
@@ -274,7 +275,7 @@ public class MappedClass {
     public List<MappedField> getFieldsAnnotatedWith(final Class<? extends Annotation> clazz) {
         final List<MappedField> results = new ArrayList<MappedField>();
         for (final MappedField mf : persistenceFields) {
-            if (mf.foundAnnotations.containsKey(clazz)) {
+            if (mf.getAnnotations().containsKey(clazz)) {
                 results.add(mf);
             }
         }

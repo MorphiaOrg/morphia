@@ -25,7 +25,7 @@ public abstract class TypeConverter {
     }
 
     protected TypeConverter(final Class... types) {
-        supportTypes = types;
+        supportTypes = copy(types);
     }
 
     public Mapper getMapper() {
@@ -33,18 +33,28 @@ public abstract class TypeConverter {
     }
 
     public Class[] getSupportTypes() {
-        return supportTypes;
+        return copy(supportTypes);
+    }
+
+    Class[] copy(final Class[] array) {
+        if (array == null) {
+            return null;
+        }
+        
+        Class[] copy = new Class[array.length];
+        System.arraycopy(array, 0, copy, 0, array.length);
+        return copy;
     }
 
     /**
      * returns list of supported convertable types
      */
     final Class[] getSupportedTypes() {
-        return supportTypes;
+        return copy(supportTypes);
     }
 
     public void setSupportTypes(final Class[] supportTypes) {
-        this.supportTypes = supportTypes;
+        this.supportTypes = copy(supportTypes);
     }
 
     /**
