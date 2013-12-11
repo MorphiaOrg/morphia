@@ -94,8 +94,8 @@ public class TestFrontPageExample extends TestBase {
         final UpdateResults<Employee> res = getDs().update(boss, getDs().createUpdateOperations(Employee.class)
                                                                      .add("underlings", key)); //add Scott as an employee of his manager
         Assert.assertNotNull(res);
-        Assert.assertTrue(res.getUpdatedExisting());
-        Assert.assertEquals(1, res.getUpdatedCount());
+        Assert.assertTrue("Should update existing document", res.getUpdatedExisting());
+        Assert.assertEquals("Should update one document", 1, res.getUpdatedCount());
 
         final Employee scottsBoss = getDs().find(Employee.class).filter("underlings", key).get(); // get Scott's boss
         Assert.assertNotNull(scottsBoss);

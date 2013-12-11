@@ -423,7 +423,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    @Override
     public Query<T> maxScan(final int value) {
         maxScan = value > 0 ? value : null;
         return this;

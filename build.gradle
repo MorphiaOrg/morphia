@@ -1,5 +1,3 @@
-@groovy.transform.Field
-private java.lang.String s
 def configDir = new File(rootDir, 'config')
 
 buildscript {
@@ -84,6 +82,7 @@ configure(subprojects) {
 
     tasks.withType(Test) { 
         if (System.getenv()['RS_ENABLED'] == "true") {
+            println "Enabling replica set url"
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
     }
@@ -118,8 +117,10 @@ project(':morphia') {
     dependencies {
         if (project.hasProperty('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
+            println "Building with the 3.x java driver"
         } else if (project.hasProperty('2.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-SNAPSHOT", changing: true
+            println "Building with the 2.x java driver"
         } else {
             compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
         }
