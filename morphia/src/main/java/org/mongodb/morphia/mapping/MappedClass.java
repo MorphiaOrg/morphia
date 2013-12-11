@@ -371,7 +371,7 @@ public class MappedClass {
     /**
      * Call the lifecycle methods
      */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("WMI_WRONG_MAP_ITERATOR")
+    @SuppressWarnings("WMI_WRONG_MAP_ITERATOR")
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
                                          final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
