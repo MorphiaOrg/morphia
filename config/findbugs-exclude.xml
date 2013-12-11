@@ -19,5 +19,23 @@
             <Bug code="SS_SHOULD_BE_STATIC"/>
         </Not>
     </Match>
+    <Match>
+        <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap"/>
+        <Not>
+            <Bug code="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap$EntryIterator"/>
+        <Not>
+            <Bug code="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="org.mongodb.morphia.mapping.MappedClass"/>
+        <Not>
+            <Bug code="WMI_WRONG_MAP_ITERATOR"/>
+        </Not>
+    </Match>
 
 </FindBugsFilter>

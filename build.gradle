@@ -148,7 +148,6 @@ project(':validation') {
         compile project(':logging-slf4j')
         testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
         
-        println "java version = " + System.getProperty('java.version')
         if(System.getProperty('java.version').startsWith("1.5")) {
             println "Including extra dependencies for the older JVM"
 

@@ -371,7 +371,7 @@ public class MappedClass {
     /**
      * Call the lifecycle methods
      */
-    @SuppressWarnings("WMI_WRONG_MAP_ITERATOR")
+    @SuppressWarnings("WMI")
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
                                          final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
