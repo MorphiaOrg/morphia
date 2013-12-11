@@ -101,6 +101,9 @@ configure(subprojects) {
     }
 
     test {
+        if (properties['forceTests']) {
+            outputs.upToDateWhen { false }
+        }
         // set heap size for the test JVM(s)
         minHeapSize = "256m"
         maxHeapSize = "512m"
