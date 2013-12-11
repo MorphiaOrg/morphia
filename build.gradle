@@ -147,6 +147,14 @@ project(':validation') {
         compile project(':morphia')
         compile project(':logging-slf4j')
         testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
+        
+        if(System.getProperty('java.version').startsWith("1.5")) {
+            println "Including extra dependencies for the older JVM"
+
+            testCompile 'com.sun.xml.bind:jaxb-impl:2.2.4-1'
+            testCompile 'javax.xml.bind:jaxb-api:2.2.4'
+            testCompile 'javax.xml.soap:saaj-api:1.3.3'
+        }
     }
 }
 
