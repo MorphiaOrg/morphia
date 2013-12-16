@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestDatastoreMerge extends TestBase {
 
-    private static class TestEntity {
+    private static class Merger {
         @Id
         private ObjectId id;
         private String name;
@@ -40,7 +40,7 @@ public class TestDatastoreMerge extends TestBase {
 
     @Test
     public void testMerge() throws Exception {
-        final TestEntity te = new TestEntity();
+        final Merger te = new Merger();
         te.name = "test1";
         te.foo = "bar";
         te.position = 1;
@@ -49,12 +49,12 @@ public class TestDatastoreMerge extends TestBase {
         assertEquals(1, getDs().getCount(te));
 
         //only update the position field with merge, normally save would override the whole object.
-        final TestEntity te2 = new TestEntity();
+        final Merger te2 = new Merger();
         te2.id = te.id;
         te2.position = 5;
         getDs().merge(te2);
 
-        final TestEntity teLoaded = getDs().get(te);
+        final Merger teLoaded = getDs().get(te);
         assertEquals(teLoaded.name, te.name);
         assertEquals(teLoaded.foo, te.foo);
         assertEquals(teLoaded.position, te2.position);
