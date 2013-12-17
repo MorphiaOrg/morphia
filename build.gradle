@@ -27,7 +27,11 @@ allprojects {
         provided
         provided.extendsFrom(compile)
     }
-    
+   
+    configurations.all {
+        // check for updates every build
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
     task listDependencies << {
         configurations.compile.each { File file -> println file }
     }
