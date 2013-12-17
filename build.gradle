@@ -35,6 +35,13 @@ allprojects {
         resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.MILLISECONDS
         resolutionStrategy.cacheDynamicVersionsFor 0, TimeUnit.MILLISECONDS
     }
+
+    task clearDependencies << {
+        configurations.compile.each { File file -> 
+            println "removing ${file}"
+            file.delete() }
+    }
+    
     task listDependencies << {
         configurations.compile.each { File file -> println file }
     }
