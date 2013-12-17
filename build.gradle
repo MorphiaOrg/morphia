@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit
+
 def configDir = new File(rootDir, 'config')
 
 buildscript {
@@ -30,7 +32,8 @@ allprojects {
    
     configurations.all {
         // check for updates every build
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.MILLISECONDS
+        resolutionStrategy.cacheDynamicVersionsFor 0, TimeUnit.MILLISECONDS
     }
     task listDependencies << {
         configurations.compile.each { File file -> println file }
