@@ -30,11 +30,13 @@ allprojects {
         provided.extendsFrom(compile)
     }
    
+/*
     configurations.all {
         // check for updates every build
-        resolutionStrategy.cacheChangingModulesFor 0, TimeUnit.MILLISECONDS
-        resolutionStrategy.cacheDynamicVersionsFor 0, TimeUnit.MILLISECONDS
+        resolutionStrategy.cacheChangingModulesFor 30, TimeUnit.SECONDS
+        resolutionStrategy.cacheDynamicVersionsFor 30, TimeUnit.SECONDS
     }
+*/
 
     task clearDependencies << {
         configurations.compile.each { File file -> 
