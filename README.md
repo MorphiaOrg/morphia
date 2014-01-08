@@ -25,11 +25,11 @@ If you have further questions, please reach out to us on our [mailing list](http
 **Maven**
 
 ```xml
-<parent>
+<dependency>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia</artifactId>
     <version>###</version>
-</parent>
+</dependency>
 ```
 
 See the [dependencies](https://github.com/mongodb/morphia/wiki/Dependencies) page for more detail.
