@@ -30,20 +30,6 @@ allprojects {
         provided.extendsFrom(compile)
     }
    
-/*
-    configurations.all {
-        // check for updates every build
-        resolutionStrategy.cacheChangingModulesFor 30, TimeUnit.SECONDS
-        resolutionStrategy.cacheDynamicVersionsFor 30, TimeUnit.SECONDS
-    }
-*/
-
-    task clearDependencies << {
-        configurations.compile.each { File file -> 
-            println "removing ${file}"
-            file.delete() }
-    }
-    
     task listDependencies << {
         configurations.compile.each { File file -> println file }
     }
@@ -162,9 +148,9 @@ project(':logging-slf4j') {
 project(':validation') {
     dependencies {
         compile 'javax.validation:validation-api:1.0.0.GA'
-        testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
         compile project(':morphia')
         compile project(':logging-slf4j')
+        testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
         testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
         
         if(System.getProperty('java.version').startsWith("1.5")) {
