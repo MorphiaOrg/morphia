@@ -15,10 +15,10 @@ notifications:
 services: 
 - mongodb
 
-branches: 
-  only: 
-  - master
-  - aggfluent
+#branches: 
+#  only: 
+#  - master
+#  - aggfluent
 
 install: ./gradlew -q jar --stacktrace
 script: ./gradlew -q check --stacktrace
