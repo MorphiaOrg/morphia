@@ -1,5 +1,3 @@
-import java.util.concurrent.TimeUnit
-
 def configDir = new File(rootDir, 'config')
 
 buildscript {
@@ -74,7 +72,8 @@ configure(subprojects) {
         }
     }
 
-    project.ext.buildingWith = { n -> project.hasProperty(n) && project.property(n).toBoolean()
+    project.ext.buildingWith = {
+        n -> project.hasProperty(n) && project.property(n).toBoolean()
     }
 
     /* Code quality */
