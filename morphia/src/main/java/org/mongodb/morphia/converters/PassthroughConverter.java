@@ -10,20 +10,25 @@ import org.mongodb.morphia.mapping.MappedField;
  */
 public class PassthroughConverter extends TypeConverter {
 
-  public PassthroughConverter() {
-  }
+    public PassthroughConverter() {
+    }
 
-  public PassthroughConverter(final Class... types) {
-    super(types);
-  }
+    public PassthroughConverter(final Class... types) {
+        super(types);
+    }
 
-  @Override
-  protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
-    return true;
-  }
+    @Override
+    protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
+        return true;
+    }
 
-  @Override
-  public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-    return fromDBObject;
-  }
+    @Override
+    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        return fromDBObject;
+    }
+
+    @Override
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+        return getMapper().toDBObject(value);
+    }
 }
