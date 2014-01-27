@@ -127,7 +127,8 @@ public class EnumMappingTest extends TestBase {
         @Id
         private ObjectId id;
 
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList = new HashMap<WebTemplateType, List<WebTemplate>>();
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
+            = new HashMap<WebTemplateType, List<WebTemplate>>();
 
         public void add(final WebTemplateType type, final List<WebTemplate> templates) {
             mapWithArrayList.put(type, templates);
@@ -161,20 +162,19 @@ public class EnumMappingTest extends TestBase {
 
     @Test
     public void testCustomerWithList() {
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        getMorphia().getMapper().getOptions().setStoreNulls(true);
+        getMorphia().map(CustomerWithArrayList.class);
         CustomerWithList customer = new CustomerWithList();
 
-        WebTemplate template1_1 = new WebTemplate("template #1.1");
-        WebTemplate template1_2 = new WebTemplate("template #1.2");
         List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
-        templates1.add(template1_1);
-        templates1.add(template1_2);
+        templates1.add(new WebTemplate("template #1.1"));
+        templates1.add(new WebTemplate("template #1.2"));
         customer.add(WebTemplateType.CrewContract, templates1);
 
-        WebTemplate template2_1 = new WebTemplate("template #2.1");
-        WebTemplate template2_2 = new WebTemplate("template #2.2");
         List<WebTemplate> templates2 = new ArrayList<WebTemplate>();
-        templates1.add(template2_1);
-        templates1.add(template2_2);
+        templates1.add(new WebTemplate("template #2.1"));
+        templates1.add(new WebTemplate("template #2.2"));
         customer.add(WebTemplateType.CrewContractHeader, templates2);
 
         getDs().save(customer);
@@ -188,7 +188,7 @@ public class EnumMappingTest extends TestBase {
         getMorphia().getMapper().getOptions().setStoreEmpties(true);
         getMorphia().getMapper().getOptions().setStoreNulls(true);
         getMorphia().map(CustomerWithArrayList.class);
-        
+
         CustomerWithArrayList customer = new CustomerWithArrayList();
 
         List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
@@ -204,9 +204,7 @@ public class EnumMappingTest extends TestBase {
         getDs().save(customer);
         CustomerWithArrayList loaded = getDs().get(customer);
 
-        Map<WebTemplateType, List<WebTemplate>> savedMap = customer.mapWithArrayList;
-        Map<WebTemplateType, List<WebTemplate>> loadedMap = loaded.mapWithArrayList;
-        Assert.assertEquals(savedMap, loadedMap);
+        Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
     }
 
 }

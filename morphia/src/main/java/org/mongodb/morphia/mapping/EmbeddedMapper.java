@@ -114,8 +114,8 @@ class EmbeddedMapper implements CustomMapper {
                     }
 
                     if (!shouldSaveClassName(entryVal, val, mf)) {
-                        if (entryVal instanceof List) {
-                            List<DBObject> list = (List<DBObject>) entryVal;
+                        if (val instanceof List) {
+                            List<DBObject> list = (List<DBObject>) val;
                             for (DBObject o : list) {
                                 o.removeField(Mapper.CLASS_NAME_FIELDNAME);
                             }
@@ -268,8 +268,9 @@ class EmbeddedMapper implements CustomMapper {
         if (mf.isSingleValue()) {
             return !(mf.getType().equals(rawVal.getClass()) && !(convertedVal instanceof BasicDBList));
         }
-        return !(convertedVal != null && convertedVal instanceof DBObject && !mf.getSubClass().isInterface() 
-                 && !Modifier.isAbstract(mf.getSubClass().getModifiers())
+        return !(convertedVal != null && convertedVal instanceof DBObject && !mf.getSubClass().isInterface() && !Modifier.isAbstract(
+                                                                                                                                        mf.getSubClass()
+                                                                                                                                          .getModifiers())
                  && mf.getSubClass().equals(rawVal.getClass()));
     }
 

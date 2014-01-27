@@ -305,9 +305,6 @@ public class Mapper {
         if (javaObj == null) {
             return null;
         }
-        if (javaObj instanceof DBObject) {
-            return javaObj;
-        }
         Class origClass = javaObj.getClass();
 
         if (origClass.isAnonymousClass() && origClass.getSuperclass().isEnum()) {
