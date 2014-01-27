@@ -268,9 +268,8 @@ class EmbeddedMapper implements CustomMapper {
         if (mf.isSingleValue()) {
             return !(mf.getType().equals(rawVal.getClass()) && !(convertedVal instanceof BasicDBList));
         }
-        return !(convertedVal != null && convertedVal instanceof DBObject && !mf.getSubClass().isInterface() && !Modifier.isAbstract(
-                                                                                                                                        mf.getSubClass()
-                                                                                                                                          .getModifiers())
+        return !(convertedVal != null && convertedVal instanceof DBObject
+                 && !mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers())
                  && mf.getSubClass().equals(rawVal.getClass()));
     }
 
