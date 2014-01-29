@@ -1,4 +1,4 @@
-apply plugin: 'release'
+3apply plugin: 'release'
 apply plugin: 'console'
 apply plugin: 'github'
 
@@ -28,11 +28,9 @@ github {
 release {
 
     doFirst {
-/*
         if (project.git.status().uncommitted) {
             throw new GradleException('You have uncommitted changes.')
         }
-*/
     }
 
     version = project.version - '-SNAPSHOT'
