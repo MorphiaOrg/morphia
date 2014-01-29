@@ -27,11 +27,13 @@ github {
 
 release {
 
+/*
     doFirst {
         if (project.git.status().uncommitted) {
             throw new GradleException('You have uncommitted changes.')
         }
     }
+*/
 
     version = project.version - '-SNAPSHOT'
     tag = { "r$project.release.version" }
