@@ -1,4 +1,4 @@
-3apply plugin: 'release'
+apply plugin: 'release'
 apply plugin: 'console'
 apply plugin: 'github'
 

@@ -4,13 +4,13 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()        
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
         classpath 'me.trnl:clirr-gradle-plugin:0.4'
         classpath 'com.antwerkz.github:github-release-gradle-plugin:1.0.0'
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
     }
 }
 
