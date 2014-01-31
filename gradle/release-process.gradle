@@ -56,6 +56,6 @@ release {
 */
 
     dependsOn subprojects.uploadArchives
-    dependsOn publishWiki
+//    dependsOn publishWiki
     dependsOn draftGhRelease
 }
