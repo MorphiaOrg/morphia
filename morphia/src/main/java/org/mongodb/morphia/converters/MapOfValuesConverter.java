@@ -56,7 +56,7 @@ public class MapOfValuesConverter extends TypeConverter {
         }
 
         final Map<Object, Object> map = (Map<Object, Object>) value;
-        if (!map.isEmpty()) {
+        if (!map.isEmpty() || getMapper().getOptions().isStoreEmpties()) {
             final Map mapForDb = new HashMap();
             for (final Map.Entry<Object, Object> entry : map.entrySet()) {
                 final String strKey = converters.encode(entry.getKey()).toString();
