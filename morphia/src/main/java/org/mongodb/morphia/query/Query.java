@@ -98,6 +98,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    */
   Query<T> offset(int value);
 
+  Query<T> max(String field, Object value);
+
     /**
      * 
      * @param value

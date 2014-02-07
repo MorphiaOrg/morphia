@@ -1,6 +1,14 @@
 package org.mongodb.morphia.query;
 
 
+import static java.lang.String.format;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.Bytes;
@@ -21,14 +29,6 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.String.format;
-
 
 /**
  * <p>Implementation of Query</p>
@@ -46,6 +46,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private String[] fields;
     private Boolean includeFields;
     private BasicDBObject sort;
+    private BasicDBObject max;
+    private BasicDBObject min;
     private final DatastoreImpl ds;
     private final DBCollection dbColl;
     private int offset;
@@ -245,6 +247,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (maxScan != null) {
             cursor.addSpecial("$maxScan", maxScan);
         }
+
+        if (max != null) {
+            cursor.addSpecial(FilterOperator.MAX.val(), max);
+        }
+
         return cursor;
     }
 
@@ -448,6 +455,19 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             throw new QueryException("order cannot be used on a snapshotted query.");
         }
         sort = parseFieldsString(condition, clazz, ds.getMapper(), validateName);
+
+        return this;
+    }
+
+    public Query<T> max(String field, Object value) {
+        StringBuffer sb = new StringBuffer(field);
+        Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.MAX, value, validateName, validateType);
+
+        if (max == null) {
+            max = new BasicDBObject();
+        }
+
+        max.put(sb.toString(), value);
 
         return this;
     }
