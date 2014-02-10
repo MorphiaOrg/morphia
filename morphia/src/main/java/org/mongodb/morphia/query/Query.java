@@ -100,6 +100,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 
   Query<T> max(String field, Object value);
 
+  Query<T> min(String field, Object value);
+
     /**
      * 
      * @param value

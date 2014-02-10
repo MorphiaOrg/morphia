@@ -97,6 +97,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.validateName = validateName;
         n.validateType = validateType;
         n.sort = (BasicDBObject) (sort == null ? null : sort.clone());
+        n.max = max;
+        n.min = min;
         n.baseQuery = (BasicDBObject) (baseQuery == null ? null : baseQuery.clone());
 
         // fields from superclass
@@ -250,6 +252,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         if (max != null) {
             cursor.addSpecial(FilterOperator.MAX.val(), max);
+        }
+
+        if (min != null) {
+            cursor.addSpecial(FilterOperator.MIN.val(), min);
         }
 
         return cursor;
@@ -471,6 +477,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return this;
     }
+
+    public Query<T> min(String field, Object value) {
+        StringBuffer sb = new StringBuffer(field);
+        Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.MIN, value, validateName, validateType);
+
+        if (min == null) {
+            min = new BasicDBObject();
+        }
+
+        min.put(sb.toString(), value);
+
+        return this;
+    }
+
 
     /**
      * parses the string and validates each part
