@@ -81,4 +81,43 @@ public class TestMaxMin extends TestBase {
         Assert.assertEquals("item", b1.id, l.get(2).id);
     }
 
+    @Test
+    public void testMin() {
+        final IndexedEntity a = new IndexedEntity("a");
+        final IndexedEntity b = new IndexedEntity("b");
+        final IndexedEntity c = new IndexedEntity("c");
+
+        Datastore ds = getDs();
+
+        ds.save(a);
+        ds.save(b);
+        ds.save(c);
+
+        Assert.assertEquals("last", b.id, ds.createQuery(IndexedEntity.class).order("id").min("testField", "b").get().id);
+    }
+
+    @Test
+    public void testMinCompoundIndex() {
+        final IndexedEntity a1 = new IndexedEntity("a");
+        final IndexedEntity a2 = new IndexedEntity("a");
+        final IndexedEntity b1 = new IndexedEntity("b");
+        final IndexedEntity b2 = new IndexedEntity("b");
+        final IndexedEntity c1 = new IndexedEntity("c");
+        final IndexedEntity c2 = new IndexedEntity("c");
+
+        Datastore ds = getDs();
+
+        ds.save(a1);
+        ds.save(a2);
+        ds.save(b1);
+        ds.save(b2);
+        ds.save(c1);
+        ds.save(c2);
+
+        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").min("testField", "b").min("id", b1.id).asList();
+
+        Assert.assertEquals("size", 4, l.size());
+        Assert.assertEquals("item", b1.id, l.get(0).id);
+    }
+
 }
