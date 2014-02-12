@@ -465,7 +465,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public Query<T> max(String field, Object value) {
+    public Query<T> max(final String field, final Object value) {
         if (max == null) {
             max = new BasicDBObject();
         }
@@ -475,7 +475,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public Query<T> min(String field, Object value) {
+    public Query<T> min(final String field, final Object value) {
         if (min == null) {
             min = new BasicDBObject();
         }
