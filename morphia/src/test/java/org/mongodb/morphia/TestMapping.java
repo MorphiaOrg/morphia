@@ -64,6 +64,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -751,53 +752,47 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBadMappings() throws Exception {
-        boolean allGood = false;
         try {
             getMorphia().map(MissingId.class);
+            fail("Validation: Missing @Id field not caught");
         } catch (MappingException e) {
-            allGood = true;
+            // good 
         }
-        assertTrue("Validation: Missing @Id field not caught", allGood);
 
-        allGood = false;
         try {
             getMorphia().map(IdOnEmbedded.class);
+            fail("Validation: @Id field on @Embedded not caught");
         } catch (MappingException e) {
-            allGood = true;
+            // good 
         }
-        assertTrue("Validation: @Id field on @Embedded not caught", allGood);
 
-        allGood = false;
         try {
             getMorphia().map(RenamedEmbedded.class);
+            fail("Validation: @Embedded(\"name\") not caught on Class");
         } catch (MappingException e) {
-            allGood = true;
+            // good
         }
-        assertTrue("Validation: @Embedded(\"name\") not caught on Class", allGood);
 
-        allGood = false;
         try {
             getMorphia().map(MissingIdStill.class);
+            fail("Validation: Missing @Id field not not caught");
         } catch (MappingException e) {
-            allGood = true;
+            // good 
         }
-        assertTrue("Validation: Missing @Id field not not caught", allGood);
 
-        allGood = false;
         try {
             getMorphia().map(MissingIdRenamed.class);
+            fail("Validation: Missing @Id field not not caught");
         } catch (MappingException e) {
-            allGood = true;
+            // good 
         }
-        assertTrue("Validation: Missing @Id field not not caught", allGood);
 
-        allGood = false;
         try {
             getMorphia().map(NonStaticInnerClass.class);
+            fail("Validation: Non-static inner class allowed");
         } catch (MappingException e) {
-            allGood = true;
+            // good 
         }
-        assertTrue("Validation: Non-static inner class allowed", allGood);
     }
 
 
