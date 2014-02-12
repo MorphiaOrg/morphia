@@ -21,13 +21,13 @@ public class TestMaxMin extends TestBase {
             @Index("testField"),
             @Index("testField, _id")
     })
-    private static class IndexedEntity {
+    private static final class IndexedEntity {
 
         @Id
         private ObjectId id;
         private String testField;
 
-        private IndexedEntity(String testField) {
+        private IndexedEntity(final String testField) {
             this.testField = testField;
         }
 
