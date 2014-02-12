@@ -1,7 +1,6 @@
 package org.mongodb.morphia.query;
 
-import java.util.List;
-
+import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,12 +12,14 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 
+import java.util.List;
+
 public class TestMaxMin extends TestBase {
 
     @Entity("IndexedEntity")
     @Indexes({
             @Index("testField"),
-            @Index("testField, id")
+            @Index("testField, _id")
     })
     private static class IndexedEntity {
 
@@ -75,7 +76,7 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").max("testField", "b").max("id", b2.id).asList();
+        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").max("testField", "b").max("_id", b2.id).asList();
 
         Assert.assertEquals("size", 3, l.size());
         Assert.assertEquals("item", b1.id, l.get(2).id);
@@ -114,10 +115,14 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").min("testField", "b").min("id", b1.id).asList();
+        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").min("testField", "b").min("_id", b1.id).asList();
 
         Assert.assertEquals("size", 4, l.size());
         Assert.assertEquals("item", b1.id, l.get(0).id);
     }
 
+    @Test(expected = MongoException.class)
+    public void testExceptionForIndexMismatch() throws Exception {
+        getDs().createQuery(IndexedEntity.class).min("doesNotExist", 1).get();
+    }
 }
