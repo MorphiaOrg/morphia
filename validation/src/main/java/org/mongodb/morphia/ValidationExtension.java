@@ -37,4 +37,8 @@ public class ValidationExtension extends AbstractEntityInterceptor {
             throw new VerboseJSR303ConstraintViolationException(validate);
         }
     }
+
+    public ValidatorFactory getValidatorFactory() {
+        return this.validationFactory;
+    }
 }
