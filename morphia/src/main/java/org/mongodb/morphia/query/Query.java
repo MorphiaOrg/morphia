@@ -98,8 +98,44 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    */
   Query<T> offset(int value);
 
+  /**
+   * <p>
+   * Specify the exclusive upper bound for a specific index in order to constrain the results of this query.
+   *
+   * You can chain this operation to build a constraint for a compound index. For instance:
+   * </p>
+   * <p>
+   * {@code
+   *   query.max("a", 1).max("b", 2);
+   * }
+   * </p>
+   * <p>
+   * to build a constraint on index {@code {"a", "b"}}
+   * </p>
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/max/#op._S_max">http://docs.mongodb.org/manual/reference/operator/meta/max/#op._S_max</a>
+   * @param field The index field to constrain.
+   * @param value The exclusive upper bound.
+   */
   Query<T> max(String field, Object value);
 
+  /**
+   * <p>
+   * Specify the inclusive lower bound for a specific index in order to constrain the results of this query.
+   *
+   * You can chain this operation to build a constraint for a compound index. For instance:
+   * </p>
+   * <p>
+   * {@code
+   *   query.min("a", 1).min("b", 2);
+   * }
+   * </p>
+   * <p>
+   * to build a constraint on index {@code {"a", "b"}}
+   * </p>
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/min/#op._S_min">http://docs.mongodb.org/manual/reference/operator/meta/min/#op._S_min</a>
+   * @param field The index field to constrain.
+   * @param value The inclusive lower bound.
+   */
   Query<T> min(String field, Object value);
 
     /**
