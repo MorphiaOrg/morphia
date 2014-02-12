@@ -1,21 +1,7 @@
 package org.mongodb.morphia.query;
 
 
-import static java.lang.String.format;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.Bytes;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.ReadPreference;
+import com.mongodb.*;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -28,6 +14,10 @@ import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
+
+import java.util.*;
+
+import static java.lang.String.format;
 
 
 /**
@@ -251,11 +241,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
 
         if (max != null) {
-            cursor.addSpecial(FilterOperator.MAX.val(), max);
+            cursor.addSpecial("$max", max);
         }
 
         if (min != null) {
-            cursor.addSpecial(FilterOperator.MIN.val(), min);
+            cursor.addSpecial("$min", min);
         }
 
         return cursor;
@@ -466,27 +456,21 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     public Query<T> max(String field, Object value) {
-        StringBuffer sb = new StringBuffer(field);
-        Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.MAX, value, validateName, validateType);
-
         if (max == null) {
             max = new BasicDBObject();
         }
 
-        max.put(sb.toString(), value);
+        max.put(field, value);
 
         return this;
     }
 
     public Query<T> min(String field, Object value) {
-        StringBuffer sb = new StringBuffer(field);
-        Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.MIN, value, validateName, validateType);
-
         if (min == null) {
             min = new BasicDBObject();
         }
 
-        min.put(sb.toString(), value);
+        min.put(field, value);
 
         return this;
     }

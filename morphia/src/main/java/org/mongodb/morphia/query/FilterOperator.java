@@ -27,9 +27,7 @@ public enum FilterOperator {
   ALL("$all"),
   ELEMENT_MATCH("$elemMatch"),
   NOT_EQUAL("$ne"),
-  WHERE("$where"),
-  MAX("$max"),
-  MIN("$min");
+  WHERE("$where");
 
   private final String value;
 
