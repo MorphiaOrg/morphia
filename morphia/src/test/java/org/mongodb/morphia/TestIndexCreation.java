@@ -19,11 +19,9 @@ package org.mongodb.morphia;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Test;
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.NotSaved;
 
@@ -38,17 +36,17 @@ public class TestIndexCreation extends TestBase {
     })
     private static class HasIndex {
         @Id
-        public ObjectId id;
-        public String test;
+        private ObjectId id;
+        private String test;
     }
 
     @Entity
     private static class NoIndexes {
         @Id
-        public ObjectId id;
+        private ObjectId id;
 
         @NotSaved
-        public HasIndex hasIndex;
+        private HasIndex hasIndex;
     }
 
     @Test
