@@ -1,13 +1,7 @@
 package org.mongodb.morphia.query;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.Bytes;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.ReadPreference;
+import com.mongodb.*;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -21,11 +15,7 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -46,6 +36,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private String[] fields;
     private Boolean includeFields;
     private BasicDBObject sort;
+    private BasicDBObject max;
+    private BasicDBObject min;
     private final DatastoreImpl ds;
     private final DBCollection dbColl;
     private int offset;
@@ -95,6 +87,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.validateName = validateName;
         n.validateType = validateType;
         n.sort = (BasicDBObject) (sort == null ? null : sort.clone());
+        n.max = max;
+        n.min = min;
         n.baseQuery = (BasicDBObject) (baseQuery == null ? null : baseQuery.clone());
 
         // fields from superclass
@@ -245,6 +239,15 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (maxScan != null) {
             cursor.addSpecial("$maxScan", maxScan);
         }
+
+        if (max != null) {
+            cursor.addSpecial("$max", max);
+        }
+
+        if (min != null) {
+            cursor.addSpecial("$min", min);
+        }
+
         return cursor;
     }
 
@@ -451,6 +454,27 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return this;
     }
+
+    public Query<T> max(String field, Object value) {
+        if (max == null) {
+            max = new BasicDBObject();
+        }
+
+        max.put(field, value);
+
+        return this;
+    }
+
+    public Query<T> min(String field, Object value) {
+        if (min == null) {
+            min = new BasicDBObject();
+        }
+
+        min.put(field, value);
+
+        return this;
+    }
+
 
     /**
      * parses the string and validates each part
