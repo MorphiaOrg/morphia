@@ -43,8 +43,8 @@ configure(subprojects) {
     group = 'org.mongodb.morphia'
     version = '0.107-SNAPSHOT'
 
-    sourceCompatibility = '1.5'
-    targetCompatibility = '1.5'
+    sourceCompatibility = JavaVersion.VERSION_1_5
+    targetCompatibility = JavaVersion.VERSION_1_5
 
     configurations {
         provided
@@ -82,6 +82,14 @@ configure(subprojects) {
         configFile = new File("$configDir/checkstyle.xml")
     }
 
+    checkstyleMain {
+        classpath += configurations.compile
+    }
+
+    checkstyleTest {
+        classpath += configurations.compile
+    }
+    
     findbugs {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
     }
