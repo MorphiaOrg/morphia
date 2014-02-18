@@ -11,7 +11,7 @@
 	<parent>
     	<groupId>org.mongodb.morphia</groupId>
     	<artifactId>morphia-parent</artifactId>
-		<version>0.106-SNAPSHOT</version>
+		<version>0.107-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 
