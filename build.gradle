@@ -187,7 +187,13 @@ project(':guice-plug') {
     }
 }
 
-project(':jrebel-plug') {}
+project(':jrebel-plug') {
+    jar {
+        manifest {
+            attributes("JavaRebel-Plugin": "org.mongodb.morphia.ext.jrebel.JRebelPlugin")
+        }
+    }
+}
 
 project(':no-proxy-deps-tests') {
    
