@@ -28,7 +28,7 @@ allprojects {
         provided
         provided.extendsFrom(compile)
     }
-   
+
     task listDependencies << {
         configurations.compile.each { File file -> println file }
     }
@@ -86,7 +86,7 @@ configure(subprojects) {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
     }
 
-    tasks.withType(Test) { 
+    tasks.withType(Test) {
         if (System.getenv()['RS_ENABLED'] == "true") {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
@@ -152,8 +152,8 @@ project(':validation') {
         compile project(':logging-slf4j')
         testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
         testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
-        
-        if(System.getProperty('java.version').startsWith("1.5")) {
+
+        if (System.getProperty('java.version').startsWith("1.5")) {
             println "Including extra dependencies for the older JVM"
 
             testCompile 'com.sun.xml.bind:jaxb-impl:2.2.4-1'
@@ -196,7 +196,6 @@ project(':jrebel-plug') {
 }
 
 project(':no-proxy-deps-tests') {
-   
     sourceSets {
         main {
             output.classesDir '../morphia/build/classes/test'
@@ -208,10 +207,9 @@ project(':no-proxy-deps-tests') {
 }
 
 project(':gwt') {
-    sourceSets {
-        main {
-            java { srcDirs = [] }
-        }
+    dependencies {
+        compile project(':morphia')
+        compile 'com.google.gwt:gwt-user:2.1.0@jar'
     }
 }
 

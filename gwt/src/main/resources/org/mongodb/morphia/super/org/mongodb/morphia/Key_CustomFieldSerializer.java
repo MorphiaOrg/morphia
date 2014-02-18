@@ -1,5 +1,3 @@
-package org.mongodb.morphia;
-
 import java.io.Serializable;
 
 import com.google.gwt.user.client.rpc.SerializationException;
