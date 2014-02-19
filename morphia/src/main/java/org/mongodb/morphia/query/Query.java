@@ -106,7 +106,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * </p>
    * <p>
    * {@code
-   *   query.upperIndexBound(new BasicDBObject("a", 1).append("b", 2);
+   *   query.upperIndexBound(new BasicDBObject("a", 1).append("b", 2));
    * }
    * </p>
    * <p>
@@ -126,7 +126,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * </p>
    * <p>
    * {@code
-   *   query.lowerIndexBound(new BasicDBObject("a", 1).append("b", 2);
+   *   query.lowerIndexBound(new BasicDBObject("a", 1).append("b", 2));
    * }
    * </p>
    * <p>
