@@ -1,5 +1,6 @@
 package org.mongodb.morphia.query;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -55,7 +56,8 @@ public class TestMaxMin extends TestBase {
         ds.save(b);
         ds.save(c);
 
-        Assert.assertEquals("last", b.id, ds.createQuery(IndexedEntity.class).order("-id").max("testField", "c").get().id);
+        Assert.assertEquals("last", b.id, ds.createQuery(IndexedEntity.class).order("-id")
+                                            .upperIndexBound(new BasicDBObject("testField", "c")).get().id);
     }
 
     @Test
@@ -76,7 +78,9 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").max("testField", "b").max("_id", b2.id).asList();
+        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id")
+                                  .upperIndexBound(new BasicDBObject("testField",
+                                                                     "b").append("_id", b2.id)).asList();
 
         Assert.assertEquals("size", 3, l.size());
         Assert.assertEquals("item", b1.id, l.get(2).id);
@@ -94,7 +98,8 @@ public class TestMaxMin extends TestBase {
         ds.save(b);
         ds.save(c);
 
-        Assert.assertEquals("last", b.id, ds.createQuery(IndexedEntity.class).order("id").min("testField", "b").get().id);
+        Assert.assertEquals("last", b.id, ds.createQuery(IndexedEntity.class).order("id")
+                                            .lowerIndexBound(new BasicDBObject("testField", "b")).get().id);
     }
 
     @Test
@@ -115,7 +120,9 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.createQuery(IndexedEntity.class).order("testField, id").min("testField", "b").min("_id", b1.id).asList();
+        Query<IndexedEntity> min = ds.createQuery(IndexedEntity.class).order("testField, id")
+                                     .lowerIndexBound(new BasicDBObject("testField", "b").append("_id", b1.id));
+        List<IndexedEntity> l = min.asList();
 
         Assert.assertEquals("size", 4, l.size());
         Assert.assertEquals("item", b1.id, l.get(0).id);
@@ -123,6 +130,6 @@ public class TestMaxMin extends TestBase {
 
     @Test(expected = MongoException.class)
     public void testExceptionForIndexMismatch() throws Exception {
-        getDs().createQuery(IndexedEntity.class).min("doesNotExist", 1).get();
+        getDs().createQuery(IndexedEntity.class).lowerIndexBound(new BasicDBObject("doesNotExist", 1)).get();
     }
 }

@@ -465,22 +465,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public Query<T> max(final String field, final Object value) {
-        if (max == null) {
-            max = new BasicDBObject();
+    public Query<T> upperIndexBound(final DBObject upperBound) {
+        if (upperBound != null) {
+            max = new BasicDBObject(upperBound.toMap());
         }
-
-        max.put(field, value);
 
         return this;
     }
 
-    public Query<T> min(final String field, final Object value) {
-        if (min == null) {
-            min = new BasicDBObject();
+    public Query<T> lowerIndexBound(final DBObject lowerBound) {
+        if (lowerBound != null) {
+            min = new BasicDBObject(lowerBound.toMap());
         }
-
-        min.put(field, value);
 
         return this;
     }
