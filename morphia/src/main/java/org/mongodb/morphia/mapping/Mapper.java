@@ -391,7 +391,7 @@ public class Mapper {
                     if (mapped != null && (Key.class.isAssignableFrom(mapped.getClazz()) || mapped.getEntityAnnotation() != null)) {
                         mappedValue = getDBRefs((Iterable) value);
                     } else {
-                        if (mf.getSubClass() == null) {
+                        if (mf.hasAnnotation(Reference.class)) {
                             mappedValue = getDBRefs((Iterable) value);
                         } else {
                             mappedValue = toMongoObject(value, false);
