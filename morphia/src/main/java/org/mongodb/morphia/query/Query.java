@@ -112,8 +112,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * <p>
    * to build a constraint on index {@code {"a", "b"}}
    * </p>
-   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/upperIndexBound/#op._S_max">
-   *     http://docs.mongodb.org/manual/reference/operator/meta/upperIndexBound/#op._S_max</a>
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/max/">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/max/</a>
    * @param upperBound The exclusive upper bound.
    */
   Query<T> upperIndexBound(DBObject upperBound);
@@ -132,8 +132,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * <p>
    * to build a constraint on index {@code {"a", "b"}}
    * </p>
-   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/lowerIndexBound/#op._S_min">
-   *     http://docs.mongodb.org/manual/reference/operator/meta/lowerIndexBound/#op._S_min</a>
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/min/">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/min/</a>
    * @param lowerBound The inclusive lower bound.
    */
   Query<T> lowerIndexBound(DBObject lowerBound);
