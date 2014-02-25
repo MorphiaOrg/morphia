@@ -89,7 +89,7 @@ configure(subprojects) {
     checkstyleTest {
         classpath += configurations.compile
     }
-    
+
     findbugs {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
     }
@@ -126,7 +126,12 @@ configure(subprojects) {
 
 project(':morphia') {
     archivesBaseName = 'morphia'
-
+    
+    jar {
+        manifest {
+        }
+    }
+    
     dependencies {
         if (project.hasProperty('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
@@ -192,14 +197,6 @@ project(':guice-plug') {
     dependencies {
         compile 'com.google.inject:guice:3.0'
         compile project(':morphia')
-    }
-}
-
-project(':jrebel-plug') {
-    jar {
-        manifest {
-            attributes("JavaRebel-Plugin": "org.mongodb.morphia.ext.jrebel.JRebelPlugin")
-        }
     }
 }
 
