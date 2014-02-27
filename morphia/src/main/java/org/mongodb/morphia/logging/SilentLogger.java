@@ -5,8 +5,6 @@ package org.mongodb.morphia.logging;
  * Silent logger; it doesn't do anything!
  */
 public class SilentLogger implements Logr {
-  private static final long serialVersionUID = 1L;
-
   public boolean isTraceEnabled() {
     return false;
   }
