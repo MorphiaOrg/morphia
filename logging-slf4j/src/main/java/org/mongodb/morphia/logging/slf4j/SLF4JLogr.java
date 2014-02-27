@@ -7,7 +7,6 @@ import org.mongodb.morphia.logging.Logr;
 
 
 public class SLF4JLogr implements Logr {
-  private static final long serialVersionUID = 1L;
   private final Logger logger;
 
   public SLF4JLogr(final Class<?> c) {
