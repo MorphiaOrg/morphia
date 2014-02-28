@@ -9,7 +9,7 @@ experience.
 
 
 ##Features
-- [Lifecycle Method/Event](LifecycleMethods) Support
+- [Lifecycle Method/Event](https://github.com/mongodb/morphia/wiki/LifecycleMethods) Support
 - Works great with Guice, Spring, and other DI frameworks.
 - Many extension points (new annotations, converters, mapping behavior, logging, etc.)
 - Does not store Null/Empty values (by default).
