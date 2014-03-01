@@ -40,8 +40,8 @@ public class TestQueriesOnReferences extends TestBase {
     @Entity
     public static class PicWithObjectId {
         @Id
-        private   ObjectId id;
-        private   String name;
+        private ObjectId id;
+        private String name;
     }
 
     @Test
@@ -83,7 +83,7 @@ public class TestQueriesOnReferences extends TestBase {
                                   .equal(withObjectId)
                                   .get());
     }
-    
+
     @Test
     public void testWithKeyQuery() {
         final ContainsPic cpk = new ContainsPic();
@@ -94,11 +94,27 @@ public class TestQueriesOnReferences extends TestBase {
 
         ContainsPic containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, p.id)).get();
         Assert.assertEquals(cpk.id, containsPic.id);
-        
+
         containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>("Pic", p.id)).get();
         Assert.assertEquals(cpk.id, containsPic.id);
     }
-    
+
+    @Test
+    public void testKeyExists() {
+        final ContainsPic cpk = new ContainsPic();
+        final Pic p = new Pic();
+        cpk.pic = p;
+        getDs().save(p);
+        getDs().save(cpk);
+
+        Assert.assertNotNull(getDs().createQuery(ContainsPic.class)
+                                      .field("pic").exists()
+                                      .retrievedFields(true, "pic").get());
+        Assert.assertNull(getDs().createQuery(ContainsPic.class)
+                                      .field("pic").doesNotExist()
+                                      .retrievedFields(true, "pic").get());
+    }
+
     @Test(expected = MappingException.class)
     public void testMissingReferences() {
         final ContainsPic cpk = new ContainsPic();
