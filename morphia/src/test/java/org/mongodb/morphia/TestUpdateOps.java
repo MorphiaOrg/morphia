@@ -22,7 +22,6 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestQuery.ContainsPic;
 import org.mongodb.morphia.TestQuery.Pic;
@@ -228,20 +227,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("need to inspect the logs")
-    public void testValidationBadFieldType() throws Exception {
-        try {
-            getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
-                           getDs().createUpdateOperations(Circle.class).set("radius", "1"),
-                           true,
-                           WriteConcern.SAFE);
-            Assert.assertTrue(false); //should not get here.
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("inconsistent"));
-        }
-    }
-
-    @Test
     public void testInsertUpdatesUnsafe() throws Exception {
         getDs().getDB()
             .requestStart();
@@ -400,7 +385,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("waiting on SERVER-1470 bug; dbRef is not included from query on upsert")
     public void testInsertWithRef() throws Exception {
         final Pic pic = new Pic();
         pic.setName("fist");
