@@ -636,7 +636,9 @@ public class Mapper {
         } else if (Embedded.class.equals(annType)) {
             opts.getEmbeddedMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         } else {
-            LOG.debug("No annotation was found, using default mapper " + opts.getDefaultMapper() + " for " + mf);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No annotation was found, using default mapper " + opts.getDefaultMapper() + " for " + mf);
+            }
             opts.getDefaultMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         }
 
@@ -773,7 +775,7 @@ public class Mapper {
             if (validateTypes) {
                 boolean compatibleForType = isCompatibleForOperator(mf.getType(), op, val);
                 boolean compatibleForSubclass = isCompatibleForOperator(mf.getSubClass(), op, val);
-                
+
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
 
