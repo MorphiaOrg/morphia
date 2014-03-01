@@ -26,7 +26,6 @@ public class NastyEnumTest extends TestBase {
     }
 
     public static class NastyEnumEntity extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private final NastyEnum e1 = NastyEnum.A;
         private final NastyEnum e2 = NastyEnum.B;
         private NastyEnum e3;

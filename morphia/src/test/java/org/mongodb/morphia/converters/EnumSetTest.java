@@ -31,10 +31,6 @@ public class EnumSetTest extends TestBase {
     }
 
     public static class NastyEnumEntity extends TestEntity {
-        /**
-         *
-         */
-        private static final long serialVersionUID = 1L;
         private final EnumSet<NastyEnum> in = EnumSet.of(NastyEnum.B, NastyEnum.C, NastyEnum.D);
         private final EnumSet<NastyEnum> out = EnumSet.of(NastyEnum.A);
         private final EnumSet<NastyEnum> empty = EnumSet.noneOf(NastyEnum.class);

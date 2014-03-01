@@ -26,8 +26,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  * @author Olafur Gauti Gudmundsson
  */
 public class Rectangle extends TestEntity implements Shape {
-  private static final long serialVersionUID = 1L;
-
   @Property("h")
   private double height;
   @Property("w")

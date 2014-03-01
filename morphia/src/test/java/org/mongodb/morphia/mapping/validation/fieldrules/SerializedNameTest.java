@@ -16,7 +16,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 public class SerializedNameTest extends TestBase {
     public static class E extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Serialized("changedName")
         private final byte[] b = "foo".getBytes();
 

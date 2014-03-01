@@ -16,7 +16,6 @@ import org.mongodb.morphia.testutil.TestEntity;
 public class ReferencesInEmbeddedTest extends TestBase {
     @Entity
     private static class Container extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private String name;
         @Embedded
         private EmbedContainingReference embed;
@@ -33,7 +32,6 @@ public class ReferencesInEmbeddedTest extends TestBase {
 
     @Entity
     public static class ReferencedEntity extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private String foo;
     }
 

@@ -35,8 +35,6 @@ import java.util.Vector;
  */
 @Entity("hotels")
 public class Hotel extends TestEntity {
-    private static final long serialVersionUID = 1L;
-
     public enum Type {
         BUSINESS,
         LEISURE

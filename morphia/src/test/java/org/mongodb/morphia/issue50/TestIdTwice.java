@@ -23,7 +23,6 @@ public class TestIdTwice extends TestBase {
     }
 
     public static class A extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Id
         private String extraId;
         @Id

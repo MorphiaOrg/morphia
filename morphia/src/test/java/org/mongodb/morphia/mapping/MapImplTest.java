@@ -58,7 +58,6 @@ public class MapImplTest extends TestBase {
     }
 
     private static class MyMap extends HashMap<String, String> {
-        private static final long serialVersionUID = 1L;
     }
 
     @Test

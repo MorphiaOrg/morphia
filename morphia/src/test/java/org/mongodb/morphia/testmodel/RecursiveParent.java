@@ -28,8 +28,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 @Entity("stuff")
 public class RecursiveParent extends TestEntity {
-  private static final long serialVersionUID = 1L;
-
   @Reference
   private RecursiveChild child;
 

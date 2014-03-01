@@ -19,14 +19,12 @@ import java.util.Map;
 public class SerializedMapTest extends TestBase {
 
     public static class Map1 extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Serialized(disableCompression = false)
         private final Map<Integer, Foo> shouldBeOk = new HashMap();
 
     }
 
     public static class Map2 extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Serialized(disableCompression = true)
         private final Map<Integer, Foo> shouldBeOk = new HashMap();
 
@@ -34,7 +32,6 @@ public class SerializedMapTest extends TestBase {
 
     public static class Foo implements Serializable {
 
-        private static final long serialVersionUID = 1L;
         private final String id;
 
         public Foo(final String id) {

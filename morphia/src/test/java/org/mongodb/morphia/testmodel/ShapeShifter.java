@@ -32,8 +32,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 @Entity("shapeshifters")
 public class ShapeShifter extends TestEntity {
-  private static final long serialVersionUID = 1L;
-
   @Embedded
   private Shape mainShape;
 

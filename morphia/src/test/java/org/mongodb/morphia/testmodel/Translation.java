@@ -11,8 +11,6 @@ import org.mongodb.morphia.annotations.Embedded;
  */
 @Embedded
 public class Translation implements Serializable {
-  private static final long serialVersionUID = 1L;
-
   private String title;
   private String body;
 

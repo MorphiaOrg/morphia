@@ -17,8 +17,6 @@ import org.mongodb.morphia.testutil.TestEntity;
 @Entity("articles")
 @SuppressWarnings("unchecked")
 public class Article extends TestEntity {
-  private static final long serialVersionUID = 1L;
-
   @Embedded
   private Map<String, Translation> translations;
   @Property

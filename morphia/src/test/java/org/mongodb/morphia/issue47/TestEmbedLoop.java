@@ -14,14 +14,12 @@ public class TestEmbedLoop extends TestBase {
 
     @Entity
     static class A extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Embedded
         private B b;
     }
 
     @Embedded
     static class B extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private String someProperty = "someThing";
 
         // produces stack overflow, might be detectable?

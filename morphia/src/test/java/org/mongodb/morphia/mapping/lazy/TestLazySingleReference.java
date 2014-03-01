@@ -181,7 +181,6 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     public static class RootEntity extends TestEntity {
-        private static final long serialVersionUID = 1L;
         @Reference(lazy = true)
         private ReferencedEntity r;
         @Reference(lazy = true)
@@ -190,7 +189,6 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     public static class ReferencedEntity extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private String foo;
 
         public void setFoo(final String string) {

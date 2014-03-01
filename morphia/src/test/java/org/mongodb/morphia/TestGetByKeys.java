@@ -29,7 +29,6 @@ public class TestGetByKeys extends TestBase {
   }
 
   public static class A extends TestEntity {
-    private static final long serialVersionUID = 1L;
     private String foo = "bar";
   }
 

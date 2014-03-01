@@ -32,8 +32,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 @Entity("agencies")
 public class TravelAgency extends TestEntity {
-  private static final long serialVersionUID = 1L;
-
   @Property
   private String name;
 

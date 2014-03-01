@@ -63,10 +63,6 @@ public class TestReferenceMap extends ProxyTestBase {
 
 
   public static class A extends TestEntity {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     @Reference(lazy = true)
     private final Map<String, B> bs = new HashMap<String, B>();
   }

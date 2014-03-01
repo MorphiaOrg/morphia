@@ -32,10 +32,6 @@ public class TestCGLibLazyProxyFactory extends ProxyTestBase {
   }
 
   public static class E extends TestEntity {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private String foo;
 
     public void setFoo(final String string) {

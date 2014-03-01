@@ -27,12 +27,10 @@ import static org.junit.Assert.assertThat;
 public class CustomConverterInEmbedTest extends TestBase {
 
     public static class E1 extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private final List<Foo> foo = new LinkedList<Foo>();
     }
 
     public static class E2 extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private final Map<String, Foo> foo = new HashMap<String, Foo>();
     }
 
@@ -113,7 +111,6 @@ public class CustomConverterInEmbedTest extends TestBase {
      */
     @Converters(ComplexFooConverter.class)
     public static class ComplexBar extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private ComplexFoo foo;
     }
 
@@ -124,7 +121,6 @@ public class CustomConverterInEmbedTest extends TestBase {
      */
     @Converters(ComplexArrayFooConverter.class)
     public static class ArrayBar extends TestEntity {
-        private static final long serialVersionUID = 1L;
         private ArrayFoo foo;
     }
 

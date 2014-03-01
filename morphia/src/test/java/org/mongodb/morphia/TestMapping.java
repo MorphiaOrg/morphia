@@ -130,7 +130,6 @@ public class TestMapping extends TestBase {
     }
 
     private static class SerializableClass implements Serializable {
-        private static final long serialVersionUID = 1L;
         private final String someString = "hi, from the ether.";
     }
 
@@ -327,12 +326,10 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class UsesBaseEntity extends BaseEntity {
-        private static final long serialVersionUID = 1L;
 
     }
 
     private static class MapSubclass extends LinkedHashMap<String, Object> {
-        private static final long serialVersionUID = 1L;
         @Id
         private ObjectId id;
     }

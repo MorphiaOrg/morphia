@@ -37,7 +37,6 @@ public class NameValuePairTest extends TestBase {
     }
 
     private static class NameValuePair<T1 extends Enum<?>, T2> implements Serializable {
-        private static final long serialVersionUID = 1L;
         private final T2 value;
         private final T1 name;
 
