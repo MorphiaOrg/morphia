@@ -75,6 +75,17 @@ public class Morphia {
     }
     return this;
   }
+    
+  public synchronized Morphia map(final Set<Class> entityClasses) {
+    if (entityClasses != null && !entityClasses.isEmpty()) {
+      for (final Class entityClass : entityClasses) {
+        if (!mapper.isMapped(entityClass)) {
+          mapper.addMappedClass(entityClass);
+        }
+      }
+    }
+    return this;
+  }
 
   public synchronized Morphia mapPackageFromClass(final Class clazz) {
     return mapPackage(clazz.getPackage().getName(), false);
