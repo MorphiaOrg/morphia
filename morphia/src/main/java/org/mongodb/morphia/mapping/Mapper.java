@@ -676,7 +676,7 @@ public class Mapper {
             key.setKind(getCollectionName(key.getKindClass()));
         }
 
-        return new DBRef(null, key.getKind(), key.getId());
+        return new DBRef(getDatastoreProvider().get().getDB(), key.getKind(), key.getId());
     }
 
     public Object keyToManualRef(final Key key) {

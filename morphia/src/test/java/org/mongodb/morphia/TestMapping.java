@@ -733,7 +733,7 @@ public class TestMapping extends TestBase {
         rectangles.save(rDbObject);
 
         final ContainsRef cRef = new ContainsRef();
-        cRef.rect = new DBRef(null, (String) rDbObject.get("_ns"), rDbObject.get("_id"));
+        cRef.rect = new DBRef(getDb(), (String) rDbObject.get("_ns"), rDbObject.get("_id"));
         final DBObject cRefDbObject = getMorphia().toDBObject(cRef);
         stuff.save(cRefDbObject);
         final BasicDBObject cRefDbObjectLoaded = (BasicDBObject) stuff.findOne(BasicDBObjectBuilder.start("_id", cRefDbObject.get("_id"))
