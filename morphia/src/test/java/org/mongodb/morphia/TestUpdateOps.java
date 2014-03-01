@@ -18,6 +18,7 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -25,15 +26,22 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestQuery.ContainsPic;
 import org.mongodb.morphia.TestQuery.Pic;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.PreLoad;
+import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -65,6 +73,46 @@ public class TestUpdateOps extends TestBase {
         private ObjectId id;
         private String name = "test";
         private Key<Pic> pic;
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class EntityLogs {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private String uuid;
+        @Embedded
+        private List<EntityLog> logs = new ArrayList<EntityLog>();
+        private DBObject raw;
+
+        @PreLoad
+        public void preload(final DBObject raw) {
+            this.raw = raw;
+        }
+    }
+
+    @Embedded
+    public static class EntityLog {
+        private Date receivedTs;
+        private String value;
+        private DBObject raw;
+
+        public EntityLog() {
+        }
+
+        public EntityLog(final String value) {
+            this.value = value;
+        }
+        
+        @PreLoad
+        public void preload(final DBObject raw) {
+            this.raw = raw;
+        }
+
+        @PrePersist
+        public void pickReceivedTs() {
+            receivedTs = new Date();
+        }
     }
 
     @Test
@@ -130,41 +178,41 @@ public class TestUpdateOps extends TestBase {
         final Circle c2 = getDs().getByKey(Circle.class, key);
         assertEquals(0D, c2.getRadius(), 0);
     }
-    
+
     @Test
     public void testSetOnInsertWhenInserting() throws Exception {
         checkMinServerVersion(2.4);
         ObjectId id = new ObjectId();
         UpdateResults<Circle> res = getDs().updateFirst(
-                getDs().createQuery(Circle.class).field("id").equal(id), 
-                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
-        
+                                                           getDs().createQuery(Circle.class).field("id").equal(id),
+                                                           getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
+
         assertInserted(res);
-        
+
         final Circle c = getDs().get(Circle.class, id);
-        
+
         assertNotNull(c);
         assertEquals(2D, c.getRadius(), 0);
     }
-    
+
     @Test
     public void testSetOnInsertWhenUpdating() throws Exception {
         checkMinServerVersion(2.4);
         ObjectId id = new ObjectId();
         UpdateResults<Circle> res = getDs().updateFirst(
-                getDs().createQuery(Circle.class).field("id").equal(id), 
-                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
-        
+                                                           getDs().createQuery(Circle.class).field("id").equal(id),
+                                                           getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
+
         assertInserted(res);
-        
+
         res = getDs().updateFirst(
-                getDs().createQuery(Circle.class).field("id").equal(id), 
-                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
-        
+                                     getDs().createQuery(Circle.class).field("id").equal(id),
+                                     getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 2D), true);
+
         assertUpdated(res, 1);
-        
+
         final Circle c = getDs().get(Circle.class, id);
-        
+
         assertNotNull(c);
         assertEquals(1D, c.getRadius(), 0);
     }
@@ -459,7 +507,43 @@ public class TestUpdateOps extends TestBase {
         assertEquals(cpk3.name, cpk.name);
         assertNotNull(cpk3.pic);
         assertEquals(cpk3.pic, picKey);
-
     }
 
+    @Test
+    public void testUpdateAll() {
+        getMorphia().map(EntityLogs.class, EntityLog.class);
+        String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
+        
+        EntityLogs logs = new EntityLogs();
+        logs.uuid = uuid;
+        getDs().save(logs);
+
+        Query<EntityLogs> finder = getDs().find(EntityLogs.class).field("uuid").equal(uuid); 
+        
+        // both of these entries will have a className attribute 
+        List<EntityLog> latestLogs = Arrays.asList(new EntityLog("whatever1"), new EntityLog("whatever2")); 
+        UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class) 
+                  .addAll("logs", latestLogs, false); 
+        getDs().update(finder, updateOperationsAll, true);
+        validateNoClassName(finder.get());
+
+        // this entry will NOT have a className attribute 
+        UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class) 
+                  .add("logs", new EntityLog("whatever3"), false); 
+        getDs().update(finder, updateOperations3, true); 
+        validateNoClassName(finder.get());
+        
+        // this entry will NOT have a className attribute 
+        UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class) 
+                  .add("logs", new EntityLog("whatever4"), false); 
+        getDs().update(finder, updateOperations4, true);
+        validateNoClassName(finder.get());
+    }
+
+    private void validateNoClassName(final EntityLogs loaded) {
+        List<DBObject> logs = (List<DBObject>) loaded.raw.get("logs");
+        for (DBObject o : logs) {
+            Assert.assertNull(o.get("className"));   
+        }
+    }
 }

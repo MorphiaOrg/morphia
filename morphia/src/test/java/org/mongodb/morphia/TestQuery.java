@@ -292,13 +292,26 @@ public class TestQuery extends TestBase {
     public void testRenamedFieldQuery() throws Exception {
         getDs().save(new ContainsRenamedFields());
 
-        ContainsRenamedFields ent;
+        assertNotNull(getDs().find(ContainsRenamedFields.class).field("firstName").equal("Scott").get());
 
-        ent = getDs().find(ContainsRenamedFields.class).field("firstName").equal("Scott").get();
-        assertNotNull(ent);
+        assertNotNull(getDs().find(ContainsRenamedFields.class).field("first_name").equal("Scott").get());
+        
+/*
+        ContainsRenamedFields entity;
 
-        ent = getDs().find(ContainsRenamedFields.class).field("first_name").equal("Scott").get();
-        assertNotNull(ent);
+        entity = getDs().find(ContainsRenamedFields.class)
+                     .field("first_name").equal("Scott")
+                     .retrievedFields(true, "first_name")
+                     .get();
+        assertNull(entity.lastName);
+
+        entity = getDs().find(ContainsRenamedFields.class)
+                                           .field("first_name").equal("Scott")
+                                           .retrievedFields(true, "firstName")
+                                           .get();
+        assertNull(entity.lastName);
+        
+*/
     }
 
     @Test
