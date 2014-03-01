@@ -2,7 +2,6 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedReference;
 
@@ -18,7 +17,6 @@ import java.util.Map;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@Ignore
 @SuppressWarnings("unchecked")
 public class ProxyTestBase extends TestBase {
 

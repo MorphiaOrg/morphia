@@ -19,7 +19,6 @@ package org.mongodb.morphia.issue80;
 
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -73,9 +72,7 @@ public class TestGenericInheritanceMappings extends TestBase {
         getMorphia().map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
     }
 
-    //Waiting on issue 80
     @Test
-    @Ignore
     public void testIt() throws Exception {
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();

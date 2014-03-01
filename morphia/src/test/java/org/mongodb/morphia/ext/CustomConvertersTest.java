@@ -19,7 +19,6 @@ package org.mongodb.morphia.ext;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DefaultDBDecoder;
@@ -27,7 +26,6 @@ import com.mongodb.DefaultDBEncoder;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Converters;
@@ -264,17 +262,11 @@ public class CustomConvertersTest extends TestBase {
      * However, the bson encoder would fail to encode the object of type A (as shown by {@link #testFullBSONSerialization()}).
      */
     @Test
-    @Ignore
     public void testDBObjectSerialization() {
         final MyEntity entity = new MyEntity(1L, new A(2L));
         final DBObject dbObject = getMorphia().toDBObject(entity);
-        assertEquals(BasicDBObjectBuilder.start("_id", 1L).add("a", 2L).get(), dbObject);
-        // fails with a
-        // org.mongodb.morphia.mapping.MappingException: No usable
-        // constructor
-        // for InheritanceTest$A
-        final MyEntity actual = getMorphia().fromDBObject(MyEntity.class, dbObject);
-        assertEquals(entity, actual);
+        assertEquals(new BasicDBObject("_id", 1L).append("a", new BasicDBObject("value", 2)), dbObject);
+        assertEquals(entity, getMorphia().fromDBObject(MyEntity.class, dbObject));
     }
 
     /**

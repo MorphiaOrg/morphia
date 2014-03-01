@@ -7,8 +7,10 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.mapping.validation.ConstraintViolationException;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -23,13 +25,15 @@ public class RegisterAfterUseTest extends TestBase {
         private List l;
     }
 
-    @Test
-    @Ignore(value = "not yet implemented")
+    @Test(expected = ConstraintViolationException.class)
+    @Ignore("https://github.com/mongodb/morphia/issues/583")
     public void testRegisterAfterUse() throws Exception {
 
-        // this would have failed: morphia.map(Broken.class);
+        // this would have failed: 
+//        getMorphia().map(Broken.class);
 
         final Broken b = new Broken();
+        b.l = Arrays.asList(1,2,3,4);
         getDs().save(b); // imho must not work
         Assert.fail();
 

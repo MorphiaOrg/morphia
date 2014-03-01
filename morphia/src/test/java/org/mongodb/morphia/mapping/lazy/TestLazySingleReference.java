@@ -2,7 +2,6 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
@@ -97,10 +96,7 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     @Test
-    @Ignore
-    // FIXME us
     public final void testSameProxy() {
-        // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }

@@ -168,7 +168,6 @@ public class TestPerf extends TestBase {
     }
 
     @Test
-    @Ignore
     public void testAddressLoadPerformance() throws Exception {
         insertAddresses(5001, true, false);
 
