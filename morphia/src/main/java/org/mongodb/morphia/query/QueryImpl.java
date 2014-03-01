@@ -207,7 +207,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (limit > 0) {
             cursor.limit(limit);
         }
-        if (batchSize > 0) {
+        if (batchSize != 0) {
             cursor.batchSize(batchSize);
         }
         if (snapshotted) {

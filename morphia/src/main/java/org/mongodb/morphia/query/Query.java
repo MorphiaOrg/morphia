@@ -71,7 +71,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   /**
    * Limit the fetched result set to a certain number of values.
    *
-   * @param value must be >= 0.  A value of 0 indicates no limit.
+   * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link #batchSize(int)} which is the preferred 
+   *              method
    */
   Query<T> limit(int value);
 

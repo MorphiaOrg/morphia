@@ -30,10 +30,10 @@ public class RegisterAfterUseTest extends TestBase {
     public void testRegisterAfterUse() throws Exception {
 
         // this would have failed: 
-//        getMorphia().map(Broken.class);
+        //        getMorphia().map(Broken.class);
 
         final Broken b = new Broken();
-        b.l = Arrays.asList(1,2,3,4);
+        b.l = Arrays.asList(1, 2, 3, 4);
         getDs().save(b); // imho must not work
         Assert.fail();
 

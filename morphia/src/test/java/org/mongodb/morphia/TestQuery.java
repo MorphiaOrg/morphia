@@ -444,6 +444,18 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testNegativeBatchSize() throws Exception {
+        getDs().delete(getDs().find(PhotoWithKeywords.class));
+        getDs().save(new PhotoWithKeywords("scott", "hernandez"),
+                     new PhotoWithKeywords("scott", "hernandez"),
+                     new PhotoWithKeywords("scott", "hernandez"));
+        getDs().save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
+        final List<PhotoWithKeywords> list = getDs().find(PhotoWithKeywords.class)
+                                               .batchSize(-2)
+                                               .asList();
+        Assert.assertEquals(2, list.size());
+    }
+    @Test
     public void testSnapshottedQuery() throws Exception {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
         getDs().save(new PhotoWithKeywords("scott", "hernandez"),
