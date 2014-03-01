@@ -20,12 +20,10 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.testmodel.Rectangle;
 
@@ -45,25 +43,11 @@ import static org.junit.Assert.assertTrue;
 public class TestIdField extends TestBase {
 
     @Entity
-    private static class ReferenceAsId {
-        @Id
-        @Reference
-        private Rectangle id;
-
-        protected ReferenceAsId() {
-        }
-
-        public ReferenceAsId(final Rectangle key) {
-            id = key;
-        }
-    }
-
-    @Entity
     private static class KeyAsId {
         @Id
         private Key<?> id;
 
-        protected KeyAsId() {
+        private KeyAsId() {
         }
 
         public KeyAsId(final Key<?> key) {
@@ -133,23 +117,6 @@ public class TestIdField extends TestBase {
             result = 31 * result + myIdPart2.hashCode();
             return result;
         }
-    }
-
-    @Test
-    @Ignore("need to set the _db in the dbRef for this to work... see issue 90")
-    public void testReferenceAsId() throws Exception {
-        getMorphia().map(ReferenceAsId.class);
-
-        final Rectangle r = new Rectangle(1, 1);
-        final Key<Rectangle> rKey = getDs().save(r);
-
-        final ReferenceAsId rai = new ReferenceAsId(r);
-        final Key<ReferenceAsId> raiKey = getDs().save(rai);
-        final ReferenceAsId raiLoaded = getDs().get(ReferenceAsId.class, rKey);
-        assertNotNull(raiLoaded);
-        assertEquals(raiLoaded.id.getArea(), r.getArea(), 0);
-
-        assertNotNull(raiKey);
     }
 
     @Test
