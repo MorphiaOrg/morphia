@@ -98,13 +98,17 @@ public class JDKLogger implements Logr {
     }
 
     protected void log(final Level l, final String m, final Throwable t) {
-        final String[] callerInfo = getCaller(new Throwable());
-        logger.logp(l, callerInfo[0], callerInfo[1], m, t);
+        if (logger.isLoggable(l)) {
+            final String[] callerInfo = getCaller(new Throwable());
+            logger.logp(l, callerInfo[0], callerInfo[1], m, t);
+        }
     }
 
     protected void log(final Level l, final String f, final Object... a) {
-        final String[] callerInfo = getCaller(new Throwable());
-        logger.logp(l, callerInfo[0], callerInfo[1], f, a);
+        if (logger.isLoggable(l)) {
+            final String[] callerInfo = getCaller(new Throwable());
+            logger.logp(l, callerInfo[0], callerInfo[1], f, a);
+        }
     }
 
     /**
