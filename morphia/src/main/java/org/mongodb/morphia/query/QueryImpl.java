@@ -154,8 +154,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
         for (String field : fields) {
-            final StringBuffer sb = new StringBuffer(
-                                                        field); //validate might modify prop string to translate java field name to db 
+            final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db 
             // field 
             // name
             Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
@@ -498,7 +497,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             }
 
             if (validate) {
-                final StringBuffer sb = new StringBuffer(s);
+                final StringBuilder sb = new StringBuilder(s);
                 Mapper.validate(clazz, mapper, sb, FilterOperator.IN, "", true, false);
                 s = sb.toString();
             }

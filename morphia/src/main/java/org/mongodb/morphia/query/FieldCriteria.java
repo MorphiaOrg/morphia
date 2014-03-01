@@ -31,7 +31,7 @@ public class FieldCriteria extends AbstractCriteria {
     protected FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
                             final boolean validateNames, final boolean validateTypes, final boolean not) {
         //validate might modify prop string to translate java field name to db field name
-        final StringBuffer sb = new StringBuffer(fieldName);
+        final StringBuilder sb = new StringBuilder(fieldName);
         final MappedField mf = Mapper.validate(query.getEntityClass(), query.getDatastore().getMapper(), sb, op, value, validateNames,
                                                validateTypes);
 

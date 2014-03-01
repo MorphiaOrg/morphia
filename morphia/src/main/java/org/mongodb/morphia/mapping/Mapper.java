@@ -710,7 +710,7 @@ public class Mapper {
     /**
      * Validate the path, and value type, returning the mapped field for the field at the path
      */
-    public static MappedField validate(final Class clazz, final Mapper mapper, final StringBuffer origProp, final FilterOperator op,
+    public static MappedField validate(final Class clazz, final Mapper mapper, final StringBuilder origProp, final FilterOperator op,
                                        final Object val, final boolean validateNames, final boolean validateTypes) {
         //TODO: cache validations (in static?).
 

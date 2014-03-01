@@ -178,7 +178,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
         Object val = null;
         MappedField mf = null;
-        final StringBuffer sb = new StringBuffer(f);
+        final StringBuilder sb = new StringBuilder(f);
         if (validateNames || validateTypes) {
             mf = Mapper.validate(clazz, mapper, sb, FilterOperator.EQUAL, val, validateNames, validateTypes);
         }
