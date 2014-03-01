@@ -813,8 +813,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities, final WriteConcern wc) {
-        final DBCollection dbColl = db.getCollection(kind);
-        return insert(dbColl, entities, wc);
+        return insert(db.getCollection(kind), entities, wc);
     }
 
     public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities) {
@@ -823,25 +822,18 @@ public class DatastoreImpl implements AdvancedDatastore {
 
 
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        //TODO: Do this without creating another iterator
-        final DBCollection dbColl = getCollection(entities.iterator().next());
-        return insert(dbColl, entities, wc);
+        return insert(getCollection(entities.iterator().next()), entities, wc);
     }
 
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
+        //        return save(entities, wc);
         final List<DBObject> list = entities instanceof List
                                     ? new ArrayList<DBObject>(((List<T>) entities).size())
                                     : new ArrayList<DBObject>();
 
         final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         for (final T ent : entities) {
-            final MappedClass mc = mapper.getMappedClass(ent);
-            if (mc.getAnnotation(NotSaved.class) != null) {
-                throw new MappingException(
-                                              "Entity type: " + mc.getClazz().getName()
-                                              + " is marked as NotSaved which means you should not try to save it!");
-            }
-            list.add(entityToDBObj(ent, involvedObjects));
+            list.add(toDbObject(involvedObjects, ent));
         }
 
         final WriteResult wr = null;
@@ -862,6 +854,24 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return savedKeys;
+    }
+
+    private <T> DBObject toDbObject(final Map<Object, DBObject> involvedObjects, final T ent) {
+        final MappedClass mc = mapper.getMappedClass(ent);
+        if (mc.getAnnotation(NotSaved.class) != null) {
+            throw new MappingException(String.format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
+                                                     mc.getClazz().getName()));
+        }
+        DBObject dbObject = entityToDBObj(ent, involvedObjects);
+        List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
+        for (MappedField mappedField : versionFields) {
+            String name = mappedField.getNameToStore();
+            if (dbObject.get(name) == null) {
+                dbObject.put(name, 1);
+                mappedField.setFieldValue(ent, 1L);
+            }
+        }
+        return dbObject;
     }
 
     public <T> Iterable<Key<T>> insert(final T... entities) {
@@ -927,13 +937,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        Object first = null;
-        try {
-            first = entities.iterator().next();
-        } catch (Exception e) {
-            //do nothing
-        }
-        return save(entities, getWriteConcern(first));
+        return save(entities, getWriteConcern(entities.iterator().next()));
     }
 
     public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
@@ -996,10 +1000,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
         final String versionKeyName = mfVersion.getNameToStore();
-        final Long oldVersion = (Long) mfVersion.getFieldValue(entity);
-        final long newVersion = nextValue(oldVersion);
+
+        Long oldVersion = (Long) mfVersion.getFieldValue(entity);
+        long newVersion = nextValue(oldVersion);
+
         dbObj.put(versionKeyName, newVersion);
-        if (oldVersion != null && oldVersion > 0) {
+        mfVersion.setFieldValue(entity, newVersion);
+
+        if (idValue != null && newVersion != 1) {
             final UpdateResults<T> res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue)
                                                     .filter(versionKeyName, oldVersion), dbObj, false, false, wc);
 
@@ -1009,14 +1017,15 @@ public class DatastoreImpl implements AdvancedDatastore {
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
                                                                  entity.getClass().getName(), idValue, oldVersion));
             }
-        } else if (wc == null) {
-            wr = dbColl.save(dbObj);
         } else {
-            wr = dbColl.save(dbObj, wc);
+            if (wc == null) {
+                wr = dbColl.save(dbObj);
+            } else {
+                wr = dbColl.save(dbObj, wc);
+            }
         }
 
         //update the version.
-        mfVersion.setFieldValue(entity, newVersion);
         return wr;
     }
 
@@ -1043,9 +1052,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(unwrapped);
-        return save(dbColl, unwrapped, wc);
+        return save(getCollection(ProxyHelper.unwrap(entity)), ProxyHelper.unwrap(entity), wc);
     }
 
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {

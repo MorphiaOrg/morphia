@@ -19,7 +19,7 @@ package org.mongodb.morphia;
 
 
 import org.bson.types.ObjectId;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -36,9 +36,9 @@ public class TestVersionAnnotation extends TestBase {
 
     private static class B {
         @Id
-        private ObjectId id = new ObjectId();
+        private ObjectId id;
         @Version
-        private long version;
+        private Long version;
     }
 
     @Entity("Test")
@@ -48,36 +48,38 @@ public class TestVersionAnnotation extends TestBase {
         @Version
         private long version;
         private String name;
-
-        // getters/setters ...
     }
 
     @Entity("Test")
     public static class Foo extends BaseFoo {
         private int value;
-
-        // getters/setters ...
     }
 
-    @Ignore
     @Test(expected = ConcurrentModificationException.class)
     public void testVersion() throws Exception {
-
         final B b1 = new B();
-        try {
-            getDs().save(b1);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        final B b2 = new B();
-        b2.id = b1.id;
+        getDs().save(b1);
+        Assert.assertEquals(new Long(1), b1.version);
+
+        final B b2 = getDs().get(B.class, b1.id);
         getDs().save(b2);
+        Assert.assertEquals(new Long(2), b2.version);
+
+        getDs().save(b1);
+    }
+
+    @Test
+    public void testVersionedInserts() {
+        B[] bs = {new B(), new B(), new B(), new B(), new B()};
+        getAds().insert(bs);
+        for (B b : bs) {
+            Assert.assertNotNull(b.version);
+        }
     }
 
     @Test
     public void abstractParent() {
         getMorphia().map(Foo.class);
-        getMorphia().mapPackage(Foo.class.getPackage()
-                                         .toString());
+        getMorphia().mapPackage(Foo.class.getPackage().toString());
     }
 }
