@@ -771,9 +771,11 @@ public class Mapper {
             }
 
             if (validateTypes) {
-                if ((mf.isSingleValue() && !isCompatibleForOperator(mf.getType(), op, val))
-                    || ((mf.isMultipleValues()
-                         && !(isCompatibleForOperator(mf.getSubClass(), op, val) || isCompatibleForOperator(mf.getType(), op, val))))) {
+                boolean compatibleForType = isCompatibleForOperator(mf.getType(), op, val);
+                boolean compatibleForSubclass = isCompatibleForOperator(mf.getSubClass(), op, val);
+                
+                if ((mf.isSingleValue() && !compatibleForType)
+                    || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
 
                     if (LOG.isWarningEnabled()) {
                         LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
@@ -814,6 +816,8 @@ public class Mapper {
         if (value == null || type == null) {
             return true;
         } else if (op.equals(FilterOperator.EXISTS) && (value instanceof Boolean)) {
+            return true;
+        } else if (op.equals(FilterOperator.SIZE) && (type.isAssignableFrom(List.class) && value instanceof Integer)) {
             return true;
         } else if (op.equals(FilterOperator.IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
                                                     || Map.class.isAssignableFrom(value.getClass()))) {
