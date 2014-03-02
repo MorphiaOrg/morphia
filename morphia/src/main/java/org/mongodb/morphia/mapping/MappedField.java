@@ -12,7 +12,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Version;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
@@ -43,7 +43,7 @@ import java.util.Set;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
-    private static final Logr LOG = MorphiaLoggerFactory.get(MappedField.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
 
     /**

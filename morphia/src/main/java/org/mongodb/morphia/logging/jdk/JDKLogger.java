@@ -1,13 +1,11 @@
 package org.mongodb.morphia.logging.jdk;
 
 
-import org.mongodb.morphia.logging.Logr;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class JDKLogger implements Logr {
+public class JDKLogger implements org.mongodb.morphia.logging.Logger {
     private final transient Logger logger;
 
     public JDKLogger(final Class c) {

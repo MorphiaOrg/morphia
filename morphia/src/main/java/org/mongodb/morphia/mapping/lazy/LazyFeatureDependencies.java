@@ -1,7 +1,7 @@
 package org.mongodb.morphia.mapping.lazy;
 
 
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
 
@@ -10,7 +10,7 @@ import org.mongodb.morphia.logging.MorphiaLoggerFactory;
  */
 public final class LazyFeatureDependencies {
 
-  private static final Logr LOG = MorphiaLoggerFactory.get(LazyFeatureDependencies.class);
+  private static final Logger LOG = MorphiaLoggerFactory.get(LazyFeatureDependencies.class);
   private static Boolean fulFilled;
 
   private LazyFeatureDependencies() {

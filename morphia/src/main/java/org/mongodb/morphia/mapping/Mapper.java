@@ -34,7 +34,7 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.converters.DefaultConverters;
 import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.mapping.cache.EntityCache;
@@ -77,7 +77,7 @@ import static java.lang.String.format;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
-    private static final Logr LOG = MorphiaLoggerFactory.get(Mapper.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
 
     /**
      * The @{@link org.mongodb.morphia.annotations.Id} field name that is stored with mongodb.

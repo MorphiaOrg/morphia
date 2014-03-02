@@ -1,14 +1,10 @@
 package org.mongodb.morphia.logging.jdk;
 
-
-import org.mongodb.morphia.logging.Logr;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 @SuppressWarnings("rawtypes")
-public class FastestJDKLogger implements Logr {
+public class FastestJDKLogger implements org.mongodb.morphia.logging.Logger {
     private final Logger logger;
     private final transient String className;
 

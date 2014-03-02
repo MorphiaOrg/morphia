@@ -9,7 +9,7 @@ import org.junit.Assert;
 /**
  * @author us@thomas-daily.de
  */
-public class MorphiaLogrFactoryTest extends TestBase {
+public class MorphiaLoggerFactoryTest extends TestBase {
 
   static {
 
@@ -19,8 +19,8 @@ public class MorphiaLogrFactoryTest extends TestBase {
 
   @Test
   public void testChoice() throws Exception {
-    final Logr logr = MorphiaLoggerFactory.get(Object.class);
-    final String className = logr.getClass().getName();
+    final Logger logger = MorphiaLoggerFactory.get(Object.class);
+    final String className = logger.getClass().getName();
     Assert.assertTrue(className.startsWith(TestLoggerFactory.class.getName() + "$"));
   }
 
@@ -30,9 +30,9 @@ public class MorphiaLogrFactoryTest extends TestBase {
     super.tearDown();
   }
 
-  static class TestLoggerFactory implements LogrFactory {
-    public Logr get(final Class<?> c) {
-      return new Logr() {
+  static class TestLoggerFactory implements LoggerFactory {
+    public Logger get(final Class<?> c) {
+      return new org.mongodb.morphia.logging.Logger() {
 
         public void warning(final String msg, final Throwable t) {
 

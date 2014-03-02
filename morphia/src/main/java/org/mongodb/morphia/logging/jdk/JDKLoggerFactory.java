@@ -1,13 +1,13 @@
 package org.mongodb.morphia.logging.jdk;
 
 
-import org.mongodb.morphia.logging.Logr;
-import org.mongodb.morphia.logging.LogrFactory;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.LoggerFactory;
 
 
-public class JDKLoggerFactory implements LogrFactory {
+public class JDKLoggerFactory implements LoggerFactory {
 
-  public Logr get(final Class<?> c) {
+  public Logger get(final Class<?> c) {
     return new JDKLogger(c);
   }
 

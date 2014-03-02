@@ -4,7 +4,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
@@ -41,7 +41,7 @@ import static java.lang.String.format;
  */
 public class MappingValidator {
 
-    private static final Logr LOG = MorphiaLoggerFactory.get(MappingValidator.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(MappingValidator.class);
 
     public void validate(final List<MappedClass> classes) {
         final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
@@ -122,7 +122,7 @@ public class MappingValidator {
             this.v = v;
         }
 
-        void log(final Logr logger) {
+        void log(final Logger logger) {
             switch (v.getLevel()) {
                 case SEVERE:
                     logger.error(v.render());

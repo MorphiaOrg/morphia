@@ -12,7 +12,7 @@ import java.io.PrintStream;
 /**
  * @author us@thomas-daily.de
  */
-public class TestSLF4JLogrTest extends TestBase {
+public class SLF4JLoggerTest extends TestBase {
 
     private ByteArrayOutputStream baos;
     private PrintStream oldErr;
@@ -24,7 +24,7 @@ public class TestSLF4JLogrTest extends TestBase {
         baos = new ByteArrayOutputStream();
         System.setErr(new PrintStream(baos));
 
-        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+        MorphiaLoggerFactory.registerLogger(SLF4JLoggerImplFactory.class);
 
         super.setUp();
     }
@@ -50,7 +50,7 @@ public class TestSLF4JLogrTest extends TestBase {
         Assert.assertTrue(log.contains("instance of"));
         Assert.assertTrue(log.contains("java.lang.String"));
         Assert.assertTrue(log.contains("which is declared"));
-        Assert.assertTrue(log.contains("LoggerImplFactory set to org.mongodb.morphia.logging.slf4j.SLF4JLogrImplFactory"));
+        Assert.assertTrue(log.contains("LoggerImplFactory set to org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory"));
     }
 
 }

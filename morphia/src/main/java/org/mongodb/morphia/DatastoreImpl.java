@@ -29,7 +29,7 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
@@ -73,7 +73,7 @@ import static java.lang.String.format;
  * @author Scott Hernandez
  */
 public class DatastoreImpl implements AdvancedDatastore {
-    private static final Logr LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
     private final Mapper mapper;
     private final Mongo mongo;

@@ -20,7 +20,7 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.validation.MappingValidator;
 import org.mongodb.morphia.utils.ReflectionUtils;
@@ -61,7 +61,7 @@ public class MappedClass {
         }
     }
 
-    private static final Logr LOG = MorphiaLoggerFactory.get(MappedClass.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(MappedClass.class);
 
     /**
      * Annotations we are interested in looking for.

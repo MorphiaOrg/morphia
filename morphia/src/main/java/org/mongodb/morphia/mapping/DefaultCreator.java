@@ -4,7 +4,7 @@ package org.mongodb.morphia.mapping;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.ConstructorArgs;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +21,7 @@ import java.util.Set;
  * @author ScottHernandez
  */
 public class DefaultCreator implements ObjectFactory {
-    private static final Logr LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
 
     /* (non-Javadoc)
      * @see org.mongodb.morphia.ObjectFactory#createInstance(java.lang.Class)

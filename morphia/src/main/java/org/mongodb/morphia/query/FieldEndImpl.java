@@ -1,7 +1,7 @@
 package org.mongodb.morphia.query;
 
 
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.Assert;
 
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
-  private static final Logr LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
+  private static final Logger LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
   private final QueryImpl<?> query;
   private final String       field;

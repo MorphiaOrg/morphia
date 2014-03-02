@@ -8,7 +8,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 class ReferenceMapper implements CustomMapper {
-    public static final Logr LOG = MorphiaLoggerFactory.get(ReferenceMapper.class);
+    public static final Logger LOG = MorphiaLoggerFactory.get(ReferenceMapper.class);
 
     public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
                            final Mapper mapper) {

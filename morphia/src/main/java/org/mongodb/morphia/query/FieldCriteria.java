@@ -3,7 +3,7 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 public class FieldCriteria extends AbstractCriteria {
-    private static final Logr LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
 
     private final String field;
     private final FilterOperator operator;

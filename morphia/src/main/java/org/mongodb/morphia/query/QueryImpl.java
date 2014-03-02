@@ -14,7 +14,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
@@ -37,7 +37,7 @@ import static java.lang.String.format;
  * @author Scott Hernandez
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
-    private static final Logr LOG = MorphiaLoggerFactory.get(QueryImpl.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
 
     private EntityCache cache;
     private boolean validateName = true;

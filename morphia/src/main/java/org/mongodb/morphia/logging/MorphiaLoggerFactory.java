@@ -10,9 +10,9 @@ import java.util.List;
 
 @SuppressWarnings({"unchecked"})
 public final class MorphiaLoggerFactory {
-    private static LogrFactory loggerFactory;
+    private static LoggerFactory loggerFactory;
 
-    private static final List<String> FACTORIES = new ArrayList(Arrays.asList("org.mongodb.morphia.logging.slf4j.SLF4JLogrImplFactory",
+    private static final List<String> FACTORIES = new ArrayList(Arrays.asList("org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory",
                                                                               JDKLoggerFactory.class.getName()));
 
     private MorphiaLoggerFactory() {
@@ -35,15 +35,15 @@ public final class MorphiaLoggerFactory {
         throw new IllegalStateException("Cannot instantiate any MorphiaLoggerFactory");
     }
 
-    private static LogrFactory newInstance(final String f) {
+    private static LoggerFactory newInstance(final String f) {
         try {
-            return (LogrFactory) Class.forName(f).newInstance();
+            return (LoggerFactory) Class.forName(f).newInstance();
         } catch (Throwable ignore) {
             return null;
         }
     }
 
-    public static Logr get(final Class<?> c) {
+    public static Logger get(final Class<?> c) {
         init();
         return loggerFactory.get(c);
     }
@@ -51,7 +51,7 @@ public final class MorphiaLoggerFactory {
     /**
      * Register a LoggerFactory; last one registered is used. *
      */
-    public static void registerLogger(final Class<? extends LogrFactory> factoryClass) {
+    public static void registerLogger(final Class<? extends LoggerFactory> factoryClass) {
         if (loggerFactory == null) {
             FACTORIES.add(0, factoryClass.getName());
         } else {

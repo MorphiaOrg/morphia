@@ -3,7 +3,7 @@ package org.mongodb.morphia.converters;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings({"rawtypes" })
 public class DefaultConverters {
-  private static final Logr LOG = MorphiaLoggerFactory.get(DefaultConverters.class);
+  private static final Logger LOG = MorphiaLoggerFactory.get(DefaultConverters.class);
 
   private final List<TypeConverter>                  untypedTypeEncoders        = new LinkedList<TypeConverter>();
   private final Map<Class, List<TypeConverter>>      tcMap                      = new ConcurrentHashMap<Class, List<TypeConverter>>();

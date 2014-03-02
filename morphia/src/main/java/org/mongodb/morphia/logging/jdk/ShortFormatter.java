@@ -1,7 +1,7 @@
 package org.mongodb.morphia.logging.jdk;
 
 
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
 import java.io.PrintWriter;
@@ -14,7 +14,7 @@ import java.util.logging.LogRecord;
 
 public class ShortFormatter extends Formatter {
     private static final MessageFormat FORMAT = new MessageFormat("[{1}|{2}|{3,date,h:mm:ss}]{0} :{4}");
-    private static final Logr LOG = MorphiaLoggerFactory.get(ShortFormatter.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(ShortFormatter.class);
 
     @Override
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")

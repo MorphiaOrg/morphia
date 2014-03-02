@@ -32,7 +32,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
 
@@ -48,7 +48,7 @@ import java.util.List;
 @Ignore("This seems an arbitrary boundary to check against and fails intermittently on jenkins")
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class TestPerf extends TestBase {
-    private static final Logr LOG = MorphiaLoggerFactory.get(TestPerf.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(TestPerf.class);
 
     private static final double WRITE_FAIL_FACTOR = 1.75;
     private static final double READ_FAIL_FACTOR = 1.75;

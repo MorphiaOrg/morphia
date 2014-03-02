@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author doc
  */
 public class QueryImplCloneTest extends TestBase {
-    private static final Logr LOG = MorphiaLoggerFactory.get(QueryImplCloneTest.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(QueryImplCloneTest.class);
 
     private static final List<String> ALLOWED = Arrays.asList("cache", "query");
 

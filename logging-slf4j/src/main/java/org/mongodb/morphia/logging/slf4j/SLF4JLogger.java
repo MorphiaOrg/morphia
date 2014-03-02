@@ -3,13 +3,12 @@ package org.mongodb.morphia.logging.slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mongodb.morphia.logging.Logr;
 
 
-public class SLF4JLogr implements Logr {
+public class SLF4JLogger implements org.mongodb.morphia.logging.Logger {
   private final Logger logger;
 
-  public SLF4JLogr(final Class<?> c) {
+  public SLF4JLogger(final Class<?> c) {
     this.logger = LoggerFactory.getLogger(c);
   }
 

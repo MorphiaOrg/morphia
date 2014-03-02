@@ -4,7 +4,7 @@ package org.mongodb.morphia.logging;
 /**
  * Silent logger; it doesn't do anything!
  */
-public class SilentLogger implements Logr {
+public class SilentLogger implements Logger {
   public boolean isTraceEnabled() {
     return false;
   }

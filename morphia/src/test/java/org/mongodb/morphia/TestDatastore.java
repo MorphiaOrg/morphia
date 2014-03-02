@@ -35,7 +35,7 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.UpdateException;
@@ -58,7 +58,7 @@ import static org.junit.Assert.assertTrue;
  * @author Scott Hernandez
  */
 public class TestDatastore extends TestBase {
-    private static final Logr LOG = MorphiaLoggerFactory.get(TestDatastore.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(TestDatastore.class);
 
     @Entity("facebook_users")
     public static class FacebookUser {
