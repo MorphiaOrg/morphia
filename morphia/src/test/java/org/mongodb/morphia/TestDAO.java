@@ -50,7 +50,7 @@ public class TestDAO extends TestBase {
 
         final Hotel borg = new Hotel();
         borg.setName("Hotel Borg");
-        borg.setStars(4);
+        borg.setStars(3);
         borg.setTakesCreditCards(true);
         borg.setStartDate(new Date());
         borg.setType(Hotel.Type.LEISURE);
@@ -72,7 +72,7 @@ public class TestDAO extends TestBase {
         assertNotNull(hotelByValue);
         assertEquals(borg.getStartDate(), hotelByValue.getStartDate());
 
-        assertTrue(hotelDAO.exists("stars", 4));
+        assertTrue(hotelDAO.exists("stars", 3));
 
         final Hotel hilton = new Hotel();
         hilton.setName("Hilton Hotel");
@@ -88,22 +88,36 @@ public class TestDAO extends TestBase {
 
         hotelDAO.save(hilton);
 
-        final List<Hotel> allHotels = hotelDAO.find().asList();
-        assertEquals(2, allHotels.size());
+        assertEquals(2, hotelDAO.find().asList().size());
+        
         assertEquals(2, hotelDAO.findIds().size());
+        
+        List<ObjectId> names = hotelDAO.findIds("name", hilton.getName());
+        assertEquals(1, names.size());
+        assertEquals(hilton.getId(), names.get(0));
+        
+        List<ObjectId> stars = hotelDAO.findIds(getDs().createQuery(Hotel.class).field("stars").equal(4));
+        assertEquals(1, stars.size());
+        assertEquals(hilton.getId(), stars.get(0));
+        
+        assertEquals(borg.getId(), hotelDAO.findOneId().getId());
+
+        assertEquals(hilton.getId(), hotelDAO.findOneId("name", hilton.getName()).getId());
+
+        assertEquals(hilton.getId(), hotelDAO.findOneId(getDs().createQuery(Hotel.class).field("stars").equal(4)).getId());
 
         assertEquals(1, hotelDAO.find(hotelDAO.createQuery().offset(1).limit(10)).asList().size());
         assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
-        assertEquals(0, hotelDAO.count(hotelDAO.createQuery().field("stars").notEqual(4)));
+        assertEquals(1, hotelDAO.count(hotelDAO.createQuery().field("stars").notEqual(4)));
         assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").lessThan(5)));
-        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").greaterThanOrEq(4)));
+        assertEquals(1, hotelDAO.count(hotelDAO.createQuery().field("stars").greaterThanOrEq(4)));
         assertEquals(2, hotelDAO.count(hotelDAO.createQuery().field("stars").lessThan(5)));
         assertEquals(1, hotelDAO.count(hotelDAO.createQuery().field("phoneNumbers").sizeEq(1)));
-        assertEquals(2, hotelDAO.count(hotelDAO.createQuery().filter("stars", 4).order("address.address_street")));
-        assertEquals(borg.getName(),
+        assertEquals(1, hotelDAO.count(hotelDAO.createQuery().filter("stars", 4).order("address.address_street")));
+        assertEquals(hilton.getName(),
                      hotelDAO.find(hotelDAO.createQuery().filter("stars", 4).order("address.address_street")).iterator().next()
                              .getName());
         assertEquals(hilton.getName(), hotelDAO.find(hotelDAO.createQuery().filter("stars", 4).order("-address.address_street")).iterator()

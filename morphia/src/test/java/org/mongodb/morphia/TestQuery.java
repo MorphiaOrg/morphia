@@ -455,6 +455,7 @@ public class TestQuery extends TestBase {
                                                .asList();
         Assert.assertEquals(2, list.size());
     }
+    
     @Test
     public void testSnapshottedQuery() throws Exception {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
