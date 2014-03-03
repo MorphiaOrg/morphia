@@ -199,6 +199,14 @@ public class TestQuery extends TestBase {
         private String firstName = "Scott";
         @Property("last_name")
         private String lastName = "Hernandez";
+
+        public ContainsRenamedFields() {
+        }
+
+        public ContainsRenamedFields(final String firstName, final String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
     }
 
     @Entity
@@ -518,6 +526,17 @@ public class TestQuery extends TestBase {
         assertNotNull(pwkLoaded);
         Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
         assertEquals(3, pwkLoaded.keywords.size());
+    }
+
+    @Test
+    public void testRetrievedFields() throws Exception {
+        getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
+        getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
+        try {
+            getDs().find(ContainsRenamedFields.class).retrievedFields(true, "bad field name").get();
+            Assert.fail("Validation should have caught the bad field");
+        } catch (ValidationException e) {
+        }
     }
 
     @Test

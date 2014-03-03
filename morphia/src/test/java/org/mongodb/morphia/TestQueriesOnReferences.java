@@ -125,7 +125,7 @@ public class TestQueriesOnReferences extends TestBase {
 
         getDs().delete(p);
 
-        List<ContainsPic> list = getDs().createQuery(ContainsPic.class).asList();
+        getDs().createQuery(ContainsPic.class).asList();
     }
 }
 
