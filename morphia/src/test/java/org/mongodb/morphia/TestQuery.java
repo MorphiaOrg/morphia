@@ -459,11 +459,11 @@ public class TestQuery extends TestBase {
                      new PhotoWithKeywords("scott", "hernandez"));
         getDs().save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
         final List<PhotoWithKeywords> list = getDs().find(PhotoWithKeywords.class)
-                                               .batchSize(-2)
-                                               .asList();
+                                                 .batchSize(-2)
+                                                 .asList();
         Assert.assertEquals(2, list.size());
     }
-    
+
     @Test
     public void testSnapshottedQuery() throws Exception {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
@@ -536,6 +536,7 @@ public class TestQuery extends TestBase {
             getDs().find(ContainsRenamedFields.class).retrievedFields(true, "bad field name").get();
             Assert.fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
+            // success!
         }
     }
 
@@ -927,9 +928,9 @@ public class TestQuery extends TestBase {
 
         assertEquals(2, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height >", 3).filter("height <", 8)));
         assertEquals(1, getDs().getCount(getDs().createQuery(Rectangle.class)
-                                          .filter("height >", 3)
-                                          .filter("height <", 8)
-                                          .filter("width", 10)));
+                                             .filter("height >", 3)
+                                             .filter("height <", 8)
+                                             .filter("width", 10)));
     }
 
     @Test
@@ -1031,14 +1032,14 @@ public class TestQuery extends TestBase {
         final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, key);
         Assert.assertEquals(value.id, byKey.id);
     }
-    
+
     @Test
     public void maxScan() {
         final Pic pic1 = new Pic("pic1");
         final Pic pic2 = new Pic("pic2");
         final Pic pic3 = new Pic("pic3");
         final Pic pic4 = new Pic("pic4");
-        
+
         getDs().save(pic1, pic2, pic3, pic4);
 
         Assert.assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());

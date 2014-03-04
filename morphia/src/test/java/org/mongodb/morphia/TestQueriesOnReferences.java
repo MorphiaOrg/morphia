@@ -10,8 +10,6 @@ import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.query.Query;
 
-import java.util.List;
-
 
 public class TestQueriesOnReferences extends TestBase {
     @Entity
@@ -108,11 +106,11 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Assert.assertNotNull(getDs().createQuery(ContainsPic.class)
-                                      .field("pic").exists()
-                                      .retrievedFields(true, "pic").get());
+                                 .field("pic").exists()
+                                 .retrievedFields(true, "pic").get());
         Assert.assertNull(getDs().createQuery(ContainsPic.class)
-                                      .field("pic").doesNotExist()
-                                      .retrievedFields(true, "pic").get());
+                              .field("pic").doesNotExist()
+                              .retrievedFields(true, "pic").get());
     }
 
     @Test(expected = MappingException.class)
