@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
 
@@ -39,7 +39,7 @@ import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 
 public class AggregationTest extends TestBase {
-    private static final Logr LOG = MorphiaLoggerFactory.get(AggregationTest.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(AggregationTest.class);
 
     @Test
     public void testOut() {

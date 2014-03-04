@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
@@ -41,7 +41,7 @@ import static org.mongodb.morphia.aggregation.Sort.ascending;
  * @see <a href="http://docs.mongodb.org/manual/tutorial/aggregation-zip-code-data-set/">Aggregation with the Zip Code Data Set</a>
  */
 public class ZipCodeDataSetTest extends TestBase {
-    private static final Logr LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
         File file = new File("zips.json");

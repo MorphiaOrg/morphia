@@ -7,7 +7,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoCursor;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.DatastoreImpl;
-import org.mongodb.morphia.logging.Logr;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> {
-    private static final Logr LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
+    private static final Logger LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
 
     private final DBCollection collection;
     private final Class<T> source;

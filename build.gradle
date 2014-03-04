@@ -130,21 +130,20 @@ project(':morphia') {
         manifest {
         }
     }
-    
+
     dependencies {
         if (project.hasProperty('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
-        } else if (project.hasProperty('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-SNAPSHOT", changing: true
-            println "Building with the 2.x java driver"
         } else {
-            compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-rc0"
+            println "Building with the 2.12 java driver"
         }
 
         provided 'cglib:cglib-nodep:[2.1_3,3.0)'
         provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
         provided 'com.google.code.findbugs:findbugs:2.0.2'
+        testCompile 'org.zeroturnaround:zt-exec:1.5'
     }
 }
 
