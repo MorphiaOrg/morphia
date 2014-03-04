@@ -2,30 +2,24 @@ apply plugin: 'release'
 apply plugin: 'console'
 apply plugin: 'github'
 
-version = project('morphia').version
-
-def bumpVersion(String v) {
-    v.replaceAll(
-        /(\d+)\.(\d+)\.*/,
-        { m -> "${m[1]}.${(m[2] as int) + 1}-SNAPSHOT" }
-    )
-}
-
 github {
-    repo = 'git@github.com:mongodb/morphia.git'
-
     wiki {
         from(project(':morphia').javadoc.outputs.files)
         into { "javadoc/$project.release.version" }
     }
 
+/*
     release {
         tag = { "r$project.release.version" }
         name = { "$project.release.version" }
     }
+*/
 }
 
 release {
+    version {
+        project('morphia').version
+    }
 
 /*
     doFirst {
@@ -35,27 +29,12 @@ release {
     }
 */
 
-    version = project.version - '-SNAPSHOT'
-    tag = { "r$project.release.version" }
-    commitMessage = { "Release $project.release.version" }
-
     update {
         file project.file('build.gradle')
         projects allprojects
     }
 
-    next {
-        version = bumpVersion(project.release.version)
-        commitMessage = { "Bumping version to $project.release.next.version" }
-    }
-
-/*
-    githubRelease {
-        releaseNotes = { "We're too good for default notes.  Here's ${project.release.version}." }
-    }
-*/
-
-    dependsOn subprojects.uploadArchives
+//    dependsOn subprojects.uploadArchives
 //    dependsOn publishWiki
-    dependsOn draftGhRelease
+//    dependsOn draftGhRelease
 }
