@@ -7,13 +7,6 @@ github {
         from(project(':morphia').javadoc.outputs.files)
         into { "javadoc/$project.release.version" }
     }
-
-/*
-    release {
-        tag = { "r$project.release.version" }
-        name = { "$project.release.version" }
-    }
-*/
 }
 
 release {
@@ -33,8 +26,8 @@ release {
         file project.file('build.gradle')
         projects allprojects
     }
-
-//    dependsOn subprojects.uploadArchives
-//    dependsOn publishWiki
-//    dependsOn draftGhRelease
+    
+//    tagRelease false
+//    createRelease false
+//    pushChanges false
 }
