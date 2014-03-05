@@ -2,9 +2,9 @@ package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.MongoCursor;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.logging.Logger;
@@ -166,7 +166,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options) {
         LOG.debug("stages = " + stages);
 
-        MongoCursor cursor = collection.aggregate(stages, options);
+        Cursor cursor = collection.aggregate(stages, options);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
 
@@ -177,7 +177,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     public MorphiaIterator<U, U> aggregate(final AggregationOptions options, final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
-        MongoCursor cursor = collection.aggregate(stages, options, readPreference);
+        Cursor cursor = collection.aggregate(stages, options, readPreference);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
 }
