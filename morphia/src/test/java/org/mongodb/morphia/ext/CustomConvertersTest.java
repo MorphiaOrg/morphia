@@ -265,7 +265,7 @@ public class CustomConvertersTest extends TestBase {
     public void testDBObjectSerialization() {
         final MyEntity entity = new MyEntity(1L, new A(2L));
         final DBObject dbObject = getMorphia().toDBObject(entity);
-        assertEquals(new BasicDBObject("_id", 1L).append("a", new BasicDBObject("value", 2)), dbObject);
+        assertEquals(new BasicDBObject("_id", 1L).append("a", new BasicDBObject("value", 2L)), dbObject);
         assertEquals(entity, getMorphia().fromDBObject(MyEntity.class, dbObject));
     }
 

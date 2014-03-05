@@ -44,7 +44,12 @@ public final class GeoNear {
     }
 
     public double[] getNear() {
-        return near;
+        double[] copy = new double[0];
+        if (near != null) {
+            copy = new double[near.length];
+            System.arraycopy(near, 0, copy, 0, near.length);
+        }
+        return copy;
     }
 
     public String getDistanceField() {
@@ -145,7 +150,7 @@ public final class GeoNear {
          * Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
          *
          * @see <a href="http://docs.mongodb.org/manual/tutorial/query-documents/#read-operations-query-argument">MongoDB read operation
-         *      query syntax</a>
+         * query syntax</a>
          */
         public GeoNearBuilder setQuery(final Query query) {
             this.query = query;
