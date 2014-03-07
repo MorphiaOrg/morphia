@@ -43,7 +43,18 @@ import static org.mongodb.morphia.aggregation.Sort.ascending;
  */
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
-    public static final String MONGO_IMPORT = "/usr/local/bin/mongoimport";
+    public static final String MONGO_IMPORT;
+
+    static {
+        String property = System.getProperty("mongodb_server");
+        String serverType = property != null ? property.replaceAll("-release", "") : "UNKNOWN";
+        String path = String.format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property);
+        if (new File(path).exists()) {
+            MONGO_IMPORT = path;
+        } else {
+            MONGO_IMPORT = "/usr/local/bin/mongoimport";
+        }
+    }
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
         File file = new File("zips.json");
@@ -85,11 +96,11 @@ public class ZipCodeDataSetTest extends TestBase {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
- 
+
         AggregationPipeline<City, Population> pipeline
             = getDs().createAggregation(City.class, Population.class)
-                  .group("state", grouping("totalPop", sum("pop")))
-                  .match(query.field("totalPop").greaterThanOrEq(10000000));
+                     .group("state", grouping("totalPop", sum("pop")))
+                     .match(query.field("totalPop").greaterThanOrEq(10000000));
 
 
         validate(pipeline.aggregate(), "CA", 29760021);
@@ -101,8 +112,8 @@ public class ZipCodeDataSetTest extends TestBase {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
-                                                             .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-                                                             .group("_id.state", grouping("avgCityPop", average("pop")));
+                                                                .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+                                                                .group("_id.state", grouping("avgCityPop", average("pop")));
         validate(pipeline.aggregate(), "MN", 5335);
     }
 
@@ -112,29 +123,29 @@ public class ZipCodeDataSetTest extends TestBase {
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
         AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
-                                                        
-                                                        .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-                                                        
-                                                        .sort(ascending("pop"))
-                                                        
-                                                        .group("_id.state",
-                                                               grouping("biggestCity", last("_id.city")),
-                                                               grouping("biggestPop", last("pop")),
-                                                               grouping("smallestCity", first("_id.city")),
-                                                               grouping("smallestPop", first("pop"))
-                                                              )
-                                                        
-                                                        .project(projection("_id").suppress(),
-                                                                 projection("state", "_id"),
-                                                                 projection("biggestCity",
-                                                                            projection("name", "biggestCity"),
-                                                                            projection("pop", "biggestPop")
-                                                                           ),
-                                                                 projection("smallestCity",
-                                                                            projection("name", "smallestCity"),
-                                                                            projection("pop", "smallestPop")
-                                                                           )
-                                                                );
+
+                                                           .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+
+                                                           .sort(ascending("pop"))
+
+                                                           .group("_id.state",
+                                                                  grouping("biggestCity", last("_id.city")),
+                                                                  grouping("biggestPop", last("pop")),
+                                                                  grouping("smallestCity", first("_id.city")),
+                                                                  grouping("smallestPop", first("pop"))
+                                                                 )
+
+                                                           .project(projection("_id").suppress(),
+                                                                    projection("state", "_id"),
+                                                                    projection("biggestCity",
+                                                                               projection("name", "biggestCity"),
+                                                                               projection("pop", "biggestPop")
+                                                                              ),
+                                                                    projection("smallestCity",
+                                                                               projection("name", "smallestCity"),
+                                                                               projection("pop", "smallestPop")
+                                                                              )
+                                                                   );
 
         MorphiaIterator<State, State> iterator = pipeline.aggregate();
         Map<String, State> states = new HashMap<String, State>();
