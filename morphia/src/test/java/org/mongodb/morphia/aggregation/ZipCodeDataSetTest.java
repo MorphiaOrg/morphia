@@ -3,6 +3,7 @@ package org.mongodb.morphia.aggregation;
 import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.AlsoLoad;
@@ -42,6 +43,7 @@ import static org.mongodb.morphia.aggregation.Sort.ascending;
  */
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
+    public static final String MONGO_IMPORT = "/usr/local/bin/mongoimport";
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
         File file = new File("zips.json");
@@ -53,7 +55,7 @@ public class ZipCodeDataSetTest extends TestBase {
         }
         DBCollection zips = getDb().getCollection("zips");
         if (zips.count() == 0) {
-            new ProcessExecutor().command("/usr/local/bin/mongoimport",
+            new ProcessExecutor().command(MONGO_IMPORT,
                                           "--db", getDb().getName(),
                                           "--collection", "zipcodes",
                                           "--file", file.getAbsolutePath())
@@ -80,6 +82,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
  
@@ -95,6 +98,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
                                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
@@ -104,6 +108,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
         AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
