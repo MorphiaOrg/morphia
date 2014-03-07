@@ -57,7 +57,10 @@ public enum FilterOperator {
 
     NEAR_SPHERE("$nearSphere"),
 
+    WITHIN("$within", "within"),
+    
     GEO_WITHIN("$geoWithin", "geoWithin") {
+/*
         @Override
         public boolean matches(final String filter) {
             boolean match = "within".equals(filter);
@@ -66,8 +69,8 @@ public enum FilterOperator {
             }
             return match || "geoWithin".equals(filter);
         }
-    },
-    ;
+*/
+    };
 
     private final String value;
     private final List<String> filters;

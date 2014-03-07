@@ -81,7 +81,7 @@ public class TestAnnotatedWriteConcern extends TestBase {
             getAds().insert(new Simple("simple"));
             fail("Duplicate Exception was not raised!");
         } catch (Exception e) {
+            assertEquals(1L, getDs().getCount(Simple.class));
         }
-        assertEquals(1L, getDs().getCount(Simple.class));
     }
 }
