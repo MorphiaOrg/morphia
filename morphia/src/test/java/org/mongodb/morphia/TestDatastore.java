@@ -360,7 +360,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testSaveAndDelete() throws Exception {
+    public void testSaveAndDelete() {
         getDs().getCollection(Rectangle.class).drop();
 
         final Rectangle rect = new Rectangle(10, 10);
@@ -411,7 +411,8 @@ public class TestDatastore extends TestBase {
 
         //test delete(Class, {id}) with one left
         id1 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
-        id2 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
+        Key<Rectangle> save = getDs().save(new Rectangle(20, 20));
+        id2 = (ObjectId) save.getId();
         assertEquals(2, getDs().getCount(rect));
         getDs().delete(Rectangle.class, Arrays.asList(id1));
         assertEquals(1, getDs().getCount(rect));

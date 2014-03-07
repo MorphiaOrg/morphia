@@ -25,6 +25,7 @@ import org.mongodb.morphia.annotations.Id;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -74,15 +75,13 @@ public class TestAnnotatedWriteConcern extends TestBase {
 
     @Test
     public void noneWriteConcern() throws Exception {
-        boolean failed = false;
-        getDs().setDefaultWriteConcern(WriteConcern.NONE);
+        getDs().setDefaultWriteConcern(WriteConcern.UNACKNOWLEDGED);
         try {
             getAds().insert(new Simple("simple"));
             getAds().insert(new Simple("simple"));
+            fail("Duplicate Exception was not raised!");
         } catch (Exception e) {
-            failed = true;
         }
         assertEquals(1L, getDs().getCount(Simple.class));
-        assertTrue("Duplicate Exception was raised!", failed);
     }
 }

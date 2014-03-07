@@ -1,55 +1,99 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static java.lang.String.format;
+
 /**
  * @author Scott Hernandez
  */
 public enum FilterOperator {
-  NEAR("$near"),
-  NEAR_SPHERE("$nearSphere"),
-  WITHIN("$within"),
-  WITHIN_CIRCLE("$center"),
-  WITHIN_CIRCLE_SPHERE("$centerSphere"),
-  WITHIN_BOX("$box"),
-  EQUAL("$eq"),
-  GEO_WITHIN("$geoWithin"),
-  GREATER_THAN("$gt"),
-  GREATER_THAN_OR_EQUAL("$gte"),
-  LESS_THAN("$lt"),
-  LESS_THAN_OR_EQUAL("$lte"),
-  EXISTS("$exists"),
-  TYPE("$type"),
-  NOT("$not"),
-  MOD("$mod"),
-  SIZE("$size"),
-  IN("$in"),
-  NOT_IN("$nin"),
-  ALL("$all"),
-  ELEMENT_MATCH("$elemMatch"),
-  NOT_EQUAL("$ne"),
-  WHERE("$where");
 
-  private final String value;
+    WITHIN_CIRCLE("$center"),
 
-  FilterOperator(final String val) {
-    value = val;
-  }
+    WITHIN_CIRCLE_SPHERE("$centerSphere"),
 
-  private boolean equals(final String val) {
-    return value.equals(val);
-  }
+    WITHIN_BOX("$box"),
 
-  public String val() {
-    return value;
-  }
+    EQUAL("$eq", "=", "=="),
 
-  public static FilterOperator fromString(final String val) {
-    for (int i = 0; i < values().length; i++) {
-      final FilterOperator fo = values()[i];
-      if (fo.equals(val)) {
-        return fo;
-      }
+    NOT_EQUAL("$ne", "!=", "<>"),
+
+    GREATER_THAN("$gt", ">"),
+
+    GREATER_THAN_OR_EQUAL("$gte", ">="),
+
+    LESS_THAN("$lt", "<"),
+
+    LESS_THAN_OR_EQUAL("$lte", "<="),
+
+    EXISTS("$exists", "exists"),
+
+    TYPE("$type"),
+
+    NOT("$not"),
+
+    MOD("$mod", "mod"),
+
+    SIZE("$size", "size"),
+
+    IN("$in", "in"),
+
+    NOT_IN("$nin", "nin"),
+
+    ALL("$all", "all"),
+
+    ELEMENT_MATCH("$elemMatch", "elem", "elemMatch"),
+
+    WHERE("$where"),
+
+    // GEO
+    NEAR("$near", "near"),
+
+    NEAR_SPHERE("$nearSphere"),
+
+    GEO_WITHIN("$geoWithin", "geoWithin") {
+        @Override
+        public boolean matches(final String filter) {
+            boolean match = "within".equals(filter);
+            if (match) {
+                LOG.warning("'within' is a deprecated operator.  Please use geoWithin instead.");
+            }
+            return match || "geoWithin".equals(filter);
+        }
+    },
+    ;
+
+    private final String value;
+    private final List<String> filters;
+
+    FilterOperator(final String val, final String... filterValues) {
+        value = val;
+        filters = Arrays.asList(filterValues);
     }
-    return null;
-  }
+
+    public String val() {
+        return value;
+    }
+
+    private static final Logger LOG = MorphiaLoggerFactory.get(FilterOperator.class);
+
+    public boolean matches(final String filter) {
+        return filter != null && filters.contains(filter.trim().toLowerCase());
+    }
+
+    public static FilterOperator fromString(final String operator) {
+        final String filter = operator.trim().toLowerCase();
+        for (FilterOperator filterOperator : FilterOperator.values()) {
+            if (filterOperator.matches(filter)) {
+                return filterOperator;
+            }
+        }
+        throw new IllegalArgumentException(format("Unknown operator '%s'", operator));
+    }
 }

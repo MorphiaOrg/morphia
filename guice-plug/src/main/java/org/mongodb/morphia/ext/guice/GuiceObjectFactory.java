@@ -32,7 +32,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     this.injector = injector;
   }
 
-  public Object createInstance(final Class clazz) {
+  public <T> T createInstance(final Class<T> clazz) {
     Assert.parameterNotNull(clazz, "clazz");
 
     if (injectOnConstructor(clazz)) {
@@ -52,7 +52,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return false;
   }
 
-  public Object createInstance(final Class clazz, final DBObject dbObj) {
+  public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
     if (injectOnConstructor(clazz)) {
       return injector.getInstance(clazz);
     }

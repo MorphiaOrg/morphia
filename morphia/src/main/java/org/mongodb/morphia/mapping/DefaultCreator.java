@@ -26,15 +26,15 @@ public class DefaultCreator implements ObjectFactory {
     /* (non-Javadoc)
      * @see org.mongodb.morphia.ObjectFactory#createInstance(java.lang.Class)
      */
-    public Object createInstance(final Class clazz) {
+    public <T> T createInstance(final Class<T> clazz) {
         return createInst(clazz);
     }
 
     /* (non-Javadoc)
      * @see org.mongodb.morphia.ObjectFactory#createInstance(java.lang.Class, com.mongodb.DBObject)
      */
-    public Object createInstance(final Class clazz, final DBObject dbObj) {
-        Class c = getClass(dbObj);
+    public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
+        Class<T> c = getClass(dbObj);
         if (c == null) {
             c = clazz;
         }
@@ -47,7 +47,7 @@ public class DefaultCreator implements ObjectFactory {
     public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
         Class c = getClass(dbObj);
         if (c == null) {
-            c = mf.isSingleValue ? mf.getConcreteType() : mf.getSubClass();
+            c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
         }
         try {
             return createInstance(c, dbObj);
@@ -76,7 +76,7 @@ public class DefaultCreator implements ObjectFactory {
         }
     }
 
-    private Class getClass(final DBObject dbObj) {
+    private <T> Class<T>  getClass(final DBObject dbObj) {
         // see if there is a className value
         final String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
         Class c = null;
@@ -84,7 +84,7 @@ public class DefaultCreator implements ObjectFactory {
             // try to Class.forName(className) as defined in the dbObject first,
             // otherwise return the entityClass
             try {
-                c = Class.forName(className, true, getClassLoaderForClass(className, dbObj));
+                c = Class.forName(className, true, getClassLoaderForClass());
             } catch (ClassNotFoundException e) {
                 if (LOG.isWarningEnabled()) {
                     LOG.warning("Class not found defined in dbObj: ", e);
@@ -94,7 +94,7 @@ public class DefaultCreator implements ObjectFactory {
         return c;
     }
 
-    protected ClassLoader getClassLoaderForClass(final String clazz, final DBObject object) {
+    protected ClassLoader getClassLoaderForClass() {
         return Thread.currentThread().getContextClassLoader();
     }
 
@@ -120,7 +120,7 @@ public class DefaultCreator implements ObjectFactory {
     }
 
 
-    public static Object createInst(final Class clazz) {
+    public static <T> T createInst(final Class<T> clazz) {
         try {
             return getNoArgsConstructor(clazz).newInstance();
         } catch (InstantiationException e) {
@@ -147,9 +147,9 @@ public class DefaultCreator implements ObjectFactory {
         return createInst(fallbackType);
     }
 
-    private static Constructor getNoArgsConstructor(final Class type) {
+    private static <T> Constructor<T> getNoArgsConstructor(final Class<T> type) {
         try {
-            final Constructor constructor = type.getDeclaredConstructor();
+            final Constructor<T> constructor = type.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor;
         } catch (NoSuchMethodException e) {

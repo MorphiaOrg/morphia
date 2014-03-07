@@ -55,7 +55,7 @@ class EmbeddedMapper implements CustomMapper {
         Iterable coll = null;
 
         if (fieldValue != null) {
-            if (mf.isArray) {
+            if (mf.isArray()) {
                 coll = Arrays.asList((Object[]) fieldValue);
             } else {
                 coll = (Iterable) fieldValue;
@@ -159,8 +159,9 @@ class EmbeddedMapper implements CustomMapper {
                                                                                         .hasSimpleValueConverter(mf.getType())) {
                             refObj = mapper.getConverters().decode(mf.getType(), dbVal, mf);
                         } else {
-                            refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, ((DBObject) dbVal));
-                            refObj = mapper.fromDb(((DBObject) dbVal), refObj, cache);
+                            DBObject value = (DBObject) dbVal;
+                            refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, value);
+                            refObj = mapper.fromDb(value, refObj, cache);
                         }
                         if (refObj != null) {
                             mf.setFieldValue(entity, refObj);

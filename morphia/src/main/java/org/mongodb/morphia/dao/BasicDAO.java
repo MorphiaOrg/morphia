@@ -117,11 +117,11 @@ public class BasicDAO<T, K> implements DAO<T, K> {
         return ds.save(entity, wc);
     }
 
-    public UpdateResults<T> updateFirst(final Query<T> q, final UpdateOperations<T> ops) {
+    public UpdateResults updateFirst(final Query<T> q, final UpdateOperations<T> ops) {
         return ds.updateFirst(q, ops);
     }
 
-    public UpdateResults<T> update(final Query<T> q, final UpdateOperations<T> ops) {
+    public UpdateResults update(final Query<T> q, final UpdateOperations<T> ops) {
         return ds.update(q, ops);
     }
 

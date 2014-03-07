@@ -76,7 +76,7 @@ public class QueryImplCloneTest extends TestBase {
                             .limit(5)
                             .filter("a", "value_a")
                             .filter("b", "value_b")
-                            .skip(5)
+                            .offset(5)
                             .batchSize(10)
                             .disableCursorTimeout()
                             .hintIndex("a")

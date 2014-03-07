@@ -57,11 +57,6 @@ public interface AdvancedDatastore extends Datastore {
 
   <T> Key<T> save(String kind, T entity, WriteConcern wc);
 
-  /**
-   * No validation or conversion is done to the id
-   */
-  @Deprecated <T> WriteResult delete(String kind, T id);
-
   <T, V> WriteResult delete(String kind, Class<T> clazz, V id);
 
   <T, V> WriteResult delete(String kind, Class<T> clazz, V id, WriteConcern wc);
@@ -90,7 +85,7 @@ public interface AdvancedDatastore extends Datastore {
   /**
    * 
    * @param kind the class of objects to be returned
-   * @param q the query which will be passed to a {@link QueryFactory}
+   * @param q the query which will be passed to a {@link org.mongodb.morphia.query.QueryFactory}
    * @return Query for the specified class clazz
    */
   <T> Query<T> createQuery(Class<T> kind, DBObject q);

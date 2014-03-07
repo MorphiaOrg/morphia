@@ -306,7 +306,6 @@ public class TestPerf extends TestBase {
         try {
             final Morphia morphia = new Morphia();
             morphia.map(TestObj.class);
-            final AdvancedDatastore ds = (AdvancedDatastore) morphia.createDatastore("my_database");
             //create the list
             List<TestObj> objList = new ArrayList<TestObj>();
             for (int i = 0; i < 1000; i++) {

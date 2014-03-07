@@ -1,6 +1,7 @@
 package org.mongodb.morphia.issue194;
 
 
+import com.mongodb.DuplicateKeyException;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +9,6 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
-import com.mongodb.MongoException;
 
 
 public class IndexTest extends TestBase {
@@ -76,7 +76,7 @@ public class IndexTest extends TestBase {
     getDs().ensureCaps();
   }
 
-  @Test(expected = MongoException.DuplicateKey.class)
+  @Test(expected = DuplicateKeyException.class)
   public void testDuplicate1() {
     final String name = "J. Doe";
 
@@ -90,7 +90,7 @@ public class IndexTest extends TestBase {
 
   }
 
-  @Test(expected = MongoException.DuplicateKey.class)
+  @Test(expected = DuplicateKeyException.class)
   public void testDuplicate2() {
     final String name = "J. Doe";
 

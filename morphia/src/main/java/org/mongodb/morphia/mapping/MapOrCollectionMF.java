@@ -17,32 +17,14 @@ public class MapOrCollectionMF extends MappedField {
     private ParameterizedType pType;
     private Object value;
 
-    /* (non-Javadoc) @see java.lang.Object#clone() */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        final MapOrCollectionMF other = new MapOrCollectionMF();
-        other.pType = pType;
-        other.isSet = isSet;
-        other.isMap = isMap;
-        other.mapKeyType = mapKeyType;
-        other.subType = subType;
-        other.isMongoType = isMongoType;
-        return other;
-    }
-
-    MapOrCollectionMF() {
-        isSingleValue = false;
-    }
-
     MapOrCollectionMF(final ParameterizedType t) {
-        this();
         pType = t;
         final Class rawClass = (Class) t.getRawType();
-        isSet = ReflectionUtils.implementsInterface(rawClass, Set.class);
-        isMap = ReflectionUtils.implementsInterface(rawClass, Map.class);
-        mapKeyType = getMapKeyClass();
-        subType = getSubType();
-        isMongoType = ReflectionUtils.isPropertyType(getSubClass());
+        setIsSet(ReflectionUtils.implementsInterface(rawClass, Set.class));
+        setIsMap(ReflectionUtils.implementsInterface(rawClass, Map.class));
+        setMapKeyType(getMapKeyClass());
+        setSubType(getSubType());
+        setIsMongoType(ReflectionUtils.isPropertyType(getSubClass()));
     }
 
     public Object getValue() {
@@ -71,7 +53,7 @@ public class MapOrCollectionMF extends MappedField {
 
     @Override
     public Class getType() {
-        return isMap ? Map.class : List.class;
+        return isMap() ? Map.class : List.class;
     }
 
     @Override
@@ -103,4 +85,5 @@ public class MapOrCollectionMF extends MappedField {
     public void setFieldValue(final Object classInst, final Object val) {
         value = val;
     }
+
 }

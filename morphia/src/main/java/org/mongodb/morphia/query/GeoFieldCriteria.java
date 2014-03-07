@@ -28,13 +28,13 @@ public class GeoFieldCriteria extends FieldCriteria {
                 query = BasicDBObjectBuilder.start(FilterOperator.NEAR_SPHERE.val(), getValue());
                 break;
             case WITHIN_BOX:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(getOperator().val(), getValue());
+                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
                 break;
             case WITHIN_CIRCLE:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(getOperator().val(), getValue());
+                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
                 break;
             case WITHIN_CIRCLE_SPHERE:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.WITHIN.val()).add(getOperator().val(), getValue());
+                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
                 break;
             default:
                 throw new UnsupportedOperationException(getOperator() + " not supported for geo-query");

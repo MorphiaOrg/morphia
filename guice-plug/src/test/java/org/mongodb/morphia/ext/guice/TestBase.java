@@ -32,8 +32,7 @@ public abstract class TestBase {
     this.db = this.mongo
       .getDB("morphia_test");
     this.ds = this.morphia
-      .createDatastore(this.mongo, this.db
-        .getName());
+      .createDatastore(this.mongo, this.db.getName());
     this.ads = (AdvancedDatastore) this.ds;
   }
 

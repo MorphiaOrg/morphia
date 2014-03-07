@@ -20,10 +20,6 @@ package org.mongodb.morphia;
 
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.ReadPreference;
-import com.mongodb.WriteConcern;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.mapping.Mapper;
@@ -32,7 +28,6 @@ import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -43,187 +38,135 @@ import java.util.Set;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Morphia {
-  private final Mapper mapper;
-  private MongoClient mongoClient;
+    private final Mapper mapper;
 
-  public Morphia() {
-    this(new Mapper(), Collections.<Class>emptySet());  
-  }
-  
-  public Morphia(final Mapper mapper) {
-    this(mapper , Collections.<Class>emptySet());
-  }
-
-  public Morphia(final Set<Class> classesToMap) {
-   this(new Mapper(), classesToMap);
-  }
-
-  public Morphia(final Mapper mapper, final Set<Class> classesToMap) {
-    this.mapper = mapper;
-    for (final Class c : classesToMap) {
-      map(c);
+    public Morphia() {
+        this(new Mapper(), Collections.<Class>emptySet());
     }
-  }
 
-  public synchronized Morphia map(final Class... entityClasses) {
-    if (entityClasses != null && entityClasses.length > 0) {
-      for (final Class entityClass : entityClasses) {
-        if (!mapper.isMapped(entityClass)) {
-          mapper.addMappedClass(entityClass);
-        }
-      }
+    public Morphia(final Mapper mapper) {
+        this(mapper, Collections.<Class>emptySet());
     }
-    return this;
-  }
-    
-  public synchronized Morphia map(final Set<Class> entityClasses) {
-    if (entityClasses != null && !entityClasses.isEmpty()) {
-      for (final Class entityClass : entityClasses) {
-        if (!mapper.isMapped(entityClass)) {
-          mapper.addMappedClass(entityClass);
-        }
-      }
+
+    public Morphia(final Set<Class> classesToMap) {
+        this(new Mapper(), classesToMap);
     }
-    return this;
-  }
 
-  public synchronized Morphia mapPackageFromClass(final Class clazz) {
-    return mapPackage(clazz.getPackage().getName(), false);
-  }
-
-  /**
-   * Tries to map all classes in the package specified. Fails if one of the classes is not valid for mapping.
-   *
-   * @param packageName the name of the package to process
-   * @return the Morphia instance
-   */
-  public synchronized Morphia mapPackage(final String packageName) {
-    return mapPackage(packageName, false);
-  }
-
-  /**
-   * Tries to map all classes in the package specified.
-   *
-   * @param packageName the name of the package to process
-   * @param ignoreInvalidClasses specifies whether to ignore classes in the package that cannot be mapped
-   * @return the Morphia instance
-   */
-  public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
-    try {
-      for (final Class c : ReflectionUtils.getClasses(packageName)) {
-        try {
-          final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(c);
-          final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(c);
-          if (entityAnn != null || embeddedAnn != null) {
+    public Morphia(final Mapper mapper, final Set<Class> classesToMap) {
+        this.mapper = mapper;
+        for (final Class c : classesToMap) {
             map(c);
-          }
-        } catch (MappingException ex) {
-          if (!ignoreInvalidClasses) {
-            throw ex;
-          }
         }
-      }
-      return this;
-    } catch (IOException e) {
-      throw new MappingException("Could not get map classes from package " + packageName, e);
-    } catch (ClassNotFoundException e) {
-      throw new MappingException("Could not get map classes from package " + packageName, e);
     }
-  }
 
-  /**
-   * Check whether a specific class is mapped by this instance.
-   *
-   * @param entityClass the class we want to check
-   * @return true if the class is mapped, else false
-   */
-  public boolean isMapped(final Class entityClass) {
-    return mapper.isMapped(entityClass);
-  }
-
-  public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject) {
-    return fromDBObject(entityClass, dbObject, mapper.createEntityCache());
-  }
-
-  public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
-    if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
-      throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
+    public synchronized Morphia map(final Class... entityClasses) {
+        if (entityClasses != null && entityClasses.length > 0) {
+            for (final Class entityClass : entityClasses) {
+                if (!mapper.isMapped(entityClass)) {
+                    mapper.addMappedClass(entityClass);
+                }
+            }
+        }
+        return this;
     }
-    try {
-      return (T) mapper.fromDBObject(entityClass, dbObject, cache);
-    } catch (Exception e) {
-      throw new MappingException("Could not map entity from DBObject", e);
+
+    public synchronized Morphia map(final Set<Class> entityClasses) {
+        if (entityClasses != null && !entityClasses.isEmpty()) {
+            for (final Class entityClass : entityClasses) {
+                if (!mapper.isMapped(entityClass)) {
+                    mapper.addMappedClass(entityClass);
+                }
+            }
+        }
+        return this;
     }
-  }
 
-  public DBObject toDBObject(final Object entity) {
-    try {
-      return mapper.toDBObject(entity);
-    } catch (Exception e) {
-      throw new MappingException("Could not map entity to DBObject", e);
+    public Morphia mapPackageFromClass(final Class clazz) {
+        return mapPackage(clazz.getPackage().getName(), false);
     }
-  }
 
-  public Mapper getMapper() {
-    return mapper;
-  }
-
-  /**
-   * This will create a new Mongo instance; it is best to use a Mongo singleton instance
-   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
-   */
-  public Datastore createDatastore(final String dbName) {
-    return createDatastore(getDefaultMongoClient(), dbName, null, null);
-  }
-
-  /**
-   * This will create a new Mongo instance; it is best to use a Mongo singleton instance
-   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
-   */
-  public Datastore createDatastore(final String dbName, final String user, final char[] pw) {
-    try {
-      return createDatastore(getDefaultMongoClient(), dbName, user, pw);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    /**
+     * Tries to map all classes in the package specified. Fails if one of the classes is not valid for mapping.
+     *
+     * @param packageName the name of the package to process
+     * @return the Morphia instance
+     */
+    public synchronized Morphia mapPackage(final String packageName) {
+        return mapPackage(packageName, false);
     }
-  }
 
-  private MongoClient getDefaultMongoClient() {
-    if (mongoClient == null) {
-      final MongoClientOptions.Builder builder = MongoClientOptions.builder();
-      builder.connectionsPerHost(100);
-      builder.threadsAllowedToBlockForConnectionMultiplier(5);
-      builder.maxWaitTime(1000 * 60 * 2);
-      builder.connectTimeout(1000 * 10);
-      builder.socketTimeout(0);
-      builder.socketKeepAlive(false);
-      builder.autoConnectRetry(false);
-      builder.maxAutoConnectRetryTime(0);
-      builder.readPreference(ReadPreference.primary());
-      builder.writeConcern(WriteConcern.ACKNOWLEDGED);
-
-      try {
-        mongoClient = new MongoClient("localhost", builder.build());
-      } catch (UnknownHostException e) {
-        throw new RuntimeException(e.getMessage(), e);
-      }
+    /**
+     * Tries to map all classes in the package specified.
+     *
+     * @param packageName          the name of the package to process
+     * @param ignoreInvalidClasses specifies whether to ignore classes in the package that cannot be mapped
+     * @return the Morphia instance
+     */
+    public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
+        try {
+            for (final Class c : ReflectionUtils.getClasses(packageName)) {
+                try {
+                    final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(c);
+                    final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(c);
+                    if (entityAnn != null || embeddedAnn != null) {
+                        map(c);
+                    }
+                } catch (MappingException ex) {
+                    if (!ignoreInvalidClasses) {
+                        throw ex;
+                    }
+                }
+            }
+            return this;
+        } catch (IOException e) {
+            throw new MappingException("Could not get map classes from package " + packageName, e);
+        } catch (ClassNotFoundException e) {
+            throw new MappingException("Could not get map classes from package " + packageName, e);
+        }
     }
-    return mongoClient;
-  }
 
-  /**
-   * It is best to use a Mongo singleton instance here.
-   * @deprecated use #createDatastore(com.mongodb.Mongo,java.lang.String) which a MongoClient instance which will authenticate for you
-   */
-  public Datastore createDatastore(final Mongo mon, final String dbName, final String user, final char[] pw) {
-    return new DatastoreImpl(this, mon, dbName, user, pw);
-  }
+    /**
+     * Check whether a specific class is mapped by this instance.
+     *
+     * @param entityClass the class we want to check
+     * @return true if the class is mapped, else false
+     */
+    public boolean isMapped(final Class entityClass) {
+        return mapper.isMapped(entityClass);
+    }
 
-  /**
-   * It is best to use a Mongo singleton instance here.
-   */
-  public Datastore createDatastore(final Mongo mongo, final String dbName) {
-    return createDatastore(mongo, dbName, null, null);
-  }
+    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject) {
+        return fromDBObject(entityClass, dbObject, mapper.createEntityCache());
+    }
+
+    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
+        if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
+            throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
+        }
+        try {
+            return (T) mapper.fromDBObject(entityClass, dbObject, cache);
+        } catch (Exception e) {
+            throw new MappingException("Could not map entity from DBObject", e);
+        }
+    }
+
+    public DBObject toDBObject(final Object entity) {
+        try {
+            return mapper.toDBObject(entity);
+        } catch (Exception e) {
+            throw new MappingException("Could not map entity to DBObject", e);
+        }
+    }
+
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    /**
+     * It is best to use a Mongo singleton instance here.
+     */
+    public Datastore createDatastore(final Mongo mongo, final String dbName) {
+        return new DatastoreImpl(this, mongo, dbName);
+    }
 
 }

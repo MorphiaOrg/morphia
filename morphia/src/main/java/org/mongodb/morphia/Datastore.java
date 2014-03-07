@@ -12,8 +12,6 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
-import org.mongodb.morphia.utils.IndexDirection;
-import org.mongodb.morphia.utils.IndexFieldDef;
 
 import java.util.List;
 import java.util.Map;
@@ -165,44 +163,44 @@ public interface Datastore {
     /**
      * updates the entity with the operations; this is an atomic operation
      */
-    <T> UpdateResults<T> update(T ent, UpdateOperations<T> ops);
+    <T> UpdateResults update(T ent, UpdateOperations<T> ops);
 
     /**
      * updates the entity with the operations; this is an atomic operation
      */
-    <T> UpdateResults<T> update(Key<T> key, UpdateOperations<T> ops);
+    <T> UpdateResults update(Key<T> key, UpdateOperations<T> ops);
 
     /**
      * updates all entities found with the operations; this is an atomic operation per entity
      */
-    <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops);
+    <T> UpdateResults update(Query<T> query, UpdateOperations<T> ops);
 
     /**
      * updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true; this
      * is an atomic operation per entity
      */
-    <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
+    <T> UpdateResults update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
 
-    <T> UpdateResults<T> update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
+    <T> UpdateResults update(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
 
     /**
      * updates the first entity found with the operations; this is an atomic operation
      */
-    <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops);
+    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> ops);
 
     /**
      * updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;
      * this is an atomic operation per entity
      */
-    <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
+    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing);
 
-    <T> UpdateResults<T> updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
+    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> ops, boolean createIfMissing, WriteConcern wc);
 
     /**
      * updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;
      * this is an atomic operation per entity
      */
-    <T> UpdateResults<T> updateFirst(Query<T> query, T entity, boolean createIfMissing);
+    <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
 
 
     /**
@@ -285,23 +283,6 @@ public interface Datastore {
      * Returns a new query based on the example object
      */
     <T> Query<T> queryByExample(T example);
-
-    /**
-     * Ensures (creating if necessary) the index and direction
-     */
-    <T> void ensureIndex(Class<T> clazz, String field, IndexDirection dir);
-
-    /**
-     * Ensures (creating if necessary) the index including the field(s) + directions
-     */
-    @Deprecated
-    <T> void ensureIndex(Class<T> clazz, IndexFieldDef... fields);
-
-    /**
-     * Ensures (creating if necessary) the index including the field(s) + directions
-     */
-    @Deprecated
-    <T> void ensureIndex(Class<T> clazz, String name, IndexFieldDef[] fields, boolean unique, boolean dropDupsOnCreate);
 
     /**
      * Ensures (creating if necessary) the index including the field(s) + directions; eg fields = "field1, -field2" ({field1:1, field2:-1})

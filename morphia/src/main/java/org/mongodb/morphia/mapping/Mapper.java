@@ -284,14 +284,14 @@ public class Mapper {
      *
      * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the DBObject
      */
-    public Object fromDBObject(final Class entityClass, final DBObject dbObject, final EntityCache cache) {
+    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
             final Throwable t = new Throwable();
             LOG.error("Somebody passed in a null dbObject; bad client!", t);
             return null;
         }
 
-        Object entity;
+        T entity;
         entity = opts.getObjectFactory().createInstance(entityClass, dbObject);
         entity = fromDb(dbObject, entity, cache);
         return entity;
@@ -557,7 +557,7 @@ public class Mapper {
         return dbObject;
     }
 
-    Object fromDb(final DBObject dbObject, final Object entity, final EntityCache cache) {
+    <T> T fromDb(final DBObject dbObject, final T entity, final EntityCache cache) {
         //hack to bypass things and just read the value.
         if (entity instanceof MappedField) {
             readMappedField(dbObject, (MappedField) entity, entity, cache);
@@ -568,8 +568,8 @@ public class Mapper {
 
         if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
             && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key key = new Key(entity.getClass(), dbObject.get(ID_KEY));
-            final Object cachedInstance = cache.getEntity(key);
+            final Key<T> key = new Key(entity.getClass(), dbObject.get(ID_KEY));
+            final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
                 return cachedInstance;
             } else {
@@ -788,23 +788,6 @@ public class Mapper {
             }
         }
         return mf;
-    }
-
-    /**
-     * Return the first {@link StackTraceElement} not in our code (package).
-     */
-    private static StackTraceElement getFirstClientLine(final Throwable t) {
-        for (final StackTraceElement ste : t.getStackTrace()) {
-            if (!ste.getClassName().startsWith("org.mongodb.morphia")
-                && !ste.getClassName().startsWith("sun.reflect")
-                && !ste.getClassName().startsWith("org.junit")
-                && !ste.getClassName().startsWith("org.eclipse")
-                && !ste.getClassName().startsWith("java.lang")) {
-                return ste;
-            }
-        }
-
-        return null;
     }
 
     /**

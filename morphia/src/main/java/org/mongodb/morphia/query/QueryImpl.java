@@ -305,7 +305,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return results;
     }
 
-
     public List<Key<T>> asKeyList() {
         final List<Key<T>> results = new ArrayList<Key<T>>();
         for (final Key<T> key : fetchKeys()) {
@@ -331,44 +330,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * are EQUAL.
      */
     protected FilterOperator translate(final String operator) {
-        final String trimmed = operator.trim();
-
-        if ("=".equals(trimmed) || "==".equals(trimmed)) {
-            return FilterOperator.EQUAL;
-        } else if (">".equals(trimmed)) {
-            return FilterOperator.GREATER_THAN;
-        } else if (">=".equals(trimmed)) {
-            return FilterOperator.GREATER_THAN_OR_EQUAL;
-        } else if ("<".equals(trimmed)) {
-            return FilterOperator.LESS_THAN;
-        } else if ("<=".equals(trimmed)) {
-            return FilterOperator.LESS_THAN_OR_EQUAL;
-        } else if ("!=".equals(trimmed) || "<>".equals(trimmed)) {
-            return FilterOperator.NOT_EQUAL;
-        } else {
-            final String lower = trimmed.toLowerCase();
-            if ("in".equals(lower)) {
-                return FilterOperator.IN;
-            } else if ("mod".equals(lower)) {
-                return FilterOperator.MOD;
-            } else if ("nin".equals(lower)) {
-                return FilterOperator.NOT_IN;
-            } else if ("all".equals(lower)) {
-                return FilterOperator.ALL;
-            } else if ("exists".equals(lower)) {
-                return FilterOperator.EXISTS;
-            } else if ("elem".equals(lower)) {
-                return FilterOperator.ELEMENT_MATCH;
-            } else if ("size".equals(lower)) {
-                return FilterOperator.SIZE;
-            } else if ("within".equals(lower)) {
-                return FilterOperator.WITHIN;
-            } else if ("near".equals(lower)) {
-                return FilterOperator.NEAR;
-            } else {
-                throw new IllegalArgumentException("Unknown operator '" + trimmed + "'");
-            }
-        }
+        return FilterOperator.fromString(operator);
     }
 
     public Query<T> filter(final String condition, final Object value) {
@@ -442,11 +404,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public int getBatchSize() {
         return batchSize;
-    }
-
-    public Query<T> skip(final int value) {
-        offset = value;
-        return this;
     }
 
     public Query<T> offset(final int value) {

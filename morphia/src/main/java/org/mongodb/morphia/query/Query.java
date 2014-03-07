@@ -139,14 +139,6 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    */
   Query<T> lowerIndexBound(DBObject lowerBound);
 
-    /**
-     * 
-     * @param value
-     * @return
-     * @deprecated use @{link #offset(int)} instead 
-     */
-  Query<T> skip(int value);
-
   /**
    * Turns on validation (for all calls made after); by default validation is on
    */

@@ -18,39 +18,15 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.8'
 }
 
+def slf4jVersion = '1.7.5'
+
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
-
-    configurations {
-        provided
-        provided.extendsFrom(compile)
-    }
-
-    task listDependencies << {
-        configurations.compile.each { File file -> println file }
-    }
-}
-
-def slf4jVersion = '1.7.5'
-
-configure(subprojects) {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
-
-    group = 'org.mongodb.morphia'
-    version = '0.108-SNAPSHOT'
-
-    sourceCompatibility = JavaVersion.VERSION_1_5
-    targetCompatibility = JavaVersion.VERSION_1_5
-
-    configurations {
-        provided
-        provided.extendsFrom(compile)
-    }
-
-    project.archivesBaseName = "morphia-${project.name}"
+    apply plugin: 'jacoco'
 
     repositories {
         mavenCentral()
@@ -61,6 +37,24 @@ configure(subprojects) {
     dependencies {
         testCompile 'junit:junit:4.11'
     }
+
+    configurations {
+        provided
+        provided.extendsFrom(compile)
+    }
+
+    group = 'org.mongodb.morphia'
+    version = '0.108-SNAPSHOT'
+
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
+
+    project.archivesBaseName = "morphia-${project.name}"
+
+    task listDependencies << {
+        configurations.compile.each { File file -> println file }
+    }
+
 
     sourceSets.main.compileClasspath += configurations.provided
     sourceSets.test.compileClasspath += configurations.provided
@@ -93,11 +87,32 @@ configure(subprojects) {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
     }
 
+    tasks.withType(AbstractCompile) {
+        options.encoding = 'ISO-8859-1'
+        options.fork = true
+        options.debug = true
+        options.compilerArgs = ['-Xlint:deprecation']
+    }
+
     tasks.withType(Test) {
         if (System.getenv()['RS_ENABLED'] == "true") {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
+
+        jacoco { enabled = false }
+
+        beforeTest { descr ->
+            logger.info("[Test ${descr.className} > ${descr.name}]")
+        }
     }
+
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (taskGraph.hasTask(testCoverage)) {
+            tasks.withType(Test) { jacoco { enabled = true } }
+        }
+    }
+
+    task testCoverage(dependsOn: test)
 
     tasks.withType(FindBugs) {
         reports {
@@ -125,18 +140,13 @@ configure(subprojects) {
 
 project(':morphia') {
     archivesBaseName = 'morphia'
-    
-    jar {
-        manifest {
-        }
-    }
 
     dependencies {
         if (project.hasProperty('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-rc1"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-SNAPSHOT"
             println "Building with the 2.12 java driver"
         }
 

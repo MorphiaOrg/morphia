@@ -16,12 +16,6 @@ import java.util.Set;
 public class ValidationExtension extends AbstractEntityInterceptor {
     private ValidatorFactory validationFactory;
 
-    /**
-     * @deprecated use the new ValidationExtension(morphia) convention
-     */
-    public ValidationExtension() {
-    }
-
     public ValidationExtension(final Morphia m) {
         final Configuration<?> configuration = Validation.byDefaultProvider().configure();
         validationFactory = configuration.buildValidatorFactory();

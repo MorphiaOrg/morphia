@@ -32,7 +32,6 @@ import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.utils.IndexDirection;
-import org.mongodb.morphia.utils.IndexFieldDef;
 
 import java.util.List;
 
@@ -182,9 +181,8 @@ public class TestIndexedCapped extends TestBase {
         final MappedClass mc = getMorphia().getMapper().getMappedClass(Ad.class);
         getMorphia().map(Ad.class);
 
-        final IndexFieldDef[] definitions = {new IndexFieldDef("lastMod"), new IndexFieldDef("active", IndexDirection.DESC)};
         assertFalse(hasNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
-        getDs().ensureIndex(Ad.class, definitions);
+        getDs().ensureIndex(Ad.class, "lastMod, -active");
         assertTrue(hasNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo()));
     }
 
