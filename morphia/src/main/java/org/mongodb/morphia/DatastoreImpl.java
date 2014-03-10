@@ -3,7 +3,6 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -12,7 +11,6 @@ import com.mongodb.DBRef;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.MapReduceOutput;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
@@ -90,13 +88,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         // VERY discussable
         DatastoreHolder.getInstance().set(this);
-    }
-
-    /**
-     * @deprecated
-     */
-    public DatastoreImpl(final Morphia morphia, final Mongo mongo) {
-        this(morphia, mongo, null);
     }
 
     public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName) {
@@ -229,7 +220,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                    final boolean dropDupsOnCreate, final boolean background, final boolean sparse,
                                    final int expireAfterSeconds) {
         final DBCollection dbColl = getCollection(clazz);
-        ensureIndex(dbColl, clazz, name, fields, unique, dropDupsOnCreate,
+        ensureIndex(dbColl, name, fields, unique, dropDupsOnCreate,
                     background, sparse, expireAfterSeconds);
     }
 
@@ -241,7 +232,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collName, final Class<T> clazz,
                                 final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        ensureIndex(getCollection(collName), clazz, name,
+        ensureIndex(getCollection(collName), name,
                     QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique,
                     dropDupsOnCreate, false, false, -1);
     }
@@ -249,13 +240,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collName, final Class<T> clazz,
                                 final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate, final boolean background) {
-        ensureIndex(getCollection(collName), clazz, name,
+        ensureIndex(getCollection(collName), name,
                     QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique,
                     dropDupsOnCreate, background, false, -1);
     }
 
     protected <T> void ensureIndex(final DBCollection dbColl,
-                                   final Class<T> clazz, final String name, final BasicDBObject fields,
+                                   final String name, final BasicDBObject fields,
                                    final boolean unique, final boolean dropDupsOnCreate,
                                    final boolean background, final boolean sparse,
                                    final int expireAfterSeconds) {
@@ -328,7 +319,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed index = mf.getAnnotation(Indexed.class);
                 final StringBuilder field = new StringBuilder();
-                final Class<?> indexedClass = (parentMCs.isEmpty() ? mc : parentMCs.get(0)).getClazz();
                 if (!parentMCs.isEmpty()) {
                     for (final MappedField pmf : parentMFs) {
                         field.append(pmf.getNameToStore()).append(".");
@@ -338,7 +328,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                 field.append(mf.getNameToStore());
 
                 ensureIndex(dbColl,
-                            indexedClass,
                             index.name(),
                             new BasicDBObject(field.toString(), index.value().toIndexValue()),
                             index.unique(),
@@ -375,7 +364,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                                  mc.getClazz(),
                                                                                  mapper,
                                                                                  !index.disableValidation());
-                        ensureIndex(dbColl, mc.getClazz(), index.name(), fields, index.unique(), index.dropDups(),
+                        ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
                                     index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
                     }
                 }
@@ -538,7 +527,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
 
     public <T> T get(final Class<T> clazz, final DBRef ref) {
-        return (T) mapper.fromDBObject(clazz, ref.fetch(), createCache());
+        return mapper.fromDBObject(clazz, ref.fetch(), createCache());
     }
 
 
@@ -780,7 +769,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-        //        return save(entities, wc);
         final List<DBObject> list = entities instanceof List
                                     ? new ArrayList<DBObject>(((List<T>) entities).size())
                                     : new ArrayList<DBObject>();
@@ -790,12 +778,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             list.add(toDbObject(involvedObjects, ent));
         }
 
-        final WriteResult wr = null;
-
-        final DBObject[] dbObjects = new DBObject[list.size()];
-        dbColl.insert(list.toArray(dbObjects), wc);
-
-        throwOnError(wc, wr);
+        dbColl.insert(list.toArray(new DBObject[list.size()]), wc);
 
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         final Iterator<T> entitiesIT = entities.iterator();
@@ -927,25 +910,24 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         //try to do an update if there is a @Version field
         final Object idValue = dbObj.get(Mapper.ID_KEY);
-        wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, db, mc);
+        wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, mc);
 
         if (wr == null) {
             if (wc == null) {
-                wr = dbColl.save(dbObj);
+                dbColl.save(dbObj);
             } else {
-                wr = dbColl.save(dbObj, wc);
+                dbColl.save(dbObj, wc);
             }
         }
 
-        throwOnError(wc, wr);
         return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
     }
 
     protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
-                                                 final WriteConcern wc, final DB database, final MappedClass mc) {
-        WriteResult wr = null;
+                                                 final WriteConcern wc, final MappedClass mc) {
+        WriteResult wr;
         if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            return wr;
+            return null;
         }
 
         final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
@@ -958,7 +940,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
-            final UpdateResults res = update(find(dbColl.getName(), (Class<T>) entity.getClass()).filter(Mapper.ID_KEY, idValue)
+            final UpdateResults res = update(find(dbColl.getName(), entity.getClass()).filter(Mapper.ID_KEY, idValue)
                                                     .filter(versionKeyName, oldVersion), dbObj, false, false, wc);
 
             wr = res.getWriteResult();
@@ -977,15 +959,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         //update the version.
         return wr;
-    }
-
-    protected void throwOnError(final WriteConcern wc, final WriteResult wr) {
-        if (wc == null) {
-            final CommandResult cr = wr.getLastError();
-            if (cr != null && cr.getErrorMessage() != null && cr.getErrorMessage().length() != 0) {
-                cr.throwOnError();
-            }
-        }
     }
 
     public <T> Key<T> save(final T entity) {
@@ -1077,8 +1050,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final UpdateResults res = update(query, dbObj, createIfMissing, false, getWriteConcern(entity));
 
         //update _id field
-        final CommandResult gle = res.getWriteResult().getCachedLastError();
-        if (gle != null && res.getInsertedCount() > 0) {
+        if (res.getInsertedCount() > 0) {
             dbObj.put(Mapper.ID_KEY, res.getNewId());
         }
 
@@ -1111,7 +1083,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = getCollection(unwrapped);
 
         //try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, db, mc);
+        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, mc);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
@@ -1120,12 +1092,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final UpdateResults res = new UpdateResults(wr);
 
-        throwOnError(wc, wr);
-
-        //check for updated count if we have a gle
-        final CommandResult gle = wr.getCachedLastError();
-        if (gle != null && res.getUpdatedCount() == 0) {
-            throw new UpdateException("Not updated: " + gle);
+        if (res.getUpdatedCount() == 0) {
+            throw new UpdateException("Nothing updated");
         }
 
         postSaveOperations(unwrapped, dbObj, involvedObjects);
@@ -1199,8 +1167,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             wr = dbColl.update(q, u, createIfMissing, multi, wc);
         }
 
-        throwOnError(wc, wr);
-
         return new UpdateResults(wr);
     }
 
@@ -1226,7 +1192,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                      false);
 
         if (result != null) {
-            return (T) mapper.fromDBObject(qi.getEntityClass(), result, cache);
+            return mapper.fromDBObject(qi.getEntityClass(), result, cache);
         }
 
         return null;
@@ -1269,7 +1235,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (res == null) {
             return null;
         } else {
-            return (T) mapper.fromDBObject(qi.getEntityClass(), res, createCache());
+            return mapper.fromDBObject(qi.getEntityClass(), res, createCache());
         }
     }
 
@@ -1303,12 +1269,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final DBCollection dbColl = query.getCollection();
 
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl,
-                                                          baseCommand.getMap(),
-                                                          baseCommand.getReduce(),
-                                                          baseCommand.getOutputTarget(),
-                                                          outType,
-                                                          query.getQueryObject());
+        final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
+                                                          baseCommand.getOutputTarget(), outType, query.getQueryObject());
         cmd.setFinalize(baseCommand.getFinalize());
         cmd.setScope(baseCommand.getScope());
 
@@ -1323,9 +1285,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.info("Executing " + cmd.toString());
         }
 
-        final MapReduceOutput mpo = dbColl.mapReduce(baseCommand);
         final EntityCache cache = createCache();
-        final MapreduceResults results = (MapreduceResults) mapper.fromDBObject(MapreduceResults.class, mpo.getCommandResult(), cache);
+        MapreduceResults<T> results = new MapreduceResults<T>(dbColl.mapReduce(baseCommand));
 
         results.setType(type);
         if (MapreduceType.INLINE.equals(type)) {

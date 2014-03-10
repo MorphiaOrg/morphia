@@ -1,12 +1,11 @@
 package org.mongodb.morphia;
 
 
-import com.mongodb.BasicDBList;
-import com.mongodb.DBObject;
+import com.mongodb.MapReduceOutput;
 import org.mongodb.morphia.annotations.NotSaved;
-import org.mongodb.morphia.annotations.PreLoad;
-import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
@@ -19,23 +18,15 @@ import java.util.Iterator;
 @SuppressWarnings({"unchecked", "rawtypes"})
 @NotSaved
 public class MapreduceResults<T> implements Iterable<T> {
-    /**
-     * @deprecated use the getter instead
-     * @see #getRawResults() 
-     */
-    //CHECKSTYLE:OFF 
-    DBObject rawResults;
-    //CHECKSTYLE:ON
+    private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
+
+    private MapReduceOutput mpo;
     private final Stats counts = new Stats();
 
-    @Property("result")
     private String outColl;
-    private long timeMillis;
-    private boolean ok;
-    private String err;
     private MapreduceType type;
     private Query query;
-    //inline stuff
+
     @Transient
     private Class<T> clazz;
     @Transient
@@ -43,8 +34,9 @@ public class MapreduceResults<T> implements Iterable<T> {
     @Transient
     private EntityCache cache;
 
-    public DBObject getRawResults() {
-        return rawResults;
+    public MapreduceResults(final MapReduceOutput mpo) {
+        this.mpo = mpo;
+        outColl = mpo.getCollectionName();
     }
 
     public Stats getCounts() {
@@ -52,17 +44,20 @@ public class MapreduceResults<T> implements Iterable<T> {
     }
 
     public long getElapsedMillis() {
-        return timeMillis;
+        return mpo.getDuration();
     }
 
+    @Deprecated
     public boolean isOk() {
-        return (ok);
+        LOG.warning("MapreduceResults.isOk() will always return true.");
+        return true;
     }
 
     public String getError() {
-        return isOk() ? "" : err;
+        LOG.warning("MapreduceResults.getError() will always return null.");
+        return null;
     }
-
+    
     public MapreduceType getType() {
         return type;
     }
@@ -82,9 +77,7 @@ public class MapreduceResults<T> implements Iterable<T> {
 
     //Inline stuff
     public Iterator<T> getInlineResults() {
-        final BasicDBList results = (BasicDBList) rawResults.get("results");
-        final Object iterator = results.iterator();
-        return new MorphiaIterator<T, T>((Iterator<DBObject>) iterator, mapper, clazz, null, cache);
+        return new MorphiaIterator<T, T>(mpo.results().iterator(), mapper, clazz, null, cache);
     }
 
     String getOutputCollectionName() {
@@ -99,26 +92,17 @@ public class MapreduceResults<T> implements Iterable<T> {
         this.query = query;
     }
 
-    @PreLoad
-    void preLoad(final DBObject raw) {
-        rawResults = raw;
-    }
-
-    public static class Stats {
-        private int input;
-        private int emit;
-        private int output;
-
+    public class Stats {
         public int getInputCount() {
-            return input;
+            return mpo.getInputCount();
         }
 
         public int getEmitCount() {
-            return emit;
+            return mpo.getEmitCount();
         }
 
         public int getOutputCount() {
-            return output;
+            return mpo.getOutputCount();
         }
     }
 
