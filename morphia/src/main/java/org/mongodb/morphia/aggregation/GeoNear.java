@@ -18,7 +18,6 @@ package org.mongodb.morphia.aggregation;
 
 import org.mongodb.morphia.query.Query;
 
-@Deprecated
 public final class GeoNear {
     private final double[] near;
     private final String distanceField;

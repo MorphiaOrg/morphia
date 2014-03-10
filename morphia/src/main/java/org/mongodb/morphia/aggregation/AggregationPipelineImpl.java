@@ -48,8 +48,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         if (projection.getProjections() != null) {
             List<Projection> list = projection.getProjections();
             DBObject projections = new BasicDBObject();
-            for (Projection proj : list) {
-                projections.putAll(toDBObject(proj));
+            for (Projection subProjection : list) {
+                projections.putAll(toDBObject(subProjection));
             }
             return new BasicDBObject(sourceFieldName, projections);
         } else if (projection.getProjectedField() != null) {
@@ -61,11 +61,11 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
 
     public AggregationPipeline<T, U> project(final Projection... projections) {
         firstStage = stages.isEmpty();
-        DBObject proj = new BasicDBObject();
+        DBObject dbObject = new BasicDBObject();
         for (Projection projection : projections) {
-            proj.putAll(toDBObject(projection));
+            dbObject.putAll(toDBObject(projection));
         }
-        stages.add(new BasicDBObject("$project", proj));
+        stages.add(new BasicDBObject("$project", dbObject));
         return this;
     }
 
