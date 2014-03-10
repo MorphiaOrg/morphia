@@ -44,6 +44,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testNear() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -56,6 +57,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testNearMaxDistance() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -73,6 +75,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testNearNoIndex() throws Exception {
+        checkMinServerVersion(2.4);
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
         Place found = null;
@@ -91,6 +94,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinRadius() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -141,6 +145,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinRadius2() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -153,6 +158,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinRadiusSphere() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -184,6 +190,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinOutsideRadius() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -196,6 +203,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinBox() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
@@ -208,6 +216,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testWithinOutsideBox() throws Exception {
+        checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);

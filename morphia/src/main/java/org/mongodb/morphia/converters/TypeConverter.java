@@ -4,6 +4,8 @@ package org.mongodb.morphia.converters;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 
+import java.util.Arrays;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -37,13 +39,7 @@ public abstract class TypeConverter {
     }
 
     Class[] copy(final Class[] array) {
-        if (array == null) {
-            return null;
-        }
-        
-        Class[] copy = new Class[array.length];
-        System.arraycopy(array, 0, copy, 0, array.length);
-        return copy;
+        return array == null ? null : Arrays.copyOf(array, array.length);
     }
 
     /**
