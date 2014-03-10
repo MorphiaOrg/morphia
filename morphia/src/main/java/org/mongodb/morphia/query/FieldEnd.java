@@ -63,22 +63,4 @@ public interface FieldEnd<T> {
    * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
    */
   T within(Shape shape);
-
-  /**
-   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
-   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
-   */
-  T within(double x, double y, double radius);
-
-  /**
-   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
-   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
-   */
-  T within(double x1, double y1, double x2, double y2);
-
-  /**
-   * @deprecated In version 2.4: $geoWithin replaces $within which is deprecated.
-   * @see <a href="http://docs.mongodb.org/manual/reference/operator/geoWithin/">geoWithin</a>
-   */
-  T within(double x, double y, double radius, boolean spherical);
 }

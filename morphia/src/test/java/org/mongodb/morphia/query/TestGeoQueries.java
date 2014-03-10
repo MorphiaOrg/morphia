@@ -26,12 +26,12 @@ public class TestGeoQueries extends TestBase {
         @Indexed(IndexDirection.GEO2D)
         private double[] loc;
 
+        private Place() {
+        }
+
         public Place(final String name, final double[] loc) {
             this.name = name;
             this.loc = loc;
-        }
-
-        private Place() {
         }
     }
 
@@ -100,7 +100,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(0, 1, 1.1)
+                                .within(Shape.center(new Point(0, 1), 1.1))
                                 .get();
         Assert.assertNotNull(found);
     }
@@ -114,7 +114,7 @@ public class TestGeoQueries extends TestBase {
             getDs().save(place1);
             final Place found = getDs().find(Place.class)
                                     .field("loc")
-                                    .within(Shape.centerSphere(new Point(0.5, 0.5), 0.77))
+                                    .within(Shape.center(new Point(0.5, 0.5), 0.77))
                                     .get();
             Assert.assertNotNull(found);
         } catch (MongoException e) {
@@ -151,7 +151,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(0.5, 0.5, 0.77)
+                                .within(Shape.center(new Point(0.5, 0.5), 0.77))
                                 .get();
         Assert.assertNotNull(found);
     }
@@ -164,7 +164,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(0, 1, 1, true)
+                                .within(Shape.centerSphere(new Point(0, 1), 1))
                                 .get();
         Assert.assertNotNull(found);
     }
@@ -196,8 +196,8 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(2, 2, .4)
-                                .get();
+                                .within(Shape.center(new Point(2, 2), .4))
+                                             .get();
         Assert.assertNull(found);
     }
 
@@ -209,7 +209,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(0, 0, 2, 2)
+                                .within(Shape.box(new Point(0, 0), new Point(2, 2)))
                                 .get();
         Assert.assertNotNull(found);
     }
@@ -222,7 +222,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                 .field("loc")
-                                .within(0, 0, .4, .5)
+                                .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
                                 .get();
         Assert.assertNull(found);
     }

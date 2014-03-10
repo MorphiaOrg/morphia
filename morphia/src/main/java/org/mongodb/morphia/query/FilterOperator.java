@@ -1,9 +1,6 @@
 package org.mongodb.morphia.query;
 
 
-import org.mongodb.morphia.logging.Logger;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,8 +80,6 @@ public enum FilterOperator {
     public String val() {
         return value;
     }
-
-    private static final Logger LOG = MorphiaLoggerFactory.get(FilterOperator.class);
 
     public boolean matches(final String filter) {
         return filter != null && filters.contains(filter.trim().toLowerCase());
