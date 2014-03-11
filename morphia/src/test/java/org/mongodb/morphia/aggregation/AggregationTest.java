@@ -130,14 +130,11 @@ public class AggregationTest extends TestBase {
         getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
-        AggregationOptions options = AggregationOptions.builder()
-                                                     .outputMode(AggregationOptions.OutputMode.CURSOR)
-                                                     .build();
         MorphiaIterator<User, User> aggregate = getDs().<User, User>createAggregation(User.class)
                                                        .project(projection("_id").suppress(), projection("name"), projection("joined"),
                                                                 projection("likes"))
                                                        .unwind("likes")
-                                                       .aggregate(User.class, options);
+                                                       .aggregate(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
