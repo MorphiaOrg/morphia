@@ -53,7 +53,6 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,6 +65,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 
 /**
@@ -773,8 +773,8 @@ public class Mapper {
             }
 
             if (validateTypes) {
-                boolean compatibleForType = isCompatibleForOperator(mf.getType(), op, val);
-                boolean compatibleForSubclass = isCompatibleForOperator(mf.getSubClass(), op, val);
+                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val);
+                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val);
 
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
@@ -797,7 +797,7 @@ public class Mapper {
         return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
     }
 
-    public static boolean isCompatibleForOperator(final Class<?> type, final FilterOperator op, final Object value) {
+    public static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op, final Object value) {
         if (value == null || type == null) {
             return true;
         } else if (op.equals(FilterOperator.EXISTS) && (value instanceof Boolean)) {
@@ -810,31 +810,35 @@ public class Mapper {
         } else if (op.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
                                                         || Map.class.isAssignableFrom(value.getClass()))) {
             return true;
-        } else {
-            if (op.equals(FilterOperator.MOD) && value.getClass().isArray()) {
-                return ReflectionUtils.isIntegerType(Array.get(value, 0).getClass());
-            } else if (op.equals(FilterOperator.ALL)
-                       && (value.getClass().isArray()
-                           || Iterable.class.isAssignableFrom(value.getClass())
-                           || Map.class.isAssignableFrom(value.getClass()))) {
-                return true;
-            } else if (value instanceof Integer && (Arrays.asList(int.class, long.class, Long.class).contains(type))) {
-                return true;
-            } else if ((value instanceof Integer || value instanceof Long)
-                       && (Arrays.asList(double.class, Double.class).contains(type))) {
-                return true;
-            } else if (value instanceof Pattern && String.class.equals(type)) {
-                return true;
-            } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
-                return true;
-            } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
-                return true;
-            } else if (value instanceof List<?>) {
-                return true;
-            } else if (!value.getClass().isAssignableFrom(type)
-                       && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
-                return false;
+        } else if (op.equals(FilterOperator.MOD) && value.getClass().isArray()) {
+            return ReflectionUtils.isIntegerType(Array.get(value, 0).getClass());
+        } else if (op.equals(FilterOperator.GEO_WITHIN)
+                   && (type.isArray() || Iterable.class.isAssignableFrom(type))
+                   && (mf.getSubType() instanceof Number || asList(int.class, long.class, double.class,
+                                                                   float.class).contains(mf.getSubType()))) {
+            if (value instanceof DBObject) {
+                String key = ((DBObject) value).keySet().iterator().next();
+                return key.equals("$box") || key.equals("$center") || key.equals("$centerSphere") || key.equals("$polygon");
             }
+            return false;
+        } else if (op.equals(FilterOperator.ALL)
+                   && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
+                       || Map.class.isAssignableFrom(value.getClass()))) {
+            return true;
+        } else if (value instanceof Integer && (asList(int.class, long.class, Long.class).contains(type))) {
+            return true;
+        } else if ((value instanceof Integer || value instanceof Long) && (asList(double.class, Double.class).contains(type))) {
+            return true;
+        } else if (value instanceof Pattern && String.class.equals(type)) {
+            return true;
+        } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
+            return true;
+        } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
+            return true;
+        } else if (value instanceof List<?>) {
+            return true;
+        } else if (!value.getClass().isAssignableFrom(type) && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
+            return false;
         }
         return true;
     }
