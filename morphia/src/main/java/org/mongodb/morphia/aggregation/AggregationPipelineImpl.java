@@ -22,18 +22,16 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
 
     private final DBCollection collection;
     private final Class<T> source;
-    private final Class<U> target;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
     private final DatastoreImpl datastore;
     private boolean firstStage = false;
 
-    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source, final Class<U> target) {
+    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source) {
         this.datastore = datastore;
         this.collection = datastore.getCollection(source);
         mapper = datastore.getMapper();
         this.source = source;
-        this.target = target;
     }
 
     public DBObject toDBObject(final Projection projection) {
@@ -150,34 +148,48 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         }
     }
 
-    public AggregationPipeline<T, U> out(final String collectionName) {
+    @Override
+    public MorphiaIterator<U, U> out(final Class<U> target) {
+        return out(datastore.getCollection(target).getName(), target);
+    }
+
+    @Override
+    public MorphiaIterator<U, U> out(final Class<U> target, final AggregationOptions options) {
+        return out(datastore.getCollection(target).getName(), target, options);
+    }
+
+    @Override
+    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target) {
+        return out(collectionName, target, AggregationOptions.builder().build());
+    }
+
+    @Override
+    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
         stages.add(new BasicDBObject("$out", collectionName));
-        return this;
+        return aggregate(target, options);
     }
 
-    public AggregationPipeline<T, U> out() {
-        return out(datastore.getCollection(target).getName());
+    @Override
+    public MorphiaIterator<U, U> aggregate(final Class<U> target) {
+        return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
     }
 
-    public MorphiaIterator<U, U> aggregate() {
-        return aggregate(AggregationOptions.builder().build());
+    @Override
+    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options) {
+       return aggregate(target, options, collection.getReadPreference());
     }
-
-    public MorphiaIterator<U, U> aggregate(final AggregationOptions options) {
+    
+    @Override
+    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
+        return aggregate(datastore.getCollection(target).getName(), target, options, readPreference);
+    }
+    
+    @Override
+    public MorphiaIterator<U, U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options, 
+                                           final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options);
-        return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
-    }
-
-    public MorphiaIterator<U, U> aggregate(final ReadPreference readPreference) {
-        return aggregate(AggregationOptions.builder().build(), readPreference);
-    }
-
-    public MorphiaIterator<U, U> aggregate(final AggregationOptions options, final ReadPreference readPreference) {
-        LOG.debug("stages = " + stages);
-
-        Cursor cursor = collection.aggregate(stages, options, readPreference);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
 }

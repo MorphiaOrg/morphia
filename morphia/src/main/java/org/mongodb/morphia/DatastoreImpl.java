@@ -468,8 +468,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      */
-    public <T, U> AggregationPipeline<T, U> createAggregation(final Class<T> source, final Class<U> target) {
-        return new AggregationPipelineImpl<T, U>(this, source, target);
+    public <T, U> AggregationPipeline<T, U> createAggregation(final Class<T> source) {
+        return new AggregationPipelineImpl<T, U>(this, source);
     }
 
     public <T> Query<T> createQuery(final Class<T> type) {

@@ -272,7 +272,7 @@ public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      */
-    <T, U> AggregationPipeline<T, U> createAggregation(Class<T> source, Class<U> target);
+    <T, U> AggregationPipeline<T, U> createAggregation(Class<T> source);
 
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})

@@ -16,6 +16,7 @@
 
 package org.mongodb.morphia.aggregation;
 
+import com.mongodb.AggregationOptions;
 import com.mongodb.DBCursor;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -23,8 +24,6 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.logging.Logger;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
 
 import java.text.ParseException;
@@ -39,8 +38,6 @@ import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 
 public class AggregationTest extends TestBase {
-    private static final Logger LOG = MorphiaLoggerFactory.get(AggregationTest.class);
-
     @Test
     public void testOut() {
         checkMinServerVersion(2.6);
@@ -50,19 +47,20 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Author, Author> aggregate = getDs().createAggregation(Book.class, Author.class)
+        AggregationOptions options = AggregationOptions.builder()
+                                                     .outputMode(AggregationOptions.OutputMode.CURSOR)
+                                                     .build();
+        MorphiaIterator<Author, Author> aggregate = getDs().<Book, Author>createAggregation(Book.class)
                                                            .group("author", grouping("books", push("title")))
-                                                           .out()
-                                                           .aggregate();
+                                                           .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
-        Assert.assertEquals("Homer", author.getName());
-        Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.getBooks());
+        Assert.assertEquals("Homer", author.name);
+        Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.books);
 
-        getDs().createAggregation(Book.class, Author.class)
+        getDs().<Book, Author>createAggregation(Book.class)
                .group("author", grouping("books", push("title")))
-               .out("different")
-               .aggregate();
+               .out("different", Author.class);
 
         Assert.assertEquals(2, getDb().getCollection("different").count());
     }
@@ -76,12 +74,11 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
                      new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel"));
 
-        getDs().createAggregation(Book.class, Book.class)
+        getDs().<Book, Author>createAggregation(Book.class)
                .match(getDs().getQueryFactory().createQuery(getDs())
                              .field("author").equal("Homer"))
                .group("author", Group.grouping("copies", sum("copies")))
-               .out("testAverage")
-               .aggregate();
+               .out("testAverage", Author.class);
         DBCursor testAverage = getDb().getCollection("testAverage").find();
         Assert.assertNotNull(testAverage);
         try {
@@ -99,9 +96,9 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().createAggregation(Book.class, Book.class)
+        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
                                                        .limit(2)
-                                                       .aggregate();
+                                                       .aggregate(Book.class);
         int count = 0;
         while (aggregate.hasNext()) {
             aggregate.next();
@@ -118,13 +115,13 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().createAggregation(Book.class, Book.class)
+        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
                                                        .skip(2)
-                                                       .aggregate();
+                                                       .aggregate(Book.class);
         Book book = aggregate.next();
-        Assert.assertEquals("Eclogues", book.getTitle());
-        Assert.assertEquals("Dante", book.getAuthor());
-        Assert.assertEquals(2, book.getCopies().intValue());
+        Assert.assertEquals("Eclogues", book.title);
+        Assert.assertEquals("Dante", book.author);
+        Assert.assertEquals(2, book.copies.intValue());
     }
 
     @Test
@@ -133,34 +130,37 @@ public class AggregationTest extends TestBase {
         getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
-        MorphiaIterator<User, User> aggregate = getDs().createAggregation(User.class, User.class)
+        AggregationOptions options = AggregationOptions.builder()
+                                                     .outputMode(AggregationOptions.OutputMode.CURSOR)
+                                                     .build();
+        MorphiaIterator<User, User> aggregate = getDs().<User, User>createAggregation(User.class)
                                                        .project(projection("_id").suppress(), projection("name"), projection("joined"),
                                                                 projection("likes"))
                                                        .unwind("likes")
-                                                       .aggregate();
+                                                       .aggregate(User.class, options);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
             switch (count) {
                 case 0:
-                    Assert.assertEquals("jane", user.getName());
-                    Assert.assertEquals("golf", user.getLikes().get(0));
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
                     break;
                 case 1:
-                    Assert.assertEquals("jane", user.getName());
-                    Assert.assertEquals("racquetball", user.getLikes().get(0));
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("racquetball", user.likes.get(0));
                     break;
                 case 2:
-                    Assert.assertEquals("joe", user.getName());
-                    Assert.assertEquals("tennis", user.getLikes().get(0));
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("tennis", user.likes.get(0));
                     break;
                 case 3:
-                    Assert.assertEquals("joe", user.getName());
-                    Assert.assertEquals("golf", user.getLikes().get(0));
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
                     break;
                 case 4:
-                    Assert.assertEquals("joe", user.getName());
-                    Assert.assertEquals("swimming", user.getLikes().get(0));
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("swimming", user.likes.get(0));
                     break;
                 default:
                     Assert.fail("Should only find 5 elements");
@@ -199,55 +199,9 @@ public class AggregationTest extends TestBase {
             this.tags = Arrays.asList(tags);
         }
 
-        private ObjectId getId() {
-            return id;
-        }
-
-        private void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        private String getTitle() {
-            return title;
-        }
-
-        private void setTitle(final String title) {
-            this.title = title;
-        }
-
-        private String getAuthor() {
-            return author;
-        }
-
-        private void setAuthor(final String author) {
-            this.author = author;
-        }
-
-        private Integer getCopies() {
-            return copies;
-        }
-
-        private void setCopies(final Integer copies) {
-            this.copies = copies;
-        }
-
-        private List<String> getTags() {
-            return tags;
-        }
-
-        private void setTags(final List<String> tags) {
-            this.tags = tags;
-        }
-
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("Book{");
-            sb.append("title='").append(title).append('\'');
-            sb.append(", author='").append(author).append('\'');
-            sb.append(", copies=").append(copies);
-            sb.append(", tags=").append(tags);
-            sb.append('}');
-            return sb.toString();
+            return String.format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
         }
     }
 
@@ -256,22 +210,6 @@ public class AggregationTest extends TestBase {
         @Id
         private String name;
         private List<String> books;
-
-        private String getName() {
-            return name;
-        }
-
-        private void setName(final String name) {
-            this.name = name;
-        }
-
-        private List<String> getBooks() {
-            return books;
-        }
-
-        private void setBooks(final List<String> books) {
-            this.books = books;
-        }
     }
 
     @Entity("users")
@@ -291,38 +229,9 @@ public class AggregationTest extends TestBase {
             this.likes = Arrays.asList(likes);
         }
 
-        private String getName() {
-            return name;
-        }
-
-        private void setName(final String name) {
-            this.name = name;
-        }
-
-        private Date getJoined() {
-            return joined;
-        }
-
-        private void setJoined(final Date joined) {
-            this.joined = joined;
-        }
-
-        private List<String> getLikes() {
-            return likes;
-        }
-
-        private void setLikes(final List<String> likes) {
-            this.likes = likes;
-        }
-
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("User{");
-            sb.append("name='").append(name).append('\'');
-            sb.append(", joined=").append(joined);
-            sb.append(", likes=").append(likes);
-            sb.append('}');
-            return sb.toString();
+            return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
         }
     }
 }

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import static java.lang.String.format;
 import static org.mongodb.morphia.aggregation.Group.average;
 import static org.mongodb.morphia.aggregation.Group.first;
 import static org.mongodb.morphia.aggregation.Group.grouping;
@@ -48,7 +49,7 @@ public class ZipCodeDataSetTest extends TestBase {
     static {
         String property = System.getProperty("mongodb_server");
         String serverType = property != null ? property.replaceAll("-release", "") : "UNKNOWN";
-        String path = String.format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property);
+        String path = format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property);
         if (new File(path).exists()) {
             MONGO_IMPORT = path;
         } else {
@@ -98,23 +99,23 @@ public class ZipCodeDataSetTest extends TestBase {
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
 
         AggregationPipeline<City, Population> pipeline
-            = getDs().createAggregation(City.class, Population.class)
+            = getDs().<City, Population>createAggregation(City.class)
                      .group("state", grouping("totalPop", sum("pop")))
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
 
-        validate(pipeline.aggregate(), "CA", 29760021);
-        validate(pipeline.aggregate(), "OH", 10847115);
+        validate(pipeline.aggregate(Population.class), "CA", 29760021);
+        validate(pipeline.aggregate(Population.class), "OH", 10847115);
     }
 
     @Test
     public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
-        AggregationPipeline<City, Population> pipeline = getDs().createAggregation(City.class, Population.class)
+        AggregationPipeline<City, Population> pipeline = getDs().<City, Population>createAggregation(City.class)
                                                                 .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
                                                                 .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate(pipeline.aggregate(), "MN", 5335);
+        validate(pipeline.aggregate(Population.class), "MN", 5335);
     }
 
     @Test
@@ -122,7 +123,7 @@ public class ZipCodeDataSetTest extends TestBase {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
-        AggregationPipeline<City, State> pipeline = getDs().createAggregation(City.class, State.class)
+        AggregationPipeline<City, State> pipeline = getDs().<City, State>createAggregation(City.class)
 
                                                            .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
 
@@ -147,7 +148,7 @@ public class ZipCodeDataSetTest extends TestBase {
                                                                               )
                                                                    );
 
-        MorphiaIterator<State, State> iterator = pipeline.aggregate();
+        MorphiaIterator<State, State> iterator = pipeline.aggregate(State.class);
         Map<String, State> states = new HashMap<String, State>();
         while (iterator.hasNext()) {
             State state = iterator.next();
@@ -156,20 +157,20 @@ public class ZipCodeDataSetTest extends TestBase {
 
         State state = states.get("SD");
 
-        Assert.assertEquals("SIOUX FALLS", state.getBiggest().getName());
-        Assert.assertEquals(102046, state.getBiggest().getPopulation().longValue());
+        Assert.assertEquals("SIOUX FALLS", state.getBiggest().name);
+        Assert.assertEquals(102046, state.getBiggest().population.longValue());
 
-        Assert.assertEquals("ZEONA", state.getSmallest().getName());
-        Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
+        Assert.assertEquals("ZEONA", state.getSmallest().name);
+        Assert.assertEquals(8, state.getSmallest().population.longValue());
         iterator.close();
     }
 
     private void validate(final MorphiaIterator<Population, Population> pipeline, final String state, final long value) {
         boolean found = false;
         for (Population population : pipeline) {
-            if (population.getState().equals(state)) {
+            if (population.state.equals(state)) {
                 found = true;
-                Assert.assertEquals(new Long(value), population.getPopulation());
+                Assert.assertEquals(new Long(value), population.population);
             }
             LOG.debug("population = " + population);
         }
@@ -193,58 +194,11 @@ public class ZipCodeDataSetTest extends TestBase {
         private City() {
         }
 
-        private String getId() {
-            return id;
-        }
-
-        private void setId(final String id) {
-            this.id = id;
-        }
-
-        private double[] getLocation() {
-            return location;
-        }
-
-        private void setLocation(final double[] location) {
-            this.location = location;
-        }
-
-        private String getName() {
-            return name;
-        }
-
-        private void setName(final String name) {
-            this.name = name;
-        }
-
-        private Double getPopulation() {
-            return population;
-        }
-
-        private void setPopulation(final Double population) {
-            this.population = population;
-        }
-
-        private String getState() {
-            return state;
-        }
-
-        private void setState(final String state) {
-            this.state = state;
-        }
-
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("City{");
-            sb.append("id='").append(id).append('\'');
-            sb.append(", name='").append(name).append('\'');
-            sb.append(", location=").append(Arrays.toString(location));
-            sb.append(", population=").append(population);
-            sb.append(", state='").append(state).append('\'');
-            sb.append('}');
-            return sb.toString();
+            return format("City{id='%s', name='%s', location=%s, population=%s, state='%s'}", id, name, Arrays.toString(location),
+                          population, state);
         }
-
     }
 
     @Entity
@@ -255,25 +209,9 @@ public class ZipCodeDataSetTest extends TestBase {
         @AlsoLoad("avgCityPop")
         private Long population;
 
-        public String getState() {
-            return state;
-        }
-
-        public Long getPopulation() {
-            return population;
-        }
-
-        public void setPopulation(final Long population) {
-            this.population = population;
-        }
-
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("Population{");
-            sb.append("population=").append(population);
-            sb.append(", state='").append(state).append('\'');
-            sb.append('}');
-            return sb.toString();
+            return String.format("Population{population=%d, state='%s'}", population, state);
         }
     }
 
@@ -284,21 +222,9 @@ public class ZipCodeDataSetTest extends TestBase {
         @Property("pop")
         private Long population;
 
-        public String getName() {
-            return name;
-        }
-
-        public Long getPopulation() {
-            return population;
-        }
-
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("CityPopulation{");
-            sb.append("name='").append(name).append('\'');
-            sb.append(", population=").append(population);
-            sb.append('}');
-            return sb.toString();
+            return String.format("CityPopulation{name='%s', population=%d}", name, population);
         }
     }
 
@@ -327,12 +253,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("State{");
-            sb.append("state='").append(state).append('\'');
-            sb.append(", biggest=").append(biggest);
-            sb.append(", smallest=").append(smallest);
-            sb.append('}');
-            return sb.toString();
+            return String.format("State{state='%s', biggest=%s, smallest=%s}", state, biggest, smallest);
         }
     }
 }
