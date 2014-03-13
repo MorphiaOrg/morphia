@@ -124,7 +124,7 @@ allprojects {
     javadoc {
         options.author = true
         options.version = true
-        options.links 'http://docs.oracle.com/javase/7/docs/api/'
+        options.links 'http://docs.oracle.com/javase/6/docs/api/'
     }
 
     test {
