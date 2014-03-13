@@ -189,7 +189,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
                                            final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
-        Cursor cursor = collection.aggregate(stages, options);
+        Cursor cursor = collection.aggregate(stages, options, readPreference);
         return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
 }
