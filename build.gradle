@@ -155,7 +155,6 @@ project(':morphia') {
 
         provided 'cglib:cglib-nodep:[2.1_3,3.0)'
         provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
-        provided 'com.google.code.findbugs:findbugs:2.0.2'
         testCompile 'org.zeroturnaround:zt-exec:1.5'
     }
 }
