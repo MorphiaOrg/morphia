@@ -457,15 +457,23 @@ public class Mapper {
             return false;
         }
 
-        return (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class) || mf.getType().isAssignableFrom(DBRef.class)
-                || isMultiValued(mf, value));
+        return    mf.hasAnnotation(Reference.class) 
+               || Key.class.isAssignableFrom(mf.getType())
+               || DBRef.class.isAssignableFrom(mf.getType())
+               || isMultiValued(mf, value);
+//        return (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class) || mf.getType().isAssignableFrom(DBRef.class)
+//                || isMultiValued(mf, value));
     }
 
     private boolean isMultiValued(final MappedField mf, final Object value) {
         final Class subClass = mf.getSubClass();
-        return value instanceof Iterable && mf.isMultipleValues()
-               && (subClass.isAssignableFrom(Key.class)
-                   || subClass.isAssignableFrom(DBRef.class));
+        return    value instanceof Iterable 
+               && mf.isMultipleValues()
+               && (   Key.class.isAssignableFrom(subClass)
+                   || DBRef.class.isAssignableFrom(subClass));
+//        return value instanceof Iterable && mf.isMultipleValues()
+//        && (subClass.isAssignableFrom(Key.class)
+//            || subClass.isAssignableFrom(DBRef.class));
     }
 
     private boolean isEntity(final MappedClass mc) {
@@ -834,11 +842,13 @@ public class Mapper {
                 return true;
             } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
                 return true;
-            } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
+            } else if (Key.class.isInstance(value) && type.equals(((Key) value).getKindClass())) {
+//            } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
                 return true;
             } else if (value instanceof List<?>) {
                 return true;
-            } else if (!value.getClass().isAssignableFrom(type)
+            } else if (!type.isInstance(value)
+//            } else if (!value.getClass().isAssignableFrom(type)
                        && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
                 return false;
             }
