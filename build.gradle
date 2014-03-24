@@ -125,6 +125,7 @@ allprojects {
         options.author = true
         options.version = true
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
+        options.links 'http://api.mongodb.org/java/2.12/'
     }
 
     test {

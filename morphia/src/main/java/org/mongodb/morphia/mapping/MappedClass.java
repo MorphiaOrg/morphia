@@ -199,7 +199,7 @@ public class MappedClass {
                 || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL)) {
                 // ignore these
             } else if (field.isAnnotationPresent(Id.class)) {
-                final MappedField mf = new MappedField(field, clazz);
+                final MappedField mf = new MappedField(field, clazz, getMapper());
                 persistenceFields.add(mf);
                 update();
             } else if (field.isAnnotationPresent(Property.class)
@@ -208,16 +208,13 @@ public class MappedClass {
                        || field.isAnnotationPresent(Serialized.class)
                        || isSupportedType(field.getType())
                        || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
-                persistenceFields.add(new MappedField(field, clazz));
+                persistenceFields.add(new MappedField(field, clazz, getMapper()));
             } else {
                 if (mapper.getOptions().getDefaultMapper() != null) {
-                    persistenceFields.add(new MappedField(field, clazz));
+                    persistenceFields.add(new MappedField(field, clazz, getMapper()));
                 } else if (LOG.isWarningEnabled()) {
-                    LOG.warning(
-                                   "Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:"
-                                   + field.getType()
-                                          .getName()
-                                   + "]");
+                    LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
+                                       field.getType().getName()));
                 }
             }
         }
@@ -549,7 +546,8 @@ public class MappedClass {
     }
 
     public MappedField getMappedIdField() {
-        return getFieldsAnnotatedWith(Id.class).get(0);
+        List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
+        return fields.isEmpty() ? null : fields.get(0);
     }
 
 }

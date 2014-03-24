@@ -389,10 +389,10 @@ public class Mapper {
                 if (value instanceof Iterable) {
                     MappedClass mapped = getMappedClass(mf.getSubClass());
                     if (mapped != null && (Key.class.isAssignableFrom(mapped.getClazz()) || mapped.getEntityAnnotation() != null)) {
-                        mappedValue = getDBRefs((Iterable) value);
+                        mappedValue = getDBRefs(mf, (Iterable) value);
                     } else {
                         if (mf.hasAnnotation(Reference.class)) {
-                            mappedValue = getDBRefs((Iterable) value);
+                            mappedValue = getDBRefs(mf, (Iterable) value);
                         } else {
                             mappedValue = toMongoObject(value, false);
                         }
@@ -445,15 +445,14 @@ public class Mapper {
         return value.getClass().isArray() ? Array.get(value, 0) : ((Iterable) value).iterator().next();
     }
 
-    private Object getDBRefs(final Iterable value) {
-        final Object mappedValue;
-        final List<DBRef> refs = new ArrayList<DBRef>();
-        for (final Object o : (Iterable) value) {
-            final Key<?> key = (o instanceof Key) ? (Key<?>) o : getKey(o);
-            refs.add(keyToRef(key));
+    private Object getDBRefs(final MappedField field, final Iterable value) {
+        final List<Object> refs = new ArrayList<Object>();
+        boolean idOnly = field.getAnnotation(Reference.class).idOnly();
+        for (final Object o : value) {
+            Key<?> key = (o instanceof Key) ? (Key<?>) o : getKey(o);
+            refs.add(idOnly ? key.getId() : keyToRef(key));
         }
-        mappedValue = refs;
-        return mappedValue;
+        return refs;
     }
 
     private boolean isAssignable(final MappedField mf, final Object value) {
@@ -836,6 +835,9 @@ public class Mapper {
         } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
             return true;
         } else if (value instanceof List<?>) {
+            return true;
+        } else if (mf.getMapper().getMappedClass(type) != null && mf.getMapper().getMappedClass(type).getMappedIdField() != null
+                   && value.getClass().equals(mf.getMapper().getMappedClass(type).getMappedIdField().getConcreteType())) {
             return true;
         } else if (!value.getClass().isAssignableFrom(type) && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
             return false;

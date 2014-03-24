@@ -56,6 +56,7 @@ public class MappedField {
                                                                    ConstructorArgs.class,
                                                                    AlsoLoad.class,
                                                                    NotSaved.class));
+    private final Mapper mapper;
     private Class persistedClass;
     private Field field; // the field :)
     private Class realType; // the real type
@@ -73,15 +74,16 @@ public class MappedField {
     private boolean isArray; // indicated if it is an Array
     private boolean isCollection; // indicated if the collection is a list)
 
-    MappedField(final Field f, final Class<?> clazz) {
+    MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
+        this.mapper = mapper;
         f.setAccessible(true);
         field = f;
         persistedClass = clazz;
         discover();
     }
 
-    protected MappedField() {
-    }
+//    protected MappedField() {
+//    }
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
         INTERESTING.add(annotation);
@@ -110,7 +112,7 @@ public class MappedField {
         }
 
         if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
-            if (LOG.isWarningEnabled()) {
+            if (LOG.isWarningEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
                 LOG.warning(String.format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
                                           + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
             }
@@ -527,6 +529,10 @@ public class MappedField {
             }
         }
         return getType();
+    }
+
+    public Mapper getMapper() {
+        return mapper;
     }
 
     @Override

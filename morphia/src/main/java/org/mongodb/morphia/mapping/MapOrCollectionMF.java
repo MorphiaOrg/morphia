@@ -17,7 +17,8 @@ public class MapOrCollectionMF extends MappedField {
     private ParameterizedType pType;
     private Object value;
 
-    MapOrCollectionMF(final ParameterizedType t) {
+    MapOrCollectionMF(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
+        super(mf.getField(), (Class) t.getRawType(), mapper);
         pType = t;
         final Class rawClass = (Class) t.getRawType();
         setIsSet(ReflectionUtils.implementsInterface(rawClass, Set.class));

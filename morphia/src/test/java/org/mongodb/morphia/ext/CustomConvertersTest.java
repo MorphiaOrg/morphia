@@ -297,6 +297,8 @@ public class CustomConvertersTest extends TestBase {
 
     @Test
     public void mimeType() throws UnknownHostException, MimeTypeParseException {
+        getMorphia().map(MimeTyped.class);
+        getDs().ensureIndexes();
         MimeTyped entity = new MimeTyped();
         entity.name = "test name";
         entity.mimeType = new MimeType("text/plain"); //MimeTypeParseException

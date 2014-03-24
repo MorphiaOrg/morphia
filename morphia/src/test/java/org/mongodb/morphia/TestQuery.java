@@ -511,23 +511,6 @@ public class TestQuery extends TestBase {
         assertNotNull(pwkLoaded);
     }
 
-
-    @Test
-    public void testIdOnlyQuery() throws Exception {
-        final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
-        getDs().save(pwk);
-
-        PhotoWithKeywords pwkLoaded = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(true, "_id").get();
-        assertNotNull(pwkLoaded);
-        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
-        assertEquals(3, pwkLoaded.keywords.size());
-
-        pwkLoaded = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(false, "keywords").get();
-        assertNotNull(pwkLoaded);
-        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
-        assertEquals(3, pwkLoaded.keywords.size());
-    }
-
     @Test
     public void testRetrievedFields() throws Exception {
         getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();

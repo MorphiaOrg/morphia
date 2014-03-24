@@ -253,7 +253,7 @@ class EmbeddedMapper implements CustomMapper {
 
     private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper) {
         if (Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass())) {
-            final MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType) mf.getSubType());
+            final MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper);
             mapper.fromDb(dbObj, mocMF, cache);
             return mocMF.getValue();
         } else {
