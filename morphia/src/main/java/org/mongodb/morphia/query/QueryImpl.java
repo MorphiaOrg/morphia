@@ -76,7 +76,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
             readPref = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                       ? ReadPreference.secondary()
+                       ? ReadPreference.secondaryPreferred()
                        : null;
         }
     }
