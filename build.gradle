@@ -70,16 +70,15 @@ allprojects {
         n -> project.hasProperty(n) && project.property(n).toBoolean()
     }
 
-    /* Code quality */
+    javadoc {
+        classpath += configurations.provided
+    }
+
     checkstyle {
         configFile = new File("$configDir/checkstyle.xml")
     }
 
-    javadoc {
-        classpath += configurations.provided
-    }
-    
-    checkstyleMain {
+    checkstyle {
         classpath += configurations.compile
     }
 
