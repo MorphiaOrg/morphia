@@ -78,7 +78,7 @@ allprojects {
         configFile = new File("$configDir/checkstyle.xml")
     }
 
-    checkstyle {
+    checkstyleMain {
         classpath += configurations.compile
     }
 
