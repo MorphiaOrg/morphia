@@ -870,7 +870,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        return save(entities, getWriteConcern(entities.iterator().next()));
+        if (entities == null) {
+            return new ArrayList<Key<T>>();            
+        }
+        Iterator<T> iterator = entities.iterator();
+        if (!iterator.hasNext()) {
+            return new ArrayList<Key<T>>();
+        }
+        return save(entities, getWriteConcern(iterator.next()));
     }
 
     public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
