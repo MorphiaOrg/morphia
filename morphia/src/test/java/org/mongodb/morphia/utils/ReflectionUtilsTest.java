@@ -10,6 +10,8 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.Mapper;
 
+import java.io.Serializable;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,6 +62,22 @@ public class ReflectionUtilsTest extends TestBase {
         Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(WritingTeam.class));
     }
 
+    /**
+     * Tests that in a class hierarchy of arbitrary depth, we can get the correct declared field type
+     *
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGenericFieldTypeResolution() throws Exception {
+        Assert.assertEquals(
+            Integer.class,
+            ReflectionUtils.getTypeArgument(Sub.class,
+                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType()
+            )
+        );
+    }
+
     @Entity("Base")
     @Indexes(@Index("id"))
     private static class Foo {
@@ -92,4 +110,18 @@ public class ReflectionUtilsTest extends TestBase {
 
         private Set<Author> authorsSet;
     }
+
+    private static class Super1<T extends Object> {
+        protected T field;
+    }
+
+    private static class Super2<T extends Serializable> extends Super1<T> {
+    }
+
+    private static class Super3<T extends Number> extends Super2<T> {
+    }
+
+    private static class Sub extends Super3<Integer>{
+    }
+
 }
