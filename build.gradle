@@ -225,15 +225,6 @@ project(':no-proxy-deps-tests') {
     }
 }
 
-/*
-project(':gwt') {
-    dependencies {
-        compile project(':morphia')
-        compile 'com.google.gwt:gwt-user:2.1.0@jar'
-    }
-}
-*/
-
 apply from: 'gradle/ide-settings.gradle'
 apply from: 'gradle/maven-deployment.gradle'
 apply from: 'gradle/osgi-compatibility.gradle'
