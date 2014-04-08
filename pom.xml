@@ -261,7 +261,6 @@
         <module>logging-slf4j</module>
         <module>guice-plug</module>
         <module>entityscanner-plug</module>
-        <module>gwt</module>
     </modules>
 
     <properties>
