@@ -19,12 +19,14 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
 import com.mongodb.ReadPreference;
 import com.mongodb.ReplicaSetStatus;
+import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
@@ -324,7 +326,7 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, id));
         assertNotNull(getDs().exists(k));
-        
+
         List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
 
         assertNotNull("Should exist when using secondaryPreferred", getAds().exists(k, ReadPreference.secondaryPreferred()));
@@ -445,5 +447,20 @@ public class TestDatastore extends TestBase {
     @Test(expected = UpdateException.class)
     public void saveNull() {
         getDs().save((Hotel) null);
+    }
+
+    @Test
+    public void massiveBulkInsert() {
+        DBCollection collection = getDs().getCollection(FacebookUser.class);
+        collection.remove(new BasicDBObject());
+        int count = 500000;
+        List<FacebookUser> list = new ArrayList<FacebookUser>(count);
+        for (int i = 0; i < count; i++) {
+            list.add(new FacebookUser(i, "User " + i));
+        }
+        
+        getAds().insert(list, WriteConcern.UNACKNOWLEDGED);
+
+        assertEquals(count, collection.count());
     }
 }

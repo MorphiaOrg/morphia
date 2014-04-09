@@ -769,31 +769,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-        final List<DBObject> list = entities instanceof List
-                                    ? new ArrayList<DBObject>(((List<T>) entities).size())
-                                    : new ArrayList<DBObject>();
-
-        final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        for (final T ent : entities) {
-            list.add(toDbObject(involvedObjects, ent));
-        }
-
-        dbColl.insert(list.toArray(new DBObject[list.size()]), wc);
-
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        final Iterator<T> entitiesIT = entities.iterator();
-        final Iterator<DBObject> dbObjectsIT = list.iterator();
-
-        while (entitiesIT.hasNext()) {
-            final T entity = entitiesIT.next();
-            final DBObject dbObj = dbObjectsIT.next();
+        int i = 0;
+        for (final T entity : entities) {
+            final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+            DBObject dbObj = toDbObject(entity, involvedObjects);
+            dbColl.insert(wc, dbObj);
             savedKeys.add(postSaveGetKey(entity, dbObj, dbColl, involvedObjects));
         }
 
         return savedKeys;
     }
 
-    private <T> DBObject toDbObject(final Map<Object, DBObject> involvedObjects, final T ent) {
+    private <T> DBObject toDbObject(final T ent, final Map<Object, DBObject> involvedObjects) {
         final MappedClass mc = mapper.getMappedClass(ent);
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(String.format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
@@ -1107,9 +1095,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         return key;
     }
 
-    private <T> void postSaveOperations(final Object entity, final DBObject dbObj, final Map<Object, DBObject> involvedObjects) {
+    private void postSaveOperations(final Object entity, final DBObject dbObj, final Map<Object, DBObject> involvedObjects) {
         mapper.updateKeyInfo(entity, dbObj, createCache());
-
+    
         //call PostPersist on all involved entities (including the entity)
         for (final Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
             final Object ent = e.getKey();
