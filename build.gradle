@@ -15,7 +15,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
+    gradleVersion = '1.11'
 }
 
 def slf4jVersion = '1.7.5'
@@ -197,8 +197,9 @@ project(':entityscanner-plug') {
             'com.google.code.gson:gson'
             'logback-classic:ch.qos.logback'
             'xml-apis:xml-apis'
+            'com.google.guava:guava'
         }
-        compile 'com.google.collections:google-collections:1.0'
+        compile 'com.google.guava:guava:14.0.1'
         compile('org.scannotation:scannotation:1.0.3') {
             'javassist:javassist'
         }
