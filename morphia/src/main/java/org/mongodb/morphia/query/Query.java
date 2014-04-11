@@ -93,6 +93,17 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   Query<T> maxScan(int value);
 
   /**
+   * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments
+   * can make your profile data much easier to interpret and trace.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment</a>
+   * @param comment the comment to add
+   * @return the Query to enable chaining of commands
+   */
+  Query<T> comment(String comment);
+
+  /**
    * Starts the query results at a particular zero-based offset.
    *
    * @param value must be >= 0

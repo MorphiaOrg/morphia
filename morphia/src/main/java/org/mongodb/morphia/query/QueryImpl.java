@@ -62,6 +62,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tailAwaitData;
     private ReadPreference readPref;
     private Integer maxScan;
+    private String comment;
 
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
@@ -257,6 +258,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             cursor.addSpecial("$min", min);
         }
 
+        if (comment != null){
+            cursor.addSpecial("$comment", comment);
+        }
+
         return cursor;
     }
 
@@ -399,6 +404,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Query<T> maxScan(final int value) {
         maxScan = value > 0 ? value : null;
+        return this;
+    }
+
+    @Override
+    public Query<T> comment(final String comment) {
+        this.comment = comment;
         return this;
     }
 

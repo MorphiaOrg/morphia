@@ -19,11 +19,13 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
@@ -52,6 +54,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -1027,5 +1030,39 @@ public class TestQuery extends TestBase {
 
         Assert.assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
         Assert.assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+    }
+
+    @Test
+    public void testSettingACommentInsertsCommentIntoProfileCollectionWhenProfilingIsTurnedOn() {
+        // given
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+
+        getDb().command(new BasicDBObject("profile", 2));
+        String expectedComment = "test comment";
+
+        // when
+        getDs().createQuery(Pic.class).comment(expectedComment).asList();
+
+        // then
+        DBCollection profileCollection = getDb().getCollection("system.profile");
+        assertNotEquals(0, profileCollection.count());
+        DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
+                                                 .append("ns", getDs().getCollection(Pic.class).getFullName()));
+        assertEquals(expectedComment, ((DBObject) profileRecord.get("query")).get("$comment"));
+
+        // finally
+        turnOffProfilingAndDropProfileCollection();
+    }
+
+    @After
+    public void tearDown() {
+        turnOffProfilingAndDropProfileCollection();
+        super.tearDown();
+    }
+
+    private void turnOffProfilingAndDropProfileCollection() {
+        getDb().command(new BasicDBObject("profile", 0));
+        DBCollection profileCollection = getDb().getCollection("system.profile");
+        profileCollection.drop();
     }
 }
