@@ -92,6 +92,7 @@ public class Mapper {
      * support polymorphism
      */
     public static final String CLASS_NAME_FIELDNAME = "className";
+    public static final String DISCRIMINATOR = "discriminator";
 
     /**
      * Set of classes that registered by this mapper

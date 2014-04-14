@@ -16,6 +16,8 @@
 
 package org.mongodb.morphia.annotations;
 
+import org.mongodb.morphia.mapping.Mapper;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -29,7 +31,9 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 public @interface Discriminator {
 
-    String column();
+    String name() default Mapper.DISCRIMINATOR;
+
+    String column() default Mapper.DISCRIMINATOR;
 
     String value();
 }

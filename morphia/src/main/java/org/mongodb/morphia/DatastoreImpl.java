@@ -307,7 +307,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         processClassAnnotations(dbColl, mc, background);
 
+        processDiscriminatorAnnotation(dbColl, mc, background);
+
         processEmbeddedAnnotations(dbColl, mc, background, parentMCs, parentMFs);
+    }
+
+    private void processDiscriminatorAnnotation(final DBCollection dbColl, final MappedClass mc, final boolean background) {
+        if (mc.getDiscriminatorAnnotation() != null){
+            ensureIndex(dbColl, mc.getDiscriminatorAnnotation().name(),
+                    QueryImpl.parseFieldsString(mc.getDiscriminatorAnnotation().column(), mc.getClass(), mapper, false),
+                    false, false, background, false, -1);
+        }
     }
 
     /**

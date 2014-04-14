@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mongodb.morphia.mapping;
+package org.mongodb.morphia.query;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -22,7 +22,6 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Discriminator;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.query.Query;
 
 import java.util.List;
 
@@ -101,6 +100,7 @@ public class TestDiscriminator extends TestBase {
 
         Employee employee = new Employee("Mike", true, "IT", "Dev");
 
+        getDs().ensureIndexes(Employee.class);
         getDs().save(employee);
 
         Employee persisted = getDs().createQuery(Employee.class).field("department").equal("IT").get();

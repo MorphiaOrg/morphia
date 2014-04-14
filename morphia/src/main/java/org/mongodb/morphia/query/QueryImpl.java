@@ -142,9 +142,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
 
         if (discriminator != null) {
-            BasicDBObject basicDBObject = new BasicDBObject();
-            basicDBObject.append(discriminator.column(), discriminator.value());
-            obj.putAll((BSONObject) basicDBObject);
+            obj.put(discriminator.column(), discriminator.value());
         }
 
         addTo(obj);
