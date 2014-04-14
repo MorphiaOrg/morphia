@@ -3,23 +3,26 @@ package org.mongodb.morphia.mapping;
 
 import com.mongodb.DBObject;
 import org.mongodb.morphia.EntityInterceptor;
-import org.mongodb.morphia.annotations.Converters;
-import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Discriminator;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.EntityListeners;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Polymorphic;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PostPersist;
-import org.mongodb.morphia.annotations.PreLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.PreSave;
-import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.EntityListeners;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Converters;
+
+import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.annotations.Version;
+import org.mongodb.morphia.annotations.Property;
+
+import org.mongodb.morphia.annotations.PreLoad;
+import org.mongodb.morphia.annotations.PrePersist;
+import org.mongodb.morphia.annotations.PostLoad;
+import org.mongodb.morphia.annotations.PostPersist;
+import org.mongodb.morphia.annotations.PreSave;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.validation.MappingValidator;
@@ -31,13 +34,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 import static java.lang.String.format;
 
@@ -51,6 +55,7 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("unchecked")
 public class MappedClass {
+
     private static class ClassMethodPair {
         private final Class<?> clazz;
         private final Method method;
@@ -71,8 +76,8 @@ public class MappedClass {
      */
     //CHECKSTYLE:OFF
     public static final List<Class<? extends Annotation>> interestingAnnotations
-        = new ArrayList(Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class, Version.class,
-                                      Converters.class, Indexes.class));
+        = new ArrayList(Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, Discriminator.class, EntityListeners.class, Version.class,
+            Converters.class, Indexes.class));
     //CHECKSTYLE:ON
 
     /**
@@ -84,6 +89,7 @@ public class MappedClass {
      * special annotations representing the type the object
      */
     private Entity entityAn;
+    private Discriminator discriminator;
     private Embedded embeddedAn;
 
     /**
@@ -155,6 +161,7 @@ public class MappedClass {
     public void update() {
         embeddedAn = (Embedded) getAnnotation(Embedded.class);
         entityAn = (Entity) getFirstAnnotation(Entity.class);
+        discriminator = (Discriminator) getFirstAnnotation(Discriminator.class);
         // polymorphicAn = (Polymorphic) getAnnotation(Polymorphic.class);
         final List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
         if (fields != null && !fields.isEmpty()) {
@@ -475,6 +482,13 @@ public class MappedClass {
      */
     public Entity getEntityAnnotation() {
         return entityAn;
+    }
+
+    /**
+     * @return the discriminator
+     */
+    public Discriminator getDiscriminatorAnnotation() {
+        return discriminator;
     }
 
     /**

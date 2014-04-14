@@ -534,6 +534,10 @@ public class Mapper {
             dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
         }
 
+        if (mc.getDiscriminatorAnnotation() != null) {
+            dbObject.put(mc.getDiscriminatorAnnotation().column(), mc.getDiscriminatorAnnotation().value());
+        }
+
         if (lifecycle) {
             dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
         }
