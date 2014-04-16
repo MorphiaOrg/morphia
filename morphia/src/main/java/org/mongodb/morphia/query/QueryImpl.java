@@ -606,4 +606,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public String getFieldName() {
         return null;
     }
+
+    @Override
+    public DBObject explain() {
+        DBCursor cursor = prepareCursor();
+        return cursor.explain();
+    }
 }

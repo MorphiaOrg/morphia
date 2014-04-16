@@ -1035,6 +1035,18 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testExplainPlanIsReturnedAndContainsCorrectValueForN() {
+        // Given
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+
+        // When
+        DBObject explainResult = getDs().createQuery(Pic.class).explain();
+
+        // Then
+        Assert.assertEquals(4, explainResult.get("n"));
+    }
+
+    @Test
     public void testSettingACommentInsertsCommentIntoProfileCollectionWhenProfilingIsTurnedOn() {
         // given
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));

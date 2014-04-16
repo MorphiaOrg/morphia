@@ -85,8 +85,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   /**
    * Constrains the query to only scan the specified number of documents when fulfilling the query.
    *
-   * @see http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan
-   * 
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan</a>
    * @param value must be > 0.  A value < 0 indicates no limit
    */
   Query<T> maxScan(int value);
@@ -272,6 +272,16 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * Returns the {@link DBCollection} of the {@link Query}.
    */
   DBCollection getCollection();
+
+  /**
+   * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
+   * may be useful when optimizing a query.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/explain/">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/explain/</a>
+   * @return DBObject describing the process used to return the query results.
+   */
+  DBObject explain();
 
   /**
    * Creates and returns a copy of this {@link Query}.
