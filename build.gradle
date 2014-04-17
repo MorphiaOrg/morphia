@@ -3,9 +3,9 @@ def configDir = new File(rootDir, 'config')
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
