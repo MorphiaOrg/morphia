@@ -53,10 +53,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 
@@ -1054,6 +1056,25 @@ public class TestQuery extends TestBase {
         turnOffProfilingAndDropProfileCollection();
     }
 
+    @Test
+    public void testShouldReturnOnlyTheFieldThatWasInTheIndexUsedForTheFindWhenReturnKeyIsUsed() {
+        // Given
+        // put some documents into the collection
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+        //set an index on the field "name"
+        getDs().ensureIndex(Pic.class, "name");
+
+        // When
+        // find a document by using a search on the field in the index
+        Query<Pic> query = getDs().createQuery(Pic.class).returnKey().field("name").equal("pic2");
+
+        // Then
+        Pic foundItem = query.get();
+        assertNotNull(foundItem);
+        assertThat("Name should be populated", foundItem.getName(), is("pic2"));
+        assertNull("ID should not be populated", foundItem.getId());
+    }
+    
     @After
     public void tearDown() {
         turnOffProfilingAndDropProfileCollection();

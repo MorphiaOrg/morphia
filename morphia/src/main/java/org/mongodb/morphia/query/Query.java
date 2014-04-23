@@ -1,11 +1,10 @@
 package org.mongodb.morphia.query;
 
 
-import org.bson.types.CodeWScope;
-
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import org.bson.types.CodeWScope;
 
 
 /**
@@ -102,6 +101,16 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * @return the Query to enable chaining of commands
    */
   Query<T> comment(String comment);
+
+  /**
+   * Only return the index field or fields for the results of the query. If $returnKey is set to true and the query does not use an index
+   * to perform the read operation, the returned documents will not contain any fields
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/returnKey/#op._S_returnKey">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/returnKey/#op._S_returnKey</a>
+   * @return the Query to enable chaining of commands
+   */
+  Query<T> returnKey();
 
   /**
    * Starts the query results at a particular zero-based offset.
@@ -268,4 +277,5 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * Creates and returns a copy of this {@link Query}.
    */
   Query<T> cloneQuery();
+
 }

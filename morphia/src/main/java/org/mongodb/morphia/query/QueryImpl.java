@@ -63,6 +63,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private ReadPreference readPref;
     private Integer maxScan;
     private String comment;
+    private boolean returnKey;
 
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
@@ -262,6 +263,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             cursor.addSpecial("$comment", comment);
         }
 
+        if (returnKey){
+            cursor.returnKey();
+        }
+
         return cursor;
     }
 
@@ -410,6 +415,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public Query<T> comment(final String comment) {
         this.comment = comment;
+        return this;
+    }
+
+    @Override
+    public Query<T> returnKey() {
+        this.returnKey = true;
         return this;
     }
 
