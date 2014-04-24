@@ -608,8 +608,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public DBObject explain() {
+    public Map<String, Object> explain() {
         DBCursor cursor = prepareCursor();
-        return cursor.explain();
+        return (BasicDBObject) cursor.explain();
     }
 }

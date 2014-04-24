@@ -6,6 +6,8 @@ import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import org.bson.types.CodeWScope;
 
+import java.util.Map;
+
 
 /**
  * @author Scott Hernandez
@@ -279,13 +281,12 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    *
    * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/explain/">
    *     http://docs.mongodb.org/manual/reference/operator/meta/explain/</a>
-   * @return DBObject describing the process used to return the query results.
+   * @return Map describing the process used to return the query results.
    */
-  DBObject explain();
+  Map<String, Object> explain();
 
   /**
    * Creates and returns a copy of this {@link Query}.
    */
   Query<T> cloneQuery();
-
 }

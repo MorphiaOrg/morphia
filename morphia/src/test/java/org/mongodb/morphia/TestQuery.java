@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -1040,7 +1041,7 @@ public class TestQuery extends TestBase {
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
 
         // When
-        DBObject explainResult = getDs().createQuery(Pic.class).explain();
+        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
 
         // Then
         Assert.assertEquals(4, explainResult.get("n"));
@@ -1061,7 +1062,7 @@ public class TestQuery extends TestBase {
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
         DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
-                                                 .append("ns", getDs().getCollection(Pic.class).getFullName()));
+                                                           .append("ns", getDs().getCollection(Pic.class).getFullName()));
         assertEquals(expectedComment, ((DBObject) profileRecord.get("query")).get("$comment"));
 
         // finally
