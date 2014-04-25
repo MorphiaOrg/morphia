@@ -355,6 +355,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testExistsWhenUsingNearest() throws Exception {
+        assumeTrue(isReplicaSet());
         // given 
         long id = System.currentTimeMillis();
         final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), WriteConcern.MAJORITY);
