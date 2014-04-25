@@ -48,7 +48,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.mongodb.ReadPreference.nearest;
 import static com.mongodb.ReadPreference.secondary;
 import static com.mongodb.ReadPreference.secondaryPreferred;
 import static org.junit.Assert.assertEquals;
@@ -351,17 +350,6 @@ public class TestDatastore extends TestBase {
 
         // expect
         assertNotNull("Should exist when using secondary", getAds().exists(key, secondary()));
-    }
-
-    @Test
-    public void testExistsWhenUsingNearest() throws Exception {
-        assumeTrue(isReplicaSet());
-        // given 
-        long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), WriteConcern.MAJORITY);
-
-        // expect
-        assertNotNull("Should exist when using nearest", getAds().exists(key, nearest()));
     }
 
     @Test
