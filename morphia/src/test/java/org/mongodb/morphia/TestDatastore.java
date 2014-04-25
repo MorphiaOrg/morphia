@@ -24,8 +24,6 @@ import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
-import com.mongodb.ReadPreference;
-import com.mongodb.ReplicaSetStatus;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -50,10 +48,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.mongodb.ReadPreference.nearest;
+import static com.mongodb.ReadPreference.secondary;
+import static com.mongodb.ReadPreference.secondaryPreferred;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 
 /**
@@ -320,28 +322,60 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testExists() throws Exception {
-        int id = 10000;
-        final Key<FacebookUser> k = getDs().save(new FacebookUser(id, "user 1"));
-        assertEquals(1, getDs().getCount(FacebookUser.class));
+    public void testExistsWhenItemSaved() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // expect
         assertNotNull(getDs().get(FacebookUser.class, id));
-        assertNotNull(getDs().exists(k));
-
-        List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
-
-        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(k, ReadPreference.secondaryPreferred()));
-        ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
-        if (replicaSetStatus != null) {
-            assertNotNull("Should exist when using secondary", getAds().exists(k, ReadPreference.secondary()));
-        }
-        assertNotNull("Should exist when using nearest", getAds().exists(k, ReadPreference.nearest()));
-
-        assertNotNull("Should be able to getByKey()", getDs().getByKey(FacebookUser.class, k));
-        getDs().delete(getDs().find(FacebookUser.class));
-        assertEquals("Should be no more users", 0, getDs().getCount(FacebookUser.class));
-        assertNull("Shouldn't exist after delete", getDs().exists(k));
+        assertNotNull(getDs().exists(key));
     }
 
+    @Test
+    public void testExistsWhenSecondaryPreferred() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // expect
+        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
+    }
+
+    @Test
+    public void testExistsWhenUsingSecondary() throws Exception {
+        assumeTrue(isReplicaSet());
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), WriteConcern.MAJORITY);
+
+        // expect
+        assertNotNull("Should exist when using secondary", getAds().exists(key, secondary()));
+    }
+
+    @Test
+    public void testExistsWhenUsingNearest() throws Exception {
+        // given 
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), WriteConcern.MAJORITY);
+
+        // expect
+        assertNotNull("Should exist when using nearest", getAds().exists(key, nearest()));
+    }
+
+    @Test
+    public void testDoesNotExistAfterDelete() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // when 
+        getDs().delete(getDs().find(FacebookUser.class));
+        
+        // then
+        assertNull("Shouldn't exist after delete", getDs().exists(key));
+    }
+    
     @Test
     public void testExistsWithEntity() throws Exception {
         final FacebookUser facebookUser = new FacebookUser(1, "user one");
@@ -458,7 +492,7 @@ public class TestDatastore extends TestBase {
         for (int i = 0; i < count; i++) {
             list.add(new FacebookUser(i, "User " + i));
         }
-        
+
         getAds().insert(list, WriteConcern.UNACKNOWLEDGED);
 
         assertEquals(count, collection.count());

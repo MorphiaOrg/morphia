@@ -1,6 +1,7 @@
 package org.mongodb.morphia;
 
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
@@ -9,7 +10,6 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.mongodb.morphia.mapping.MappedClass;
-
 
 public abstract class TestBase {
     private final Mongo mongo;
@@ -47,7 +47,7 @@ public abstract class TestBase {
     }
 
     /**
-     * @param version  must be a major version, e.g. 1.8, 2,0, 2.2
+     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtLeastVersion(final double version) {
@@ -58,9 +58,9 @@ public abstract class TestBase {
     protected void checkMinServerVersion(final double version) {
         Assume.assumeTrue(serverIsAtLeastVersion(version));
     }
-    
+
     /**
-     * @param version  must be a major version, e.g. 1.8, 2,0, 2.2
+     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtMostVersion(final double version) {
@@ -71,7 +71,7 @@ public abstract class TestBase {
     protected void checkMaxServerVersion(final double version) {
         Assume.assumeTrue(serverIsAtMostVersion(version));
     }
-    
+
     public AdvancedDatastore getAds() {
         return ads;
     }
@@ -103,4 +103,14 @@ public abstract class TestBase {
     public void setAds(final AdvancedDatastore ads) {
         this.ads = ads;
     }
+
+    public boolean isReplicaSet() {
+        return runIsMaster().get("setName") != null;
+    }
+
+    private CommandResult runIsMaster() {
+        // Check to see if this is a replica set... if not, get out of here.
+        return mongo.getDB("admin").command(new BasicDBObject("ismaster", 1));
+    }
+
 }
