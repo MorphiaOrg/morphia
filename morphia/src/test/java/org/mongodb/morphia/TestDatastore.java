@@ -48,13 +48,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.mongodb.ReadPreference.secondary;
 import static com.mongodb.ReadPreference.secondaryPreferred;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 
 
 /**
@@ -339,17 +337,6 @@ public class TestDatastore extends TestBase {
 
         // expect
         assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
-    }
-
-    @Test
-    public void testExistsWhenUsingSecondary() throws Exception {
-        assumeTrue(isReplicaSet());
-        // given
-        long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), WriteConcern.MAJORITY);
-
-        // expect
-        assertNotNull("Should exist when using secondary", getAds().exists(key, secondary()));
     }
 
     @Test
