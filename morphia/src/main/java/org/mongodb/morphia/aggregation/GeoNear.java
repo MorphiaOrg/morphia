@@ -186,7 +186,7 @@ public final class GeoNear {
         }
 
         /**
-         * If this value is true, the query returns a matching document once, even if more than one of the document’s location fields match
+         * If this value is true, the query returns a matching document once, even if more than one of the document's location fields match
          * the query. If this value is false, the query returns a document multiple times if the document has multiple matching location
          * fields. See $uniqueDocs for more information.
          *
