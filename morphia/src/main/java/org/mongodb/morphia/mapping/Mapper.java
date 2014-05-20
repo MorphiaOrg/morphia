@@ -839,7 +839,7 @@ public class Mapper {
         } else if (mf.getMapper().getMappedClass(type) != null && mf.getMapper().getMappedClass(type).getMappedIdField() != null
                    && value.getClass().equals(mf.getMapper().getMappedClass(type).getMappedIdField().getConcreteType())) {
             return true;
-        } else if (!value.getClass().isAssignableFrom(type) && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
+        } else if (!type.isInstance(value) && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
             return false;
         }
         return true;
