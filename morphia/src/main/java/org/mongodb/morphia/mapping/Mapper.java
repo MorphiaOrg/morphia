@@ -825,10 +825,10 @@ public class Mapper {
                    && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
                        || Map.class.isAssignableFrom(value.getClass()))) {
             return true;
-        } else if (value instanceof Integer && (Arrays.<Type>asList(int.class, long.class, Long.class).contains(type))) {
+        } else if (value instanceof Integer && Arrays.<Type>asList(int.class, long.class, Long.class).contains(type)) {
             return true;
         } else if ((value instanceof Integer || value instanceof Long)
-                   && (Arrays.<Type>asList(double.class, Double.class).contains(type))) {
+                   && Arrays.<Type>asList(double.class, Double.class).contains(type)) {
             return true;
         } else if (value instanceof Pattern && String.class.equals(type)) {
             return true;
