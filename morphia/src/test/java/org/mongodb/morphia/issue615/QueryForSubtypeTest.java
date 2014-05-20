@@ -64,4 +64,17 @@ public class QueryForSubtypeTest extends TestBase {
 
         assertTrue("LocalUser should be compatible for field of type User", compatible);
     }
+
+    @Test
+    public void testSizeOfArrayList() {
+        MappedField mf = jobMappedClass.getMappedField("attributes");
+
+        boolean compatible = Mapper.isCompatibleForOperator(
+                mf,
+                mf.getType(),
+                FilterOperator.SIZE,
+                2);
+
+        assertTrue("$size 2 should be compatible for field of type ArrayList", compatible);
+    }
 }

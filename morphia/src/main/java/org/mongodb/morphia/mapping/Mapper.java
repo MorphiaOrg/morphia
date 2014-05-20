@@ -801,7 +801,7 @@ public class Mapper {
             return true;
         } else if (op.equals(FilterOperator.EXISTS) && (value instanceof Boolean)) {
             return true;
-        } else if (op.equals(FilterOperator.SIZE) && (type.isAssignableFrom(List.class) && value instanceof Integer)) {
+        } else if (op.equals(FilterOperator.SIZE) && (List.class.isAssignableFrom(type) && value instanceof Integer)) {
             return true;
         } else if (op.equals(FilterOperator.IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
                                                     || Map.class.isAssignableFrom(value.getClass()))) {
