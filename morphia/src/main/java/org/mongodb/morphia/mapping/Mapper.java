@@ -52,7 +52,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +67,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 
 /**
@@ -813,8 +814,8 @@ public class Mapper {
             return ReflectionUtils.isIntegerType(Array.get(value, 0).getClass());
         } else if (op.equals(FilterOperator.GEO_WITHIN)
                    && (type.isArray() || Iterable.class.isAssignableFrom(type))
-                   && (mf.getSubType() instanceof Number || asList(int.class, long.class, double.class,
-                                                                   float.class).contains(mf.getSubType()))) {
+                   && (mf.getSubType() instanceof Number || Arrays.<Type>asList(int.class, long.class, double.class,
+                                                                                float.class).contains(mf.getSubType()))) {
             if (value instanceof DBObject) {
                 String key = ((DBObject) value).keySet().iterator().next();
                 return key.equals("$box") || key.equals("$center") || key.equals("$centerSphere") || key.equals("$polygon");
@@ -824,9 +825,10 @@ public class Mapper {
                    && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
                        || Map.class.isAssignableFrom(value.getClass()))) {
             return true;
-        } else if (value instanceof Integer && (asList(int.class, long.class, Long.class).contains(type))) {
+        } else if (value instanceof Integer && (Arrays.<Type>asList(int.class, long.class, Long.class).contains(type))) {
             return true;
-        } else if ((value instanceof Integer || value instanceof Long) && (asList(double.class, Double.class).contains(type))) {
+        } else if ((value instanceof Integer || value instanceof Long)
+                   && (Arrays.<Type>asList(double.class, Double.class).contains(type))) {
             return true;
         } else if (value instanceof Pattern && String.class.equals(type)) {
             return true;
