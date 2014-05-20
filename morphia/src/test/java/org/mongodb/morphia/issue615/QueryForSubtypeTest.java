@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -76,5 +77,18 @@ public class QueryForSubtypeTest extends TestBase {
                 2);
 
         assertTrue("$size 2 should be compatible for field of type ArrayList", compatible);
+    }
+
+    @Test
+    public void testSubclassOfKey() {
+        MappedField mf = jobMappedClass.getMappedField("owner");
+
+        boolean compatible = Mapper.isCompatibleForOperator(
+                mf,
+                mf.getType(),
+                FilterOperator.EQUAL,
+                new Key<User>(User.class, 212L) {}); // anonymous subclass of Key
+
+        assertTrue("Subclass of Key<User> should be compatible for field of type User", compatible);
     }
 }

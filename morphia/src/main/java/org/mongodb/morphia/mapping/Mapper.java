@@ -832,7 +832,7 @@ public class Mapper {
             return true;
         } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
             return true;
-        } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
+        } else if (Key.class.isInstance(value) && type.equals(((Key) value).getKindClass())) {
             return true;
         } else if (value instanceof List<?>) {
             return true;
