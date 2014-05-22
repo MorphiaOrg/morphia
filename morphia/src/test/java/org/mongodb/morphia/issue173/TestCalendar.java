@@ -1,6 +1,5 @@
 package org.mongodb.morphia.issue173;
 
-
 import com.mongodb.WriteConcern;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,8 +9,7 @@ import org.mongodb.morphia.testutil.TestEntity;
 
 import java.util.Calendar;
 
-
-public class TestIdTwice extends TestBase {
+public class TestCalendar extends TestBase {
 
     @Test
     public final void testCalendar() {
