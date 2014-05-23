@@ -15,14 +15,12 @@
  */
 
 
-package org.mongodb.morphia;
-
+package org.mongodb.morphia.indexes;
 
 import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
@@ -31,7 +29,6 @@ import org.mongodb.morphia.mapping.MappedClass;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 
 /**
  * @author Scott Hernandez
@@ -80,62 +77,12 @@ public class TestIndexInheritance extends TestBase {
         }
     }
 
-    @Entity
-    public static class Child extends Father {
-        public Child() {
-        }
-
-        public Child(final String name) {
-            super(name);
-        }
-    }
-
-    @Entity
-    public static class Father extends GrandFather {
-        public Father() {
-        }
-
-        public Father(final String name) {
-            super(name);
-        }
-    }
-
-    @Entity
-    public static class GrandFather {
-        @Id
-        private ObjectId id;
-        private String name;
-
-        public GrandFather() {
-        }
-
-        public GrandFather(final String name) {
-            this.name = name;
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-    }
-
     @Test
     public void testClassIndexInherit() throws Exception {
         getMorphia().map(Circle.class)
-            .map(Shape.class);
+                    .map(Shape.class);
         final MappedClass mc = getMorphia().getMapper()
-                                   .getMappedClass(Circle.class);
+                                           .getMappedClass(Circle.class);
         assertNotNull(mc);
 
         assertEquals(2, mc.getAnnotations(Indexes.class)
@@ -151,9 +98,9 @@ public class TestIndexInheritance extends TestBase {
     @Test
     public void testInheritedFieldIndex() throws Exception {
         getMorphia().map(Circle.class)
-            .map(Shape.class);
+                    .map(Shape.class);
         getMorphia().getMapper()
-            .getMappedClass(Circle.class);
+                    .getMappedClass(Circle.class);
 
         getDs().ensureIndexes();
         final DBCollection coll = getDs().getCollection(Circle.class);
@@ -162,13 +109,4 @@ public class TestIndexInheritance extends TestBase {
                             .size());
     }
 
-    @Test
-    public void deepTree() {
-        final Child jimmy = new Child("Jimmy");
-        getDs().save(jimmy);
-
-        final Child loaded = getDs().get(Child.class, jimmy.getId());
-        Assert.assertNotNull(loaded);
-        Assert.assertEquals(jimmy.getName(), loaded.getName());
-    }
 }
