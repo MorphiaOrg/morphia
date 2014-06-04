@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mongodb.morphia.query.QueryValidator.validateQuery;
+
 
 /**
  * @author Scott Hernandez
@@ -180,7 +182,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         MappedField mf = null;
         final StringBuilder sb = new StringBuilder(f);
         if (validateNames || validateTypes) {
-            mf = Mapper.validate(clazz, mapper, sb, FilterOperator.EQUAL, val, validateNames, validateTypes);
+            mf = validateQuery(clazz, mapper, sb, FilterOperator.EQUAL, val, validateNames, validateTypes);
         }
 
         if (convert) {

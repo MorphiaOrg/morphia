@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
 /**
@@ -159,7 +160,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db 
             // field 
             // name
-            Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+            validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
             fieldsFilter.put(field, (includeFields ? 1 : 0));
         }
@@ -483,7 +484,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
             if (validate) {
                 final StringBuilder sb = new StringBuilder(s);
-                Mapper.validate(clazz, mapper, sb, FilterOperator.IN, "", true, false);
+                validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
                 s = sb.toString();
             }
             ret = ret.add(s, dir);

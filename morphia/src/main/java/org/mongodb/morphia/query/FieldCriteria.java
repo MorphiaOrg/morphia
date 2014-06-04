@@ -14,7 +14,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
+// TODO used for querying?
 public class FieldCriteria extends AbstractCriteria {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
 
@@ -32,8 +34,13 @@ public class FieldCriteria extends AbstractCriteria {
                             final boolean validateNames, final boolean validateTypes, final boolean not) {
         //validate might modify prop string to translate java field name to db field name
         final StringBuilder sb = new StringBuilder(fieldName);
-        final MappedField mf = Mapper.validate(query.getEntityClass(), query.getDatastore().getMapper(), sb, op, value, validateNames,
-                                               validateTypes);
+        final MappedField mf = validateQuery(query.getEntityClass(),
+                                             query.getDatastore().getMapper(),
+                                             sb,
+                                             op,
+                                             value,
+                                             validateNames,
+                                             validateTypes);
 
         final Mapper mapper = query.getDatastore().getMapper();
 
