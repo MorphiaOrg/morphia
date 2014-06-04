@@ -21,8 +21,10 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 //TODO: Trisha - this really needs a test, if only to document what it's doing
-class QueryValidator {
+final class QueryValidator {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryValidator.class);
+    
+    private QueryValidator() {}
 
     private static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op,
                                                    final Object value) {
