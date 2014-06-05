@@ -474,6 +474,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return queryByExample(db.getCollection(kind), ex);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Query<T> queryByExample(final DBCollection coll, final T example) {
         //TODO: think about remove className from baseQuery param below.
         final Class<T> type = (Class<T>) example.getClass();
@@ -613,7 +614,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
 
         final Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
@@ -674,6 +675,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return get(clazz, key.getId());
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
         final Object id = mapper.getId(unwrapped);
@@ -875,6 +877,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     /**
      * call postSaveOperations and returns Key for entity
      */
+    @SuppressWarnings("unchecked")
     protected <T> Key<T> postSaveGetKey(final T entity, final DBObject dbObj, final DBCollection dbColl,
                                         final Map<Object, DBObject> involvedObjects) {
         if (dbObj.get(Mapper.ID_KEY) == null) {
@@ -1030,6 +1033,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(query, ops, createIfMissing, true, wc);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> UpdateResults update(final T ent, final UpdateOperations<T> ops) {
         if (ent instanceof Query) {
             return update((Query<T>) ent, ops);
@@ -1049,6 +1053,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(q, ops);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> ops) {
         Class<T> clazz = (Class<T>) key.getKindClass();
         if (clazz == null) {
@@ -1095,6 +1100,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return merge(entity, getWriteConcern(entity));
     }
 
+    @SuppressWarnings("unchecked")
     public <T> Key<T> merge(final T entity, final WriteConcern wc) {
         T unwrapped = entity;
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
@@ -1386,6 +1392,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     /**
      * Converts a list of refs to keys
      */
+    @SuppressWarnings("unchecked")
     public static <T> List<Key<T>> refsToKeys(final Mapper mapper, final List<DBRef> refs, final Class<T> c) {
         final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
         for (final DBRef ref : refs) {

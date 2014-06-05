@@ -33,6 +33,7 @@ public class SerializableMapObjectReference extends AbstractReference implements
     //CHECKSTYLE:ON
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object fetch() {
         final Map m = (Map) object;
         m.clear();
@@ -55,6 +56,7 @@ public class SerializableMapObjectReference extends AbstractReference implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void syncKeys() {
         final Datastore ds = p.get();
 

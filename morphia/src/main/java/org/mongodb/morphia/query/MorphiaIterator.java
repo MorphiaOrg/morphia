@@ -74,6 +74,7 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return dbObj;
     }
 
+    @SuppressWarnings("unchecked")
     protected V convertItem(final DBObject dbObj) {
         return (V) m.fromDBObject(clazz, dbObj, cache);
     }

@@ -42,6 +42,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return injectMembers(delegate.createInstance(clazz));
   }
 
+  @SuppressWarnings("unchecked")
   private boolean injectOnConstructor(final Class clazz) {
     final Constructor[] cs = clazz.getDeclaredConstructors();
     for (final Constructor constructor : cs) {
@@ -60,6 +61,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return injectMembers(delegate.createInstance(clazz, dbObj));
   }
 
+  @SuppressWarnings("unchecked")
   public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
     final Class clazz = mf.getType();
     if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
@@ -74,6 +76,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return injectMembers(delegate.createInstance(mapper, mf, dbObj));
   }
 
+  @SuppressWarnings("unchecked")
   public Map createMap(final MappedField mf) {
     final Class clazz = mf.getType();
     if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
@@ -88,6 +91,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return injectMembers(delegate.createMap(mf));
   }
 
+  @SuppressWarnings("unchecked")
   public List createList(final MappedField mf) {
     final Class clazz = mf.getType();
     if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
@@ -102,6 +106,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     return injectMembers(delegate.createList(mf));
   }
 
+  @SuppressWarnings("unchecked")
   public Set createSet(final MappedField mf) {
     final Class clazz = mf.getType();
     if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {

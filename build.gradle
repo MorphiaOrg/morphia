@@ -97,7 +97,7 @@ allprojects {
         options.encoding = 'ISO-8859-1'
         options.fork = true
         options.debug = true
-        options.compilerArgs = ['-Xlint:deprecation', '-Xlint:-options']
+        options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-Xlint:-options']
     }
 
     tasks.withType(Test) {

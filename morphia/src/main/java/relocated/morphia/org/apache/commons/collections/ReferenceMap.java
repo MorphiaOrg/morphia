@@ -613,6 +613,7 @@ public class ReferenceMap extends AbstractMap {
 
 
       @Override
+      @SuppressWarnings("unchecked")
       public Object[] toArray(final Object[] arr) {
         final List list = new ArrayList();
         final Iterator iterator = iterator();
@@ -908,6 +909,7 @@ public class ReferenceMap extends AbstractMap {
     private final int hash;
 
 
+    @SuppressWarnings("unchecked")
     public SoftRef(final int hash, final Object r, final ReferenceQueue q) {
       super(r, q);
       this.hash = hash;
@@ -924,6 +926,7 @@ public class ReferenceMap extends AbstractMap {
     private final int hash;
 
 
+    @SuppressWarnings("unchecked")
     public WeakRef(final int hash, final Object r, final ReferenceQueue q) {
       super(r, q);
       this.hash = hash;

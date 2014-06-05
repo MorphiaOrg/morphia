@@ -97,6 +97,7 @@ public class FieldCriteria extends AbstractCriteria {
         return value;
     }
 
+    @SuppressWarnings("unchecked")
     public void addTo(final DBObject obj) {
         if (FilterOperator.EQUAL.equals(operator)) {
             // no operator, prop equals (or NOT equals) value

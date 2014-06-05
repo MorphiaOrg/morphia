@@ -143,7 +143,7 @@ public final class ReflectionUtils {
      * @param interfaceClass the interface class we want to check against
      * @return true if type implements interfaceClass, else false
      */
-    public static boolean implementsInterface(final Class type, final Class interfaceClass) {
+    public static boolean implementsInterface(final Class<?> type, final Class<?> interfaceClass) {
         return interfaceClass.isAssignableFrom(type);
     }
 
@@ -388,6 +388,7 @@ public final class ReflectionUtils {
     /**
      * Returns the (first) instance of the annotation, on the class (or any superclass, or interfaces implemented).
      */
+    @SuppressWarnings("unchecked")
     public static <T> List<T> getAnnotations(final Class c, final Class<T> annClass) {
         final List<T> found = new ArrayList<T>();
         // TODO isn't that actually breaking the contract of @Inherited?
@@ -515,6 +516,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
+    @SuppressWarnings("unchecked")
     public static List iterToList(final Iterable it) {
         if (it instanceof List) {
           return (List) it;

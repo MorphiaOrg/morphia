@@ -23,9 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Id;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -67,8 +64,7 @@ public class TestDatatypes extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(new HashSet<Class>(Arrays.asList(ContainsByte.class, ContainsDouble.class,
-                                                          ContainsFloat.class, ContainsShort.class)));
+        getMorphia().map(ContainsByte.class, ContainsDouble.class, ContainsFloat.class, ContainsShort.class);
     }
 
     @Test

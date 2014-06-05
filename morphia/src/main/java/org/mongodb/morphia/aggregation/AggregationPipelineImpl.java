@@ -34,6 +34,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         this.source = source;
     }
 
+    @SuppressWarnings("unchecked")
     public DBObject toDBObject(final Projection projection) {
         String sourceFieldName;
         if (firstStage) {

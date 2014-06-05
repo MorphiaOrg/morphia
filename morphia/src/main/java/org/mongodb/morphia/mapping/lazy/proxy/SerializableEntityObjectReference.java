@@ -24,6 +24,7 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
     //CHECKSTYLE:ON
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object fetch() {
         final Object entity = p.get().getByKey(referenceObjClass, key);
         if (entity == null) {

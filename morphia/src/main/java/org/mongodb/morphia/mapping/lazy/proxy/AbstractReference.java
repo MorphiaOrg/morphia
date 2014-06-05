@@ -53,6 +53,7 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         return isFetched;
     }
 
+    @SuppressWarnings("unchecked")
     protected final Object fetch(final Key<?> id) {
         return p.get().getByKey(referenceObjClass, id);
     }

@@ -33,6 +33,7 @@ public class IterableConverter extends TypeConverter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
         if (mf == null || fromDBObject == null) {
             return fromDBObject;
@@ -71,6 +72,7 @@ public class IterableConverter extends TypeConverter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object encode(final Object value, final MappedField mf) {
 
         if (value == null) {

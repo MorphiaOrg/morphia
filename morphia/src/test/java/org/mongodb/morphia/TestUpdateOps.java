@@ -505,6 +505,7 @@ public class TestUpdateOps extends TestBase {
         validateNoClassName(finder.get());
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void validateNoClassName(final EntityLogs loaded) {
         List<DBObject> logs = (List<DBObject>) loaded.raw.get("logs");
         for (DBObject o : logs) {

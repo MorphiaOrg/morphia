@@ -44,6 +44,7 @@ public class DefaultCreator implements ObjectFactory {
     /**
      * @see ObjectFactory#createInstance(Mapper, MappedField, DBObject)
      */
+    @SuppressWarnings("unchecked")
     public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
         Class c = getClass(dbObj);
         if (c == null) {
@@ -76,6 +77,7 @@ public class DefaultCreator implements ObjectFactory {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Class<T>  getClass(final DBObject dbObj) {
         // see if there is a className value
         final String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
@@ -135,6 +137,7 @@ public class DefaultCreator implements ObjectFactory {
     /**
      * creates an instance of testType (if it isn't Object.class or null) or fallbackType
      */
+    @SuppressWarnings("unchecked")
     private static Object newInstance(final Constructor tryMe, final Class fallbackType) {
         if (tryMe != null) {
             tryMe.setAccessible(true);
