@@ -32,19 +32,16 @@ import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 public class QueryValidatorTest {
 
     @Test
-    public void shouldNotErrorWhenValueIsNull() {
+    public void shouldNotErrorWhenValidateQueryCalledWithNullValue() {
         // this unit test is to drive fixing a null pointer in the logging code.  It's a bit stupid but it's an edge case that wasn't 
         // caught.
         // when this is called, don't error
         validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("name"), EQUAL, null, true, true);
     }
 
-    //TODO: worryingly, when isCompatibleForOperator is hardcoded to return false, no tests fail (currently)
-    // Ditto for when it's hardcoded for true.  Also no failures.  Not tested...
-
     // All of the following tests are whitebox, as I have retrofitted them afterwards.  I have no idea if this is the required 
     // functionality or not
-    
+
     @Test
     public void shouldBeCompatibleIfValueIsNull() {
         // expect
@@ -110,7 +107,7 @@ public class QueryValidatorTest {
     @Test
     public void shouldAllowInOperatorForIterableMapAndArrayValues() {
         // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, IN, Arrays.asList(1,2)), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, IN, Arrays.asList(1, 2)), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, IN, Collections.emptySet()), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, IN, new HashMap<String, String>()), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, IN, new int[0]), is(true));
@@ -171,8 +168,8 @@ public class QueryValidatorTest {
     public void shouldNotAllowModOperatorWithNonArrayValue() {
         // expect
         // this is bad
-//        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-//        MappedField mappedField = mappedClass.getMappedField("name");
+        //        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        //        MappedField mappedField = mappedClass.getMappedField("name");
         assertThat(QueryValidator.isCompatibleForOperator(null, String.class, MOD, "value"), is(false));
     }
 
@@ -189,7 +186,7 @@ public class QueryValidatorTest {
         // expect
         MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("array");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedField, List.class, GEO_WITHIN, new BasicDBObject("name", "value")), 
+        assertThat(QueryValidator.isCompatibleForOperator(mappedField, List.class, GEO_WITHIN, new BasicDBObject("name", "value")),
                    is(false));
     }
 
@@ -208,7 +205,7 @@ public class QueryValidatorTest {
     @Test
     public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
         // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, ALL, Arrays.asList(1,2)), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, ALL, Arrays.asList(1, 2)), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, ALL, Collections.emptySet()), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, ALL, new HashMap<String, String>()), is(true));
         assertThat(QueryValidator.isCompatibleForOperator(null, SimpleEntity.class, ALL, new int[0]), is(true));
@@ -231,7 +228,7 @@ public class QueryValidatorTest {
         assertThat(QueryValidator.isCompatibleForOperator(null, long.class, EQUAL, new Integer(1)), is(true));
 
         //for some insane reason, although the value needs to be an Integer, the type cannot be
-//        assertThat(QueryValidator.isCompatibleForOperator(null, Integer.class, EQUAL, new Integer(1)), is(true));
+        //        assertThat(QueryValidator.isCompatibleForOperator(null, Integer.class, EQUAL, new Integer(1)), is(true));
     }
 
     @Test
@@ -313,7 +310,7 @@ public class QueryValidatorTest {
         // expect
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedField, Integer.class, EQUAL, 
+        assertThat(QueryValidator.isCompatibleForOperator(mappedField, Integer.class, EQUAL,
                                                           new Key<Number>(Integer.class, new ObjectId())), is(true));
     }
 
@@ -322,7 +319,7 @@ public class QueryValidatorTest {
         // expect
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedField, String.class, EQUAL, 
+        assertThat(QueryValidator.isCompatibleForOperator(mappedField, String.class, EQUAL,
                                                           new Key<Number>(Integer.class, new ObjectId())), is(false));
     }
 
@@ -331,7 +328,7 @@ public class QueryValidatorTest {
         // expect
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedField, SimpleEntity.class, EQUAL, new Key<String>("kind", new ObjectId())), 
+        assertThat(QueryValidator.isCompatibleForOperator(mappedField, SimpleEntity.class, EQUAL, new Key<String>("kind", new ObjectId())),
                    is(false));
     }
 
