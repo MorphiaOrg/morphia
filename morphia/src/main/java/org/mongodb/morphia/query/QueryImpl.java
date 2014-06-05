@@ -300,11 +300,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public List<T> asList() {
         final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = (MorphiaIterator<T, T>) fetch().iterator();
-        for (final T ent : iter) {
-            results.add(ent);
+        final MorphiaIterator<T, T> iter = fetch();
+        try {
+            for (final T ent : iter) {
+                results.add(ent);
+            }
+        } finally {
+            iter.close();
         }
-        iter.close();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
@@ -317,8 +320,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public List<Key<T>> asKeyList() {
         final List<Key<T>> results = new ArrayList<Key<T>>();
-        for (final Key<T> key : fetchKeys()) {
-            results.add(key);
+        MorphiaKeyIterator<T> keys = fetchKeys();
+        try {
+            for (final Key<T> key : keys) {
+                results.add(key);
+            }
+        } finally {
+            keys.close();
         }
         return results;
     }
