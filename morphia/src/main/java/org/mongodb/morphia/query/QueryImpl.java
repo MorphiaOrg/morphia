@@ -271,7 +271,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
-    public Iterable<T> fetch() {
+    public MorphiaIterator<T, T> fetch() {
         final DBCursor cursor = prepareCursor();
         if (LOG.isTraceEnabled()) {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
@@ -281,7 +281,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
-    public Iterable<Key<T>> fetchKeys() {
+    public MorphiaKeyIterator<T> fetchKeys() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
         fields = new String[]{Mapper.ID_KEY};
@@ -324,12 +324,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
-    public Iterable<T> fetchEmptyEntities() {
+    public MorphiaIterator<T, T> fetchEmptyEntities() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
         fields = new String[]{Mapper.ID_KEY};
         includeFields = true;
-        final Iterable<T> res = fetch();
+        final MorphiaIterator<T, T> res = fetch();
         fields = oldFields;
         includeFields = oldInclude;
         return res;
@@ -412,13 +412,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    @Override
     public Query<T> comment(final String comment) {
         this.comment = comment;
         return this;
     }
 
-    @Override
     public Query<T> returnKey() {
         this.returnKey = true;
         return this;
@@ -485,20 +483,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return (BasicDBObject) ret.get();
     }
 
-    public Iterator<T> iterator() {
-        return fetch().iterator();
+    public MorphiaIterator<T, T> iterator() {
+        return fetch();
     }
 
-    public Iterator<T> tail() {
+    public MorphiaIterator<T, T> tail() {
         return tail(true);
     }
 
-    public Iterator<T> tail(final boolean awaitData) {
+    public MorphiaIterator<T, T> tail(final boolean awaitData) {
         //Create a new query for this, so the current one is not affected.
         final QueryImpl<T> tailQ = cloneQuery();
         tailQ.tail = true;
         tailQ.tailAwaitData = awaitData;
-        return tailQ.fetch().iterator();
+        return tailQ.fetch();
     }
 
     public Class<T> getEntityClass() {
@@ -607,7 +605,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return null;
     }
 
-    @Override
     public Map<String, Object> explain() {
         DBCursor cursor = prepareCursor();
         return (BasicDBObject) cursor.explain();
