@@ -13,6 +13,7 @@ import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Discriminator;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -38,6 +39,7 @@ import static java.lang.String.format;
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
+    private final Discriminator discriminator;
 
     private EntityCache cache;
     private boolean validateName = true;
@@ -76,6 +78,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         final MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
+        this.discriminator = mc == null ? null : mc.getDiscriminatorAnnotation();
         if (entAn != null) {
             readPref = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
                        ? ReadPreference.secondaryPreferred()
@@ -138,6 +141,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         if (baseQuery != null) {
             obj.putAll((BSONObject) baseQuery);
+        }
+
+        if (discriminator != null) {
+            obj.put(discriminator.column(), discriminator.value());
         }
 
         addTo(obj);

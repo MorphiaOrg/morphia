@@ -21,7 +21,6 @@ public class DefaultQueryFactory extends AbstractQueryFactory {
         if (query != null) {
             item.setQueryObject(query);
         }
-
         return item;
     }
     

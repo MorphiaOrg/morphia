@@ -92,6 +92,7 @@ public class Mapper {
      * support polymorphism
      */
     public static final String CLASS_NAME_FIELDNAME = "className";
+    public static final String DISCRIMINATOR = "discriminator";
 
     /**
      * Set of classes that registered by this mapper
@@ -532,6 +533,10 @@ public class Mapper {
 
         if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored()) {
             dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
+        }
+
+        if (mc.getDiscriminatorAnnotation() != null) {
+            dbObject.put(mc.getDiscriminatorAnnotation().column(), mc.getDiscriminatorAnnotation().value());
         }
 
         if (lifecycle) {
