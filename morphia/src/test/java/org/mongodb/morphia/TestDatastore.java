@@ -483,7 +483,7 @@ public class TestDatastore extends TestBase {
 
         Awaitility
             .await()
-            .atMost(5, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
             .until(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
                     return collection.count() == count;
