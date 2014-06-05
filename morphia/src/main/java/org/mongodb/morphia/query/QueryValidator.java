@@ -26,7 +26,7 @@ final class QueryValidator {
     
     private QueryValidator() {}
 
-    private static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op,
+    /*package*/ static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op,
                                                    final Object value) {
         if (value == null || type == null) {
             return true;
@@ -152,8 +152,9 @@ final class QueryValidator {
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
 
                     if (LOG.isWarningEnabled()) {
+                        String className = val == null ? "null" : val.getClass().getName();
                         LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
-                                           + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
+                                           + "for the field '%s.%s' which is declared as '%s'", className,
                                            mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()
                                           ));
                     }
