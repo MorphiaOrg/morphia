@@ -18,6 +18,7 @@
 package org.mongodb.morphia;
 
 
+import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -26,6 +27,7 @@ import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
@@ -47,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
 import static org.junit.Assert.assertEquals;
@@ -461,9 +465,15 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void massiveBulkInsert() {
-        DBCollection collection = getDs().getCollection(FacebookUser.class);
+        doInserts(false);
+        doInserts(true);
+    }
+
+    private void doInserts(final boolean useBulkWriteOperations) {
+        getMorphia().setUseBulkWriteOperations(useBulkWriteOperations);
+        final DBCollection collection = getDs().getCollection(FacebookUser.class);
         collection.remove(new BasicDBObject());
-        int count = 500000;
+        final int count = 500000;
         List<FacebookUser> list = new ArrayList<FacebookUser>(count);
         for (int i = 0; i < count; i++) {
             list.add(new FacebookUser(i, "User " + i));
@@ -471,6 +481,18 @@ public class TestDatastore extends TestBase {
 
         getAds().insert(list, WriteConcern.UNACKNOWLEDGED);
 
+        Awaitility
+            .await()
+            .atMost(5, TimeUnit.SECONDS)
+            .until(new Callable<Boolean>() {
+                public Boolean call() throws Exception {
+                    return collection.count() == count;
+                }
+            });
         assertEquals(count, collection.count());
+
+        for (FacebookUser user : list) {
+            Assert.assertNotNull(user.getId());
+        }
     }
 }

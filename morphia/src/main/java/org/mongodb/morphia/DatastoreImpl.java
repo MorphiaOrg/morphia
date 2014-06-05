@@ -3,6 +3,7 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.BulkWriteOperation;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -73,6 +74,7 @@ import static java.lang.String.format;
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
+    private final Morphia morphia;
     private final Mapper mapper;
     private final Mongo mongo;
     private final DB db;
@@ -81,7 +83,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
-    public DatastoreImpl(final Mapper mapper, final Mongo mongo, final String dbName) {
+    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final Mongo mongo, final String dbName) {
+        this.morphia = morphia;
         this.mapper = mapper;
         this.mongo = mongo;
         db = mongo.getDB(dbName);
@@ -91,7 +94,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName) {
-        this(morphia.getMapper(), mongo, dbName);
+        this(morphia, morphia.getMapper(), mongo, dbName);
     }
 
     public static long nextValue(final Long oldVersion) {
@@ -99,7 +102,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public DatastoreImpl copy(final String database) {
-        return new DatastoreImpl(mapper, mongo, database);
+        return new DatastoreImpl(morphia, mapper, mongo, database);
     }
 
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
@@ -750,32 +753,49 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
-        //TODO: try not to create two iterators...
-        final Object first = entities.iterator().next();
-        return insert(entities, getWriteConcern(first));
+        return insert(entities, null);
+    }
+
+    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
+        return insert(getCollection(entities.iterator().next()), entities, wc);
+    }
+
+    public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities) {
+        return insert(kind, entities, null);
     }
 
     public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities, final WriteConcern wc) {
         return insert(db.getCollection(kind), entities, wc);
     }
 
-    public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities) {
-        return insert(kind, entities, getWriteConcern(entities.iterator().next()));
-    }
-
-
-    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        return insert(getCollection(entities.iterator().next()), entities, wc);
-    }
-
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
+        WriteConcern writeConcern = wc;
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        int i = 0;
-        for (final T entity : entities) {
+        if (morphia.getUseBulkWriteOperations()) {
+            BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
             final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-            DBObject dbObj = toDbObject(entity, involvedObjects);
-            dbColl.insert(wc, dbObj);
-            savedKeys.add(postSaveGetKey(entity, dbObj, dbColl, involvedObjects));
+            for (final T entity : entities) {
+                if (writeConcern == null) {
+                    writeConcern = getWriteConcern(entity);
+                }
+                DBObject dbObj = toDbObject(entity, involvedObjects);
+                bulkWriteOperation.insert(dbObj);
+                savedKeys.add(postSaveGetKey(entity, dbObj, dbColl, new LinkedHashMap<Object, DBObject>()));
+            }
+            bulkWriteOperation.execute(writeConcern);
+            postSaveOperations(involvedObjects);
+
+        } else {
+            writeConcern = getWriteConcern(entities.iterator().next());
+            final List<DBObject> list = new ArrayList<DBObject>();
+            for (final T entity : entities) {
+                list.add(toDbObject(entity, new LinkedHashMap<Object, DBObject>()));
+            }
+            dbColl.insert(writeConcern, list.toArray(new DBObject[0]));
+            int index = 0;
+            for (T entity : entities) {
+                savedKeys.add(postSaveGetKey(entity, list.get(index++), dbColl, new LinkedHashMap<Object, DBObject>()));
+            }
         }
 
         return savedKeys;
@@ -837,7 +857,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
     }
 
-    protected DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
+    private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
 
@@ -849,8 +869,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (dbObj.get(Mapper.ID_KEY) == null) {
             throw new MappingException("Missing _id after save!");
         }
+        mapper.updateKeyInfo(entity, dbObj, createCache());
 
-        postSaveOperations(entity, dbObj, involvedObjects);
+        postSaveOperations(involvedObjects);
         final Key<T> key = new Key<T>(dbColl.getName(), mapper.getId(entity));
         key.setKindClass((Class<? extends T>) entity.getClass());
 
@@ -859,7 +880,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
         if (entities == null) {
-            return new ArrayList<Key<T>>();            
+            return new ArrayList<Key<T>>();
         }
         Iterator<T> iterator = entities.iterator();
         if (!iterator.hasNext()) {
@@ -894,7 +915,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(
                                           "Entity type: " + mc.getClazz().getName()
-                                          + " is marked as NotSaved which means you should not try to save it!");
+                                          + " is marked as NotSaved which means you should not try to save it!"
+            );
         }
 
         WriteResult wr;
@@ -936,7 +958,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         if (idValue != null && newVersion != 1) {
             final UpdateResults res = update(find(dbColl.getName(), entity.getClass()).filter(Mapper.ID_KEY, idValue)
-                                                    .filter(versionKeyName, oldVersion), dbObj, false, false, wc);
+                                                                                      .filter(versionKeyName, oldVersion),
+                                             dbObj,
+                                             false,
+                                             false,
+                                             wc
+                                            );
 
             wr = res.getWriteResult();
 
@@ -988,7 +1015,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
-                                       final WriteConcern wc) {
+                                    final WriteConcern wc) {
         return update(query, ops, createIfMissing, true, wc);
     }
 
@@ -1034,7 +1061,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
-                                            final WriteConcern wc) {
+                                         final WriteConcern wc) {
         return update(query, ops, createIfMissing, false, wc);
     }
 
@@ -1049,7 +1076,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbObj.put(Mapper.ID_KEY, res.getNewId());
         }
 
-        postSaveOperations(entity, dbObj, involvedObjects);
+        postSaveOperations(involvedObjects);
         return res;
     }
 
@@ -1091,14 +1118,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Nothing updated");
         }
 
-        postSaveOperations(unwrapped, dbObj, involvedObjects);
+        postSaveOperations(involvedObjects);
         return key;
     }
 
-    private void postSaveOperations(final Object entity, final DBObject dbObj, final Map<Object, DBObject> involvedObjects) {
-        mapper.updateKeyInfo(entity, dbObj, createCache());
-    
-        //call PostPersist on all involved entities (including the entity)
+    private void postSaveOperations(final Map<Object, DBObject> involvedObjects) {
         for (final Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
             final Object ent = e.getKey();
             final DBObject dbO = e.getValue();
@@ -1109,8 +1133,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @SuppressWarnings("rawtypes")
     private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing,
-                                        final boolean multi,
-                                        final WriteConcern wc) {
+                                     final boolean multi,
+                                     final WriteConcern wc) {
         final DBObject u = ((UpdateOpsImpl) ops).getOps();
         if (((UpdateOpsImpl) ops).isIsolated()) {
             final Query<T> q = query.cloneQuery();
@@ -1122,12 +1146,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @SuppressWarnings("rawtypes")
     private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing,
-                                        final boolean multi) {
+                                     final boolean multi) {
         return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));
     }
 
     private <T> UpdateResults update(final Query<T> query, final DBObject u, final boolean createIfMissing, final boolean multi,
-                                        final WriteConcern wc) {
+                                     final WriteConcern wc) {
 
         DBCollection dbColl = query.getCollection();
         //TODO remove this after testing.

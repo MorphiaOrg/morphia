@@ -157,13 +157,14 @@ project(':morphia') {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3-SNAPSHOT", changing: true
             println "Building with the 2.12.1 SNAPSHOT java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.2"
             println "Building with the 2.12 java driver"
         }
 
         provided 'cglib:cglib-nodep:[2.1_3,3.0)'
         provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
         testCompile 'org.zeroturnaround:zt-exec:1.5'
+        testCompile 'com.jayway.awaitility:awaitility:1.5.0'
     }
 }
 

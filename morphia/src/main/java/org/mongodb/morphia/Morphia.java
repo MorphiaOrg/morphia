@@ -39,6 +39,7 @@ import java.util.Set;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Morphia {
     private final Mapper mapper;
+    private boolean useBulkWriteOperations = false;
 
     public Morphia() {
         this(new Mapper(), Collections.<Class>emptySet());
@@ -169,4 +170,19 @@ public class Morphia {
         return new DatastoreImpl(this, mongo, dbName);
     }
 
+    public Datastore createDatastore(final Mongo mongo, final Mapper mapper, final String dbName) {
+        return new DatastoreImpl(this, mapper, mongo, dbName);
+    }
+
+    public boolean getUseBulkWriteOperations() {
+        return useBulkWriteOperations;
+    }
+
+    public boolean isUseBulkWriteOperations() {
+        return useBulkWriteOperations;
+    }
+
+    public void setUseBulkWriteOperations(final boolean useBulkWriteOperations) {
+        this.useBulkWriteOperations = useBulkWriteOperations;
+    }
 }
