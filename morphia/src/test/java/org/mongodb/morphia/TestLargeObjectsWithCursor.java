@@ -1,10 +1,9 @@
-package org.mongodb.morphia.largeObjectsWithCursor;
+package org.mongodb.morphia;
 
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestMapping.BaseEntity;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.query.Query;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Test from list, but doesn't seems to be a problem. Here as an example.
  */
-public class TestStuff extends TestBase {
+public class TestLargeObjectsWithCursor extends TestBase {
     private int documentsNb;
 
     @Entity

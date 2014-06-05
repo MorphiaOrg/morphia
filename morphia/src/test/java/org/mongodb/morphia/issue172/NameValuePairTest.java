@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.entities.SimpleEnum;
 
 import java.io.Serializable;
 
@@ -18,22 +19,17 @@ public class NameValuePairTest extends TestBase {
     public void testNameValuePairWithDoubleIn() throws Exception {
         getMorphia().map(NameValuePairContainer.class);
         final NameValuePairContainer container = new NameValuePairContainer();
-        container.pair = new NameValuePair<Name, Double>(Name.FOO, 1.2d);
+        container.pair = new NameValuePair<SimpleEnum, Double>(SimpleEnum.FOO, 1.2d);
         getDs().save(container);
 
         getDs().get(container);
-    }
-
-    enum Name {
-        FOO,
-        BAR
     }
 
     @Entity
     private static class NameValuePairContainer {
         @Id
         private ObjectId id;
-        private NameValuePair<Name, Double> pair;
+        private NameValuePair<SimpleEnum, Double> pair;
     }
 
     private static class NameValuePair<T1 extends Enum<?>, T2> implements Serializable {

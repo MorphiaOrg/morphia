@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-
-package org.mongodb.morphia;
-
+package org.mongodb.morphia.indexes;
 
 import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Test;
+import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
@@ -31,7 +30,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 
 /**
  * @author Scott Hernandez
