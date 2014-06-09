@@ -2,7 +2,7 @@ package org.mongodb.morphia.dao;
 
 
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.Datastore;
@@ -38,22 +38,41 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     protected DatastoreImpl ds;
     //CHECKSTYLE:ON
 
-    public BasicDAO(final Class<T> entityClass, final Mongo mongo, final Morphia morphia, final String dbName) {
-        initDS(mongo, morphia, dbName);
+    /**
+     * Create a new BasicDAO
+     *
+     * @param entityClass the class of the POJO you want to persist using this DAO
+     * @param mongoClient the representations of the connection to a MongoDB instance
+     * @param morphia     a Morphia instance
+     * @param dbName      the name of the database
+     */
+    public BasicDAO(final Class<T> entityClass, final MongoClient mongoClient, final Morphia morphia, final String dbName) {
+        initDS(mongoClient, morphia, dbName);
         initType(entityClass);
     }
 
+    /**
+     * Create a new BasicDAO
+     *
+     * @param entityClass the class of the POJO you want to persist using this DAO
+     * @param ds the Datastore which gives access to the MongoDB instance for this DAO
+     */
     public BasicDAO(final Class<T> entityClass, final Datastore ds) {
         this.ds = (DatastoreImpl) ds;
         initType(entityClass);
     }
 
     /**
-     * <p> Only calls this from your derived class when you explicitly declare the generic types with concrete classes </p> <p> {@code class
-     * MyDao extends DAO<MyEntity, String>} </p>
+     * Only calls this from your derived class when you explicitly declare the generic types with concrete classes
+     * <p/>
+     * {@code class MyDao extends DAO<MyEntity, String>}
+     *
+     * @param mongoClient the representations of the connection to a MongoDB instance
+     * @param morphia     a Morphia instance
+     * @param dbName      the name of the database
      */
-    protected BasicDAO(final Mongo mongo, final Morphia morphia, final String dbName) {
-        initDS(mongo, morphia, dbName);
+    protected BasicDAO(final MongoClient mongoClient, final Morphia morphia, final String dbName) {
+        initDS(mongoClient, morphia, dbName);
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
 
@@ -67,8 +86,8 @@ public class BasicDAO<T, K> implements DAO<T, K> {
         ds.getMapper().addMappedClass(type);
     }
 
-    protected void initDS(final Mongo mon, final Morphia mor, final String db) {
-        ds = new DatastoreImpl(mor, mon, db);
+    protected void initDS(final MongoClient mongoClient, final Morphia mor, final String db) {
+        ds = new DatastoreImpl(mor, mongoClient, db);
     }
 
     public DatastoreImpl getDs() {

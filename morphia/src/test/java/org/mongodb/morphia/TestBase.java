@@ -3,7 +3,6 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.junit.After;
@@ -12,7 +11,7 @@ import org.junit.Before;
 import org.mongodb.morphia.mapping.MappedClass;
 
 public abstract class TestBase {
-    private final Mongo mongo;
+    private final MongoClient mongoClient;
     private DB db;
     private Datastore ds;
     private AdvancedDatastore ads;
@@ -20,7 +19,7 @@ public abstract class TestBase {
 
     protected TestBase() {
         try {
-            mongo = new MongoClient(new MongoClientURI(System.getProperty("MONGO_URI", "mongodb://localhost:27017")));
+            mongoClient = new MongoClient(new MongoClientURI(System.getProperty("MONGO_URI", "mongodb://localhost:27017")));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -28,8 +27,8 @@ public abstract class TestBase {
 
     @Before
     public void setUp() {
-        setDb(getMongo().getDB("morphia_test"));
-        setDs(getMorphia().createDatastore(getMongo(), getDb().getName()));
+        setDb(getMongoClient().getDB("morphia_test"));
+        setDs(getMorphia().createDatastore(getMongoClient(), getDb().getName()));
         setAds((AdvancedDatastore) getDs());
     }
 
@@ -37,13 +36,12 @@ public abstract class TestBase {
         for (final MappedClass mc : getMorphia().getMapper().getMappedClasses()) {
             getDb().getCollection(mc.getCollectionName()).drop();
         }
-
     }
 
     @After
     public void tearDown() {
         cleanup();
-        getMongo().close();
+        getMongoClient().close();
     }
 
     /**
@@ -51,7 +49,7 @@ public abstract class TestBase {
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtLeastVersion(final double version) {
-        String serverVersion = (String) getMongo().getDB("admin").command("serverStatus").get("version");
+        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
         return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
     }
 
@@ -64,7 +62,7 @@ public abstract class TestBase {
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtMostVersion(final double version) {
-        String serverVersion = (String) getMongo().getDB("admin").command("serverStatus").get("version");
+        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
         return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
     }
 
@@ -84,8 +82,8 @@ public abstract class TestBase {
         return ds;
     }
 
-    public Mongo getMongo() {
-        return mongo;
+    public MongoClient getMongoClient() {
+        return mongoClient;
     }
 
     public Morphia getMorphia() {
@@ -110,7 +108,7 @@ public abstract class TestBase {
 
     private CommandResult runIsMaster() {
         // Check to see if this is a replica set... if not, get out of here.
-        return mongo.getDB("admin").command(new BasicDBObject("ismaster", 1));
+        return mongoClient.getDB("admin").command(new BasicDBObject("ismaster", 1));
     }
 
 }

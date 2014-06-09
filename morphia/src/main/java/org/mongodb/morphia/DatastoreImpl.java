@@ -12,7 +12,7 @@ import com.mongodb.DBRef;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
@@ -76,25 +76,32 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private final Morphia morphia;
     private final Mapper mapper;
-    private final Mongo mongo;
+    private final MongoClient mongoClient;
     private final DB db;
     private WriteConcern defConcern = WriteConcern.SAFE;
     private DBDecoderFactory decoderFactory;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
-    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final Mongo mongo, final String dbName) {
+    /**
+     * Create a new DatastoreImpl
+     * @param morphia
+     * @param mapper
+     * @param mongoClient
+     * @param dbName
+     */
+    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this.morphia = morphia;
         this.mapper = mapper;
-        this.mongo = mongo;
-        db = mongo.getDB(dbName);
+        this.mongoClient = mongoClient;
+        db = mongoClient.getDB(dbName);
 
         // VERY discussable
         DatastoreHolder.getInstance().set(this);
     }
 
-    public DatastoreImpl(final Morphia morphia, final Mongo mongo, final String dbName) {
-        this(morphia, morphia.getMapper(), mongo, dbName);
+    public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
+        this(morphia, morphia.getMapper(), mongoClient, dbName);
     }
 
     public static long nextValue(final Long oldVersion) {
@@ -102,7 +109,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public DatastoreImpl copy(final String database) {
-        return new DatastoreImpl(morphia, mapper, mongo, database);
+        return new DatastoreImpl(morphia, mapper, mongoClient, database);
     }
 
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
@@ -739,8 +746,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
-    public Mongo getMongo() {
-        return mongo;
+    public MongoClient getMongo() {
+        return mongoClient;
     }
 
 

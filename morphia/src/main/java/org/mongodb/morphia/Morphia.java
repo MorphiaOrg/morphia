@@ -19,7 +19,7 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.mapping.Mapper;
@@ -165,13 +165,25 @@ public class Morphia {
 
     /**
      * It is best to use a Mongo singleton instance here.
+     *
+     * @param mongoClient the representations of the connection to a MongoDB instance
+     * @param dbName      the name of the database
+     * @return a Datastore that you can use to interact with MongoDB
      */
-    public Datastore createDatastore(final Mongo mongo, final String dbName) {
-        return new DatastoreImpl(this, mongo, dbName);
+    public Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
+        return new DatastoreImpl(this, mongoClient, dbName);
     }
 
-    public Datastore createDatastore(final Mongo mongo, final Mapper mapper, final String dbName) {
-        return new DatastoreImpl(this, mapper, mongo, dbName);
+    /**
+     * Creates a new Datastore for interacting with MongoDB using POJOs
+     *
+     * @param mongoClient the representations of the connection to a MongoDB instance
+     * @param mapper      a pre-configured Mapper for your POJOs
+     * @param dbName      the name of the database
+     * @return a Datastore that you can use to interact with MongoDB
+     */
+    public Datastore createDatastore(final MongoClient mongoClient, final Mapper mapper, final String dbName) {
+        return new DatastoreImpl(this, mapper, mongoClient, dbName);
     }
 
     public boolean getUseBulkWriteOperations() {

@@ -9,7 +9,6 @@ buildscript {
     }
 
     dependencies {
-        classpath 'me.trnl:clirr-gradle-plugin:0.4'
         classpath 'com.antwerkz.github:github-release-gradle-plugin:1.1.0'
     }
 }

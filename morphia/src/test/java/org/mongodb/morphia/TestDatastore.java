@@ -240,7 +240,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testMorphiaDS() throws Exception {
-        new Morphia().createDatastore(getMongo(), "test");
+        new Morphia().createDatastore(getMongoClient(), "test");
     }
 
     @Test

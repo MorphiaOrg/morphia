@@ -4,7 +4,7 @@ package org.mongodb.morphia;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MapReduceCommand;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
@@ -323,7 +323,7 @@ public interface Datastore {
 
     DB getDB();
 
-    Mongo getMongo();
+    MongoClient getMongo();
 
     DBCollection getCollection(Class<?> c);
 
