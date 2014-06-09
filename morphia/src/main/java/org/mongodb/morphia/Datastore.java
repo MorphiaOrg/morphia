@@ -323,6 +323,11 @@ public interface Datastore {
 
     DB getDB();
 
+    /**
+     * Get the underlying MongoClient that allows connection to the MongoDB instance being used.
+     *
+     * @return the MongoClient being used by this datastore.
+     */
     MongoClient getMongo();
 
     DBCollection getCollection(Class<?> c);

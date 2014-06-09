@@ -85,10 +85,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     /**
      * Create a new DatastoreImpl
-     * @param morphia
-     * @param mapper
-     * @param mongoClient
-     * @param dbName
+     * @param morphia the Morphia instance
+     * @param mapper an initialised Mapper
+     * @param mongoClient the connection to the MongoDB instance
+     * @param dbName the name of the database for this data store.
      */
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this.morphia = morphia;
@@ -100,6 +100,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         DatastoreHolder.getInstance().set(this);
     }
 
+    /**
+     * Create a new DatastoreImpl
+     * @param morphia the Morphia instance
+     * @param mongoClient the connection to the MongoDB instance
+     * @param dbName the name of the database for this data store.
+     */
     public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
         this(morphia, morphia.getMapper(), mongoClient, dbName);
     }
@@ -745,11 +751,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         return query.countAll();
     }
 
-
     public MongoClient getMongo() {
         return mongoClient;
     }
-
 
     public DB getDB() {
         return db;
