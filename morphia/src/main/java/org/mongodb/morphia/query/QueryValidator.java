@@ -26,6 +26,7 @@ final class QueryValidator {
     
     private QueryValidator() {}
 
+    @SuppressWarnings("unchecked")
     /*package*/ static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op,
                                                    final Object value) {
         if (value == null || type == null) {
