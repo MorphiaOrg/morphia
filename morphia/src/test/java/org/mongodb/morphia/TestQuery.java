@@ -27,6 +27,7 @@ import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
@@ -61,6 +62,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
 
 
 /**
@@ -588,18 +590,66 @@ public class TestQuery extends TestBase {
 
     }
 
-
     @Test
     public void testFluentNotQuery() throws Exception {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
-        q.criteria("keywords.keyword").not().startsWith("ralph");
+        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+        query.criteria("keywords.keyword").not().startsWith("ralph");
 
-        assertEquals(1, q.countAll());
+        assertEquals(1, query.countAll());
     }
 
+    @Test
+    public void testNotGeneratesCorrectQueryForRegex() throws Exception {
+        // given
+        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.criteria("keywords.keyword").not().startsWith("ralph");
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords.keyword: { $not: { $regex: '^ralph'} } }"));
+    }
+
+    @Test
+    @Ignore("Issue 514 not fixed yet")
+    public void testNotGeneratesCorrectQueryForGreaterThan() throws Exception {
+        // given
+        final Query<Keyword> query = getAds().createQuery(Keyword.class);
+
+        // when
+        query.criteria("score").not().greaterThan(7);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ score: { $not: { $gt: 7} } }"));
+    }
+
+    @Test
+    @Ignore("Issue 514 not fixed yet")
+    public void testCorrectQueryForNotWithSizeEqIssue514() {
+        // given
+        Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.field("keywords").not().sizeEq(0);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords: { $not: { $size: 3 } } }"));
+    }
+
+    @Test
+    public void testSizeEqQuery() {
+        // given
+        Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.field("keywords").sizeEq(3);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords: { $size: 3 } }"));
+    }
 
     @Test
     public void testIdFieldNameQuery() throws Exception {
