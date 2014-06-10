@@ -77,11 +77,7 @@ public class FieldCriteria extends AbstractCriteria {
 
         this.field = sb.toString();
         operator = op;
-        if (not) {
-            this.value = new BasicDBObject("$not", mappedValue);
-        } else {
-            this.value = mappedValue;
-        }
+        this.value = mappedValue;
         this.not = not;
     }
 
@@ -103,7 +99,12 @@ public class FieldCriteria extends AbstractCriteria {
 
     public void addTo(final DBObject obj) {
         if (FilterOperator.EQUAL.equals(operator)) {
-            obj.put(field, value); // no operator, prop equals value
+            // no operator, prop equals (or NOT equals) value
+            if (not) {
+                obj.put(field, new BasicDBObject("$not", value));
+            } else {
+                obj.put(field, value); 
+            }
 
         } else {
             final Object object = obj.get(field); // operator within inner object
@@ -115,7 +116,11 @@ public class FieldCriteria extends AbstractCriteria {
                 inner = (Map<String, Object>) object;
             }
 
-            inner.put(operator.val(), not ? new BasicDBObject("$not", value) : value);
+            if (not) {
+                inner.put("$not", new BasicDBObject(operator.val(), value));
+            } else {
+                inner.put(operator.val(), value);
+            }
         }
     }
 

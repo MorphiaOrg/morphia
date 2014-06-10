@@ -27,7 +27,6 @@ import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
@@ -614,7 +613,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore("Issue 514 not fixed yet")
     public void testNotGeneratesCorrectQueryForGreaterThan() throws Exception {
         // given
         final Query<Keyword> query = getAds().createQuery(Keyword.class);
@@ -627,13 +625,12 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore("Issue 514 not fixed yet")
     public void testCorrectQueryForNotWithSizeEqIssue514() {
         // given
         Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
 
         // when
-        query.field("keywords").not().sizeEq(0);
+        query.field("keywords").not().sizeEq(3);
 
         // then
         assertThat(query.toString(), jsonEqual("{ keywords: { $not: { $size: 3 } } }"));
