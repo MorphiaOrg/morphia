@@ -118,7 +118,7 @@ allprojects {
         }
     }
 
-    task testCoverage(dependsOn: test)
+    task testCoverage(dependsOn: check)
 
     tasks.withType(FindBugs) {
         reports {
