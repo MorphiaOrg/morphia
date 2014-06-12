@@ -23,11 +23,15 @@ import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Version;
+import org.mongodb.morphia.mapping.MappedClass;
 
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -92,9 +96,13 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        // I have no idea exactly what this test is testing, other than no error is thrown
-        getMorphia().map(Foo.class);
-        getMorphia().mapPackage(Foo.class.getPackage().toString());
+        // when
+        Morphia morphia = getMorphia().map(Foo.class);
+
+        // then
+        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        assertThat(mappedClasses.size(), is(1));
+        assertEquals(mappedClasses.iterator().next().getClazz(), Foo.class);
     }
 
     @Test

@@ -8,6 +8,10 @@
         </Not>
     </Match>
     <Match>
+        <!-- Ignore test entities as these will often have unused things -->
+        <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
+    </Match>
+    <Match>
         <Class name="org.mongodb.morphia.testmodel.Hotel"/>
         <Not>
             <Bug code="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
