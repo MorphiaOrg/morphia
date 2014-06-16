@@ -58,6 +58,7 @@ class ReferenceMapper implements CustomMapper {
             if (mapper.getOptions().isStoreNulls()) {
                 dbObject.put(name, null);
             }
+            return; // fixes issue #624 ?
         }
 
         dbObject.put(name, refAnn.idOnly()
