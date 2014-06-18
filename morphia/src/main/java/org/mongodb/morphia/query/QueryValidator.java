@@ -1,8 +1,5 @@
 package org.mongodb.morphia.query;
 
-import com.mongodb.DBObject;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.logging.Logger;
@@ -10,73 +7,61 @@ import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.utils.ReflectionUtils;
+import org.mongodb.morphia.query.validation.AllOperationValidator;
+import org.mongodb.morphia.query.validation.DefaultTypeValidator;
+import org.mongodb.morphia.query.validation.DoubleTypeValidator;
+import org.mongodb.morphia.query.validation.EntityAnnotatedValueValidator;
+import org.mongodb.morphia.query.validation.EntityTypeAndIdValueValidator;
+import org.mongodb.morphia.query.validation.ExistsOperationValidator;
+import org.mongodb.morphia.query.validation.GeoWithinOperationValidator;
+import org.mongodb.morphia.query.validation.InOperationValidator;
+import org.mongodb.morphia.query.validation.IntegerTypeValidator;
+import org.mongodb.morphia.query.validation.KeyValueTypeValidator;
+import org.mongodb.morphia.query.validation.ListValueValidator;
+import org.mongodb.morphia.query.validation.LongTypeValidator;
+import org.mongodb.morphia.query.validation.ModOperationValidator;
+import org.mongodb.morphia.query.validation.NotInOperationValidator;
+import org.mongodb.morphia.query.validation.PatternValueValidator;
+import org.mongodb.morphia.query.validation.SizeOperationValidator;
+import org.mongodb.morphia.query.validation.ValidationFailure;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
-//TODO: Trisha - this really needs a test, if only to document what it's doing
 final class QueryValidator {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryValidator.class);
-    
+
     private QueryValidator() {}
 
-    @SuppressWarnings("unchecked")
-    /*package*/ static boolean isCompatibleForOperator(final MappedField mf, final Class<?> type, final FilterOperator op,
-                                                   final Object value) {
+    /*package*/ static boolean isCompatibleForOperator(final MappedField mappedField, final Class<?> type, final FilterOperator op,
+                                           final Object value, final List<ValidationFailure> validationFailures) {
+        // TODO: it's really OK to have null values?  I think this is to prevent null pointers further down, 
+        // but I want to move the null check into the operations that care whether they allow nulls or not.
         if (value == null || type == null) {
             return true;
-        } else if (op.equals(FilterOperator.EXISTS) && (value instanceof Boolean)) {
-            return true;
-        } else if (op.equals(FilterOperator.SIZE) && (type.isAssignableFrom(List.class) && value instanceof Integer)) {
-            return true;
-        } else if (op.equals(FilterOperator.IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
-                                                    || Map.class.isAssignableFrom(value.getClass()))) {
-            return true;
-        } else if (op.equals(FilterOperator.NOT_IN) && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
-                                                        || Map.class.isAssignableFrom(value.getClass()))) {
-            return true;
-        } else if (op.equals(FilterOperator.MOD) && value.getClass().isArray()) {
-            return ReflectionUtils.isIntegerType(Array.get(value, 0).getClass());
-        } else if (op.equals(FilterOperator.GEO_WITHIN)
-                   && (type.isArray() || Iterable.class.isAssignableFrom(type))
-                   && (mf.getSubType() instanceof Number || asList(int.class, long.class, double.class,
-                                                                   float.class).contains(mf.getSubType()))) {
-            if (value instanceof DBObject) {
-                String key = ((DBObject) value).keySet().iterator().next();
-                return key.equals("$box") || key.equals("$center") || key.equals("$centerSphere") || key.equals("$polygon");
-            }
-            return false;
-        } else if (op.equals(FilterOperator.ALL)
-                   && (value.getClass().isArray() || Iterable.class.isAssignableFrom(value.getClass())
-                       || Map.class.isAssignableFrom(value.getClass()))) {
-            return true;
-        } else if (value instanceof Integer && (asList(int.class, long.class, Long.class).contains(type))) {
-            return true;
-        } else if ((value instanceof Integer || value instanceof Long) && (asList(double.class, Double.class).contains(type))) {
-            return true;
-        } else if (value instanceof Pattern && String.class.equals(type)) {
-            return true;
-        } else if (value.getClass().getAnnotation(Entity.class) != null && Key.class.equals(type)) {
-            return true;
-        } else if (value.getClass().isAssignableFrom(Key.class) && type.equals(((Key) value).getKindClass())) {
-            return true;
-        } else if (value instanceof List<?>) {
-            return true;
-        } else if (mf.getMapper().getMappedClass(type) != null && mf.getMapper().getMappedClass(type).getMappedIdField() != null
-                   && value.getClass().equals(mf.getMapper().getMappedClass(type).getMappedIdField().getConcreteType())) {
-            return true;
-        } else if (!value.getClass().isAssignableFrom(type) && !value.getClass()
-                                                                     .getSimpleName()
-                                                                     .equalsIgnoreCase(type.getSimpleName())) {
-            return false;
         }
-        return true;
+
+        boolean validationApplied = ExistsOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || SizeOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || InOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || NotInOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || ModOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || GeoWithinOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || AllOperationValidator.getInstance().apply(mappedField, op, value, validationFailures)
+                                    || KeyValueTypeValidator.getInstance().apply(type, value, validationFailures)
+                                    || IntegerTypeValidator.getInstance().apply(type, value, validationFailures)
+                                    || LongTypeValidator.getInstance().apply(type, value, validationFailures)
+                                    || DoubleTypeValidator.getInstance().apply(type, value, validationFailures)
+                                    || PatternValueValidator.getInstance().apply(type, value, validationFailures)
+                                    || EntityAnnotatedValueValidator.getInstance().apply(type, value, validationFailures)
+                                    || ListValueValidator.getInstance().apply(type, value, validationFailures)
+                                    || EntityTypeAndIdValueValidator.getInstance()
+                                                                    .apply(mappedField.getMapper(), type, value, validationFailures)
+                                    || DefaultTypeValidator.getInstance().apply(type, value, validationFailures);
+
+        return validationApplied && validationFailures.size() == 0;
     }
 
     /**
@@ -146,8 +131,9 @@ final class QueryValidator {
             }
 
             if (validateTypes) {
-                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val);
-                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val);
+                List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val, validationFailures);
+                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val, validationFailures);
 
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
@@ -158,6 +144,7 @@ final class QueryValidator {
                                            + "for the field '%s.%s' which is declared as '%s'", className,
                                            mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()
                                           ));
+                        LOG.warning("Validation warnings: \n" + validationFailures);
                     }
                 }
             }
