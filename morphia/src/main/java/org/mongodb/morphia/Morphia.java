@@ -28,6 +28,7 @@ import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Set;
 
@@ -105,14 +106,15 @@ public class Morphia {
      */
     public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
         try {
-            for (final Class c : ReflectionUtils.getClasses(packageName)) {
+            for (final Class clazz : ReflectionUtils.getClasses(packageName)) {
                 try {
-                    final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(c);
-                    final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(c);
-                    if (entityAnn != null || embeddedAnn != null) {
-                        map(c);
+                    final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
+                    final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);
+                    final boolean isAbstract = Modifier.isAbstract(clazz.getModifiers());
+                    if ((entityAnn != null || embeddedAnn != null) && !isAbstract) {
+                        map(clazz);
                     }
-                } catch (MappingException ex) {
+                } catch (final MappingException ex) {
                     if (!ignoreInvalidClasses) {
                         throw ex;
                     }

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class MorphiaTest extends TestBase {
     @Test
-    public void shouldMapAllEntitiesInTheGivenPackageExcludingEnumsAndClassesWithoutEntityAnnotations() {
+    public void shouldMapEntitiesInTheGivenPackageExcludingEnumsAndAbstractClassesAndClassesWithoutEntityAnnotations() {
         // when
         Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.testmappackage");
 
