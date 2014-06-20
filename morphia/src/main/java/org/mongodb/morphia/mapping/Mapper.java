@@ -456,15 +456,17 @@ public class Mapper {
             return false;
         }
 
-        return (mf.hasAnnotation(Reference.class) || mf.getType().isAssignableFrom(Key.class) || mf.getType().isAssignableFrom(DBRef.class)
-                || isMultiValued(mf, value));
+        return mf.hasAnnotation(Reference.class)
+               || Key.class.isAssignableFrom(mf.getType())
+               || DBRef.class.isAssignableFrom(mf.getType())
+               || isMultiValued(mf, value);
     }
 
     private boolean isMultiValued(final MappedField mf, final Object value) {
         final Class subClass = mf.getSubClass();
-        return value instanceof Iterable && mf.isMultipleValues()
-               && (subClass.isAssignableFrom(Key.class)
-                   || subClass.isAssignableFrom(DBRef.class));
+        return value instanceof Iterable
+               && mf.isMultipleValues()
+               && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
     private boolean isEntity(final MappedClass mc) {
@@ -579,8 +581,8 @@ public class Mapper {
             for (final MappedField mf : mc.getPersistenceFields()) {
                 readMappedField(updated, mf, entity, cache);
             }
-        } catch (MappingException e) {
-            String id = dbObject.get(ID_KEY).toString();
+        } catch (final MappingException e) {
+            Object id = dbObject.get(ID_KEY);
             String entityName = entity.getClass().getName();
             throw new MappingException(format("Could not map %s with ID: %s", entityName, id), e);
         }
