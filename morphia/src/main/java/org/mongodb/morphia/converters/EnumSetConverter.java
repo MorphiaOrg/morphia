@@ -1,18 +1,15 @@
 package org.mongodb.morphia.converters;
 
-
 import org.mongodb.morphia.mapping.MappedField;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class EnumSetConverter extends TypeConverter implements SimpleValueConverter {
 
     private final EnumConverter ec = new EnumConverter();
@@ -22,6 +19,7 @@ public class EnumSetConverter extends TypeConverter implements SimpleValueConver
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
         if (fromDBObject == null) {
             return null;
@@ -42,6 +40,7 @@ public class EnumSetConverter extends TypeConverter implements SimpleValueConver
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         if (value == null) {
             return null;

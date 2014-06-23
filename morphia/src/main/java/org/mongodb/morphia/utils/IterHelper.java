@@ -17,7 +17,7 @@ import java.util.Map.Entry;
  * @author Scott Hernandez
  */
 public final class IterHelper<T, V> {
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     public void loopMap(final Object x, final MapIterCallback<T, V> iter) {
         if (x == null) {
             return;

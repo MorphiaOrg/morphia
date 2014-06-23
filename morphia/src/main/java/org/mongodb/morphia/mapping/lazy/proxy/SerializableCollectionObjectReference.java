@@ -1,6 +1,5 @@
 package org.mongodb.morphia.mapping.lazy.proxy;
 
-
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
@@ -12,8 +11,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-
-@SuppressWarnings("unchecked")
 public class SerializableCollectionObjectReference<T> extends AbstractReference implements ProxiedEntityReferenceList {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +26,7 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected synchronized Object fetch() {
         final Collection<T> c = (Collection<T>) object;
         c.clear();
@@ -70,6 +68,7 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
     //CHECKSTYLE:ON
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void beforeWriteObject() {
         if (__isFetched()) {
             syncKeys();

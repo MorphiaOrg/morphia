@@ -3,7 +3,6 @@ package org.mongodb.morphia.logging.jdk;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("rawtypes")
 public class FastestJDKLogger implements org.mongodb.morphia.logging.Logger {
     private final Logger logger;
     private final transient String className;

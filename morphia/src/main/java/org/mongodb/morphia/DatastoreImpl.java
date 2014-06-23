@@ -714,7 +714,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId());
     }
 
-    @SuppressWarnings("rawtypes")
     public DBCollection getCollection(final Class clazz) {
         final String collName = mapper.getCollectionName(clazz);
         return getDB().getCollection(collName);
@@ -1161,7 +1160,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(query, u, createIfMissing, multi, wc);
     }
 
-    @SuppressWarnings("rawtypes")
     private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing,
                                      final boolean multi) {
         return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));

@@ -37,7 +37,6 @@ import java.util.Set;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class Morphia {
     private final Mapper mapper;
     private boolean useBulkWriteOperations = false;

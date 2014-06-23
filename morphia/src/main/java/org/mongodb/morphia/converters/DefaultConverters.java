@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes"})
 public class DefaultConverters {
     private static final Logger LOG = MorphiaLoggerFactory.get(DefaultConverters.class);
 

@@ -1,6 +1,5 @@
 package org.mongodb.morphia.mapping;
 
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -17,8 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
-@SuppressWarnings({"unchecked", "rawtypes"})
 class EmbeddedMapper implements CustomMapper {
     public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
                            final Mapper mapper) {
@@ -63,7 +60,7 @@ class EmbeddedMapper implements CustomMapper {
         }
 
         if (coll != null) {
-            final List values = new ArrayList();
+            final List<Object> values = new ArrayList<Object>();
             for (final Object o : coll) {
                 if (null == o) {
                     values.add(null);
@@ -91,6 +88,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void writeMap(final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects, final String name,
                           final Object fieldValue, final Mapper mapper) {
         final Map<String, Object> map = (Map<String, Object>) fieldValue;
@@ -174,6 +172,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
                                 final Mapper mapper) {
         // multiple documents in a List
@@ -217,6 +216,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache, final Mapper mapper) {
         final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
 

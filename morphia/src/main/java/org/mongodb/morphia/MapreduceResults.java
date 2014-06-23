@@ -15,7 +15,6 @@ import org.mongodb.morphia.query.Query;
 import java.util.Iterator;
 
 
-@SuppressWarnings({"unchecked", "rawtypes"})
 @NotSaved
 public class MapreduceResults<T> implements Iterable<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
@@ -25,7 +24,7 @@ public class MapreduceResults<T> implements Iterable<T> {
 
     private String outColl;
     private MapreduceType type;
-    private Query query;
+    private Query<T> query;
 
     @Transient
     private Class<T> clazz;
@@ -88,7 +87,7 @@ public class MapreduceResults<T> implements Iterable<T> {
         this.type = type;
     }
 
-    void setQuery(final Query query) {
+    void setQuery(final Query<T> query) {
         this.query = query;
     }
 

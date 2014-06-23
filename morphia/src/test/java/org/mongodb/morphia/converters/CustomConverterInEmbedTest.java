@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Uwe Schaefer
  */
-@SuppressWarnings("rawtypes")
 public class CustomConverterInEmbedTest extends TestBase {
 
     public static class E1 extends TestEntity {

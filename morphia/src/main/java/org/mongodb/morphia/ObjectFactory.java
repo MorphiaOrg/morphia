@@ -1,6 +1,5 @@
 package org.mongodb.morphia;
 
-
 import com.mongodb.DBObject;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-@SuppressWarnings("rawtypes")
 public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz);
 

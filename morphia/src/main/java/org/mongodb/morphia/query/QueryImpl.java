@@ -298,7 +298,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
     }
 
-    @SuppressWarnings("unchecked")
     public List<T> asList() {
         final List<T> results = new ArrayList<T>();
         final MorphiaIterator<T, T> iter = fetch();

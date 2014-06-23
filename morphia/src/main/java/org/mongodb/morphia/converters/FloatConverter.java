@@ -1,17 +1,14 @@
 package org.mongodb.morphia.converters;
 
-
 import org.mongodb.morphia.mapping.MappedField;
 
 import java.lang.reflect.Array;
 import java.util.List;
 
-
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes"})
 public class FloatConverter extends TypeConverter implements SimpleValueConverter {
 
     public FloatConverter() {

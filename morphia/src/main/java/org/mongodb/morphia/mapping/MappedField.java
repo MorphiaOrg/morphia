@@ -28,12 +28,13 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -41,21 +42,24 @@ import java.util.Set;
  *
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-    private static final List<Class<? extends Annotation>> INTERESTING
-        = new ArrayList<Class<? extends Annotation>>(Arrays.asList(Serialized.class,
-                                                                   Indexed.class,
-                                                                   Property.class,
-                                                                   Reference.class,
-                                                                   Embedded.class,
-                                                                   Id.class,
-                                                                   Version.class,
-                                                                   ConstructorArgs.class,
-                                                                   AlsoLoad.class,
-                                                                   NotSaved.class));
+    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<Class<? extends Annotation>>();
+
+    static {
+        INTERESTING.add(Serialized.class);
+        INTERESTING.add(Indexed.class);
+        INTERESTING.add(Property.class);
+        INTERESTING.add(Reference.class);
+        INTERESTING.add(Embedded.class);
+        INTERESTING.add(Id.class);
+        INTERESTING.add(Version.class);
+        INTERESTING.add(ConstructorArgs.class);
+        INTERESTING.add(AlsoLoad.class);
+        INTERESTING.add(NotSaved.class);
+    }
+
     private final Mapper mapper;
     private Class persistedClass;
     private Field field; // the field :)
@@ -82,8 +86,8 @@ public class MappedField {
         discover();
     }
 
-//    protected MappedField() {
-//    }
+    //    protected MappedField() {
+    //    }
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
         INTERESTING.add(annotation);
@@ -147,6 +151,7 @@ public class MappedField {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Class discoverType() {
         Class type = field.getType();
         final Type gType = field.getGenericType();
@@ -172,8 +177,8 @@ public class MappedField {
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
             if (LOG.isWarningEnabled()) {
                 LOG.warning(
-                               "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
-                               + field.getDeclaringClass());
+                           "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
+                           + field.getDeclaringClass());
             }
         }
 
@@ -185,8 +190,8 @@ public class MappedField {
     }
 
     private Constructor discoverConstructor() {
-        Constructor constructor = null;
-        Class type = null;
+        Constructor<?> constructor = null;
+        Class<?> type = null;
         // get the first annotation with a concreteClass that isn't Object.class
         for (final Annotation an : foundAnnotations.values()) {
             try {
@@ -254,7 +259,7 @@ public class MappedField {
 
         final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);
         if (al != null && al.value() != null && al.value().length > 0) {
-            names.addAll(Arrays.asList(al.value()));
+            names.addAll(asList(al.value()));
         }
 
         return names;
@@ -296,6 +301,7 @@ public class MappedField {
     /**
      * returns the annotation instance if it exists on this field
      */
+    @SuppressWarnings("unchecked")
     public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
         return (T) foundAnnotations.get(clazz);
     }

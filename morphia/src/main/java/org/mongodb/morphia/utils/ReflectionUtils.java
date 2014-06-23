@@ -156,7 +156,7 @@ public final class ReflectionUtils {
      */
     public static boolean isIntegerType(final Class type) {
         return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
-                             byte.class).contains(type);
+                                    byte.class).contains(type);
     }
 
     /**
@@ -339,9 +339,9 @@ public final class ReflectionUtils {
      * @param field the field
      * @param c     the class to check against
      * @return true if the field is parameterized and c is the class that parameterizes the field, or is an interface that the parameterized
-     *         class implements, else false
+     * class implements, else false
      * @deprecated this class is unused in morphia and will be removed in a future release
-     */    
+     */
     public static boolean isFieldParameterizedWithClass(final Field field, final Class c) {
         if (field.getGenericType() instanceof ParameterizedType) {
             final ParameterizedType genericType = (ParameterizedType) field.getGenericType();
@@ -516,23 +516,22 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List iterToList(final Iterable it) {
+    public static <T> List<T> iterToList(final Iterable<T> it) {
         if (it instanceof List) {
-          return (List) it;
+            return (List<T>) it;
         }
         if (it == null) {
-          return null;
+            return null;
         }
-    
-        final List ar = new ArrayList();
-        for (final Object o : it) {
-          ar.add(o);
+
+        final List<T> ar = new ArrayList<T>();
+        for (final T o : it) {
+            ar.add(o);
         }
-    
+
         return ar;
-      }
-    
+    }
+
     public static Object convertToArray(final Class type, final List<?> values) {
         final Object exampleArray = Array.newInstance(type, values.size());
         try {

@@ -1,6 +1,5 @@
 package org.mongodb.morphia.dao;
 
-
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
@@ -19,14 +18,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class BasicDAO<T, K> implements DAO<T, K> {
-
     //CHECKSTYLE:OFF
     /**
      * @deprecated please use the getter for this field
@@ -71,11 +67,13 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @param morphia     a Morphia instance
      * @param dbName      the name of the database
      */
+    @SuppressWarnings("unchecked")
     protected BasicDAO(final MongoClient mongoClient, final Morphia morphia, final String dbName) {
         initDS(mongoClient, morphia, dbName);
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
 
+    @SuppressWarnings("unchecked")
     protected BasicDAO(final Datastore ds) {
         this.ds = (DatastoreImpl) ds;
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
@@ -102,7 +100,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * Converts from a List<Key> to their id values
      */
     protected List<?> keysToIds(final List<Key<T>> keys) {
-        final List ids = new ArrayList(keys.size() * 2);
+        final List<Object> ids = new ArrayList<Object>(keys.size() * 2);
         for (final Key<T> key : keys) {
             ids.add(key.getId());
         }
@@ -164,14 +162,17 @@ public class BasicDAO<T, K> implements DAO<T, K> {
         return ds.get(entityClazz, id);
     }
 
+    @SuppressWarnings("unchecked")
     public List<K> findIds() {
         return (List<K>) keysToIds(ds.find(entityClazz).asKeyList());
     }
 
+    @SuppressWarnings("unchecked")
     public List<K> findIds(final Query<T> q) {
         return (List<K>) keysToIds(q.asKeyList());
     }
 
+    @SuppressWarnings("unchecked")
     public List<K> findIds(final String key, final Object value) {
         return (List<K>) keysToIds(ds.find(entityClazz, key, value).asKeyList());
     }

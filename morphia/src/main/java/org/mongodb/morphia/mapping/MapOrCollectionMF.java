@@ -1,6 +1,5 @@
 package org.mongodb.morphia.mapping;
 
-
 import com.mongodb.DBObject;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.utils.ReflectionUtils;
@@ -11,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-@SuppressWarnings({"rawtypes"})
 public class MapOrCollectionMF extends MappedField {
     private ParameterizedType pType;
     private Object value;
