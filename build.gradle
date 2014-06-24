@@ -154,7 +154,7 @@ project(':morphia') {
             println "Building with the 3.x java driver"
         } else if (project.hasProperty('2.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3-SNAPSHOT", changing: true
-            println "Building with the 2.12.1 SNAPSHOT java driver"
+            println "Building with the 2.12.3 SNAPSHOT java driver"
         } else {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.2"
             println "Building with the 2.12 java driver"
