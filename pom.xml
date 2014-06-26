@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
-    <version>0.107-SNAPSHOT</version>
+    <version>0.108</version>
 
     <packaging>pom</packaging>
 
