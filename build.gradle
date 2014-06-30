@@ -4,12 +4,6 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        jcenter()
-        mavenLocal()
-    }
-
-    dependencies {
-        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.1.0'
     }
 }
 
@@ -64,7 +58,7 @@ allprojects {
     sourceSets.test.runtimeClasspath += configurations.provided
 
     if (properties['xlint']) {
-        tasks.withType(Compile) {
+        tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked"
         }
     }
@@ -231,7 +225,4 @@ project(':no-proxy-deps-tests') {
     }
 }
 
-apply from: 'gradle/ide-settings.gradle'
-apply from: 'gradle/maven-deployment.gradle'
 apply from: 'gradle/osgi-compatibility.gradle'
-apply from: 'gradle/release-process.gradle'
