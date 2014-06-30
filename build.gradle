@@ -14,7 +14,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '1.12'
 }
 
 def slf4jVersion = '1.7.5'
