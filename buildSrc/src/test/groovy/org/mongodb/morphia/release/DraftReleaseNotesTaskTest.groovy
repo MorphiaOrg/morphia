@@ -5,6 +5,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.kohsuke.github.GHMilestone
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class DraftReleaseNotesTaskTest extends Specification {
@@ -19,6 +20,7 @@ class DraftReleaseNotesTaskTest extends Specification {
         task instanceof DraftReleaseNotesTask
     }
 
+    @Ignore('Functional')
     def 'should get an open milestone corresponding to the release number'() {
         //note: functional test that needs a connection to github and a real milestone
         given:
@@ -33,6 +35,23 @@ class DraftReleaseNotesTaskTest extends Specification {
         then:
         milestone != null
         milestone.title == releaseVersion
+    }
+
+    @Ignore('Functional')
+    def 'should return all closed issues for a given milestone and partition them by bug or enhancement'() {
+        //note: functional test that needs a connection to github and a real milestone
+        given:
+        Project project = ProjectBuilder.builder().build()
+        DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
+        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHMilestone release108Milestone = repository.getMilestone(9)
+
+        when:
+        def issues = task.getIssuesAsMapOfEnhancementsAndBugs(repository, release108Milestone)
+
+        then:
+        issues != null
+        issues.enhancement.size + issues.bug.size == release108Milestone.closedIssues
     }
 
 }
