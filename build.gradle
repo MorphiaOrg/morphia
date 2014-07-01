@@ -226,3 +226,4 @@ project(':no-proxy-deps-tests') {
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
+apply from: 'gradle/release-process.gradle'

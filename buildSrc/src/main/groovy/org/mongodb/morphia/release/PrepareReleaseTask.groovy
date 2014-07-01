@@ -4,11 +4,11 @@ import org.eclipse.jgit.api.Git
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-class ReleaseTask extends DefaultTask {
-    def releaseVersion
+class PrepareReleaseTask extends DefaultTask {
 
     @TaskAction
     def prepareGitForRelease() {
+        def releaseVersion = project.release.releaseVersion
         def buildFile = project.file('build.gradle')
         def snapshotVersion = "${releaseVersion}-SNAPSHOT"
         project.ant.replaceregexp(file: buildFile, match: snapshotVersion, replace: releaseVersion)

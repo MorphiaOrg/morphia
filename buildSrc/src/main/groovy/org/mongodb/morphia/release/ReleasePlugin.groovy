@@ -9,8 +9,9 @@ class ReleasePlugin implements Plugin<Project> {
     @Override
     void apply(final Project project) {
         this.project = project
-        project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         project.extensions.create('release', ReleasePluginExtension)
+        project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
+        project.task('prepareRelease', type: PrepareReleaseTask)
     }
 }
 
