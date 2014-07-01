@@ -72,25 +72,37 @@ class DraftReleaseNotesTaskTest extends Specification {
     @Ignore('Functional')
     def 'create a default template for release notes'() {
         //note: functional test that needs a connection to github and a real milestone
-        //also: not an awesome test as it duplicates a lot of what the real method does
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
         def releaseVersion = 'post-1.0'
 
+        // add some arbitrary (real) issues to see them populated in the release notes
+        def enhancement1 = repository.getIssue(620)
+        def enhancement2 = repository.getIssue(609)
+        def bug1 = repository.getIssue(599)
+        def issues = [enhancements: [enhancement1, enhancement2], bugs: [bug1]]
+        def date = new Date()
+
         when:
-        def notes = task.createDraftReleaseNotes(repository, releaseVersion)
+        def notes = task.createDraftReleaseNotes(repository, releaseVersion, issues, date)
 
         then:
         notes != null
-        def date = new Date().format("MMM dd, yyyy")
-        notes == "\n## Version post-1.0 (${date})\n\n" +
+        notes == "\n## Version post-1.0 (${date.format("MMM dd, yyyy")})\n\n" +
         "### Downloads\n" +
         "Below and on maven central.\n\n" +
         "### Docs\n" +
-        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/${releaseVersion}/apidocs/index.html\n\n" +
-        "### Issues Resolved\n"
+        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/apidocs/index.html\n\n" +
+        "### Issues Resolved\n" +
+        "#### ENHANCEMENTS\n" +
+        "* [Issue 620](https://github.com/mongodb/morphia/pull/620): Moved around a chunk of tests\n" +
+        "* [Issue 609](https://github.com/mongodb/morphia/issues/609): Support ID generator so users can specify the behaviour when an ID" +
+        " is not supplied\n" +
+        "\n" +
+        "#### BUGS\n" +
+        "* [Issue 599](https://github.com/mongodb/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
         //this would be populated if we hadn't chosen a release that currently has no closed issues
     }
 

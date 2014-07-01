@@ -7,10 +7,7 @@ import static org.kohsuke.github.GHIssueState.OPEN
 
 class DraftReleaseNotesTask extends DefaultTask {
 
-    static createDraftReleaseNotes(repository, releaseVersion) {
-        def milestone = getMilestone(repository, releaseVersion)
-        def issues = getIssuesAsMapOfEnhancementsAndBugs(repository, milestone)
-
+    static createDraftReleaseNotes(repository, releaseVersion, issues, date) {
         def javadoc = "https://rawgithub.com/wiki/${repository.owner.name}/${repository.name}/javadoc/${releaseVersion}/apidocs/index.html";
 
         def notes = """
