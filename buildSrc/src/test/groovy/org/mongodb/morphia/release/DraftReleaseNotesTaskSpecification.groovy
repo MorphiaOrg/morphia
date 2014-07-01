@@ -11,7 +11,7 @@ import spock.lang.Specification
 
 import static org.kohsuke.github.GHIssueState.CLOSED
 
-class DraftReleaseNotesTaskTest extends Specification {
+class DraftReleaseNotesTaskSpecification extends Specification {
     def 'should be able to add the task to a project'() {
         given:
         Project project = ProjectBuilder.builder().build()
