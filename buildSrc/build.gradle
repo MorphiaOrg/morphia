@@ -6,8 +6,7 @@ repositories {
 
 dependencies {
     compile 'org.kohsuke:github-api:1.47'
-    //TODO: consider upgrading
-    compile 'org.eclipse.jgit:org.eclipse.jgit:3.2.0.201312181205-r'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.4.1.201406201815-r'
     //groovy code in the buildSrc directory always runs against groovy 1.8
     //so we need to use that version of spock, or move all of this into a proper plugin (and hence different directory)
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'

@@ -2,6 +2,7 @@ package org.mongodb.morphia.release
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import static org.spockframework.util.Assert.fail
@@ -27,7 +28,7 @@ class ReleaseTaskSpecification extends Specification {
         task.releaseVersion = '0.109'
 
         when:
-        task.updateVersionInBuildFile()
+        task.updateVersionInBuildFile(project.file('build.gradle'))
 
         then:
         def buildFilePattern = ~/build\.gradle/
@@ -44,18 +45,18 @@ class ReleaseTaskSpecification extends Specification {
         matched == true
     }
 
-//    def 'should commit the changes to git'() {
-//        given:
-//        def locationOfTestBuildFile = new File('src/test/resources')
-//        Project project = ProjectBuilder.builder().withProjectDir(locationOfTestBuildFile).build()
-//        ReleaseTask task = project.task('release', type: ReleaseTask)
-//        task.releaseVersion = 'Test'
-//
-//        when:
-//        task.prepareGitForRelease();
-//
-//        then:
-//        fail 'Not implemented yet'
-//
-//    }
+    @Ignore("not testable")
+    def 'should commit the changes to git'() {
+        given:
+        def locationOfMorphiaHome = new File('')
+        Project project = ProjectBuilder.builder().withProjectDir(locationOfMorphiaHome).build()
+        ReleaseTask task = project.task('release', type: ReleaseTask)
+        task.releaseVersion = '0.109'
+
+        when:
+        task.theRelease()
+
+        then:
+        fail 'There is no way to see if this went into git apart from manually'
+    }
 }
