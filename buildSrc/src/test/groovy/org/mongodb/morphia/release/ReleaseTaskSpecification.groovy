@@ -24,9 +24,10 @@ class ReleaseTaskSpecification extends Specification {
         def locationOfTestBuildFile = new File('src/test/resources')
         Project project = ProjectBuilder.builder().withProjectDir(locationOfTestBuildFile).build()
         ReleaseTask task = project.task('release', type: ReleaseTask)
+        task.releaseVersion = '0.109'
 
         when:
-        task.updateVersionInBuildFile('0.109-SNAPSHOT', '0.109')
+        task.updateVersionInBuildFile()
 
         then:
         def buildFilePattern = ~/build\.gradle/
@@ -43,4 +44,18 @@ class ReleaseTaskSpecification extends Specification {
         matched == true
     }
 
+//    def 'should commit the changes to git'() {
+//        given:
+//        def locationOfTestBuildFile = new File('src/test/resources')
+//        Project project = ProjectBuilder.builder().withProjectDir(locationOfTestBuildFile).build()
+//        ReleaseTask task = project.task('release', type: ReleaseTask)
+//        task.releaseVersion = 'Test'
+//
+//        when:
+//        task.prepareGitForRelease();
+//
+//        then:
+//        fail 'Not implemented yet'
+//
+//    }
 }

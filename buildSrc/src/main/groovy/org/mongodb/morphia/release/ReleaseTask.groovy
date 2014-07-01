@@ -5,32 +5,28 @@ import org.gradle.api.DefaultTask
 
 class ReleaseTask extends DefaultTask {
     def releaseVersion
-
-    def prepareGitForRelease() {
-        updateVersionInBuildFile(project.version, releaseVersion)
-
-        Git git = Git.open(new File('.'))
-//        git.commit()
-//           .setMessage("Release ${releaseVersion}")
-//           .call()
-//
-//        git.tag()
-//           .setName(tagName())
-//           .setMessage("Release ${releaseVersion}")
-//           .call()
+    
+    def theRelease () {
+        updateVersionInBuildFile()
+        prepareGitForRelease();
     }
 
-    def updateVersionInBuildFile(oldVersion, newVersion) {
-        println project
-        
-        def buildFile = project.file('build.gradle')
-        println buildFile.path
-        project.ant.replaceregexp(file: buildFile, match: oldVersion, replace: newVersion)
+    def prepareGitForRelease() {
+        def git = Git.open(new File('.'))
+        git.commit()
+           .setMessage("Release ${releaseVersion}")
+           .call()
 
-//        Git git = Git.open(new File('.'))
-//        git.add()
-//           .addFilepattern(buildFile.path)
-//           .call();
+        git.tag()
+           .setName("r${releaseVersion}")
+           .setMessage("Release ${releaseVersion}")
+           .call()
+    }
+
+    def updateVersionInBuildFile() {
+        def buildFile = project.file('build.gradle')
+        def snapshotVersion = "${releaseVersion}-SNAPSHOT"
+        project.ant.replaceregexp(file: buildFile, match: snapshotVersion, replace: releaseVersion)
     }
 
 }
