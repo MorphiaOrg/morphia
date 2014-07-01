@@ -2,11 +2,14 @@ package org.mongodb.morphia.release
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
+import org.kohsuke.github.GHIssueState
 import org.kohsuke.github.GHMilestone
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 import spock.lang.Ignore
 import spock.lang.Specification
+
+import static org.kohsuke.github.GHIssueState.CLOSED
 
 class DraftReleaseNotesTaskTest extends Specification {
     def 'should be able to add the task to a project'() {
@@ -21,20 +24,19 @@ class DraftReleaseNotesTaskTest extends Specification {
     }
 
     @Ignore('Functional')
-    def 'should get an open milestone corresponding to the release number'() {
+    def 'should get a milestone ID corresponding to the release number'() {
         //note: functional test that needs a connection to github and a real milestone
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
-        def releaseVersion = 'post-1.0'
 
         when:
-        GHMilestone milestone = task.getMilestone(repository, releaseVersion)
+        def milestoneNumber = task.getMilestoneNumber(repository, 'post-1.0', GHIssueState.OPEN)
 
         then:
-        milestone != null
-        milestone.title == releaseVersion
+        //this is a real milestone and this is its actual ID
+        milestoneNumber == 10
     }
 
     @Ignore('Functional')
@@ -46,10 +48,25 @@ class DraftReleaseNotesTaskTest extends Specification {
         GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
 
         when:
-        GHMilestone milestone = task.getMilestone(repository, '0.108')
+        GHMilestone milestone = task.getMilestoneNumber(repository, '0.108', GHIssueState.OPEN)
 
         then:
         thrown IllegalArgumentException
+    }
+
+    @Ignore('Functional')
+    def 'should be able to specify that expected milestone is closed'() {
+        //note: functional test that needs a connection to github and a real milestone
+        given:
+        Project project = ProjectBuilder.builder().build()
+        DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
+        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+
+        when:
+        def milestoneNumber = task.getMilestoneNumber(repository, '0.108', CLOSED)
+
+        then:
+        milestoneNumber == 9
     }
 
     @Ignore('Functional')
@@ -62,7 +79,7 @@ class DraftReleaseNotesTaskTest extends Specification {
         GHMilestone release108Milestone = repository.getMilestone(9)
 
         when:
-        def issues = task.getIssuesAsMapOfEnhancementsAndBugs(repository, release108Milestone)
+        def issues = task.getIssuesAsMapOfEnhancementsAndBugs(repository, release108Milestone.number)
 
         then:
         issues != null
@@ -86,7 +103,7 @@ class DraftReleaseNotesTaskTest extends Specification {
         def date = new Date()
 
         when:
-        def notes = task.createDraftReleaseNotes(repository, releaseVersion, issues, date)
+        def notes = task.createDraftReleaseNotesContent(repository, releaseVersion, issues, date)
 
         then:
         notes != null
@@ -103,7 +120,24 @@ class DraftReleaseNotesTaskTest extends Specification {
         "\n" +
         "#### BUGS\n" +
         "* [Issue 599](https://github.com/mongodb/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
-        //this would be populated if we hadn't chosen a release that currently has no closed issues
+    }
+
+    @Ignore('Functional')
+    def 'should save the release notes to Github as a draft'() {
+        //note: functional test that needs a connection to github and a real milestone
+        given:
+        Project project = ProjectBuilder.builder().build()
+        DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
+        task.releaseVersion = '0.108'
+        task.expectedMilestoneState = CLOSED
+        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+
+        expect:
+        task.draftReleaseNotes();
+
+        //not a great test, there are no assertions.  It's a fully functional test, so go to
+        // https://github.com/mongodb/morphia/releases
+        //to see if the draft release notes have been posted with the text, the issues, and the jars for the release
     }
 
 }

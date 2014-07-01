@@ -1,13 +1,51 @@
 package org.mongodb.morphia.release
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
+import org.kohsuke.github.GHIssueState
+import org.kohsuke.github.GHMilestone
+import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GitHub
 
 import static org.kohsuke.github.GHIssueState.CLOSED
 import static org.kohsuke.github.GHIssueState.OPEN
 
+//this class needs you to have your credentials in ~/.github
 class DraftReleaseNotesTask extends DefaultTask {
+    String repositoryName = "mongodb/morphia"
+    String releaseVersion
+    //generally we're going to expect the release milestone to be open. This is set-able for testing.
+    GHIssueState expectedMilestoneState = OPEN
 
-    static createDraftReleaseNotes(repository, releaseVersion, issues, date) {
+    @TaskAction
+    void draftReleaseNotes() {
+        GHRepository repository = GitHub.connect().getRepository(repositoryName)
+        def milestoneNumber = getMilestoneNumber(repository, releaseVersion, expectedMilestoneState)
+        def notes = createDraftReleaseNotesContent(repository,
+                                                   releaseVersion,
+                                                   getIssuesAsMapOfEnhancementsAndBugs(repository, milestoneNumber),
+                                                   new Date())
+        def ghRelease = repository.createRelease("r${releaseVersion}")
+                                  .name(releaseVersion)
+                                  .body(notes.toString())
+                                  .draft(true)
+                                  .create()
+        // TODO: not proven to work yet
+//        project.subprojects { subproject ->
+//            subproject.configurations.archives { archive ->
+//                gitHub.with {
+//                    def jar = archive.getAllArtifacts().find { artifact ->
+//                        artifact.getFile().getName().endsWith("-${project.version}.jar")
+//                    }
+//
+//                    println "Uploading ${jar.getFile()}"
+//                    ghRelease.uploadAsset(jar.getFile(), "application/jar")
+//                }
+//            }
+//        }
+    }
+
+    static createDraftReleaseNotesContent(repository, releaseVersion, issues, date) {
         def javadoc = "https://rawgithub.com/wiki/${repository.owner.name}/${repository.name}/javadoc/${releaseVersion}/apidocs/index.html";
 
         def notes = """
@@ -31,12 +69,12 @@ ${javadoc}
 
         notes
     }
-    
-    static getIssuesAsMapOfEnhancementsAndBugs(repository, milestone) {
+
+    static getIssuesAsMapOfEnhancementsAndBugs(repository, milestoneNumber) {
         def issues = [:].withDefault { [] }
         def list = repository.listIssues(CLOSED)
         list.each { issue ->
-            if (issue.milestone?.number == milestone.number) {
+            if (issue.milestone?.number == milestoneNumber) {
                 if (issue.labels) {
                     issue.labels.each { label ->
                         issues[label.name] << issue
@@ -49,13 +87,13 @@ ${javadoc}
         issues
     }
 
-    static getMilestone(repository, releaseVersion) {
-        def milestoneForRelease = repository.listMilestones(OPEN).find { milestone ->
+    static getMilestoneNumber(repository, releaseVersion, status) {
+        GHMilestone milestoneForRelease = repository.listMilestones(status).find { milestone ->
             milestone.title == releaseVersion
         }
         if (milestoneForRelease == null) {
             throw new IllegalArgumentException("Github milestone ${releaseVersion} either does not exist, or is already closed.")
         }
-        milestoneForRelease
+        milestoneForRelease.number
     }
 }
