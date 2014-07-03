@@ -9,8 +9,8 @@ class PrepareReleaseTask extends DefaultTask {
     @TaskAction
     def prepareGitForRelease() {
         def releaseVersion = project.release.releaseVersion
+        def snapshotVersion = project.release.snapshotVersion
         def buildFile = project.file('build.gradle')
-        def snapshotVersion = "${releaseVersion}-SNAPSHOT"
         project.ant.replaceregexp(file: buildFile, match: snapshotVersion, replace: releaseVersion)
 
         def git = Git.open(new File('.'))
@@ -26,6 +26,4 @@ class PrepareReleaseTask extends DefaultTask {
            .call()
     }
 
-    
-    
 }

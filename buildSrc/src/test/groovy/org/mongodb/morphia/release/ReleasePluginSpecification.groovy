@@ -34,7 +34,7 @@ class ReleasePluginSpecification extends Specification {
         project.apply plugin: 'release'
 
         when:
-        project.release.releaseVersion = '0.108'
+        project.release.releaseVersion = '0.108-SNAPSHOT'
 
         then:
         project.release.releaseVersion == '0.108'

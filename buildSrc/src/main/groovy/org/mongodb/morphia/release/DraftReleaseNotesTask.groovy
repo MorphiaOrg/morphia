@@ -13,36 +13,46 @@ import static org.kohsuke.github.GHIssueState.OPEN
 //this class needs you to have your credentials in ~/.github
 class DraftReleaseNotesTask extends DefaultTask {
     String repositoryName = "mongodb/morphia"
-    String releaseVersion
     //generally we're going to expect the release milestone to be open. This is set-able for testing.
     GHIssueState expectedMilestoneState = OPEN
 
     @TaskAction
     void draftReleaseNotes() {
+        ensureArchivesAreNotSnapshotJarFiles()
+        def releaseVersion = project.release.releaseVersion
         GHRepository repository = GitHub.connect().getRepository(repositoryName)
         def milestoneNumber = getMilestoneNumber(repository, releaseVersion, expectedMilestoneState)
         def notes = createDraftReleaseNotesContent(repository,
                                                    releaseVersion,
                                                    getIssuesAsMapOfEnhancementsAndBugs(repository, milestoneNumber),
                                                    new Date())
-        def ghRelease = repository.createRelease("r${releaseVersion}")
-                                  .name(releaseVersion)
-                                  .body(notes.toString())
-                                  .draft(true)
-                                  .create()
-        // TODO: not proven to work yet
-//        project.subprojects { subproject ->
-//            subproject.configurations.archives { archive ->
-//                gitHub.with {
-//                    def jar = archive.getAllArtifacts().find { artifact ->
-//                        artifact.getFile().getName().endsWith("-${project.version}.jar")
-//                    }
-//
-//                    println "Uploading ${jar.getFile()}"
-//                    ghRelease.uploadAsset(jar.getFile(), "application/jar")
-//                }
-//            }
-//        }
+        def githubRelease = repository.createRelease("r${releaseVersion}")
+                                      .name(releaseVersion)
+                                      .body(notes.toString())
+                                      .draft(true)
+                                      .create()
+        attachJarFilesToRelease(releaseVersion, githubRelease)
+    }
+
+    private ensureArchivesAreNotSnapshotJarFiles() {
+        String jarFilePath = project.getTasksByName('jar', false).toArray()[0].archivePath
+        if (jarFilePath.contains('SNAPSHOT')) {
+            throw new IllegalStateException('Cannot upload snapshot JAR files onto the release notes. Make sure the version number in ' +
+                                            'the build file does not have the -SNAPSHOT suffix');
+        }
+    }
+
+    private attachJarFilesToRelease(releaseVersion, ghRelease) {
+        project.subprojects { subproject ->
+            subproject.configurations.archives { archive ->
+                def jar = archive.getAllArtifacts().find { artifact ->
+                    artifact.getFile().getName().endsWith("-${releaseVersion}.jar")
+                }
+
+                println "Uploading ${jar.getFile()}"
+                ghRelease.uploadAsset(jar.getFile(), "application/jar")
+            }
+        }
     }
 
     static createDraftReleaseNotesContent(repository, releaseVersion, issues, date) {

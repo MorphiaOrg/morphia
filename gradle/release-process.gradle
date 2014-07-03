@@ -1,9 +1,7 @@
 apply plugin: 'release'
 
 release {
-    // the version in the build file should be a SNAPSHOT version
-    String version = project('morphia').version
-    releaseVersion = version[0..<version.indexOf('-SNAPSHOT')]
+    releaseVersion = project('morphia').version
 }
 
 apply from: 'gradle/release-to-nexus.gradle'
