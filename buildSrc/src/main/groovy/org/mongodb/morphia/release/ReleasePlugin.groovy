@@ -12,6 +12,7 @@ class ReleasePlugin implements Plugin<Project> {
         project.extensions.create('release', ReleasePluginExtension)
         project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         project.task('prepareRelease', type: PrepareReleaseTask)
+        project.task('pushToRemote', type: PushToRemoteTask)
     }
 }
 
