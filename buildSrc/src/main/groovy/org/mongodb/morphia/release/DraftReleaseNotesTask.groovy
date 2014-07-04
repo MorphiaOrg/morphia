@@ -16,6 +16,10 @@ class DraftReleaseNotesTask extends DefaultTask {
     //generally we're going to expect the release milestone to be open. This is set-able for testing.
     GHIssueState expectedMilestoneState = OPEN
 
+    DraftReleaseNotesTask() {
+        description = 'Creates the release notes document, and include the release issues from Github'
+    }
+
     @TaskAction
     void draftReleaseNotes() {
         ensureArchivesAreNotSnapshotJarFiles()

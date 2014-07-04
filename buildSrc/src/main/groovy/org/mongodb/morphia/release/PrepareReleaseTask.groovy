@@ -6,6 +6,10 @@ import org.gradle.api.tasks.TaskAction
 
 class PrepareReleaseTask extends DefaultTask {
 
+    PrepareReleaseTask (){
+        description = 'Update release version in the build file, commit to github and tag the release'
+    }
+
     @TaskAction
     def prepareGitForRelease() {
         def releaseVersion = project.release.releaseVersion
