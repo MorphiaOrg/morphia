@@ -1,6 +1,7 @@
 package org.mongodb.morphia.release
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.errors.JGitInternalException
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -25,10 +26,18 @@ class PrepareReleaseTask extends DefaultTask {
 
         getLog().info 'Checking build file into git'
         def git = Git.open(new File('.'))
-        git.commit()
-           .setOnly(buildFile.name)
-           .setMessage("Release ${releaseVersion}")
-           .call()
+        try {
+            git.commit()
+               .setOnly(buildFile.name)
+               .setMessage("Release ${releaseVersion}")
+               .call()
+        } catch (JGitInternalException e) {
+            if (e.getMessage().equals('No changes')) {
+                // we probably already committed this file, we're done
+                // this is not an elegant way to make this idempotent, but it does work
+                return
+            }
+        }
 
         getLog().info "Tagging release with 'r${releaseVersion}'"
         git.tag()

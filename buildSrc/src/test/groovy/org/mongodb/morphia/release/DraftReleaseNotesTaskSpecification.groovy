@@ -111,7 +111,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         "### Downloads\n" +
         "Below and on maven central.\n\n" +
         "### Docs\n" +
-        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/apidocs/index.html\n\n" +
+        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/index.html\n\n" +
         "### Issues Resolved\n" +
         "#### ENHANCEMENTS\n" +
         "* [Issue 620](https://github.com/mongodb/morphia/pull/620): Moved around a chunk of tests\n" +

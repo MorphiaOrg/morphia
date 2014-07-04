@@ -52,7 +52,7 @@ class DraftReleaseNotesTask extends DefaultTask {
     }
 
     static createDraftReleaseNotesContent(repository, releaseVersion, issues, date) {
-        def javadoc = "https://rawgithub.com/wiki/${repository.owner.name}/${repository.name}/javadoc/${releaseVersion}/apidocs/index.html";
+        def javadoc = "https://rawgithub.com/wiki/${repository.owner.name}/${repository.name}/javadoc/${releaseVersion}/index.html";
 
         def notes = """
 ## Version ${releaseVersion} (${new Date().format("MMM dd, yyyy")})
