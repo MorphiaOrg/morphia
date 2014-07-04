@@ -6,6 +6,8 @@ import org.kohsuke.github.GHIssueState
 import org.kohsuke.github.GHMilestone
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import static org.kohsuke.github.GHIssueState.CLOSED
 import static org.kohsuke.github.GHIssueState.OPEN
@@ -22,7 +24,6 @@ class DraftReleaseNotesTask extends DefaultTask {
 
     @TaskAction
     void draftReleaseNotes() {
-        ensureArchivesAreNotSnapshotJarFiles()
         def releaseVersion = project.release.releaseVersion
         GHRepository repository = GitHub.connect().getRepository(repositoryName)
         def milestoneNumber = getMilestoneNumber(repository, releaseVersion, expectedMilestoneState)
@@ -38,23 +39,14 @@ class DraftReleaseNotesTask extends DefaultTask {
         attachJarFilesToRelease(releaseVersion, githubRelease)
     }
 
-    private ensureArchivesAreNotSnapshotJarFiles() {
-        String jarFilePath = project.getTasksByName('jar', false).toArray()[0].archivePath
-        if (jarFilePath.contains('SNAPSHOT')) {
-            throw new IllegalStateException('Cannot upload snapshot JAR files onto the release notes. Make sure the version number in ' +
-                                            'the build file does not have the -SNAPSHOT suffix');
-        }
-    }
-
     private attachJarFilesToRelease(releaseVersion, ghRelease) {
+        def log = getLog()
         project.subprojects { subproject ->
-            subproject.configurations.archives { archive ->
-                def jar = archive.getAllArtifacts().find { artifact ->
-                    artifact.getFile().getName().endsWith("-${releaseVersion}.jar")
+            subproject.jar.destinationDir.eachFile { jarFile ->
+                if (jarFile.name.endsWith("-${releaseVersion}.jar")){
+                    log.info "Uploading ${jarFile.name}"
+                    ghRelease.uploadAsset(jarFile, "application/jar")
                 }
-
-                println "Uploading ${jar.getFile()}"
-                ghRelease.uploadAsset(jar.getFile(), "application/jar")
             }
         }
     }
@@ -110,4 +102,6 @@ ${javadoc}
         }
         milestoneForRelease.number
     }
+
+    private Logger getLog() { project?.logger ?: LoggerFactory.getLogger(this.class) }
 }
