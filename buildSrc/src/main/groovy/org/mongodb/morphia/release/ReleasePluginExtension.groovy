@@ -3,6 +3,7 @@ package org.mongodb.morphia.release
 class ReleasePluginExtension {
     String releaseVersion
     String snapshotVersion
+    String javadocDir
 
     def setReleaseVersion(String version) {
         int indexOfSnapshotTag = version.indexOf('-SNAPSHOT')

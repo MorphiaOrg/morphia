@@ -2,6 +2,7 @@ apply plugin: 'release'
 
 release {
     releaseVersion = project('morphia').version
+    javadocDir = project('morphia').javadoc.destinationDir
 }
 
 apply from: 'gradle/release-to-nexus.gradle'
