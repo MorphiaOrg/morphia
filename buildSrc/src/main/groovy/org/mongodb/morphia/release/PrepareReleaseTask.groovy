@@ -54,6 +54,7 @@ class PrepareReleaseTask extends DefaultTask {
            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
            .call()
         
+        project.version = releaseVersion
         project.subprojects { subproject ->
             subproject.version = releaseVersion
         }
