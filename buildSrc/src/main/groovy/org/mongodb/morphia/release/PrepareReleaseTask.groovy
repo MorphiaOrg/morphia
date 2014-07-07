@@ -53,6 +53,11 @@ class PrepareReleaseTask extends DefaultTask {
         git.push()
            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
            .call()
+        
+        project.subprojects { subproject ->
+            subproject.version = releaseVersion
+        }
+
     }
 
     private Logger getLog() { project?.logger ?: LoggerFactory.getLogger(this.class) }
