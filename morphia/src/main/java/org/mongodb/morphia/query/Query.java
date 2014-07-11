@@ -95,9 +95,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   Query<T> maxScan(int value);
 
   /**
-   * Specifying a time limit for executing the querry. Requires server version 2.6 or above.
+   * Specifies a time limit for executing the query. Requires server version 2.6 or above.
    *
-   * @param value must be > 0.  A value < 0 indicates no limit
+   * @param maxTime must be > 0.  A value < 0 indicates no limit
+   * @param maxTimeUnit
    */
   Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
 
