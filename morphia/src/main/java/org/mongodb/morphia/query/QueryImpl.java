@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
@@ -63,6 +64,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tailAwaitData;
     private ReadPreference readPref;
     private Integer maxScan;
+    private Long maxTime;
+    private TimeUnit maxTimeUnit;
     private String comment;
     private boolean returnKey;
 
@@ -190,7 +193,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
         }
-        return dbColl.getCount(query);
+        DBCursor cursor = dbColl.find(query, null);
+        if (maxTime != null && maxTimeUnit != null) {
+            cursor.maxTime(maxTime, maxTimeUnit);
+        }
+        long count = cursor.count();
+        cursor.close();
+        return count;
     }
 
     public DBCursor prepareCursor() {
@@ -250,6 +259,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         if (maxScan != null) {
             cursor.addSpecial("$maxScan", maxScan);
+        }
+
+        if (maxTime != null && maxTimeUnit != null) {
+            cursor.maxTime(maxTime, maxTimeUnit);
         }
 
         if (max != null) {
@@ -417,6 +430,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Query<T> maxScan(final int value) {
         maxScan = value > 0 ? value : null;
+        return this;
+    }
+
+    public Query<T> maxTime(final long value, final TimeUnit timeUnitValue) {
+        maxTime = value > 0 ? value : null;
+        maxTimeUnit = timeUnitValue;
         return this;
     }
 
