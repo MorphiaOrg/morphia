@@ -26,8 +26,8 @@ class ReleasePlugin implements Plugin<Project> {
         project.extensions.create('release', ReleasePluginExtension)
         project.evaluationDependsOnChildren()
 
-        magicIncantationRequiredToGetNexusPluginWorkingOnSubprojects()
         project.task('prepareRelease', type: PrepareReleaseTask, dependsOn: project.subprojects.clean)
+        magicIncantationRequiredToGetNexusPluginWorkingOnSubprojects()
         project.task('draftReleaseNotes', type: DraftReleaseNotesTask, dependsOn: ['prepareRelease', project.subprojects.uploadArchives])
         project.task('publishJavadoc', type: PublishJavadocTask, dependsOn: ['draftReleaseNotes', project.subprojects.javadoc])
         project.task('updateToNextVersion', type: UpdateToNextVersionTask, dependsOn: 'publishJavadoc')
