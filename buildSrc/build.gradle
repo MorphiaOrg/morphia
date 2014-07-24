@@ -6,6 +6,8 @@ repositories {
 }
 
 dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.3'
+
     // used by draftReleaseNotes
     compile 'org.kohsuke:github-api:1.47'
     // used by prepareRelease
@@ -14,5 +16,6 @@ dependencies {
     compile 'org.gradle.api.plugins:gradle-nexus-plugin:0.5'
     //groovy code in the buildSrc directory always runs against groovy 1.8
     //so we need to use that version of spock, or move all of this into a proper plugin (and hence different directory)
-    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
+
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
