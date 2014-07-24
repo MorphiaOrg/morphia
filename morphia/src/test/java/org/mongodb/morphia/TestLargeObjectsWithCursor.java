@@ -1,9 +1,11 @@
 package org.mongodb.morphia;
 
 
+import category.Slow;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.TestMapping.BaseEntity;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.query.Query;
@@ -62,6 +64,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
     }
 
     @Test
+    @Category(Slow.class)
     public void testWithManyElementsInCollection() throws Exception {
         Query<E> query = getDs().createQuery(E.class);
         final long countAll = query.countAll();

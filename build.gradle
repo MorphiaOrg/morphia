@@ -99,6 +99,12 @@ allprojects {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
 
+        useJUnit {
+            if (project.buildingWith('local')) {
+                excludeCategories 'category.Slow'
+            }
+        }
+
         jacoco { enabled = false }
 
         beforeTest { descr ->
@@ -154,6 +160,7 @@ project(':morphia') {
             println "Building with the 2.12 java driver"
         }
 
+        compile project(':util')
         provided 'cglib:cglib-nodep:[2.1_3,3.0)'
         provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
         testCompile 'org.zeroturnaround:zt-exec:1.5'

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-
 package org.mongodb.morphia;
 
-
+import category.Slow;
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -29,6 +28,7 @@ import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
 import org.mongodb.morphia.annotations.Id;
@@ -464,6 +464,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    @Category(Slow.class)
     public void massiveBulkInsert() {
         doInserts(false);
         doInserts(true);
