@@ -40,7 +40,9 @@ import org.mongodb.morphia.utils.IndexDirection;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -48,6 +50,15 @@ import static org.junit.Assert.fail;
  * @author Scott Hernandez
  */
 public class TestIndexed extends TestBase {
+    @SuppressWarnings("unused")
+    private static class Place {
+        @Id
+        private long id;
+
+        @Indexed(IndexDirection.GEO2DSPHERE)
+        private Object location;
+    }
+
     private static class Ad {
         @Id
         private long id;
@@ -168,7 +179,7 @@ public class TestIndexed extends TestBase {
             // } catch (MappingException me) {}
         } catch (Throwable me) {
             // currently is masked by java.lang.RuntimeException: json can't
-        } 
+        }
         // serialize type : class com.mongodb.DBTimestamp
 
         getDs().ensureIndexes();
@@ -218,6 +229,20 @@ public class TestIndexed extends TestBase {
         final UniqueIndexOnValue entityWithSameName = new UniqueIndexOnValue();
         entityWithSameName.setValue(value);
         getDs().save(entityWithSameName);
+    }
+
+    @Test
+    public void testCanCreate2dSphereIndexes() {
+        // given
+        getMorphia().map(Place.class);
+
+        // when
+        getDs().ensureIndexes();
+
+        // then
+        List<DBObject> indexInfo = getDs().getCollection(Place.class).getIndexInfo();
+        assertThat(indexInfo.size(), is(2));
+        assertHasNamedIndex("location_2dsphere", indexInfo);
     }
 
     protected static void assertHasNamedIndex(final String name, final List<DBObject> indexes) {
