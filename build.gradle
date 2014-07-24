@@ -161,8 +161,8 @@ project(':morphia') {
         }
 
         compile project(':util')
-        provided 'cglib:cglib-nodep:[2.1_3,3.0)'
-        provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
+        compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
+        provided 'cglib:cglib-nodep:2.2.2'
         testCompile 'org.zeroturnaround:zt-exec:1.5'
         testCompile 'com.jayway.awaitility:awaitility:1.5.0'
         testCompile 'org.skyscreamer:jsonassert:1.2.3'
