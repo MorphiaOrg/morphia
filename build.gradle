@@ -149,14 +149,14 @@ project(':morphia') {
     archivesBaseName = 'morphia'
 
     dependencies {
-        if (project.hasProperty('3.x')) {
+        if (project.buildingWith('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
-        } else if (project.hasProperty('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3-SNAPSHOT", changing: true
-            println "Building with the 2.12.3 SNAPSHOT java driver"
+        } else if (project.buildingWith('2.x')) {
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.4-SNAPSHOT", changing: true
+            println "Building with the 2.12.4 SNAPSHOT java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.2"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3"
             println "Building with the 2.12 java driver"
         }
 
