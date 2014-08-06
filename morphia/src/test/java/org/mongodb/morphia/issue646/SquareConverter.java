@@ -11,7 +11,7 @@ public class SquareConverter extends TypeConverter implements SimpleValueConvert
     }
 
     @Override
-    public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) {
+    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
         if (fromDBObject == null) {
             return null;
         }
@@ -25,7 +25,7 @@ public class SquareConverter extends TypeConverter implements SimpleValueConvert
     }
 
     @Override
-    public Object encode(Object value, MappedField optionalExtraInfo) {
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
         if (value == null) {
             return null;
         }
