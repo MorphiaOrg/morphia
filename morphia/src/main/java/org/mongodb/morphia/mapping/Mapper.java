@@ -166,13 +166,20 @@ public class Mapper {
             mc.validate();
         }
 
-        final Converters c = (Converters) mc.getAnnotation(Converters.class);
-        if (c != null) {
-            for (final Class<? extends TypeConverter> clazz : c.value()) {
-                if (!getConverters().isRegistered(clazz)) {
-                    getConverters().addConverter(clazz);
+        final List<Annotation> convertersList = mc.getAnnotations(Converters.class);
+        if (convertersList != null) {
+            
+            for (Annotation a : convertersList) {
+                final Converters c = (Converters) a;
+                if (c != null) {
+                    for (final Class<? extends TypeConverter> clazz : c.value()) {
+                        if (!getConverters().isRegistered(clazz)) {
+                            getConverters().addConverter(clazz);
+                        }
+                    }
                 }
             }
+        
         }
 
         mappedClasses.put(mc.getClazz().getName(), mc);
