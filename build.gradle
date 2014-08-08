@@ -119,6 +119,13 @@ allprojects {
         if (taskGraph.hasTask(testCoverage)) {
             tasks.withType(Test) { jacoco { enabled = true } }
         }
+        //findbugs is far too slow. Setting a "local" property allows you to skip it whilst still running it in CI
+        tasks.findbugsMain.onlyIf {
+            !project.buildingWith('local')
+        }
+        tasks.findbugsTest.onlyIf {
+            !project.buildingWith('local')
+        }
     }
 
     task testCoverage(dependsOn: check)
