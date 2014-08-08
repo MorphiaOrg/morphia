@@ -4,7 +4,13 @@
     <Match>
         <Class name="~.*\.*Test.*"/>
         <Not>
-            <Bug code="IJU, SE_BAD_FIELD, EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
+            <Bug code="IJU"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="~.*\.*Test.*"/>
+        <Not>
+            <Bug pattern="SE_BAD_FIELD, EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
         </Not>
     </Match>
     <Match>
@@ -13,33 +19,29 @@
     </Match>
     <Match>
         <Class name="org.mongodb.morphia.testmodel.Hotel"/>
-        <Not>
-            <Bug code="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
-        </Not>
+        <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
     </Match>
     <Match>
         <Class name="org.mongodb.morphia.utils.E1"/>
-        <Not>
-            <Bug code="SS_SHOULD_BE_STATIC"/>
-        </Not>
+        <Bug pattern="SS_SHOULD_BE_STATIC"/>
     </Match>
     <Match>
         <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap"/>
-        <Not>
-            <Bug code="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
-        </Not>
+        <Bug pattern="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
     </Match>
     <Match>
         <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap$EntryIterator"/>
-        <Not>
-            <Bug code="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
-        </Not>
+        <Bug pattern="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
     </Match>
     <Match>
         <Class name="org.mongodb.morphia.mapping.MappedClass"/>
-        <Not>
-            <Bug code="WMI_WRONG_MAP_ITERATOR"/>
-        </Not>
+        <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    </Match>
+    <Match>
+        <Bug code="SQL,XSS,J2EE,SW,STI,DL,JLM,MWN,NN,RS,UL,HRS,PT,MTIA,XFB"/>
+    </Match>
+    <Match>
+        <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
 
 </FindBugsFilter>
