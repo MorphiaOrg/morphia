@@ -15,6 +15,7 @@ def slf4jVersion = '1.7.5'
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
@@ -123,10 +124,10 @@ allprojects {
     task testCoverage(dependsOn: check)
 
     tasks.withType(FindBugs) {
-//        reports {
-//            xml.enabled = project.buildingWith('xmlReports.enabled')
-//            html.enabled = !project.buildingWith('xmlReports.enabled')
-//        }
+        reports {
+            xml.enabled = project.buildingWith('xmlReports.enabled')
+            html.enabled = !project.buildingWith('xmlReports.enabled')
+        }
     }
 
     javadoc {
