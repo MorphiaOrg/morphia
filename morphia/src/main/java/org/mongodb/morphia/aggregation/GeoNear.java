@@ -190,8 +190,13 @@ public final class GeoNear {
          * the query. If this value is false, the query returns a document multiple times if the document has multiple matching location
          * fields. See $uniqueDocs for more information.
          *
+         * @param uniqueDocuments true if only unique documents are required in the return value
+         * @return this builder
          * @see <a href="http://docs.mongodb.org/master/reference/operator/query/uniqueDocs/#op._S_uniqueDocs">uniqueDocs</a>
+         * @deprecated Deprecated since server version 2.6: Geospatial queries no longer return duplicate results. The $uniqueDocs operator
+         * has no impact on results.
          */
+        @Deprecated
         public GeoNearBuilder setUniqueDocuments(final Boolean uniqueDocuments) {
             this.uniqueDocuments = uniqueDocuments;
             return this;
