@@ -1,4 +1,4 @@
-package org.mongodb.morphia.issue377.TestMapping;
+package org.mongodb.morphia.issue377;
 
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
