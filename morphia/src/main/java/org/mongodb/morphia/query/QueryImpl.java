@@ -63,6 +63,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tailAwaitData;
     private ReadPreference readPref;
     private Integer maxScan;
+    private Integer maxTimeMS;
     private String comment;
     private boolean returnKey;
 
@@ -252,6 +253,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             cursor.addSpecial("$maxScan", maxScan);
         }
 
+        if (maxTimeMS != null) {
+            cursor.addSpecial("$maxTimeMS", maxTimeMS);
+        }
+
         if (max != null) {
             cursor.addSpecial("$max", max);
         }
@@ -417,6 +422,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     public Query<T> maxScan(final int value) {
         maxScan = value > 0 ? value : null;
+        return this;
+    }
+
+    public Query<T> maxTimeMS(final int value) {
+        maxTimeMS = value > 0 ? value : null;
         return this;
     }
 

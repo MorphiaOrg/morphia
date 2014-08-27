@@ -1083,6 +1083,19 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void maxTimeMS() {
+        final Pic pic1 = new Pic("pic1");
+        final Pic pic2 = new Pic("pic2");
+        final Pic pic3 = new Pic("pic3");
+        final Pic pic4 = new Pic("pic4");
+
+        getDs().save(pic1, pic2, pic3, pic4);
+
+        Assert.assertEquals(2, getDs().createQuery(Pic.class).maxTimeMS(2).asList().size());
+        Assert.assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+    }
+
+    @Test
     public void testExplainPlanIsReturnedAndContainsCorrectValueForN() {
         // Given
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));

@@ -94,6 +94,16 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   Query<T> maxScan(int value);
 
   /**
+   * Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
+   * MongoDB interrupts the operation at the earliest following interrupt point.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/#op._S_maxTimeMS">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/#op._S_maxTimeMS</a>
+   * @param value must be > 0.  A value < 0 indicates no limit
+   */
+  Query<T> maxTimeMS(int value);
+
+  /**
    * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments
    * can make your profile data much easier to interpret and trace.
    *
