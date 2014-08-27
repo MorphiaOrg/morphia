@@ -21,6 +21,7 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
+import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -425,8 +426,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public Query<T> maxTimeMS(final int value) {
-        maxTimeMS = value > 0 ? value : null;
+    public Query<T> maxTime(final int value, final TimeUnit timeUnit) {
+        if (timeUnit == null) {
+            return this;
+        }
+        maxTimeMS = value > 0 ? (int) timeUnit.convert(value, TimeUnit.MILLISECONDS) : null;
+
         return this;
     }
 
