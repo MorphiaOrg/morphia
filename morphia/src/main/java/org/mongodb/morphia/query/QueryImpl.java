@@ -430,7 +430,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (timeUnit == null) {
             return this;
         }
-        maxTimeMS = value > 0 ? (int) timeUnit.convert(value, TimeUnit.MILLISECONDS) : null;
+        maxTimeMS = value > 0 ? (int) TimeUnit.MILLISECONDS.convert(value, timeUnit) : null;
 
         return this;
     }
