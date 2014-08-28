@@ -4,7 +4,6 @@ package org.mongodb.morphia.converters;
 import org.mongodb.morphia.mapping.MappedField;
 
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 
 /**
@@ -33,12 +32,19 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
 
   public static Locale parseLocale(final String localeString) {
     if ((localeString != null) && (localeString.length() != 0)) {
-      final StringTokenizer st = new StringTokenizer(localeString, "_");
-      final String language = st.hasMoreElements() ? st.nextToken() : Locale.getDefault().getLanguage();
-      final String country = st.hasMoreElements() ? st.nextToken() : "";
-      final String variant = st.hasMoreElements() ? st.nextToken() : "";
-      return new Locale(language, country, variant);
+      final int index = localeString.indexOf("_");
+      final int index2 = localeString.indexOf("_", index + 1);
+      Locale l;
+      if (index == -1) {
+          l = new Locale(localeString);
+      } else if (index2 == -1) {
+          l = new Locale(localeString.substring(0, index), localeString.substring(index + 1));
+      } else {
+          l = new Locale(localeString.substring(0, index), localeString.substring(index + 1, index2), localeString.substring(index2 + 1));
+      }
+      return l;
     }
+    
     return null;
   }
 }

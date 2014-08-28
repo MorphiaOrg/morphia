@@ -27,5 +27,21 @@ public class LocaleConverterTest extends TestBase {
     Assert.assertEquals("DE", l2.getCountry());
     Assert.assertEquals("bavarian", l2.getVariant());
 
+    // Incomplete locales
+    l = new Locale("", "FI");
+    l2 = (Locale) c.decode(Locale.class, c.encode(l));
+    Assert.assertEquals(l, l2);
+    
+    l = new Locale("fi", "", "VAR");
+    l2 = (Locale) c.decode(Locale.class, c.encode(l));
+    Assert.assertEquals(l, l2);
+    
+    l = new Locale("", "FI", "VAR");
+    l2 = (Locale) c.decode(Locale.class, c.encode(l));
+    Assert.assertEquals(l, l2);
+    
+    l = new Locale("fi", "FI", "VAR_STRANGE");
+    l2 = (Locale) c.decode(Locale.class, c.encode(l));
+    Assert.assertEquals(l, l2);
   }
 }
