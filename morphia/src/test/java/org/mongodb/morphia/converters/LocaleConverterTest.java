@@ -1,31 +1,40 @@
 package org.mongodb.morphia.converters;
 
+import org.junit.Test;
+import org.mongodb.morphia.TestBase;
 
 import java.util.Locale;
 
-import org.junit.Test;
-import org.mongodb.morphia.TestBase;
-import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class LocaleConverterTest extends TestBase {
-  @Test
-  public void testConversion() throws Exception {
-    final LocaleConverter c = new LocaleConverter();
+    @Test
+    public void shouldEncodeAndDecodeBuiltInLocale() throws Exception {
+        // given
+        LocaleConverter converter = new LocaleConverter();
+        Locale expectedLocale = Locale.CANADA_FRENCH;
 
-    Locale l = Locale.CANADA_FRENCH;
-    Locale l2 = (Locale) c.decode(Locale.class, c.encode(l));
-    Assert.assertEquals(l, l2);
+        // when
+        Locale decodedLocale = (Locale) converter.decode(Locale.class, converter.encode(expectedLocale));
 
-    l = new Locale("de", "DE", "bavarian");
-    l2 = (Locale) c.decode(Locale.class, c.encode(l));
-    Assert.assertEquals(l, l2);
-    Assert.assertEquals("de", l2.getLanguage());
-    Assert.assertEquals("DE", l2.getCountry());
-    Assert.assertEquals("bavarian", l2.getVariant());
+        // then
+        assertThat(decodedLocale, is(expectedLocale));
+    }
 
-  }
+    @Test
+    public void shouldEncodeAndDecodeCustomLocale() {
+        // given
+        LocaleConverter converter = new LocaleConverter();
+        Locale expectedLocale = new Locale("de", "DE", "bavarian");
+
+        // when
+        Locale decodedLocale = (Locale) converter.decode(Locale.class, converter.encode(expectedLocale));
+
+        // then
+        assertThat(decodedLocale, is(expectedLocale));
+        assertThat(decodedLocale.getLanguage(), is("de"));
+        assertThat(decodedLocale.getCountry(), is("DE"));
+        assertThat(decodedLocale.getVariant(), is("bavarian"));
+    }
 }
