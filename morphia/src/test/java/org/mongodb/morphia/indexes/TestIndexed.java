@@ -39,12 +39,11 @@ import org.mongodb.morphia.utils.IndexDirection;
 
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.mongodb.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
+import static org.mongodb.morphia.testutil.IndexMatcher.hasIndexNamed;
 
 /**
  * @author Scott Hernandez
@@ -57,6 +56,15 @@ public class TestIndexed extends TestBase {
 
         @Indexed(IndexDirection.GEO2DSPHERE)
         private Object location;
+    }
+
+    @SuppressWarnings("unused")
+    private static class LegacyPlace {
+        @Id
+        private long id;
+
+        @Indexed(IndexDirection.GEO2DSPHERE)
+        private double[] location;
     }
 
     private static class Ad {
@@ -124,18 +132,18 @@ public class TestIndexed extends TestBase {
     public void testIndexes() {
         final MappedClass mc = getMorphia().getMapper().addMappedClass(Ad2.class);
 
-        assertDoesNotHaveNamedIndex("active_1_lastMod_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), doesNotHaveIndexNamed("active_1_lastMod_-1"));
         getDs().ensureIndexes(Ad2.class);
-        assertHasNamedIndex("active_1_lastMod_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("active_1_lastMod_-1"));
     }
 
     @Test
     public void testEmbeddedIndex() {
         final MappedClass mc = getMorphia().getMapper().addMappedClass(ContainsIndexedEmbed.class);
 
-        assertDoesNotHaveNamedIndex("e.name_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), doesNotHaveIndexNamed("e.name_-1"));
         getDs().ensureIndexes(ContainsIndexedEmbed.class);
-        assertHasNamedIndex("e.name_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("e.name_-1"));
     }
 
     @Test
@@ -143,59 +151,43 @@ public class TestIndexed extends TestBase {
         final MappedClass mc = getMorphia().getMapper().getMappedClass(Ad.class);
         getMorphia().map(Ad.class);
 
-        assertDoesNotHaveNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), doesNotHaveIndexNamed("lastMod_1_active_-1"));
         getDs().ensureIndex(Ad.class, "lastMod, -active");
-        assertHasNamedIndex("lastMod_1_active_-1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("lastMod_1_active_-1"));
     }
 
     @Test
     public void testIndexedRecursiveEntity() throws Exception {
         final MappedClass mc = getMorphia().getMapper().getMappedClass(CircularEmbeddedEntity.class);
         getDs().ensureIndexes();
-        assertHasNamedIndex("a_1", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("a_1"));
     }
 
     @Test
     public void testIndexedEntity() throws Exception {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(IndexOnValue.class);
         getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDs().getCollection(IndexOnValue.class).getIndexInfo(), hasIndexNamed("value_1"));
+
         getDs().save(new IndexOnValue());
         getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDs().getCollection(IndexOnValue.class).getIndexInfo(), hasIndexNamed("value_1"));
     }
 
-    @Test
+    @Test(expected = DuplicateKeyException.class)
     public void testUniqueIndexedEntity() throws Exception {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(UniqueIndexOnValue.class);
         getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDs().getCollection(UniqueIndexOnValue.class).getIndexInfo(), hasIndexNamed("l_ascending"));
         getDs().save(new UniqueIndexOnValue("a"));
 
-        try {
-            // this should throw...
-            getDs().save(new UniqueIndexOnValue("v"));
-            assertTrue(false);
-            // } catch (MappingException me) {}
-        } catch (Throwable me) {
-            // currently is masked by java.lang.RuntimeException: json can't
-        }
-        // serialize type : class com.mongodb.DBTimestamp
-
-        getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        // this should throw...
+        getDs().save(new UniqueIndexOnValue("v"));
     }
 
     @Test
     public void testNamedIndexEntity() throws Exception {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(NamedIndexOnValue.class);
         getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
-        getDs().save(new IndexOnValue());
-        getDs().ensureIndexes();
-        assertHasIndexedField("value", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
 
-        assertHasNamedIndex("value_ascending", getDb().getCollection(mc.getCollectionName()).getIndexInfo());
+        assertThat(getDs().getCollection(NamedIndexOnValue.class).getIndexInfo(), hasIndexNamed("value_ascending"));
     }
 
     @Test
@@ -242,32 +234,20 @@ public class TestIndexed extends TestBase {
         // then
         List<DBObject> indexInfo = getDs().getCollection(Place.class).getIndexInfo();
         assertThat(indexInfo.size(), is(2));
-        assertHasNamedIndex("location_2dsphere", indexInfo);
+        assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
     }
 
-    protected static void assertHasNamedIndex(final String name, final List<DBObject> indexes) {
-        for (final DBObject dbObj : indexes) {
-            if (dbObj.get("name").equals(name)) {
-                return;
-            }
-        }
-        fail(format("Expected to find index with name '%s' in %s", name, indexes));
+    @Test
+    public void testCanCreate2dSphereIndexesOnLegacyCoordinatePairs() {
+        // given
+        getMorphia().map(LegacyPlace.class);
+
+        // when
+        getDs().ensureIndexes();
+
+        // then
+        List<DBObject> indexInfo = getDs().getCollection(LegacyPlace.class).getIndexInfo();
+        assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
     }
 
-    protected static void assertDoesNotHaveNamedIndex(final String name, final List<DBObject> indexes) {
-        for (final DBObject dbObj : indexes) {
-            if (dbObj.get("name").equals(name)) {
-                fail(format("Did not expect to find index with name '%s' in %s", name, indexes));
-            }
-        }
-    }
-
-    protected static void assertHasIndexedField(final String name, final List<DBObject> indexes) {
-        for (final DBObject dbObj : indexes) {
-            if (((DBObject) dbObj.get("key")).containsField(name)) {
-                return;
-            }
-        }
-        fail(format("Expected to find index for field '%s' in %s", name, indexes));
-    }
 }
