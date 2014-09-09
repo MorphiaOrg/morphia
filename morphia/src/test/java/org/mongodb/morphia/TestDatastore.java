@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-
 package org.mongodb.morphia;
 
-
+import category.Slow;
+import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.LazyDBDecoder;
 import com.mongodb.LazyWriteableDBDecoder;
-import com.mongodb.ReadPreference;
-import com.mongodb.ReplicaSetStatus;
+import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
 import org.mongodb.morphia.annotations.Id;
@@ -47,7 +49,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import static com.mongodb.ReadPreference.secondaryPreferred;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -235,7 +240,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testMorphiaDS() throws Exception {
-        new Morphia().createDatastore(getMongo(), "test");
+        new Morphia().createDatastore(getMongoClient(), "test");
     }
 
     @Test
@@ -318,28 +323,39 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testExists() throws Exception {
-        int id = 10000;
-        final Key<FacebookUser> k = getDs().save(new FacebookUser(id, "user 1"));
-        assertEquals(1, getDs().getCount(FacebookUser.class));
+    public void testExistsWhenItemSaved() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // expect
         assertNotNull(getDs().get(FacebookUser.class, id));
-        assertNotNull(getDs().exists(k));
-        
-        List<FacebookUser> users = getDs().createQuery(FacebookUser.class).asList();
-
-        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(k, ReadPreference.secondaryPreferred()));
-        ReplicaSetStatus replicaSetStatus = getMongo().getReplicaSetStatus();
-        if (replicaSetStatus != null) {
-            assertNotNull("Should exist when using secondary", getAds().exists(k, ReadPreference.secondary()));
-        }
-        assertNotNull("Should exist when using nearest", getAds().exists(k, ReadPreference.nearest()));
-
-        assertNotNull("Should be able to getByKey()", getDs().getByKey(FacebookUser.class, k));
-        getDs().delete(getDs().find(FacebookUser.class));
-        assertEquals("Should be no more users", 0, getDs().getCount(FacebookUser.class));
-        assertNull("Shouldn't exist after delete", getDs().exists(k));
+        assertNotNull(getDs().exists(key));
     }
 
+    @Test
+    public void testExistsWhenSecondaryPreferred() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // expect
+        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
+    }
+
+    @Test
+    public void testDoesNotExistAfterDelete() throws Exception {
+        // given
+        long id = System.currentTimeMillis();
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+
+        // when 
+        getDs().delete(getDs().find(FacebookUser.class));
+        
+        // then
+        assertNull("Shouldn't exist after delete", getDs().exists(key));
+    }
+    
     @Test
     public void testExistsWithEntity() throws Exception {
         final FacebookUser facebookUser = new FacebookUser(1, "user one");
@@ -360,7 +376,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testSaveAndDelete() throws Exception {
+    public void testSaveAndDelete() {
         getDs().getCollection(Rectangle.class).drop();
 
         final Rectangle rect = new Rectangle(10, 10);
@@ -411,7 +427,8 @@ public class TestDatastore extends TestBase {
 
         //test delete(Class, {id}) with one left
         id1 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
-        id2 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
+        Key<Rectangle> save = getDs().save(new Rectangle(20, 20));
+        id2 = (ObjectId) save.getId();
         assertEquals(2, getDs().getCount(rect));
         getDs().delete(Rectangle.class, Arrays.asList(id1));
         assertEquals(1, getDs().getCount(rect));
@@ -444,5 +461,39 @@ public class TestDatastore extends TestBase {
     @Test(expected = UpdateException.class)
     public void saveNull() {
         getDs().save((Hotel) null);
+    }
+
+    @Test
+    @Category(Slow.class)
+    public void massiveBulkInsert() {
+        doInserts(false);
+        doInserts(true);
+    }
+
+    private void doInserts(final boolean useBulkWriteOperations) {
+        getMorphia().setUseBulkWriteOperations(useBulkWriteOperations);
+        final DBCollection collection = getDs().getCollection(FacebookUser.class);
+        collection.remove(new BasicDBObject());
+        final int count = 500000;
+        List<FacebookUser> list = new ArrayList<FacebookUser>(count);
+        for (int i = 0; i < count; i++) {
+            list.add(new FacebookUser(i, "User " + i));
+        }
+
+        getAds().insert(list, WriteConcern.UNACKNOWLEDGED);
+
+        Awaitility
+            .await()
+            .atMost(30, TimeUnit.SECONDS)
+            .until(new Callable<Boolean>() {
+                public Boolean call() throws Exception {
+                    return collection.count() == count;
+                }
+            });
+        assertEquals(count, collection.count());
+
+        for (FacebookUser user : list) {
+            Assert.assertNotNull(user.getId());
+        }
     }
 }

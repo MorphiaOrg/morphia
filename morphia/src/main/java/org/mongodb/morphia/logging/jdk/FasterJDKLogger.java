@@ -1,10 +1,7 @@
 package org.mongodb.morphia.logging.jdk;
 
-
 import java.util.logging.Level;
 
-
-@SuppressWarnings("rawtypes")
 public class FasterJDKLogger extends FastestJDKLogger {
   private static final long serialVersionUID = 1L;
 

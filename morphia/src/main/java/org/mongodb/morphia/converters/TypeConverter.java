@@ -1,14 +1,13 @@
 package org.mongodb.morphia.converters;
 
-
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 
+import java.util.Arrays;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("rawtypes")
 public abstract class TypeConverter {
     //CHECKSTYLE:OFF
     /**
@@ -37,13 +36,7 @@ public abstract class TypeConverter {
     }
 
     Class[] copy(final Class[] array) {
-        if (array == null) {
-            return null;
-        }
-        
-        Class[] copy = new Class[array.length];
-        System.arraycopy(array, 0, copy, 0, array.length);
-        return copy;
+        return array == null ? null : Arrays.copyOf(array, array.length);
     }
 
     /**
@@ -82,7 +75,7 @@ public abstract class TypeConverter {
      * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object<br><b>NOTE: optionalExtraInfo might be
      * null</b>*
      */
-    public abstract Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo);
+    public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
 
     /**
      * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object

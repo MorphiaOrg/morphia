@@ -22,7 +22,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.ReflectionDBObject;
 import com.mongodb.WriteConcern;
@@ -306,7 +305,6 @@ public class TestPerf extends TestBase {
         try {
             final Morphia morphia = new Morphia();
             morphia.map(TestObj.class);
-            final AdvancedDatastore ds = (AdvancedDatastore) morphia.createDatastore("my_database");
             //create the list
             List<TestObj> objList = new ArrayList<TestObj>();
             for (int i = 0; i < 1000; i++) {
@@ -323,7 +321,7 @@ public class TestPerf extends TestBase {
             }
             LOG.info("Time taken morphia: " + (System.currentTimeMillis() - start) + "ms");
 
-            final Mongo mongoConn = new MongoClient("localhost", 27017);
+            final MongoClient mongoConn = new MongoClient("localhost", 27017);
             final DB mongoDB = mongoConn.getDB("my_database");
             List<DBObject> batchPush = new ArrayList<DBObject>();
             for (int i = 0; i < 1000; i++) {

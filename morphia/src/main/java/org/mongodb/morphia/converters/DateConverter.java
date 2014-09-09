@@ -1,8 +1,12 @@
 package org.mongodb.morphia.converters;
 
 
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -11,6 +15,8 @@ import java.util.Date;
  * @author scotthernandez
  */
 public class DateConverter extends TypeConverter implements SimpleValueConverter {
+    private static final Logger LOG = MorphiaLoggerFactory.get(DateConverter.class);
+
 
     public DateConverter() {
         this(Date.class);
@@ -21,7 +27,7 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object val, final MappedField optionalExtraInfo) {
+    public Object decode(final Class<?> targetClass, final Object val, final MappedField optionalExtraInfo) {
         if (val == null) {
             return null;
         }
@@ -34,6 +40,15 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
             return new Date(((Number) val).longValue());
         }
 
-        return new Date(Date.parse(val.toString())); // good luck
+        if (val instanceof String) {
+            try {
+                return new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy").parse((String) val);
+            } catch (ParseException e) {
+                LOG.error("Can't parse Date from: " + val);
+            }
+
+        }
+        
+        throw new IllegalArgumentException("Can't convert to Date from " + val);
     }
 }

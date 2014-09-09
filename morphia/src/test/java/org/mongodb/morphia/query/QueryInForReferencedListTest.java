@@ -12,6 +12,7 @@ import org.mongodb.morphia.testutil.TestEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -46,6 +47,18 @@ public class QueryInForReferencedListTest extends TestBase {
     private static class Doc {
         @Id
         private long id = 4;
+    }
+
+
+    @Entity(value = "as", noClassnameStored = true)
+    public static class HasIdOnly {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Reference(idOnly = true)
+        private List<ReferencedEntity> list;
+        @Reference(idOnly = true)
+        private ReferencedEntity entity;
     }
 
     @Test
@@ -96,5 +109,26 @@ public class QueryInForReferencedListTest extends TestBase {
         final List<HasRefs> found = q.asList();
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
+    }
+    
+    @Test
+    public void testIdOnly() {
+        ReferencedEntity b = new ReferencedEntity();
+        b.setId(new ObjectId("111111111111111111111111"));
+        getDs().save(b);
+        
+        HasIdOnly has = new HasIdOnly();
+        has.list =  new ArrayList<ReferencedEntity>();
+        has.list.add(b);
+        has.entity = b;
+        getDs().save(has);
+        
+        Query<HasIdOnly> q = getDs().createQuery(HasIdOnly.class);
+        q.criteria("list").in(Arrays.asList(b));
+        Assert.assertEquals(1, q.asList().size());
+        
+        q = getDs().createQuery(HasIdOnly.class);
+        q.criteria("entity").equal(b.getId());
+        Assert.assertEquals(1, q.asList().size());
     }
 }

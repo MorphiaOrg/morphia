@@ -2,9 +2,9 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.CommandFailureException;
 import com.mongodb.DBObject;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -67,7 +67,6 @@ public class TestMapreduce extends TestBase {
 
     @Test
     public void testMR() throws Exception {
-        Assume.assumeFalse(getMongo().getVersion().startsWith("3."));
         final Random rnd = new Random();
 
         //create 100 circles and rectangles
@@ -95,6 +94,15 @@ public class TestMapreduce extends TestBase {
         }
         Assert.assertEquals(2, count);
         Assert.assertEquals(100, inline.iterator().next().getValue().count, 0);
+    }
+    
+    @Test(expected = CommandFailureException.class)
+    public void testBadMR() throws Exception {
+        final String map = "function () { if(this['radius']) { doEmit('circle', {count:1}); return; } emit('rect', {count:1}); }";
+        final String reduce = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} "
+                              + "return { count : total }; }";
+
+        getDs().mapReduce(MapreduceType.REPLACE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
     }
 
 }

@@ -37,7 +37,7 @@ public class TestExpireAfterSeconds extends TestBase {
     }
 
     @Test
-    public void testIndexedField() throws InterruptedException {
+    public void testIndexedField() {
         getMorphia().map(HasExpiryField.class);
         getDs().ensureIndexes();
 
@@ -60,7 +60,7 @@ public class TestExpireAfterSeconds extends TestBase {
     }
 
     @Test
-    public void testClassAnnotation() throws InterruptedException {
+    public void testClassAnnotation() {
         getMorphia().map(ClassAnnotation.class);
         getDs().ensureIndexes();
 

@@ -1,12 +1,13 @@
 language: java
 jdk: 
+- oraclejdk8
 - oraclejdk7
-- openjdk6
 
 notifications: 
   email: 
     recipients: 
     - justin.lee@mongodb.com
+    - trisha.gee@mongodb.com
     on_success: change
     on_failure: always
   flowdock:

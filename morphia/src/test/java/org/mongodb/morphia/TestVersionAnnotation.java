@@ -18,14 +18,18 @@
 package org.mongodb.morphia;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Version;
+import org.mongodb.morphia.entities.version.Versioned;
+import org.mongodb.morphia.entities.version.VersionedChildEntity;
+import org.mongodb.morphia.mapping.MappedClass;
 
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -34,52 +38,73 @@ import java.util.ConcurrentModificationException;
 
 public class TestVersionAnnotation extends TestBase {
 
-    private static class B {
-        @Id
-        private ObjectId id;
-        @Version
-        private Long version;
-    }
+    @Test
+    public void testVersionNumbersIncrementWithEachSave() throws Exception {
+        final Versioned version1 = new Versioned();
+        getDs().save(version1);
+        assertEquals(new Long(1), version1.getVersion());
 
-    @Entity("Test")
-    public abstract static class BaseFoo {
-        @Id
-        private ObjectId id;
-        @Version
-        private long version;
-        private String name;
-    }
-
-    @Entity("Test")
-    public static class Foo extends BaseFoo {
-        private int value;
+        final Versioned version2 = getDs().get(Versioned.class, version1.getId());
+        getDs().save(version2);
+        assertEquals(new Long(2), version2.getVersion());
     }
 
     @Test(expected = ConcurrentModificationException.class)
-    public void testVersion() throws Exception {
-        final B b1 = new B();
-        getDs().save(b1);
-        Assert.assertEquals(new Long(1), b1.version);
+    public void testThrowsExceptionWhenTryingToSaveAnOldVersion() throws Exception {
+        // given
+        final Versioned version1 = new Versioned();
+        getDs().save(version1);
+        final Versioned version2 = getDs().get(Versioned.class, version1.getId());
+        getDs().save(version2);
 
-        final B b2 = getDs().get(B.class, b1.id);
-        getDs().save(b2);
-        Assert.assertEquals(new Long(2), b2.version);
-
-        getDs().save(b1);
+        // when
+        getDs().save(version1);
     }
 
     @Test
     public void testVersionedInserts() {
-        B[] bs = {new B(), new B(), new B(), new B(), new B()};
-        getAds().insert(bs);
-        for (B b : bs) {
-            Assert.assertNotNull(b.version);
+        Versioned[] versioneds = {new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned()};
+        getAds().insert(versioneds);
+        for (Versioned versioned : versioneds) {
+            assertNotNull(versioned.getVersion());
         }
     }
 
     @Test
-    public void abstractParent() {
-        getMorphia().map(Foo.class);
-        getMorphia().mapPackage(Foo.class.getPackage().toString());
+    public void testCanMapAnEntityWithAnAbstractVersionedParent() {
+        // when
+        Morphia morphia = getMorphia().map(VersionedChildEntity.class);
+
+        // then
+        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        assertThat(mappedClasses.size(), is(1));
+        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+    }
+
+    @Test
+    public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
+        // when
+        Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.entities.version");
+
+        // then
+        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        assertThat(mappedClasses.size(), is(1));
+        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+    }
+
+    @Test
+    public void testUpdatesToVersionedFileAreReflectedInTheDatastore() {
+        final Versioned version1 = new Versioned();
+        version1.setName("foo");
+
+        this.getDs().save(version1);
+
+        final Versioned version1Updated = getDs().get(Versioned.class, version1.getId());
+        version1Updated.setName("bar");
+
+        this.getDs().merge(version1Updated);
+
+        final Versioned versionedEntityFromDs = this.getDs().get(Versioned.class, version1.getId());
+        assertEquals(version1Updated.getName(), versionedEntityFromDs.getName());
     }
 }

@@ -43,12 +43,12 @@ public interface DAO<T, K> {
     /**
      * Updates the first entity matched by the constraints with the modifiers supplied.
      */
-    UpdateResults<T> updateFirst(Query<T> q, UpdateOperations<T> ops);
+    UpdateResults updateFirst(Query<T> q, UpdateOperations<T> ops);
 
     /**
      * Updates all entities matched by the constraints with the modifiers supplied.
      */
-    UpdateResults<T> update(Query<T> q, UpdateOperations<T> ops);
+    UpdateResults update(Query<T> q, UpdateOperations<T> ops);
 
     /**
      * Deletes the entity

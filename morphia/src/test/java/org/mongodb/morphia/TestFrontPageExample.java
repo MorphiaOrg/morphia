@@ -91,7 +91,7 @@ public class TestFrontPageExample extends TestBase {
         final Key<Employee> key = getDs().save(new Employee("Scott", "Hernandez", getDs().getKey(boss), 150 * 1000));
         Assert.assertNotNull(key);
 
-        final UpdateResults<Employee> res = getDs().update(boss, getDs().createUpdateOperations(Employee.class)
+        final UpdateResults res = getDs().update(boss, getDs().createUpdateOperations(Employee.class)
                                                                      .add("underlings", key)); //add Scott as an employee of his manager
         Assert.assertNotNull(res);
         Assert.assertTrue("Should update existing document", res.getUpdatedExisting());

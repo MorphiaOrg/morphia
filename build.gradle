@@ -2,72 +2,63 @@ def configDir = new File(rootDir, 'config')
 
 buildscript {
     repositories {
-        mavenLocal()
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'me.trnl:clirr-gradle-plugin:0.4'
-        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.1.0-SNAPSHOT'
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
+    gradleVersion = '2.0'
 }
+
+def slf4jVersion = '1.7.5'
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
-
-    configurations {
-        provided
-        provided.extendsFrom(compile)
-    }
-
-    task listDependencies << {
-        configurations.compile.each { File file -> println file }
-    }
-}
-
-def slf4jVersion = '1.7.5'
-
-configure(subprojects) {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
-
-    group = 'org.mongodb.morphia'
-    version = '0.107-SNAPSHOT'
-
-    sourceCompatibility = JavaVersion.VERSION_1_5
-    targetCompatibility = JavaVersion.VERSION_1_5
-
-    configurations {
-        provided
-        provided.extendsFrom(compile)
-    }
-
-    project.archivesBaseName = "morphia-${project.name}"
+    apply plugin: 'jacoco'
 
     repositories {
         mavenCentral()
-        mavenLocal()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        mavenLocal()
     }
 
     dependencies {
         testCompile 'junit:junit:4.11'
     }
 
+    configurations {
+        provided
+        provided.extendsFrom(compile)
+    }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
+    group = 'org.mongodb.morphia'
+    version = '0.109-SNAPSHOT'
+
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
+
+    project.archivesBaseName = "morphia-${project.name}"
+
+    task listDependencies << {
+        configurations.compile.each { File file -> println file }
+    }
+
+
     sourceSets.main.compileClasspath += configurations.provided
     sourceSets.test.compileClasspath += configurations.provided
     sourceSets.test.runtimeClasspath += configurations.provided
 
     if (properties['xlint']) {
-        tasks.withType(Compile) {
+        tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked"
         }
     }
@@ -76,7 +67,10 @@ configure(subprojects) {
         n -> project.hasProperty(n) && project.property(n).toBoolean()
     }
 
-    /* Code quality */
+    javadoc {
+        classpath += configurations.provided
+    }
+
     checkstyle {
         configFile = new File("$configDir/checkstyle.xml")
     }
@@ -91,13 +85,50 @@ configure(subprojects) {
 
     findbugs {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
+        toolVersion = '3.0.0'
+        effort = 'min'
+        reportLevel = 'high'
+    }
+
+    tasks.withType(AbstractCompile) {
+        options.encoding = 'ISO-8859-1'
+        options.fork = true
+        options.debug = true
+        options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-Xlint:-options']
     }
 
     tasks.withType(Test) {
         if (System.getenv()['RS_ENABLED'] == "true") {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
+
+        useJUnit {
+            if (project.buildingWith('local')) {
+                excludeCategories 'category.Slow'
+            }
+        }
+
+        jacoco { enabled = false }
+
+        beforeTest { descr ->
+            logger.info("[Test ${descr.className} > ${descr.name}]")
+        }
     }
+
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (taskGraph.hasTask(testCoverage)) {
+            tasks.withType(Test) { jacoco { enabled = true } }
+        }
+        //findbugs is far too slow. Setting a "local" property allows you to skip it whilst still running it in CI
+        tasks.findbugsMain.onlyIf {
+            !project.buildingWith('local')
+        }
+        tasks.findbugsTest.onlyIf {
+            !project.buildingWith('local')
+        }
+    }
+
+    task testCoverage(dependsOn: check)
 
     tasks.withType(FindBugs) {
         reports {
@@ -109,42 +140,39 @@ configure(subprojects) {
     javadoc {
         options.author = true
         options.version = true
-        options.links 'http://docs.oracle.com/javase/7/docs/api/'
+        options.links 'http://docs.oracle.com/javase/6/docs/api/'
+        options.links 'http://api.mongodb.org/java/2.12/'
     }
 
     test {
         // set heap size for the test JVM(s)
         minHeapSize = "256m"
         maxHeapSize = "512m"
-
-        // set JVM arguments for the test JVM(s)
-        jvmArgs '-XX:MaxPermSize=256m'
     }
 
 }
 
 project(':morphia') {
     archivesBaseName = 'morphia'
-    
-    jar {
-        manifest {
-        }
-    }
-    
+
     dependencies {
-        if (project.hasProperty('3.x')) {
+        if (project.buildingWith('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
-        } else if (project.hasProperty('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.0-SNAPSHOT", changing: true
-            println "Building with the 2.x java driver"
+        } else if (project.buildingWith('2.x')) {
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.4-SNAPSHOT", changing: true
+            println "Building with the 2.12.4 SNAPSHOT java driver"
         } else {
-            compile 'org.mongodb:mongo-java-driver:[2.10.1,2.12)'
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3"
+            println "Building with the 2.12 java driver"
         }
 
-        provided 'cglib:cglib-nodep:[2.1_3,3.0)'
-        provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
-        provided 'com.google.code.findbugs:findbugs:2.0.2'
+        compile project(':util')
+        compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
+        provided 'cglib:cglib-nodep:2.2.2'
+        testCompile 'org.zeroturnaround:zt-exec:1.5'
+        testCompile 'com.jayway.awaitility:awaitility:1.5.0'
+        testCompile 'org.skyscreamer:jsonassert:1.2.3'
     }
 }
 
@@ -182,8 +210,9 @@ project(':entityscanner-plug') {
             'com.google.code.gson:gson'
             'logback-classic:ch.qos.logback'
             'xml-apis:xml-apis'
+            'com.google.guava:guava'
         }
-        compile 'com.google.collections:google-collections:1.0'
+        compile 'com.google.guava:guava:14.0.1'
         compile('org.scannotation:scannotation:1.0.3') {
             'javassist:javassist'
         }
@@ -210,14 +239,5 @@ project(':no-proxy-deps-tests') {
     }
 }
 
-project(':gwt') {
-    dependencies {
-        compile project(':morphia')
-        compile 'com.google.gwt:gwt-user:2.1.0@jar'
-    }
-}
-
-apply from: 'gradle/ide-settings.gradle'
-apply from: 'gradle/maven-deployment.gradle'
 apply from: 'gradle/osgi-compatibility.gradle'
 apply from: 'gradle/release-process.gradle'

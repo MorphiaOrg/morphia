@@ -2,14 +2,16 @@ package org.mongodb.morphia.ext.entityscanner;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author us@thomas-daily.de
  */
-public class EntityScannerTest extends TestCase {
+public class EntityScannerTest {
   @Test
   public void testScanning() throws Exception {
     final Morphia m = new Morphia();

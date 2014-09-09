@@ -28,12 +28,13 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -41,104 +42,57 @@ import java.util.Set;
  *
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class MappedField {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
+    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<Class<? extends Annotation>>();
 
-    /**
-     * @deprecated use the method for this field instead.
-     * @see #addInterestingAnnotation(Class<? extends Annotation>)
-     */
-    public static final List<Class<? extends Annotation>> INTERESTING
-        = new ArrayList<Class<? extends Annotation>>(Arrays.asList(Serialized.class,
-                                                                   Indexed.class,
-                                                                   Property.class,
-                                                                   Reference.class,
-                                                                   Embedded.class,
-                                                                   Id.class,
-                                                                   Version.class,
-                                                                   ConstructorArgs.class,
-                                                                   AlsoLoad.class,
-                                                                   NotSaved.class));
-    //CHECKSTYLE:OFF
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Class persistedClass;
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Field field; // the field :)
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Class realType; // the real type
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Constructor constructor; // the constructor for the type
+    static {
+        INTERESTING.add(Serialized.class);
+        INTERESTING.add(Indexed.class);
+        INTERESTING.add(Property.class);
+        INTERESTING.add(Reference.class);
+        INTERESTING.add(Embedded.class);
+        INTERESTING.add(Id.class);
+        INTERESTING.add(Version.class);
+        INTERESTING.add(ConstructorArgs.class);
+        INTERESTING.add(AlsoLoad.class);
+        INTERESTING.add(NotSaved.class);
+    }
+
+    private final Mapper mapper;
+    private Class persistedClass;
+    private Field field; // the field :)
+    private Class realType; // the real type
+    private Constructor constructor; // the constructor for the type
     // Annotations that have been found relevant to mapping
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Type subType; // the type (T) for the Collection<T>/T[]/Map<?,T>
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected Type mapKeyType; // the type (T) for the Map<T,?>
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isSingleValue = true; // indicates the field is a single value
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isMongoType;
+    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
+    private Type subType; // the type (T) for the Collection<T>/T[]/Map<?,T>
+    private Type mapKeyType; // the type (T) for the Map<T,?>
+    private boolean isSingleValue = true; // indicates the field is a single value
+    private boolean isMongoType;
     // indicated the type is a mongo compatible type (our version of value-type)
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isMap; // indicated if it implements Map interface
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isSet; // indicated if the collection is a set
+    private boolean isMap; // indicated if it implements Map interface
+    private boolean isSet; // indicated if the collection is a set
     //for debugging
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isArray; // indicated if it is an Array
-    /**
-     * @deprecated use the getter for this field instead.
-     */
-    protected boolean isCollection; // indicated if the collection is a list)
-    //CHECKSTYLE:ON
-    
-    /**
-     * the constructor
-     */
-    MappedField(final Field f, final Class<?> clazz) {
+    private boolean isArray; // indicated if it is an Array
+    private boolean isCollection; // indicated if the collection is a list)
+
+    MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
+        this.mapper = mapper;
         f.setAccessible(true);
         field = f;
         persistedClass = clazz;
         discover();
     }
 
-    /**
-     * the constructor
-     */
-    protected MappedField() {
-    }
+    //    protected MappedField() {
+    //    }
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
         INTERESTING.add(annotation);
     }
-    
+
     /**
      * Discovers interesting (that we care about) things about the field.
      */
@@ -162,7 +116,7 @@ public class MappedField {
         }
 
         if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
-            if (LOG.isWarningEnabled()) {
+            if (LOG.isWarningEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
                 LOG.warning(String.format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
                                           + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
             }
@@ -197,6 +151,7 @@ public class MappedField {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Class discoverType() {
         Class type = field.getType();
         final Type gType = field.getGenericType();
@@ -222,8 +177,8 @@ public class MappedField {
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
             if (LOG.isWarningEnabled()) {
                 LOG.warning(
-                               "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
-                               + field.getDeclaringClass());
+                           "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
+                           + field.getDeclaringClass());
             }
         }
 
@@ -235,8 +190,8 @@ public class MappedField {
     }
 
     private Constructor discoverConstructor() {
-        Constructor constructor = null;
-        Class type = null;
+        Constructor<?> constructor = null;
+        Class<?> type = null;
         // get the first annotation with a concreteClass that isn't Object.class
         for (final Annotation an : foundAnnotations.values()) {
             try {
@@ -304,7 +259,7 @@ public class MappedField {
 
         final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);
         if (al != null && al.value() != null && al.value().length > 0) {
-            names.addAll(Arrays.asList(al.value()));
+            names.addAll(asList(al.value()));
         }
 
         return names;
@@ -346,6 +301,7 @@ public class MappedField {
     /**
      * returns the annotation instance if it exists on this field
      */
+    @SuppressWarnings("unchecked")
     public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
         return (T) foundAnnotations.get(clazz);
     }
@@ -427,46 +383,6 @@ public class MappedField {
         return field.getName();
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(getMappedFieldName()).append(" (");
-        sb.append(" type:").append(realType.getSimpleName()).append(",");
-
-        if (isSingleValue()) {
-            sb.append(" single:true,");
-        } else {
-            sb.append(" multiple:true,");
-            sb.append(" subtype:").append(getSubClass()).append(",");
-        }
-        if (isMap()) {
-            sb.append(" map:true,");
-            if (getMapKeyClass() != null) {
-                sb.append(" map-key:").append(getMapKeyClass().getSimpleName());
-            } else {
-                sb.append(" map-key: class unknown! ");
-            }
-        }
-
-        if (isSet()) {
-            sb.append(" set:true,");
-        }
-        if (isCollection) {
-            sb.append(" collection:true,");
-        }
-        if (isArray) {
-            sb.append(" array:true,");
-        }
-
-        //remove last comma
-        if (sb.charAt(sb.length() - 1) == ',') {
-            sb.setLength(sb.length() - 1);
-        }
-
-        sb.append("); ").append(foundAnnotations.toString());
-        return sb.toString();
-    }
-
     /**
      * returns the type of the underlying java field
      */
@@ -479,13 +395,6 @@ public class MappedField {
      */
     public Class getDeclaringClass() {
         return field.getDeclaringClass();
-    }
-
-    /**
-     * If the underlying java type is a map then it returns T from Map<T,V>
-     */
-    public Class getMapKeyClass() {
-        return toClass(mapKeyType);
     }
 
     protected Class toClass(final Type t) {
@@ -517,6 +426,14 @@ public class MappedField {
         return subType;
     }
 
+    void setSubType(final Type subType) {
+        this.subType = subType;
+    }
+
+    public boolean isArray() {
+        return isArray;
+    }
+
     public boolean isSingleValue() {
         if (!isSingleValue && !isMap && !isSet && !isArray && !isCollection) {
             throw new RuntimeException("Not single, but none of the types that are not-single.");
@@ -525,7 +442,7 @@ public class MappedField {
     }
 
     public boolean isMultipleValues() {
-        return !isSingleValue;
+        return !isSingleValue();
     }
 
     public boolean isTypeMongoCompatible() {
@@ -536,8 +453,31 @@ public class MappedField {
         return isMap;
     }
 
+    void setIsMap(final boolean isMap) {
+        this.isMap = isMap;
+    }
+
+    void setIsMongoType(final boolean isMongoType) {
+        this.isMongoType = isMongoType;
+    }
+
     public boolean isSet() {
         return isSet;
+    }
+
+    void setIsSet(final boolean isSet) {
+        this.isSet = isSet;
+    }
+
+    /**
+     * If the underlying java type is a map then it returns T from Map<T,V>
+     */
+    public Class getMapKeyClass() {
+        return toClass(mapKeyType);
+    }
+
+    void setMapKeyType(final Class mapKeyType) {
+        this.mapKeyType = mapKeyType;
     }
 
     /**
@@ -595,5 +535,49 @@ public class MappedField {
             }
         }
         return getType();
+    }
+
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(getMappedFieldName()).append(" (");
+        sb.append(" type:").append(realType.getSimpleName()).append(",");
+
+        if (isSingleValue()) {
+            sb.append(" single:true,");
+        } else {
+            sb.append(" multiple:true,");
+            sb.append(" subtype:").append(getSubClass()).append(",");
+        }
+        if (isMap()) {
+            sb.append(" map:true,");
+            if (getMapKeyClass() != null) {
+                sb.append(" map-key:").append(getMapKeyClass().getSimpleName());
+            } else {
+                sb.append(" map-key: class unknown! ");
+            }
+        }
+
+        if (isSet()) {
+            sb.append(" set:true,");
+        }
+        if (isCollection) {
+            sb.append(" collection:true,");
+        }
+        if (isArray) {
+            sb.append(" array:true,");
+        }
+
+        //remove last comma
+        if (sb.charAt(sb.length() - 1) == ',') {
+            sb.setLength(sb.length() - 1);
+        }
+
+        sb.append("); ").append(foundAnnotations.toString());
+        return sb.toString();
     }
 }

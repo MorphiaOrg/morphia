@@ -19,11 +19,13 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
@@ -48,13 +50,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
 
 
 /**
@@ -511,23 +518,6 @@ public class TestQuery extends TestBase {
         assertNotNull(pwkLoaded);
     }
 
-
-    @Test
-    public void testIdOnlyQuery() throws Exception {
-        final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
-        getDs().save(pwk);
-
-        PhotoWithKeywords pwkLoaded = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(true, "_id").get();
-        assertNotNull(pwkLoaded);
-        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
-        assertEquals(3, pwkLoaded.keywords.size());
-
-        pwkLoaded = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott").retrievedFields(false, "keywords").get();
-        assertNotNull(pwkLoaded);
-        Assert.assertFalse(pwkLoaded.keywords.contains("scott"));
-        assertEquals(3, pwkLoaded.keywords.size());
-    }
-
     @Test
     public void testRetrievedFields() throws Exception {
         getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
@@ -599,18 +589,64 @@ public class TestQuery extends TestBase {
 
     }
 
-
     @Test
     public void testFluentNotQuery() throws Exception {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
-        q.criteria("keywords.keyword").not().startsWith("ralph");
+        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+        query.criteria("keywords.keyword").not().startsWith("ralph");
 
-        assertEquals(1, q.countAll());
+        assertEquals(1, query.countAll());
     }
 
+    @Test
+    public void testNotGeneratesCorrectQueryForRegex() throws Exception {
+        // given
+        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.criteria("keywords.keyword").not().startsWith("ralph");
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords.keyword: { $not: { $regex: '^ralph'} } }"));
+    }
+
+    @Test
+    public void testNotGeneratesCorrectQueryForGreaterThan() throws Exception {
+        // given
+        final Query<Keyword> query = getAds().createQuery(Keyword.class);
+
+        // when
+        query.criteria("score").not().greaterThan(7);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ score: { $not: { $gt: 7} } }"));
+    }
+
+    @Test
+    public void testCorrectQueryForNotWithSizeEqIssue514() {
+        // given
+        Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.field("keywords").not().sizeEq(3);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords: { $not: { $size: 3 } } }"));
+    }
+
+    @Test
+    public void testSizeEqQuery() {
+        // given
+        Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+
+        // when
+        query.field("keywords").sizeEq(3);
+
+        // then
+        assertThat(query.toString(), jsonEqual("{ keywords: { $size: 3 } }"));
+    }
 
     @Test
     public void testIdFieldNameQuery() throws Exception {
@@ -1044,5 +1080,70 @@ public class TestQuery extends TestBase {
 
         Assert.assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
         Assert.assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+    }
+
+    @Test
+    public void testExplainPlanIsReturnedAndContainsCorrectValueForN() {
+        // Given
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+
+        // When
+        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
+
+        // Then
+        Assert.assertEquals(4, explainResult.get("n"));
+    }
+
+    @Test
+    public void testSettingACommentInsertsCommentIntoProfileCollectionWhenProfilingIsTurnedOn() {
+        // given
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+
+        getDb().command(new BasicDBObject("profile", 2));
+        String expectedComment = "test comment";
+
+        // when
+        getDs().createQuery(Pic.class).comment(expectedComment).asList();
+
+        // then
+        DBCollection profileCollection = getDb().getCollection("system.profile");
+        assertNotEquals(0, profileCollection.count());
+        DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
+                                                           .append("ns", getDs().getCollection(Pic.class).getFullName()));
+        assertEquals(expectedComment, ((DBObject) profileRecord.get("query")).get("$comment"));
+
+        // finally
+        turnOffProfilingAndDropProfileCollection();
+    }
+
+    @Test
+    public void testShouldReturnOnlyTheFieldThatWasInTheIndexUsedForTheFindWhenReturnKeyIsUsed() {
+        // Given
+        // put some documents into the collection
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+        //set an index on the field "name"
+        getDs().ensureIndex(Pic.class, "name");
+
+        // When
+        // find a document by using a search on the field in the index
+        Query<Pic> query = getDs().createQuery(Pic.class).returnKey().field("name").equal("pic2");
+
+        // Then
+        Pic foundItem = query.get();
+        assertNotNull(foundItem);
+        assertThat("Name should be populated", foundItem.getName(), is("pic2"));
+        assertNull("ID should not be populated", foundItem.getId());
+    }
+    
+    @After
+    public void tearDown() {
+        turnOffProfilingAndDropProfileCollection();
+        super.tearDown();
+    }
+
+    private void turnOffProfilingAndDropProfileCollection() {
+        getDb().command(new BasicDBObject("profile", 0));
+        DBCollection profileCollection = getDb().getCollection("system.profile");
+        profileCollection.drop();
     }
 }

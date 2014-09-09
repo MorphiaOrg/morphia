@@ -32,7 +32,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 
 /**
@@ -49,7 +49,6 @@ import static java.lang.String.format;
  *
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
 public class MappedClass {
     private static class ClassMethodPair {
         private final Class<?> clazz;
@@ -70,9 +69,17 @@ public class MappedClass {
      * @deprecated use the method for this field instead.
      */
     //CHECKSTYLE:OFF
-    public static final List<Class<? extends Annotation>> interestingAnnotations
-        = new ArrayList(Arrays.asList(Embedded.class, Entity.class, Polymorphic.class, EntityListeners.class, Version.class,
-                                      Converters.class, Indexes.class));
+    public static final List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>();
+
+    static {
+        interestingAnnotations.add(Embedded.class);
+        interestingAnnotations.add(Entity.class);
+        interestingAnnotations.add(Polymorphic.class);
+        interestingAnnotations.add(EntityListeners.class);
+        interestingAnnotations.add(Version.class);
+        interestingAnnotations.add(Converters.class);
+        interestingAnnotations.add(Indexes.class);
+    }
     //CHECKSTYLE:ON
 
     /**
@@ -89,20 +96,23 @@ public class MappedClass {
     /**
      * Annotations interesting for life-cycle events
      */
-    private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = Arrays.asList(PrePersist.class, PreSave.class,
-                                                                                                 PreLoad.class, PostPersist.class,
-                                                                                                 PostLoad.class);
+    @SuppressWarnings("unchecked")
+    private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
+                                                                                          PreSave.class,
+                                                                                          PreLoad.class,
+                                                                                          PostPersist.class,
+                                                                                          PostLoad.class);
     /**
      * Annotations we were interested in, and found.
      */
     private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations
-        = new HashMap<Class<? extends Annotation>, List<Annotation>>();
+    = new HashMap<Class<? extends Annotation>, List<Annotation>>();
 
     /**
      * Methods which are life-cycle events
      */
     private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods
-        = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
+    = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 
     /**
      * a list of the fields to map
@@ -199,7 +209,7 @@ public class MappedClass {
                 || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL)) {
                 // ignore these
             } else if (field.isAnnotationPresent(Id.class)) {
-                final MappedField mf = new MappedField(field, clazz);
+                final MappedField mf = new MappedField(field, clazz, getMapper());
                 persistenceFields.add(mf);
                 update();
             } else if (field.isAnnotationPresent(Property.class)
@@ -208,16 +218,13 @@ public class MappedClass {
                        || field.isAnnotationPresent(Serialized.class)
                        || isSupportedType(field.getType())
                        || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
-                persistenceFields.add(new MappedField(field, clazz));
+                persistenceFields.add(new MappedField(field, clazz, getMapper()));
             } else {
                 if (mapper.getOptions().getDefaultMapper() != null) {
-                    persistenceFields.add(new MappedField(field, clazz));
+                    persistenceFields.add(new MappedField(field, clazz, getMapper()));
                 } else if (LOG.isWarningEnabled()) {
-                    LOG.warning(
-                                   "Ignoring (will not persist) field: " + clazz.getName() + "." + field.getName() + " [type:"
-                                   + field.getType()
-                                          .getName()
-                                   + "]");
+                    LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
+                                       field.getType().getName()));
                 }
             }
         }
@@ -371,7 +378,7 @@ public class MappedClass {
     /**
      * Call the lifecycle methods
      */
-    @SuppressWarnings("WMI")
+    @SuppressWarnings({"WMI", "unchecked"})
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
                                          final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
@@ -549,7 +556,8 @@ public class MappedClass {
     }
 
     public MappedField getMappedIdField() {
-        return getFieldsAnnotatedWith(Id.class).get(0);
+        List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
+        return fields.isEmpty() ? null : fields.get(0);
     }
 
 }

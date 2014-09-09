@@ -14,7 +14,6 @@ public class TestLazySingleReference extends ProxyTestBase {
     @Test
     public final void testCreateProxy() {
 
-        // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }
@@ -53,7 +52,6 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testShortcutInterface() {
-        // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }
@@ -117,7 +115,6 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testSerialization() {
-        // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }
@@ -146,7 +143,6 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testGetKeyWithoutFetching() {
-        // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }

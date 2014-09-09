@@ -46,7 +46,7 @@ public class TestDAO extends TestBase {
     public void testNewDAO() throws Exception {
         getMorphia().map(Hotel.class);
 
-        final DAO<Hotel, ObjectId> hotelDAO = new BasicDAO<Hotel, ObjectId>(Hotel.class, getMongo(), getMorphia(), "morphia_test");
+        final DAO<Hotel, ObjectId> hotelDAO = new BasicDAO<Hotel, ObjectId>(Hotel.class, getMongoClient(), getMorphia(), "morphia_test");
 
         final Hotel borg = new Hotel();
         borg.setName("Hotel Borg");
@@ -147,7 +147,7 @@ public class TestDAO extends TestBase {
         address.setPostCode("101");
         borg.setAddress(address);
 
-        final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongo());
+        final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
         hotelDAO.save(borg);
         assertEquals(1, hotelDAO.count());
         assertNotNull(borg.getId());
@@ -197,7 +197,7 @@ public class TestDAO extends TestBase {
 
     @Test
     public void testSaveEntityWithId() throws Exception {
-        final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongo());
+        final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
 
         final Hotel borg = new Hotel();
         borg.setName("Hotel Borg");

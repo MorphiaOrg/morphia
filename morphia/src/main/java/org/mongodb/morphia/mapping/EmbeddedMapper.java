@@ -1,6 +1,5 @@
 package org.mongodb.morphia.mapping;
 
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -17,8 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
-@SuppressWarnings({"unchecked", "rawtypes"})
 class EmbeddedMapper implements CustomMapper {
     public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
                            final Mapper mapper) {
@@ -55,7 +52,7 @@ class EmbeddedMapper implements CustomMapper {
         Iterable coll = null;
 
         if (fieldValue != null) {
-            if (mf.isArray) {
+            if (mf.isArray()) {
                 coll = Arrays.asList((Object[]) fieldValue);
             } else {
                 coll = (Iterable) fieldValue;
@@ -63,7 +60,7 @@ class EmbeddedMapper implements CustomMapper {
         }
 
         if (coll != null) {
-            final List values = new ArrayList();
+            final List<Object> values = new ArrayList<Object>();
             for (final Object o : coll) {
                 if (null == o) {
                     values.add(null);
@@ -91,6 +88,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void writeMap(final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects, final String name,
                           final Object fieldValue, final Mapper mapper) {
         final Map<String, Object> map = (Map<String, Object>) fieldValue;
@@ -159,8 +157,9 @@ class EmbeddedMapper implements CustomMapper {
                                                                                         .hasSimpleValueConverter(mf.getType())) {
                             refObj = mapper.getConverters().decode(mf.getType(), dbVal, mf);
                         } else {
-                            refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, ((DBObject) dbVal));
-                            refObj = mapper.fromDb(((DBObject) dbVal), refObj, cache);
+                            DBObject value = (DBObject) dbVal;
+                            refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, value);
+                            refObj = mapper.fromDb(value, refObj, cache);
                         }
                         if (refObj != null) {
                             mf.setFieldValue(entity, refObj);
@@ -173,6 +172,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
                                 final Mapper mapper) {
         // multiple documents in a List
@@ -216,6 +216,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache, final Mapper mapper) {
         final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
 
@@ -252,7 +253,7 @@ class EmbeddedMapper implements CustomMapper {
 
     private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper) {
         if (Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass())) {
-            final MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType) mf.getSubType());
+            final MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper);
             mapper.fromDb(dbObj, mocMF, cache);
             return mocMF.getValue();
         } else {

@@ -9,7 +9,6 @@ import org.mongodb.morphia.mapping.MappingException;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-@SuppressWarnings({"rawtypes" })
 public class ClassConverter extends TypeConverter implements SimpleValueConverter {
 
   public ClassConverter() {

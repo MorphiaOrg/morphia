@@ -188,20 +188,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, null);
   }
 
-  public T within(final double x, final double y, final double radius) {
-    return within(x, y, radius, false);
-  }
-
-  public T within(final double x, final double y, final double radius, final boolean spherical) {
-    return addGeoCriteria(spherical ? FilterOperator.WITHIN_CIRCLE_SPHERE : FilterOperator.WITHIN_CIRCLE,
-      new Object[] {new double[] {x, y}, radius}, null);
-  }
-
-  public T within(final double x1, final double y1, final double x2, final double y2) {
-    return addGeoCriteria(FilterOperator.WITHIN_BOX, new double[][] {new double[] {x1, y1}, new double[] {x2, y2}}, null);
-  }
-
-  private Map<String, Object> opts(final String s, final Object v) {
+    private Map<String, Object> opts(final String s, final Object v) {
     final Map<String, Object> opts = new HashMap<String, Object>();
     opts.put(s, v);
     return opts;

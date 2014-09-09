@@ -4,12 +4,12 @@ package org.mongodb.morphia.mapping.lazy.proxy;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-@SuppressWarnings("unchecked")
 public final class ProxyHelper {
 
     private ProxyHelper() {
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T unwrap(final T entity) {
         if (isProxy(entity)) {
             return (T) asProxy(entity).__unwrap();

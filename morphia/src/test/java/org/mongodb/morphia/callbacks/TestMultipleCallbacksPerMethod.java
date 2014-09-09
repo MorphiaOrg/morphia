@@ -14,7 +14,7 @@ import org.mongodb.morphia.annotations.Transient;
 public class TestMultipleCallbacksPerMethod extends TestBase {
   abstract static class CallbackAbstractEntity {
     @Id
-    private final String id = new ObjectId().toStringMongod();
+    private final String id = new ObjectId().toHexString();
 
     public String getId() {
       return id;
@@ -27,7 +27,9 @@ public class TestMultipleCallbacksPerMethod extends TestBase {
       return persistentMarker;
     }
 
-    @PostPersist @PostLoad void markPersistent() {
+    @PostPersist
+    @PostLoad 
+    void markPersistent() {
       persistentMarker = true;
     }
   }

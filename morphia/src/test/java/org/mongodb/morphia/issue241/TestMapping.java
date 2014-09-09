@@ -15,7 +15,6 @@ import org.mongodb.morphia.dao.BasicDAO;
  */
 public class TestMapping extends TestBase {
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testMapping() {
         final BasicDAO<Message, ObjectId> messageDAO = new BasicDAO<Message, ObjectId>(Message.class, getDs());

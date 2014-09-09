@@ -1,23 +1,23 @@
 package org.mongodb.morphia.logging;
 
-
 import org.mongodb.morphia.logging.jdk.JDKLoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
-@SuppressWarnings({"unchecked"})
 public final class MorphiaLoggerFactory {
     private static LoggerFactory loggerFactory;
 
-    private static final List<String> FACTORIES = new ArrayList(Arrays.asList("org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory",
-                                                                              JDKLoggerFactory.class.getName()));
+    private static final List<String> FACTORIES = new ArrayList<String>();
+
+    static {
+        FACTORIES.add("org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory");
+        FACTORIES.add(JDKLoggerFactory.class.getName());
+    }
 
     private MorphiaLoggerFactory() {
     }
-
+    
     private static synchronized void init() {
         if (loggerFactory == null) {
             chooseLoggerFactory();

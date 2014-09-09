@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
 /**
@@ -62,6 +63,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tailAwaitData;
     private ReadPreference readPref;
     private Integer maxScan;
+    private String comment;
+    private boolean returnKey;
 
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
@@ -76,7 +79,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
             readPref = this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                       ? ReadPreference.secondary()
+                       ? ReadPreference.secondaryPreferred()
                        : null;
         }
     }
@@ -157,7 +160,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db 
             // field 
             // name
-            Mapper.validate(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+            validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
             fieldsFilter.put(field, (includeFields ? 1 : 0));
         }
@@ -257,11 +260,19 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             cursor.addSpecial("$min", min);
         }
 
+        if (comment != null){
+            cursor.addSpecial("$comment", comment);
+        }
+
+        if (returnKey){
+            cursor.returnKey();
+        }
+
         return cursor;
     }
 
 
-    public Iterable<T> fetch() {
+    public MorphiaIterator<T, T> fetch() {
         final DBCursor cursor = prepareCursor();
         if (LOG.isTraceEnabled()) {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
@@ -271,7 +282,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
-    public Iterable<Key<T>> fetchKeys() {
+    public MorphiaKeyIterator<T> fetchKeys() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
         fields = new String[]{Mapper.ID_KEY};
@@ -287,14 +298,16 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
     }
 
-
     public List<T> asList() {
         final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = (MorphiaIterator<T, T>) fetch().iterator();
-        for (final T ent : iter) {
-            results.add(ent);
+        final MorphiaIterator<T, T> iter = fetch();
+        try {
+            for (final T ent : iter) {
+                results.add(ent);
+            }
+        } finally {
+            iter.close();
         }
-        iter.close();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
@@ -305,22 +318,26 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return results;
     }
 
-
     public List<Key<T>> asKeyList() {
         final List<Key<T>> results = new ArrayList<Key<T>>();
-        for (final Key<T> key : fetchKeys()) {
-            results.add(key);
+        MorphiaKeyIterator<T> keys = fetchKeys();
+        try {
+            for (final Key<T> key : keys) {
+                results.add(key);
+            }
+        } finally {
+            keys.close();
         }
         return results;
     }
 
 
-    public Iterable<T> fetchEmptyEntities() {
+    public MorphiaIterator<T, T> fetchEmptyEntities() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
         fields = new String[]{Mapper.ID_KEY};
         includeFields = true;
-        final Iterable<T> res = fetch();
+        final MorphiaIterator<T, T> res = fetch();
         fields = oldFields;
         includeFields = oldInclude;
         return res;
@@ -331,44 +348,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * are EQUAL.
      */
     protected FilterOperator translate(final String operator) {
-        final String trimmed = operator.trim();
-
-        if ("=".equals(trimmed) || "==".equals(trimmed)) {
-            return FilterOperator.EQUAL;
-        } else if (">".equals(trimmed)) {
-            return FilterOperator.GREATER_THAN;
-        } else if (">=".equals(trimmed)) {
-            return FilterOperator.GREATER_THAN_OR_EQUAL;
-        } else if ("<".equals(trimmed)) {
-            return FilterOperator.LESS_THAN;
-        } else if ("<=".equals(trimmed)) {
-            return FilterOperator.LESS_THAN_OR_EQUAL;
-        } else if ("!=".equals(trimmed) || "<>".equals(trimmed)) {
-            return FilterOperator.NOT_EQUAL;
-        } else {
-            final String lower = trimmed.toLowerCase();
-            if ("in".equals(lower)) {
-                return FilterOperator.IN;
-            } else if ("mod".equals(lower)) {
-                return FilterOperator.MOD;
-            } else if ("nin".equals(lower)) {
-                return FilterOperator.NOT_IN;
-            } else if ("all".equals(lower)) {
-                return FilterOperator.ALL;
-            } else if ("exists".equals(lower)) {
-                return FilterOperator.EXISTS;
-            } else if ("elem".equals(lower)) {
-                return FilterOperator.ELEMENT_MATCH;
-            } else if ("size".equals(lower)) {
-                return FilterOperator.SIZE;
-            } else if ("within".equals(lower)) {
-                return FilterOperator.WITHIN;
-            } else if ("near".equals(lower)) {
-                return FilterOperator.NEAR;
-            } else {
-                throw new IllegalArgumentException("Unknown operator '" + trimmed + "'");
-            }
-        }
+        return FilterOperator.fromString(operator);
     }
 
     public Query<T> filter(final String condition, final Object value) {
@@ -440,13 +420,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    public int getBatchSize() {
-        return batchSize;
+    public Query<T> comment(final String comment) {
+        this.comment = comment;
+        return this;
     }
 
-    public Query<T> skip(final int value) {
-        offset = value;
+    public Query<T> returnKey() {
+        this.returnKey = true;
         return this;
+    }
+
+    public int getBatchSize() {
+        return batchSize;
     }
 
     public Query<T> offset(final int value) {
@@ -498,7 +483,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
             if (validate) {
                 final StringBuilder sb = new StringBuilder(s);
-                Mapper.validate(clazz, mapper, sb, FilterOperator.IN, "", true, false);
+                validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
                 s = sb.toString();
             }
             ret = ret.add(s, dir);
@@ -506,20 +491,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return (BasicDBObject) ret.get();
     }
 
-    public Iterator<T> iterator() {
-        return fetch().iterator();
+    public MorphiaIterator<T, T> iterator() {
+        return fetch();
     }
 
-    public Iterator<T> tail() {
+    public MorphiaIterator<T, T> tail() {
         return tail(true);
     }
 
-    public Iterator<T> tail(final boolean awaitData) {
+    public MorphiaIterator<T, T> tail(final boolean awaitData) {
         //Create a new query for this, so the current one is not affected.
         final QueryImpl<T> tailQ = cloneQuery();
         tailQ.tail = true;
         tailQ.tailAwaitData = awaitData;
-        return tailQ.fetch().iterator();
+        return tailQ.fetch();
     }
 
     public Class<T> getEntityClass() {
@@ -626,5 +611,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public String getFieldName() {
         return null;
+    }
+
+    public Map<String, Object> explain() {
+        DBCursor cursor = prepareCursor();
+        return (BasicDBObject) cursor.explain();
     }
 }

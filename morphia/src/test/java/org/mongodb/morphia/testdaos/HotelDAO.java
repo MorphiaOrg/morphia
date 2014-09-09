@@ -18,11 +18,11 @@
 package org.mongodb.morphia.testdaos;
 
 
+import com.mongodb.MongoClient;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.testmodel.Hotel;
-import com.mongodb.Mongo;
 
 
 /**
@@ -30,7 +30,7 @@ import com.mongodb.Mongo;
  */
 public class HotelDAO extends BasicDAO<Hotel, ObjectId> {
 
-  public HotelDAO(final Morphia morphia, final Mongo mongo) {
-    super(mongo, morphia, "morphia_test");
+  public HotelDAO(final Morphia morphia, final MongoClient mongoClient) {
+    super(mongoClient, morphia, "morphia_test");
   }
 }

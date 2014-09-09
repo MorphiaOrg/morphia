@@ -1,11 +1,12 @@
 package org.mongodb.morphia.query;
 
 
-import org.bson.types.CodeWScope;
-
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import org.bson.types.CodeWScope;
+
+import java.util.Map;
 
 
 /**
@@ -86,11 +87,32 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
   /**
    * Constrains the query to only scan the specified number of documents when fulfilling the query.
    *
-   * @see http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan
-   * 
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/maxScan/#op._S_maxScan</a>
    * @param value must be > 0.  A value < 0 indicates no limit
    */
   Query<T> maxScan(int value);
+
+  /**
+   * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments
+   * can make your profile data much easier to interpret and trace.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment</a>
+   * @param comment the comment to add
+   * @return the Query to enable chaining of commands
+   */
+  Query<T> comment(String comment);
+
+  /**
+   * Only return the index field or fields for the results of the query. If $returnKey is set to true and the query does not use an index
+   * to perform the read operation, the returned documents will not contain any fields
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/returnKey/#op._S_returnKey">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/returnKey/#op._S_returnKey</a>
+   * @return the Query to enable chaining of commands
+   */
+  Query<T> returnKey();
 
   /**
    * Starts the query results at a particular zero-based offset.
@@ -138,14 +160,6 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * @param lowerBound The inclusive lower bound.
    */
   Query<T> lowerIndexBound(DBObject lowerBound);
-
-    /**
-     * 
-     * @param value
-     * @return
-     * @deprecated use @{link #offset(int)} instead 
-     */
-  Query<T> skip(int value);
 
   /**
    * Turns on validation (for all calls made after); by default validation is on
@@ -260,6 +274,16 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * Returns the {@link DBCollection} of the {@link Query}.
    */
   DBCollection getCollection();
+
+  /**
+   * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
+   * may be useful when optimizing a query.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/explain/">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/explain/</a>
+   * @return Map describing the process used to return the query results.
+   */
+  Map<String, Object> explain();
 
   /**
    * Creates and returns a copy of this {@link Query}.
