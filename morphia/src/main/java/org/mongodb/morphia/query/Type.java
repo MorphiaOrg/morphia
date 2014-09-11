@@ -49,9 +49,9 @@ public enum Type {
 
     private Type(final int value) {
        this.value = value;
-	}
+     }
 
     public int val() {
         return value;
-	}
+    }
 }
