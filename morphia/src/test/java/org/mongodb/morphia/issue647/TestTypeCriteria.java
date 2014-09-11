@@ -2,6 +2,7 @@ package org.mongodb.morphia.issue647;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -34,7 +35,7 @@ public class TestTypeCriteria extends TestBase {
 
     }
 
-
+    @Ignore
     @Test
     public void getStringTypeData() throws Exception {
         getMorphia().map(Class1.class);
