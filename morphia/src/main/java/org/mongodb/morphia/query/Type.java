@@ -7,48 +7,47 @@ package org.mongodb.morphia.query;
  */
 public enum Type {
 
-	DOUBLE(1),
+    DOUBLE(1),
 	
-	STRING(2),
+    STRING(2),
 	
-	OBJECT(3),
+    OBJECT(3),
 	
-	ARRAY(4),
+    ARRAY(4),
 	
-	BINARY_DATA(5),
+    BINARY_DATA(5),
 	
-	UNDEFINED(6),
+    UNDEFINED(6),
 	
-	OBJECT_ID(7),
+    OBJECT_ID(7),
 	
-	BOOLEAN(8),
+    BOOLEAN(8),
 	
-	DATE(9),
+    DATE(9),
 	
-	NULL(10),
+    NULL(10),
 	
-	REGULAR_EXPRESSION(11),
+    REGULAR_EXPRESSION(11),
 	
-	JAVASCRIPT(13),
+    JAVASCRIPT(13),
 	
-	SYMBOL(14),
+    SYMBOL(14),
 	
-	JAVASCRIPT_WITH_SCOPE(15),
+    JAVASCRIPT_WITH_SCOPE(15),
 	
-	INTEGER_32_BIT(16),
+    INTEGER_32_BIT(16),
 	
-	TIMESTAMP(17),
+    TIMESTAMP(17),
 	
-	INTEGER_64_BIT(18),
+    INTEGER_64_BIT(18),
 	
-	MIN_KEY(255),
+    MIN_KEY(255),
 	
-	MAX_KEY(127),
-	;
+    MAX_KEY(127);
 	
 	private final int value;
 	
-	private Type(int value) {
+	private Type(final int value) {
 		this.value = value;
 	}
 

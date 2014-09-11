@@ -194,7 +194,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return opts;
   }
 
-    public T type(final Type type) {
-  		return addCriteria(FilterOperator.TYPE, type.val());
-  	}
+  public T type(final Type type) {
+    return addCriteria(FilterOperator.TYPE, type.val());
+  }
 }
