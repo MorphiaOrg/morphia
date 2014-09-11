@@ -1,7 +1,5 @@
 package org.mongodb.morphia.issue647;
 
-import java.net.UnknownHostException;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
