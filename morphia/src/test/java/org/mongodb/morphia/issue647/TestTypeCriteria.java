@@ -48,17 +48,4 @@ public class TestTypeCriteria extends TestBase {
         Assert.assertTrue(query.asList().size() > 0);
     }
 
-    
-    @Test
-    public void getArrayTypeData() throws Exception {
-        getMorphia().map(Class1.class);
-
-        Morphia morphia =  getMorphia().map(Class1.class);
-        MongoClient mongoClient = new MongoClient("localhost");
-        Datastore ds = morphia.createDatastore(mongoClient, "test");
-
-        Query<Class1> query = ds.createQuery(Class1.class);
-        query.criteria("first_name").type(Type.DOUBLE);
-        Assert.assertTrue(query.asList().size() > 0);
-    }
 }
