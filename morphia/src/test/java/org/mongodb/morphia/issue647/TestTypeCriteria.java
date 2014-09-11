@@ -18,99 +18,49 @@ import com.mongodb.MongoClient;
 
 public class TestTypeCriteria extends TestBase {
 
-	@Entity(value = "user", noClassnameStored = true)
-	public static class Class1 {
-		@Id
-		private ObjectId id;
-		
-		@Property("first_name")
-		private String firstName;
+    @Entity(value = "user", noClassnameStored = true)
+    public static class Class1 {
+        @Id
+        private ObjectId id;
 
-		@Property("last_name")
-		private String lastName;
+        @Property("first_name")
+        private String firstName;
 
-		private boolean status;
+        @Property("last_name")
+        private String lastName;
 
-		@Property("create_date")
-		private long createDt;
+        private boolean status;
 
-		public ObjectId getId() {
-			return id;
-		}
+        @Property("create_date")
+        private long createDt;
 
-		public String getFirstName() {
-			return firstName;
-		}
-
-		public void setFirstName(String firstName) {
-			this.firstName = firstName;
-		}
-
-		public String getLastName() {
-			return lastName;
-		}
-
-		public void setLastName(String lastName) {
-			this.lastName = lastName;
-		}
-
-		public boolean isStatus() {
-			return status;
-		}
-
-		public void setStatus(boolean status) {
-			this.status = status;
-		}
-
-		public long getCreateDt() {
-			return createDt;
-		}
-
-		public void setCreateDt(long createDt) {
-			this.createDt = createDt;
-		}
-
-		public void setId(ObjectId id) {
-			this.id = id;
-		}
-
-	}
+    }
 
 
-	@Test
-	public void getStringTypeData() {
-		getMorphia().map(Class1.class);
+    @Test
+    public void getStringTypeData() throws Exception {
+        getMorphia().map(Class1.class);
 
-		Morphia morphia =  getMorphia().map(Class1.class);
-		try {
-			MongoClient mongoClient = new MongoClient("localhost");
-			Datastore ds = morphia.createDatastore( mongoClient, "test" );
+        Morphia morphia =  getMorphia().map(Class1.class);
+        MongoClient mongoClient = new MongoClient("localhost");
+        Datastore ds = morphia.createDatastore(mongoClient, "test");
 
-			Query<Class1> query = ds.createQuery(Class1.class);
-			query.criteria("first_name").type(Type.STRING);
-			Assert.assertTrue(query.asList().size()>0);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Field is string so it will return 0 data
-	 */
-	@Test
-	public void getArrayTypeData() {
-		getMorphia().map(Class1.class);
+        Query<Class1> query = ds.createQuery(Class1.class);
+        query.criteria("first_name").type(Type.STRING);
+        Assert.assertTrue(query.asList().size() > 0);
+    }
 
-		Morphia morphia =  getMorphia().map(Class1.class);
-		try {
-			MongoClient mongoClient = new MongoClient("localhost");
-			Datastore ds = morphia.createDatastore( mongoClient, "test" );
+    
+    @Test
+    public void getArrayTypeData() throws Exception {
+        getMorphia().map(Class1.class);
 
-			Query<Class1> query = ds.createQuery(Class1.class);
-			query.criteria("first_name").type(Type.DOUBLE);
-			Assert.assertTrue(query.asList().size()>0);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-	}
+        Morphia morphia =  getMorphia().map(Class1.class);
+        MongoClient mongoClient = new MongoClient("localhost");
+        Datastore ds = morphia.createDatastore(mongoClient, "test");
+
+        Query<Class1> query = ds.createQuery(Class1.class);
+        query.criteria("first_name").type(Type.DOUBLE);
+        Assert.assertTrue(query.asList().size() > 0);
+    }
 }
