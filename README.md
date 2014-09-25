@@ -67,7 +67,7 @@ class Employee {
   @Indexed boolean active = false;
 
   //fields can loaded, but not saved
-  @NotSaved string readButNotStored;
+  @NotSaved String readButNotStored;
 
   //fields can be ignored (no load/save)
   @Transient int notStored;
