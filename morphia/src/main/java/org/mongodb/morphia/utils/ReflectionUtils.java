@@ -21,6 +21,7 @@ package org.mongodb.morphia.utils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Key;
@@ -437,6 +438,10 @@ public final class ReflectionUtils {
             return filename;
         }
     }
+    
+    private static String getPackageName(final String filename) {
+      return filename.substring(0, filename.lastIndexOf(File.separator));
+    }
 
     public static Set<Class<?>> getFromDirectory(final File directory, final String packageName) throws ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
@@ -461,11 +466,9 @@ public final class ReflectionUtils {
                 jarEntry = jarFile.getNextJarEntry();
                 if (jarEntry != null) {
                     String className = jarEntry.getName();
-                    if (className.endsWith(".class")) {
+                    if (className.endsWith(".class") && getPackageName(className).equals(packageName)) {
                         className = stripFilenameExtension(className);
-                        if (className.startsWith(packageName)) {
-                            classes.add(Class.forName(className.replace('/', '.')));
-                        }
+                        classes.add(Class.forName(className.replace('/', '.')));
                     }
                 }
             } while (jarEntry != null);
