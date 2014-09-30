@@ -1,6 +1,14 @@
 package org.mongodb.morphia.utils;
 
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
@@ -9,12 +17,6 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.Mapper;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -60,6 +62,17 @@ public class ReflectionUtilsTest extends TestBase {
         Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(WritingTeam.class));
     }
 
+    @Test
+    public void testGetFromJARFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
+      //we need a jar to test with so use Junit since it will always be there
+      String rootPath = Assert.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+      Set<Class<?>> result = ReflectionUtils.getFromJARFile(rootPath, "org/junit");
+
+      for (Class clazz : result) {
+        assertEquals("org.junit", clazz.getPackage().getName());
+      }
+    }
+  
     @Entity("Base")
     @Indexes(@Index("id"))
     private static class Foo {
