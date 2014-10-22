@@ -604,4 +604,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public String getFieldName() {
         return null;
     }
+	
+	public Query<T> search(String search){
+
+        final String prop = "$text";
+        final BasicDBObject op = new BasicDBObject("$search", search);
+		
+		this.criteria("$text", false).equal(op);
+		
+		return this;
+	}
 }

@@ -60,6 +60,8 @@ import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import org.mongodb.morphia.utils.IndexDirection;
+
 
 
 /**
@@ -240,7 +242,16 @@ public class DatastoreImpl implements AdvancedDatastore {
 
   protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
       final boolean dropDupsOnCreate, final boolean background, final boolean sparse, final int expireAfterSeconds) {
-    final BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
+    ensureIndex(dbColl, name, fields, unique, dropDupsOnCreate, background, sparse, expireAfterSeconds, null);
+  }
+  
+  protected <T> void ensureIndex(final DBCollection dbColl,final String name, final BasicDBObject fields,
+                                   final boolean unique, final boolean dropDupsOnCreate, final boolean background, 
+                                   final boolean sparse, final int expireAfterSeconds, BasicDBObjectBuilder keyOpts) {
+        if(keyOpts == null){
+      keyOpts = new BasicDBObjectBuilder(); 
+    }
+    
     if (name != null && name.length() != 0) {
       keyOpts.add("name", name);
     }
@@ -261,6 +272,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     if (expireAfterSeconds > -1) {
       keyOpts.add("expireAfterSeconds", expireAfterSeconds);
     }
+    
+
 
     final DBCollection dbColl = getCollection(clazz);
 
@@ -326,6 +339,15 @@ public class DatastoreImpl implements AdvancedDatastore {
    */
   private void processEmbeddedAnnotations(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
       final List<MappedField> parentMFs) {
+
+        
+    
+    BasicDBObject textFields = new BasicDBObject();
+    BasicDBObjectBuilder textKeyOpts = new BasicDBObjectBuilder();
+    HashMap<String, Integer> weights = new HashMap<>();
+    textKeyOpts.add("weights", weights);
+    
+
     for (final MappedField mf : mc.getPersistenceFields()) {
       if (mf.hasAnnotation(Indexed.class)) {
         final Indexed index = mf.getAnnotation(Indexed.class);
@@ -339,8 +361,18 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         field.append(mf.getNameToStore());
 
-        ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(),
-            index.dropDups(), index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+        if(index.value() == IndexDirection.TEXT){
+          
+          textFields.append(field.toString(), index.value().toIndexValue());
+          
+          if(index.textWeight() != 1){
+            weights.put(field.toString(), new Integer(index.textWeight()));
+          }
+          
+        }else{
+          ensureIndex(indexedClass, index.name(), new BasicDBObject(field.toString(), index.value().toIndexValue()), index.unique(),
+              index.dropDups(), index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+        }
       }
 
       if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)) {
@@ -352,6 +384,26 @@ public class DatastoreImpl implements AdvancedDatastore {
             newParents);
       }
     }
+
+    if(!textFields.isEmpty()){
+      
+      String textIndexName = "textIndexed";
+      
+      try{
+        ensureIndex(dbColl, textIndexName, textFields, false, false, background, false, -1, textKeyOpts);
+      }catch(com.mongodb.CommandFailureException ex){
+        if(ex.getCode() == 85){
+          dbColl.dropIndex(textIndexName);
+          try{
+            ensureIndex(dbColl, textIndexName, textFields, false, false, background, false, -1, textKeyOpts);
+          }catch(com.mongodb.CommandFailureException ex2){
+            throw new com.mongodb.MongoException("Unable to create the text indexes for " + mc.toString() + ".  Please make sure that you have no other text indexes on this collection!", ex2);
+          }
+        }
+      }
+      
+    }
+
   }
 
   private void processClassAnnotations(final MappedClass mc, final boolean background) {

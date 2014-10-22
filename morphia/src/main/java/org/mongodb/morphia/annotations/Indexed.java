@@ -56,4 +56,14 @@ public @interface Indexed {
      */
     int expireAfterSeconds() default -1;
 
+
+	/**
+	 * Optional. For text indexes, a document that contains field and weight pairs. The weight is an
+	 * integer ranging from 1 to 99,999 and denotes the significance of the field relative to the
+	 * other indexed fields in terms of the score. You can specify weights for some or all the
+	 * indexed fields. See Control Search Results with Weights to adjust the scores. The default
+	 * value is 1
+	 */
+	int textWeight() default 1;
+
 }
