@@ -2,14 +2,18 @@ package org.mongodb.morphia.aggregation;
 
 public class Accumulator {
     private final String operation;
-    private final String field;
+    private final Object field;
 
     public Accumulator(final String operation, final String field) {
+        this(operation, (Object)("$" + field));
+    }
+	
+    public Accumulator(final String operation, final Object field) {
         this.operation = operation;
-        this.field = "$" + field;
+        this.field = field;
     }
 
-    public String getField() {
+    public Object getField() {
         return field;
     }
 
