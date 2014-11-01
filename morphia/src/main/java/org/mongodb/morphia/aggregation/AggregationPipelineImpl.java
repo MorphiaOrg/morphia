@@ -67,7 +67,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         for (Object arg: args) {
             if (arg instanceof Projection) {
                 Projection projection = (Projection) arg;
-                if (projection.getArguments() != null || projection.getProjections() != null) {
+                if (projection.getArguments() != null || projection.getProjections() != null || projection.getProjectedField() != null) {
                     result.add(toDBObject(projection));
                 } else {
                     result.add("$" + projection.getSourceField());
