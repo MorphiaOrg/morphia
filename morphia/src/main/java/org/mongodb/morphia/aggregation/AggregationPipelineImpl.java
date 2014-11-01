@@ -1,11 +1,13 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -53,9 +55,30 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
             return new BasicDBObject(sourceFieldName, projections);
         } else if (projection.getProjectedField() != null) {
             return new BasicDBObject(sourceFieldName, projection.getProjectedField());
+        } else if (projection.getArguments() != null) {
+            return new BasicDBObject(sourceFieldName, toExpressionArgs(projection.getArguments()));
         } else {
             return new BasicDBObject(sourceFieldName, projection.isSuppressed() ? 0 : 1);
         }
+    }
+
+    private BasicDBList toExpressionArgs(final List<Object> args) {
+        BasicDBList result = new BasicDBList();
+        for (Object arg: args) {
+            if (arg instanceof Projection) {
+                Projection projection = (Projection) arg;
+                if (projection.getArguments() != null || projection.getProjections() != null) {
+                    result.add(toDBObject(projection));
+                } else {
+                    result.add("$" + projection.getSourceField());
+                }
+            } else if (arg instanceof Number) {
+                result.add(arg);
+            } else if (arg instanceof String) {
+                result.add(new BasicDBObject("$literal", arg));
+            }
+        }
+        return result;
     }
 
     public AggregationPipeline<T, U> project(final Projection... projections) {
