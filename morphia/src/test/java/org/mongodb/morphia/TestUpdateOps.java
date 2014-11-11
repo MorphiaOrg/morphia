@@ -217,7 +217,7 @@ public class TestUpdateOps extends TestBase {
     public void testMaxWhenUpdating() throws Exception {
         checkMinServerVersion(2.6);
         ObjectId id = new ObjectId();
-        UpdateResults<Circle> res = getDs().updateFirst(
+        UpdateResults res = getDs().updateFirst(
             getDs().createQuery(Circle.class).field("id").equal(id),
             getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
 
@@ -252,7 +252,7 @@ public class TestUpdateOps extends TestBase {
     public void testMinWhenUpdating() throws Exception {
         checkMinServerVersion(2.6);
         ObjectId id = new ObjectId();
-        UpdateResults<Circle> res = getDs().updateFirst(
+        UpdateResults res = getDs().updateFirst(
             getDs().createQuery(Circle.class).field("id").equal(id),
             getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 3D), true);
 
