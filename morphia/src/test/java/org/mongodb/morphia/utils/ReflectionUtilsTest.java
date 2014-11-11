@@ -112,7 +112,7 @@ public class ReflectionUtilsTest extends TestBase {
     }
 
     private static class Super1<T extends Object> {
-        protected T field;
+        private T field;
     }
 
     private static class Super2<T extends Serializable> extends Super1<T> {
@@ -121,7 +121,7 @@ public class ReflectionUtilsTest extends TestBase {
     private static class Super3<T extends Number> extends Super2<T> {
     }
 
-    private static class Sub extends Super3<Integer>{
+    private static class Sub extends Super3<Integer> {
     }
 
 }
