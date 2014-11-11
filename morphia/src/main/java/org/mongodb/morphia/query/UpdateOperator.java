@@ -18,9 +18,11 @@ public enum UpdateOperator {
   EACH("$each"),
   POP("$pop"),
   INC("$inc"),
-  Foo("$foo");
+  Foo("$foo"),
+  MAX("$max"),
+  MIN("$min");
 
-  private final String value;
+    private final String value;
 
   UpdateOperator(final String val) {
     value = val;
