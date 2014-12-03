@@ -54,6 +54,10 @@ public final class Projection<T, U> {
         return new Projection<T, U>(operator, args);
     }
     
+    public static <T, U> Projection<T, U> list(final Object... args) {
+        return new Projection<T, U>(null, args);
+    }
+    
     public static <T, U> Projection<T, U> add(final Object... args) {
         return new Projection<T, U>("$add", args);
     }

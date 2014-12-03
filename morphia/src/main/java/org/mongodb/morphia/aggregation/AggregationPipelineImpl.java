@@ -56,7 +56,11 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         } else if (projection.getProjectedField() != null) {
             return new BasicDBObject(sourceFieldName, projection.getProjectedField());
         } else if (projection.getArguments() != null) {
-            return new BasicDBObject(sourceFieldName, toExpressionArgs(projection.getArguments()));
+            if (sourceFieldName == null) {
+                return toExpressionArgs(projection.getArguments());
+            } else {
+                return new BasicDBObject(sourceFieldName, toExpressionArgs(projection.getArguments()));
+            }
         } else {
             return new BasicDBObject(sourceFieldName, projection.isSuppressed() ? 0 : 1);
         }
@@ -75,7 +79,7 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
             } else if (arg instanceof Number) {
                 result.add(arg);
             } else if (arg instanceof String) {
-                result.add(new BasicDBObject("$literal", arg));
+                result.add(arg);
             }
         }
         return result;
