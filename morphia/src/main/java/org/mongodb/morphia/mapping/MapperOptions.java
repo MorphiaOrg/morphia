@@ -36,6 +36,10 @@ public class MapperOptions {
      */
     public boolean ignoreFinals; //ignore final fields.
     /**
+     * <p>Controls if the default collection if nothing is specified in {@code @Entity} should be lowercased and pluralized.</p>
+     */
+    private boolean pluralizeCollections;
+    /**
      * @deprecated use the getter/setter instead
      */
     public final CustomMapper referenceMapper = new ReferenceMapper();
@@ -105,6 +109,14 @@ public class MapperOptions {
 
     public void setStoreNulls(final boolean storeNulls) {
         this.storeNulls = storeNulls;
+    }
+
+    public boolean isPluralizeCollections() {
+        return pluralizeCollections;
+    }
+
+    public void setPluralizeCollections(final boolean pluralizeCollections) {
+        this.pluralizeCollections = pluralizeCollections;
     }
 
     public CustomMapper getValueMapper() {
