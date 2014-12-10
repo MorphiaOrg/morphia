@@ -104,8 +104,8 @@ public class ZipCodeDataSetTest extends TestBase {
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
 
-        validate(pipeline.aggregate(Population.class), "CA", 29760021);
-        validate(pipeline.aggregate(Population.class), "OH", 10847115);
+        validate(pipeline.aggregate(Population.class), "CA", 29754890);
+        validate(pipeline.aggregate(Population.class), "OH", 10846517);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ZipCodeDataSetTest extends TestBase {
         AggregationPipeline<City, Population> pipeline = getDs().<City, Population>createAggregation(City.class)
                                                                 .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
                                                                 .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate(pipeline.aggregate(Population.class), "MN", 5335);
+        validate(pipeline.aggregate(Population.class), "MN", 5372);
     }
 
     @Test
