@@ -137,6 +137,8 @@ public class EnumMappingTest extends TestBase {
 
     @Test
     public void testEnumMapping() throws Exception {
+        getDs().getDB().dropDatabase();
+        
         getMorphia().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());

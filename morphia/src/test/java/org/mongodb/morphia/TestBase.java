@@ -34,8 +34,12 @@ public abstract class TestBase {
 
     protected void cleanup() {
         for (final MappedClass mc : getMorphia().getMapper().getMappedClasses()) {
-            getDb().getCollection(mc.getCollectionName()).drop();
+            String collectionName = mc.getCollectionName();
+            if (collectionName != null && collectionName.length() > 0) {
+                getDb().getCollection(collectionName).drop();
+            }
         }
+        getDb().dropDatabase();
     }
 
     @After
