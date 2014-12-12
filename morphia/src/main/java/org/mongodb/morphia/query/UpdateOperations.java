@@ -72,6 +72,16 @@ public interface UpdateOperations<T> {
   UpdateOperations<T> inc(String fieldExpr, Number value);
 
   /**
+   * sets the numeric field to value if it is greater than the current value.
+   */
+  UpdateOperations<T> max(String fieldExpr, Number value);
+
+  /**
+   * sets the numeric field to value if it is less than the current value.
+   */
+  UpdateOperations<T> min(String fieldExpr, Number value);
+
+  /**
    * Turns on validation (for all calls made after); by default validation is on
    */
   UpdateOperations<T> enableValidation();

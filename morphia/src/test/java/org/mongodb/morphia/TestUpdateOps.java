@@ -213,6 +213,75 @@ public class TestUpdateOps extends TestBase {
         assertEquals(1D, c.getRadius(), 0);
     }
 
+    @Test
+    public void testMaxWhenUpdating() throws Exception {
+        checkMinServerVersion(2.6);
+        ObjectId id = new ObjectId();
+        UpdateResults res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
+
+        assertInserted(res);
+
+        //Test that an update of a greater value does take effect.
+        res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).max("radius", 2D), true);
+
+        assertUpdated(res, 1);
+
+        final Circle c = getDs().get(Circle.class, id);
+
+        assertNotNull(c);
+        assertEquals(2D, c.getRadius(), 0);
+
+        //Test that an update of a smaller value does not take effect.
+        res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).max("radius", 1D), true);
+
+        assertUpdated(res, 1);
+
+        final Circle c1 = getDs().get(Circle.class, id);
+
+        assertNotNull(c1);
+        assertEquals(2D, c1.getRadius(), 0);
+    }
+
+    @Test
+    public void testMinWhenUpdating() throws Exception {
+        checkMinServerVersion(2.6);
+        ObjectId id = new ObjectId();
+        UpdateResults res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 3D), true);
+
+        assertInserted(res);
+
+        //Test that an update of a greater value does not take effect.
+        res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).min("radius", 5D), true);
+
+        assertUpdated(res, 1);
+
+        final Circle c = getDs().get(Circle.class, id);
+
+        assertNotNull(c);
+        assertEquals(3D, c.getRadius(), 0);
+
+        //Test that an update of a lesser value does take effect.
+        res = getDs().updateFirst(
+            getDs().createQuery(Circle.class).field("id").equal(id),
+            getDs().createUpdateOperations(Circle.class).min("radius", 2D), true);
+
+        assertUpdated(res, 1);
+
+        final Circle c1 = getDs().get(Circle.class, id);
+
+        assertNotNull(c1);
+        assertEquals(2D, c1.getRadius(), 0);
+    }
 
     @Test(expected = ValidationException.class)
     public void testValidationBadFieldName() throws Exception {

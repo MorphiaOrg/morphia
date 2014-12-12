@@ -105,6 +105,16 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         return this;
     }
 
+    public UpdateOperations<T> max(final String fieldExpr, final Number value) {
+        add(UpdateOperator.MAX, fieldExpr, value, false);
+        return this;
+    }
+
+    public UpdateOperations<T> min(final String fieldExpr, final Number value) {
+        add(UpdateOperator.MIN, fieldExpr, value, false);
+        return this;
+    }
+
 
     protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {
         add(UpdateOperator.POP, fieldExpr, (firstNotLast) ? -1 : 1, false);
