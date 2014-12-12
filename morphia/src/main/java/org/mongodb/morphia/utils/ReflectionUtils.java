@@ -644,7 +644,16 @@ public final class ReflectionUtils {
                         if (cls != null) {
                             return cls;
                         }
-                        return getClass(resolvedTypes.get(actualTypeArguments[i]));
+                        //We don't know that the type we want is the one in the map, if this argument has been
+                        //passed through multiple levels of the hierarchy.  Walk back until we run out.
+                        Type typeToTest = resolvedTypes.get(actualTypeArguments[i]);
+                        while (typeToTest != null) {
+                            final Class classToTest = getClass(typeToTest);
+                            if (classToTest != null) {
+                                return classToTest;
+                            }
+                            typeToTest = resolvedTypes.get(typeToTest);
+                        }
                     }
                     resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
                 }
