@@ -7,6 +7,7 @@ import com.mongodb.ReadPreference;
 import org.bson.types.CodeWScope;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -92,6 +93,14 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * @param value must be > 0.  A value < 0 indicates no limit
    */
   Query<T> maxScan(int value);
+
+  /**
+   * Specifies a time limit for executing the query. Requires server version 2.6 or above.
+   *
+   * @param maxTime must be > 0.  A value < 0 indicates no limit
+   * @param maxTimeUnit
+   */
+  Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
 
   /**
    * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments
