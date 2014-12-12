@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import org.bson.types.CodeWScope;
 
+import java.util.concurrent.TimeUnit;
 import java.util.Map;
 
 
@@ -92,6 +93,17 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
    * @param value must be > 0.  A value < 0 indicates no limit
    */
   Query<T> maxScan(int value);
+
+  /**
+   * Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
+   * MongoDB interrupts the operation at the earliest following interrupt point.
+   *
+   * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/#op._S_maxTimeMS">
+   *     http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/#op._S_maxTimeMS</a>
+   * @param value must be > 0.  A value < 0 indicates no limit
+   * @param timeUnit The time unit used to quantify the value.
+   */
+  Query<T> maxTime(int value, TimeUnit timeUnit);
 
   /**
    * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments
