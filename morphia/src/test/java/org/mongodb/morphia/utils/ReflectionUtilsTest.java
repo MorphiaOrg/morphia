@@ -1,7 +1,5 @@
 package org.mongodb.morphia.utils;
 
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -18,11 +16,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mongodb.morphia.testutil.ExactClassMatcher.exactClass;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author Scott Hernandez
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ReflectionUtilsTest extends TestBase {
 
     /**
@@ -30,36 +33,39 @@ public class ReflectionUtilsTest extends TestBase {
      */
     @Test
     public void testImplementsInterface() {
-        Assert.assertTrue(ReflectionUtils.implementsInterface(ArrayList.class, List.class));
-        Assert.assertTrue(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class));
-        Assert.assertFalse(ReflectionUtils.implementsInterface(Set.class, List.class));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, List.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+        
+        assertThat(ReflectionUtils.implementsInterface(Set.class, List.class), is(false));
+        assertThat(ReflectionUtils.implementsInterface(List.class, ArrayList.class), is(false));
     }
 
     @Test
     public void testInheritedClassAnnotations() {
         final List<Indexes> annotations = ReflectionUtils.getAnnotations(Foobie.class, Indexes.class);
-        Assert.assertEquals(2, annotations.size());
-        Assert.assertTrue(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null);
+        assertThat(annotations.size(), is(2));
+        assertThat(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null, is(true));
 
-        Assert.assertTrue("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()));
+        assertThat("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()), is(true));
 
-        Assert.assertTrue("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()));
+        assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
 
-        Assert.assertEquals(Mapper.IGNORED_FIELDNAME, ReflectionUtils.getClassEntityAnnotation(Fooble.class).value());
+        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
     }
 
     @Test
     public void testGetParameterizedClassInheritance() throws Exception {
         // Work before fix...
-        Assert.assertEquals(Object.class, ReflectionUtils.getParameterizedClass(Set.class));
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")));
+        assertThat(ReflectionUtils.getParameterizedClass(Set.class), isA(Object.class));
+        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")), is(exactClass(Author.class)));
 
         // Works now...
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")));
+        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")), is(exactClass(Author.class)));
 
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Authors.class));
+        assertThat(ReflectionUtils.getParameterizedClass(Authors.class), is(exactClass(Author.class)));
 
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(WritingTeam.class));
+        assertThat(ReflectionUtils.getParameterizedClass(WritingTeam.class), is(is(exactClass(Author.class))));
     }
 
     /**
@@ -70,12 +76,9 @@ public class ReflectionUtilsTest extends TestBase {
     @SuppressWarnings("unchecked")
     @Test
     public void testGenericFieldTypeResolution() throws Exception {
-        Assert.assertEquals(
-            Integer.class,
-            ReflectionUtils.getTypeArgument(Sub.class,
-                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType()
-            )
-        );
+        Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class, 
+                                                                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
+        assertThat(typeArgument, is(exactClass(Integer.class)));
     }
 
     @Entity("Base")
