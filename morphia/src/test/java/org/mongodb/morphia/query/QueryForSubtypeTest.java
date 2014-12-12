@@ -15,21 +15,26 @@ import org.mongodb.morphia.query.validation.ValidationFailure;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mongodb.morphia.query.FilterOperator.EQUAL;
+import static org.mongodb.morphia.query.FilterOperator.SIZE;
+import static org.mongodb.morphia.query.QueryValidator.isCompatibleForOperator;
 
 /**
  * For issue #615.
- * 
+ *
  * @author jbyler
  */
 public class QueryForSubtypeTest extends TestBase {
 
     private MappedClass jobMappedClass;
 
-    interface User { }
+    interface User {
+    }
 
     @Entity
-    static class LocalUser implements User {
+    static class UserImpl implements User {
         @Id
         @SuppressWarnings("unused")
         private ObjectId id;
@@ -50,50 +55,36 @@ public class QueryForSubtypeTest extends TestBase {
     }
 
     @Before
-    public void commonSetup() throws Exception {
-        Mapper mapper = new Mapper();
-        jobMappedClass = mapper.getMappedClass(Job.class);
+    public void setUp() {
+        super.setUp();
+        jobMappedClass = new Mapper().getMappedClass(Job.class);
     }
 
     @Test
-    public void testClassIsCompatibleWithInterface() {
-        MappedField mf = jobMappedClass.getMappedField("owner");
+    public void testImplementingClassIsCompatibleWithInterface() {
+        MappedField user = jobMappedClass.getMappedField("owner");
 
-        boolean compatible = QueryValidator.isCompatibleForOperator(
-                mf,
-                mf.getType(),
-                FilterOperator.EQUAL,
-                new LocalUser(), 
-                new ArrayList<ValidationFailure>());
+        boolean compatible = isCompatibleForOperator(user, User.class, EQUAL, new UserImpl(), new ArrayList<ValidationFailure>());
 
-        assertTrue("LocalUser should be compatible for field of type User", compatible);
+        assertThat(compatible, is(true));
     }
 
     @Test
-    public void testSizeOfArrayList() {
-        MappedField mf = jobMappedClass.getMappedField("attributes");
+    public void testIntSizeShouldBeCompatibleWithArrayList() {
+        MappedField attributes = jobMappedClass.getMappedField("attributes");
 
-        boolean compatible = QueryValidator.isCompatibleForOperator(
-                mf,
-                mf.getType(),
-                FilterOperator.SIZE,
-                2,
-                new ArrayList<ValidationFailure>());
+        boolean compatible = isCompatibleForOperator(attributes, ArrayList.class, SIZE, 2, new ArrayList<ValidationFailure>());
 
-        assertTrue("$size 2 should be compatible for field of type ArrayList", compatible);
+        assertThat(compatible, is(true));
     }
 
     @Test
-    public void testSubclassOfKey() {
-        MappedField mf = jobMappedClass.getMappedField("owner");
+    public void testSubclassOfKeyShouldBeCompatibleWithFieldUser() {
+        MappedField user = jobMappedClass.getMappedField("owner");
+        Key<User> anonymousKeySubclass = new Key<User>(User.class, 212L) { };
+        
+        boolean compatible = isCompatibleForOperator(user, User.class, EQUAL, anonymousKeySubclass, new ArrayList<ValidationFailure>());
 
-        boolean compatible = QueryValidator.isCompatibleForOperator(
-                mf,
-                mf.getType(),
-                FilterOperator.EQUAL,
-                new Key<User>(User.class, 212L) {},
-                new ArrayList<ValidationFailure>()); // anonymous subclass of Key
-
-        assertTrue("Subclass of Key<User> should be compatible for field of type User", compatible);
+        assertThat(compatible, is(true));
     }
 }
