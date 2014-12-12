@@ -214,73 +214,95 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testMaxWhenUpdating() throws Exception {
+    public void testMaxUsesSuppliedValueWhenThisIsLargerThanCurrentDocumentValue() throws Exception {
         checkMinServerVersion(2.6);
-        ObjectId id = new ObjectId();
-        UpdateResults res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
+        // given
+        final ObjectId id = new ObjectId();
+        UpdateResults res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 1D), true);
 
         assertInserted(res);
 
-        //Test that an update of a greater value does take effect.
-        res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).max("radius", 2D), true);
+        // when
+        final double newHigherValue = 2D;
+        res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                  getDs().createUpdateOperations(Circle.class).max("radius", newHigherValue), true);
 
+        // then
         assertUpdated(res, 1);
 
-        final Circle c = getDs().get(Circle.class, id);
-
-        assertNotNull(c);
-        assertEquals(2D, c.getRadius(), 0);
-
-        //Test that an update of a smaller value does not take effect.
-        res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).max("radius", 1D), true);
-
-        assertUpdated(res, 1);
-
-        final Circle c1 = getDs().get(Circle.class, id);
-
-        assertNotNull(c1);
-        assertEquals(2D, c1.getRadius(), 0);
+        final Circle updatedCircle = getDs().get(Circle.class, id);
+        assertNotNull(updatedCircle);
+        assertEquals(newHigherValue, updatedCircle.getRadius(), 0);
     }
 
     @Test
-    public void testMinWhenUpdating() throws Exception {
+    public void testMaxKeepsCurrentDocumentValueWhenThisIsLargerThanSuppliedValue() throws Exception {
         checkMinServerVersion(2.6);
-        ObjectId id = new ObjectId();
-        UpdateResults res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 3D), true);
+        // given
+        final ObjectId id = new ObjectId();
+        final double originalValue = 2D;
+        UpdateResults res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", originalValue), true);
 
         assertInserted(res);
 
-        //Test that an update of a greater value does not take effect.
-        res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).min("radius", 5D), true);
+        // when
+        res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                  getDs().createUpdateOperations(Circle.class).max("radius", 1D), true);
 
+        // then
         assertUpdated(res, 1);
 
-        final Circle c = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().get(Circle.class, id);
+        assertNotNull(updatedCircle);
+        assertEquals(originalValue, updatedCircle.getRadius(), 0);
+    }
 
-        assertNotNull(c);
-        assertEquals(3D, c.getRadius(), 0);
+    @Test
+    public void testMinUsesSuppliedValueWhenThisIsSmallerThanCurrentDocumentValue() throws Exception {
+        checkMinServerVersion(2.6);
+        // given
+        final ObjectId id = new ObjectId();
+        UpdateResults res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", 3D), true);
 
-        //Test that an update of a lesser value does take effect.
-        res = getDs().updateFirst(
-            getDs().createQuery(Circle.class).field("id").equal(id),
-            getDs().createUpdateOperations(Circle.class).min("radius", 2D), true);
+        assertInserted(res);
 
+        // when
+        final double newLowerValue = 2D;
+        res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                  getDs().createUpdateOperations(Circle.class).min("radius", newLowerValue), true);
+
+        // then
         assertUpdated(res, 1);
 
-        final Circle c1 = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().get(Circle.class, id);
+        assertNotNull(updatedCircle);
+        assertEquals(newLowerValue, updatedCircle.getRadius(), 0);
+    }
 
-        assertNotNull(c1);
-        assertEquals(2D, c1.getRadius(), 0);
+    @Test
+    public void testMinKeepsCurrentDocumentValueWhenThisIsSmallerThanSuppliedValue() throws Exception {
+        checkMinServerVersion(2.6);
+        // given
+        final ObjectId id = new ObjectId();
+        final double originalValue = 3D;
+        UpdateResults res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                                getDs().createUpdateOperations(Circle.class).setOnInsert("radius", originalValue), true);
+
+        assertInserted(res);
+
+        // when
+        res = getDs().updateFirst(getDs().createQuery(Circle.class).field("id").equal(id),
+                                  getDs().createUpdateOperations(Circle.class).min("radius", 5D), true);
+
+        // then
+        assertUpdated(res, 1);
+
+        final Circle updatedCircle = getDs().get(Circle.class, id);
+        assertNotNull(updatedCircle);
+        assertEquals(originalValue, updatedCircle.getRadius(), 0);
     }
 
     @Test(expected = ValidationException.class)
