@@ -10,7 +10,9 @@ public final class Projection<T, U> {
     private final String sourceField;
     private final String projectedField;
     private List<Projection> projections;
+    private List<Object> arguments;
     private boolean suppressed = false;
+    private boolean expression = false;
 
     private Projection(final String field) {
         this.sourceField = field;
@@ -28,6 +30,12 @@ public final class Projection<T, U> {
         projections.add(projection);
         projections.addAll(Arrays.asList(subsequent));
     }
+    
+    private Projection(final String expression, final Object...args) {
+        this(expression);
+        this.arguments = Arrays.asList(args);
+        this.expression = true;
+    }
 
     public static <T, U> Projection<T, U> projection(final String name) {
         return new Projection<T, U>(name);
@@ -39,6 +47,35 @@ public final class Projection<T, U> {
 
     public static <T, U> Projection<T, U> projection(final String field, final Projection projection, final Projection... subsequent) {
         return new Projection<T, U>(field, projection, subsequent);
+    }
+    
+    /** Provides access to arbitrary expressions taking an array of arguments, such as $concat */
+    public static <T, U> Projection<T, U> expression(final String operator, final Object... args) {
+        return new Projection<T, U>(operator, args);
+    }
+    
+    public static <T, U> Projection<T, U> list(final Object... args) {
+        return new Projection<T, U>(null, args);
+    }
+    
+    public static <T, U> Projection<T, U> add(final Object... args) {
+        return new Projection<T, U>("$add", args);
+    }
+    
+    public static <T, U> Projection<T, U> subtract(final Object arg1, final Object arg2) {
+        return new Projection<T, U>("$subtract", arg1, arg2);
+    }
+    
+    public static <T, U> Projection<T, U> multiply(final Object... args) {
+        return new Projection<T, U>("$multiply", args);
+    }
+    
+    public static <T, U> Projection<T, U> divide(final Object arg1, final Object arg2) {
+        return new Projection<T, U>("$divide", arg1, arg2);
+    }
+    
+    public static <T, U> Projection<T, U> mod(final Object arg1, final Object arg2) {
+        return new Projection<T, U>("$mod", arg1, arg2);
     }
 
     public Projection<T, U> suppress() {
@@ -60,6 +97,10 @@ public final class Projection<T, U> {
 
     public List<Projection> getProjections() {
         return projections;
+    }
+
+    public List<Object> getArguments() {
+        return arguments;
     }
 
     @Override
