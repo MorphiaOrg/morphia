@@ -37,8 +37,6 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.logging.Logger;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.testmodel.Address;
@@ -53,18 +51,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
+import static com.mongodb.WriteConcern.REPLICA_ACKNOWLEDGED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assume.assumeTrue;
 
 /**
  * @author Scott Hernandez
  */
 public class TestDatastore extends TestBase {
-    private static final Logger LOG = MorphiaLoggerFactory.get(TestDatastore.class);
-
     @Entity("facebook_users")
     public static class FacebookUser {
         @Id
@@ -89,6 +86,7 @@ public class TestDatastore extends TestBase {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static class LifecycleListener {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
@@ -108,6 +106,7 @@ public class TestDatastore extends TestBase {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @EntityListeners(LifecycleListener.class)
     public static class LifecycleTestObj {
         @Id
@@ -211,6 +210,7 @@ public class TestDatastore extends TestBase {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static class KeysKeysKeys {
         @Id
         private ObjectId id;
@@ -335,9 +335,11 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testExistsWhenSecondaryPreferred() throws Exception {
+        assumeTrue(isReplicaSet());
+        
         // given
         long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), REPLICA_ACKNOWLEDGED);
 
         // expect
         assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
