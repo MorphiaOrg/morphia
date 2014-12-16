@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-
 package org.mongodb.morphia;
-
 
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
@@ -41,13 +39,15 @@ import org.mongodb.morphia.testmodel.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
-
 
 /**
  * @author Scott Hernandez
@@ -583,6 +583,81 @@ public class TestUpdateOps extends TestBase {
                                                                 .add("logs", new EntityLog("whatever4"), false);
         getDs().update(finder, updateOperations4, true);
         validateNoClassName(finder.get());
+    }
+
+    @Test
+    public void shouldUpdateAnArrayElement() {
+        // given
+        ObjectId parentId = new ObjectId();
+        String childName = "Bob";
+        String updatedLastName = "updatedLastName";
+
+        Parent parent = new Parent();
+        parent.id = parentId;
+        parent.children.add(new Child("Anthony", "Child"));
+        parent.children.add(new Child(childName, "originalLastName"));
+        getDs().save(parent);
+
+        // when
+        Query<Parent> query = getDs().createQuery(Parent.class)
+                                        .field("_id").equal(parentId)
+                                        .field("children.first").equal(childName);
+        UpdateOperations<Parent> updateOps = getDs().createUpdateOperations(Parent.class)
+                                                       .set("children.$.last", updatedLastName);
+        UpdateResults updateResults = getDs().update(query, updateOps);
+
+        // then
+        assertThat(updateResults.getUpdatedCount(), is(1));
+        assertThat(getDs().find(Parent.class, "id", parentId).get().children, hasItem(new Child(childName, updatedLastName)));
+    }
+
+    private static final class Parent {
+        @Id
+        private ObjectId id;
+
+        @Embedded
+        private final Set<Child> children = new HashSet<Child>();
+    }
+
+    private static final class Child {
+        private String first;
+        private String last;
+
+        private Child(final String first, final String last) {
+            this.first = first;
+            this.last = last;
+        }
+
+        private Child() {
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Child child = (Child) o;
+
+            if (first != null ? !first.equals(child.first) : child.first != null) {
+                return false;
+            }
+            if (last != null ? !last.equals(child.last) : child.last != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = first != null ? first.hashCode() : 0;
+            result = 31 * result + (last != null ? last.hashCode() : 0);
+            return result;
+        }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

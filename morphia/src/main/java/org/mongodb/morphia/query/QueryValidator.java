@@ -33,9 +33,11 @@ import static java.lang.String.format;
 final class QueryValidator {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryValidator.class);
 
-    private QueryValidator() {}
+    private QueryValidator() {
+    }
 
-    /*package*/ static boolean isCompatibleForOperator(final MappedField mappedField, final Class<?> type, final FilterOperator op,
+    /*package*/
+    static boolean isCompatibleForOperator(final MappedField mappedField, final Class<?> type, final FilterOperator op,
                                            final Object value, final List<ValidationFailure> validationFailures) {
         // TODO: it's really OK to have null values?  I think this is to prevent null pointers further down, 
         // but I want to move the null check into the operations that care whether they allow nulls or not.
@@ -86,10 +88,12 @@ final class QueryValidator {
             for (int i = 0; ; ) {
                 //CHECKSTYLE:ON
                 final String part = parts[i];
+                boolean fieldIsArrayOperator = part.equals("$");
+
                 mf = mc.getMappedField(part);
 
                 //translate from java field name to stored field name
-                if (mf == null) {
+                if (mf == null && !fieldIsArrayOperator) {
                     mf = mc.getMappedFieldByJavaField(part);
                     if (mf == null) {
                         throw new ValidationException(format("The field '%s' could not be found in '%s' while validating - %s; if "
@@ -102,20 +106,21 @@ final class QueryValidator {
                 }
 
                 i++;
-                if (mf.isMap()) {
+                if (fieldIsArrayOperator || mf.isMap()) {
                     //skip the map key validation, and move to the next part
                     i++;
-                }
-
-                //catch people trying to search/update into @Reference/@Serialized fields
-                if (i < parts.length && !canQueryPast(mf)) {
-                    throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
-                                                         + " validating - %s", part, clazz.getName(), prop));
                 }
 
                 if (i >= parts.length) {
                     break;
                 }
+
+                //catch people trying to search/update into @Reference/@Serialized fields
+                if (!canQueryPast(mf)) {
+                    throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
+                                                         + " validating - %s", part, clazz.getName(), prop));
+                }
+
                 //get the next MappedClass for the next field validation
                 mc = mapper.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
             }
@@ -130,7 +135,7 @@ final class QueryValidator {
                 }
             }
 
-            if (validateTypes) {
+            if (validateTypes && mf != null) {
                 List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
                 boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val, validationFailures);
                 boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val, validationFailures);
