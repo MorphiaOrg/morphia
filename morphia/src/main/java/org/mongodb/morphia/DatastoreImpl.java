@@ -1,6 +1,5 @@
 package org.mongodb.morphia;
 
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.BulkWriteOperation;
@@ -64,7 +63,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.lang.String.format;
-
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -145,10 +143,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.getKey(entity);
     }
 
+    @Override
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id) {
         return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
     }
 
+    @Override
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
         return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
     }

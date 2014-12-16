@@ -14,46 +14,79 @@
  * limitations under the License.
  */
 
-
 package org.mongodb.morphia;
-
 
 import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
-import org.junit.Before;
 import org.junit.Test;
+import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import static org.junit.Assert.assertEquals;
 
-
-/**
- * @author Scott Hernandez
- */
 public class TestSuperDatastore extends TestBase {
-
-    @Before
-    @Override
-    public void setUp() {
-        super.setUp();
-    }
-
     @Test
-    public void testSaveAndDelete() throws Exception {
-        final String ns = "hotels";
+    public void testDeleteWithAnEntityTypeAndId() throws Exception {
+        // given
+        final String ns = "someCollectionName";
+        getDb().getCollection(ns).remove(new BasicDBObject());
+
         final Rectangle rect = new Rectangle(10, 10);
         ObjectId id = new ObjectId();
         rect.setId(id);
 
-        getDb().getCollection(ns).remove(new BasicDBObject());
-
-        //test delete(entity, id)
         getAds().save(ns, rect);
         assertEquals(1, getAds().getCount(ns));
-        getAds().delete(ns, Rectangle.class, 1);
-        assertEquals(1, getAds().getCount(ns));
+        
+        // when
         getAds().delete(ns, Rectangle.class, id);
+        
+        // then
         assertEquals(0, getAds().getCount(ns));
+    }
+
+    @Test
+    public void testDeleteDoesNotDeleteAnythingWhenGivenAnIncorrectId() throws Exception {
+        // given
+        final String ns = "someCollectionName";
+        getDb().getCollection(ns).remove(new BasicDBObject());
+
+        final Rectangle rect = new Rectangle(10, 10);
+        ObjectId id = new ObjectId();
+        rect.setId(id);
+
+        getAds().save(ns, rect);
+        assertEquals(1, getAds().getCount(ns));
+        
+        // when giving an ID that is not the entity ID.  Note that at the time of writing this will also log a validation warning
+        getAds().delete(ns, Rectangle.class, 1);
+        
+        // then
+        assertEquals(1, getAds().getCount(ns));
+    }
+
+    @Test
+    public void testDeleteWillRemoveAnyDocumentWithAMatchingId() throws Exception {
+        // given
+        final String ns = "someCollectionName";
+        getDb().getCollection(ns).remove(new BasicDBObject());
+
+        final Rectangle rect = new Rectangle(10, 10);
+        ObjectId rectangleId = new ObjectId();
+        rect.setId(rectangleId);
+        getAds().save(ns, rect);
+
+        final Circle circle = new Circle();
+        circle.setId(new ObjectId());
+        getAds().save(ns, circle);
+
+        assertEquals(2, getAds().getCount(ns));
+        
+        // when 
+        getAds().delete(ns, Circle.class, rectangleId);
+        
+        // then
+        assertEquals(1, getAds().getCount(ns));
     }
 
     @Test
@@ -63,7 +96,6 @@ public class TestSuperDatastore extends TestBase {
 
         getDb().getCollection(ns).remove(new BasicDBObject());
 
-        //test delete(entity, id)
         getAds().save(ns, rect);
         assertEquals(1, getAds().getCount(ns));
         final Rectangle rectLoaded = getAds().get(ns, Rectangle.class, rect.getId());
@@ -80,7 +112,6 @@ public class TestSuperDatastore extends TestBase {
 
         getDb().getCollection(ns).remove(new BasicDBObject());
 
-        //test delete(entity, id)
         getAds().save(ns, rect);
         assertEquals(1, getAds().getCount(ns));
         Rectangle rectLoaded = getAds().find(ns, Rectangle.class).get();
@@ -104,6 +135,5 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 
         getAds().find(ns, Rectangle.class, "_id !=", "-1", 1, 1).get();
-
     }
 }
