@@ -1,6 +1,7 @@
 package org.mongodb.morphia.release
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
@@ -21,6 +22,13 @@ class UpdateToNextVersionTask extends DefaultTask {
         git.commit()
            .setOnly(buildFile.name)
            .setMessage("Updated to next development version: ${newVersion}")
+           .call()
+
+        String username = project.property("github.credentials.username")
+        String password = project.property("github.credentials.password")
+
+        git.push()
+           .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
            .call()
     }
 

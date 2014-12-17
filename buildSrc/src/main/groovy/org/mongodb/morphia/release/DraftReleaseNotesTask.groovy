@@ -57,6 +57,8 @@ class DraftReleaseNotesTask extends DefaultTask {
         def notes = """
 ## Version ${releaseVersion} (${new Date().format("MMM dd, yyyy")})
 
+### Notes
+
 ### Downloads
 Below and on maven central.
 
