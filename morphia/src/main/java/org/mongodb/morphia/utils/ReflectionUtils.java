@@ -440,7 +440,7 @@ public final class ReflectionUtils {
     }
     
     private static String getPackageName(final String filename) {
-      return filename.substring(0, filename.lastIndexOf(File.separator));
+      return filename.substring(0, filename.lastIndexOf('/'));
     }
 
     public static Set<Class<?>> getFromDirectory(final File directory, final String packageName) throws ClassNotFoundException {
