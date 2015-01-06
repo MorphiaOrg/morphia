@@ -10,50 +10,32 @@ import org.mongodb.morphia.ObjectFactory;
  * @author Scott Hernandez
  */
 public class MapperOptions {
-    //CHECKSTYLE:OFF
     /**
      * <p>Treat java transient fields as if they have {@code @Transient} on them</p>
-     *
-     * @deprecated use the getter/setter instead
      */
-    public boolean actLikeSerializer;
-    /**
-     * <p>Controls if null are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean storeNulls;
-    /**
-     * <p>Controls if empty collection/arrays are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean storeEmpties;
+    private boolean actLikeSerializer;
     /**
      * <p>Controls if final fields are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
      */
-    public boolean ignoreFinals; //ignore final fields.
+    private boolean ignoreFinals; //ignore final fields.
     /**
-     * @deprecated use the getter/setter instead
+     * <p>Controls if null are stored. </p>
      */
-    public final CustomMapper referenceMapper = new ReferenceMapper();
+    private boolean storeNulls;
     /**
-     * @deprecated use the getter/setter instead
+     * <p>Controls if empty collection/arrays are stored. </p>
      */
-    public final CustomMapper embeddedMapper = new EmbeddedMapper();
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper valueMapper = new ValueMapper();
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper defaultMapper = embeddedMapper;
+    private boolean storeEmpties;
 
-    public ObjectFactory objectFactory = new DefaultCreator();
-    //CHECKSTYLE:ON
+    private ObjectFactory objectFactory = new DefaultCreator();
+    
+    private CustomMapper embeddedMapper = new EmbeddedMapper();
+
+    private CustomMapper defaultMapper = embeddedMapper;
+    
+    private CustomMapper referenceMapper = new ReferenceMapper();
+    
+    private CustomMapper valueMapper = new ValueMapper();
 
     public boolean isActLikeSerializer() {
         return actLikeSerializer;
@@ -67,8 +49,16 @@ public class MapperOptions {
         return defaultMapper;
     }
 
+    public void setDefaultMapper(final CustomMapper pDefaultMapper) {
+        defaultMapper = pDefaultMapper;
+    }
+
     public CustomMapper getEmbeddedMapper() {
         return embeddedMapper;
+    }
+
+    public void setEmbeddedMapper(final CustomMapper pEmbeddedMapper) {
+        embeddedMapper = pEmbeddedMapper;
     }
 
     public boolean isIgnoreFinals() {
@@ -91,6 +81,10 @@ public class MapperOptions {
         return referenceMapper;
     }
 
+    public void setReferenceMapper(final CustomMapper pReferenceMapper) {
+        referenceMapper = pReferenceMapper;
+    }
+
     public boolean isStoreEmpties() {
         return storeEmpties;
     }
@@ -109,5 +103,9 @@ public class MapperOptions {
 
     public CustomMapper getValueMapper() {
         return valueMapper;
+    }
+
+    public void setValueMapper(final CustomMapper pValueMapper) {
+        valueMapper = pValueMapper;
     }
 }
