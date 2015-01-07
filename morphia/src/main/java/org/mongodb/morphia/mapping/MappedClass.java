@@ -98,21 +98,21 @@ public class MappedClass {
      */
     @SuppressWarnings("unchecked")
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
-                                                                                          PreSave.class,
-                                                                                          PreLoad.class,
-                                                                                          PostPersist.class,
-                                                                                          PostLoad.class);
+            PreSave.class,
+            PreLoad.class,
+            PostPersist.class,
+            PostLoad.class);
     /**
      * Annotations we were interested in, and found.
      */
     private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations
-    = new HashMap<Class<? extends Annotation>, List<Annotation>>();
+            = new HashMap<Class<? extends Annotation>, List<Annotation>>();
 
     /**
      * Methods which are life-cycle events
      */
     private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods
-    = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
+            = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 
     /**
      * a list of the fields to map
@@ -177,7 +177,7 @@ public class MappedClass {
      */
     protected void discover() {
         try {
-            Class.forName(clazz.getName());
+            Class.forName(clazz.getName(), true, clazz.getClassLoader());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Couldn't initialize class " + clazz.getName()
                     + ". Please make sure it can be loaded by the classloader.", e);
@@ -387,7 +387,7 @@ public class MappedClass {
      */
     @SuppressWarnings({"WMI", "unchecked"})
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
-                                         final Mapper mapper) {
+            final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
         DBObject retDbObj = dbObj;
         try {
@@ -460,7 +460,7 @@ public class MappedClass {
     }
 
     private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
-                                        final Mapper mapper, final Collection<EntityInterceptor> interceptors) {
+            final Mapper mapper, final Collection<EntityInterceptor> interceptors) {
         for (final EntityInterceptor ei : interceptors) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
