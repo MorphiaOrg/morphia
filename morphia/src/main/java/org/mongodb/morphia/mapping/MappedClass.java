@@ -176,6 +176,13 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover() {
+        try {
+            Class.forName(clazz.getName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Couldn't initialize class " + clazz.getName()
+                    + ". Please make sure it can be loaded by the classloader.", e);
+        }
+
         for (final Class<? extends Annotation> c : interestingAnnotations) {
             addAnnotation(c);
         }
@@ -204,27 +211,27 @@ public class MappedClass {
             field.setAccessible(true);
             final int fieldMods = field.getModifiers();
             if (field.isAnnotationPresent(Transient.class)
-                || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
-                || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
-                || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL)) {
+                    || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
+                    || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
+                    || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL)) {
                 // ignore these
             } else if (field.isAnnotationPresent(Id.class)) {
                 final MappedField mf = new MappedField(field, clazz, getMapper());
                 persistenceFields.add(mf);
                 update();
             } else if (field.isAnnotationPresent(Property.class)
-                       || field.isAnnotationPresent(Reference.class)
-                       || field.isAnnotationPresent(Embedded.class)
-                       || field.isAnnotationPresent(Serialized.class)
-                       || isSupportedType(field.getType())
-                       || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
+                    || field.isAnnotationPresent(Reference.class)
+                    || field.isAnnotationPresent(Embedded.class)
+                    || field.isAnnotationPresent(Serialized.class)
+                    || isSupportedType(field.getType())
+                    || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
                 persistenceFields.add(new MappedField(field, clazz, getMapper()));
             } else {
                 if (mapper.getOptions().getDefaultMapper() != null) {
                     persistenceFields.add(new MappedField(field, clazz, getMapper()));
                 } else if (LOG.isWarningEnabled()) {
                     LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
-                                       field.getType().getName()));
+                            field.getType().getName()));
                 }
             }
         }
