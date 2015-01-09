@@ -57,7 +57,7 @@ class Employee {
   @Reference List<Employee> underlings = new ArrayList<Employee>();
 
   // stored in one binary field
-  @Serialized EncryptedReviews;
+  @Serialized EncryptedReviews encryptedReviews;
 
   //fields can be renamed
   @Property("started") Date startDate;
