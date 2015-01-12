@@ -24,7 +24,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.DefaultDBEncoder;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
@@ -41,7 +40,11 @@ import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import java.net.UnknownHostException;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -79,16 +82,22 @@ public class CustomConvertersTest extends TestBase {
     }
 
     @Test
-    public void testIt() {
+    public void shouldUseSuppliedConverterToEncodeAndDecodeObject() {
+        // given
         getMorphia().map(CharEntity.class);
 
+        // when
         getDs().save(new CharEntity());
-        final CharEntity ce = getDs().find(CharEntity.class).get();
-        Assert.assertNotNull(ce.c);
-        assertEquals('a', ce.c.charValue());
 
+        // then check the representation in the database is a number
         final BasicDBObject dbObj = (BasicDBObject) getDs().getCollection(CharEntity.class).findOne();
-        Assert.assertTrue(dbObj.getInt("c") == (int) 'a');
+        assertThat(dbObj.get("c"), is(instanceOf(int.class)));
+        assertThat(dbObj.getInt("c"), is((int) 'a'));
+
+        // then check CharEntity can be decoded from the database
+        final CharEntity ce = getDs().find(CharEntity.class).get();
+        assertThat(ce.c, is(notNullValue()));
+        assertThat(ce.c.charValue(), is('a'));
     }
 
     /**
