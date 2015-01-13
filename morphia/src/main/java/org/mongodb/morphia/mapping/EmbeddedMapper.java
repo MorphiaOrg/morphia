@@ -191,7 +191,9 @@ class EmbeddedMapper implements CustomMapper {
                 dbValues.add(dbVal);
             }
 
-            MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf) ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper) : null;
+            MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf)
+                    ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper)
+                    : null;
             for (final Object o : dbValues) {
 
                 Object newEntity = null;
@@ -224,7 +226,9 @@ class EmbeddedMapper implements CustomMapper {
 
         final DBObject dbObj = (DBObject) mf.getDbObjectValue(dbObject);
 
-        final MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf) ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper) : null;
+        final MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf)
+                ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper)
+                : null;
         new IterHelper<Object, Object>().loopMap(dbObj, new MapIterCallback<Object, Object>() {
             @Override
             public void eval(final Object key, final Object val) {
@@ -255,7 +259,8 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
-    private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper, MapOrCollectionMF mapOrCollectionMF) {
+    private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper,
+                                               final MapOrCollectionMF mapOrCollectionMF) {
         if (mapOrCollectionMF != null) {
             mapper.fromDb(dbObj, mapOrCollectionMF, cache);
             return mapOrCollectionMF.getValue();
@@ -265,7 +270,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
-    private boolean isMapOrCollection(MappedField mf) {
+    private static boolean isMapOrCollection(final MappedField mf) {
         return Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass());
     }
 
