@@ -179,6 +179,7 @@ class EmbeddedMapper implements CustomMapper {
         final Collection values = mf.isSet() ? mapper.getOptions().getObjectFactory().createSet(mf)
                                              : mapper.getOptions().getObjectFactory().createList(mf);
 
+
         final Object dbVal = mf.getDbObjectValue(dbObject);
         if (dbVal != null) {
 
@@ -190,6 +191,7 @@ class EmbeddedMapper implements CustomMapper {
                 dbValues.add(dbVal);
             }
 
+            MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf) ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper) : null;
             for (final Object o : dbValues) {
 
                 Object newEntity = null;
@@ -200,7 +202,7 @@ class EmbeddedMapper implements CustomMapper {
                                                                                     .hasSimpleValueConverter(mf.getSubClass())) {
                         newEntity = mapper.getConverters().decode(mf.getSubClass(), o, mf);
                     } else {
-                        newEntity = readMapOrCollectionOrEntity((DBObject) o, mf, cache, mapper);
+                        newEntity = readMapOrCollectionOrEntity((DBObject) o, mf, cache, mapper, mapOrCollectionMF);
                     }
                 }
 
@@ -221,6 +223,8 @@ class EmbeddedMapper implements CustomMapper {
         final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
 
         final DBObject dbObj = (DBObject) mf.getDbObjectValue(dbObject);
+
+        final MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf) ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper) : null;
         new IterHelper<Object, Object>().loopMap(dbObj, new MapIterCallback<Object, Object>() {
             @Override
             public void eval(final Object key, final Object val) {
@@ -233,7 +237,7 @@ class EmbeddedMapper implements CustomMapper {
                         newEntity = mapper.getConverters().decode(mf.getSubClass(), val, mf);
                     } else {
                         if (val instanceof DBObject) {
-                            newEntity = readMapOrCollectionOrEntity((DBObject) val, mf, cache, mapper);
+                            newEntity = readMapOrCollectionOrEntity((DBObject) val, mf, cache, mapper, mapOrCollectionMF);
                         } else {
                             throw new MappingException("Embedded element isn't a DBObject! How can it be that is a " + val.getClass());
                         }
@@ -251,15 +255,18 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
-    private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper) {
-        if (Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass())) {
-            final MapOrCollectionMF mocMF = new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper);
-            mapper.fromDb(dbObj, mocMF, cache);
-            return mocMF.getValue();
+    private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper, MapOrCollectionMF mapOrCollectionMF) {
+        if (mapOrCollectionMF != null) {
+            mapper.fromDb(dbObj, mapOrCollectionMF, cache);
+            return mapOrCollectionMF.getValue();
         } else {
             final Object newEntity = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, dbObj);
             return mapper.fromDb(dbObj, newEntity, cache);
         }
+    }
+
+    private boolean isMapOrCollection(MappedField mf) {
+        return Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass());
     }
 
     public static boolean shouldSaveClassName(final Object rawVal, final Object convertedVal, final MappedField mf) {
