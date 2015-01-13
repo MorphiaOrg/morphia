@@ -1,66 +1,90 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.Point;
+
 public interface FieldEnd<T> {
 
-  T contains(String string);
+    T contains(String string);
 
-  T containsIgnoreCase(String suffix);
+    T containsIgnoreCase(String suffix);
 
-  T doesNotExist();
+    T doesNotExist();
 
-  T endsWith(String suffix);
+    T endsWith(String suffix);
 
-  T endsWithIgnoreCase(String suffix);
+    T endsWithIgnoreCase(String suffix);
 
-  T equal(Object val);
+    T equal(Object val);
 
-  T exists();
-  
-  T greaterThan(Object val);
+    T exists();
 
-  T greaterThanOrEq(Object val);
+    T greaterThan(Object val);
 
-  T hasAllOf(Iterable<?> values);
+    T greaterThanOrEq(Object val);
 
-  T hasAnyOf(Iterable<?> values);
+    T hasAllOf(Iterable<?> values);
 
-  T hasNoneOf(Iterable<?> values);
+    T hasAnyOf(Iterable<?> values);
 
-  T hasThisElement(Object val);
+    T hasNoneOf(Iterable<?> values);
 
-  T hasThisOne(Object val);
+    T hasThisElement(Object val);
 
-  T lessThan(Object val);
+    T hasThisOne(Object val);
 
-  T lessThanOrEq(Object val);
+    T lessThan(Object val);
 
-  T in(Iterable<?> values);
+    T lessThanOrEq(Object val);
 
-  T mod(long divisor, long remainder);
+    T in(Iterable<?> values);
 
-  FieldEnd<T> not();
+    T mod(long divisor, long remainder);
 
-  T notEqual(Object val);
+    FieldEnd<T> not();
 
-  T notIn(Iterable<?> values);
+    T notEqual(Object val);
 
-  T near(double x, double y);
+    T notIn(Iterable<?> values);
 
-  T near(double x, double y, boolean spherical);
+    T near(double x, double y);
 
-  T near(double x, double y, double radius);
+    T near(double x, double y, boolean spherical);
 
-  T near(double x, double y, double radius, boolean spherical);
+    T near(double x, double y, double radius);
 
-  T sizeEq(int val);
+    T near(double x, double y, double radius, boolean spherical);
 
-  T startsWith(String prefix);
+    T sizeEq(int val);
 
-  T startsWithIgnoreCase(String prefix);
+    T startsWith(String prefix);
 
-  /**
-   * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
-   */
-  T within(Shape shape);
+    T startsWithIgnoreCase(String prefix);
+
+    /**
+     * This implements the $geoWithin operator and is only compatible with MongoDB 2.4 or greater.
+     *
+     * @param shape the Shape to find locations inside
+     * @return T
+     */
+    T within(Shape shape);
+
+    /**
+     * This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
+     * These queries are only supported by MongoDB version 2.4 or greater.
+     *
+     * @param point       the point to find results close to
+     * @param maxDistance the radius, in kilometers, to find the results inside
+     * @return T
+     */
+    T near(Point point, int maxDistance);
+
+    /**
+     * This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
+     * These queries are only supported by MongoDB version 2.4 or greater.
+     *
+     * @param point the point to find results close to
+     * @return T
+     */
+    T near(Point point);
 }
