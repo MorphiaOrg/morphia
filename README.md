@@ -14,7 +14,7 @@ experience.
 - Many extension points (new annotations, converters, mapping behavior, logging, etc.)
 - Does not store Null/Empty values (by default).
 - GWT support (entities are just POJOs) -- (GWT ignores annotations)
-- Advanced mapper which allows raw conversion, `void toObject(DBObject)` or ` DBObject fromObject(Object)`
+- Advanced mapper which allows raw conversion, `DBObject toDBObject(Object entity)` or `T fromDBObject(Class<T> entityClass, DBObject dbObject)`
 
 Please continue by reading the QuickStart or looking at a list of [the annotations](https://github.com/mongodb/morphia/wiki/AllAnnotations).
 If you have further questions, please reach out to us on our [mailing list](https://groups.google.com/forum/#!forum/morphia).
