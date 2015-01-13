@@ -1,5 +1,13 @@
 def configDir = new File(rootDir, 'config')
 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
 buildscript {
     repositories {
         mavenCentral()
