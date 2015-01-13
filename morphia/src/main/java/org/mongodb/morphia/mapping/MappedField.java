@@ -229,6 +229,12 @@ public class MappedField {
         } else {
             // see if we can create instances of the type used for declaration
             type = getType();
+
+            // short circuit to avoid wasting time throwing an exception trying to get a constructor we know doesnt exist
+            if (type == List.class || type == Map.class) {
+                return null;
+            }
+
             if (type != null) {
                 try {
                     constructor = type.getDeclaredConstructor();
