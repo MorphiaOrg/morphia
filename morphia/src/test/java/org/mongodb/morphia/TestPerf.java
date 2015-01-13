@@ -18,7 +18,13 @@
 package org.mongodb.morphia;
 
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.ReflectionDBObject;
+import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -32,7 +38,11 @@ import org.mongodb.morphia.query.Query;
 
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -45,7 +55,7 @@ public class TestPerf extends TestBase {
 
     private static final double WRITE_FAIL_FACTOR = 1.75;
     private static final double READ_FAIL_FACTOR = 1.75;
-    private static int NANOS_PER_MILLI = 1000000;
+    private static final int NANOS_PER_MILLI = 1000000;
 
     private static final DecimalFormat DF = new DecimalFormat("#.##");
 
@@ -306,7 +316,7 @@ public class TestPerf extends TestBase {
             return meta;
         }
 
-        public void setMeta(Map<String, String> meta) {
+        public void setMeta(final Map<String, String> meta) {
             this.meta = meta;
         }
 
@@ -314,7 +324,7 @@ public class TestPerf extends TestBase {
             return raw;
         }
 
-        public void setRaw(String raw) {
+        public void setRaw(final String raw) {
             this.raw = raw;
         }
     }
@@ -329,7 +339,7 @@ public class TestPerf extends TestBase {
             return id;
         }
 
-        public void setId(ObjectId id) {
+        public void setId(final ObjectId id) {
             this.id = id;
         }
 
@@ -337,7 +347,7 @@ public class TestPerf extends TestBase {
             return values;
         }
 
-        public void setValues(Map<String, List<Value>> values) {
+        public void setValues(final Map<String, List<Value>> values) {
             this.values = values;
         }
     }
