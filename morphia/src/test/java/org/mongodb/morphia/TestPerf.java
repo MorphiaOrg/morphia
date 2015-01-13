@@ -34,11 +34,15 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.Query;
 
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -51,6 +55,8 @@ public class TestPerf extends TestBase {
 
     private static final double WRITE_FAIL_FACTOR = 1.75;
     private static final double READ_FAIL_FACTOR = 1.75;
+    private static final int NANOS_PER_MILLI = 1000000;
+
     private static final DecimalFormat DF = new DecimalFormat("#.##");
 
     @Entity
@@ -162,7 +168,7 @@ public class TestPerf extends TestBase {
         final long insertTime = endTicks - startTicks;
 
         final String msg = String.format("Insert (%s) performance is too slow: %sX slower (%s/%s)",
-                                         count, DF.format((double) insertTime / rawInsertTime), insertTime, rawInsertTime);
+                count, DF.format((double) insertTime / rawInsertTime), insertTime, rawInsertTime);
         Assert.assertTrue(msg, insertTime < (rawInsertTime * WRITE_FAIL_FACTOR));
     }
 
@@ -187,11 +193,11 @@ public class TestPerf extends TestBase {
         final long reflectLoadTime = endTicks - startTicks;
 
         String msg = String.format("Load (%s) performance is too slow compared to ReflectionDBObject: %sX slower (%s/%s)",
-                                   count, DF.format((double) morphiaLoadTime / reflectLoadTime), morphiaLoadTime, reflectLoadTime);
+                count, DF.format((double) morphiaLoadTime / reflectLoadTime), morphiaLoadTime, reflectLoadTime);
         Assert.assertTrue(msg, morphiaLoadTime < (reflectLoadTime * READ_FAIL_FACTOR));
 
         msg = String.format("Load (%s) performance is too slow compared to raw: %sX slower (%s/%s)",
-                            count, DF.format((double) morphiaLoadTime / rawLoadTime), morphiaLoadTime, rawLoadTime);
+                count, DF.format((double) morphiaLoadTime / rawLoadTime), morphiaLoadTime, rawLoadTime);
         Assert.assertTrue(msg, morphiaLoadTime < (rawLoadTime * READ_FAIL_FACTOR));
 
     }
@@ -219,7 +225,7 @@ public class TestPerf extends TestBase {
         }
         if (!raw) {
             LOG.info("driverTime: " + ((MorphiaIterator<Object, Object>) it).getDriverTime() + "ms, mapperTime:"
-                                  + ((MorphiaIterator<Object, Object>) it).getMapperTime() + "ms");
+                    + ((MorphiaIterator<Object, Object>) it).getMapperTime() + "ms");
         }
     }
 
@@ -242,7 +248,7 @@ public class TestPerf extends TestBase {
 
         if (!raw) {
             LOG.info("driverTime: " + ((MorphiaIterator<Object, Object>) it).getDriverTime() + "ms, mapperTime:"
-                               + ((MorphiaIterator<Object, Object>) it).getMapperTime() + "ms");
+                    + ((MorphiaIterator<Object, Object>) it).getMapperTime() + "ms");
         }
     }
 
@@ -298,6 +304,103 @@ public class TestPerf extends TestBase {
         public void setVar2(final long var2) {
             this.var2 = var2;
         }
+    }
+
+
+    @org.mongodb.morphia.annotations.Entity(noClassnameStored = true)
+    public static class Value {
+        private String raw;
+        private Map<String, String> meta = new HashMap<String, String>();
+
+        public Map<String, String> getMeta() {
+            return meta;
+        }
+
+        public void setMeta(final Map<String, String> meta) {
+            this.meta = meta;
+        }
+
+        public String getRaw() {
+            return raw;
+        }
+
+        public void setRaw(final String raw) {
+            this.raw = raw;
+        }
+    }
+
+    @org.mongodb.morphia.annotations.Entity(noClassnameStored = true)
+    public static class Item {
+        @Id
+        private ObjectId id = new ObjectId();
+        private Map<String, List<Value>> values = new HashMap<String, List<Value>>();
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public Map<String, List<Value>> getValues() {
+            return values;
+        }
+
+        public void setValues(final Map<String, List<Value>> values) {
+            this.values = values;
+        }
+    }
+
+    /**
+     * Ensure that decoding multimaps is not inefficient
+     *
+     * @throws UnknownHostException
+     */
+    @Test
+    public void testMultimapPerf() throws UnknownHostException {
+        int iterations = 50;
+        int itemCount = 1000;
+        int valueCount = 30;
+
+        long start = System.nanoTime();
+        for (int i = 0; i < itemCount; i++) {
+            Item item = new Item();
+            for (int j = 0; j < valueCount; j++) {
+                Value value = new Value();
+                value.setRaw("asdf");
+                List<Value> values = new ArrayList<Value>();
+                values.add(value);
+                item.getValues().put("a" + j, values);
+            }
+            getDs().save(item);
+        }
+        long createTime = System.nanoTime() - start;
+        LOG.info("created in " + createTime / NANOS_PER_MILLI);
+
+
+        start = System.nanoTime();
+        Query<Item> query = getDs().createQuery(Item.class);
+
+        for (int i = 0; i < iterations; i++) {
+            query.asList();
+        }
+        long fetchTime = System.nanoTime() - start;
+        LOG.info("morphia fetched in " + fetchTime / NANOS_PER_MILLI);
+
+        final DBCollection dbColl = getDb().getCollection(((DatastoreImpl) getDs()).getMapper().getCollectionName(Item.class));
+
+        start = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            dbColl.find().toArray();
+        }
+        long rawFetchTime = System.nanoTime() - start;
+        LOG.info("raw fetched in " + rawFetchTime / NANOS_PER_MILLI);
+
+
+        final String msg = String.format("Fetch multimap performance is too slow: %sX slower (%s/%s)",
+                DF.format((double) fetchTime / rawFetchTime), fetchTime / NANOS_PER_MILLI, rawFetchTime / NANOS_PER_MILLI);
+        Assert.assertTrue(msg, fetchTime < (rawFetchTime * READ_FAIL_FACTOR));
     }
 
     @Test

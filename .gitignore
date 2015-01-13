@@ -15,4 +15,3 @@ target
 bin
 .gradle
 out/
-**/gradle.properties

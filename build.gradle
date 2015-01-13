@@ -1,5 +1,13 @@
 def configDir = new File(rootDir, 'config')
 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -41,7 +49,7 @@ allprojects {
     }
 
     group = 'org.mongodb.morphia'
-    version = '0.110-SNAPSHOT'
+    // version = '0.110-SNAPSHOT'
 
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
@@ -138,6 +146,7 @@ allprojects {
     }
 
     javadoc {
+        options.encoding = "UTF-8"
         options.author = true
         options.version = true
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
