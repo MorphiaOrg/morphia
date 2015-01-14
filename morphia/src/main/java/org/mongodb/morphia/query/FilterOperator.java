@@ -31,7 +31,7 @@ public enum FilterOperator {
 
     EXISTS("$exists", "exists"),
 
-    TYPE("$type"),
+    TYPE("$type", "type"),
 
     NOT("$not"),
 
