@@ -63,4 +63,6 @@ public interface FieldEnd<T> {
    * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
    */
   T within(Shape shape);
+  
+  T type(Type type);
 }
