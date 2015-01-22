@@ -188,7 +188,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, null);
   }
 
-    private Map<String, Object> opts(final String s, final Object v) {
+  private Map<String, Object> opts(final String s, final Object v) {
     final Map<String, Object> opts = new HashMap<String, Object>();
     opts.put(s, v);
     return opts;
