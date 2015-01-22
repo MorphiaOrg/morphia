@@ -165,10 +165,10 @@ project(':morphia') {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
         } else if (buildingWith('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.4-SNAPSHOT", changing: true
-            println "Building with the 2.12.4 SNAPSHOT java driver"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.6-SNAPSHOT", changing: true
+            println "Building with the 2.12.6 SNAPSHOT java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.5"
             println "Building with the 2.12 java driver"
         }
 
