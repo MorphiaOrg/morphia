@@ -325,7 +325,7 @@ public class MappedClass {
     }
 
     /**
-     * Checks to see if it a Map/Set/List or a property supported by the MangoDB java driver
+     * Checks to see if it a Map/Set/List or a property supported by the MongoDB java driver
      */
     public static boolean isSupportedType(final Class<?> clazz) {
         if (ReflectionUtils.isPropertyType(clazz)) {

@@ -8,6 +8,7 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -48,4 +49,13 @@ public class ClassMappingTest extends TestBase {
         Assert.assertEquals(LinkedList.class, e.testClass2);
     }
 
+    @Test
+    public void testClassQueries() {
+        E e = new E();
+
+        e.testClass2 = LinkedList.class;
+        getDs().save(e);
+
+        Assert.assertNull(getDs().createQuery(E.class).field("testClass2").equal(ArrayList.class).get());
+    }
 }

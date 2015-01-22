@@ -136,20 +136,21 @@ final class QueryValidator {
             }
 
             if (validateTypes && mf != null) {
-                List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val, validationFailures);
-                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val, validationFailures);
+                List<ValidationFailure> typeValidationFailures = new ArrayList<ValidationFailure>();
+                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val, typeValidationFailures);
+                List<ValidationFailure> subclassValidationFailures = new ArrayList<ValidationFailure>();
+                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val, subclassValidationFailures);
 
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
 
                     if (LOG.isWarningEnabled()) {
-                        String className = val == null ? "null" : val.getClass().getName();
                         LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
-                                           + "for the field '%s.%s' which is declared as '%s'", className,
+                                           + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
                                            mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()
                                           ));
-                        LOG.warning("Validation warnings: \n" + validationFailures);
+                        typeValidationFailures.addAll(subclassValidationFailures);
+                        LOG.warning("Validation warnings: \n" + typeValidationFailures);
                     }
                 }
             }

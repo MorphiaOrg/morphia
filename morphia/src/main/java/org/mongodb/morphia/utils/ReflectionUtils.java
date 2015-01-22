@@ -176,29 +176,25 @@ public final class ReflectionUtils {
         if (type instanceof Class) {
             return isPropertyType((Class) type);
         }
-
-        throw new RuntimeException("bad type, not parameterized...");
+        return false;
     }
 
     public static boolean isPropertyType(final Class type) {
-        if (type == null) {
-            return false;
-        }
+        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class 
+                || type == CodeWScope.class || type == ObjectId.class || type == Key.class 
+                || type == DBObject.class || type == BasicDBObject.class);
 
-        return isPrimitiveLike(type) || (type == DBRef.class) || (type == Pattern.class) || (type == CodeWScope.class)
-               || (type == ObjectId.class) || (type == Key.class) || (type == DBObject.class) || (type == BasicDBObject.class);
     }
 
     public static boolean isPrimitiveLike(final Class type) {
-        if (type == null) {
-            return false;
-        }
+        return type != null && (type == String.class || type == char.class
+                || type == Character.class || type == short.class || type == Short.class
+                || type == Integer.class || type == int.class || type == Long.class || type == long.class
+                || type == Double.class || type == double.class || type == float.class || type == Float.class
+                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
+                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
+                || type == URI.class || type.isEnum());
 
-        return (type == String.class) || (type == char.class) || (type == Character.class) || (type == short.class) || (type == Short.class)
-               || (type == Integer.class) || (type == int.class) || (type == Long.class) || (type == long.class) || (type == Double.class)
-               || (type == double.class) || (type == float.class) || (type == Float.class) || (type == Boolean.class)
-               || (type == boolean.class) || (type == Byte.class) || (type == byte.class) || (type == Date.class) || (type == Locale.class)
-               || (type == Class.class) || (type == UUID.class) || (type == URI.class) || type.isEnum();
     }
 
     /**
