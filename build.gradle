@@ -71,10 +71,6 @@ allprojects {
         }
     }
 
-    project.ext.buildingWith = {
-        n -> project.hasProperty(n) && project.property(n).toBoolean()
-    }
-
     javadoc {
         classpath += configurations.provided
     }
@@ -165,10 +161,10 @@ project(':morphia') {
     archivesBaseName = 'morphia'
 
     dependencies {
-        if (project.buildingWith('3.x')) {
+        if (buildingWith('3.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
             println "Building with the 3.x java driver"
-        } else if (project.buildingWith('2.x')) {
+        } else if (buildingWith('2.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.4-SNAPSHOT", changing: true
             println "Building with the 2.12.4 SNAPSHOT java driver"
         } else {
@@ -246,6 +242,14 @@ project(':no-proxy-deps-tests') {
     dependencies {
         compile project(':morphia')
     }
+}
+
+def buildingWith(n) {
+    project.hasProperty(n)
+}
+
+def isTrue(n) {
+    project.hasProperty(n) && project.property(n).toBoolean()
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
