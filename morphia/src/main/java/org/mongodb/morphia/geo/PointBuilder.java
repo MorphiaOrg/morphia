@@ -42,4 +42,13 @@ public class PointBuilder {
     public Point build() {
         return new Point(latitude, longitude);
     }
+
+    /**
+     * Convenience method to return a new PointBuilder.
+     *
+     * @return a new instance of PointBuilder.
+     */
+    public static PointBuilder pointBuilder() {
+        return new PointBuilder();
+    }
 }

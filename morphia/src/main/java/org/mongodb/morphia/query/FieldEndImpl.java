@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.Assert;
@@ -188,13 +189,25 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, null);
   }
 
-  private Map<String, Object> opts(final String s, final Object v) {
-    final Map<String, Object> opts = new HashMap<String, Object>();
-    opts.put(s, v);
-    return opts;
-  }
+    @Override
+    public T near(final Point point, final int maxDistance) {
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, maxDistance, validateName, false));
+        return target;
+    }
 
-  public T type(final Type type) {
-    return addCriteria(FilterOperator.TYPE, type.val());
-  }
+    @Override
+    public T near(final Point point) {
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, null, validateName, false));
+        return target;
+    }
+
+    private Map<String, Object> opts(final String s, final Object v) {
+        final Map<String, Object> opts = new HashMap<String, Object>();
+        opts.put(s, v);
+        return opts;
+    }
+  
+    public T type(final Type type) {
+      return addCriteria(FilterOperator.TYPE, type.val());
+    }
 }
