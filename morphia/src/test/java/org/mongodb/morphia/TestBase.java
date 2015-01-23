@@ -33,7 +33,7 @@ public abstract class TestBase {
 
     protected void cleanup() {
         DB db = getDb();
-        if(db != null)  {
+        if (db != null) {
             db.dropDatabase();
         }
     }
