@@ -451,7 +451,7 @@ public class TestDatastore extends TestBase {
         getMorphia().setUseBulkWriteOperations(useBulkWriteOperations);
         final DBCollection collection = getDs().getCollection(FacebookUser.class);
         collection.remove(new BasicDBObject());
-        final int count = 500000;
+        final int count = 250000;
         List<FacebookUser> list = new ArrayList<FacebookUser>(count);
         for (int i = 0; i < count; i++) {
             list.add(new FacebookUser(i, "User " + i));
