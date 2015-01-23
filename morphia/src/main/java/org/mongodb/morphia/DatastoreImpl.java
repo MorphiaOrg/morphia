@@ -120,7 +120,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
         }
-        return new DBRef(getDB(), getCollection(clazz).getName(), id);
+        return new DBRef(getCollection(clazz).getName(), id);
     }
 
 
@@ -544,7 +544,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
 
     public <T> T get(final Class<T> clazz, final DBRef ref) {
-        return mapper.fromDBObject(clazz, ref.fetch(), createCache());
+        DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
+        return mapper.fromDBObject(clazz, object, createCache());
     }
 
 
@@ -582,10 +583,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final Map<String, List<DBRef>> kindMap = new HashMap<String, List<DBRef>>();
         for (final DBRef ref : refs) {
-            if (kindMap.containsKey(ref.getRef())) {
-                kindMap.get(ref.getRef()).add(ref);
+            if (kindMap.containsKey(ref.getCollectionName())) {
+                kindMap.get(ref.getCollectionName()).add(ref);
             } else {
-                kindMap.put(ref.getRef(), new ArrayList<DBRef>(Collections.singletonList(ref)));
+                kindMap.put(ref.getCollectionName(), new ArrayList<DBRef>(Collections.singletonList(ref)));
             }
         }
         for (final Map.Entry<String, List<DBRef>> entry : kindMap.entrySet()) {

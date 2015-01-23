@@ -317,14 +317,9 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testInsertUpdatesUnsafe() throws Exception {
-        getDs().getDB().requestStart();
-        try {
-            getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
-                           getDs().createUpdateOperations(Circle.class).inc("radius", 1D), true, WriteConcern.UNACKNOWLEDGED);
-            assertThat(getDs().getCount(Circle.class), is(1L));
-        } finally {
-            getDs().getDB().requestDone();
-        }
+        getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
+                       getDs().createUpdateOperations(Circle.class).inc("radius", 1D), true, WriteConcern.UNACKNOWLEDGED);
+        assertThat(getDs().getCount(Circle.class), is(1L));
     }
 
     @Test

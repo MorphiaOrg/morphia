@@ -285,16 +285,16 @@ class ReferenceMapper implements CustomMapper {
         final DatastoreImpl dsi = (DatastoreImpl) mapper.getDatastoreProvider().get();
 
         final DBCollection dbColl = dsi.getCollection(c);
-        if (!idOnly && !dbColl.getName().equals(dbRef.getRef())) {
+        if (!idOnly && !dbColl.getName().equals(dbRef.getCollectionName())) {
             LOG.warning("Class " + c.getName() + " is stored in the '" + dbColl.getName()
-                        + "' collection but a reference was found for this type to another collection, '" + dbRef.getRef()
+                        + "' collection but a reference was found for this type to another collection, '" + dbRef.getCollectionName()
                         + "'. The reference will be loaded using the class anyway. " + dbRef);
         }
         final boolean exists;
         if (idOnly) {
             exists = (dsi.find(dbColl.getName(), c).disableValidation().filter("_id", ref).asKeyList().size() == 1);
         } else {
-            exists = (dsi.find(dbRef.getRef(), c).disableValidation().filter("_id", dbRef.getId()).asKeyList().size() == 1);
+            exists = (dsi.find(dbRef.getCollectionName(), c).disableValidation().filter("_id", dbRef.getId()).asKeyList().size() == 1);
         }
         cache.notifyExists(key, exists);
         return exists;
@@ -309,15 +309,16 @@ class ReferenceMapper implements CustomMapper {
         final DBRef dbRef = idOnly ? null : (DBRef) ref;
         final Key key = mapper.createKey(mf.isSingleValue() ? mf.getType() : mf.getSubClass(),
                                          idOnly ? ref : dbRef.getId());
-        final Datastore ds = idOnly ? mapper.getDatastoreProvider().get() : null;
 
         final Object cached = cache.getEntity(key);
         if (cached != null) {
             return cached;
         }
 
-        //TODO: if _db is null, set it?
-        final DBObject refDbObject = idOnly ? ds.getCollection(key.getKindClass()).findOne(ref) : dbRef.fetch();
+        final Datastore ds = mapper.getDatastoreProvider().get();
+
+        final DBObject refDbObject = idOnly ? ds.getCollection(key.getKindClass()).findOne(ref)
+                                            : ds.getDB().getCollection(dbRef.getCollectionName()).findOne(dbRef.getId());
 
         if (refDbObject != null) {
             Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDbObject);

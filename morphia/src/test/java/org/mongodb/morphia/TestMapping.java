@@ -89,7 +89,7 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class MissingId {
-        private String id;
+        private String  id;
     }
 
     private static class MissingIdStill {
@@ -733,7 +733,7 @@ public class TestMapping extends TestBase {
         rectangles.save(rDbObject);
 
         final ContainsRef cRef = new ContainsRef();
-        cRef.rect = new DBRef(getDb(), (String) rDbObject.get("_ns"), rDbObject.get("_id"));
+        cRef.rect = new DBRef((String) rDbObject.get("_ns"), rDbObject.get("_id"));
         final DBObject cRefDbObject = getMorphia().toDBObject(cRef);
         stuff.save(cRefDbObject);
         final BasicDBObject cRefDbObjectLoaded = (BasicDBObject) stuff.findOne(BasicDBObjectBuilder.start("_id", cRefDbObject.get("_id"))
@@ -742,9 +742,9 @@ public class TestMapping extends TestBase {
         assertNotNull(cRefLoaded);
         assertNotNull(cRefLoaded.rect);
         assertNotNull(cRefLoaded.rect.getId());
-        assertNotNull(cRefLoaded.rect.getRef());
+        assertNotNull(cRefLoaded.rect.getCollectionName());
         assertEquals(cRefLoaded.rect.getId(), cRef.rect.getId());
-        assertEquals(cRefLoaded.rect.getRef(), cRef.rect.getRef());
+        assertEquals(cRefLoaded.rect.getCollectionName(), cRef.rect.getCollectionName());
     }
 
     @Test

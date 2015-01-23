@@ -16,7 +16,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '2.2'
 }
 
 def slf4jVersion = '1.7.5'
@@ -146,7 +146,7 @@ allprojects {
         options.author = true
         options.version = true
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
-        options.links 'http://api.mongodb.org/java/2.12/'
+        options.links 'http://api.mongodb.org/java/2.13/'
     }
 
     test {
@@ -162,14 +162,11 @@ project(':morphia') {
 
     dependencies {
         if (buildingWith('3.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-beta1", changing: true
             println "Building with the 3.x java driver"
-        } else if (buildingWith('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.6-SNAPSHOT", changing: true
-            println "Building with the 2.x SNAPSHOT java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.5"
-            println "Building with the 2.12 java driver"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.0-rc2"
+            println "Building with the 2.13 java driver"
         }
 
         compile project(':util')

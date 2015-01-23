@@ -20,10 +20,7 @@ import category.Slow;
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
-import com.mongodb.LazyDBDecoder;
-import com.mongodb.LazyWriteableDBDecoder;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -245,52 +242,30 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testLifecycle() throws Exception {
-        final DBDecoderFactory oldFactory = getAds().setDecoderFact(LazyWriteableDBDecoder.FACTORY);
+        final LifecycleTestObj life1 = new LifecycleTestObj();
+        getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
+        getDs().save(life1);
+        assertTrue(life1.prePersist);
+        assertTrue(life1.prePersistWithParam);
+        assertTrue(life1.prePersistWithParamAndReturn);
+        assertTrue(life1.postPersist);
+        assertTrue(life1.postPersistWithParam);
 
-        //only replace if using lazy decoder
-        if (!(oldFactory instanceof LazyDBDecoder)) {
-            getAds().setDecoderFact(oldFactory);
-        }
-
-        try {
-            final LifecycleTestObj life1 = new LifecycleTestObj();
-            getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
-            getDs().save(life1);
-            assertTrue(life1.prePersist);
-            assertTrue(life1.prePersistWithParam);
-            assertTrue(life1.prePersistWithParamAndReturn);
-            assertTrue(life1.postPersist);
-            assertTrue(life1.postPersistWithParam);
-
-            final LifecycleTestObj loaded = getDs().get(life1);
-            assertTrue(loaded.preLoad);
-            assertTrue(loaded.preLoadWithParam);
-            assertTrue(loaded.preLoadWithParamAndReturn);
-            assertTrue(loaded.postLoad);
-            assertTrue(loaded.postLoadWithParam);
-        } finally {
-            getAds().setDecoderFact(oldFactory);
-        }
+        final LifecycleTestObj loaded = getDs().get(life1);
+        assertTrue(loaded.preLoad);
+        assertTrue(loaded.preLoadWithParam);
+        assertTrue(loaded.preLoadWithParamAndReturn);
+        assertTrue(loaded.postLoad);
+        assertTrue(loaded.postLoadWithParam);
     }
 
     @Test
     public void testLifecycleListeners() throws Exception {
-        final DBDecoderFactory oldFactory = getAds().setDecoderFact(LazyWriteableDBDecoder.FACTORY);
-
-        //only replace if using lazy decoder
-        if (!(oldFactory instanceof LazyDBDecoder)) {
-            getAds().setDecoderFact(oldFactory);
-        }
-
-        try {
-            final LifecycleTestObj life1 = new LifecycleTestObj();
-            getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
-            getDs().save(life1);
-            assertTrue(LifecycleListener.prePersist);
-            assertTrue(LifecycleListener.prePersistWithEntity);
-        } finally {
-            getAds().setDecoderFact(oldFactory);
-        }
+        final LifecycleTestObj life1 = new LifecycleTestObj();
+        getMorphia().getMapper().addMappedClass(LifecycleTestObj.class);
+        getDs().save(life1);
+        assertTrue(LifecycleListener.prePersist);
+        assertTrue(LifecycleListener.prePersistWithEntity);
     }
 
     @Test

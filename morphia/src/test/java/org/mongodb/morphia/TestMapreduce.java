@@ -2,8 +2,8 @@ package org.mongodb.morphia;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.CommandFailureException;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
@@ -96,7 +96,7 @@ public class TestMapreduce extends TestBase {
         Assert.assertEquals(100, inline.iterator().next().getValue().count, 0);
     }
     
-    @Test(expected = CommandFailureException.class)
+    @Test(expected = MongoException.class)
     public void testBadMR() throws Exception {
         final String map = "function () { if(this['radius']) { doEmit('circle', {count:1}); return; } emit('rect', {count:1}); }";
         final String reduce = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} "

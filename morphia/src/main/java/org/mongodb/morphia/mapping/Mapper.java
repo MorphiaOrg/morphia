@@ -459,14 +459,10 @@ public class Mapper {
     }
 
     private boolean isAssignable(final MappedField mf, final Object value) {
-        if (mf == null) {
-            return false;
-        }
+        return mf != null &&
+               (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType()) ||
+                DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
-        return mf.hasAnnotation(Reference.class)
-               || Key.class.isAssignableFrom(mf.getType())
-               || DBRef.class.isAssignableFrom(mf.getType())
-               || isMultiValued(mf, value);
     }
 
     private boolean isMultiValued(final MappedField mf, final Object value) {
@@ -658,7 +654,7 @@ public class Mapper {
     }
 
     public <T> Key<T> refToKey(final DBRef ref) {
-        return ref == null ? null : new Key<T>(ref.getRef(), ref.getId());
+        return ref == null ? null : new Key<T>(ref.getCollectionName(), ref.getId());
     }
 
     public <T> Key<T> manualRefToKey(final Class<T> kindClass, final Object id) {
@@ -680,7 +676,7 @@ public class Mapper {
             key.setKind(getCollectionName(key.getKindClass()));
         }
 
-        return new DBRef(getDatastoreProvider().get().getDB(), key.getKind(), key.getId());
+        return new DBRef(key.getKind(), key.getId());
     }
 
     public Object keyToManualRef(final Key key) {
