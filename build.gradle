@@ -155,6 +155,7 @@ allprojects {
         maxHeapSize = "512m"
     }
 
+    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest']) {}
 }
 
 project(':morphia') {

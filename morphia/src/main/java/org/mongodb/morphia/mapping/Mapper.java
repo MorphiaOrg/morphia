@@ -459,9 +459,9 @@ public class Mapper {
     }
 
     private boolean isAssignable(final MappedField mf, final Object value) {
-        return mf != null &&
-               (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType()) ||
-                DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
+        return mf != null
+               && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
+                   || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
     }
 
