@@ -8,7 +8,6 @@ import com.mongodb.MongoClientURI;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.mongodb.morphia.mapping.MappedClass;
 
 public abstract class TestBase {
     private final MongoClient mongoClient;
