@@ -26,6 +26,10 @@ public class MapperOptions {
      * <p>Controls if empty collection/arrays are stored. </p>
      */
     private boolean storeEmpties;
+    /**
+     * <p>Controls if default entity collection name should be lowercase.</p>
+     */
+    private boolean lowercaseDefault;
 
     private ObjectFactory objectFactory = new DefaultCreator();
     
@@ -107,5 +111,13 @@ public class MapperOptions {
 
     public void setValueMapper(final CustomMapper pValueMapper) {
         valueMapper = pValueMapper;
+    }
+
+    public boolean shouldLowercaseDefault() {
+        return lowercaseDefault;
+    }
+
+    public void setLowercaseDefault(final boolean lowercaseDefault) {
+        this.lowercaseDefault = lowercaseDefault;
     }
 }

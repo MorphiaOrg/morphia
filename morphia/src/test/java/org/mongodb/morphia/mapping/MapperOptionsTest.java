@@ -6,17 +6,19 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 
 /**
  * @author scott hernandez
+ * @author RainoBoy97
  */
 public class MapperOptionsTest extends TestBase {
 
@@ -36,6 +38,10 @@ public class MapperOptionsTest extends TestBase {
 
         HasMap() {
         }
+    }
+
+    @Entity
+    private static class DummyEntity {
     }
 
     @Test
@@ -81,4 +87,18 @@ public class MapperOptionsTest extends TestBase {
         dbObj = getDs().getCollection(HasMap.class).findOne();
         Assert.assertFalse("field exists, value =" + dbObj.get("properties"), dbObj.containsField("properties"));
     }
+
+    @Test
+    public void lowercaseDefaultCollection() {
+        DummyEntity entity = new DummyEntity();
+
+        String collectionName = getMorphia().getMapper().getCollectionName(entity);
+        Assert.assertEquals("uppercase", "DummyEntity", collectionName);
+
+        getMorphia().getMapper().getOptions().setLowercaseDefault(true);
+
+        collectionName = getMorphia().getMapper().getCollectionName(entity);
+        Assert.assertEquals("lowercase", "dummyentity", collectionName);
+    }
+
 }
