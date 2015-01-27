@@ -9,30 +9,18 @@ import java.util.Arrays;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public abstract class TypeConverter {
-    //CHECKSTYLE:OFF
-    /**
-     * @deprecated please use the getter/setter methods
-     */
-    protected Mapper mapper;
-    /**
-     * @deprecated please use the getter/setter methods
-     */
-    protected Class[] supportTypes;
-    //CHECKSTYLE:ON
+    private Mapper mapper;
+    private Class[] supportedTypes;
 
     protected TypeConverter() {
     }
 
     protected TypeConverter(final Class... types) {
-        supportTypes = copy(types);
+        supportedTypes = copy(types);
     }
 
     public Mapper getMapper() {
         return mapper;
-    }
-
-    public Class[] getSupportTypes() {
-        return copy(supportTypes);
     }
 
     Class[] copy(final Class[] array) {
@@ -40,14 +28,30 @@ public abstract class TypeConverter {
     }
 
     /**
+     * @deprecated use #getSupportedTypes()
+     */
+    @Deprecated
+    public Class[] getSupportTypes() {
+        return copy(supportedTypes);
+    }
+
+    /**
      * returns list of supported convertable types
      */
     final Class[] getSupportedTypes() {
-        return copy(supportTypes);
+        return copy(supportedTypes);
     }
 
+    public void setSupportedTypes(final Class[] supportedTypes) {
+        this.supportedTypes = copy(supportedTypes);
+    }
+
+    /**
+     * @deprecated use #setSupportedTypes(Class[])
+     */
+    @Deprecated
     public void setSupportTypes(final Class[] supportTypes) {
-        this.supportTypes = copy(supportTypes);
+        this.supportedTypes = copy(supportTypes);
     }
 
     /**
