@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
@@ -194,5 +195,36 @@ public class ReferencesNotUsingDBRefTest extends ProxyTestBase {
         assertEquals(expectedRefList, unwrapList(retrieved.getLazyCollectionRef()));
         assertEquals(expectedRefMap, retrieved.getMapRef());
         assertEquals(expectedRefMap, unwrapMap(retrieved.getLazyMapRef()));
+    }
+    
+    @Test
+    public void testNullReferences() {
+        Container container = new Container();
+        container.lazyMapRef = null;
+        container.singleRef = null;
+        container.lazySingleRef = null;
+        container.collectionRef = null;
+        container.lazyCollectionRef = null;
+        container.mapRef = null;
+        container.lazyMapRef = null;
+        
+        getMorphia().getMapper().getOptions().setStoreNulls(true);
+        getDs().save(container);
+        allNull(container);
+        
+        getMorphia().getMapper().getOptions().setStoreNulls(false);
+        getDs().save(container);
+        allNull(container);
+    }
+
+    private void allNull(final Container container) {
+        Assert.assertNull(container.lazyMapRef);
+        Assert.assertNull(container.singleRef);
+        Assert.assertNull(container.lazySingleRef);
+        Assert.assertNull(container.collectionRef);
+        Assert.assertNull(container.lazyCollectionRef);
+        Assert.assertNull(container.mapRef);
+        Assert.assertNull(container.lazyMapRef);
+        
     }
 }

@@ -58,11 +58,11 @@ class ReferenceMapper implements CustomMapper {
             if (mapper.getOptions().isStoreNulls()) {
                 dbObject.put(name, null);
             }
+        } else {
+            dbObject.put(name, refAnn.idOnly()
+                               ? mapper.keyToManualRef(getKey(fieldValue, mapper))
+                               : mapper.keyToRef(getKey(fieldValue, mapper)));
         }
-
-        dbObject.put(name, refAnn.idOnly()
-                           ? mapper.keyToManualRef(getKey(fieldValue, mapper))
-                           : mapper.keyToRef(getKey(fieldValue, mapper)));
     }
 
     private void writeCollection(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,
