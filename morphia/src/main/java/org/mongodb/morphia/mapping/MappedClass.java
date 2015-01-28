@@ -538,7 +538,10 @@ public class MappedClass {
      * @return the collName
      */
     public String getCollectionName() {
-        return (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) ? clazz.getSimpleName() : entityAn.value();
+        if (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            return mapper.getOptions().isUseLowerCaseCollectionNames() ? clazz.getSimpleName().toLowerCase() : clazz.getSimpleName();
+        }
+        return entityAn.value();
     }
 
     /**
