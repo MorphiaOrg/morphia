@@ -73,7 +73,7 @@ public interface FieldEnd<T> {
      * These queries are only supported by MongoDB version 2.4 or greater.
      *
      * @param point       the point to find results close to
-     * @param maxDistance the radius, in kilometers, to find the results inside
+     * @param maxDistance the radius, in meters, to find the results inside
      * @return T
      */
     T near(Point point, int maxDistance);
