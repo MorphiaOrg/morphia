@@ -20,7 +20,7 @@ class PrepareReleaseTask extends DefaultTask {
     def prepareGitForRelease() {
         def releaseVersion = project.release.releaseVersion
         def snapshotVersion = project.release.snapshotVersion
-        def buildFile = project.file('build.gradle')
+        def buildFile = project.file('gradle.properties')
         getLog().info "Updating ${buildFile.absolutePath} from ${snapshotVersion} to ${releaseVersion}"
         project.ant.replaceregexp(file: buildFile, match: snapshotVersion, replace: releaseVersion)
 
