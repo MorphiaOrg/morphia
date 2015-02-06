@@ -13,7 +13,6 @@ import java.util.List;
  * The builder for creating a Point is the {@code GeoJson.pointBuilder} method, or the helper {@code GeoJson.point} factory method.
  *
  * @see org.mongodb.morphia.geo.GeoJson#point(double, double)
- * @see GeoJson#pointBuilder()
  */
 @Embedded
 @Entity(noClassnameStored = true)

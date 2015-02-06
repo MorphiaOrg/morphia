@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 /**
- * A default implementation of {@link Map.Entry}
+ * A default implementation of {@link java.util.Map.Entry}
  *
  * @author <a href="mailto:jstrachan@apache.org">James Strachan</a>
  * @author <a href="mailto:mas@apache.org">Michael A. Smith</a>
@@ -52,7 +52,7 @@ public class DefaultMapEntry implements Map.Entry {
   }
 
   /**
-   * Implemented per API documentation of {@link Map.Entry#equals(Object)}
+   * Implemented per API documentation of {@link java.util.Map.Entry#equals(Object)}
    */
   public boolean equals(final Object o) {
     if (o == null) {
@@ -73,7 +73,7 @@ public class DefaultMapEntry implements Map.Entry {
 
 
   /**
-   * Implemented per API documentation of {@link Map.Entry#hashCode()}
+   * Implemented per API documentation of {@link java.util.Map.Entry#hashCode()}
    */
   public int hashCode() {
     return ((getKey() == null ? 0 : getKey().hashCode()) ^ (getValue() == null ? 0 : getValue().hashCode()));

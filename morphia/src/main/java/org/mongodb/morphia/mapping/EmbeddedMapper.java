@@ -210,12 +210,12 @@ class EmbeddedMapper implements CustomMapper {
 
                 values.add(newEntity);
             }
-        }
-        if (values != null && (!values.isEmpty() || mapper.getOptions().isStoreEmpties())) {
-            if (mf.getType().isArray()) {
-                mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values)));
-            } else {
-                mf.setFieldValue(entity, values);
+            if (!values.isEmpty() || mapper.getOptions().isStoreEmpties()) {
+                if (mf.getType().isArray()) {
+                    mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values)));
+                } else {
+                    mf.setFieldValue(entity, values);
+                }
             }
         }
     }
