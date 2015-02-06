@@ -175,13 +175,13 @@ class EmbeddedMapper implements CustomMapper {
     @SuppressWarnings("unchecked")
     private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
                                 final Mapper mapper) {
-        // multiple documents in a List
-        final Collection values = mf.isSet() ? mapper.getOptions().getObjectFactory().createSet(mf)
-                                             : mapper.getOptions().getObjectFactory().createList(mf);
-
-
+        Collection values = null;
+        
         final Object dbVal = mf.getDbObjectValue(dbObject);
         if (dbVal != null) {
+            // multiple documents in a List
+            values = mf.isSet() ? mapper.getOptions().getObjectFactory().createSet(mf)
+                                : mapper.getOptions().getObjectFactory().createList(mf);
 
             final List dbValues;
             if (dbVal instanceof List) {
@@ -192,8 +192,8 @@ class EmbeddedMapper implements CustomMapper {
             }
 
             MapOrCollectionMF mapOrCollectionMF = isMapOrCollection(mf)
-                    ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper)
-                    : null;
+                                                  ? new MapOrCollectionMF((ParameterizedType) mf.getSubType(), mf, mapper)
+                                                  : null;
             for (final Object o : dbValues) {
 
                 Object newEntity = null;
@@ -211,7 +211,7 @@ class EmbeddedMapper implements CustomMapper {
                 values.add(newEntity);
             }
         }
-        if (!values.isEmpty() || mapper.getOptions().isStoreEmpties()) {
+        if (values != null && (!values.isEmpty() || mapper.getOptions().isStoreEmpties())) {
             if (mf.getType().isArray()) {
                 mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(values)));
             } else {
