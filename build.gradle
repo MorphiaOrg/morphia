@@ -49,7 +49,7 @@ allprojects {
     }
 
     group = 'org.mongodb.morphia'
-    // version = '0.110'
+    // version = '0.111-SNAPSHOT'
 
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
