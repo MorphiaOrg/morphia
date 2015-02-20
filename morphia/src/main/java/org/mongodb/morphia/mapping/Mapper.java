@@ -147,7 +147,14 @@ public class Mapper {
      * Creates a MappedClass and validates it.
      */
     public MappedClass addMappedClass(final Class c) {
-        return addMappedClass(new MappedClass(c, this), true);
+        
+        MappedClass mappedClass = mappedClasses.get(c.getName());
+        if (mappedClass == null) {
+            mappedClass = new MappedClass(c, this);
+            return addMappedClass(mappedClass, true);
+        }
+        return mappedClass;
+//        return addMappedClass(new MappedClass(c, this), true);
     }
 
     /**

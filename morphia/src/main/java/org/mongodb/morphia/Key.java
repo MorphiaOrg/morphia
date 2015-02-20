@@ -14,20 +14,18 @@ import java.io.Serializable;
  */
 public class Key<T> implements Serializable, Comparable<Key<?>> {
     private static final long serialVersionUID = 1L;
-    //CHECKSTYLE:OFF
     /**
      * The name of the class which represents the kind. As much as we'd like to use the normal String kind value here, translating back to a
      * Class for getKind() would then require a link to the OFactory, making this object non-serializable.
      */
-    protected String kind;
-    protected Class<? extends T> kindClass;
+    private String kind;
+    private Class<? extends T> kindClass;
 
     /**
      * Id value
      */
-    protected Object id;
-    protected byte[] idBytes;
-    //CHECKSTYLE:ON
+    private Object id;
+    private byte[] idBytes;
 
     /**
      * For GWT serialization
@@ -138,15 +136,8 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     /** */
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
+        return obj != null && obj instanceof Key<?> && compareTo((Key<?>) obj) == 0;
 
-        if (!(obj instanceof Key<?>)) {
-            return false;
-        }
-
-        return compareTo((Key<?>) obj) == 0;
     }
 
     /** */
