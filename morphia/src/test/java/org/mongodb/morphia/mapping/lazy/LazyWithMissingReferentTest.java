@@ -2,11 +2,13 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.MappingException;
+import org.mongodb.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import org.mongodb.morphia.testutil.TestEntity;
 
 import java.util.Iterator;
@@ -55,13 +57,14 @@ public class LazyWithMissingReferentTest extends TestBase {
         getDs().createQuery(E.class).asList();
     }
 
-    @Test(expected = MappingException.class)
+    @Test(expected = LazyReferenceFetchingException.class)
     public void testMissingRefLazy() throws Exception {
         final ELazy e = new ELazy();
         e.e2 = new E2();
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        getDs().createQuery(ELazy.class).asList();
+        ELazy eLazy = getDs().createQuery(ELazy.class).get();
+        Assert.assertNull(eLazy.e2);
     }
 
     @Test(expected = Exception.class)

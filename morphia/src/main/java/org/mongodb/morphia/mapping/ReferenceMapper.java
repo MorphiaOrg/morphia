@@ -1,11 +1,9 @@
 package org.mongodb.morphia.mapping;
 
 
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.logging.Logger;
@@ -183,15 +181,9 @@ class ReferenceMapper implements CustomMapper {
 
         final Object ref = mf.getDbObjectValue(dbObject);
         if (ref != null) {
-            Object resolvedObject = null;
+            Object resolvedObject;
             if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                if (exists(fieldType, ref, cache, mapper, refAnn.idOnly())) {
-                    resolvedObject = createOrReuseProxy(fieldType, ref, cache, mapper, refAnn.idOnly());
-                } else {
-                    if (!refAnn.ignoreMissing()) {
-                        throw new MappingException("The reference(" + ref.toString() + ") could not be fetched for " + mf.getFullName());
-                    }
-                }
+                resolvedObject = createOrReuseProxy(fieldType, ref, cache, mapper, refAnn.idOnly());
             } else {
                 resolvedObject = resolveObject(ref, mf, cache, mapper, refAnn.idOnly());
             }
@@ -218,37 +210,13 @@ class ReferenceMapper implements CustomMapper {
                 final ProxiedEntityReferenceList referencesAsProxy = (ProxiedEntityReferenceList) references;
 
                 if (dbVal instanceof List) {
-                    final List<Object> refList = (List) dbVal;
-                    final List<DBRef> dbRefList = (List) dbVal;
-                    final DatastoreImpl dsi = (DatastoreImpl) mapper.getDatastoreProvider().get();
-                    final List<Key<Object>> keys = refAnn.idOnly()
-                                                   ? dsi.getKeysByManualRefs(referenceObjClass, refList)
-                                                   : dsi.getKeysByRefs(dbRefList);
-
-                    if (keys.size() != refList.size()) {
-                        final String msg = "Some of the references could not be fetched for " + mf.getFullName() + ". " + refList + " != "
-                                           + keys;
-                        if (!refAnn.ignoreMissing()) {
-                            throw new MappingException(msg);
-                        } else {
-                            LOG.warning(msg);
-                        }
-                    }
-
-                    referencesAsProxy.__addAll(keys);
+                    referencesAsProxy.__addAll(refAnn.idOnly()
+                                                   ? mapper.getKeysByManualRefs(referenceObjClass, (List) dbVal)
+                                                   : mapper.getKeysByRefs((List) dbVal));
                 } else {
-                    if (!exists(mf.getSubClass(), dbVal, cache, mapper, refAnn.idOnly())) {
-                        final String msg = "The reference(" + dbVal.toString() + ") could not be fetched for " + mf.getFullName();
-                        if (!refAnn.ignoreMissing()) {
-                            throw new MappingException(msg);
-                        } else {
-                            LOG.warning(msg);
-                        }
-                    } else {
-                        referencesAsProxy.__add(refAnn.idOnly()
-                                                ? mapper.manualRefToKey(referenceObjClass, dbVal)
-                                                : mapper.refToKey((DBRef) dbVal));
-                    }
+                    referencesAsProxy.__add(refAnn.idOnly()
+                                            ? mapper.manualRefToKey(referenceObjClass, dbVal)
+                                            : mapper.refToKey((DBRef) dbVal));
                 }
             }
         } else {
@@ -272,32 +240,6 @@ class ReferenceMapper implements CustomMapper {
         } else {
             mf.setFieldValue(entity, references);
         }
-    }
-
-    boolean exists(final Class c, final Object ref, final EntityCache cache, final Mapper mapper, final boolean idOnly) {
-        final Key key = idOnly ? mapper.manualRefToKey(c, ref) : mapper.refToKey((DBRef) ref);
-        final DBRef dbRef = idOnly ? null : (DBRef) ref;
-        final Boolean cached = cache.exists(key);
-        if (cached != null) {
-            return cached;
-        }
-
-        final DatastoreImpl dsi = (DatastoreImpl) mapper.getDatastoreProvider().get();
-
-        final DBCollection dbColl = dsi.getCollection(c);
-        if (!idOnly && !dbColl.getName().equals(dbRef.getCollectionName())) {
-            LOG.warning("Class " + c.getName() + " is stored in the '" + dbColl.getName()
-                        + "' collection but a reference was found for this type to another collection, '" + dbRef.getCollectionName()
-                        + "'. The reference will be loaded using the class anyway. " + dbRef);
-        }
-        final boolean exists;
-        if (idOnly) {
-            exists = (dsi.find(dbColl.getName(), c).disableValidation().filter("_id", ref).asKeyList().size() == 1);
-        } else {
-            exists = (dsi.find(dbRef.getCollectionName(), c).disableValidation().filter("_id", dbRef.getId()).asKeyList().size() == 1);
-        }
-        cache.notifyExists(key, exists);
-        return exists;
     }
 
     Object resolveObject(final Object ref, final MappedField mf, final EntityCache cache, final Mapper mapper,

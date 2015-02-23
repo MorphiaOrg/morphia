@@ -672,6 +672,32 @@ public class Mapper {
         return id == null ? null : new Key<T>(kind, id);
     }
 
+    /**
+     * Queries the server to check for each manual ref
+     */
+    public <T> List<Key<T>> getKeysByManualRefs(final Class<T> kindClass, final List<Object> refs) {
+        final String kind = getCollectionName(kindClass);
+        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+        for (final Object ref : refs) {
+            keys.add(this.<T>manualRefToKey(kind, ref));
+        }
+
+        return keys;
+    }
+
+    /**
+     * Queries the server to check for each DBRef
+     */
+    public <T> List<Key<T>> getKeysByRefs(final List<DBRef> refs) {
+        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
+        for (final DBRef ref : refs) {
+            final Key<T> testKey = refToKey(ref);
+            keys.add(testKey);
+        }
+        return keys;
+    }
+
+    
     public DBRef keyToRef(final Key key) {
         if (key == null) {
             return null;

@@ -55,12 +55,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -551,64 +549,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
         return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
-    }
-
-    /**
-     * Queries the server to check for each manual ref
-     */
-    public <T> List<Key<T>> getKeysByManualRefs(final Class<T> kindClass, final List<Object> refs) {
-        final Set<Key<T>> tempKeys = new HashSet<Key<T>>(refs.size());
-        tempKeys.addAll(this.find(kindClass).disableValidation().filter("_id in", refs).asKeyList());
-
-        // keys returned by query use collection name rather than class
-        final String kind = getCollection(kindClass).getName();
-
-        // put back in order
-        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
-        for (final Object ref : refs) {
-            final Key<T> key = mapper.manualRefToKey(kind, ref);
-            if (tempKeys.contains(key)) {
-                keys.add(key);
-            }
-        }
-
-        return keys;
-    }
-
-    /**
-     * Queries the server to check for each DBRef
-     */
-    public <T> List<Key<T>> getKeysByRefs(final List<DBRef> refs) {
-        final Set<Key<T>> tempKeys = new HashSet<Key<T>>(refs.size());
-
-        final Map<String, List<DBRef>> kindMap = new HashMap<String, List<DBRef>>();
-        for (final DBRef ref : refs) {
-            if (kindMap.containsKey(ref.getCollectionName())) {
-                kindMap.get(ref.getCollectionName()).add(ref);
-            } else {
-                kindMap.put(ref.getCollectionName(), new ArrayList<DBRef>(Collections.singletonList(ref)));
-            }
-        }
-        for (final Map.Entry<String, List<DBRef>> entry : kindMap.entrySet()) {
-            final List<DBRef> kindRefs = entry.getValue();
-
-            final List<Object> objIds = new ArrayList<Object>();
-            for (final DBRef key : kindRefs) {
-                objIds.add(key.getId());
-            }
-            final List<Key<T>> kindResults = this.<T>find(entry.getKey(), null).disableValidation().filter("_id in", objIds).asKeyList();
-            tempKeys.addAll(kindResults);
-        }
-
-        //put them back in order, minus the missing ones.
-        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
-        for (final DBRef ref : refs) {
-            final Key<T> testKey = mapper.refToKey(ref);
-            if (tempKeys.contains(testKey)) {
-                keys.add(testKey);
-            }
-        }
-        return keys;
     }
 
     public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
