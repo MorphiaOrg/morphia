@@ -114,6 +114,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return new DatastoreImpl(morphia, mapper, mongoClient, database);
     }
 
+    @Override
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
@@ -122,6 +123,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
+    @Override
     public <T> DBRef createRef(final T entity) {
         final T wrapped = ProxyHelper.unwrap(entity);
         final Object id = mapper.getId(wrapped);
@@ -136,6 +138,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.getId(entity);
     }
 
+    @Override
     @Deprecated // use mapper instead.
     public <T> Key<T> getKey(final T entity) {
         return mapper.getKey(entity);
@@ -151,6 +154,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
     }
 
+    @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
         return delete(clazz, id, getWriteConcern(clazz));
     }
@@ -159,15 +163,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
     }
 
+    @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
         final Query<T> q = find(clazz).filter(Mapper.ID_KEY + " in", ids);
         return delete(q);
     }
 
+    @Override
     public <T> WriteResult delete(final T entity) {
         return delete(entity, getWriteConcern(entity));
     }
 
+    @Override
     public <T> WriteResult delete(final T entity, final WriteConcern wc) {
         final T wrapped = ProxyHelper.unwrap(entity);
         if (wrapped instanceof Class<?>) {
@@ -182,10 +189,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    @Override
     public <T> WriteResult delete(final Query<T> query) {
         return delete(query, getWriteConcern(query.getEntityClass()));
     }
 
+    @Override
     public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
 
         DBCollection dbColl = query.getCollection();
@@ -216,18 +225,15 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wr;
     }
 
+    @Override
     public <T> void ensureIndex(final Class<T> type, final String fields) {
         ensureIndex(type, null, fields, false, false);
     }
 
+    @Override
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate, false, false, -1);
-    }
-
-    public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
-                                final boolean dropDupsOnCreate, final boolean background) {
-        ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate, background, false, -1);
     }
 
     protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
@@ -238,11 +244,13 @@ public class DatastoreImpl implements AdvancedDatastore {
                     background, sparse, expireAfterSeconds);
     }
 
+    @Override
     public <T> void ensureIndex(final String collName, final Class<T> type,
                                 final String fields) {
         ensureIndex(collName, type, null, fields, false, false);
     }
 
+    @Override
     public <T> void ensureIndex(final String collName, final Class<T> clazz,
                                 final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
@@ -251,15 +259,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     dropDupsOnCreate, false, false, -1);
     }
 
-    public <T> void ensureIndex(final String collName, final Class<T> clazz,
-                                final String name, final String fields, final boolean unique,
-                                final boolean dropDupsOnCreate, final boolean background) {
-        ensureIndex(getCollection(collName), name,
-                    QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique,
-                    dropDupsOnCreate, background, false, -1);
-    }
-
-    protected <T> void ensureIndex(final DBCollection dbColl,
+    protected void ensureIndex(final DBCollection dbColl,
                                    final String name, final BasicDBObject fields,
                                    final boolean unique, final boolean dropDupsOnCreate,
                                    final boolean background, final boolean sparse,
@@ -386,19 +386,23 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
         ensureIndexes(clazz, false);
     }
 
+    @Override
     public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
         final MappedClass mc = mapper.getMappedClass(clazz);
         ensureIndexes(mc, background);
     }
 
+    @Override
     public void ensureIndexes() {
         ensureIndexes(false);
     }
 
+    @Override
     public void ensureIndexes(final boolean background) {
         // loops over mappedClasses and call ensureIndex for each @Entity object
         // (for now)
@@ -407,15 +411,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    @Override
     public <T> void ensureIndexes(final String collName, final Class<T> clazz) {
         ensureIndexes(collName, clazz, false);
     }
 
+    @Override
     public <T> void ensureIndexes(final String collName, final Class<T> clazz, final boolean background) {
         final MappedClass mc = mapper.getMappedClass(clazz);
         ensureIndexes(collName, mc, background);
     }
 
+    @Override
     public void ensureCaps() {
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
@@ -464,10 +471,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getQueryFactory().createQuery(this, collection, type, query);
     }
 
+    @Override
     public <T> Query<T> queryByExample(final T ex) {
         return queryByExample(getCollection(ex), ex);
     }
 
+    @Override
     public <T> Query<T> queryByExample(final String kind, final T ex) {
         return queryByExample(db.getCollection(kind), ex);
     }
@@ -483,39 +492,48 @@ public class DatastoreImpl implements AdvancedDatastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      */
+    @Override
     public <T, U> AggregationPipeline<T, U> createAggregation(final Class<T> source) {
         return new AggregationPipelineImpl<T, U>(this, source);
     }
 
+    @Override
     public <T> Query<T> createQuery(final Class<T> type) {
         return newQuery(type, getCollection(type));
     }
 
+    @Override
     public <T> Query<T> createQuery(final String kind, final Class<T> type) {
         return newQuery(type, db.getCollection(kind));
     }
 
+    @Override
     public <T> Query<T> createQuery(final Class<T> type, final DBObject q) {
         return newQuery(type, getCollection(type), q);
     }
 
+    @Override
     public <T> Query<T> createQuery(final String kind, final Class<T> type, final DBObject q) {
         return newQuery(type, getCollection(kind), q);
     }
 
+    @Override
     public <T> Query<T> find(final String kind, final Class<T> clazz) {
         return createQuery(kind, clazz);
     }
 
+    @Override
     public <T> Query<T> find(final Class<T> clazz) {
         return createQuery(clazz);
     }
 
+    @Override
     public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
         final Query<T> query = createQuery(clazz);
         return query.filter(property, value);
     }
 
+    @Override
     public <T, V> Query<T> find(final String kind, final Class<T> clazz, final String property, final V value, final int offset,
                                 final int size) {
         return find(kind, clazz, property, value, offset, size, true);
@@ -533,6 +551,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
+    @Override
     public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
         final Query<T> query = createQuery(clazz);
         query.offset(offset);
@@ -541,20 +560,24 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
+    @Override
     public <T> T get(final Class<T> clazz, final DBRef ref) {
         DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
         return mapper.fromDBObject(clazz, object, createCache());
     }
 
 
+    @Override
     public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
         return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
     }
 
+    @Override
     public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
         return getByKeys(null, keys);
     }
 
+    @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
 
@@ -592,6 +615,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
+    @Override
     public <T, V> T get(final String kind, final Class<T> clazz, final V id) {
         final List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
         if (results == null || results.isEmpty()) {
@@ -601,11 +625,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
 
+    @Override
     public <T, V> T get(final Class<T> clazz, final V id) {
         return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1, true).get();
     }
 
 
+    @Override
     public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
         final String kind = mapper.getCollectionName(clazz);
         final String keyKind = mapper.updateKind(key);
@@ -616,6 +642,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return get(clazz, key.getId());
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T get(final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
@@ -626,11 +653,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         return (T) get(unwrapped.getClass(), id);
     }
 
+    @Override
     public Key<?> exists(final Object entityOrKey) {
         final Query<?> query = buildExistsQuery(entityOrKey);
         return query.getKey();
     }
 
+    @Override
     public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
         final Query<?> query = buildExistsQuery(entityOrKey);
         if (readPreference != null) {
@@ -655,6 +684,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId());
     }
 
+    @Override
     public DBCollection getCollection(final Class clazz) {
         final String collName = mapper.getCollectionName(clazz);
         return getDB().getCollection(collName);
@@ -674,29 +704,35 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getDB().getCollection(kind);
     }
 
+    @Override
     public <T> long getCount(final T entity) {
         return getCollection(ProxyHelper.unwrap(entity)).count();
     }
 
 
+    @Override
     public <T> long getCount(final Class<T> clazz) {
         return getCollection(clazz).count();
     }
 
 
+    @Override
     public long getCount(final String kind) {
         return getCollection(kind).count();
     }
 
 
+    @Override
     public <T> long getCount(final Query<T> query) {
         return query.countAll();
     }
 
+    @Override
     public MongoClient getMongo() {
         return mongoClient;
     }
 
+    @Override
     public DB getDB() {
         return db;
     }
@@ -709,14 +745,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         return insert(entities, null);
     }
 
+    @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
         return insert(getCollection(entities.iterator().next()), entities, wc);
     }
 
+    @Override
     public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities) {
         return insert(kind, entities, null);
     }
 
+    @Override
     public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities, final WriteConcern wc) {
         return insert(db.getCollection(kind), entities, wc);
     }
@@ -744,7 +783,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             for (final T entity : entities) {
                 list.add(toDbObject(entity, new LinkedHashMap<Object, DBObject>()));
             }
-            dbColl.insert(writeConcern, list.toArray(new DBObject[0]));
+            dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
             int index = 0;
             for (T entity : entities) {
                 savedKeys.add(postSaveGetKey(entity, list.get(index++), dbColl, new LinkedHashMap<Object, DBObject>()));
@@ -772,20 +811,24 @@ public class DatastoreImpl implements AdvancedDatastore {
         return dbObject;
     }
 
+    @Override
     public <T> Iterable<Key<T>> insert(final T... entities) {
         return insert(Arrays.asList(entities), getWriteConcern(entities[0]));
     }
 
+    @Override
     public <T> Key<T> insert(final T entity) {
         return insert(entity, getWriteConcern(entity));
     }
 
+    @Override
     public <T> Key<T> insert(final T entity, final WriteConcern wc) {
         final T unwrapped = ProxyHelper.unwrap(entity);
         final DBCollection dbColl = getCollection(unwrapped);
         return insert(dbColl, unwrapped, wc);
     }
 
+    @Override
     public <T> Key<T> insert(final String kind, final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
         final DBCollection dbColl = getCollection(kind);
@@ -832,6 +875,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return key;
     }
 
+    @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
         if (entities == null) {
             return new ArrayList<Key<T>>();
@@ -843,6 +887,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return save(entities, getWriteConcern(iterator.next()));
     }
 
+    @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         for (final T ent : entities) {
@@ -852,6 +897,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     }
 
+    @Override
     public <T> Iterable<Key<T>> save(final T... entities) {
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         for (final T ent : entities) {
@@ -937,42 +983,51 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wr;
     }
 
+    @Override
     public <T> Key<T> save(final T entity) {
         return save(entity, getWriteConcern(entity));
     }
 
+    @Override
     public <T> Key<T> save(final String kind, final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
         return save(kind, entity, getWriteConcern(unwrapped));
     }
 
+    @Override
     public <T> Key<T> save(final String kind, final T entity, final WriteConcern wc) {
         return save(getCollection(kind), ProxyHelper.unwrap(entity), wc);
     }
 
+    @Override
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
         return save(getCollection(ProxyHelper.unwrap(entity)), ProxyHelper.unwrap(entity), wc);
     }
 
+    @Override
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {
         return new UpdateOpsImpl<T>(clazz, getMapper());
     }
 
+    @Override
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> kind, final DBObject ops) {
         final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(kind);
         upOps.setOps(ops);
         return upOps;
     }
 
+    @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing) {
         return update(query, ops, createIfMissing, getWriteConcern(query.getEntityClass()));
     }
 
+    @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
                                     final WriteConcern wc) {
         return update(query, ops, createIfMissing, true, wc);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> UpdateResults update(final T ent, final UpdateOperations<T> ops) {
         if (ent instanceof Query) {
@@ -993,6 +1048,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(q, ops);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> ops) {
         Class<T> clazz = (Class<T>) key.getKindClass();
@@ -1002,25 +1058,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), ops);
     }
 
+    @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops) {
         return update(query, ops, false, true);
     }
 
 
+    @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops) {
         return update(query, ops, false, false);
     }
 
+    @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing) {
-        return update(query, ops, createIfMissing, getWriteConcern(query.getEntityClass()));
+        return update(query, ops, createIfMissing, false);
 
     }
 
+    @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
                                          final WriteConcern wc) {
         return update(query, ops, createIfMissing, false, wc);
     }
 
+    @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
@@ -1036,10 +1097,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return res;
     }
 
+    @Override
     public <T> Key<T> merge(final T entity) {
         return merge(entity, getWriteConcern(entity));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Key<T> merge(final T entity, final WriteConcern wc) {
         T unwrapped = entity;
@@ -1145,6 +1208,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return new UpdateResults(wr);
     }
 
+    @Override
     public <T> T findAndDelete(final Query<T> qi) {
         DBCollection dbColl = qi.getCollection();
         //TODO remove this after testing.
@@ -1173,14 +1237,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         return null;
     }
 
+    @Override
     public <T> T findAndModify(final Query<T> q, final UpdateOperations<T> ops) {
         return findAndModify(q, ops, false);
     }
 
+    @Override
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> ops, final boolean oldVersion) {
         return findAndModify(query, ops, oldVersion, false);
     }
 
+    @Override
     public <T> T findAndModify(final Query<T> qi, final UpdateOperations<T> ops, final boolean oldVersion, final boolean createIfMissing) {
 
         DBCollection dbColl = qi.getCollection();
@@ -1214,6 +1281,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    @Override
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
                                              final MapReduceCommand baseCommand) {
 
@@ -1274,6 +1342,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     }
 
+    @Override
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
                                              final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
 
@@ -1317,29 +1386,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapReduce(type, query, outputType, cmd);
     }
 
-    /**
-     * Converts a list of keys to refs
-     */
-    public static <T> List<DBRef> keysAsRefs(final List<Key<T>> keys, final Mapper mapper) {
-        final List<DBRef> refs = new ArrayList<DBRef>(keys.size());
-        for (final Key<T> key : keys) {
-            refs.add(mapper.keyToRef(key));
-        }
-        return refs;
-    }
-
-    /**
-     * Converts a list of refs to keys
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> List<Key<T>> refsToKeys(final Mapper mapper, final List<DBRef> refs, final Class<T> c) {
-        final List<Key<T>> keys = new ArrayList<Key<T>>(refs.size());
-        for (final DBRef ref : refs) {
-            keys.add((Key<T>) mapper.refToKey(ref));
-        }
-        return keys;
-    }
-
     private EntityCache createCache() {
         return mapper.createEntityCache();
     }
@@ -1359,27 +1405,33 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wc;
     }
 
+    @Override
     public WriteConcern getDefaultWriteConcern() {
         return defConcern;
     }
 
+    @Override
     public void setDefaultWriteConcern(final WriteConcern wc) {
         defConcern = wc;
     }
 
+    @Override
     public DBDecoderFactory setDecoderFact(final DBDecoderFactory fact) {
         decoderFactory = fact;
         return decoderFactory;
     }
 
+    @Override
     public DBDecoderFactory getDecoderFact() {
         return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
     }
 
+    @Override
     public void setQueryFactory(final QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
+    @Override
     public QueryFactory getQueryFactory() {
         return queryFactory;
     }

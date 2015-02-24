@@ -16,6 +16,7 @@
 
 package org.mongodb.morphia;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
@@ -47,6 +48,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -578,6 +580,71 @@ public class TestUpdateOps extends TestBase {
                                                                 .add("logs", new EntityLog("whatever4"), false);
         getDs().update(finder, updateOperations4, true);
         validateNoClassName(finder.get());
+    }
+
+    @Test
+    public void testUpdateFirstNoCreate() {
+        getDs().delete(getDs().createQuery(EntityLogs.class));
+        EntityLogs logs1 = createEntryLogs("name", "logs1");
+        EntityLogs logs2 = createEntryLogs("name", "logs2");
+        
+        Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
+        UpdateOperations<EntityLogs> updateOperations = getDs().createUpdateOperations(EntityLogs.class);
+        BasicDBObject object = new BasicDBObject("new", "value");
+        updateOperations.set("raw", object);
+        
+        getDs().updateFirst(query, updateOperations, false);
+
+        List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
+        for (EntityLogs entityLogs : list) {
+            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs2.raw, entityLogs.raw);
+        }
+    }
+
+    @Test
+    public void testUpdateFirstNoCreateWithEntity() {
+        getDs().delete(getDs().createQuery(EntityLogs.class));
+        EntityLogs logs1 = createEntryLogs("name", "logs1");
+        EntityLogs logs2 = createEntryLogs("name", "logs2");
+        
+        Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
+        BasicDBObject object = new BasicDBObject("new", "value");
+        EntityLogs newLogs = new EntityLogs();
+        newLogs.raw = object;
+        
+        getDs().updateFirst(query, newLogs, false);
+
+        List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
+        for (EntityLogs entityLogs : list) {
+            assertEquals(entityLogs.id.equals(logs1.id) ? newLogs.raw : logs2.raw, entityLogs.raw);
+        }
+    }
+
+    @Test
+    public void testUpdateFirstNoCreateWithWriteConcern() {
+        getDs().delete(getDs().createQuery(EntityLogs.class));
+        EntityLogs logs1 = createEntryLogs("name", "logs1");
+        EntityLogs logs2 = createEntryLogs("name", "logs2");
+        
+        Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
+        UpdateOperations<EntityLogs> updateOperations = getDs().createUpdateOperations(EntityLogs.class);
+        BasicDBObject object = new BasicDBObject("new", "value");
+        updateOperations.set("raw", object);
+        
+        getDs().updateFirst(query, updateOperations, false, WriteConcern.FSYNCED);
+
+        List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
+        for (EntityLogs entityLogs : list) {
+            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs2.raw, entityLogs.raw);
+        }
+    }
+
+    private EntityLogs createEntryLogs(final String key, final String value) {
+        EntityLogs logs = new EntityLogs();
+        logs.raw = new BasicDBObject(key, value);
+        getDs().save(logs);
+        
+        return logs;
     }
 
     @Test
