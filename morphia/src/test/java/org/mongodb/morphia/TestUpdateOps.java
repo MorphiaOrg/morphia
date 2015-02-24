@@ -585,9 +585,11 @@ public class TestUpdateOps extends TestBase {
     @Test
     public void testUpdateFirstNoCreate() {
         getDs().delete(getDs().createQuery(EntityLogs.class));
-        EntityLogs logs1 = createEntryLogs("name", "logs1");
-        EntityLogs logs2 = createEntryLogs("name", "logs2");
-        
+        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        for (int i = 0; i < 100; i++) {
+            logs.add(createEntryLogs("name", "logs" + i));
+        }
+        EntityLogs logs1 = logs.get(0);
         Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
         UpdateOperations<EntityLogs> updateOperations = getDs().createUpdateOperations(EntityLogs.class);
         BasicDBObject object = new BasicDBObject("new", "value");
@@ -596,16 +598,19 @@ public class TestUpdateOps extends TestBase {
         getDs().updateFirst(query, updateOperations, false);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
-        for (EntityLogs entityLogs : list) {
-            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs2.raw, entityLogs.raw);
+        for (int i = 0; i < list.size(); i++) {
+            final EntityLogs entityLogs = list.get(i);
+            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
         }
     }
 
     @Test
     public void testUpdateFirstNoCreateWithEntity() {
-        getDs().delete(getDs().createQuery(EntityLogs.class));
-        EntityLogs logs1 = createEntryLogs("name", "logs1");
-        EntityLogs logs2 = createEntryLogs("name", "logs2");
+        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        for (int i = 0; i < 100; i++) {
+            logs.add(createEntryLogs("name", "logs" + i));
+        }
+        EntityLogs logs1 = logs.get(0);
         
         Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
         BasicDBObject object = new BasicDBObject("new", "value");
@@ -615,16 +620,19 @@ public class TestUpdateOps extends TestBase {
         getDs().updateFirst(query, newLogs, false);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
-        for (EntityLogs entityLogs : list) {
-            assertEquals(entityLogs.id.equals(logs1.id) ? newLogs.raw : logs2.raw, entityLogs.raw);
+        for (int i = 0; i < list.size(); i++) {
+            final EntityLogs entityLogs = list.get(i);
+            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
         }
     }
 
     @Test
     public void testUpdateFirstNoCreateWithWriteConcern() {
-        getDs().delete(getDs().createQuery(EntityLogs.class));
-        EntityLogs logs1 = createEntryLogs("name", "logs1");
-        EntityLogs logs2 = createEntryLogs("name", "logs2");
+        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        for (int i = 0; i < 100; i++) {
+            logs.add(createEntryLogs("name", "logs" + i));
+        }
+        EntityLogs logs1 = logs.get(0);
         
         Query<EntityLogs> query = getDs().createQuery(EntityLogs.class);
         UpdateOperations<EntityLogs> updateOperations = getDs().createUpdateOperations(EntityLogs.class);
@@ -634,8 +642,9 @@ public class TestUpdateOps extends TestBase {
         getDs().updateFirst(query, updateOperations, false, WriteConcern.FSYNCED);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
-        for (EntityLogs entityLogs : list) {
-            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs2.raw, entityLogs.raw);
+        for (int i = 0; i < list.size(); i++) {
+            final EntityLogs entityLogs = list.get(i);
+            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
         }
     }
 
