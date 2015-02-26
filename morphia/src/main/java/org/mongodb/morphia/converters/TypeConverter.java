@@ -124,4 +124,14 @@ public abstract class TypeConverter {
     public void setMapper(final Mapper mapper) {
         this.mapper = mapper;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj != null && getClass().equals(obj.getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().getName().hashCode();
+    }
 }

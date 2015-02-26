@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -100,7 +101,7 @@ public class DefaultConverters {
     }
 
     public TypeConverter addConverter(final Class<? extends TypeConverter> clazz) {
-        return addConverter((TypeConverter) mapper.getOptions().getObjectFactory().createInstance(clazz));
+        return addConverter(mapper.getOptions().getObjectFactory().createInstance(clazz));
     }
 
     /**
@@ -110,18 +111,18 @@ public class DefaultConverters {
         if (tc.getSupportedTypes() == null) {
             untypedTypeEncoders.remove(tc);
         } else {
-            for (final List<TypeConverter> tcList : tcMap.values()) {
-                if (tcList.contains(tc)) {
-                    tcList.remove(tc);
+            for (final Entry<Class, List<TypeConverter>> entry : tcMap.entrySet()) {
+                List<TypeConverter> list = entry.getValue();
+                if (list.contains(tc)) {
+                    list.remove(tc);
+                    registeredConverterClasses.remove(tc.getClass());
+                }
+                if (list.isEmpty()) {
+                    tcMap.remove(entry.getKey());
                 }
             }
         }
 
-        registeredConverterClasses.remove(tc.getClass());
-    }
-
-    public boolean isRegistered(final Class<? extends TypeConverter> tcClass) {
-        return registeredConverterClasses.contains(tcClass);
     }
 
     private void addTypedConverter(final Class type, final TypeConverter tc) {
@@ -133,6 +134,10 @@ public class DefaultConverters {
             values.add(tc);
             tcMap.put(type, values);
         }
+    }
+
+    public boolean isRegistered(final Class<? extends TypeConverter> tcClass) {
+        return registeredConverterClasses.contains(tcClass);
     }
 
     public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
