@@ -51,12 +51,17 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <!-- TODO: This has to be enabled at some point before we release -->
-        <!--<module name="JavadocType">-->
-        <!--<property name="scope" value="public"/>-->
-        <!--</module>-->
-        <!--<module name="JavadocMethod">-->
-        <!--<property name="scope" value="public"/>-->
-        <!--</module>-->
+<!--
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+            <property name="tokens" value="INTERFACE_DEF"/>
+        </module>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="tokens" value="INTERFACE_DEF"/>
+        </module>
+-->
         <!--<module name="JavadocVariable"/>-->
         <!--<module name="JavadocStyle"/>-->
 
