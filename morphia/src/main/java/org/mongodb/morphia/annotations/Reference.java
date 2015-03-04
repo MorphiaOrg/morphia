@@ -64,3 +64,25 @@ public @interface Reference {
    */
   boolean idOnly() default false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,6 +3,10 @@ package org.mongodb.morphia.query;
 
 import org.mongodb.morphia.geo.Point;
 
+/**
+ * Represents a document field in a query and presents the operations available to querying against that field.
+ * @param <T>
+ */
 public interface FieldEnd<T> {
 
     T contains(String string);

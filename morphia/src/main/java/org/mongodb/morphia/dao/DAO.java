@@ -14,6 +14,12 @@ import org.mongodb.morphia.query.UpdateResults;
 import java.util.List;
 
 
+/**
+ * Defines a basic interface for use in applications
+ * 
+ * @param <T> The Java type serviced by this DAO
+ * @param <K> The Key type used by the entity
+ */
 public interface DAO<T, K> {
     /**
      * Starts a query for this DAO entities type

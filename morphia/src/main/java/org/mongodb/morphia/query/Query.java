@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Scott Hernandez
+ * 
+ * @param <T> The java type to query against
  */
 public interface Query<T> extends QueryResults<T>, Cloneable {
   /**

@@ -5,7 +5,10 @@ import org.mongodb.morphia.Key;
 
 import java.util.List;
 
-
+/**
+ * The results of a query.  These results aren't materialized until a method on this interface is called.
+ * @param <T>
+ */
 public interface QueryResults<T> extends Iterable<T> {
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.

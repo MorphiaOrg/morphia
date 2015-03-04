@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and client
  * version of the Entity to be different </p>
+ * 
+ * @param <T> The Java type used in the updates
  */
 public interface UpdateOperations<T> {
   /**

@@ -23,16 +23,10 @@ import java.util.Set;
 public class DefaultCreator implements ObjectFactory {
     private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.ObjectFactory#createInstance(java.lang.Class)
-     */
     public <T> T createInstance(final Class<T> clazz) {
         return createInst(clazz);
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.ObjectFactory#createInstance(java.lang.Class, com.mongodb.DBObject)
-     */
     public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
         Class<T> c = getClass(dbObj);
         if (c == null) {
@@ -41,9 +35,6 @@ public class DefaultCreator implements ObjectFactory {
         return createInstance(c);
     }
 
-    /**
-     * @see ObjectFactory#createInstance(Mapper, MappedField, DBObject)
-     */
     @SuppressWarnings("unchecked")
     public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
         Class c = getClass(dbObj);
@@ -100,23 +91,14 @@ public class DefaultCreator implements ObjectFactory {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.ObjectFactory#createMap(org.mongodb.morphia.mapping.MappedField)
-     */
     public Map createMap(final MappedField mf) {
         return (Map) newInstance(mf.getCTor(), HashMap.class);
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.ObjectFactory#createList(org.mongodb.morphia.mapping.MappedField)
-     */
     public List createList(final MappedField mf) {
         return (List) newInstance(mf.getCTor(), ArrayList.class);
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.ObjectFactory#createSet(org.mongodb.morphia.mapping.MappedField)
-     */
     public Set createSet(final MappedField mf) {
         return (Set) newInstance(mf.getCTor(), HashSet.class);
     }
@@ -137,7 +119,6 @@ public class DefaultCreator implements ObjectFactory {
     /**
      * creates an instance of testType (if it isn't Object.class or null) or fallbackType
      */
-    @SuppressWarnings("unchecked")
     private static Object newInstance(final Constructor tryMe, final Class fallbackType) {
         if (tryMe != null) {
             tryMe.setAccessible(true);
