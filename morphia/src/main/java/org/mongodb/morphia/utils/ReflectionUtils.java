@@ -21,7 +21,6 @@ package org.mongodb.morphia.utils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Key;
@@ -180,20 +179,20 @@ public final class ReflectionUtils {
     }
 
     public static boolean isPropertyType(final Class type) {
-        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class 
-                || type == CodeWScope.class || type == ObjectId.class || type == Key.class 
-                || type == DBObject.class || type == BasicDBObject.class);
+        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
+                                || type == CodeWScope.class || type == ObjectId.class || type == Key.class
+                                || type == DBObject.class || type == BasicDBObject.class);
 
     }
 
     public static boolean isPrimitiveLike(final Class type) {
         return type != null && (type == String.class || type == char.class
-                || type == Character.class || type == short.class || type == Short.class
-                || type == Integer.class || type == int.class || type == Long.class || type == long.class
-                || type == Double.class || type == double.class || type == float.class || type == Float.class
-                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
-                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
-                || type == URI.class || type.isEnum());
+                                || type == Character.class || type == short.class || type == Short.class
+                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
+                                || type == Double.class || type == double.class || type == float.class || type == Float.class
+                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
+                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
+                                || type == URI.class || type.isEnum());
 
     }
 
@@ -434,18 +433,19 @@ public final class ReflectionUtils {
             return filename;
         }
     }
-    
+
     private static String getPackageName(final String filename) {
-      return filename.substring(0, filename.lastIndexOf('/'));
+        return filename.substring(0, filename.lastIndexOf('/'));
     }
 
-    public static Set<Class<?>> getFromDirectory(final File directory, final String packageName) throws ClassNotFoundException {
+    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName)
+        throws ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         if (directory.exists()) {
             for (final String file : directory.list()) {
                 if (file.endsWith(".class")) {
                     final String name = packageName + '.' + stripFilenameExtension(file);
-                    final Class<?> clazz = Class.forName(name);
+                    final Class<?> clazz = Class.forName(name, true, loader);
                     classes.add(clazz);
                 }
             }
@@ -453,7 +453,8 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static Set<Class<?>> getFromJARFile(final String jar, final String packageName) throws IOException, ClassNotFoundException {
+    public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName)
+        throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
         try {
@@ -464,7 +465,7 @@ public final class ReflectionUtils {
                     String className = jarEntry.getName();
                     if (className.endsWith(".class") && getPackageName(className).equals(packageName)) {
                         className = stripFilenameExtension(className);
-                        classes.add(Class.forName(className.replace('/', '.')));
+                        classes.add(Class.forName(className.replace('/', '.'), true, loader));
                     }
                 }
             } while (jarEntry != null);
@@ -505,9 +506,9 @@ public final class ReflectionUtils {
                         if (jarPath.contains(":")) {
                             jarPath = jarPath.substring(1);
                         }
-                        classes.addAll(getFromJARFile(jarPath, path));
+                        classes.addAll(getFromJARFile(loader, jarPath, path));
                     } else {
-                        classes.addAll(getFromDirectory(new File(filePath), packageName));
+                        classes.addAll(getFromDirectory(loader, new File(filePath), packageName));
                     }
                 }
             }
