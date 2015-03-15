@@ -2,6 +2,7 @@ package org.mongodb.morphia.query;
 
 
 import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.geo.Polygon;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.Assert;
@@ -37,7 +38,8 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
    * Add a criteria
    */
   private T addCriteria(final FilterOperator op, final Object val) {
-    target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not));
+    target.add(new FieldCriteria(query, field, op, val, validateName, query
+            .isValidatingTypes(), not));
     return target;
   }
 
@@ -100,6 +102,13 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
   public T within(final Shape shape) {
     Assert.parametersNotNull("shape", shape);
     return addCriteria(FilterOperator.GEO_WITHIN, shape.toDBObject());
+  }
+
+  @Override
+  public T within(final Polygon boundary) {
+    target.add(new StandardGeoFieldCriteria(query, field, FilterOperator
+            .GEO_WITHIN, boundary, null, validateName, false));
+    return target;
   }
 
   public T greaterThan(final Object val) {
