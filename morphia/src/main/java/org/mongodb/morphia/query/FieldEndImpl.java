@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
 import org.mongodb.morphia.logging.Logger;
@@ -10,6 +11,8 @@ import org.mongodb.morphia.utils.Assert;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
 
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
@@ -101,13 +104,18 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
   public T within(final Shape shape) {
     Assert.parametersNotNull("shape", shape);
-    return addCriteria(FilterOperator.GEO_WITHIN, shape.toDBObject());
+    return addCriteria(GEO_WITHIN, shape.toDBObject());
   }
 
   @Override
   public T within(final Polygon boundary) {
-    target.add(new StandardGeoFieldCriteria(query, field, FilterOperator
-            .GEO_WITHIN, boundary, null, validateName, false));
+    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null, validateName, false));
+    return target;
+  }
+
+  @Override
+  public T within(final MultiPolygon boundaries) {
+    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN,  boundaries, null, validateName, false));
     return target;
   }
 
