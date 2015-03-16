@@ -7,10 +7,12 @@ import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Language;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
+import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -58,6 +60,8 @@ public class MappedField {
         INTERESTING.add(ConstructorArgs.class);
         INTERESTING.add(AlsoLoad.class);
         INTERESTING.add(NotSaved.class);
+        INTERESTING.add(Text.class);
+        INTERESTING.add(Language.class);
     }
 
     private final Mapper mapper;

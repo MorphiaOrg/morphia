@@ -23,10 +23,14 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Language;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
+import org.mongodb.morphia.annotations.Text;
+import org.mongodb.morphia.annotations.TextIndex;
+import org.mongodb.morphia.annotations.TextIndexed;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
@@ -81,10 +85,11 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     /**
      * Create a new DatastoreImpl
-     * @param morphia the Morphia instance
-     * @param mapper an initialised Mapper
+     *
+     * @param morphia     the Morphia instance
+     * @param mapper      an initialised Mapper
      * @param mongoClient the connection to the MongoDB instance
-     * @param dbName the name of the database for this data store.
+     * @param dbName      the name of the database for this data store.
      */
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this.morphia = morphia;
@@ -98,9 +103,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     /**
      * Create a new DatastoreImpl
-     * @param morphia the Morphia instance
+     *
+     * @param morphia     the Morphia instance
      * @param mongoClient the connection to the MongoDB instance
-     * @param dbName the name of the database for this data store.
+     * @param dbName      the name of the database for this data store.
      */
     public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
         this(morphia, morphia.getMapper(), mongoClient, dbName);
@@ -260,10 +266,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected void ensureIndex(final DBCollection dbColl,
-                                   final String name, final BasicDBObject fields,
-                                   final boolean unique, final boolean dropDupsOnCreate,
-                                   final boolean background, final boolean sparse,
-                                   final int expireAfterSeconds) {
+                               final String name, final BasicDBObject fields,
+                               final boolean unique, final boolean dropDupsOnCreate,
+                               final boolean background, final boolean sparse,
+                               final int expireAfterSeconds) {
         final BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
         if (name != null && name.length() != 0) {
             keyOpts.add("name", name);
@@ -383,6 +389,102 @@ public class DatastoreImpl implements AdvancedDatastore {
                     }
                 }
             }
+        }
+        
+        mapTextIndexed(dbColl, mc);
+        mapTextIndex(dbColl, mc);
+    }
+
+    private void mapTextIndexed(final DBCollection dbColl, final MappedClass mc) {
+        if (mc.getAnnotations(TextIndexed.class).size() > 1) {
+            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+        }
+        TextIndexed textIndexed = (TextIndexed) mc.getAnnotation(TextIndexed.class);
+        if (textIndexed != null) {
+            final DBObject fields = new BasicDBObject();
+            final DBObject opts = new BasicDBObject();
+            mapTextFields(mc, fields, opts);
+            mapLanguageOverride(mc, opts);
+            putIfNotEmpty(opts, "name", textIndexed.value());
+            putIfNotEmpty(opts, "default_language", textIndexed.language());
+            dbColl.createIndex(fields, opts);
+        }
+    }
+
+    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc) {
+        if (mc.getAnnotations(TextIndex.class).size() > 1) {
+            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+        }
+        TextIndex textIndex = (TextIndex) mc.getAnnotation(TextIndex.class);
+        if (textIndex != null) {
+            final DBObject fields = new BasicDBObject();
+            final DBObject opts = new BasicDBObject();
+            if (textIndex.value().length != 0) {
+                for (String name : textIndex.value()) {
+                    MappedField field = mc.getMappedField(name);
+                    fields.put(field.getNameToStore(), "text");
+                }
+            } else {
+                fields.put("$**", "text");
+            }
+            if (textIndex.weights().length != 0) {
+                DBObject weights = (DBObject) opts.get("weights");
+                if (weights == null) {
+                    weights = new BasicDBObject();
+                    opts.put("weights", weights);
+                }
+                for (String entry : textIndex.weights()) {
+                    String[] weight = entry.split(":");
+                    try {
+                        weights.put(weight[0].trim(), Integer.parseInt(weight[1].trim()));
+                    } catch (NumberFormatException e) {
+                        throw new MappingException(format("The weight value on %s (%s) must be a whole number: %s", weight[0], weight[1],
+                                                          mc.getClazz().getName()));
+                    }
+                }
+            }
+
+            putIfNotEmpty(opts, "name", textIndex.name());
+            putIfNotEmpty(opts, "default_language", textIndex.language());
+            putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
+            dbColl.createIndex(fields, opts);
+        }
+    }
+
+    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
+        if (!value.equals("")) {
+            opts.put(key, value);
+        }
+    }
+
+    private void mapLanguageOverride(final MappedClass mc, final DBObject opts) {
+        List<MappedField> languages = mc.getFieldsAnnotatedWith(Language.class);
+        if (!languages.isEmpty()) {
+            if (languages.size() != 1) {
+                throw new MappingException("Only one field can be annotated with @Language: " + mc.getClazz().getName());
+            }
+            MappedField field = languages.get(0);
+            opts.put("language_override", field.getNameToStore());
+        }
+    }
+
+    private void mapTextFields(final MappedClass mc, final DBObject fields, final DBObject opts) {
+        List<MappedField> textFields = mc.getFieldsAnnotatedWith(Text.class);
+        if (!textFields.isEmpty()) {
+            for (MappedField field : textFields) {
+                Text text = field.getAnnotation(Text.class);
+                fields.put(field.getNameToStore(), "text");
+                if (text.value() != -1) {
+                    DBObject weights = (DBObject) opts.get("weights");
+                    if (weights == null) {
+                        weights = new BasicDBObject();
+                        opts.put("weights", weights);
+                    }
+                    weights.put(field.getNameToStore(), text.value());
+                }
+            }
+        } else {
+            fields.put("$**", "text");
         }
     }
 
