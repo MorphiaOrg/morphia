@@ -396,58 +396,66 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private void mapTextIndexed(final DBCollection dbColl, final MappedClass mc) {
-        if (mc.getAnnotations(TextIndexed.class).size() > 1) {
-            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-        }
-        TextIndexed textIndexed = (TextIndexed) mc.getAnnotation(TextIndexed.class);
-        if (textIndexed != null) {
-            final DBObject fields = new BasicDBObject();
-            final DBObject opts = new BasicDBObject();
-            mapTextFields(mc, fields, opts);
-            mapLanguageOverride(mc, opts);
-            putIfNotEmpty(opts, "name", textIndexed.value());
-            putIfNotEmpty(opts, "default_language", textIndexed.language());
-            dbColl.createIndex(fields, opts);
+        List<Annotation> annotations = mc.getAnnotations(TextIndexed.class);
+        if (annotations != null) {
+            if (annotations.size() > 1) {
+                throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+            }
+            TextIndexed textIndexed = (TextIndexed) mc.getAnnotation(TextIndexed.class);
+            if (textIndexed != null) {
+                final DBObject fields = new BasicDBObject();
+                final DBObject opts = new BasicDBObject();
+                mapTextFields(mc, fields, opts);
+                mapLanguageOverride(mc, opts);
+                putIfNotEmpty(opts, "name", textIndexed.value());
+                putIfNotEmpty(opts, "default_language", textIndexed.language());
+                dbColl.createIndex(fields, opts);
+            }
         }
     }
 
     private void mapTextIndex(final DBCollection dbColl, final MappedClass mc) {
-        if (mc.getAnnotations(TextIndex.class).size() > 1) {
-            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-        }
-        TextIndex textIndex = (TextIndex) mc.getAnnotation(TextIndex.class);
-        if (textIndex != null) {
-            final DBObject fields = new BasicDBObject();
-            final DBObject opts = new BasicDBObject();
-            if (textIndex.value().length != 0) {
-                for (String name : textIndex.value()) {
-                    MappedField field = mc.getMappedField(name);
-                    fields.put(field.getNameToStore(), "text");
-                }
-            } else {
-                fields.put("$**", "text");
+        List<Annotation> annotations = mc.getAnnotations(TextIndex.class);
+        if (annotations != null) {
+            if (annotations.size() > 1) {
+                throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
             }
-            if (textIndex.weights().length != 0) {
-                DBObject weights = (DBObject) opts.get("weights");
-                if (weights == null) {
-                    weights = new BasicDBObject();
-                    opts.put("weights", weights);
+            TextIndex textIndex = (TextIndex) mc.getAnnotation(TextIndex.class);
+            if (textIndex != null) {
+                final DBObject fields = new BasicDBObject();
+                final DBObject opts = new BasicDBObject();
+                if (textIndex.value().length != 0) {
+                    for (String name : textIndex.value()) {
+                        MappedField field = mc.getMappedField(name);
+                        fields.put(field.getNameToStore(), "text");
+                    }
+                } else {
+                    fields.put("$**", "text");
                 }
-                for (String entry : textIndex.weights()) {
-                    String[] weight = entry.split(":");
-                    try {
-                        weights.put(weight[0].trim(), Integer.parseInt(weight[1].trim()));
-                    } catch (NumberFormatException e) {
-                        throw new MappingException(format("The weight value on %s (%s) must be a whole number: %s", weight[0], weight[1],
-                                                          mc.getClazz().getName()));
+                if (textIndex.weights().length != 0) {
+                    DBObject weights = (DBObject) opts.get("weights");
+                    if (weights == null) {
+                        weights = new BasicDBObject();
+                        opts.put("weights", weights);
+                    }
+                    for (String entry : textIndex.weights()) {
+                        String[] weight = entry.split(":");
+                        try {
+                            weights.put(weight[0].trim(), Integer.parseInt(weight[1].trim()));
+                        } catch (NumberFormatException e) {
+                            throw new MappingException(format("The weight value on %s (%s) must be a whole number: %s",
+                                                              weight[0],
+                                                              weight[1],
+                                                              mc.getClazz().getName()));
+                        }
                     }
                 }
-            }
 
-            putIfNotEmpty(opts, "name", textIndex.name());
-            putIfNotEmpty(opts, "default_language", textIndex.language());
-            putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
-            dbColl.createIndex(fields, opts);
+                putIfNotEmpty(opts, "name", textIndex.name());
+                putIfNotEmpty(opts, "default_language", textIndex.language());
+                putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
+                dbColl.createIndex(fields, opts);
+            }
         }
     }
 
