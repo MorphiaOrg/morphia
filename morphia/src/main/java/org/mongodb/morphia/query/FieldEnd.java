@@ -1,7 +1,9 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.geo.Polygon;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
@@ -91,4 +93,29 @@ public interface FieldEnd<T> {
      */
     T near(Point point);
 
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields
+     * whose area falls within the given boundary. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the
+     * shape, subject to the precision of floating point numbers.
+     *
+     * These queries are only compatible with MongoDB 2.4 or greater.
+     *
+     * @param boundary a polygon describing the boundary to search within.
+     * @return T
+     */
+    T within(Polygon boundary);
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields
+     * whose area falls within the given boundaries. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the
+     * shape, subject to the precision of floating point numbers.
+     *
+     * These queries are only compatible with MongoDB 2.4 or greater.
+     *
+     * @param boundaries a multi-polygon describing the areas to search within.
+     * @return T
+     */
+    T within(MultiPolygon boundaries);
 }
