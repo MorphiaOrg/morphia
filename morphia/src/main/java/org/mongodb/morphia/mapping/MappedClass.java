@@ -8,6 +8,8 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.IndexField;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Polymorphic;
 import org.mongodb.morphia.annotations.PostLoad;
@@ -83,6 +85,8 @@ public class MappedClass {
         interestingAnnotations.add(Indexes.class);
         interestingAnnotations.add(TextIndexed.class);
         interestingAnnotations.add(TextIndex.class);
+        interestingAnnotations.add(IndexField.class);
+        interestingAnnotations.add(IndexOptions.class);
     }
     //CHECKSTYLE:ON
 

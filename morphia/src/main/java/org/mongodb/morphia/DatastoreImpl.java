@@ -21,6 +21,8 @@ import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexField;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Language;
@@ -378,7 +380,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (indexes != null) {
             for (final Annotation ann : indexes) {
                 final Indexes idx = (Indexes) ann;
-                if (idx != null && idx.value() != null && idx.value().length > 0) {
+                if (idx.value().length > 0) {
                     for (final Index index : idx.value()) {
                         final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(),
                                                                                  mc.getClazz(),
@@ -388,11 +390,16 @@ public class DatastoreImpl implements AdvancedDatastore {
                                     index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
                     }
                 }
+                if (idx.text().length != 0) {
+                    if (idx.text().length > 1) {
+                        throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+                    }
+                    mapTextIndex(dbColl, mc, idx.text()[0]);
+                }
             }
         }
-        
+
         mapTextIndexed(dbColl, mc);
-        mapTextIndex(dbColl, mc);
     }
 
     private void mapTextIndexed(final DBCollection dbColl, final MappedClass mc) {
@@ -414,54 +421,49 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc) {
-        List<Annotation> annotations = mc.getAnnotations(TextIndex.class);
-        if (annotations != null) {
-            if (annotations.size() > 1) {
-                throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-            }
-            TextIndex textIndex = (TextIndex) mc.getAnnotation(TextIndex.class);
-            if (textIndex != null) {
-                final DBObject fields = new BasicDBObject();
-                final DBObject opts = new BasicDBObject();
-                if (textIndex.value().length != 0) {
-                    for (String name : textIndex.value()) {
-                        MappedField field = mc.getMappedField(name);
-                        fields.put(field.getNameToStore(), "text");
-                    }
-                } else {
-                    fields.put("$**", "text");
-                }
-                if (textIndex.weights().length != 0) {
-                    DBObject weights = (DBObject) opts.get("weights");
-                    if (weights == null) {
-                        weights = new BasicDBObject();
-                        opts.put("weights", weights);
-                    }
-                    for (String entry : textIndex.weights()) {
-                        String[] weight = entry.split(":");
-                        try {
-                            weights.put(weight[0].trim(), Integer.parseInt(weight[1].trim()));
-                        } catch (NumberFormatException e) {
-                            throw new MappingException(format("The weight value on %s (%s) must be a whole number: %s",
-                                                              weight[0],
-                                                              weight[1],
-                                                              mc.getClazz().getName()));
-                        }
-                    }
-                }
-
-                putIfNotEmpty(opts, "name", textIndex.name());
-                putIfNotEmpty(opts, "default_language", textIndex.language());
-                putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
-                dbColl.createIndex(fields, opts);
-            }
+    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc, final TextIndex textIndex) {
+        final DBObject fields = new BasicDBObject();
+        final DBObject opts = new BasicDBObject();
+        DBObject weights = (DBObject) opts.get("weights");
+        if (weights == null) {
+            weights = new BasicDBObject();
+            opts.put("weights", weights);
         }
+        if (textIndex.value().length != 0) {
+            for (IndexField field : textIndex.value()) {
+                MappedField mf = mc.getMappedField(field.value());
+                fields.put(mf.getNameToStore(), field.direction().toIndexValue());
+                if (field.weight() > 0) {
+                    weights.put(mf.getNameToStore(), field.weight());
+                }
+            }
+        } else {
+            fields.put("$**", "text");
+        }
+
+        putIfNotEmpty(opts, "default_language", textIndex.language());
+        putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
+
+        IndexOptions options = textIndex.options();
+        putIfNotEmpty(opts, "name", options.name());
+        putIfTrue(opts, "background", options.background());
+        putIfTrue(opts, "dropDups", options.dropDups());
+        putIfTrue(opts, "sparse", options.sparse());
+        putIfTrue(opts, "unique", options.unique());
+        if (options.expireAfterSeconds() != -1) {
+            opts.put("expireAfterSeconds", options.expireAfterSeconds());
+        }
+        dbColl.createIndex(fields, opts);
     }
 
     private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
         if (!value.equals("")) {
             opts.put(key, value);
+        }
+    }
+    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
+        if (value) {
+            opts.put(key, true);
         }
     }
 
