@@ -69,4 +69,14 @@ public @interface IndexOptions {
      */
     int expireAfterSeconds() default -1;
 
+    /**
+     * Default language for the index.
+     */
+    String language() default "";
+    
+    /**
+     * The field to use to override the default language.
+     */
+    String languageOverride() default "";
+
 }

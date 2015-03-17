@@ -22,14 +22,4 @@ public @interface TextIndex {
     IndexField[] value() default {};
     
     IndexOptions options() default @IndexOptions;
-
-    /**
-     * Default language for the index.
-     */
-    String language() default "";
-    
-    /**
-     * The field to use to override the default language.
-     */
-    String languageOverride() default "";
 }

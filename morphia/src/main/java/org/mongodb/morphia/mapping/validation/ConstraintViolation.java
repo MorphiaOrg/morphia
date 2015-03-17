@@ -9,6 +9,9 @@ import org.mongodb.morphia.mapping.MappedField;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class ConstraintViolation {
+    /**
+     * Levels of constraint violations
+     */
     public enum Level {
         MINOR,
         INFO,

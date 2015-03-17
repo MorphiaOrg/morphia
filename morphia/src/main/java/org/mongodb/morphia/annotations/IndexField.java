@@ -19,7 +19,7 @@
 package org.mongodb.morphia.annotations;
 
 
-import org.mongodb.morphia.utils.IndexDirection;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -42,14 +42,14 @@ public @interface IndexField {
     String value();
 
     /**
-     * "Direction" of the indexing.  Defaults to {@link IndexDirection#ASC}.
+     * "Direction" of the indexing.  Defaults to {@link IndexType#ASC}.
      * 
-     * @see IndexDirection
+     * @see IndexType
      */
-    IndexDirection direction() default IndexDirection.ASC;
+    IndexType direction() default IndexType.ASC;
 
     /**
-     * The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexDirection#TEXT}
+     * The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexType#TEXT}
      */
     int weight() default -1;
 }
