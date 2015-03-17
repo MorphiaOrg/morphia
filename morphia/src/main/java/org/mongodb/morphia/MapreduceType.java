@@ -1,6 +1,9 @@
 package org.mongodb.morphia;
 
 
+/**
+ * Defines how the output of the map reduce job is handled.
+ */
 public enum MapreduceType {
   REPLACE,
   MERGE,

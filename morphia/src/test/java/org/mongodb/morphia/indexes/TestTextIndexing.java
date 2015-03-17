@@ -15,7 +15,7 @@ import org.mongodb.morphia.annotations.Language;
 import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.annotations.TextIndex;
 import org.mongodb.morphia.annotations.TextIndexed;
-import org.mongodb.morphia.utils.IndexDirection;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
@@ -43,11 +43,10 @@ public class TestTextIndexing extends TestBase {
     }
 
     @Entity
-    @Indexes(text = @TextIndex(value = {@IndexField(value = "name", direction = IndexDirection.TEXT),
-                                        @IndexField(value = "nickName", direction = IndexDirection.TEXT, weight = 10),
-                                        @IndexField(value = "age", direction = IndexDirection.DESC)},
-                                  options = @IndexOptions(name = "indexing_test"), language = "russian",
-                                  languageOverride = "nativeTongue")
+    @Indexes(text = @TextIndex(value = {@IndexField(value = "name", direction = IndexType.TEXT),
+                                        @IndexField(value = "nickName", direction = IndexType.TEXT, weight = 10),
+                                        @IndexField(value = "age", direction = IndexType.DESC)},
+                                  options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue"))
     )
     private static class SingleTextAnnotation {
         @Id

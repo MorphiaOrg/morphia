@@ -1,18 +1,18 @@
 package org.mongodb.morphia.utils;
 
-
 /**
- * Defines the "direction" of an index.
+ * Defines the type of the index to create for a field.
  */
-public enum IndexDirection {
+public enum IndexType {
     ASC(1),
     DESC(-1),
     GEO2D("2d"),
-    GEO2DSPHERE("2dsphere");
+    GEO2DSPHERE("2dsphere"),
+    TEXT("text");
 
     private final Object direction;
 
-    IndexDirection(final Object o) {
+    IndexType(final Object o) {
         direction = o;
     }
 

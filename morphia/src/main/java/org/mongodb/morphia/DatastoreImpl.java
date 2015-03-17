@@ -441,11 +441,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             fields.put("$**", "text");
         }
 
-        putIfNotEmpty(opts, "default_language", textIndex.language());
-        putIfNotEmpty(opts, "language_override", textIndex.languageOverride());
-
         IndexOptions options = textIndex.options();
         putIfNotEmpty(opts, "name", options.name());
+        putIfNotEmpty(opts, "default_language", options.language());
+        putIfNotEmpty(opts, "language_override", options.languageOverride());
         putIfTrue(opts, "background", options.background());
         putIfTrue(opts, "dropDups", options.dropDups());
         putIfTrue(opts, "sparse", options.sparse());
