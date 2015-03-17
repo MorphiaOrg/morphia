@@ -19,18 +19,9 @@ public @interface TextIndex {
      * List of fields to include in the index.  If no fields are listed, all fields are used as discussed 
      * {@link "http://docs.mongodb.org/manual/tutorial/create-text-index-on-multiple-fields/#index-all-fields" here}
      */
-    String[] value() default {};
+    IndexField[] value() default {};
     
-    /**
-     * Weights of the fields.  Weights take form of "field:weight".  If a field is omitted from this item, the weight is assumed
-     * to the database default.
-     */
-    String[] weights() default {};
-
-    /**
-     * Name of the index
-     */
-    String name() default "";
+    IndexOptions options() default @IndexOptions;
 
     /**
      * Default language for the index.
