@@ -112,7 +112,7 @@ public interface FieldEnd<T> {
      * inclusion, MongoDB considers the border of a shape to be part of the
      * shape, subject to the precision of floating point numbers.
      *
-     * These queries are only compatible with MongoDB 2.4 or greater.
+     * These queries are only compatible with MongoDB 2.6 or greater.
      *
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
