@@ -21,4 +21,9 @@ public class DefaultDatastoreProvider implements DatastoreProvider {
     return datastore;
   }
 
+  @Override
+  public void register(final Datastore ds) {
+     DatastoreHolder.getInstance().set(ds);
+  }
+
 }
