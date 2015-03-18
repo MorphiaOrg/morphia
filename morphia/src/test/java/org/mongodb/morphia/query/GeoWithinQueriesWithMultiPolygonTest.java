@@ -38,8 +38,8 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Before
     public void setUp() {
-        // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
+        // Multi-polygon is server 2.6 and onwards
+        checkMinServerVersion(2.6);
         super.setUp();
     }
 
@@ -146,7 +146,6 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsWithinEurope() {
-        checkMinServerVersion(2.6);
         // given
         MultiPolygon europeanCountries = multiPolygon(uk, spain);
         Regions sevilla = new Regions("Spain", multiPolygon(polygon(point(37.40759155713022, -5.964911067858338),
@@ -194,7 +193,6 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindGeometryCollectionsWithinEurope() {
-        checkMinServerVersion(2.6);
         // given
         MultiPolygon europeanCountries = multiPolygon(uk, spain);
 
