@@ -105,7 +105,7 @@ public class Mapper {
 
     // TODO: make these configurable
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
-    private final DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
+    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
     private final DefaultConverters converters = new DefaultConverters();
 
     public Mapper() {
@@ -115,6 +115,11 @@ public class Mapper {
     public Mapper(final MapperOptions opts) {
         this();
         this.opts = opts;
+    }
+    
+    public Mapper(final DatastoreProvider datastoreProvider) {
+        this();
+        this.datastoreProvider = datastoreProvider;
     }
 
     /**
