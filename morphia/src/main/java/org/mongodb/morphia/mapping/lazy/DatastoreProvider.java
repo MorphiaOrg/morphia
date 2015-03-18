@@ -15,4 +15,6 @@ import org.mongodb.morphia.Datastore;
  */
 public interface DatastoreProvider extends Serializable {
   Datastore get();
+
+  void register(Datastore ds);
 }
