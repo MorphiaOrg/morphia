@@ -37,7 +37,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Indexes {
-    Index[] value() default {};
-
-    Index[] text() default {};
+    Index[] value();
 }

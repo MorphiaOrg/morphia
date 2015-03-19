@@ -265,28 +265,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                     dropDupsOnCreate, false, false, -1);
     }
 
-    protected void ensureIndex(final DBCollection dbColl, final Field[] fields, final IndexOptions options) {
-        DBObject keys = new BasicDBObject();
-        DBObject opts = extractOptions(options);
-        for (Field field : fields) {
-            keys.put(field.value(), field.type().toIndexValue());
-            if (field.weight() != -1) {
-                if (field.type() != IndexType.TEXT) {
-                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(fields));
-                }
-                DBObject weights = (DBObject) opts.get("weights");
-                if (weights == null) {
-                    weights = new BasicDBObject();
-                    opts.put("weights", weights);
-                }
-                weights.put(field.value(), field.weight());
-            }
-        }
-
-        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
-        dbColl.createIndex(keys, opts);
-    }
-    
     protected void ensureIndex(final DBCollection dbColl,
                                final String name, final BasicDBObject fields,
                                final boolean unique, final boolean dropDupsOnCreate,
@@ -396,6 +374,41 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options) {
+        DBObject keys = new BasicDBObject();
+        DBObject opts = extractOptions(options);
+        for (Field field : fields) {
+            String value = field.value();
+            String key = value;
+            if (!"$**".equals(value)) {
+                MappedField mf = mc.getMappedField(value);
+                if (mf == null) {
+                    mf = mc.getMappedFieldByJavaField(value);
+                }
+                if (mf == null) {
+                    throw new MappingException(format("Unknown field '%s' for index: %s", value, mc.getClazz().getName()));
+                } else {
+                    key = mf.getNameToStore();
+                }
+            }
+            keys.put(key, field.type().toIndexValue());
+            if (field.weight() != -1) {
+                if (field.type() != IndexType.TEXT) {
+                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(fields));
+                }
+                DBObject weights = (DBObject) opts.get("weights");
+                if (weights == null) {
+                    weights = new BasicDBObject();
+                    opts.put("weights", weights);
+                }
+                weights.put(key, field.weight());
+            }
+        }
+
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
+        dbColl.createIndex(keys, opts);
+    }
+
     private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
                                  final MappedField mf) {
         final Text index = mf.getAnnotation(Text.class);
@@ -429,7 +442,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (idx.value().length > 0) {
                     for (final Index index : idx.value()) {
                         if (index.fields().length != 0) {
-                            ensureIndex(dbColl, index.fields(), index.options());
+                            ensureIndex(mc, dbColl, index.fields(), index.options());
                         } else {
                             final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(),
                                                                                      mc.getClazz(),
@@ -440,63 +453,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         }
                     }
                 }
-                if (idx.text().length != 0) {
-                    if (idx.text().length > 1) {
-                        throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-                    }
-                    mapTextIndex(dbColl, mc, idx.text()[0]);
-                }
             }
-        }
-    }
-
-    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc, final Index textIndex) {
-        final DBObject fields = new BasicDBObject();
-        final DBObject opts = extractOptions(textIndex.options());
-        DBObject weights = (DBObject) opts.get("weights");
-        if (weights == null) {
-            weights = new BasicDBObject();
-            opts.put("weights", weights);
-        }
-        if (textIndex.fields().length != 0) {
-            for (Field field : textIndex.fields()) {
-                MappedField mf = mc.getMappedField(field.value());
-                fields.put(mf.getNameToStore(), field.type().toIndexValue());
-                if (field.weight() > 0) {
-                    weights.put(mf.getNameToStore(), field.weight());
-                }
-            }
-        } else {
-            fields.put("$**", "text");
-        }
-
-        dbColl.createIndex(fields, opts);
-    }
-
-    private DBObject extractOptions(final IndexOptions options) {
-        final DBObject opts = new BasicDBObject();
-        
-        putIfNotEmpty(opts, "name", options.name());
-        putIfNotEmpty(opts, "default_language", options.language());
-        putIfNotEmpty(opts, "language_override", options.languageOverride());
-        putIfTrue(opts, "background", options.background());
-        putIfTrue(opts, "dropDups", options.dropDups());
-        putIfTrue(opts, "sparse", options.sparse());
-        putIfTrue(opts, "unique", options.unique());
-        if (options.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", options.expireAfterSeconds());
-        }
-        return opts;
-    }
-
-    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
-        if (!value.equals("")) {
-            opts.put(key, value);
-        }
-    }
-    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
-        if (value) {
-            opts.put(key, true);
         }
     }
 
@@ -534,6 +491,34 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndexes(final String collName, final Class<T> clazz, final boolean background) {
         final MappedClass mc = mapper.getMappedClass(clazz);
         ensureIndexes(collName, mc, background);
+    }
+
+    private DBObject extractOptions(final IndexOptions options) {
+        final DBObject opts = new BasicDBObject();
+
+        putIfNotEmpty(opts, "name", options.name());
+        putIfNotEmpty(opts, "default_language", options.language());
+        putIfNotEmpty(opts, "language_override", options.languageOverride());
+        putIfTrue(opts, "background", options.background());
+        putIfTrue(opts, "dropDups", options.dropDups());
+        putIfTrue(opts, "sparse", options.sparse());
+        putIfTrue(opts, "unique", options.unique());
+        if (options.expireAfterSeconds() != -1) {
+            opts.put("expireAfterSeconds", options.expireAfterSeconds());
+        }
+        return opts;
+    }
+
+    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
+        if (!value.equals("")) {
+            opts.put(key, value);
+        }
+    }
+
+    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
+        if (value) {
+            opts.put(key, true);
+        }
     }
 
     @Override
