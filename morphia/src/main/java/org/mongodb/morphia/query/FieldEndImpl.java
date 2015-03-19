@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
+import static org.mongodb.morphia.query.FilterOperator.INTERSECTS;
 
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
@@ -223,8 +224,15 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
         opts.put(s, v);
         return opts;
     }
-  
+
+    @Override
     public T type(final Type type) {
       return addCriteria(FilterOperator.TYPE, type.val());
+    }
+
+    @Override
+    public T intersects(final Point point) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, point, null, validateName, false));
+        return target;
     }
 }

@@ -60,18 +60,9 @@ public enum FilterOperator {
     @Deprecated
     WITHIN("$within", "within"),
     
-    GEO_WITHIN("$geoWithin", "geoWithin") {
-/*
-        @Override
-        public boolean matches(final String filter) {
-            boolean match = "within".equals(filter);
-            if (match) {
-                LOG.warning("'within' is a deprecated operator.  Please use geoWithin instead.");
-            }
-            return match || "geoWithin".equals(filter);
-        }
-*/
-    };
+    GEO_WITHIN("$geoWithin", "geoWithin"),
+
+    INTERSECTS("$geoIntersects", "geoIntersects");
 
     private final String value;
     private final List<String> filters;

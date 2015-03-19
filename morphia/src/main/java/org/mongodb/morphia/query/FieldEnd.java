@@ -118,4 +118,14 @@ public interface FieldEnd<T> {
      * @return T
      */
     T within(MultiPolygon boundaries);
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning
+     * those where the given point intersects with the document shape.  This includes cases where the data and the
+     * specified object share an edge.
+     *
+     * @param point the co-ordinates to use to find any intersecting shapes.
+     * @return any documents where the GeoJson intersects with a specified {@code point}.
+     */
+    T intersects(Point point);
 }
