@@ -8,7 +8,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.IndexField;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Polymorphic;
@@ -20,8 +20,6 @@ import org.mongodb.morphia.annotations.PreSave;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.annotations.TextIndex;
-import org.mongodb.morphia.annotations.TextIndexed;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
@@ -31,7 +29,6 @@ import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -83,9 +80,7 @@ public class MappedClass {
         interestingAnnotations.add(Version.class);
         interestingAnnotations.add(Converters.class);
         interestingAnnotations.add(Indexes.class);
-        interestingAnnotations.add(TextIndexed.class);
-        interestingAnnotations.add(TextIndex.class);
-        interestingAnnotations.add(IndexField.class);
+        interestingAnnotations.add(Field.class);
         interestingAnnotations.add(IndexOptions.class);
     }
     //CHECKSTYLE:ON
@@ -93,7 +88,7 @@ public class MappedClass {
     /**
      * special fields representing the Key of the object
      */
-    private Field idField;
+    private java.lang.reflect.Field idField;
 
     /**
      * special annotations representing the type the object
@@ -208,7 +203,7 @@ public class MappedClass {
 
         update();
 
-        for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
+        for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
             field.setAccessible(true);
             final int fieldMods = field.getModifiers();
             if (field.isAnnotationPresent(Transient.class)
@@ -484,7 +479,7 @@ public class MappedClass {
     /**
      * @return the idField
      */
-    public Field getIdField() {
+    public java.lang.reflect.Field getIdField() {
         return idField;
     }
 

@@ -3,25 +3,22 @@ package org.mongodb.morphia.indexes;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.IndexField;
+import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.annotations.Language;
 import org.mongodb.morphia.annotations.Text;
-import org.mongodb.morphia.annotations.TextIndex;
-import org.mongodb.morphia.annotations.TextIndexed;
 import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
 public class TestTextIndexing extends TestBase {
     @Entity
-    @TextIndexed
+    @Indexes(text = @Index(options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue")))
     private static class TextIndexAll {
         @Id
         private ObjectId id;
@@ -30,23 +27,19 @@ public class TestTextIndexing extends TestBase {
     }
 
     @Entity
-    @TextIndexed(value = "indexing_test", language = "russian")
     private static class TextIndexing {
         @Id
         private ObjectId id;
-        @Text
         private String name;
-        @Text(10)
+        @Text(value = 10, options = @IndexOptions(name = "single_annotation", languageOverride = "nativeTongue"))
         private String nickName;
-        @Language
-        private String nativeTongue;
     }
 
     @Entity
-    @Indexes(text = @TextIndex(value = {@IndexField(value = "name", direction = IndexType.TEXT),
-                                        @IndexField(value = "nickName", direction = IndexType.TEXT, weight = 10),
-                                        @IndexField(value = "age", direction = IndexType.DESC)},
-                                  options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue"))
+    @Indexes(text = @Index(fields = {@Field(value = "name", type = IndexType.TEXT),
+                                     @Field(value = "nickName", type = IndexType.TEXT, weight = 10),
+                                     @Field(value = "age")},
+                              options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue"))
     )
     private static class SingleTextAnnotation {
         @Id
@@ -56,7 +49,6 @@ public class TestTextIndexing extends TestBase {
         private String nickName;
         private String nativeTongue;
     }
-
 
     @Test
     public void testIndexAll() {
@@ -68,14 +60,33 @@ public class TestTextIndexing extends TestBase {
         for (DBObject dbObject : indexInfo) {
             if (!dbObject.get("name").equals("_id_")) {
                 Assert.assertEquals(1, ((DBObject) dbObject.get("weights")).get("$**"));
+                Assert.assertEquals("russian", dbObject.get("default_language"));
+                Assert.assertEquals("nativeTongue", dbObject.get("language_override"));
             }
         }
     }
 
     @Test
-    @Ignore
-    public void testTestIndexedOptions() {
-        testIndex(TextIndexing.class);
+    public void testTextAnnotation() {
+        Class<TextIndexing> clazz = TextIndexing.class;
+        
+        getMorphia().map(clazz);
+        getDs().getCollection(clazz).drop();
+        getDs().ensureIndexes();
+
+        List<DBObject> indexInfo = getDs().getCollection(clazz).getIndexInfo();
+        Assert.assertEquals(2, indexInfo.size());
+        boolean found = false;
+        for (DBObject dbObject : indexInfo) {
+            if (dbObject.get("name").equals("single_annotation")) {
+                found = true;
+                Assert.assertEquals(dbObject.toString(), "english", dbObject.get("default_language"));
+                Assert.assertEquals(dbObject.toString(), "nativeTongue", dbObject.get("language_override"));
+                Assert.assertEquals(dbObject.toString(), 10, ((DBObject) dbObject.get("weights")).get("nickName"));
+            }
+        }
+        Assert.assertTrue(found);
+        
     }
 
     private void testIndex(final Class clazz) {
@@ -93,7 +104,7 @@ public class TestTextIndexing extends TestBase {
                 Assert.assertEquals(dbObject.toString(), "nativeTongue", dbObject.get("language_override"));
                 Assert.assertEquals(dbObject.toString(), 1, ((DBObject) dbObject.get("weights")).get("name"));
                 Assert.assertEquals(dbObject.toString(), 10, ((DBObject) dbObject.get("weights")).get("nickName"));
-                Assert.assertEquals(dbObject.toString(), -1, ((DBObject) dbObject.get("key")).get("age"));
+                Assert.assertEquals(dbObject.toString(), 1, ((DBObject) dbObject.get("key")).get("age"));
             }
         }
         Assert.assertTrue(found);

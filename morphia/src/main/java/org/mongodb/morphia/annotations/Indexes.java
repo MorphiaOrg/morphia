@@ -39,5 +39,5 @@ import java.lang.annotation.Target;
 public @interface Indexes {
     Index[] value() default {};
 
-    TextIndex[] text() default {};
+    Index[] text() default {};
 }
