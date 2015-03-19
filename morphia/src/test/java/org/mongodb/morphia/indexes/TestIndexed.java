@@ -79,7 +79,7 @@ public class TestIndexed extends TestBase {
         private boolean active;
     }
 
-    @Indexes(@Index("active,-lastModified"))
+    @Indexes(@Index(value = "active,-lastModified", unique = true))
     private static class Ad2 {
         @Id
         private long id;

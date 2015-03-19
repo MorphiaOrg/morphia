@@ -34,8 +34,8 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface IndexField {
+@Target({ElementType.ANNOTATION_TYPE})
+public @interface Field {
     /**
      * Field name to index
      */
@@ -46,7 +46,7 @@ public @interface IndexField {
      * 
      * @see IndexType
      */
-    IndexType direction() default IndexType.ASC;
+    IndexType type() default IndexType.ASC;
 
     /**
      * The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexType#TEXT}

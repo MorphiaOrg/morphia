@@ -20,19 +20,16 @@ import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.IndexField;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.annotations.Language;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Text;
-import org.mongodb.morphia.annotations.TextIndex;
-import org.mongodb.morphia.annotations.TextIndexed;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
@@ -54,6 +51,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.utils.Assert;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -267,41 +265,57 @@ public class DatastoreImpl implements AdvancedDatastore {
                     dropDupsOnCreate, false, false, -1);
     }
 
+    protected void ensureIndex(final DBCollection dbColl, final Field[] fields, final IndexOptions options) {
+        DBObject keys = new BasicDBObject();
+        DBObject opts = extractOptions(options);
+        for (Field field : fields) {
+            keys.put(field.value(), field.type().toIndexValue());
+            if (field.weight() != -1) {
+                if (field.type() != IndexType.TEXT) {
+                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(fields));
+                }
+                DBObject weights = (DBObject) opts.get("weights");
+                if (weights == null) {
+                    weights = new BasicDBObject();
+                    opts.put("weights", weights);
+                }
+                weights.put(field.value(), field.weight());
+            }
+        }
+
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
+        dbColl.createIndex(keys, opts);
+    }
+    
     protected void ensureIndex(final DBCollection dbColl,
                                final String name, final BasicDBObject fields,
                                final boolean unique, final boolean dropDupsOnCreate,
                                final boolean background, final boolean sparse,
                                final int expireAfterSeconds) {
-        final BasicDBObjectBuilder keyOpts = new BasicDBObjectBuilder();
+        final BasicDBObject opts = new BasicDBObject();
         if (name != null && name.length() != 0) {
-            keyOpts.add("name", name);
+            opts.append("name", name);
         }
         if (unique) {
-            keyOpts.add("unique", true);
+            opts.append("unique", true);
             if (dropDupsOnCreate) {
-                keyOpts.add("dropDups", true);
+                opts.append("dropDups", true);
             }
         }
 
         if (background) {
-            keyOpts.add("background", true);
+            opts.append("background", true);
         }
         if (sparse) {
-            keyOpts.add("sparse", true);
+            opts.append("sparse", true);
         }
 
         if (expireAfterSeconds > -1) {
-            keyOpts.add("expireAfterSeconds", expireAfterSeconds);
+            opts.append("expireAfterSeconds", expireAfterSeconds);
         }
 
-        final BasicDBObject opts = (BasicDBObject) keyOpts.get();
-        if (opts.isEmpty()) {
-            LOG.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields);
-            dbColl.createIndex(fields);
-        } else {
-            LOG.debug("Ensuring index for " + dbColl.getName() + " with keys:" + fields + " and opts:" + opts);
-            dbColl.createIndex(fields, opts);
-        }
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), fields, opts));
+        dbColl.createIndex(fields, opts);
     }
 
     protected void ensureIndexes(final MappedClass mc, final boolean background) {
@@ -337,6 +351,10 @@ public class DatastoreImpl implements AdvancedDatastore {
      */
     private void processEmbeddedAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background,
                                             final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
+        List<MappedField> annotatedWith = mc.getFieldsAnnotatedWith(Text.class);
+        if (annotatedWith.size() > 1) {
+            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+        }
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed index = mf.getAnnotation(Indexed.class);
@@ -359,6 +377,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                             index.expireAfterSeconds());
             }
 
+            if (mf.hasAnnotation(Text.class)) {
+                createTextIndex(dbColl, parentMCs, parentMFs, mf);
+            }
+
             if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
                 && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
                 final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
@@ -374,6 +396,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
+                                 final MappedField mf) {
+        final Text index = mf.getAnnotation(Text.class);
+        final StringBuilder field = new StringBuilder();
+        if (!parentMCs.isEmpty()) {
+            for (final MappedField pmf : parentMFs) {
+                field.append(pmf.getNameToStore()).append(".");
+            }
+        }
+
+        field.append(mf.getNameToStore());
+
+        DBObject keys = new BasicDBObject(field.toString(), IndexType.TEXT.toIndexValue());
+        DBObject opts = extractOptions(index.options());
+        if (index.value() != -1) {
+            DBObject weights = new BasicDBObject();
+            opts.put("weights", weights);
+            weights.put(field.toString(), index.value());
+        }
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
+        dbColl.createIndex(keys, opts);
+    }
+
+    @SuppressWarnings("deprecation")
     private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background) {
         //Ensure indexes from class annotation
         final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
@@ -382,12 +428,16 @@ public class DatastoreImpl implements AdvancedDatastore {
                 final Indexes idx = (Indexes) ann;
                 if (idx.value().length > 0) {
                     for (final Index index : idx.value()) {
-                        final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(),
-                                                                                 mc.getClazz(),
-                                                                                 mapper,
-                                                                                 !index.disableValidation());
-                        ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
-                                    index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+                        if (index.fields().length != 0) {
+                            ensureIndex(dbColl, index.fields(), index.options());
+                        } else {
+                            final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(),
+                                                                                     mc.getClazz(),
+                                                                                     mapper,
+                                                                                     !index.disableValidation());
+                            ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
+                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+                        }
                     }
                 }
                 if (idx.text().length != 0) {
@@ -398,41 +448,20 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
         }
-
-        mapTextIndexed(dbColl, mc);
     }
 
-    private void mapTextIndexed(final DBCollection dbColl, final MappedClass mc) {
-        List<Annotation> annotations = mc.getAnnotations(TextIndexed.class);
-        if (annotations != null) {
-            if (annotations.size() > 1) {
-                throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-            }
-            TextIndexed textIndexed = (TextIndexed) mc.getAnnotation(TextIndexed.class);
-            if (textIndexed != null) {
-                final DBObject fields = new BasicDBObject();
-                final DBObject opts = new BasicDBObject();
-                mapTextFields(mc, fields, opts);
-                mapLanguageOverride(mc, opts);
-                putIfNotEmpty(opts, "name", textIndexed.value());
-                putIfNotEmpty(opts, "default_language", textIndexed.language());
-                dbColl.createIndex(fields, opts);
-            }
-        }
-    }
-
-    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc, final TextIndex textIndex) {
+    private void mapTextIndex(final DBCollection dbColl, final MappedClass mc, final Index textIndex) {
         final DBObject fields = new BasicDBObject();
-        final DBObject opts = new BasicDBObject();
+        final DBObject opts = extractOptions(textIndex.options());
         DBObject weights = (DBObject) opts.get("weights");
         if (weights == null) {
             weights = new BasicDBObject();
             opts.put("weights", weights);
         }
-        if (textIndex.value().length != 0) {
-            for (IndexField field : textIndex.value()) {
+        if (textIndex.fields().length != 0) {
+            for (Field field : textIndex.fields()) {
                 MappedField mf = mc.getMappedField(field.value());
-                fields.put(mf.getNameToStore(), field.direction().toIndexValue());
+                fields.put(mf.getNameToStore(), field.type().toIndexValue());
                 if (field.weight() > 0) {
                     weights.put(mf.getNameToStore(), field.weight());
                 }
@@ -441,7 +470,12 @@ public class DatastoreImpl implements AdvancedDatastore {
             fields.put("$**", "text");
         }
 
-        IndexOptions options = textIndex.options();
+        dbColl.createIndex(fields, opts);
+    }
+
+    private DBObject extractOptions(final IndexOptions options) {
+        final DBObject opts = new BasicDBObject();
+        
         putIfNotEmpty(opts, "name", options.name());
         putIfNotEmpty(opts, "default_language", options.language());
         putIfNotEmpty(opts, "language_override", options.languageOverride());
@@ -452,7 +486,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (options.expireAfterSeconds() != -1) {
             opts.put("expireAfterSeconds", options.expireAfterSeconds());
         }
-        dbColl.createIndex(fields, opts);
+        return opts;
     }
 
     private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
@@ -463,37 +497,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     private void putIfTrue(final DBObject opts, final String key, final boolean value) {
         if (value) {
             opts.put(key, true);
-        }
-    }
-
-    private void mapLanguageOverride(final MappedClass mc, final DBObject opts) {
-        List<MappedField> languages = mc.getFieldsAnnotatedWith(Language.class);
-        if (!languages.isEmpty()) {
-            if (languages.size() != 1) {
-                throw new MappingException("Only one field can be annotated with @Language: " + mc.getClazz().getName());
-            }
-            MappedField field = languages.get(0);
-            opts.put("language_override", field.getNameToStore());
-        }
-    }
-
-    private void mapTextFields(final MappedClass mc, final DBObject fields, final DBObject opts) {
-        List<MappedField> textFields = mc.getFieldsAnnotatedWith(Text.class);
-        if (!textFields.isEmpty()) {
-            for (MappedField field : textFields) {
-                Text text = field.getAnnotation(Text.class);
-                fields.put(field.getNameToStore(), "text");
-                if (text.value() != -1) {
-                    DBObject weights = (DBObject) opts.get("weights");
-                    if (weights == null) {
-                        weights = new BasicDBObject();
-                        opts.put("weights", weights);
-                    }
-                    weights.put(field.getNameToStore(), text.value());
-                }
-            }
-        } else {
-            fields.put("$**", "text");
         }
     }
 
@@ -907,8 +910,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     private <T> DBObject toDbObject(final T ent, final Map<Object, DBObject> involvedObjects) {
         final MappedClass mc = mapper.getMappedClass(ent);
         if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(String.format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                                                     mc.getClazz().getName()));
+            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
+                                              mc.getClazz().getName()));
         }
         DBObject dbObject = entityToDBObj(ent, involvedObjects);
         List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);

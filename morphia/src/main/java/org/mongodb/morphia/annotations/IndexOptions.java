@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.ANNOTATION_TYPE})
 public @interface IndexOptions {
     /**
      * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
@@ -79,4 +79,8 @@ public @interface IndexOptions {
      */
     String languageOverride() default "";
 
+    /**
+     * Used for internal tracking.  Do not use.
+     */
+    boolean userDefined() default true;
 }
