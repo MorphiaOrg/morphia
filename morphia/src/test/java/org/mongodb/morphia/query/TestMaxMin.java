@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
@@ -19,8 +20,8 @@ public class TestMaxMin extends TestBase {
 
     @Entity("IndexedEntity")
     @Indexes({
-            @Index("testField"),
-            @Index("testField, _id")
+            @Index(fields = @Field("testField")),
+            @Index(fields = {@Field("testField"), @Field("_id")})
     })
     private static final class IndexedEntity {
 

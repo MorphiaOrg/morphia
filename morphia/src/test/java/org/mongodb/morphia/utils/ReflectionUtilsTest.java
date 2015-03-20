@@ -3,11 +3,13 @@ package org.mongodb.morphia.utils;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.Mapper;
 
+import java.awt.print.Book;
 import java.io.Serializable;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -93,14 +95,14 @@ public class ReflectionUtilsTest extends TestBase {
     }
   
     @Entity("Base")
-    @Indexes(@Index("id"))
+    @Indexes(@Index(fields = @Field("id")))
     private static class Foo {
         @Id
         private int id;
     }
 
     @Entity("Sub")
-    @Indexes(@Index("test"))
+    @Indexes(@Index(fields = @Field("test")))
     private static class Foobie extends Foo {
         private String test;
     }

@@ -20,6 +20,8 @@ import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
@@ -35,7 +37,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Scott Hernandez
  */
 public class TestEmbeddedArrayIndexes extends TestBase {
-    @Indexes({@Index("b.bar, b.car")})
+    @Indexes({@Index(fields = {@Field("b.bar"), @Field("b.car")})})
     private static class A {
         @Id
         private ObjectId id = new ObjectId();
@@ -44,6 +46,7 @@ public class TestEmbeddedArrayIndexes extends TestBase {
         private String foo;
     }
 
+    @Embedded
     private static class B {
         private String bar;
         private String car;

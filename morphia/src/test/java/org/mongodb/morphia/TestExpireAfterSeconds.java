@@ -8,8 +8,10 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 
@@ -27,9 +29,7 @@ public class TestExpireAfterSeconds extends TestBase {
     }
 
     @Entity
-    @Indexes({
-                 @Index(value = "offerExpiresAt", expireAfterSeconds = 5)
-             })
+    @Indexes(@Index(fields = @Field("offerExpiresAt"), options = @IndexOptions(expireAfterSeconds = 5)))
     public static class ClassAnnotation {
         @Id
         private ObjectId id;
