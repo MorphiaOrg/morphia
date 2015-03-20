@@ -63,7 +63,7 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Embedded
-    //    @Indexes(@Index(fields = @Field(value = "color", type = DESC)))
+    //    @Indexes(@Index(fields = @Field(value = "color", type = DESC))) https://github.com/mongodb/morphia/issues/734
     private static class EmbeddedIndex {
         @Indexed
         private String name;
@@ -117,8 +117,7 @@ public class TestIndexCollections extends TestBase {
         BasicDBObject[] indexes = new BasicDBObject[]{
                                                          new BasicDBObject("name", 1),
                                                          new BasicDBObject("embeddedIndex.name", 1),
-                                                         //                                                         new BasicDBObject
-                                                         // ("embeddedIndex.color", -1),
+                                                         new BasicDBObject("embeddedIndex.color", -1),
         };
 
         testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
