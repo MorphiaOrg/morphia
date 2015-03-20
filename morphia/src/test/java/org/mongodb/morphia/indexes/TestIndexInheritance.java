@@ -21,6 +21,7 @@ import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexed;
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestIndexInheritance extends TestBase {
 
-    @Indexes(@Index("description"))
+    @Indexes(@Index(fields = @Field("description")))
     public abstract static class Shape {
         @Id
         private ObjectId id;
@@ -68,7 +69,7 @@ public class TestIndexInheritance extends TestBase {
         }
     }
 
-    @Indexes(@Index("radius"))
+    @Indexes(@Index(fields = @Field("radius")))
     private static class Circle extends Shape {
         private double radius = 1;
 

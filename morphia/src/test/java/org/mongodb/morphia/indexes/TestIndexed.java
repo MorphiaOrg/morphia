@@ -25,8 +25,10 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.NotSaved;
@@ -36,6 +38,7 @@ import org.mongodb.morphia.entities.NamedIndexOnValue;
 import org.mongodb.morphia.entities.UniqueIndexOnValue;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.utils.IndexDirection;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
@@ -79,7 +82,8 @@ public class TestIndexed extends TestBase {
         private boolean active;
     }
 
-    @Indexes(@Index(value = "active,-lastModified", unique = true))
+    @Indexes(@Index(fields = {@Field("active"), @Field(value = "lastModified", type = IndexType.DESC)},
+                       options = @IndexOptions(unique = true)))
     private static class Ad2 {
         @Id
         private long id;

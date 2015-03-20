@@ -39,6 +39,20 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Entity
+    @Indexes({@Index(fields = @Field(value = "field2", type = DESC)),
+              @Index(fields = @Field("field3"))})
+    private static class OldStyleIndexing {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private String field;
+        @Property
+        private String field2;
+        @Property("f3")
+        private String field3;
+    }
+
+    @Entity
     private static class HasEmbeddedIndex {
         @Id
         private ObjectId id;
@@ -56,9 +70,6 @@ public class TestIndexCollections extends TestBase {
         private String color;
     }
 
-    /**
-     * Test that indexes created on one collection do not affect other collections.
-     */
     @Test
     public void testSingleFieldIndex() {
         AdvancedDatastore ads = getAds();
@@ -69,7 +80,7 @@ public class TestIndexCollections extends TestBase {
                   new BasicDBObject("field", 1),
                   new BasicDBObject("field2", -1),
                   new BasicDBObject("f3", 1));
-        
+
         ads.ensureIndex("a_2", SingleFieldIndex.class, "-field2");
         ads.ensureIndexes("a_2", SingleFieldIndex.class);
         testIndex(db.getCollection("a_2").getIndexInfo(),
@@ -82,8 +93,17 @@ public class TestIndexCollections extends TestBase {
         ads.ensureIndex("a_3", SingleFieldIndex.class, "field, field2");
         testIndex(db.getCollection("a_3").getIndexInfo(), new BasicDBObject("field", 1)
                                                               .append("field2", 1));
+    }
 
-        ads.ensureIndexes();
+    @Test
+    public void testOldStyleIndexing() {
+        getMorphia().map(OldStyleIndexing.class);
+        getDb().dropDatabase();
+        getAds().ensureIndexes();
+        testIndex(getAds().getCollection(OldStyleIndexing.class).getIndexInfo(),
+                  new BasicDBObject("field", 1),
+                  new BasicDBObject("field2", -1),
+                  new BasicDBObject("f3", 1));
     }
 
     @Test
@@ -97,7 +117,8 @@ public class TestIndexCollections extends TestBase {
         BasicDBObject[] indexes = new BasicDBObject[]{
                                                          new BasicDBObject("name", 1),
                                                          new BasicDBObject("embeddedIndex.name", 1),
-//                                                         new BasicDBObject("embeddedIndex.color", -1),
+                                                         //                                                         new BasicDBObject
+                                                         // ("embeddedIndex.color", -1),
         };
 
         testIndex(db.getCollection("b_2").getIndexInfo(), indexes);

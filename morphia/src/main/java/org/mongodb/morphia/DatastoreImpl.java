@@ -381,10 +381,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             String value = field.value();
             String key = value;
             if (!"$**".equals(value)) {
-                MappedField mf = mc.getMappedField(value);
-                if (mf == null) {
-                    mf = mc.getMappedFieldByJavaField(value);
-                }
+                MappedField mf = findField(mc, value);
                 if (mf == null) {
                     throw new MappingException(format("Unknown field '%s' for index: %s", value, mc.getClazz().getName()));
                 } else {
@@ -407,6 +404,27 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
         dbColl.createIndex(keys, opts);
+    }
+
+    private MappedField findField(final MappedClass mc, final String value) {
+        if (value.contains(".")) {
+            try {
+                String segment = value.substring(0, value.indexOf("."));
+                MappedField field1 = findField(mc, segment);
+                String className = field1.getSubType().getTypeName();
+                MappedClass mappedClass = getMapper().getMappedClass(Class.forName(className));
+                MappedField field = findField(mappedClass, value.substring(value.indexOf(".") + 1));
+                return field;
+            } catch (ClassNotFoundException e) {
+                throw new MappingException(e.getMessage());
+            }
+        } else {
+            MappedField mf = mc.getMappedField(value);
+            if (mf == null) {
+                mf = mc.getMappedFieldByJavaField(value);
+            }
+            return mf;
+        }
     }
 
     private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
@@ -444,6 +462,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                         if (index.fields().length != 0) {
                             ensureIndex(mc, dbColl, index.fields(), index.options());
                         } else {
+                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
+                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                             final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(),
                                                                                      mc.getClazz(),
                                                                                      mapper,
