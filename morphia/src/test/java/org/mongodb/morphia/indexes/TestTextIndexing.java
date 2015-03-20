@@ -30,21 +30,12 @@ public class TestTextIndexing extends TestBase {
     }
 
     @Entity
-    private static class TextIndexing {
-        @Id
-        private ObjectId id;
-        private String name;
-        @Text(value = 10, options = @IndexOptions(name = "single_annotation", languageOverride = "nativeTongue"))
-        private String nickName;
-    }
-
-    @Entity
     @Indexes(@Index(fields = {@Field(value = "name", type = TEXT),
                               @Field(value = "nick", type = TEXT, weight = 10),
                               @Field(value = "age")},
                        options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue"))
     )
-    private static class SingleTextAnnotation {
+    private static class CompoundTextIndex {
         @Id
         private ObjectId id;
         private String name;
@@ -52,6 +43,16 @@ public class TestTextIndexing extends TestBase {
         @Property("nick")
         private String nickName;
         private String nativeTongue;
+    }
+    
+    @Entity
+    private static class SingleFieldTextIndex {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Text(value = 10, options = @IndexOptions(name = "single_annotation", languageOverride = "nativeTongue"))
+        private String nickName;
+
     }
 
     @Entity
@@ -97,7 +98,7 @@ public class TestTextIndexing extends TestBase {
 
     @Test
     public void testTextAnnotation() {
-        Class<TextIndexing> clazz = TextIndexing.class;
+        Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
         getMorphia().map(clazz);
         getDs().getCollection(clazz).drop();
@@ -120,11 +121,11 @@ public class TestTextIndexing extends TestBase {
 
     @Test
     public void testSingleAnnotation() {
-        getMorphia().map(SingleTextAnnotation.class);
-        getDs().getCollection(SingleTextAnnotation.class).drop();
+        getMorphia().map(CompoundTextIndex.class);
+        getDs().getCollection(CompoundTextIndex.class).drop();
         getDs().ensureIndexes();
 
-        List<DBObject> indexInfo = getDs().getCollection(SingleTextAnnotation.class).getIndexInfo();
+        List<DBObject> indexInfo = getDs().getCollection(CompoundTextIndex.class).getIndexInfo();
         Assert.assertEquals(2, indexInfo.size());
         boolean found = false;
         for (DBObject dbObject : indexInfo) {
