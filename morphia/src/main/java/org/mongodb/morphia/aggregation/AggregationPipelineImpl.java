@@ -98,8 +98,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     public AggregationPipeline<T, U> group(final String id, final Group... groupings) {
         DBObject group = new BasicDBObject("_id", "$" + id);
         for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+        	IAccumulator accumulator = grouping.getAccumulator();
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getValue()));
         }
 
         stages.add(new BasicDBObject("$group", group));
@@ -113,8 +113,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         }
         DBObject group = new BasicDBObject("_id", idGroup);
         for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+        	IAccumulator accumulator = grouping.getAccumulator();
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getValue()));
         }
 
         stages.add(new BasicDBObject("$group", group));
