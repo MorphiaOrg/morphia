@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Group<T, U> {
-	
+
     private IAccumulator accumulator;
     private final String name;
     private String sourceField;
