@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
@@ -231,8 +232,8 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
-    public T intersects(final Point point) {
-        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, point, null, validateName, false));
+    public T intersects(final Geometry geometry) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
         return target;
     }
 }
