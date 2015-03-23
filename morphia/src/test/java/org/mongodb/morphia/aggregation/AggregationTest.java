@@ -289,7 +289,7 @@ public class AggregationTest extends TestBase {
     @Entity
     private static class CountResult {
         
-    	@Id
+        @Id
         private String author;
         private int count;
         
