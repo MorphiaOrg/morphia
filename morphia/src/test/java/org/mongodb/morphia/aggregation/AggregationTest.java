@@ -190,8 +190,14 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
     }
-
+    
     public void testGenericAccumulator() {
+        GenericAccumulator acc = new GenericAccumulator("$sum", 8);
+        Assert.assertEquals("$sum", acc.getOperation());
+        Assert.assertEquals(8, acc.getValue());
+    }
+
+    public void testGenericAccumulatorUsage() {
         getDs().save(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
