@@ -87,6 +87,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
     }
 
+    @Override
     public QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
         n.batchSize = batchSize;
@@ -121,6 +122,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return copy;
     }
 
+    @Override
     public DBCollection getCollection() {
         return dbColl;
     }
@@ -129,14 +131,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         baseQuery = (BasicDBObject) query;
     }
 
+    @Override
     public int getOffset() {
         return offset;
     }
 
+    @Override
     public int getLimit() {
         return limit;
     }
 
+    @Override
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();
 
@@ -153,6 +158,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return ds;
     }
 
+    @Override
     public DBObject getFieldsObject() {
         if (fields == null || fields.length == 0) {
             return null;
@@ -176,6 +182,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return new BasicDBObject(fieldsFilter);
     }
 
+    @Override
     public DBObject getSortObject() {
         return (sort == null) ? null : sort;
     }
@@ -188,6 +195,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return validateType;
     }
 
+    @Override
     public long countAll() {
         final DBObject query = getQueryObject();
         if (LOG.isTraceEnabled()) {
@@ -279,6 +287,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
+    @Override
     public MorphiaIterator<T, T> fetch() {
         final DBCursor cursor = prepareCursor();
         if (LOG.isTraceEnabled()) {
@@ -289,6 +298,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
+    @Override
     public MorphiaKeyIterator<T> fetchKeys() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
@@ -305,6 +315,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
     }
 
+    @Override
     public List<T> asList() {
         final List<T> results = new ArrayList<T>();
         final MorphiaIterator<T, T> iter = fetch();
@@ -325,6 +336,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return results;
     }
 
+    @Override
     public List<Key<T>> asKeyList() {
         final List<Key<T>> results = new ArrayList<Key<T>>();
         MorphiaKeyIterator<T> keys = fetchKeys();
@@ -339,6 +351,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
+    @Override
     public MorphiaIterator<T, T> fetchEmptyEntities() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
@@ -358,6 +371,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return FilterOperator.fromString(operator);
     }
 
+    @Override
     public Query<T> filter(final String condition, final Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
@@ -372,28 +386,33 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
+    @Override
     public Query<T> where(final CodeWScope js) {
         add(new WhereCriteria(js));
         return this;
     }
 
+    @Override
     public Query<T> where(final String js) {
         add(new WhereCriteria(js));
         return this;
     }
 
+    @Override
     public Query<T> enableValidation() {
         validateName = true;
         validateType = true;
         return this;
     }
 
+    @Override
     public Query<T> disableValidation() {
         validateName = false;
         validateType = false;
         return this;
     }
 
+    @Override
     public T get() {
         final int oldLimit = limit;
         limit = 1;
@@ -403,6 +422,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
+    @Override
     public Key<T> getKey() {
         final int oldLimit = limit;
         limit = 1;
@@ -412,47 +432,77 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
 
+    @Override
     public Query<T> limit(final int value) {
         limit = value;
         return this;
     }
 
+    @Override
     public Query<T> batchSize(final int value) {
         batchSize = value;
         return this;
     }
 
+    @Override
     public Query<T> maxScan(final int value) {
         maxScan = value > 0 ? value : null;
         return this;
     }
 
+    @Override
     public Query<T> maxTime(final long value, final TimeUnit timeUnitValue) {
         maxTime = value > 0 ? value : null;
         maxTimeUnit = timeUnitValue;
         return this;
     }
 
+    @Override
     public Query<T> comment(final String comment) {
         this.comment = comment;
         return this;
     }
 
+    @Override
     public Query<T> returnKey() {
         this.returnKey = true;
         return this;
     }
 
+    @Override
+    public Query<T> search(final String search) {
+
+        final BasicDBObject op = new BasicDBObject("$search", search);
+
+        this.criteria("$text", false).equal(op);
+
+        return this;
+    }
+    
+    @Override
+    public Query<T> search(final String search, final String language) {
+
+        final BasicDBObject op = new BasicDBObject("$search", search)
+            .append("$language", language);
+
+        this.criteria("$text", false).equal(op);
+
+        return this;
+    }
+    
+    @Override
     public int getBatchSize() {
         return batchSize;
     }
 
+    @Override
     public Query<T> offset(final int value) {
         offset = value;
         return this;
     }
 
 
+    @Override
     public Query<T> order(final String condition) {
         if (snapshotted) {
             throw new QueryException("order cannot be used on a snapshotted query.");
@@ -462,6 +512,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
+    @Override
     public Query<T> upperIndexBound(final DBObject upperBound) {
         if (upperBound != null) {
             max = new BasicDBObject(upperBound.toMap());
@@ -470,6 +521,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
+    @Override
     public Query<T> lowerIndexBound(final DBObject lowerBound) {
         if (lowerBound != null) {
             min = new BasicDBObject(lowerBound.toMap());
@@ -504,14 +556,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return (BasicDBObject) ret.get();
     }
 
+    @Override
     public MorphiaIterator<T, T> iterator() {
         return fetch();
     }
 
+    @Override
     public MorphiaIterator<T, T> tail() {
         return tail(true);
     }
 
+    @Override
     public MorphiaIterator<T, T> tail(final boolean awaitData) {
         //Create a new query for this, so the current one is not affected.
         final QueryImpl<T> tailQ = cloneQuery();
@@ -520,6 +575,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return tailQ.fetch();
     }
 
+    @Override
     public Class<T> getEntityClass() {
         return clazz;
     }
@@ -528,6 +584,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return getQueryObject().toString();
     }
 
+    @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
         return field(name, validateName);
     }
@@ -549,11 +606,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     //TODO: test this.
+    @Override
     public Query<T> hintIndex(final String idxName) {
         indexHint = idxName;
         return this;
     }
 
+    @Override
     public Query<T> retrievedFields(final boolean include, final String... list) {
         if (includeFields != null && include != includeFields) {
             throw new IllegalStateException("You cannot mix include and excluded fields together!");
@@ -563,6 +622,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
+    @Override
     public Query<T> retrieveKnownFields() {
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
         final List<String> fields = new ArrayList<String>(mc.getPersistenceFields().size() + 1);
@@ -577,6 +637,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
      * compatible with order/sort and hint.
      */
+    @Override
     public Query<T> enableSnapshotMode() {
         snapshotted = true;
         return this;
@@ -585,21 +646,25 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     /**
      * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates. *
      */
+    @Override
     public Query<T> disableSnapshotMode() {
         snapshotted = false;
         return this;
     }
 
+    @Override
     public Query<T> useReadPreference(final ReadPreference readPref) {
         this.readPref = readPref;
         return this;
     }
 
+    @Override
     public Query<T> queryNonPrimary() {
         readPref = ReadPreference.secondary();
         return this;
     }
 
+    @Override
     public Query<T> queryPrimaryOnly() {
         readPref = ReadPreference.primary();
         return this;
@@ -608,6 +673,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     /**
      * Disables cursor timeout on server.
      */
+    @Override
     public Query<T> disableCursorTimeout() {
         noTimeout = true;
         return this;
@@ -616,6 +682,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     /**
      * Enables cursor timeout on server.
      */
+    @Override
     public Query<T> enableCursorTimeout() {
         noTimeout = false;
         return this;
@@ -626,6 +693,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return null;
     }
 
+    @Override
     public Map<String, Object> explain() {
         DBCursor cursor = prepareCursor();
         return (BasicDBObject) cursor.explain();

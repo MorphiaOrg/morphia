@@ -88,9 +88,6 @@ public class MappedField {
         discover();
     }
 
-    //    protected MappedField() {
-    //    }
-
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
         INTERESTING.add(annotation);
     }

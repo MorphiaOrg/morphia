@@ -53,6 +53,7 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Entity
+    @Indexes(@Index(fields = @Field(value = "embeddedIndex.color", type = DESC))) 
     private static class HasEmbeddedIndex {
         @Id
         private ObjectId id;

@@ -381,11 +381,19 @@ public class DatastoreImpl implements AdvancedDatastore {
             String value = field.value();
             String key = value;
             if (!"$**".equals(value)) {
-                MappedField mf = findField(mc, value);
+                ArrayList<String> namePath = new ArrayList<String>();
+                MappedField mf = findField(namePath, mc, value);
                 if (mf == null) {
                     throw new MappingException(format("Unknown field '%s' for index: %s", value, mc.getClazz().getName()));
                 } else {
-                    key = mf.getNameToStore();
+                    StringBuilder sb = new StringBuilder();
+                    for (String s : namePath) {
+                        if (sb.length() != 0) {
+                            sb.append(".");
+                        }
+                        sb.append(s);
+                    }
+                    key = sb.toString();
                 }
             }
             keys.put(key, field.type().toIndexValue());
@@ -406,22 +414,21 @@ public class DatastoreImpl implements AdvancedDatastore {
         dbColl.createIndex(keys, opts);
     }
 
-    private MappedField findField(final MappedClass mc, final String value) {
+    private MappedField findField(final List<String> namePath, final MappedClass mc, final String value) {
         if (value.contains(".")) {
-            try {
-                String segment = value.substring(0, value.indexOf("."));
-                MappedField field1 = findField(mc, segment);
-                String className = field1.getSubType().getTypeName();
-                MappedClass mappedClass = getMapper().getMappedClass(Class.forName(className));
-                MappedField field = findField(mappedClass, value.substring(value.indexOf(".") + 1));
-                return field;
-            } catch (ClassNotFoundException e) {
-                throw new MappingException(e.getMessage());
-            }
+            String segment = value.substring(0, value.indexOf("."));
+            MappedField field = findField(namePath, mc, segment);
+            MappedClass mappedClass = getMapper().getMappedClass(field.getSubType() != null
+                                                                 ? field.getSubType() 
+                                                                 : field.getConcreteType());
+            return findField(namePath, mappedClass, value.substring(value.indexOf(".") + 1));
         } else {
             MappedField mf = mc.getMappedField(value);
             if (mf == null) {
                 mf = mc.getMappedFieldByJavaField(value);
+            }
+            if (mf != null) {
+                namePath.add(mf.getNameToStore());
             }
             return mf;
         }
