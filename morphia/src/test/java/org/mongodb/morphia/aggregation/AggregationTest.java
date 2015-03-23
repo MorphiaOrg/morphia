@@ -191,12 +191,14 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(1, book.copies.intValue());
     }
     
+    @Test
     public void testGenericAccumulator() {
         GenericAccumulator acc = new GenericAccumulator("$sum", 8);
         Assert.assertEquals("$sum", acc.getOperation());
         Assert.assertEquals(8, acc.getValue());
     }
 
+    @Test
     public void testGenericAccumulatorUsage() {
         getDs().save(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
@@ -205,9 +207,9 @@ public class AggregationTest extends TestBase {
                 new Book("Iliad", "Homer", 10));
         
         MorphiaIterator<CountResult, CountResult> aggregation = getDs().
-                <CountResult, CountResult>createAggregation(CountResult.class)
+                <Book, CountResult>createAggregation(Book.class)
                 .group("author", Group.grouping("count", new GenericAccumulator("$sum", 1)))
-                .sort(Sort.ascending("author"))
+                .sort(Sort.ascending("_id"))
                 .aggregate(CountResult.class);
         
         CountResult result1 = aggregation.next();
