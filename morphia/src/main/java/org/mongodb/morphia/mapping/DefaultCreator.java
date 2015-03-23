@@ -92,7 +92,7 @@ public class DefaultCreator implements ObjectFactory {
     }
 
     public Map createMap(final MappedField mf) {
-        return (Map) newInstance(mf.getCTor(), HashMap.class);
+        return (Map) newInstance(mf != null ? mf.getCTor() : null, HashMap.class);
     }
 
     public List createList(final MappedField mf) {

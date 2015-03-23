@@ -6,8 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +20,48 @@ import java.util.Map;
 /**
  * @author scotthernandez
  */
-public class NestedMapOrCollTest extends TestBase {
+public class NestedMapsAndListsTest extends TestBase {
 
+    @Entity
+    private static class ListOfMap {
+        @Id
+        private long id;
+        @Property
+        private final List<Map<String, String>> listOfMap = new ArrayList<Map<String, String>>();
+
+        @Override
+        public String toString() {
+            return String.format("ListOfMap{id=%d, listOfMap=%s}", id, listOfMap);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final ListOfMap listOfMap1 = (ListOfMap) o;
+
+            if (id != listOfMap1.id) {
+                return false;
+            }
+            if (!listOfMap.equals(listOfMap1.listOfMap)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + listOfMap.hashCode();
+            return result;
+        }
+    }
 
     private static class HashMapOfMap {
         @Id
@@ -99,5 +142,24 @@ public class NestedMapOrCollTest extends TestBase {
         Assert.assertEquals("lame", mapMap.mol.get("r1").get(0).mom.get("root").get("peer"));
         Assert.assertEquals("values", mapMap.mol.get("r2").get(0).mom.get("root").get("deep"));
         Assert.assertEquals("lame", mapMap.mol.get("r2").get(0).mom.get("root").get("peer"));
+    }
+
+    @Test
+    public void testListOfMap() {
+        getMorphia().map(ListOfMap.class);
+
+        ListOfMap entity = new ListOfMap();
+        HashMap<String, String> mapA = new HashMap<String, String>();
+        mapA.put("a", "b");
+        entity.listOfMap.add(mapA);
+        final Map<String, String> mapC = new HashMap<String, String>();
+        mapC.put("c", "d");
+        entity.listOfMap.add(mapC);
+
+        getDs().save(entity);
+
+        ListOfMap object = getDs().createQuery(ListOfMap.class).get();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(entity, object);
     }
 }

@@ -45,17 +45,17 @@ public class IterableConverter extends TypeConverter {
         if (fromDBObject.getClass().isArray()) {
             //This should never happen. The driver always returns list/arrays as a List
             for (final Object o : (Object[]) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
+                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
         } else if (fromDBObject instanceof Iterable) {
             // map back to the java data type
             // (List/Set/Array[])
             for (final Object o : (Iterable) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
+                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
         } else {
             //Single value case.
-            values.add(chain.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject));
+            values.add(chain.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
         }
 
         //convert to and array if that is the destination type (not a list/set)

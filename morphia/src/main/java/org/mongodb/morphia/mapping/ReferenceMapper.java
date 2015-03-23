@@ -295,7 +295,7 @@ class ReferenceMapper implements CustomMapper {
                 @Override
                 public void eval(final Object key, final Object val) {
 
-                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), key);
+                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), key, mf);
 
                     if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
                         final ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;

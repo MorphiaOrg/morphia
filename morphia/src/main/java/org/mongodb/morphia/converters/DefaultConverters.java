@@ -237,10 +237,6 @@ public class DefaultConverters {
         return getEncoder(toDecode).decode(toDecode, fromDBObject, mf);
     }
 
-    public Object decode(final Class c, final Object fromDBObject) {
-        return decode(c, fromDBObject, null);
-    }
-
     public Object encode(final Object o) {
         if (o == null) {
             return null;

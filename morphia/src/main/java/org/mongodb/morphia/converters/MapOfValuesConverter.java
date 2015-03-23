@@ -39,8 +39,8 @@ public class MapOfValuesConverter extends TypeConverter {
         new IterHelper<Object, Object>().loopMap(fromDBObject, new MapIterCallback<Object, Object>() {
             @Override
             public void eval(final Object key, final Object val) {
-                final Object objKey = converters.decode(mf.getMapKeyClass(), key);
-                values.put(objKey, converters.decode(mf.getSubClass(), val));
+                final Object objKey = converters.decode(mf.getMapKeyClass(), key, mf);
+                values.put(objKey, val != null ? converters.decode(val.getClass(), val, mf) : null);
             }
         });
 

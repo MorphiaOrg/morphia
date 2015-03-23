@@ -249,7 +249,7 @@ class EmbeddedMapper implements CustomMapper {
                     }
                 }
 
-                final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), key);
+                final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), key, mf);
                 map.put(objKey, newEntity);
             }
         });
