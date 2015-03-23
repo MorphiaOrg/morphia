@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
+import static org.mongodb.morphia.query.FilterOperator.INTERSECTS;
 
 
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
@@ -223,8 +225,15 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
         opts.put(s, v);
         return opts;
     }
-  
+
+    @Override
     public T type(final Type type) {
       return addCriteria(FilterOperator.TYPE, type.val());
+    }
+
+    @Override
+    public T intersects(final Geometry geometry) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
+        return target;
     }
 }

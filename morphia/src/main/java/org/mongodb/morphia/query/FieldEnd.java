@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
@@ -118,4 +119,14 @@ public interface FieldEnd<T> {
      * @return T
      */
     T within(MultiPolygon boundaries);
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning
+     * those where the given geometry intersects with the document shape.  This includes cases where the data and the
+     * specified object share an edge.
+     *
+     * @param geometry the shape to use to query for any stored shapes that intersect
+     * @return any documents where the GeoJson intersects with a specified {@code geometry}.
+     */
+    T intersects(Geometry geometry);
 }

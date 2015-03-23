@@ -5,7 +5,6 @@ import com.mongodb.DBObject;
 import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.GeometryQueryConverter;
 
-import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
 import static org.mongodb.morphia.query.FilterOperator.NEAR;
 
 /**
@@ -37,7 +36,8 @@ class StandardGeoFieldCriteria extends FieldCriteria {
                 query = BasicDBObjectBuilder.start(NEAR.val(), geometryAsDBObject);
                 break;
             case GEO_WITHIN:
-                query = BasicDBObjectBuilder.start(GEO_WITHIN.val(), geometryAsDBObject);
+            case INTERSECTS:
+                query = BasicDBObjectBuilder.start(operator.val(), geometryAsDBObject);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));
