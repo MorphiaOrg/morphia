@@ -4,6 +4,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoCommandException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -20,6 +21,13 @@ import java.util.List;
 import static org.mongodb.morphia.utils.IndexType.TEXT;
 
 public class TestTextIndexing extends TestBase {
+    @Override
+    @Before
+    public void setUp() {
+        checkMinServerVersion(2.6);
+        super.setUp();
+    }
+    
     @Entity
     @Indexes(@Index(fields = @Field(value = "$**", type = TEXT)))
     private static class TextIndexAll {
@@ -142,7 +150,7 @@ public class TestTextIndexing extends TestBase {
     }
 
     @Test(expected = MongoCommandException.class)
-    public void shouldNotAllowTextTypesInNotTextIndexes() {
+    public void shouldNotAllowMultipleTextIndexes() {
         Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;
         getMorphia().map(clazz);
         getDs().getCollection(clazz).drop();
