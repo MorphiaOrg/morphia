@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 
@@ -38,6 +35,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.ValidationException;
@@ -68,240 +66,6 @@ import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
  * @author Scott Hernandez
  */
 public class TestQuery extends TestBase {
-
-    @Entity
-    public static class Photo {
-        @Id
-        private ObjectId id;
-        private List<String> keywords = Collections.singletonList("amazing");
-    }
-
-
-    public static class PhotoWithKeywords {
-        @Id
-        private ObjectId id;
-        @Embedded
-        private List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
-
-        public PhotoWithKeywords() {
-        }
-
-        public PhotoWithKeywords(final String... words) {
-            keywords = new ArrayList<Keyword>((int) (words.length));
-            for (final String word : words) {
-                keywords.add(new Keyword(word));
-            }
-        }
-    }
-
-    @Embedded(concreteClass = Keyword.class)
-    public static class Keyword {
-        private String keyword;
-        private int score = 12;
-
-        protected Keyword() {
-        }
-
-        public Keyword(final String k) {
-            keyword = k;
-        }
-    }
-
-    public static class ContainsPhotoKey {
-        @Id
-        private ObjectId id;
-        private Key<Photo> photo;
-    }
-
-    @Entity
-    public static class HasIntId {
-        @Id
-        private int id;
-
-        protected HasIntId() {
-        }
-
-        HasIntId(final int id) {
-            this.id = id;
-        }
-    }
-
-    @Entity
-    public static class ContainsPic {
-        @Id
-        private ObjectId id;
-        private String name = "test";
-        @Reference
-        private Pic pic;
-        @Reference(lazy = true)
-        private Pic lazyPic;
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        public Pic getLazyPic() {
-            return lazyPic;
-        }
-
-        public void setLazyPic(final Pic lazyPic) {
-            this.lazyPic = lazyPic;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-
-        public Pic getPic() {
-            return pic;
-        }
-
-        public void setPic(final Pic pic) {
-            this.pic = pic;
-        }
-    }
-
-    @Entity
-    public static class Pic {
-        @Id
-        private ObjectId id;
-        private String name;
-
-        public Pic() {
-        }
-
-        public Pic(final String name) {
-            this.name = name;
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-    }
-
-    public static class ContainsRenamedFields {
-        @Id
-        private ObjectId id;
-        @Property("first_name")
-        private String firstName = "Scott";
-        @Property("last_name")
-        private String lastName = "Hernandez";
-
-        public ContainsRenamedFields() {
-        }
-
-        public ContainsRenamedFields(final String firstName, final String lastName) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-        }
-    }
-
-    @Entity
-    static class KeyValue {
-        @Id
-        private ObjectId id;
-        /**
-         * The list of keys for this value.
-         */
-        @Indexed(unique = true)
-        private List<Object> key;
-        /**
-         * The id of the value document
-         */
-        @Indexed
-        private ObjectId value;
-    }
-
-    @Entity
-    static class GenericKeyValue<T> {
-
-        @Id
-        private ObjectId id;
-
-        @Indexed(unique = true)
-        private List<Object> key;
-
-        @Embedded
-        private T value;
-    }
-
-    @Entity
-    static class ReferenceKeyValue {
-        @Id
-        private ReferenceKey id;
-        /**
-         * The list of keys for this value.
-         */
-        @Indexed(unique = true)
-        @Reference
-        private List<Pic> key;
-        /**
-         * The id of the value document
-         */
-        @Indexed
-        private ObjectId value;
-    }
-
-    static class ReferenceKey {
-        @Id
-        private ObjectId id;
-        private String name;
-
-        ReferenceKey() {
-        }
-
-        ReferenceKey(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final ReferenceKey that = (ReferenceKey) o;
-
-            if (id != null ? !id.equals(that.id) : that.id != null) {
-                return false;
-            }
-            if (name != null ? !name.equals(that.name) : that.name != null) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (name != null ? name.hashCode() : 0);
-            return result;
-        }
-    }
 
     @Test
     public void testRenamedFieldQuery() throws Exception {
@@ -394,7 +158,6 @@ public class TestQuery extends TestBase {
         assertEquals(1, query.field("lazyPic").equal(p).asList().size());
     }
 
-
     @Test
     public void testWhereCodeWScopeQuery() throws Exception {
         getDs().save(new PhotoWithKeywords());
@@ -430,9 +193,9 @@ public class TestQuery extends TestBase {
     public void testRegexQuery() throws Exception {
         getDs().save(new PhotoWithKeywords());
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                          .disableValidation()
-                          .filter("keywords.keyword", Pattern.compile("california"))
-                          .get());
+                             .disableValidation()
+                             .filter("keywords.keyword", Pattern.compile("california"))
+                             .get());
         assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", Pattern.compile("blah")).get());
     }
 
@@ -466,8 +229,8 @@ public class TestQuery extends TestBase {
                      new PhotoWithKeywords("scott", "hernandez"));
         getDs().save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
         final List<PhotoWithKeywords> list = getDs().find(PhotoWithKeywords.class)
-                                                 .batchSize(-2)
-                                                 .asList();
+                                                    .batchSize(-2)
+                                                    .asList();
         Assert.assertEquals(2, list.size());
     }
 
@@ -478,9 +241,9 @@ public class TestQuery extends TestBase {
                      new PhotoWithKeywords("scott", "hernandez"),
                      new PhotoWithKeywords("scott", "hernandez"));
         final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott")
-                                                   .enableSnapshotMode()
-                                                   .batchSize(2)
-                                                   .iterator();
+                                                      .enableSnapshotMode()
+                                                      .batchSize(2)
+                                                      .iterator();
         getDs().save(new PhotoWithKeywords("1", "2"), new PhotoWithKeywords("3", "4"), new PhotoWithKeywords("5", "6"));
 
         PhotoWithKeywords pwkLoaded;
@@ -523,11 +286,20 @@ public class TestQuery extends TestBase {
         getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
         getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
         try {
-            getDs().find(ContainsRenamedFields.class).retrievedFields(true, "bad field name").get();
+            getDs()
+                .find(ContainsRenamedFields.class)
+                .retrievedFields(true, "bad field name").get();
             Assert.fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
             // success!
         }
+
+        Query<ContainsRenamedFields> query = getDs()
+                                                 .find(ContainsRenamedFields.class)
+                                                 .retrievedFields(true, "_id", "first_name");
+        DBObject fields = query.getFieldsObject();
+        Assert.assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+
     }
 
     @Test
@@ -720,7 +492,6 @@ public class TestQuery extends TestBase {
         assertNull(p);
     }
 
-
     @Test
     public void testElemMatchQuery() throws Exception {
         final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
@@ -728,9 +499,9 @@ public class TestQuery extends TestBase {
 
         getDs().save(pwk1, pwk2);
         final PhotoWithKeywords pwkScott = getDs().find(PhotoWithKeywords.class)
-                                               .field("keywords")
-                                               .hasThisElement(new Keyword("Scott"))
-                                               .get();
+                                                  .field("keywords")
+                                                  .hasThisElement(new Keyword("Scott"))
+                                                  .get();
         assertNotNull(pwkScott);
         // TODO add back when $and is done (> 1.5)
         // PhotoWithKeywords pwkScottSarah= getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new 
@@ -937,7 +708,6 @@ public class TestQuery extends TestBase {
         assertEquals(1, getDs().find(HasIntId.class).field("_id").greaterThan(0).field("_id").lessThan(11).countAll());
     }
 
-
     @Test
     public void testRangeQuery() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5),
@@ -964,9 +734,9 @@ public class TestQuery extends TestBase {
 
         assertEquals(2, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height >", 3).filter("height <", 8)));
         assertEquals(1, getDs().getCount(getDs().createQuery(Rectangle.class)
-                                             .filter("height >", 3)
-                                             .filter("height <", 8)
-                                             .filter("width", 10)));
+                                                .filter("height >", 3)
+                                                .filter("height <", 8)
+                                                .filter("width", 10)));
     }
 
     @Test
@@ -1123,7 +893,7 @@ public class TestQuery extends TestBase {
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
         DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
-                                                           .append("ns", getDs().getCollection(Pic.class).getFullName()));
+                                                               .append("ns", getDs().getCollection(Pic.class).getFullName()));
         assertEquals(expectedComment, ((DBObject) profileRecord.get("query")).get("$comment"));
 
         // finally
@@ -1148,7 +918,7 @@ public class TestQuery extends TestBase {
         assertThat("Name should be populated", foundItem.getName(), is("pic2"));
         assertNull("ID should not be populated", foundItem.getId());
     }
-    
+
     @After
     public void tearDown() {
         turnOffProfilingAndDropProfileCollection();
@@ -1159,5 +929,239 @@ public class TestQuery extends TestBase {
         getDb().command(new BasicDBObject("profile", 0));
         DBCollection profileCollection = getDb().getCollection("system.profile");
         profileCollection.drop();
+    }
+
+    @Entity
+    public static class Photo {
+        @Id
+        private ObjectId id;
+        private List<String> keywords = Collections.singletonList("amazing");
+    }
+
+    public static class PhotoWithKeywords {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
+
+        public PhotoWithKeywords() {
+        }
+
+        public PhotoWithKeywords(final String... words) {
+            keywords = new ArrayList<Keyword>((int) (words.length));
+            for (final String word : words) {
+                keywords.add(new Keyword(word));
+            }
+        }
+    }
+
+    @Embedded(concreteClass = Keyword.class)
+    public static class Keyword {
+        private String keyword;
+        private int score = 12;
+
+        protected Keyword() {
+        }
+
+        public Keyword(final String k) {
+            keyword = k;
+        }
+    }
+
+    public static class ContainsPhotoKey {
+        @Id
+        private ObjectId id;
+        private Key<Photo> photo;
+    }
+
+    @Entity
+    public static class HasIntId {
+        @Id
+        private int id;
+
+        protected HasIntId() {
+        }
+
+        HasIntId(final int id) {
+            this.id = id;
+        }
+    }
+
+    @Entity
+    public static class ContainsPic {
+        @Id
+        private ObjectId id;
+        private String name = "test";
+        @Reference
+        private Pic pic;
+        @Reference(lazy = true)
+        private Pic lazyPic;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public Pic getLazyPic() {
+            return lazyPic;
+        }
+
+        public void setLazyPic(final Pic lazyPic) {
+            this.lazyPic = lazyPic;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+
+        public Pic getPic() {
+            return pic;
+        }
+
+        public void setPic(final Pic pic) {
+            this.pic = pic;
+        }
+    }
+
+    @Entity
+    public static class Pic {
+        @Id
+        private ObjectId id;
+        private String name;
+
+        public Pic() {
+        }
+
+        public Pic(final String name) {
+            this.name = name;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class ContainsRenamedFields {
+        @Id
+        private ObjectId id;
+        @Property("first_name")
+        private String firstName = "Scott";
+        @Property("last_name")
+        private String lastName = "Hernandez";
+
+        public ContainsRenamedFields() {
+        }
+
+        public ContainsRenamedFields(final String firstName, final String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+    }
+
+    @Entity
+    static class KeyValue {
+        @Id
+        private ObjectId id;
+        /**
+         * The list of keys for this value.
+         */
+        @Indexed(unique = true)
+        private List<Object> key;
+        /**
+         * The id of the value document
+         */
+        @Indexed
+        private ObjectId value;
+    }
+
+    @Entity
+    static class GenericKeyValue<T> {
+
+        @Id
+        private ObjectId id;
+
+        @Indexed(unique = true)
+        private List<Object> key;
+
+        @Embedded
+        private T value;
+    }
+
+    @Entity
+    static class ReferenceKeyValue {
+        @Id
+        private ReferenceKey id;
+        /**
+         * The list of keys for this value.
+         */
+        @Indexed(unique = true)
+        @Reference
+        private List<Pic> key;
+        /**
+         * The id of the value document
+         */
+        @Indexed
+        private ObjectId value;
+    }
+
+    static class ReferenceKey {
+        @Id
+        private ObjectId id;
+        private String name;
+
+        ReferenceKey() {
+        }
+
+        ReferenceKey(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final ReferenceKey that = (ReferenceKey) o;
+
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            if (name != null ? !name.equals(that.name) : that.name != null) {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

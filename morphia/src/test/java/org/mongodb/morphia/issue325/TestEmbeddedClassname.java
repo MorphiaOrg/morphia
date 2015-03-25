@@ -34,6 +34,7 @@ public class TestEmbeddedClassname extends TestBase {
         private final List<B> bList = new ArrayList<B>();
     }
 
+    @Embedded
     private static class A {
         private String name = "some name";
 

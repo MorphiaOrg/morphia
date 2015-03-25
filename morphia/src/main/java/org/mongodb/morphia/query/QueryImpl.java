@@ -174,8 +174,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             fieldsFilter.put(field, (includeFields ? 1 : 0));
         }
 
+        final MappedClass mc = ds.getMapper().getMappedClass(clazz);
+        
         //Add className field just in case.
-        if (includeFields) {
+        Entity entityAnnotation = mc.getEntityAnnotation();
+        if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
             fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
         }
 
