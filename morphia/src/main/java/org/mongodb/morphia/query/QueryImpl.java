@@ -167,8 +167,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
         for (String field : fields) {
             final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db 
-            // field 
-            // name
             validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
             field = sb.toString();
             fieldsFilter.put(field, (includeFields ? 1 : 0));
@@ -176,7 +174,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
         
-        //Add className field just in case.
         Entity entityAnnotation = mc.getEntityAnnotation();
         if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
             fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
