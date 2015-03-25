@@ -36,9 +36,13 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        Object encodedObjects = encodeObjects(((Geometry) value).getCoordinates());
-        return new BasicDBObject("type", geoJsonType.getType())
-               .append("coordinates", encodedObjects);
+        if (value != null) {
+            Object encodedObjects = encodeObjects(((Geometry) value).getCoordinates());
+            return new BasicDBObject("type", geoJsonType.getType())
+                   .append("coordinates", encodedObjects);
+        } else {
+            return null;
+        }
     }
 
     private Object encodeObjects(final List value) {
