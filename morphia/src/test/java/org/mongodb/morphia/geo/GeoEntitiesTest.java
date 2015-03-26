@@ -124,8 +124,8 @@ public class GeoEntitiesTest extends TestBase {
         // then use the underlying driver to ensure it was persisted correctly to the database
         DBObject storedArea = getDs().getCollection(Area.class).findOne(new BasicDBObject("name", "The Area"),
                                                                         new BasicDBObject("_id", 0)
-                                                                        .append("className", 0)
-                                                                        .append("area.className", 0));
+                                                                            .append("className", 0)
+                                                                            .append("area.className", 0));
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: 'The Area',"
@@ -169,8 +169,8 @@ public class GeoEntitiesTest extends TestBase {
         // then use the underlying driver to ensure it was persisted correctly to the database
         DBObject storedArea = getDs().getCollection(Area.class).findOne(new BasicDBObject("name", polygonName),
                                                                         new BasicDBObject("_id", 0)
-                                                                        .append("className", 0)
-                                                                        .append("area.className", 0));
+                                                                            .append("className", 0)
+                                                                            .append("area.className", 0));
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: " + polygonName + ","
@@ -331,7 +331,7 @@ public class GeoEntitiesTest extends TestBase {
         // then use the underlying driver to ensure it was persisted correctly to the database
         DBObject storedRegions = getDs().getCollection(Regions.class).findOne(new BasicDBObject("name", name),
                                                                               new BasicDBObject("_id", 0)
-                                                                              .append("className", 0));
+                                                                                  .append("className", 0));
         assertThat(storedRegions, is(notNullValue()));
         assertThat(storedRegions.toString(), JSONMatcher.jsonEqual("  {"
                                                                    + " name: '" + name + "',"
@@ -403,7 +403,7 @@ public class GeoEntitiesTest extends TestBase {
         MultiPolygon multiPolygon = multiPolygon(polygon(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
                                                  polygon(lineString(point(1.2, 3.0), point(2.5, 4.5), point(6.7, 1.9), point(1.2, 3.0)),
                                                          lineString(point(3.5, 2.4), point(1.7, 2.8), point(3.5, 2.4))));
-        
+
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point, lineString, polygonWithHoles, multiPoint, multiLineString,
                                                                            multiPolygon);
         AllTheThings allTheThings = new AllTheThings(name, geometryCollection);
@@ -414,7 +414,7 @@ public class GeoEntitiesTest extends TestBase {
         // then use the underlying driver to ensure it was persisted correctly to the database
         DBObject storedArea = getDs().getCollection(AllTheThings.class).findOne(new BasicDBObject("name", name),
                                                                                 new BasicDBObject("_id", 0)
-                                                                                .append("className", 0));
+                                                                                    .append("className", 0));
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: '" + name + "',"
@@ -530,6 +530,19 @@ public class GeoEntitiesTest extends TestBase {
         assertThat(found, is(allTheThings));
     }
 
+    @Test
+    public void shouldSaveAnEntityWithNullPoints() {
+        getDs().save(new City("New City", null));
+
+        DBObject storedCity = getDs().getCollection(City.class)
+                                     .findOne(new BasicDBObject("name", "New City"),
+                                              new BasicDBObject("_id", 0)
+                                                  .append("className", 0));
+        assertThat(storedCity, is(notNullValue()));
+        assertThat(storedCity.toString(), JSONMatcher.jsonEqual("{ name: 'New City'}"));
+    }
+
+
     @SuppressWarnings("UnusedDeclaration")
     private static final class Paths {
         private String name;
@@ -541,6 +554,13 @@ public class GeoEntitiesTest extends TestBase {
         private Paths(final String name, final MultiLineString paths) {
             this.name = name;
             this.paths = paths;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + paths.hashCode();
+            return result;
         }
 
         @Override
@@ -564,12 +584,6 @@ public class GeoEntitiesTest extends TestBase {
             return true;
         }
 
-        @Override
-        public int hashCode() {
-            int result = name.hashCode();
-            result = 31 * result + paths.hashCode();
-            return result;
-        }
 
         @Override
         public String toString() {

@@ -57,53 +57,64 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return target;
   }
 
+  @Override
   public FieldEnd<T> not() {
     not = !not;
     return this;
   }
 
+  @Override
   public T startsWith(final String prefix) {
     Assert.parametersNotNull("val", prefix);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile("^" + prefix));
   }
 
+  @Override
   public T startsWithIgnoreCase(final String prefix) {
     Assert.parametersNotNull("val", prefix);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile("^" + prefix, Pattern.CASE_INSENSITIVE));
   }
 
+  @Override
   public T endsWith(final String suffix) {
     Assert.parametersNotNull("val", suffix);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile(suffix + "$"));
   }
 
+  @Override
   public T endsWithIgnoreCase(final String suffix) {
     Assert.parametersNotNull("val", suffix);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile(suffix + "$", Pattern.CASE_INSENSITIVE));
   }
 
+  @Override
   public T contains(final String string) {
     Assert.parametersNotNull("val", string);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile(string));
   }
 
+  @Override
   public T containsIgnoreCase(final String string) {
     Assert.parametersNotNull("val", string);
     return addCriteria(FilterOperator.EQUAL, Pattern.compile(string, Pattern.CASE_INSENSITIVE));
   }
 
+  @Override
   public T exists() {
     return addCriteria(FilterOperator.EXISTS, true);
   }
 
+  @Override
   public T doesNotExist() {
     return addCriteria(FilterOperator.EXISTS, false);
   }
 
+  @Override
   public T equal(final Object val) {
     return addCriteria(FilterOperator.EQUAL, val);
   }
 
+  @Override
   public T within(final Shape shape) {
     Assert.parametersNotNull("shape", shape);
     return addCriteria(GEO_WITHIN, shape.toDBObject());
@@ -121,26 +132,31 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return target;
   }
 
+  @Override
   public T greaterThan(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.GREATER_THAN, val);
   }
 
+  @Override
   public T greaterThanOrEq(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.GREATER_THAN_OR_EQUAL, val);
   }
 
+  @Override
   public T hasThisOne(final Object val) {
     return addCriteria(FilterOperator.EQUAL, val);
   }
 
+  @Override
   public T hasAllOf(final Iterable<?> values) {
     Assert.parametersNotNull("values", values);
     Assert.parameterNotEmpty(values, "values");
     return addCriteria(FilterOperator.ALL, values);
   }
 
+  @Override
   public T hasAnyOf(final Iterable<?> values) {
     Assert.parametersNotNull("values", values);
     if (LOG.isWarningEnabled()) {
@@ -151,59 +167,72 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     return addCriteria(FilterOperator.IN, values);
   }
 
+  @Override
   public T in(final Iterable<?> values) {
     return hasAnyOf(values);
   }
 
+  @Override
   public T mod(final long divisor, final long remainder) {
     return addCriteria(FilterOperator.MOD, new long[] {divisor, remainder});
   }
 
+  @Override
   public T hasThisElement(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.ELEMENT_MATCH, val);
   }
 
+  @Override
   public T hasNoneOf(final Iterable<?> values) {
     Assert.parametersNotNull("values", values);
     Assert.parameterNotEmpty(values, "values");
     return addCriteria(FilterOperator.NOT_IN, values);
   }
 
+  @Override
   public T notIn(final Iterable<?> values) {
     return hasNoneOf(values);
   }
 
+  @Override
   public T lessThan(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.LESS_THAN, val);
   }
 
+  @Override
   public T lessThanOrEq(final Object val) {
     Assert.parametersNotNull("val", val);
     return addCriteria(FilterOperator.LESS_THAN_OR_EQUAL, val);
   }
 
+  @Override
   public T notEqual(final Object val) {
     return addCriteria(FilterOperator.NOT_EQUAL, val);
   }
 
+  @Override
   public T sizeEq(final int val) {
     return addCriteria(FilterOperator.SIZE, val);
   }
 
+  @Override
   public T near(final double x, final double y) {
     return near(x, y, false);
   }
 
+  @Override
   public T near(final double x, final double y, final double radius) {
     return near(x, y, radius, false);
   }
 
+  @Override
   public T near(final double x, final double y, final double radius, final boolean spherical) {
     return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, opts("$maxDistance", radius));
   }
 
+  @Override
   public T near(final double x, final double y, final boolean spherical) {
     return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, null);
   }

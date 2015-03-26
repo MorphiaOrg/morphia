@@ -40,6 +40,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -265,6 +266,8 @@ public final class ReflectionUtils {
                         // from the T/V/X
                         // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) 
                         // paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
+                        return paramType;
+                    } else if (paramType instanceof WildcardType) {
                         return paramType;
                     } else if (paramType instanceof Class) {
                         return paramType;

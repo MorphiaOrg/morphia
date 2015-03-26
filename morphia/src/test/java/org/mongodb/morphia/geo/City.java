@@ -23,25 +23,22 @@ public class City {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof City)) {
             return false;
         }
 
-        City city = (City) o;
+        final City city = (City) o;
 
-        if (!location.equals(city.location)) {
+        if (location != null ? !location.equals(city.location) : city.location != null) {
             return false;
         }
-        if (!name.equals(city.name)) {
-            return false;
-        }
+        return name.equals(city.name);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = location.hashCode();
+        int result = location != null ? location.hashCode() : 0;
         result = 31 * result + name.hashCode();
         return result;
     }

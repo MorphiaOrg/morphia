@@ -2,6 +2,7 @@ package org.mongodb.morphia.query;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Field;
@@ -13,6 +14,13 @@ import org.mongodb.morphia.utils.IndexType;
 import java.util.List;
 
 public class TestTextSearching extends TestBase {
+    @Override
+    @Before
+    public void setUp() {
+        checkMinServerVersion(2.6);
+        super.setUp();
+    }
+
     @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
     public static class Greeting {
         @Id
@@ -49,6 +57,7 @@ public class TestTextSearching extends TestBase {
 
         List<Greeting> good = getDs().createQuery(Greeting.class)
                                      .search("good")
+                                     .order("_id")
                                      .asList();
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
@@ -58,6 +67,7 @@ public class TestTextSearching extends TestBase {
 
         good = getDs().createQuery(Greeting.class)
                       .search("good", "english")
+                      .order("_id")
                       .asList();
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
@@ -66,13 +76,13 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good riddance", good.get(3).value);
 
         Assert.assertEquals(1, getDs().createQuery(Greeting.class)
-                      .search("riddance")
-                      .asList().size());
+                                      .search("riddance")
+                                      .asList().size());
         Assert.assertEquals(1, getDs().createQuery(Greeting.class)
-                      .search("noches", "spanish")
-                      .asList().size());
+                                      .search("noches", "spanish")
+                                      .asList().size());
         Assert.assertEquals(1, getDs().createQuery(Greeting.class)
-                      .search("Tag")
-                      .asList().size());
+                                      .search("Tag")
+                                      .asList().size());
     }
 }
