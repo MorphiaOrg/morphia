@@ -498,15 +498,18 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
 
         getDs().save(pwk1, pwk2);
-        final PhotoWithKeywords pwkScott = getDs().find(PhotoWithKeywords.class)
-                                                  .field("keywords")
-                                                  .hasThisElement(new Keyword("Scott"))
-                                                  .get();
+        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                                                              .field("keywords")
+                                                              .hasThisElement(new Keyword("Scott"));
+        final PhotoWithKeywords pwkScott = query.get();
         assertNotNull(pwkScott);
-        // TODO add back when $and is done (> 1.5)
-        // PhotoWithKeywords pwkScottSarah= getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword[] {new 
-        // Keyword("Scott"), new Keyword("Joe")}).get();
-        // assertNotNull(pwkScottSarah);
+        // TODO add back when $and is done (> 1.5)  this needs multiple $elemMatch clauses
+//        query = getDs().find(PhotoWithKeywords.class)
+//                       .field("keywords")
+//                       .hasThisElement(new Keyword[]{new Keyword("Scott"), new Keyword("Joe")});
+//        System.out.println("************ query = " + query);
+//        PhotoWithKeywords pwkScottSarah = query.get();
+//        assertNotNull(pwkScottSarah);
         final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
         assertNull(pwkBad);
 
