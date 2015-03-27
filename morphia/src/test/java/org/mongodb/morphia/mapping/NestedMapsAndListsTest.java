@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -15,6 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -59,6 +62,41 @@ public class NestedMapsAndListsTest extends TestBase {
         public int hashCode() {
             int result = (int) (id ^ (id >>> 32));
             result = 31 * result + listOfMap.hashCode();
+            return result;
+        }
+    }
+    
+    @Entity
+    private static class ListOfList {
+        @Id
+        private long id;
+        @Property
+        private final List<List<String>> list = new ArrayList<List<String>>();
+
+        @Override
+        public String toString() {
+            return String.format("ListOfList{id=%d, list=%s}", id, list);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ListOfList)) {
+                return false;
+            }
+
+            final ListOfList that = (ListOfList) o;
+
+            return id == that.id && list.equals(that.list);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + list.hashCode();
             return result;
         }
     }
@@ -161,5 +199,17 @@ public class NestedMapsAndListsTest extends TestBase {
         ListOfMap object = getDs().createQuery(ListOfMap.class).get();
         Assert.assertNotNull(object);
         Assert.assertEquals(entity, object);
+    }
+    
+    @Test
+    @Ignore
+    public void testListOfList() {
+        ListOfList list = new ListOfList();
+        list.list.add(asList("a", "b", "c"));
+        list.list.add(asList("123", "456"));
+        getDs().save(list);
+
+        ListOfList listOfList = getDs().createQuery(ListOfList.class).get();
+        Assert.assertEquals(list, listOfList);
     }
 }
