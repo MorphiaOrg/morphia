@@ -116,10 +116,9 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
-                                          .skip(2)
-                                          .aggregate(Book.class);
-        Book book = aggregate.next();
+        Book book = getDs().createAggregation(Book.class)
+                           .skip(2)
+                           .aggregate(Book.class).next();
         Assert.assertEquals("Eclogues", book.title);
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(2, book.copies.intValue());
