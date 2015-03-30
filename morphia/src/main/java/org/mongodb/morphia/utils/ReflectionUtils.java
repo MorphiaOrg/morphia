@@ -438,7 +438,7 @@ public final class ReflectionUtils {
     }
 
     private static String getPackageName(final String filename) {
-        return filename.substring(0, filename.lastIndexOf('/'));
+        return filename.contains("/") ? filename.substring(0, filename.lastIndexOf('/')) : filename;
     }
 
     public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName)
