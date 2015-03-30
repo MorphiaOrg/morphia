@@ -59,7 +59,7 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.books);
 
-        getDs().<Book, Author>createAggregation(Book.class)
+        getDs().createAggregation(Book.class)
                .group("author", grouping("books", push("title")))
                .out("different", Author.class);
 
@@ -75,7 +75,7 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
                      new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel"));
 
-        getDs().<Book, Author>createAggregation(Book.class)
+        getDs().createAggregation(Book.class)
                .match(getDs().getQueryFactory().createQuery(getDs())
                              .field("author").equal("Homer"))
                .group("author", grouping("copies", sum("copies")))
