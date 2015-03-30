@@ -3,27 +3,24 @@ package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
-import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * This defines the pipeline used in aggregation operations
  *
  * @see <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline/">Aggregation Pipeline</a>
- * 
- * @param <T> The input type of the aggregation
- * @param <U> The output type of the aggregation
  */
-public interface AggregationPipeline<T, U> {
+public interface AggregationPipeline {
     /**
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one
      * document.
      *
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project">$project</a>
      */
-    AggregationPipeline<T, U> project(Projection... projections);
+    AggregationPipeline project(Projection... projections);
 
     /**
      * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group .
@@ -32,12 +29,12 @@ public interface AggregationPipeline<T, U> {
      *
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#pipe._S_group">$group</a>
      */
-    AggregationPipeline<T, U> group(String id, Group... groupings);
+    AggregationPipeline group(String id, Group... groupings);
 
     /**
      * @see #group(String, Group...}
      */
-    AggregationPipeline<T, U> group(List<Group> id, Group... groupings);
+    AggregationPipeline group(List<Group> id, Group... groupings);
 
     /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
@@ -45,7 +42,7 @@ public interface AggregationPipeline<T, U> {
      *
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/match/#pipe._S_match">$match</a>
      */
-    AggregationPipeline<T, U> match(Query query);
+    AggregationPipeline match(Query query);
 
     /**
      * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input
@@ -53,7 +50,7 @@ public interface AggregationPipeline<T, U> {
      * 
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/sort/#pipe._S_sort">$sort</a>
      */
-    AggregationPipeline<T, U> sort(Sort... sorts);
+    AggregationPipeline sort(Sort... sorts);
 
     /**
      * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either 
@@ -61,7 +58,7 @@ public interface AggregationPipeline<T, U> {
      * 
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/limit/#pipe._S_limit">$limit</a>
      */
-    AggregationPipeline<T, U> limit(int count);
+    AggregationPipeline limit(int count);
 
     /**
      * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. 
@@ -69,7 +66,7 @@ public interface AggregationPipeline<T, U> {
      * 
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/skip/#pipe._S_skip">$skip</a>
      */
-    AggregationPipeline<T, U> skip(int count);
+    AggregationPipeline skip(int count);
 
     /**
      * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the 
@@ -78,7 +75,7 @@ public interface AggregationPipeline<T, U> {
      * 
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/#pipe._S_unwind">$unwind</a>
      */
-    AggregationPipeline<T, U> unwind(String field);
+    AggregationPipeline unwind(String field);
 
     /**
      * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match, 
@@ -87,7 +84,7 @@ public interface AggregationPipeline<T, U> {
      * 
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/geoNear/#pipe._S_geoNear">$geoNear</a>
      */
-    AggregationPipeline<T, U> geoNear(GeoNear geoNear);
+    AggregationPipeline geoNear(GeoNear geoNear);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type using the default options as defined in {@link
@@ -96,7 +93,7 @@ public interface AggregationPipeline<T, U> {
      * @param target The class to use when iterating over the results
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> out(Class<U> target);
+    <U> Iterator<U> out(Class<U> target);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type.
@@ -105,7 +102,7 @@ public interface AggregationPipeline<T, U> {
      * @param options The options to apply to this aggregation
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> out(Class<U> target, AggregationOptions options);
+    <U> Iterator<U> out(Class<U> target, AggregationOptions options);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type using the default options as defined in {@link
@@ -115,7 +112,7 @@ public interface AggregationPipeline<T, U> {
      * @param target         The class to use when iterating over the results
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> out(String collectionName, Class<U> target);
+    <U> Iterator<U> out(String collectionName, Class<U> target);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type.
@@ -125,7 +122,7 @@ public interface AggregationPipeline<T, U> {
      * @param options        The options to apply to this aggregation
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> out(String collectionName, Class<U> target, AggregationOptions options);
+    <U> Iterator<U> out(String collectionName, Class<U> target, AggregationOptions options);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type using the default options as defined in
@@ -134,7 +131,7 @@ public interface AggregationPipeline<T, U> {
      * @param target The class to use when iterating over the results
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> aggregate(Class<U> target);
+    <U> Iterator<U> aggregate(Class<U> target);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -143,7 +140,7 @@ public interface AggregationPipeline<T, U> {
      * @param options The options to apply to this aggregation
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> aggregate(Class<U> target, AggregationOptions options);
+    <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -153,7 +150,7 @@ public interface AggregationPipeline<T, U> {
      * @param readPreference The read preference to apply to this pipeline
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> aggregate(Class<U> target, AggregationOptions options, ReadPreference readPreference);
+    <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options, ReadPreference readPreference);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -164,5 +161,5 @@ public interface AggregationPipeline<T, U> {
      * @param readPreference The read preference to apply to this pipeline
      * @return an iterator of the computed results
      */
-    MorphiaIterator<U, U> aggregate(String collectionName, Class<U> target, AggregationOptions options, ReadPreference readPreference);
+    <U> Iterator<U> aggregate(String collectionName, Class<U> target, AggregationOptions options, ReadPreference readPreference);
 }

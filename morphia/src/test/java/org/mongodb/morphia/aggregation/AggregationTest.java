@@ -24,17 +24,18 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.query.MorphiaIterator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
+import static org.mongodb.morphia.aggregation.Projection.divide;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 
 public class AggregationTest extends TestBase {
@@ -48,11 +49,11 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         AggregationOptions options = AggregationOptions.builder()
-                                                     .outputMode(AggregationOptions.OutputMode.CURSOR)
-                                                     .build();
-        MorphiaIterator<Author, Author> aggregate = getDs().<Book, Author>createAggregation(Book.class)
-                                                           .group("author", grouping("books", push("title")))
-                                                           .out(Author.class, options);
+                                                       .outputMode(AggregationOptions.OutputMode.CURSOR)
+                                                       .build();
+        Iterator<Author> aggregate = getDs().createAggregation(Book.class)
+                                            .group("author", grouping("books", push("title")))
+                                            .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
@@ -96,9 +97,9 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
-                                                       .limit(2)
-                                                       .aggregate(Book.class);
+        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
+                                          .limit(2)
+                                          .aggregate(Book.class);
         int count = 0;
         while (aggregate.hasNext()) {
             aggregate.next();
@@ -115,9 +116,9 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
-                                                       .skip(2)
-                                                       .aggregate(Book.class);
+        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
+                                          .skip(2)
+                                          .aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Eclogues", book.title);
         Assert.assertEquals("Dante", book.author);
@@ -130,11 +131,11 @@ public class AggregationTest extends TestBase {
         getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
-        MorphiaIterator<User, User> aggregate = getDs().<User, User>createAggregation(User.class)
-                                                       .project(projection("_id").suppress(), projection("name"), projection("joined"),
-                                                                projection("likes"))
-                                                       .unwind("likes")
-                                                       .aggregate(User.class);
+        Iterator<User> aggregate = getDs().createAggregation(User.class)
+                                          .project(projection("_id").suppress(), projection("name"), projection("joined"),
+                                                   projection("likes"))
+                                          .unwind("likes")
+                                          .aggregate(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -169,22 +170,18 @@ public class AggregationTest extends TestBase {
     @Test
     public void testProjection() {
         getDs().save(new Book("The Banquet", "Dante", 2),
-                new Book("Divine Comedy", "Dante", 1),
-                new Book("Eclogues", "Dante", 2),
-                new Book("The Odyssey", "Homer", 10),
-                new Book("Iliad", "Homer", 10));
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs()
-                .<Book, Book>createAggregation(Book.class)
-                .group("author",
-                        Group.grouping("copies", Group.sum("copies")))
-                .project(
-                        Projection.projection("_id").suppress(),
-                        Projection.projection("author", "_id"),
-                        Projection.projection("copies", 
-                                Projection.divide(Projection.projection("copies"), 5)))
-                .sort(Sort.ascending("author"))
-                .aggregate(Book.class);
+        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
+                                          .group("author", Group.grouping("copies", Group.sum("copies")))
+                                          .project(projection("_id").suppress(),
+                                                   projection("author", "_id"),
+                                                   projection("copies", divide(projection("copies"), 5)))
+                                          .sort(Sort.ascending("author"))
+                                          .aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
@@ -199,7 +196,6 @@ public class AggregationTest extends TestBase {
 
         // Then
     }
-
 
     @Entity(value = "books", noClassnameStored = true)
     private static final class Book {

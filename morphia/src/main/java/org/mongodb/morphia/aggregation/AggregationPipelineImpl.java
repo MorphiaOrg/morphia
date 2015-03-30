@@ -17,19 +17,20 @@ import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> {
+public class AggregationPipelineImpl implements AggregationPipeline {
     private static final Logger LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
 
     private final DBCollection collection;
-    private final Class<T> source;
+    private final Class source;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
     private final DatastoreImpl datastore;
     private boolean firstStage = false;
 
-    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source) {
+    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class source) {
         this.datastore = datastore;
         this.collection = datastore.getCollection(source);
         mapper = datastore.getMapper();
@@ -85,7 +86,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return result;
     }
 
-    public AggregationPipeline<T, U> project(final Projection... projections) {
+    @Override
+    public AggregationPipeline project(final Projection... projections) {
         firstStage = stages.isEmpty();
         DBObject dbObject = new BasicDBObject();
         for (Projection projection : projections) {
@@ -95,7 +97,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
-    public AggregationPipeline<T, U> group(final String id, final Group... groupings) {
+    @Override
+    public AggregationPipeline group(final String id, final Group... groupings) {
         DBObject group = new BasicDBObject("_id", "$" + id);
         for (Group grouping : groupings) {
             Accumulator accumulator = grouping.getAccumulator();
@@ -106,7 +109,8 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
-    public AggregationPipeline<T, U> group(final List<Group> id, final Group... groupings) {
+    @Override
+    public AggregationPipeline group(final List<Group> id, final Group... groupings) {
         DBObject idGroup = new BasicDBObject();
         for (Group group : id) {
             idGroup.put(group.getName(), group.getSourceField());
@@ -121,12 +125,14 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
-    public AggregationPipeline<T, U> match(final Query query) {
+    @Override
+    public AggregationPipeline match(final Query query) {
         stages.add(new BasicDBObject("$match", query.getQueryObject()));
         return this;
     }
 
-    public AggregationPipeline<T, U> sort(final Sort... sorts) {
+    @Override
+    public AggregationPipeline sort(final Sort... sorts) {
         DBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
             sortList.put(sort.getField(), sort.getDirection());
@@ -136,22 +142,26 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         return this;
     }
 
-    public AggregationPipeline<T, U> limit(final int count) {
+    @Override
+    public AggregationPipeline limit(final int count) {
         stages.add(new BasicDBObject("$limit", count));
         return this;
     }
 
-    public AggregationPipeline<T, U> skip(final int count) {
+    @Override
+    public AggregationPipeline skip(final int count) {
         stages.add(new BasicDBObject("$skip", count));
         return this;
     }
 
-    public AggregationPipeline<T, U> unwind(final String field) {
+    @Override
+    public AggregationPipeline unwind(final String field) {
         stages.add(new BasicDBObject("$unwind", "$" + field));
         return this;
     }
 
-    public AggregationPipeline<T, U> geoNear(final GeoNear geoNear) {
+    @Override
+    public AggregationPipeline geoNear(final GeoNear geoNear) {
         DBObject geo = new BasicDBObject();
         putIfNull(geo, "near", geoNear.getNear());
         putIfNull(geo, "distanceField", geoNear.getDistanceField());
@@ -177,43 +187,43 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
     }
 
     @Override
-    public MorphiaIterator<U, U> out(final Class<U> target) {
+    public <U> Iterator<U> out(final Class<U> target) {
         return out(datastore.getCollection(target).getName(), target);
     }
 
     @Override
-    public MorphiaIterator<U, U> out(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> out(final Class<U> target, final AggregationOptions options) {
         return out(datastore.getCollection(target).getName(), target, options);
     }
 
     @Override
-    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target) {
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target) {
         return out(collectionName, target, AggregationOptions.builder().build());
     }
 
     @Override
-    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
         stages.add(new BasicDBObject("$out", collectionName));
         return aggregate(target, options);
     }
 
     @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target) {
+    public <U> Iterator<U> aggregate(final Class<U> target) {
         return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
     }
 
     @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options) {
        return aggregate(target, options, collection.getReadPreference());
     }
     
     @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
         return aggregate(datastore.getCollection(target).getName(), target, options, readPreference);
     }
     
     @Override
-    public MorphiaIterator<U, U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options, 
+    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options, 
                                            final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
