@@ -100,7 +100,7 @@ public class ZipCodeDataSetTest extends TestBase {
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
 
         AggregationPipeline pipeline
-            = getDs().<City, Population>createAggregation(City.class)
+            = getDs().createAggregation(City.class)
                      .group("state", grouping("totalPop", sum("pop")))
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
@@ -113,7 +113,7 @@ public class ZipCodeDataSetTest extends TestBase {
     public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
-        AggregationPipeline pipeline = getDs().<City, Population>createAggregation(City.class)
+        AggregationPipeline pipeline = getDs().createAggregation(City.class)
                                               .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
                                               .group("_id.state", grouping("avgCityPop", average("pop")));
         validate(pipeline.aggregate(Population.class), "MN", 5372);
@@ -124,7 +124,7 @@ public class ZipCodeDataSetTest extends TestBase {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());
-        AggregationPipeline pipeline = getDs().<City, State>createAggregation(City.class)
+        AggregationPipeline pipeline = getDs().createAggregation(City.class)
 
                                               .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
 
@@ -134,20 +134,16 @@ public class ZipCodeDataSetTest extends TestBase {
                                                      grouping("biggestCity", last("_id.city")),
                                                      grouping("biggestPop", last("pop")),
                                                      grouping("smallestCity", first("_id.city")),
-                                                     grouping("smallestPop", first("pop"))
-                                                    )
+                                                     grouping("smallestPop", first("pop")))
 
                                               .project(projection("_id").suppress(),
                                                        projection("state", "_id"),
                                                        projection("biggestCity",
                                                                   projection("name", "biggestCity"),
-                                                                  projection("pop", "biggestPop")
-                                                                 ),
+                                                                  projection("pop", "biggestPop")),
                                                        projection("smallestCity",
                                                                   projection("name", "smallestCity"),
-                                                                  projection("pop", "smallestPop")
-                                                                 )
-                                                      );
+                                                                  projection("pop", "smallestPop")));
 
         Iterator<State> iterator = pipeline.aggregate(State.class);
         try {
