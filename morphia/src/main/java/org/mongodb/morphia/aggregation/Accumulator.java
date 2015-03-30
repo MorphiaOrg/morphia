@@ -1,6 +1,11 @@
 package org.mongodb.morphia.aggregation;
 
-public class Accumulator {
+/**
+ * Use this class to accumulate value of the filed using the given operation
+ *
+ */
+public class Accumulator implements IAccumulator {
+
     private final String operation;
     private final String field;
 
@@ -9,11 +14,14 @@ public class Accumulator {
         this.field = "$" + field;
     }
 
-    public String getField() {
+    @Override
+    public String getValue() {
         return field;
     }
 
+    @Override
     public String getOperation() {
         return operation;
     }
+    
 }

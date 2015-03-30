@@ -18,6 +18,7 @@ package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.DBCursor;
+
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -186,6 +187,36 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
     }
+    
+    @Test
+    public void testGenericAccumulator() {
+        GenericAccumulator acc = new GenericAccumulator("$sum", 8);
+        Assert.assertEquals("$sum", acc.getOperation());
+        Assert.assertEquals(8, acc.getValue());
+    }
+
+    @Test
+    public void testGenericAccumulatorUsage() {
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                new Book("Divine Comedy", "Dante", 1),
+                new Book("Eclogues", "Dante", 2),
+                new Book("The Odyssey", "Homer", 10),
+                new Book("Iliad", "Homer", 10));
+        
+        MorphiaIterator<CountResult, CountResult> aggregation = getDs().
+                <Book, CountResult>createAggregation(Book.class)
+                .group("author", Group.grouping("count", new GenericAccumulator("$sum", 1)))
+                .sort(Sort.ascending("_id"))
+                .aggregate(CountResult.class);
+        
+        CountResult result1 = aggregation.next();
+        CountResult result2 = aggregation.next();
+        Assert.assertFalse("Expecting two results", aggregation.hasNext());
+        Assert.assertEquals("Dante", result1.getAuthor());
+        Assert.assertEquals(3, result1.getCount());
+        Assert.assertEquals("Homer", result2.getAuthor());
+        Assert.assertEquals(2, result2.getCount());
+    }
 
     @Test
     public void testGeoNear() {
@@ -228,6 +259,7 @@ public class AggregationTest extends TestBase {
         private String name;
         private List<String> books;
     }
+    
 
     @Entity("users")
     private static final class User {
@@ -249,6 +281,22 @@ public class AggregationTest extends TestBase {
         @Override
         public String toString() {
             return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+        }
+    }
+    
+    @Entity
+    private static class CountResult {
+        
+        @Id
+        private String author;
+        private int count;
+        
+        public String getAuthor() {
+            return author;
+        }
+        
+        public int getCount() {
+            return count;
         }
     }
 }
