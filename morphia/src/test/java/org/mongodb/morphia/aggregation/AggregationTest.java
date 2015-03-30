@@ -78,7 +78,7 @@ public class AggregationTest extends TestBase {
         getDs().<Book, Author>createAggregation(Book.class)
                .match(getDs().getQueryFactory().createQuery(getDs())
                              .field("author").equal("Homer"))
-               .group("author", Group.grouping("copies", sum("copies")))
+               .group("author", grouping("copies", sum("copies")))
                .out("testAverage", Author.class);
         DBCursor testAverage = getDb().getCollection("testAverage").find();
         Assert.assertNotNull(testAverage);
@@ -176,7 +176,7 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         Iterator<Book> aggregate = getDs().createAggregation(Book.class)
-                                          .group("author", Group.grouping("copies", Group.sum("copies")))
+                                          .group("author", grouping("copies", sum("copies")))
                                           .project(projection("_id").suppress(),
                                                    projection("author", "_id"),
                                                    projection("copies", divide(projection("copies"), 5)))
@@ -185,6 +185,28 @@ public class AggregationTest extends TestBase {
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
+    }
+
+    @Test
+    public void testGenericAccumulatorUsage() {
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
+
+        Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
+                                                   .group("author", grouping("count", new Accumulator("$sum", 1)))
+                                                   .sort(Sort.ascending("_id"))
+                                                   .aggregate(CountResult.class);
+
+        CountResult result1 = aggregation.next();
+        CountResult result2 = aggregation.next();
+        Assert.assertFalse("Expecting two results", aggregation.hasNext());
+        Assert.assertEquals("Dante", result1.getAuthor());
+        Assert.assertEquals(3, result1.getCount());
+        Assert.assertEquals("Homer", result2.getAuthor());
+        Assert.assertEquals(2, result2.getCount());
     }
 
     @Test
@@ -249,6 +271,22 @@ public class AggregationTest extends TestBase {
         @Override
         public String toString() {
             return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+        }
+    }
+
+    @Entity
+    private static class CountResult {
+
+        @Id
+        private String author;
+        private int count;
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public int getCount() {
+            return count;
         }
     }
 }
