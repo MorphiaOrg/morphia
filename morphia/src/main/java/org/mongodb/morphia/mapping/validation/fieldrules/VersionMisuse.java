@@ -23,7 +23,7 @@ public class VersionMisuse extends FieldConstraint {
       if (Long.class.equals(type) || long.class.equals(type)) {
 
         //TODO: Replace this will a read ObjectFactory call -- requires Mapper instance.
-        final Object testInstance = DefaultCreator.createInst(mc.getClazz());
+        final Object testInstance = new DefaultCreator().createInst(mc.getClazz());
 
         // check initial value
         if (Long.class.equals(type)) {

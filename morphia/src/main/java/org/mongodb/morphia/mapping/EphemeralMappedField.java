@@ -10,11 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MapOrCollectionMF extends MappedField {
+/**
+ * This is a MappedField facade that allows us to convert and collect values to be gathered back in to a Map or Collection, e.g., rather 
+ * than directly on a mapped entity.  This are not mapped directly to a field on a class like MappedFields are.
+ */
+public class EphemeralMappedField extends MappedField {
     private ParameterizedType pType;
     private Object value;
 
-    MapOrCollectionMF(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
+    EphemeralMappedField(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
         super(mf.getField(), (Class) t.getRawType(), mapper);
         pType = t;
         final Class rawClass = (Class) t.getRawType();

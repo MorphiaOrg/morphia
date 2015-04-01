@@ -1,8 +1,10 @@
 package org.mongodb.morphia.converters;
 
 
+import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Array;
@@ -51,7 +53,13 @@ public class IterableConverter extends TypeConverter {
             // map back to the java data type
             // (List/Set/Array[])
             for (final Object o : (Iterable) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                if (o instanceof DBObject) {
+                    final MappedField mappedField = mf.getTypeParameters().get(0);
+                    final Object o1 = getMapper().fromDBObject(mappedField.getType(), (DBObject) o, new DefaultEntityCache());
+                    values.add(o1);
+                } else {
+                    values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                }
             }
         } else {
             //Single value case.

@@ -76,8 +76,9 @@ public abstract class TypeConverter {
     }
 
     /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object<br><b>NOTE: optionalExtraInfo might be
-     * null</b>*
+     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
+     * <br><b>NOTE: optionalExtraInfo might be null</b>
+     *
      */
     public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
 
@@ -89,7 +90,7 @@ public abstract class TypeConverter {
     }
 
     /**
-     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}<br><b>NOTE: optionalExtraInfo might be null</b>
+     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
      */
     public final Object encode(final Object value) {
         return encode(value, null);

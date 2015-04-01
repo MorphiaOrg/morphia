@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -24,106 +23,6 @@ import static java.util.Arrays.asList;
  * @author scotthernandez
  */
 public class NestedMapsAndListsTest extends TestBase {
-
-    @Entity
-    private static class ListOfMap {
-        @Id
-        private long id;
-        @Property
-        private final List<Map<String, String>> listOfMap = new ArrayList<Map<String, String>>();
-
-        @Override
-        public String toString() {
-            return String.format("ListOfMap{id=%d, listOfMap=%s}", id, listOfMap);
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final ListOfMap listOfMap1 = (ListOfMap) o;
-
-            if (id != listOfMap1.id) {
-                return false;
-            }
-            if (!listOfMap.equals(listOfMap1.listOfMap)) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = (int) (id ^ (id >>> 32));
-            result = 31 * result + listOfMap.hashCode();
-            return result;
-        }
-    }
-    
-    @Entity
-    private static class ListOfList {
-        @Id
-        private long id;
-        @Property
-        private final List<List<String>> list = new ArrayList<List<String>>();
-
-        @Override
-        public String toString() {
-            return String.format("ListOfList{id=%d, list=%s}", id, list);
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ListOfList)) {
-                return false;
-            }
-
-            final ListOfList that = (ListOfList) o;
-
-            return id == that.id && list.equals(that.list);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = (int) (id ^ (id >>> 32));
-            result = 31 * result + list.hashCode();
-            return result;
-        }
-    }
-
-    private static class HashMapOfMap {
-        @Id
-        private ObjectId id;
-
-        @Embedded
-        private final Map<String, Map<String, String>> mom = new HashMap<String, Map<String, String>>();
-    }
-
-    private static class HashMapOfList {
-        @Id
-        private ObjectId id;
-
-        @Embedded
-        private final Map<String, List<String>> mol = new HashMap<String, List<String>>();
-    }
-
-    private static class HashMapOfListOfMapMap {
-        @Id
-        private ObjectId id;
-
-        @Embedded
-        private final Map<String, List<HashMapOfMap>> mol = new HashMap<String, List<HashMapOfMap>>();
-    }
 
     @Test
     public void testMapOfMap() throws Exception {
@@ -200,10 +99,10 @@ public class NestedMapsAndListsTest extends TestBase {
         Assert.assertNotNull(object);
         Assert.assertEquals(entity, object);
     }
-    
+
     @Test
-    @Ignore
     public void testListOfList() {
+        getMorphia().map(ListOfList.class);
         ListOfList list = new ListOfList();
         list.list.add(asList("a", "b", "c"));
         list.list.add(asList("123", "456"));
@@ -211,5 +110,102 @@ public class NestedMapsAndListsTest extends TestBase {
 
         ListOfList listOfList = getDs().createQuery(ListOfList.class).get();
         Assert.assertEquals(list, listOfList);
+    }
+
+    @Entity
+    private static class ListOfMap {
+        @Property
+        private final List<Map<String, String>> listOfMap = new ArrayList<Map<String, String>>();
+        @Id
+        private long id;
+
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + listOfMap.hashCode();
+            return result;
+        }        @Override
+        public String toString() {
+            return String.format("ListOfMap{id=%d, listOfMap=%s}", id, listOfMap);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final ListOfMap listOfMap1 = (ListOfMap) o;
+
+            if (id != listOfMap1.id) {
+                return false;
+            }
+            if (!listOfMap.equals(listOfMap1.listOfMap)) {
+                return false;
+            }
+
+            return true;
+        }
+
+
+    }
+
+    @Entity
+    private static class ListOfList {
+        @Property
+        private final List<List<String>> list = new ArrayList<List<String>>();
+        @Id
+        private long id;
+
+        @Override
+        public String toString() {
+            return String.format("ListOfList{id=%d, list=%s}", id, list);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ListOfList)) {
+                return false;
+            }
+
+            final ListOfList that = (ListOfList) o;
+
+            return id == that.id && list.equals(that.list);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + list.hashCode();
+            return result;
+        }
+    }
+
+    private static class HashMapOfMap {
+        @Embedded
+        private final Map<String, Map<String, String>> mom = new HashMap<String, Map<String, String>>();
+        @Id
+        private ObjectId id;
+    }
+
+    private static class HashMapOfList {
+        @Embedded
+        private final Map<String, List<String>> mol = new HashMap<String, List<String>>();
+        @Id
+        private ObjectId id;
+    }
+
+    private static class HashMapOfListOfMapMap {
+        @Embedded
+        private final Map<String, List<HashMapOfMap>> mol = new HashMap<String, List<HashMapOfMap>>();
+        @Id
+        private ObjectId id;
     }
 }

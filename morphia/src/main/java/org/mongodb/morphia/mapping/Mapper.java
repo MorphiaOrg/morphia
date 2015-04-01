@@ -569,7 +569,7 @@ public class Mapper {
         return dbObject;
     }
 
-    <T> T fromDb(final DBObject dbObject, final T entity, final EntityCache cache) {
+    public <T> T fromDb(final DBObject dbObject, final T entity, final EntityCache cache) {
         //hack to bypass things and just read the value.
         if (entity instanceof MappedField) {
             readMappedField(dbObject, (MappedField) entity, entity, cache);
