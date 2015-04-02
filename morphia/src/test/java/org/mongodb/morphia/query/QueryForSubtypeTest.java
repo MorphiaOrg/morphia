@@ -30,6 +30,57 @@ public class QueryForSubtypeTest extends TestBase {
 
     private MappedClass jobMappedClass;
 
+    @Before
+    @Override
+    public void setUp() {
+        super.setUp();
+        jobMappedClass = new Mapper().getMappedClass(Job.class);
+    }
+
+    @Test
+    public void testImplementingClassIsCompatibleWithInterface() {
+        MappedField user = jobMappedClass.getMappedField("owner");
+
+        boolean compatible = isCompatibleForOperator(jobMappedClass,
+                                                     user,
+                                                     User.class,
+                                                     EQUAL,
+                                                     new UserImpl(),
+                                                     new ArrayList<ValidationFailure>());
+
+        assertThat(compatible, is(true));
+    }
+
+    @Test
+    public void testIntSizeShouldBeCompatibleWithArrayList() {
+        MappedField attributes = jobMappedClass.getMappedField("attributes");
+
+        boolean compatible = isCompatibleForOperator(jobMappedClass,
+                                                     attributes,
+                                                     ArrayList.class,
+                                                     SIZE,
+                                                     2,
+                                                     new ArrayList<ValidationFailure>());
+
+        assertThat(compatible, is(true));
+    }
+
+    @Test
+    public void testSubclassOfKeyShouldBeCompatibleWithFieldUser() {
+        MappedField user = jobMappedClass.getMappedField("owner");
+        Key<User> anonymousKeySubclass = new Key<User>(User.class, 212L) {
+        };
+
+        boolean compatible = isCompatibleForOperator(jobMappedClass,
+                                                     user,
+                                                     User.class,
+                                                     EQUAL,
+                                                     anonymousKeySubclass,
+                                                     new ArrayList<ValidationFailure>());
+
+        assertThat(compatible, is(true));
+    }
+
     interface User {
     }
 
@@ -52,39 +103,5 @@ public class QueryForSubtypeTest extends TestBase {
 
         @SuppressWarnings("unused")
         private ArrayList<String> attributes;
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
-        jobMappedClass = new Mapper().getMappedClass(Job.class);
-    }
-
-    @Test
-    public void testImplementingClassIsCompatibleWithInterface() {
-        MappedField user = jobMappedClass.getMappedField("owner");
-
-        boolean compatible = isCompatibleForOperator(user, User.class, EQUAL, new UserImpl(), new ArrayList<ValidationFailure>());
-
-        assertThat(compatible, is(true));
-    }
-
-    @Test
-    public void testIntSizeShouldBeCompatibleWithArrayList() {
-        MappedField attributes = jobMappedClass.getMappedField("attributes");
-
-        boolean compatible = isCompatibleForOperator(attributes, ArrayList.class, SIZE, 2, new ArrayList<ValidationFailure>());
-
-        assertThat(compatible, is(true));
-    }
-
-    @Test
-    public void testSubclassOfKeyShouldBeCompatibleWithFieldUser() {
-        MappedField user = jobMappedClass.getMappedField("owner");
-        Key<User> anonymousKeySubclass = new Key<User>(User.class, 212L) { };
-        
-        boolean compatible = isCompatibleForOperator(user, User.class, EQUAL, anonymousKeySubclass, new ArrayList<ValidationFailure>());
-
-        assertThat(compatible, is(true));
     }
 }

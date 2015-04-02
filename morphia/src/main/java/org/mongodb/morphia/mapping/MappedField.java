@@ -92,7 +92,7 @@ public class MappedField {
         discover();
     }
 
-    private MappedField(final Type type, final Mapper mapper) {
+    public MappedField(final Type type, final Mapper mapper) {
         this.mapper = mapper;
         genericType = type;
         discoverType();
@@ -176,8 +176,19 @@ public class MappedField {
             realType = toClass(pt);
 
             for (Type type : types) {
-                typeParameters.add(new MappedField(type, getMapper()));
+                if (type instanceof ParameterizedType) {
+                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, getMapper()));
+                } else {
+                    if (type instanceof WildcardType) {
+                        type = ((WildcardType) type).getUpperBounds()[0];
+                    }
+                    typeParameters.add(new MappedField(type, getMapper()));
+                }
             }
+        } else if (genericType instanceof WildcardType) {
+            final WildcardType wildcardType = (WildcardType) genericType;
+            final Type[] types = wildcardType.getUpperBounds();
+            realType = toClass(types[0]);
         } else if (genericType instanceof Class) {
             realType = (Class) genericType;
         }
@@ -429,7 +440,6 @@ public class MappedField {
 
     /**
      * If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>
-     *
      */
     public Class getSubClass() {
         return toClass(subType);

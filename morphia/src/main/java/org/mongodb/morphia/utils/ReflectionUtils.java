@@ -26,6 +26,8 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappingException;
 
 import java.io.File;
@@ -65,7 +67,9 @@ import java.util.regex.Pattern;
  * @author Olafur Gauti Gudmundsson
  */
 public final class ReflectionUtils {
-
+    private static final Logger LOG = MorphiaLoggerFactory.get(ReflectionUtils.class);
+    
+    
     private ReflectionUtils() {
     }
 
@@ -563,12 +567,15 @@ public final class ReflectionUtils {
             final Type componentType = ((GenericArrayType) type).getGenericComponentType();
             final Class<?> componentClass = getClass(componentType);
             if (componentClass != null) {
-                return Array.newInstance(componentClass, 0)
-                            .getClass();
+                return Array.newInstance(componentClass, 0).getClass();
             } else {
+                LOG.debug("************ ReflectionUtils.getClass 1st else");
+                LOG.debug("************ type = " + type);
                 return null;
             }
         } else {
+            LOG.debug("************ ReflectionUtils.getClass final else");
+            LOG.debug("************ type = " + type);
             return null;
         }
     }
