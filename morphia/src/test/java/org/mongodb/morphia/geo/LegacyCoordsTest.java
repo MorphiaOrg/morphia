@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mongodb.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static org.mongodb.morphia.testutil.IndexMatcher.hasIndexNamed;
+import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
 
 /**
  * This test shows how to define an entity that uses the legacy co-ordinate pairs standard, which works with MongoDB server versions 2.2 and
@@ -130,5 +131,36 @@ public class LegacyCoordsTest extends TestBase {
                .get();
 
         // then expect the Exception
+    }
+
+    @Test
+    // Issue #275
+    public void shouldGenerateCorrectQueryForNearSphereWithRadius() {
+        // when
+        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
+                                                    .field("location")
+                                                    .near(42.08563, -87.99822, 2, true);
+
+        // then
+        assertThat(query.getQueryObject().toString(),
+                jsonEqual("{ \"location\" : "
+                        + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
+                        + "\"$maxDistance\" : 2.0}}"));
+    }
+
+    @Test
+    // Issue #275
+    public void shouldGenerateCorrectQueryForNearWithMaxDistance() {
+        // when
+        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
+                                                    .field("location")
+                                                    .near(42.08563, -87.99822, 2);
+
+        // then
+        assertThat(query.getQueryObject().toString(),
+                jsonEqual("{ \"location\" : "
+                        + "{ \"$near\" : [ 42.08563 , -87.99822] , "
+                        + "\"$maxDistance\" : 2.0}}"));
+
     }
 }
