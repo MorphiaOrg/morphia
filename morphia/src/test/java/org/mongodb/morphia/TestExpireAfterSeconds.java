@@ -56,7 +56,7 @@ public class TestExpireAfterSeconds extends TestBase {
             }
         }
         Assert.assertNotNull(index);
-        Assert.assertEquals(5, index.get("expireAfterSeconds"));
+        Assert.assertEquals(5, ((Number) index.get("expireAfterSeconds")).intValue());
     }
 
     @Test
@@ -80,6 +80,6 @@ public class TestExpireAfterSeconds extends TestBase {
         }
         Assert.assertNotNull(index);
         Assert.assertTrue(index.containsField("expireAfterSeconds"));
-        Assert.assertEquals(5, index.get("expireAfterSeconds"));
+        Assert.assertEquals(5, ((Number) index.get("expireAfterSeconds")).intValue());
     }
 }
