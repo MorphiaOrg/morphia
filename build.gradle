@@ -162,7 +162,7 @@ project(':morphia') {
 
     dependencies {
         if (buildingWith('3.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-beta1", changing: true
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0"
             println "Building with the 3.x java driver"
         } else {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.0"
