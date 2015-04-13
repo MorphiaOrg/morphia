@@ -6,10 +6,10 @@ import org.junit.Test;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -22,42 +22,42 @@ public class TestReferenceCollection extends ProxyTestBase {
             return;
         }
 
-        A a = new A();
-        final B b1 = new B();
-        final B b2 = new B();
+        Origin origin = new Origin();
+        final Endpoint endpoint1 = new Endpoint();
+        final Endpoint endpoint2 = new Endpoint();
 
-        a.bs.add(b1);
-        a.bs.add(b2);
+        origin.list.add(endpoint1);
+        origin.list.add(endpoint2);
 
-        Collection<B> lazyBs = a.lazyBs;
-        lazyBs.add(b1);
-        lazyBs.add(b2);
+        Collection<Endpoint> lazyEndpoints = origin.lazyList;
+        lazyEndpoints.add(endpoint1);
+        lazyEndpoints.add(endpoint2);
 
-        getDs().save(b2, b1, a);
+        getDs().save(endpoint2, endpoint1, origin);
 
-        a = getDs().get(a);
+        origin = getDs().get(origin);
 
-        lazyBs = a.lazyBs;
-        Assert.assertNotNull(lazyBs);
-        assertNotFetched(lazyBs);
+        lazyEndpoints = origin.lazyList;
+        Assert.assertNotNull(lazyEndpoints);
+        assertNotFetched(lazyEndpoints);
 
-        Assert.assertNotNull(lazyBs.iterator().next());
-        assertFetched(lazyBs);
+        Assert.assertNotNull(lazyEndpoints.iterator().next());
+        assertFetched(lazyEndpoints);
 
-        a = deserialize(a);
+        origin = deserialize(origin);
 
-        lazyBs = a.lazyBs;
-        Assert.assertNotNull(lazyBs);
-        assertNotFetched(lazyBs);
+        lazyEndpoints = origin.lazyList;
+        Assert.assertNotNull(lazyEndpoints);
+        assertNotFetched(lazyEndpoints);
 
-        Assert.assertNotNull(lazyBs.iterator().next());
-        assertFetched(lazyBs);
+        Assert.assertNotNull(lazyEndpoints.iterator().next());
+        assertFetched(lazyEndpoints);
 
-        a = deserialize(a);
+        origin = deserialize(origin);
 
-        getDs().save(a);
-        lazyBs = a.lazyBs;
-        assertNotFetched(lazyBs);
+        getDs().save(origin);
+        lazyEndpoints = origin.lazyList;
+        assertNotFetched(lazyEndpoints);
     }
 
     @Test
@@ -67,46 +67,46 @@ public class TestReferenceCollection extends ProxyTestBase {
             return;
         }
 
-        final A a = new A();
-        final B b1 = new B();
-        b1.setFoo("b1");
-        a.lazyBs.add(b1);
+        final Origin origin = new Origin();
+        final Endpoint endpoint1 = new Endpoint();
+        endpoint1.setFoo("b1");
+        origin.lazyList.add(endpoint1);
 
-        final B b2 = new B();
-        b2.setFoo("b2");
-        a.lazyBs.add(b2);
-        getDs().save(b1);
-        getDs().save(b2);
+        final Endpoint endpoint2 = new Endpoint();
+        endpoint2.setFoo("b2");
+        origin.lazyList.add(endpoint2);
+        getDs().save(endpoint1);
+        getDs().save(endpoint2);
 
-        Assert.assertEquals("b1", a.lazyBs.iterator().next().foo);
+        Assert.assertEquals("b1", origin.lazyList.iterator().next().foo);
 
-        getDs().save(a);
+        getDs().save(origin);
 
-        A reloaded = getDs().get(a);
-        Assert.assertEquals("b1", reloaded.lazyBs.iterator().next().foo);
-        Collections.swap((List<B>) reloaded.lazyBs, 0, 1);
-        Assert.assertEquals("b2", reloaded.lazyBs.iterator().next().foo);
+        Origin reloaded = getDs().get(origin);
+        Assert.assertEquals("b1", reloaded.lazyList.iterator().next().foo);
+        Collections.swap((List<Endpoint>) reloaded.lazyList, 0, 1);
+        Assert.assertEquals("b2", reloaded.lazyList.iterator().next().foo);
 
         getDs().save(reloaded);
 
         reloaded = getDs().get(reloaded);
-        final Collection<B> lbs = reloaded.lazyBs;
+        final Collection<Endpoint> lbs = reloaded.lazyList;
         Assert.assertEquals(2, lbs.size());
-        final Iterator<B> iterator = lbs.iterator();
+        final Iterator<Endpoint> iterator = lbs.iterator();
         Assert.assertEquals("b2", iterator.next().foo);
 
     }
 
-    public static class A extends TestEntity {
-        @Reference(lazy = false)
-        private final Collection<B> bs = new LinkedList();
+    public static class Origin extends TestEntity {
+        @Reference
+        private final List<Endpoint> list = new ArrayList<Endpoint>();
 
         @Reference(lazy = true)
-        private final Collection<B> lazyBs = new LinkedList();
+        private final List<Endpoint> lazyList = new ArrayList<Endpoint>();
 
     }
 
-    public static class B extends TestEntity {
+    public static class Endpoint extends TestEntity {
         private String foo;
 
         public void setFoo(final String string) {
