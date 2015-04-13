@@ -119,7 +119,7 @@ public class DefaultCreator implements ObjectFactory {
     /**
      * creates an instance of testType (if it isn't Object.class or null) or fallbackType
      */
-    private static Object newInstance(final Constructor tryMe, final Class fallbackType) {
+    private static <T> Object newInstance(final Constructor tryMe, final Class<T> fallbackType) {
         if (tryMe != null) {
             tryMe.setAccessible(true);
             try {
