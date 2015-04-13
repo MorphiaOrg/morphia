@@ -39,7 +39,6 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
-import org.mongodb.morphia.mapping.lazy.DatastoreHolder;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
 import org.mongodb.morphia.query.DefaultQueryFactory;
 import org.mongodb.morphia.query.Query;
@@ -98,7 +97,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         db = mongoClient.getDB(dbName);
 
         // VERY discussable
-        DatastoreHolder.getInstance().set(this);
+        mapper.getDatastoreProvider().register(this);
     }
 
     /**
