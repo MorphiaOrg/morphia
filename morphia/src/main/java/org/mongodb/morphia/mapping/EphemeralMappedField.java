@@ -32,16 +32,6 @@ public class EphemeralMappedField extends MappedField {
         setIsMongoType(ReflectionUtils.isPropertyType(getSubClass()));
     }
 
-/*
-    public EphemeralMappedField(final ParameterizedType t, final Mapper mapper) {
-        this((Type)t, mapper);
-        pType = t;
-        final Class rawClass = (Class) t.getRawType();
-        setIsSet(ReflectionUtils.implementsInterface(rawClass, Set.class));
-        setIsMap(ReflectionUtils.implementsInterface(rawClass, Map.class));
-    }
-*/
-
     public EphemeralMappedField(final Type t, final MappedField mf, final Mapper mapper) {
         super(t, mapper);
         parent = mf;
