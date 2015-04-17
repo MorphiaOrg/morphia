@@ -61,7 +61,7 @@ public class EphemeralMappedField extends MappedField {
 
     @Override
     public String toString() {
-        return "MapOrCollectionMF for " + super.toString();
+        return "EphemeralMappedField for " + super.toString();
     }
 
     @Override
@@ -99,4 +99,8 @@ public class EphemeralMappedField extends MappedField {
         value = val;
     }
 
+    @Override
+    protected String getMappedFieldName() {
+        return "";
+    }
 }

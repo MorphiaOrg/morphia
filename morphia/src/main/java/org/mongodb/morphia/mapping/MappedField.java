@@ -373,7 +373,7 @@ public class MappedField {
     /**
      * Returns the name of the field's key-name for mongodb
      */
-    private String getMappedFieldName() {
+    protected String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
             return Mapper.ID_KEY;
         } else if (hasAnnotation(Property.class)) {

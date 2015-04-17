@@ -637,7 +637,7 @@ public final class ReflectionUtils {
         final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
         Type type = clazz;
         // start walking up the inheritance hierarchy until we hit the end
-        while (!getClass(type).equals(Object.class)) {
+        while (type != null && !getClass(type).equals(Object.class)) {
             if (type instanceof Class) {
                 // there is no useful information for us in raw types, so just
                 // keep going.

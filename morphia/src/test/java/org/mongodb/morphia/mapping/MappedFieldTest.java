@@ -13,6 +13,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +79,12 @@ public class MappedFieldTest extends TestBase {
                                               .fromDb(new BasicDBObject("listOfListOfString", list),
                                                       new TestEntity(),
                                                       new DefaultEntityCache());
-        Assert.assertEquals(asList(asList("a", "b", "c"),
-                                   asList("d", "e", "f")
-                                  ), entity.listOfListOfString);
+        final List<String> strings = asList("a", "b", "c");
+        final List<String> strings1 = asList("d", "e", "f");
+        final List<List<String>> expected = new ArrayList<List<String>>();
+        expected.add(strings);
+        expected.add(strings1);
+        Assert.assertEquals(expected, entity.listOfListOfString);
     }
 
     private BasicDBList dbList(final String... values) {
