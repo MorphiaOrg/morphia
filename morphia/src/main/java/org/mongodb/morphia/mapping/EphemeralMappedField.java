@@ -4,6 +4,7 @@ import com.mongodb.DBObject;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.Set;
 public class EphemeralMappedField extends MappedField {
     private ParameterizedType pType;
     private Object value;
+    private MappedField parent;
 
     public EphemeralMappedField(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
-        super(mf.getField(), (Class) t.getRawType(), mapper);
+        super(t, mapper);
+        parent = mf;
         pType = t;
         final Class rawClass = (Class) t.getRawType();
         setIsSet(ReflectionUtils.implementsInterface(rawClass, Set.class));
@@ -29,15 +32,31 @@ public class EphemeralMappedField extends MappedField {
         setIsMongoType(ReflectionUtils.isPropertyType(getSubClass()));
     }
 
+/*
     public EphemeralMappedField(final ParameterizedType t, final Mapper mapper) {
-        super(t.getRawType(), mapper);
+        this((Type)t, mapper);
         pType = t;
         final Class rawClass = (Class) t.getRawType();
         setIsSet(ReflectionUtils.implementsInterface(rawClass, Set.class));
         setIsMap(ReflectionUtils.implementsInterface(rawClass, Map.class));
-        setMapKeyType(getMapKeyClass());
-        setSubType(getSubType());
-        setIsMongoType(ReflectionUtils.isPropertyType(getSubClass()));
+    }
+*/
+
+    public EphemeralMappedField(final Type t, final MappedField mf, final Mapper mapper) {
+        super(t, mapper);
+        parent = mf;
+    }
+
+    public MappedField getParent() {
+        return parent;
+    }
+
+    @Override
+    public void addAnnotation(final Class<? extends Annotation> clazz) {
+    }
+
+    @Override
+    public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
     }
 
     public Object getValue() {
@@ -66,7 +85,13 @@ public class EphemeralMappedField extends MappedField {
 
     @Override
     public Class getType() {
-        return isMap() ? Map.class : List.class;
+        if (pType == null) {
+            return super.getType();
+        } else if (isMap()) {
+            return Map.class;
+        } else {
+            return List.class;
+        }
     }
 
     @Override
@@ -76,7 +101,7 @@ public class EphemeralMappedField extends MappedField {
 
     @Override
     public Type getSubType() {
-        return pType.getActualTypeArguments()[isMap() ? 1 : 0];
+        return pType != null ? pType.getActualTypeArguments()[isMap() ? 1 : 0] : null;
     }
 
     @Override

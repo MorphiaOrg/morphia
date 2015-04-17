@@ -2,6 +2,8 @@ package org.mongodb.morphia.mapping;
 
 
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.annotations.Embedded;
@@ -161,7 +163,7 @@ public class MappedField {
     }
 
     @SuppressWarnings("unchecked")
-    private void discoverType() {
+    protected void discoverType() {
         ParameterizedType pt = null;
         TypeVariable<GenericDeclaration> tv = null;
         if (genericType instanceof TypeVariable) {
@@ -177,12 +179,12 @@ public class MappedField {
 
             for (Type type : types) {
                 if (type instanceof ParameterizedType) {
-                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, getMapper()));
+                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, getMapper()));
                 } else {
                     if (type instanceof WildcardType) {
                         type = ((WildcardType) type).getUpperBounds()[0];
                     }
-                    typeParameters.add(new MappedField(type, getMapper()));
+                    typeParameters.add(new EphemeralMappedField(type, this, getMapper()));
                 }
             }
         } else if (genericType instanceof WildcardType) {
@@ -354,6 +356,10 @@ public class MappedField {
      */
     public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
         foundAnnotations.put(clazz, ann);
+    }
+
+    public boolean isReference() {
+        return hasAnnotation(Reference.class) || Key.class == getConcreteType() || DBRef.class == getConcreteType(); 
     }
 
     /**

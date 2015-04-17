@@ -20,7 +20,7 @@ public class EntityTypeAndIdValueValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("id");
+        MappedField mappedField = mappedClass.getMappedField("_id");
         
         boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, new ObjectId(),
                                                                                       validationFailures);
@@ -35,7 +35,7 @@ public class EntityTypeAndIdValueValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("id");
+        MappedField mappedField = mappedClass.getMappedField("_id");
         boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, "some non-ObjectId value",
                                                                                       validationFailures);
         // then
@@ -49,7 +49,7 @@ public class EntityTypeAndIdValueValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         MappedClass mappedClass = new MappedClass(EntityWithNoId.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("id");
+        MappedField mappedField = mappedClass.getMappedField("_id");
         boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, "some non-null value",
                                                                                       validationFailures);
         // then

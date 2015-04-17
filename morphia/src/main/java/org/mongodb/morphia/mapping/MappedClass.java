@@ -7,8 +7,8 @@ import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
-import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Field;
+import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Polymorphic;
@@ -67,23 +67,20 @@ public class MappedClass {
      * Annotations we are interested in looking for.
      *
      * @see #addInterestingAnnotation
-     * @deprecated use the method for this field instead.
      */
-    //CHECKSTYLE:OFF
-    public static final List<Class<? extends Annotation>> interestingAnnotations = new ArrayList<Class<? extends Annotation>>();
+    private static final List<Class<? extends Annotation>> INTERESTING_ANNOTATIONS = new ArrayList<Class<? extends Annotation>>();
 
     static {
-        interestingAnnotations.add(Embedded.class);
-        interestingAnnotations.add(Entity.class);
-        interestingAnnotations.add(Polymorphic.class);
-        interestingAnnotations.add(EntityListeners.class);
-        interestingAnnotations.add(Version.class);
-        interestingAnnotations.add(Converters.class);
-        interestingAnnotations.add(Indexes.class);
-        interestingAnnotations.add(Field.class);
-        interestingAnnotations.add(IndexOptions.class);
+        INTERESTING_ANNOTATIONS.add(Embedded.class);
+        INTERESTING_ANNOTATIONS.add(Entity.class);
+        INTERESTING_ANNOTATIONS.add(Polymorphic.class);
+        INTERESTING_ANNOTATIONS.add(EntityListeners.class);
+        INTERESTING_ANNOTATIONS.add(Version.class);
+        INTERESTING_ANNOTATIONS.add(Converters.class);
+        INTERESTING_ANNOTATIONS.add(Indexes.class);
+        INTERESTING_ANNOTATIONS.add(Field.class);
+        INTERESTING_ANNOTATIONS.add(IndexOptions.class);
     }
-    //CHECKSTYLE:ON
 
     /**
      * special fields representing the Key of the object
@@ -130,9 +127,7 @@ public class MappedClass {
     private final Mapper mapper;
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
-        //CHECKSTYLE:OFF
-        interestingAnnotations.add(annotation);
-        //CHECKSTYLE:ON
+        INTERESTING_ANNOTATIONS.add(annotation);
     }
 
     /**
@@ -179,7 +174,7 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover() {
-        for (final Class<? extends Annotation> c : interestingAnnotations) {
+        for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
             addAnnotation(c);
         }
 
@@ -206,31 +201,34 @@ public class MappedClass {
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
             field.setAccessible(true);
             final int fieldMods = field.getModifiers();
-            if (field.isAnnotationPresent(Transient.class)
-                || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
-                || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
-                || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL)) {
-                // ignore these
-            } else if (field.isAnnotationPresent(Id.class)) {
-                final MappedField mf = new MappedField(field, clazz, getMapper());
-                persistenceFields.add(mf);
-                update();
-            } else if (field.isAnnotationPresent(Property.class)
-                       || field.isAnnotationPresent(Reference.class)
-                       || field.isAnnotationPresent(Embedded.class)
-                       || field.isAnnotationPresent(Serialized.class)
-                       || isSupportedType(field.getType())
-                       || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
-                persistenceFields.add(new MappedField(field, clazz, getMapper()));
-            } else {
-                if (mapper.getOptions().getDefaultMapper() != null) {
+            if (!isIgnorable(field, fieldMods)) {
+                if (field.isAnnotationPresent(Id.class)) {
                     persistenceFields.add(new MappedField(field, clazz, getMapper()));
-                } else if (LOG.isWarningEnabled()) {
-                    LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
-                                       field.getType().getName()));
+                    update();
+                } else if (field.isAnnotationPresent(Property.class)
+                           || field.isAnnotationPresent(Reference.class)
+                           || field.isAnnotationPresent(Embedded.class)
+                           || field.isAnnotationPresent(Serialized.class)
+                           || isSupportedType(field.getType())
+                           || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
+                    persistenceFields.add(new MappedField(field, clazz, getMapper()));
+                } else {
+                    if (mapper.getOptions().getDefaultMapper() != null) {
+                        persistenceFields.add(new MappedField(field, clazz, getMapper()));
+                    } else if (LOG.isWarningEnabled()) {
+                        LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
+                                           field.getType().getName()));
+                    }
                 }
             }
         }
+    }
+
+    private boolean isIgnorable(final java.lang.reflect.Field field, final int fieldMods) {
+        return field.isAnnotationPresent(Transient.class)
+            || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
+            || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
+            || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL);
     }
 
     private void addLifecycleEventMethod(final Class<? extends Annotation> lceClazz, final Method m, final Class<?> clazz) {
@@ -253,8 +251,7 @@ public class MappedClass {
         }
 
         if (!foundAnnotations.containsKey(clazz)) {
-            final List<Annotation> list = new ArrayList<Annotation>();
-            foundAnnotations.put(clazz, list);
+            foundAnnotations.put(clazz, new ArrayList<Annotation>());
         }
 
         foundAnnotations.get(clazz).add(ann);

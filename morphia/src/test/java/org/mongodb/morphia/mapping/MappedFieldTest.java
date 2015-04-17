@@ -64,10 +64,13 @@ public class MappedFieldTest extends TestBase {
         Assert.assertTrue(field.isMultipleValues());
         Assert.assertFalse(field.isArray());
         Assert.assertTrue(List.class == field.getType());
-        final List<MappedField> typeParameters = field.getTypeParameters();
-        final MappedField typeParameter = typeParameters.get(0);
+
+        final List<MappedField> level1Types = field.getTypeParameters();
+        final MappedField typeParameter = level1Types.get(0);
         Assert.assertTrue(List.class == typeParameter.getConcreteType());
-        final MappedField nested = typeParameter.getTypeParameters().get(0);
+
+        final List<MappedField> level2Types = typeParameter.getTypeParameters();
+        final MappedField nested = level2Types.get(0);
         Assert.assertTrue(String.class == nested.getConcreteType());
         Assert.assertEquals("listOfListOfString", field.getJavaFieldName());
         Assert.assertEquals("listOfListOfString", field.getNameToStore());

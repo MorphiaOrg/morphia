@@ -44,7 +44,6 @@ import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
 import org.mongodb.morphia.query.ValidationException;
-import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -62,6 +61,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import static java.lang.String.format;
+import static org.mongodb.morphia.utils.ReflectionUtils.getParameterizedClass;
+import static org.mongodb.morphia.utils.ReflectionUtils.implementsInterface;
+import static org.mongodb.morphia.utils.ReflectionUtils.isPropertyType;
 
 
 /**
@@ -239,6 +241,7 @@ public class Mapper {
         }
 
         MappedClass mc = mappedClasses.get(type.getName());
+//        if (mc == null && !isPropertyType(type) && !isPrimitiveLike(type)) {
         if (mc == null) {
             mc = new MappedClass(type, this);
             // no validation
@@ -346,12 +349,12 @@ public class Mapper {
 
             if (type.isArray() || Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)) {
                 isSingleValue = false;
-                isMap = ReflectionUtils.implementsInterface(type, Map.class);
+                isMap = implementsInterface(type, Map.class);
                 // subtype of Long[], List<Long> is Long
-                subType = (type.isArray()) ? type.getComponentType() : ReflectionUtils.getParameterizedClass(type, (isMap) ? 1 : 0);
+                subType = (type.isArray()) ? type.getComponentType() : getParameterizedClass(type, (isMap) ? 1 : 0);
             }
 
-            if (isSingleValue && !ReflectionUtils.isPropertyType(type)) {
+            if (isSingleValue && !isPropertyType(type)) {
                 final DBObject dbObj = toDBObject(newObj);
                 if (!includeClassName) {
                     dbObj.removeField(CLASS_NAME_FIELDNAME);
@@ -360,7 +363,7 @@ public class Mapper {
             } else if (newObj instanceof DBObject) {
                 return newObj;
             } else if (isMap) {
-                if (ReflectionUtils.isPropertyType(subType)) {
+                if (isPropertyType(subType)) {
                     return toDBObject(newObj);
                 } else {
                     final HashMap m = new HashMap();
@@ -371,7 +374,7 @@ public class Mapper {
                     return m;
                 }
                 //Set/List but needs elements converted
-            } else if (!isSingleValue && !ReflectionUtils.isPropertyType(subType)) {
+            } else if (!isSingleValue && !isPropertyType(subType)) {
                 final List<Object> values = new BasicDBList();
                 if (type.isArray()) {
                     for (final Object obj : (Object[]) newObj) {

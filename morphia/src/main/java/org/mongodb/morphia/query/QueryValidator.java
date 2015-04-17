@@ -1,6 +1,5 @@
 package org.mongodb.morphia.query;
 
-import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -160,7 +159,7 @@ final class QueryValidator {
     }
 
     private static boolean canQueryPast(final MappedField mf) {
-        return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
+        return !(mf.isReference() || mf.hasAnnotation(Serialized.class));
     }
 
 }
