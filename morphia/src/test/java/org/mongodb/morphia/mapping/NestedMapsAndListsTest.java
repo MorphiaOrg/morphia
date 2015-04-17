@@ -69,6 +69,24 @@ public class NestedMapsAndListsTest extends TestBase {
     }
 
     @Test
+    public void testListOfMapOfEntity() {
+        getMorphia().map(ListMapPerson.class);
+        ListMapPerson listMap = new ListMapPerson();
+        listMap.list.add(map("Rick", new Person("Richard")));
+        listMap.list.add(map("Bill", new Person("William")));
+
+        getDs().save(listMap);
+
+        Assert.assertEquals(listMap, getDs().createQuery(ListMapPerson.class).get());
+    }
+
+    private Map<String, Person> map(final String nick, final Person person) {
+        final HashMap<String, Person> map = new HashMap<String, Person>();
+        map.put(nick, person);
+        return map;
+    }
+
+    @Test
     public void testMapOfList() throws Exception {
         HashMapOfList map = new HashMapOfList();
         map.mol.put("entry1", Collections.singletonList("val1"));
@@ -124,25 +142,7 @@ public class NestedMapsAndListsTest extends TestBase {
         Assert.assertEquals("values", mapOfMap.mom.get("root").get("deep"));
         Assert.assertNotNull("lame", mapOfMap.mom.get("root").get("peer"));
     }
-
-    @Test
-    public void testListOfMapOfEntity() {
-        getMorphia().map(ListMapPerson.class);
-        ListMapPerson listMap = new ListMapPerson();
-        listMap.list.add(map("Rick", new Person("Richard")));
-        listMap.list.add(map("Bill", new Person("William")));
-        
-        getDs().save(listMap);
-
-        Assert.assertEquals(listMap, getDs().createQuery(ListMapPerson.class).get());
-    }
-
-    private Map<String, Person> map(final String nick, final Person person) {
-        final HashMap<String, Person> map = new HashMap<String, Person>();
-        map.put(nick, person);
-        return map;
-    }
-
+    
     @Entity
     private static class ListOfMap {
         @Property
@@ -222,10 +222,10 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Entity
     private static class ListListPerson {
-        @Id
-        private long id;
         @Embedded
         private final List<List<Person>> list = new ArrayList<List<Person>>();
+        @Id
+        private long id;
 
         @Override
         public String toString() {
@@ -295,7 +295,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
     }
-    
+
     @Embedded
     private static class Person {
         private String name;
