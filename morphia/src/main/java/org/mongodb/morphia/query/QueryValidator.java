@@ -1,6 +1,5 @@
 package org.mongodb.morphia.query;
 
-import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -37,7 +36,8 @@ final class QueryValidator {
     }
 
     /*package*/
-    static boolean isCompatibleForOperator(final MappedField mappedField, final Class<?> type, final FilterOperator op,
+    static boolean isCompatibleForOperator(final MappedClass mappedClass, final MappedField mappedField, final Class<?> type,
+                                           final FilterOperator op,
                                            final Object value, final List<ValidationFailure> validationFailures) {
         // TODO: it's really OK to have null values?  I think this is to prevent null pointers further down, 
         // but I want to move the null check into the operations that care whether they allow nulls or not.
@@ -60,7 +60,7 @@ final class QueryValidator {
                                     || EntityAnnotatedValueValidator.getInstance().apply(type, value, validationFailures)
                                     || ListValueValidator.getInstance().apply(type, value, validationFailures)
                                     || EntityTypeAndIdValueValidator.getInstance()
-                                                                    .apply(mappedField.getMapper(), type, value, validationFailures)
+                                                                    .apply(mappedClass, mappedField, value, validationFailures)
                                     || DefaultTypeValidator.getInstance().apply(type, value, validationFailures);
 
         return validationApplied && validationFailures.size() == 0;
@@ -139,9 +139,9 @@ final class QueryValidator {
 
             if (validateTypes && mf != null) {
                 List<ValidationFailure> typeValidationFailures = new ArrayList<ValidationFailure>();
-                boolean compatibleForType = isCompatibleForOperator(mf, mf.getType(), op, val, typeValidationFailures);
+                boolean compatibleForType = isCompatibleForOperator(mc, mf, mf.getType(), op, val, typeValidationFailures);
                 List<ValidationFailure> subclassValidationFailures = new ArrayList<ValidationFailure>();
-                boolean compatibleForSubclass = isCompatibleForOperator(mf, mf.getSubClass(), op, val, subclassValidationFailures);
+                boolean compatibleForSubclass = isCompatibleForOperator(mc, mf, mf.getSubClass(), op, val, subclassValidationFailures);
 
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
@@ -161,7 +161,7 @@ final class QueryValidator {
     }
 
     private static boolean canQueryPast(final MappedField mf) {
-        return !(mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Serialized.class));
+        return !(mf.isReference() || mf.hasAnnotation(Serialized.class));
     }
 
 }

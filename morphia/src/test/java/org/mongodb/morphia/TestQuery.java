@@ -103,7 +103,7 @@ public class TestQuery extends TestBase {
 
     }
 
-    @Test
+    @Test(expected = ValidationException.class)
     public void testReferenceQuery() throws Exception {
         final Photo p = new Photo();
         final ContainsPhotoKey cpk = new ContainsPhotoKey();
@@ -114,12 +114,7 @@ public class TestQuery extends TestBase {
         assertNotNull(getDs().find(ContainsPhotoKey.class, "photo", cpk.photo).get());
         assertNull(getDs().find(ContainsPhotoKey.class, "photo", 1).get());
 
-        try {
-            getDs().find(ContainsPhotoKey.class, "photo.keywords", "foo").get();
-            assertNull("um, query validation should have thrown");
-        } catch (ValidationException e) {
-            assertTrue(e.getMessage().contains("could not be found"));
-        }
+        getDs().find(ContainsPhotoKey.class, "photo.keywords", "foo").get();
     }
 
     @Test

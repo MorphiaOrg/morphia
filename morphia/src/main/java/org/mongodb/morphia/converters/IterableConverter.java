@@ -1,8 +1,11 @@
 package org.mongodb.morphia.converters;
 
 
+import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.mapping.EphemeralMappedField;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Array;
@@ -51,7 +54,16 @@ public class IterableConverter extends TypeConverter {
             // map back to the java data type
             // (List/Set/Array[])
             for (final Object o : (Iterable) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                if (o instanceof DBObject) {
+                    final MappedField mappedField = mf.getTypeParameters().get(0);
+                    if (mappedField instanceof EphemeralMappedField) {
+                        final EphemeralMappedField field = (EphemeralMappedField) getMapper().fromDb((DBObject) o, mappedField,
+                                                                                                     new DefaultEntityCache());
+                        values.add(field.getValue());
+                    }
+                } else {
+                    values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                }
             }
         } else {
             //Single value case.
@@ -64,11 +76,6 @@ public class IterableConverter extends TypeConverter {
         } else {
             return values;
         }
-    }
-
-    private Collection<?> createNewCollection(final MappedField mf) {
-        final ObjectFactory of = getMapper().getOptions().getObjectFactory();
-        return mf.isSet() ? of.createSet(mf) : of.createList(mf);
     }
 
     @Override
@@ -116,5 +123,10 @@ public class IterableConverter extends TypeConverter {
         } else {
             return null;
         }
+    }
+
+    private Collection<?> createNewCollection(final MappedField mf) {
+        final ObjectFactory of = getMapper().getOptions().getObjectFactory();
+        return mf.isSet() ? of.createSet(mf) : of.createList(mf);
     }
 }

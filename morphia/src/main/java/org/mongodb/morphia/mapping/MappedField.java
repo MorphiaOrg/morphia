@@ -2,6 +2,8 @@ package org.mongodb.morphia.mapping;
 
 
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.annotations.Embedded;
@@ -63,12 +65,13 @@ public class MappedField {
     }
 
     private final Mapper mapper;
+    // Annotations that have been found relevant to mapping
+    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
+    private final List<MappedField> typeParameters = new ArrayList<MappedField>();
     private Class persistedClass;
     private Field field; // the field :)
     private Class realType; // the real type
     private Constructor constructor; // the constructor for the type
-    // Annotations that have been found relevant to mapping
-    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
     private Type subType; // the type (T) for the Collection<T>/T[]/Map<?,T>
     private Type mapKeyType; // the type (T) for the Map<T,?>
     private boolean isSingleValue = true; // indicates the field is a single value
@@ -79,13 +82,22 @@ public class MappedField {
     //for debugging
     private boolean isArray; // indicated if it is an Array
     private boolean isCollection; // indicated if the collection is a list)
+    private Type genericType;
 
     MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
         this.mapper = mapper;
         f.setAccessible(true);
         field = f;
         persistedClass = clazz;
+        realType = field.getType();
+        genericType = field.getGenericType();
         discover();
+    }
+
+    public MappedField(final Type type, final Mapper mapper) {
+        this.mapper = mapper;
+        genericType = type;
+        discoverType();
     }
 
     public static void addInterestingAnnotation(final Class<? extends Annotation> annotation) {
@@ -101,7 +113,7 @@ public class MappedField {
         }
 
         //type must be discovered before the constructor.
-        realType = discoverType();
+        discoverType();
         constructor = discoverConstructor();
         discoverMultivalued();
 
@@ -114,7 +126,7 @@ public class MappedField {
             isMongoType = ReflectionUtils.isPropertyType(subType);
         }
 
-        if (!isMongoType && !isSingleValue && (subType == null || subType.equals(Object.class))) {
+        if (!isMongoType && !isSingleValue && (subType == null || subType == Object.class)) {
             if (LOG.isWarningEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
                 LOG.warning(String.format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
                                           + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
@@ -151,41 +163,49 @@ public class MappedField {
     }
 
     @SuppressWarnings("unchecked")
-    private Class discoverType() {
-        Class type = field.getType();
-        final Type gType = field.getGenericType();
-        TypeVariable<GenericDeclaration> tv = null;
+    protected void discoverType() {
         ParameterizedType pt = null;
-        if (gType instanceof TypeVariable) {
-            tv = (TypeVariable<GenericDeclaration>) gType;
-        } else if (gType instanceof ParameterizedType) {
-            pt = (ParameterizedType) gType;
-        }
-
-        if (tv != null) {
+        TypeVariable<GenericDeclaration> tv = null;
+        if (genericType instanceof TypeVariable) {
+            tv = (TypeVariable<GenericDeclaration>) genericType;
             final Class typeArgument = ReflectionUtils.getTypeArgument(persistedClass, tv);
             if (typeArgument != null) {
-                type = typeArgument;
+                realType = typeArgument;
             }
-        } else if (pt != null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("found instance of ParameterizedType : " + pt);
+        } else if (genericType instanceof ParameterizedType) {
+            pt = (ParameterizedType) genericType;
+            final Type[] types = pt.getActualTypeArguments();
+            realType = toClass(pt);
+
+            for (Type type : types) {
+                if (type instanceof ParameterizedType) {
+                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, getMapper()));
+                } else {
+                    if (type instanceof WildcardType) {
+                        type = ((WildcardType) type).getUpperBounds()[0];
+                    }
+                    typeParameters.add(new EphemeralMappedField(type, this, getMapper()));
+                }
             }
+        } else if (genericType instanceof WildcardType) {
+            final WildcardType wildcardType = (WildcardType) genericType;
+            final Type[] types = wildcardType.getUpperBounds();
+            realType = toClass(types[0]);
+        } else if (genericType instanceof Class) {
+            realType = (Class) genericType;
         }
 
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
             if (LOG.isWarningEnabled()) {
                 LOG.warning(
-                           "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
-                           + field.getDeclaringClass());
+                               "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
+                               + field.getDeclaringClass());
             }
         }
 
-        if (type == null) {
+        if (realType == null) {
             throw new MappingException("A type could not be found for " + field);
         }
-
-        return type;
     }
 
     private Constructor discoverConstructor() {
@@ -338,6 +358,10 @@ public class MappedField {
         foundAnnotations.put(clazz, ann);
     }
 
+    public boolean isReference() {
+        return hasAnnotation(Reference.class) || Key.class == getConcreteType() || DBRef.class == getConcreteType(); 
+    }
+
     /**
      * Adds the annotation even if not on the declared class/field.
      */
@@ -355,7 +379,7 @@ public class MappedField {
     /**
      * Returns the name of the field's key-name for mongodb
      */
-    private String getMappedFieldName() {
+    protected String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
             return Mapper.ID_KEY;
         } else if (hasAnnotation(Property.class)) {
@@ -433,6 +457,10 @@ public class MappedField {
 
     void setSubType(final Type subType) {
         this.subType = subType;
+    }
+
+    public List<MappedField> getTypeParameters() {
+        return typeParameters;
     }
 
     public boolean isArray() {

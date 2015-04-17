@@ -4,6 +4,8 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.entities.EntityWithNoId;
 import org.mongodb.morphia.entities.SimpleEntity;
+import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
@@ -17,9 +19,10 @@ public class EntityTypeAndIdValueValidatorTest {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
-        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(new Mapper(),
-                                                                                      SimpleEntity.class,
-                                                                                      new ObjectId(),
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("_id");
+        
+        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, new ObjectId(),
                                                                                       validationFailures);
         // then
         assertThat(validationApplied, is(true));
@@ -31,9 +34,9 @@ public class EntityTypeAndIdValueValidatorTest {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
-        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(new Mapper(),
-                                                                                      SimpleEntity.class,
-                                                                                      "some non-ObjectId value",
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("_id");
+        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, "some non-ObjectId value",
                                                                                       validationFailures);
         // then
         assertThat(validationApplied, is(true));
@@ -45,9 +48,9 @@ public class EntityTypeAndIdValueValidatorTest {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
-        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(new Mapper(),
-                                                                                      EntityWithNoId.class,
-                                                                                      "some non-null value",
+        MappedClass mappedClass = new MappedClass(EntityWithNoId.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("_id");
+        boolean validationApplied = EntityTypeAndIdValueValidator.getInstance().apply(mappedClass, mappedField, "some non-null value",
                                                                                       validationFailures);
         // then
         assertThat(validationApplied, is(false));
