@@ -106,7 +106,7 @@ final class QueryValidator {
                 }
 
                 i++;
-                if (fieldIsArrayOperator || mf.isMap()) {
+                if (mf != null && mf.isMap()) {
                     //skip the map key validation, and move to the next part
                     i++;
                 }
@@ -115,14 +115,16 @@ final class QueryValidator {
                     break;
                 }
 
-                //catch people trying to search/update into @Reference/@Serialized fields
-                if (!canQueryPast(mf)) {
-                    throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
-                                                         + " validating - %s", part, clazz.getName(), prop));
-                }
+                if (!fieldIsArrayOperator) {
+                    //catch people trying to search/update into @Reference/@Serialized fields
+                    if (!canQueryPast(mf)) {
+                        throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
+                                                             + " validating - %s", part, clazz.getName(), prop));
+                    }
 
-                //get the next MappedClass for the next field validation
-                mc = mapper.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
+                    //get the next MappedClass for the next field validation
+                    mc = mapper.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
+                }
             }
 
             //record new property string if there has been a translation to any part
