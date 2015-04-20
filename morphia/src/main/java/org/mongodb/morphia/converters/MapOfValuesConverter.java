@@ -40,7 +40,7 @@ public class MapOfValuesConverter extends TypeConverter {
             @Override
             public void eval(final Object key, final Object val) {
                 final Object objKey = converters.decode(mf.getMapKeyClass(), key, mf);
-                values.put(objKey, val != null ? converters.decode(val.getClass(), val, mf) : null);
+                values.put(objKey, val != null ? converters.decode(mf.getSubClass(), val, mf) : null);
             }
         });
 
