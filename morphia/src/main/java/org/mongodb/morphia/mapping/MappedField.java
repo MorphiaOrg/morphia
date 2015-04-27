@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 
@@ -128,8 +129,8 @@ public class MappedField {
 
         if (!isMongoType && !isSingleValue && (subType == null || subType == Object.class)) {
             if (LOG.isWarningEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
-                LOG.warning(String.format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
-                                          + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
+                LOG.warning(format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
+                                   + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
             }
             isMongoType = true;
         }
@@ -138,7 +139,8 @@ public class MappedField {
     private void discoverMultivalued() {
         if (realType.isArray()
             || Collection.class.isAssignableFrom(realType)
-            || Map.class.isAssignableFrom(realType)) {
+            || Map.class.isAssignableFrom(realType)
+            || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
 
             isSingleValue = false;
 
@@ -193,6 +195,8 @@ public class MappedField {
             realType = toClass(types[0]);
         } else if (genericType instanceof Class) {
             realType = (Class) genericType;
+        } else if (genericType instanceof GenericArrayType) {
+            realType = (Class) ((GenericArrayType) genericType).getGenericComponentType();
         }
 
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
@@ -204,7 +208,7 @@ public class MappedField {
         }
 
         if (realType == null) {
-            throw new MappingException("A type could not be found for " + field);
+            throw new MappingException(format("A type could not be found for the field %s.%s", getType(), getField()));
         }
     }
 
@@ -302,7 +306,7 @@ public class MappedField {
                     foundField = true;
                     fieldName = n;
                 } else {
-                    throw new MappingException(String.format("Found more than one field from @AlsoLoad %s", getLoadNames()));
+                    throw new MappingException(format("Found more than one field from @AlsoLoad %s", getLoadNames()));
                 }
             }
         }

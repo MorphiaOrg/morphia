@@ -12,8 +12,6 @@ import org.mongodb.morphia.annotations.Id;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
 public class KeyMappingTest extends TestBase {
     @Test
     public void keyMapping() {
@@ -40,9 +38,11 @@ public class KeyMappingTest extends TestBase {
         Channel fitnessChannel = new Channel("Fitness channel");
         datastore.save(fitnessChannel);
 
-        datastore.save(new User("Roberto", datastore.getKey(sportChannel),
-                                asList(datastore.getKey(sportChannel), datastore.getKey(fitnessChannel))));
-
+        final List<Key<Channel>> followedChannels = new ArrayList<Key<Channel>>();
+        followedChannels.add(datastore.getKey(sportChannel));
+        followedChannels.add(datastore.getKey(fitnessChannel));
+        
+        datastore.save(new User("Roberto", datastore.getKey(sportChannel), followedChannels));
     }
 
     @Test
