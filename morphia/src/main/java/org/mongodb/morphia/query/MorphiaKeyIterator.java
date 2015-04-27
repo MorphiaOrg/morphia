@@ -16,10 +16,9 @@ public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Key<T> convertItem(final DBObject dbObj) {
-        final Key<T> key = new Key<T>(getKind(), dbObj.get(Mapper.ID_KEY));
-        key.setKindClass(getClazz());
-        return key;
+        return new Key<T>(getClazz(), getCollection(), dbObj.get(Mapper.ID_KEY));
     }
 
 }

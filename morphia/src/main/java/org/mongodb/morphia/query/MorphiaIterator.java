@@ -15,18 +15,19 @@ import java.util.NoSuchElementException;
  */
 public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     private final Iterator<DBObject> wrapped;
-    private final Mapper m;
+    private final Mapper mapper;
     private final Class<T> clazz;
-    private final String kind;
+    private final String collection;
     private final EntityCache cache;
     private long driverTime;
     private long mapperTime;
 
-    public MorphiaIterator(final Iterator<DBObject> it, final Mapper m, final Class<T> clazz, final String kind, final EntityCache cache) {
+    public MorphiaIterator(final Iterator<DBObject> it, final Mapper mapper, final Class<T> clazz, final String collection,
+                           final EntityCache cache) {
         wrapped = it;
-        this.m = m;
+        this.mapper = mapper;
         this.clazz = clazz;
-        this.kind = kind;
+        this.collection = collection;
         this.cache = cache;
     }
 
@@ -34,14 +35,20 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return clazz;
     }
 
-    public String getKind() {
-        return kind;
+    public String getCollection() {
+        return collection;
     }
 
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    @Override
     public Iterator<V> iterator() {
         return this;
     }
 
+    @Override
     public boolean hasNext() {
         if (wrapped == null) {
             return false;
@@ -52,6 +59,7 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return ret;
     }
 
+    @Override
     public V next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -76,9 +84,10 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
 
     @SuppressWarnings("unchecked")
     protected V convertItem(final DBObject dbObj) {
-        return (V) m.fromDBObject(clazz, dbObj, cache);
+        return (V) mapper.fromDBObject(clazz, dbObj, cache);
     }
 
+    @Override
     public void remove() {
         final long start = System.currentTimeMillis();
         wrapped.remove();

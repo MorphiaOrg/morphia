@@ -55,7 +55,9 @@ public class QueryInForKeyTest extends TestBase {
         for (int x = 0; x < 10; x++) {
             final ReferencedEntity re = new ReferencedEntity("" + x);
             getDs().save(re);
-            refs.add(new Key<QueryInForKeyTest.ReferencedEntity>(ReferencedEntity.class.getName(), re.getId()));
+            refs.add(new Key<QueryInForKeyTest.ReferencedEntity>(ReferencedEntity.class,
+                                                                 getMorphia().getMapper().getCollectionName(ReferencedEntity.class),
+                                                                 re.getId()));
         }
         hr.ref = refs.get(0);
 

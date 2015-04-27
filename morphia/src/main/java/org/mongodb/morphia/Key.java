@@ -2,7 +2,7 @@ package org.mongodb.morphia;
 
 
 import java.io.Serializable;
-
+import java.util.Arrays;
 
 /**
  * <p> The key object; this class is take from the app-engine datastore (mostly) implementation. It is also Serializable and GWT-safe,
@@ -12,14 +12,9 @@ import java.io.Serializable;
  * @author Jeff Schnitzer <jeff@infohazard.org> (from Objectify codebase)
  * @author Scott Hernandez (adapted to morphia/mongodb)
  */
-public class Key<T> implements Serializable, Comparable<Key<?>> {
-    private static final long serialVersionUID = 1L;
-    /**
-     * The name of the class which represents the kind. As much as we'd like to use the normal String kind value here, translating back to a
-     * Class for getKind() would then require a link to the OFactory, making this object non-serializable.
-     */
-    private String kind;
-    private Class<? extends T> kindClass;
+public class Key<T> implements Serializable, Comparable<Key<T>> {
+    private String collection;
+    private Class<? extends T> type;
 
     /**
      * Id value
@@ -36,27 +31,19 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     /**
      * Create a key with an id
      */
-    public Key(final Class<? extends T> kind, final Object id) {
-        kindClass = kind;
+    public Key(final Class<? extends T> type, final String collection, final Object id) {
+        this.type = type;
+        this.collection = collection;
         this.id = id;
     }
 
     /**
      * Create a key with an id
      */
-    public Key(final Class<? extends T> kind, final byte[] idBytes) {
-        kindClass = kind;
-
-        this.idBytes = new byte[idBytes.length];
-        System.arraycopy(idBytes, 0, this.idBytes, 0, idBytes.length);
-    }
-
-    /**
-     * Create a key with an id
-     */
-    public Key(final String kind, final Object id) {
-        this.kind = kind.intern();
-        this.id = id;
+    public Key(final Class<? extends T> type, final String collection, final byte[] idBytes) {
+        this.type = type;
+        this.collection = collection;
+        this.idBytes = Arrays.copyOf(idBytes, idBytes.length);
     }
 
     /**
@@ -69,28 +56,28 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     /**
      * @return the collection-name.
      */
-    public String getKind() {
-        return kind;
+    public String getCollection() {
+        return collection;
     }
 
     /**
      * sets the collection-name.
      */
-    public void setKind(final String newKind) {
-        kind = newKind.intern();
+    public void setCollection(final String collection) {
+        this.collection = collection.intern();
     }
 
-    public void setKindClass(final Class<? extends T> clazz) {
-        kindClass = clazz;
+    public void setType(final Class<? extends T> clazz) {
+        type = clazz;
     }
 
-    public Class<? extends T> getKindClass() {
-        return kindClass;
+    public Class<? extends T> getType() {
+        return type;
     }
 
     private void checkState(final Key k) {
-        if (k.kindClass == null && k.kind == null) {
-            throw new IllegalStateException("Kind must be specified (or a class).");
+        if (k.type == null && k.collection == null) {
+            throw new IllegalStateException("Collection must be specified (or a class).");
         }
         if (k.id == null && k.idBytes == null) {
             throw new IllegalStateException("id must be specified");
@@ -98,21 +85,27 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     }
 
     /**
-     * <p> Compares based on the following traits, in order: </p> <ol> <li>kind/kindClass</li> <li>parent</li> <li>id or name</li> </ol>
+     * <p> Compares based on the following traits, in order: </p> 
+     * <ol>
+     *     <li>collection/type</li>
+     *     <li>parent</li> 
+     *     <li>id or name</li>
+     *  </ol>
      */
-    public int compareTo(final Key<?> other) {
+    @Override
+    public int compareTo(final Key<T> other) {
         checkState(this);
         checkState(other);
 
         int cmp;
-        // First kind
-        if (other.kindClass != null && kindClass != null) {
-            cmp = kindClass.getName().compareTo(other.kindClass.getName());
+        // First collection
+        if (other.type != null && type != null) {
+            cmp = type.getName().compareTo(other.type.getName());
             if (cmp != 0) {
                 return cmp;
             }
         }
-        cmp = compareNullable(kind, other.kind);
+        cmp = compareNullable(collection, other.collection);
         if (cmp != 0) {
             return cmp;
         }
@@ -133,10 +126,10 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
         return 0;
     }
 
-    /** */
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(final Object obj) {
-        return obj != null && obj instanceof Key<?> && compareTo((Key<?>) obj) == 0;
+        return obj != null && obj instanceof Key<?> && compareTo((Key<T>) obj) == 0;
 
     }
 
@@ -153,12 +146,12 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
     public String toString() {
         final StringBuilder bld = new StringBuilder("Key{");
 
-        if (kind != null) {
-            bld.append("kind=");
-            bld.append(kind);
+        if (collection != null) {
+            bld.append("collection=");
+            bld.append(collection);
         } else {
-            bld.append("kindClass=");
-            bld.append(kindClass.getName());
+            bld.append("type=");
+            bld.append(type.getName());
         }
         bld.append(", id=");
         bld.append(id);
@@ -181,21 +174,4 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
             return o1.compareTo(o2);
         }
     }
-
-    // private void writeObject(java.io.ObjectOutputStream out) throws
-    // IOException {
-    // if (!(id instanceof Serializable))
-    // throw new NotSerializableException(id.getClass().getName());
-    // // TODO persist id to a BasicDBObject (or Map<String, Object>) using
-    // // mapper to make serializable.
-    // out.defaultWriteObject();
-    // }
-    // private void readObject(java.io.ObjectInputStream in) throws IOException
-    // {
-    // if (!(id instanceof Serializable))
-    // throw new NotSerializableException(id.getClass().getName());
-    // // TODO persist id to a BasicDBObject (or Map<String, Object>) using
-    // // mapper to make serializable.
-    // in.defaultWriteObject();
-    // }
 }

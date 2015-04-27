@@ -17,7 +17,7 @@ public class KeyValueTypeValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         boolean validationApplied = KeyValueTypeValidator.getInstance().apply(Integer.class,
-                                                                              new Key<Number>(Integer.class, new ObjectId()),
+                                                                              new Key<Number>(Integer.class, "Integer", new ObjectId()),
                                                                               validationFailures);
         // then
         assertThat(validationApplied, is(true));
@@ -30,7 +30,7 @@ public class KeyValueTypeValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         boolean validationApplied = KeyValueTypeValidator.getInstance().apply(String.class,
-                                                                              new Key<Number>(Integer.class, new ObjectId()),
+                                                                              new Key<Number>(Integer.class, "Integer", new ObjectId()),
                                                                               validationFailures);
         // then
         assertThat(validationApplied, is(true));

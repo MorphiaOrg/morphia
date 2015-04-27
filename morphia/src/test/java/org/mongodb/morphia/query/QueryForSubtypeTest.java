@@ -68,7 +68,7 @@ public class QueryForSubtypeTest extends TestBase {
     @Test
     public void testSubclassOfKeyShouldBeCompatibleWithFieldUser() {
         MappedField user = jobMappedClass.getMappedField("owner");
-        Key<User> anonymousKeySubclass = new Key<User>(User.class, 212L) {
+        Key<User> anonymousKeySubclass = new Key<User>(User.class, "User", 212L) {
         };
 
         boolean compatible = isCompatibleForOperator(jobMappedClass,

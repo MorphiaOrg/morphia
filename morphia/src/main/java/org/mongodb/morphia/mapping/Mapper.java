@@ -517,7 +517,8 @@ public class Mapper {
         }
 
         final Object id = getId(unwrapped);
-        return id == null ? null : new Key<T>((Class<T>) unwrapped.getClass(), id);
+        final Class<T> aClass = (Class<T>) unwrapped.getClass();
+        return id == null ? null : new Key<T>(aClass, getCollectionName(aClass), id);
     }
 
     /**
@@ -583,7 +584,7 @@ public class Mapper {
 
         if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
             && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key<T> key = new Key(entity.getClass(), dbObject.get(ID_KEY));
+            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(ID_KEY));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
                 return cachedInstance;
@@ -606,7 +607,7 @@ public class Mapper {
         }
 
         if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
-            final Key key = new Key(entity.getClass(), updated.get(ID_KEY));
+            final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
             cache.putEntity(key, entity);
         }
         mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
@@ -669,15 +670,16 @@ public class Mapper {
     }
 
     public <T> Key<T> refToKey(final DBRef ref) {
-        return ref == null ? null : new Key<T>(ref.getCollectionName(), ref.getId());
+        return ref == null ? null : new Key<T>((Class<? extends T>) getClassFromCollection(ref.getCollectionName()),
+                                               ref.getCollectionName(), ref.getId());
     }
 
-    public <T> Key<T> manualRefToKey(final Class<T> kindClass, final Object id) {
-        return id == null ? null : new Key<T>(kindClass, id);
+    public <T> Key<T> manualRefToKey(final Class<T> type, final Object id) {
+        return id == null ? null : new Key<T>(type, getCollectionName(type), id);
     }
 
-    public <T> Key<T> manualRefToKey(final String kind, final Object id) {
-        return id == null ? null : new Key<T>(kind, id);
+    public <T> Key<T> manualRefToKey(final String collection, final Object id) {
+        return id == null ? null : new Key<T>((Class<? extends T>) getClassFromCollection(collection), collection, id);
     }
 
     /**
@@ -710,14 +712,14 @@ public class Mapper {
         if (key == null) {
             return null;
         }
-        if (key.getKindClass() == null && key.getKind() == null) {
+        if (key.getType() == null && key.getCollection() == null) {
             throw new IllegalStateException("How can it be missing both?");
         }
-        if (key.getKind() == null) {
-            key.setKind(getCollectionName(key.getKindClass()));
+        if (key.getCollection() == null) {
+            key.setCollection(getCollectionName(key.getType()));
         }
 
-        return new DBRef(key.getKind(), key.getId());
+        return new DBRef(key.getCollection(), key.getId());
     }
 
     public Object keyToManualRef(final Key key) {
@@ -725,17 +727,17 @@ public class Mapper {
     }
 
     public String updateKind(final Key key) {
-        if (key.getKind() == null && key.getKindClass() == null) {
+        if (key.getCollection() == null && key.getType() == null) {
             throw new IllegalStateException("Key is invalid! " + toString());
-        } else if (key.getKind() == null) {
-            key.setKind(getMappedClass(key.getKindClass()).getCollectionName());
+        } else if (key.getCollection() == null) {
+            key.setCollection(getMappedClass(key.getType()).getCollectionName());
         }
 
-        return key.getKind();
+        return key.getCollection();
     }
 
     <T> Key<T> createKey(final Class<T> clazz, final Serializable id) {
-        return new Key<T>(clazz, id);
+        return new Key<T>(clazz, getCollectionName(clazz), id);
     }
 
     <T> Key<T> createKey(final Class<T> clazz, final Object id) {
@@ -745,17 +747,17 @@ public class Mapper {
 
         //TODO: cache the encoders, maybe use the pool version of the buffer that the driver does.
         final BSONEncoder enc = new BasicBSONEncoder();
-        return new Key<T>(clazz, enc.encode(toDBObject(id)));
+        return new Key<T>(clazz, getCollectionName(clazz), enc.encode(toDBObject(id)));
     }
 
-    public Class<?> getClassFromKind(final String kind) {
-        final Set<MappedClass> mcs = mappedClassesByCollection.get(kind);
+    public Class<?> getClassFromCollection(final String collection) {
+        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
         if (mcs.isEmpty()) {
-            throw new MappingException(format("The collection '%s' is not mapped to a java class.", kind));
+            throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
         }
         if (mcs.size() > 1) {
             if (LOG.isInfoEnabled()) {
-                LOG.info(format("Found more than one class mapped to collection '%s'%s", kind, mcs));
+                LOG.info(format("Found more than one class mapped to collection '%s'%s", collection, mcs));
             }
         }
         return mcs.iterator().next().getClazz();

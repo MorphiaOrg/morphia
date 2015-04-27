@@ -147,7 +147,7 @@ class ReferenceMapper implements CustomMapper {
             if (id == null) {
                 throw new MappingException("@Id field cannot be null!");
             }
-            return new Key(mappedClass.getCollectionName(), id);
+            return new Key(mappedClass.getClazz(), mappedClass.getCollectionName(), id);
         } catch (IllegalAccessException iae) {
             throw new RuntimeException(iae);
         }
@@ -259,7 +259,7 @@ class ReferenceMapper implements CustomMapper {
 
         final Datastore ds = mapper.getDatastoreProvider().get();
 
-        final DBObject refDbObject = idOnly ? ds.getCollection(key.getKindClass()).findOne(ref)
+        final DBObject refDbObject = idOnly ? ds.getCollection(key.getType()).findOne(ref)
                                             : ds.getDB().getCollection(dbRef.getCollectionName()).findOne(dbRef.getId());
 
         if (refDbObject != null) {

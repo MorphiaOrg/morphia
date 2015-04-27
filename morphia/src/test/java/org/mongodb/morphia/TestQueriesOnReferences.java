@@ -90,10 +90,10 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(p);
         getDs().save(cpk);
 
-        ContainsPic containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, p.id)).get();
+        ContainsPic containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.id)).get();
         Assert.assertEquals(cpk.id, containsPic.id);
 
-        containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>("Pic", p.id)).get();
+        containsPic = getDs().createQuery(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.id)).get();
         Assert.assertEquals(cpk.id, containsPic.id);
     }
 

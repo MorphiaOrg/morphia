@@ -427,7 +427,7 @@ public class QueryValidatorTest {
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("integer");
         assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, Integer.class, EQUAL,
-                                                          new Key<Number>(Integer.class, new ObjectId()),
+                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
                                                           new ArrayList<ValidationFailure>()), is(true));
     }
 
@@ -437,7 +437,7 @@ public class QueryValidatorTest {
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("name");
         assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, String.class, EQUAL,
-                                                          new Key<Number>(Integer.class, new ObjectId()),
+                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
                                                           new ArrayList<ValidationFailure>()), is(false));
     }
 
@@ -447,7 +447,8 @@ public class QueryValidatorTest {
         MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
         MappedField mappedField = mappedClass.getMappedField("listOfIntegers");
         assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, EQUAL,
-                                                          new Key<String>("kind", new ObjectId()), new ArrayList<ValidationFailure>()),
+                                                          new Key<String>(String.class, "kind", new ObjectId()),
+                                                          new ArrayList<ValidationFailure>()),
                    is(false));
     }
 

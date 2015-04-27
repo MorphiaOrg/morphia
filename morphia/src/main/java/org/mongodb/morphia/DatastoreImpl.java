@@ -718,10 +718,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             // clazz + "!=" + key.getKindClass() +
             // ") for key and method parameter clazz");
             //
-            if (kindMap.containsKey(key.getKind())) {
-                kindMap.get(key.getKind()).add(key);
+            if (kindMap.containsKey(key.getCollection())) {
+                kindMap.get(key.getCollection()).add(key);
             } else {
-                kindMap.put(key.getKind(), new ArrayList<Key>(Collections.singletonList((Key) key)));
+                kindMap.put(key.getCollection(), new ArrayList<Key>(Collections.singletonList((Key) key)));
             }
         }
         for (final Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
@@ -801,12 +801,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        String collName = key.getKind();
-        if (collName == null) {
-            collName = getCollection(key.getKindClass()).getName();
-        }
-
-        return find(collName, key.getKindClass()).filter(Mapper.ID_KEY, key.getId());
+        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId());
     }
 
     @Override
@@ -994,8 +989,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         mapper.updateKeyInfo(entity, dbObj, createCache());
 
         postSaveOperations(involvedObjects);
-        final Key<T> key = new Key<T>(dbColl.getName(), mapper.getId(entity));
-        key.setKindClass((Class<? extends T>) entity.getClass());
+        final Key<T> key = new Key<T>((Class<? extends T>) entity.getClass(), dbColl.getName(), mapper.getId(entity));
+        key.setType((Class<? extends T>) entity.getClass());
 
         return key;
     }
@@ -1176,9 +1171,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> ops) {
-        Class<T> clazz = (Class<T>) key.getKindClass();
+        Class<T> clazz = (Class<T>) key.getType();
         if (clazz == null) {
-            clazz = (Class<T>) mapper.getClassFromKind(key.getKind());
+            clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
         }
         return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), ops);
     }
