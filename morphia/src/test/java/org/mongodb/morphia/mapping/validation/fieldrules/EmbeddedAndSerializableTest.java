@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping.validation.fieldrules;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -44,6 +43,7 @@ public class EmbeddedAndSerializableTest extends TestBase {
         @Embedded
         private Period period;
 
+        @Embedded
         private List<Period> periods = new ArrayList<Period>();
     }
 
@@ -58,7 +58,6 @@ public class EmbeddedAndSerializableTest extends TestBase {
     }
 
     @Test
-    @Ignore("https://github.com/mongodb/morphia/issues/580")
     public void embedded() {
         getMorphia().map(Project.class, Period.class);
 

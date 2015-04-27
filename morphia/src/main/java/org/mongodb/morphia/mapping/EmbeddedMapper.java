@@ -148,7 +148,7 @@ class EmbeddedMapper implements CustomMapper {
                     final boolean isDBObject = dbVal instanceof DBObject;
 
                     //run converters
-                    if (isDBObject && (mapper.getConverters().hasDbObjectConverter(mf)
+                    if (isDBObject && !mapper.isMapped(mf.getConcreteType()) && (mapper.getConverters().hasDbObjectConverter(mf)
                                        || mapper.getConverters().hasDbObjectConverter(mf.getType()))) {
                         mapper.getConverters().fromDBObject(dbObject, mf, entity);
                     } else {
@@ -191,8 +191,9 @@ class EmbeddedMapper implements CustomMapper {
                 dbValues.add(dbVal);
             }
 
-            EphemeralMappedField ephemeralMappedField = isMapOrCollection(mf)
-                                                  ? new EphemeralMappedField((ParameterizedType) mf.getSubType(), mf, mapper)
+            EphemeralMappedField ephemeralMappedField = !mapper.isMapped(mf.getType()) && isMapOrCollection(mf)
+                                                        && (mf.getSubType() instanceof ParameterizedType)
+                                                        ? new EphemeralMappedField((ParameterizedType) mf.getSubType(), mf, mapper)
                                                   : null;
             for (final Object o : dbValues) {
 
