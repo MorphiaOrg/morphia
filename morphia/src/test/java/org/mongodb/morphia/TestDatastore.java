@@ -24,6 +24,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.annotations.Entity;
@@ -442,6 +443,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     @Category(Slow.class)
+    @Ignore
     public void massiveBulkInsert() {
         doInserts(false);
         doInserts(true);

@@ -12,12 +12,6 @@ import java.util.Map;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class MapOfValuesConverter extends TypeConverter {
-    private final DefaultConverters converters;
-
-    public MapOfValuesConverter(final DefaultConverters converters) {
-        this.converters = converters;
-    }
-
     @Override
     protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
         if (optionalExtraInfo != null) {
@@ -39,8 +33,8 @@ public class MapOfValuesConverter extends TypeConverter {
         new IterHelper<Object, Object>().loopMap(fromDBObject, new MapIterCallback<Object, Object>() {
             @Override
             public void eval(final Object key, final Object val) {
-                final Object objKey = converters.decode(mf.getMapKeyClass(), key, mf);
-                values.put(objKey, val != null ? converters.decode(mf.getSubClass(), val, mf) : null);
+                final Object objKey = getMapper().getConverters().decode(mf.getMapKeyClass(), key, mf);
+                values.put(objKey, val != null ? getMapper().getConverters().decode(mf.getSubClass(), val, mf) : null);
             }
         });
 
@@ -58,8 +52,8 @@ public class MapOfValuesConverter extends TypeConverter {
         if (!map.isEmpty() || getMapper().getOptions().isStoreEmpties()) {
             final Map mapForDb = new HashMap();
             for (final Map.Entry<Object, Object> entry : map.entrySet()) {
-                final String strKey = converters.encode(entry.getKey()).toString();
-                mapForDb.put(strKey, converters.encode(entry.getValue()));
+                final String strKey = getMapper().getConverters().encode(entry.getKey()).toString();
+                mapForDb.put(strKey, getMapper().getConverters().encode(entry.getValue()));
             }
             return mapForDb;
         }

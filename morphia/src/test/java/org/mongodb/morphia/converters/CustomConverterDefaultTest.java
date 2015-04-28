@@ -72,7 +72,7 @@ public class CustomConverterDefaultTest extends TestBase {
 
     @Test
     public void testRemoveConverter() {
-        DefaultConverters converters = getMorphia().getMapper().getConverters();
+        Converters converters = getMorphia().getMapper().getConverters();
         try {
             Assert.assertTrue(converters.isRegistered(DoubleConverter.class));
             converters.removeConverter(new DoubleConverter());

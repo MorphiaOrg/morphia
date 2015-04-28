@@ -1121,7 +1121,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
-        return save(getCollection(ProxyHelper.unwrap(entity)), ProxyHelper.unwrap(entity), wc);
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        return save(getCollection(unwrapped), unwrapped, wc);
     }
 
     @Override

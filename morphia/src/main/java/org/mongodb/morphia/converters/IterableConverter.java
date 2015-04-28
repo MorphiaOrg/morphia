@@ -14,18 +14,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.String.format;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
 public class IterableConverter extends TypeConverter {
-    private final DefaultConverters chain;
-
-    public IterableConverter(final DefaultConverters chain) {
-        this.chain = chain;
-    }
-
     @Override
     protected boolean isSupported(final Class c, final MappedField mf) {
         if (mf != null) {
@@ -48,7 +44,7 @@ public class IterableConverter extends TypeConverter {
         if (fromDBObject.getClass().isArray()) {
             //This should never happen. The driver always returns list/arrays as a List
             for (final Object o : (Object[]) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
         } else if (fromDBObject instanceof Iterable) {
             // map back to the java data type
@@ -62,12 +58,12 @@ public class IterableConverter extends TypeConverter {
                         values.add(field.getValue());
                     }
                 } else {
-                    values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                    values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
                 }
             }
         } else {
             //Single value case.
-            values.add(chain.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
+            values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
         }
 
         //convert to and array if that is the destination type (not a list/set)
@@ -89,19 +85,14 @@ public class IterableConverter extends TypeConverter {
         final Iterable<?> iterableValues;
 
         if (value.getClass().isArray()) {
-
-            if (Array.getLength(value) == 0) {
-                return value;
-            }
-
-            if (value.getClass().getComponentType().isPrimitive()) {
+            if (Array.getLength(value) == 0 || value.getClass().getComponentType().isPrimitive()) {
                 return value;
             }
 
             iterableValues = Arrays.asList((Object[]) value);
         } else {
             if (!(value instanceof Iterable)) {
-                throw new ConverterException("Cannot cast " + value.getClass() + " to Iterable for MappedField: " + mf);
+                throw new ConverterException(format("Cannot cast %s to Iterable for MappedField: %s", value.getClass(), mf));
             }
 
             // cast value to a common interface
@@ -111,18 +102,14 @@ public class IterableConverter extends TypeConverter {
         final List values = new ArrayList();
         if (mf != null && mf.getSubClass() != null) {
             for (final Object o : iterableValues) {
-                values.add(chain.encode(mf.getSubClass(), o));
+                values.add(getMapper().getConverters().encode(mf.getSubClass(), o));
             }
         } else {
             for (final Object o : iterableValues) {
-                values.add(chain.encode(o));
+                values.add(getMapper().getConverters().encode(o));
             }
         }
-        if (!values.isEmpty() || getMapper().getOptions().isStoreEmpties()) {
-            return values;
-        } else {
-            return null;
-        }
+        return !values.isEmpty() || getMapper().getOptions().isStoreEmpties() ? values : null;
     }
 
     private Collection<?> createNewCollection(final MappedField mf) {

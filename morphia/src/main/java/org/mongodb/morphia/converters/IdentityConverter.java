@@ -8,12 +8,9 @@ import org.mongodb.morphia.mapping.MappedField;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
-public class PassthroughConverter extends TypeConverter {
+public class IdentityConverter extends TypeConverter {
 
-  public PassthroughConverter() {
-  }
-
-  public PassthroughConverter(final Class... types) {
+  public IdentityConverter(final Class... types) {
     super(types);
   }
 

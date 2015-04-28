@@ -252,38 +252,42 @@ public final class ReflectionUtils {
     }
 
     public static Type getParameterizedType(final Field field, final int index) {
-        if (field.getGenericType() instanceof ParameterizedType) {
-            final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
-                return null;
-            }
-            final Type paramType = type.getActualTypeArguments()[index];
-            if (paramType instanceof GenericArrayType) {
-                return paramType; //((GenericArrayType) paramType).getGenericComponentType();
-            } else {
-                if (paramType instanceof ParameterizedType) {
-                    return paramType;
+        if (field != null) {
+            if (field.getGenericType() instanceof ParameterizedType) {
+                final ParameterizedType type = (ParameterizedType) field.getGenericType();
+                if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
+                    return null;
+                }
+                final Type paramType = type.getActualTypeArguments()[index];
+                if (paramType instanceof GenericArrayType) {
+                    return paramType; //((GenericArrayType) paramType).getGenericComponentType();
                 } else {
-                    if (paramType instanceof TypeVariable) {
-                        // TODO: Figure out what to do... Walk back up the to
-                        // the parent class and try to get the variable type
-                        // from the T/V/X
-                        // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) 
-                        // paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
-                        return paramType;
-                    } else if (paramType instanceof WildcardType) {
-                        return paramType;
-                    } else if (paramType instanceof Class) {
+                    if (paramType instanceof ParameterizedType) {
                         return paramType;
                     } else {
-                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                        if (paramType instanceof TypeVariable) {
+                            // TODO: Figure out what to do... Walk back up the to
+                            // the parent class and try to get the variable type
+                            // from the T/V/X
+                            // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) 
+                            // paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
+                            return paramType;
+                        } else if (paramType instanceof WildcardType) {
+                            return paramType;
+                        } else if (paramType instanceof Class) {
+                            return paramType;
+                        } else {
+                            throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                        }
                     }
                 }
             }
-        }
 
-        // Not defined on field, but may be on class or super class...
-        return getParameterizedClass(field.getType());
+            // Not defined on field, but may be on class or super class...
+            return getParameterizedClass(field.getType());
+        }
+        
+        return null;
     }
 
     /**
