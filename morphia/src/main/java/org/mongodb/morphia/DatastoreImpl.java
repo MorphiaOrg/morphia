@@ -1314,6 +1314,15 @@ public class DatastoreImpl implements AdvancedDatastore {
             q = new BasicDBObject();
         }
 
+        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
+        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
+        if (!fields.isEmpty()) {
+            final MappedField versionMF = fields.get(0);
+            if (q.get(versionMF.getNameToStore()) == null) {
+                u.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+            }
+        }
+
         if (LOG.isTraceEnabled()) {
             LOG.trace("Executing update(" + dbColl.getName() + ") for query: " + q + ", ops: " + u + ", multi: " + multi + ", upsert: "
                       + createIfMissing);

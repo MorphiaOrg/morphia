@@ -29,6 +29,7 @@ public abstract class TestBase {
         setDb(getMongoClient().getDB("morphia_test"));
         setDs(getMorphia().createDatastore(getMongoClient(), getDb().getName()));
         setAds((AdvancedDatastore) getDs());
+        cleanup();
     }
 
     protected void cleanup() {

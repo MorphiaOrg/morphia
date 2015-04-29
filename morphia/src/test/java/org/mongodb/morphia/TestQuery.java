@@ -74,23 +74,6 @@ public class TestQuery extends TestBase {
         assertNotNull(getDs().find(ContainsRenamedFields.class).field("firstName").equal("Scott").get());
 
         assertNotNull(getDs().find(ContainsRenamedFields.class).field("first_name").equal("Scott").get());
-        
-/*
-        ContainsRenamedFields entity;
-
-        entity = getDs().find(ContainsRenamedFields.class)
-                     .field("first_name").equal("Scott")
-                     .retrievedFields(true, "first_name")
-                     .get();
-        assertNull(entity.lastName);
-
-        entity = getDs().find(ContainsRenamedFields.class)
-                                           .field("first_name").equal("Scott")
-                                           .retrievedFields(true, "firstName")
-                                           .get();
-        assertNull(entity.lastName);
-        
-*/
     }
 
     @Test
