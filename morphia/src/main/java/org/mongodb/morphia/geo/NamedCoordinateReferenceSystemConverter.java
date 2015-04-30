@@ -12,24 +12,24 @@ import org.mongodb.morphia.mapping.MappedField;
  * Only implements the decode method as the concrete classes can encode themselves without needing a converter. It's when they come out of
  * the database that there's not enough information for Morphia to automatically create Geometry instances.
  */
-public class CRSConverter extends TypeConverter implements SimpleValueConverter {
+public class NamedCoordinateReferenceSystemConverter extends TypeConverter implements SimpleValueConverter {
     /**
      * Sets up this converter to work with things that implement the Geometry interface
      */
-    public CRSConverter() {
-        super(CRS.class);
+    public NamedCoordinateReferenceSystemConverter() {
+        super(NamedCoordinateReferenceSystem.class);
     }
 
     @Override
     protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
-        return CRS.class.isAssignableFrom(c);
+        return CoordinateReferenceSystem.class.isAssignableFrom(c);
     }
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        CRS crs = (CRS) value;
-        final BasicDBObject dbObject = new BasicDBObject("type", crs.getType());
-        dbObject.put("properties", crs.getProperties());
+        CoordinateReferenceSystem CoordinateReferenceSystem = (CoordinateReferenceSystem) value;
+        final BasicDBObject dbObject = new BasicDBObject("type", CoordinateReferenceSystem.getType());
+        dbObject.put("properties", CoordinateReferenceSystem.getProperties());
         
         return dbObject;
     }

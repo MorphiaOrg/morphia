@@ -1,5 +1,7 @@
 package org.mongodb.morphia.geo;
 
+import org.bson.util.annotations.Immutable;
+
 import java.util.Map;
 
 /**
@@ -7,8 +9,12 @@ import java.util.Map;
  *
  * @see <a href="http://docs.mongodb.org/manual/reference/operator/query/geometry/#op._S_geometry">$geometry</a>
  */
-public interface CRS {
-    String getType();
+public abstract class CoordinateReferenceSystem {
 
-    Map<String, String> getProperties();
+    /**
+     * Gets the type of this Coordinate Reference System.
+     *
+     * @return the type
+     */
+    public abstract CoordinateReferenceSystemType getType();
 }
