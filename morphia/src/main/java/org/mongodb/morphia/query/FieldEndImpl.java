@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.CRS;
 import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
@@ -44,7 +45,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
    */
   private T addCriteria(final FilterOperator op, final Object val) {
     target.add(new FieldCriteria(query, field, op, val, validateName, query
-            .isValidatingTypes(), not));
+                                                                          .isValidatingTypes(), not));
     return target;
   }
 
@@ -128,7 +129,19 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
   @Override
   public T within(final MultiPolygon boundaries) {
-    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN,  boundaries, null, validateName, false));
+    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null, validateName, false));
+    return target;
+  }
+
+  @Override
+  public T within(final Polygon boundary, final CRS crs) {
+    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null, validateName, false, crs));
+    return target;
+  }
+
+  @Override
+  public T within(final MultiPolygon boundaries, final CRS crs) {
+    target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null, validateName, false, crs));
     return target;
   }
 
@@ -174,7 +187,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
   @Override
   public T mod(final long divisor, final long remainder) {
-    return addCriteria(FilterOperator.MOD, new long[] {divisor, remainder});
+    return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
   }
 
   @Override
@@ -229,7 +242,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
   @Override
   public T near(final double x, final double y, final double radius, final boolean spherical) {
-    return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] {x, y}, opts("$maxDistance", radius));
+    return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{x, y}, opts("$maxDistance", radius));
   }
 
   @Override
@@ -263,6 +276,12 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T intersects(final Geometry geometry) {
         target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
+        return target;
+    }
+
+    @Override
+    public T intersects(final Geometry geometry, final CRS crs) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false, crs));
         return target;
     }
 }

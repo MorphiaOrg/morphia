@@ -5,12 +5,15 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.geo.AllTheThings;
 import org.mongodb.morphia.geo.Area;
+import org.mongodb.morphia.geo.CRS;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.Polygon;
 import org.mongodb.morphia.geo.Regions;
 import org.mongodb.morphia.geo.Route;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -122,11 +125,11 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
                                                  pointBuilder().latitude(51.507780365645885).longitude(-0.21786745637655258).build()));
         getDs().save(london);
         Area europe = new Area("Europe", polygon(
-                pointBuilder().latitude(58.0).longitude(-10.0).build(),
-                pointBuilder().latitude(58.0).longitude(3).build(),
-                pointBuilder().latitude(48.858859).longitude(3).build(),
-                pointBuilder().latitude(48.858859).longitude(-10).build(),
-                pointBuilder().latitude(58.0).longitude(-10.0).build()));
+                                                    pointBuilder().latitude(58.0).longitude(-10.0).build(),
+                                                    pointBuilder().latitude(58.0).longitude(3).build(),
+                                                    pointBuilder().latitude(48.858859).longitude(3).build(),
+                                                    pointBuilder().latitude(48.858859).longitude(-10).build(),
+                                                    pointBuilder().latitude(58.0).longitude(-10.0).build()));
         getDs().save(europe);
         getDs().ensureIndexes();
 
@@ -139,6 +142,12 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         // then
         assertThat(areasInTheUK.size(), is(1));
         assertThat(areasInTheUK.get(0), is(london));
+        
+        // should not error
+        areasInTheUK = getDs().find(Area.class)
+                              .field("area")
+                              .within(uk, new TestCRS())
+                              .asList();
     }
 
     @Test
@@ -251,4 +260,22 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         assertThat(everythingInTheUK.get(0), is(london));
     }
 
+    private static class TestCRS implements CRS {
+
+        private HashMap<String, String> map = new HashMap<String, String>();
+
+        public TestCRS() {
+            map.put("name", "urn:x-mongodb:crs:strictwinding:EPSG:4326");
+        }
+
+        @Override
+        public String getType() {
+            return "name";
+        }
+
+        @Override
+        public Map<String, String> getProperties() {
+            return map;
+        }
+    }
 }
