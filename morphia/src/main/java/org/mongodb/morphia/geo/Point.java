@@ -3,7 +3,7 @@ package org.mongodb.morphia.geo;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,27 +17,20 @@ import java.util.List;
 @Embedded
 @Entity(noClassnameStored = true)
 public class Point implements Geometry {
-    private final double latitude;
-    private final double longitude;
-
-    @SuppressWarnings("unused") //needed for Morphia serialisation
-    private Point() {
-        longitude = 0;
-        latitude = 0;
-    }
-
+    private final List<Double> coordinates = new ArrayList<Double>();
+        
     Point(final double latitude, final double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        coordinates.add(longitude);
+        coordinates.add(latitude);
     }
 
     Point(final List<Double> coordinates) {
-        this(coordinates.get(1), coordinates.get(0));
+        this.coordinates.addAll(coordinates);
     }
 
     @Override
     public List<Double> getCoordinates() {
-        return Arrays.asList(longitude, latitude);
+        return coordinates;
     }
 
     /**
@@ -46,7 +39,7 @@ public class Point implements Geometry {
      * @return the Point's latitude
      */
     public double getLatitude() {
-        return latitude;
+        return coordinates.get(1);
     }
 
     /**
@@ -55,7 +48,7 @@ public class Point implements Geometry {
      * @return the Point's longitude
      */
     public double getLongitude() {
-        return longitude;
+        return coordinates.get(0);
     }
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
@@ -70,11 +63,14 @@ public class Point implements Geometry {
 
         Point point = (Point) o;
 
-        if (Double.compare(point.latitude, latitude) != 0) {
+        if (getCoordinates().size() != point.getCoordinates().size()) {
             return false;
         }
-        if (Double.compare(point.longitude, longitude) != 0) {
-            return false;
+        for (int i = 0; i < coordinates.size(); i++) {
+            final Double coordinate = coordinates.get(i);
+            if (Double.compare(coordinate, point.getCoordinates().get(i)) != 0) {
+                return false;
+            }
         }
 
         return true;
@@ -82,20 +78,11 @@ public class Point implements Geometry {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(latitude);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(longitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return coordinates.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Point{"
-               + "latitude=" + latitude
-               + ", longitude=" + longitude
-               + '}';
+        return String.format("Point{coordinates=%s}", coordinates);
     }
 }

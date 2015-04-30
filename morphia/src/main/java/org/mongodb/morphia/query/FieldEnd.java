@@ -8,6 +8,7 @@ import org.mongodb.morphia.geo.Polygon;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
+ *
  * @param <T>
  */
 public interface FieldEnd<T> {
@@ -40,19 +41,22 @@ public interface FieldEnd<T> {
 
     T hasThisOne(Object val);
 
+    T in(Iterable<?> values);
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
+     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     *
+     * @param geometry the shape to use to query for any stored shapes that intersect
+     * @return any documents where the GeoJson intersects with a specified {@code geometry}.
+     */
+    T intersects(Geometry geometry);
+
     T lessThan(Object val);
 
     T lessThanOrEq(Object val);
 
-    T in(Iterable<?> values);
-
     T mod(long divisor, long remainder);
-
-    FieldEnd<T> not();
-
-    T notEqual(Object val);
-
-    T notIn(Iterable<?> values);
 
     T near(double x, double y);
 
@@ -61,19 +65,6 @@ public interface FieldEnd<T> {
     T near(double x, double y, double radius);
 
     T near(double x, double y, double radius, boolean spherical);
-
-    T sizeEq(int val);
-
-    T startsWith(String prefix);
-
-    T startsWithIgnoreCase(final String prefix);
-
-    /**
-     * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
-     */
-    T within(Shape shape);
-
-    T type(Type type);
 
     /**
      * This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
@@ -94,12 +85,29 @@ public interface FieldEnd<T> {
      */
     T near(Point point);
 
+    FieldEnd<T> not();
+
+    T notEqual(Object val);
+
+    T notIn(Iterable<?> values);
+
+    T sizeEq(int val);
+
+    T startsWith(String prefix);
+
+    T startsWithIgnoreCase(final String prefix);
+
+    T type(Type type);
+
     /**
-     * This runs the $geoWithin query, returning documents with GeoJson fields
-     * whose area falls within the given boundary. When determining
-     * inclusion, MongoDB considers the border of a shape to be part of the
-     * shape, subject to the precision of floating point numbers.
-     *
+     * This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.
+     */
+    T within(Shape shape);
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point numbers.
+     * <p/>
      * These queries are only compatible with MongoDB 2.4 or greater.
      *
      * @param boundary a polygon describing the boundary to search within.
@@ -108,25 +116,14 @@ public interface FieldEnd<T> {
     T within(Polygon boundary);
 
     /**
-     * This runs the $geoWithin query, returning documents with GeoJson fields
-     * whose area falls within the given boundaries. When determining
-     * inclusion, MongoDB considers the border of a shape to be part of the
-     * shape, subject to the precision of floating point numbers.
-     *
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
+     * determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
+     * numbers.
+     * <p/>
      * These queries are only compatible with MongoDB 2.6 or greater.
      *
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
      */
     T within(MultiPolygon boundaries);
-
-    /**
-     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning
-     * those where the given geometry intersects with the document shape.  This includes cases where the data and the
-     * specified object share an edge.
-     *
-     * @param geometry the shape to use to query for any stored shapes that intersect
-     * @return any documents where the GeoJson intersects with a specified {@code geometry}.
-     */
-    T intersects(Geometry geometry);
 }
