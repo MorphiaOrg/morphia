@@ -8,3 +8,11 @@ task website(dependsOn : [ 'javadoc' ]) << {
         into 'docs/reference/public'
     }
 }
+
+task watch_website() << {
+    exec {
+        workingDir 'docs/reference'
+        commandLine 'hugo', 'server' , '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
+    }
+ 
+}
