@@ -5,15 +5,13 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.geo.AllTheThings;
 import org.mongodb.morphia.geo.Area;
-import org.mongodb.morphia.geo.CRS;
 import org.mongodb.morphia.geo.City;
+import org.mongodb.morphia.geo.NamedCoordinateReferenceSystem;
 import org.mongodb.morphia.geo.Polygon;
 import org.mongodb.morphia.geo.Regions;
 import org.mongodb.morphia.geo.Route;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -146,7 +144,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         // should not error
         areasInTheUK = getDs().find(Area.class)
                               .field("area")
-                              .within(uk, new TestCRS())
+                              .within(uk, NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING)
                               .asList();
     }
 
@@ -258,24 +256,5 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         // then
         assertThat(everythingInTheUK.size(), is(1));
         assertThat(everythingInTheUK.get(0), is(london));
-    }
-
-    private static class TestCRS implements CRS {
-
-        private HashMap<String, String> map = new HashMap<String, String>();
-
-        public TestCRS() {
-            map.put("name", "urn:x-mongodb:crs:strictwinding:EPSG:4326");
-        }
-
-        @Override
-        public String getType() {
-            return "name";
-        }
-
-        @Override
-        public Map<String, String> getProperties() {
-            return map;
-        }
     }
 }

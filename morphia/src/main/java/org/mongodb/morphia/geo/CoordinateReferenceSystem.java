@@ -1,9 +1,5 @@
 package org.mongodb.morphia.geo;
 
-import org.bson.util.annotations.Immutable;
-
-import java.util.Map;
-
 /**
  * Defines the coordinate reference system to be used in certain geo queries.
  *

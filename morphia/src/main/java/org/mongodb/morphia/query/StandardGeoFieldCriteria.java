@@ -2,10 +2,10 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
-import org.mongodb.morphia.geo.CRS;
-import org.mongodb.morphia.geo.CRSConverter;
+import org.mongodb.morphia.geo.CoordinateReferenceSystem;
 import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.GeometryQueryConverter;
+import org.mongodb.morphia.geo.NamedCoordinateReferenceSystemConverter;
 
 import static org.mongodb.morphia.query.FilterOperator.NEAR;
 
@@ -16,11 +16,11 @@ import static org.mongodb.morphia.query.FilterOperator.NEAR;
 class StandardGeoFieldCriteria extends FieldCriteria {
     private final Integer maxDistanceMeters;
     private final DBObject geometryAsDBObject;
-    private CRS crs;
+    private CoordinateReferenceSystem crs;
 
     protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
                                        final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes, 
-                                       final CRS crs) {
+                                       final CoordinateReferenceSystem crs) {
         this(query, field, operator, value, maxDistanceMeters, validateNames, validateTypes);
         this.crs = crs;
     }
@@ -49,7 +49,7 @@ class StandardGeoFieldCriteria extends FieldCriteria {
             case INTERSECTS:
                 query = BasicDBObjectBuilder.start(operator.val(), geometryAsDBObject);
                 if (crs != null) {
-                    ((DBObject) geometryAsDBObject.get("$geometry")).put("crs", new CRSConverter().encode(crs));
+                    ((DBObject) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
                 }
                 break;
             default:

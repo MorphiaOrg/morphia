@@ -27,9 +27,9 @@ public class NamedCoordinateReferenceSystemConverter extends TypeConverter imple
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        CoordinateReferenceSystem CoordinateReferenceSystem = (CoordinateReferenceSystem) value;
-        final BasicDBObject dbObject = new BasicDBObject("type", CoordinateReferenceSystem.getType());
-        dbObject.put("properties", CoordinateReferenceSystem.getProperties());
+        NamedCoordinateReferenceSystem crs = (NamedCoordinateReferenceSystem) value;
+        final BasicDBObject dbObject = new BasicDBObject("type", crs.getType().getTypeName());
+        dbObject.put("properties", new BasicDBObject("name", crs.getName()));
         
         return dbObject;
     }

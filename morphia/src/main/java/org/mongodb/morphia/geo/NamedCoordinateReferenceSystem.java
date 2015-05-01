@@ -16,16 +16,9 @@
 
 package org.mongodb.morphia.geo;
 
-import com.mongodb.annotations.Immutable;
+import static java.lang.String.format;
 
-import static com.mongodb.assertions.Assertions.notNull;
-
-/**
- * A GeoJSON named Coordinate Reference System.
- *
- * @since 3.1
- */
-@Immutable
+// borrowed from the 3.0 Java driver and will be replaced by that version after the move to 3.0
 public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSystem {
 
     /**
@@ -42,8 +35,6 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
 
     /**
      * A custom MongoDB EPSG:4326 Coordinate Reference System that uses a strict counter-clockwise winding order.
-     *
-     * @mongodb.driver.manual reference/operator/query/geometry/ Strict Winding
      */
     public static final NamedCoordinateReferenceSystem EPSG_4326_STRICT_WINDING =
     new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326");
@@ -55,8 +46,8 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
      *
      * @param name the name
      */
-    public NamedCoordinateReferenceSystem(final String name) {
-        this.name = notNull("name", name);
+    private NamedCoordinateReferenceSystem(final String name) {
+        this.name = name;
 
     }
 
@@ -85,11 +76,8 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
 
         NamedCoordinateReferenceSystem that = (NamedCoordinateReferenceSystem) o;
 
-        if (!name.equals(that.name)) {
-            return false;
-        }
+        return name.equals(that.name);
 
-        return true;
     }
 
     @Override
@@ -99,8 +87,6 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
 
     @Override
     public String toString() {
-        return "NamedCoordinateReferenceSystem{"
-               + "name='" + name + '\''
-               + '}';
+        return format("NamedCoordinateReferenceSystem{name='%s'}", name);
     }
 }
