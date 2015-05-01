@@ -623,7 +623,6 @@ public class Mapper {
 
     private void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,
                                   final Map<Object, DBObject> involvedObjects) {
-        Class<? extends Annotation> annType = null;
 
         //skip not saved fields.
         if (mf.hasAnnotation(NotSaved.class)) {
@@ -631,12 +630,7 @@ public class Mapper {
         }
 
         // get the annotation from the field.
-        for (final Class<? extends Annotation> testType : new Class[]{Property.class, Embedded.class, Serialized.class, Reference.class}) {
-            if (mf.hasAnnotation(testType)) {
-                annType = testType;
-                break;
-            }
-        }
+        Class<? extends Annotation> annType = getFieldAnnotation(mf);
 
         if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
             || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
@@ -652,6 +646,17 @@ public class Mapper {
             opts.getDefaultMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         }
 
+    }
+
+    private Class<? extends Annotation> getFieldAnnotation(final MappedField mf) {
+        Class<? extends Annotation> annType = null;
+        for (final Class<? extends Annotation> testType : new Class[]{Property.class, Embedded.class, Serialized.class, Reference.class}) {
+            if (mf.hasAnnotation(testType)) {
+                annType = testType;
+                break;
+            }
+        }
+        return annType;
     }
 
     public org.mongodb.morphia.converters.Converters getConverters() {

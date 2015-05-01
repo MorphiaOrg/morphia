@@ -62,6 +62,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static java.lang.String.format;
 
@@ -814,7 +815,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (obj == null) {
             return null;
         }
-        return getCollection(obj.getClass());
+        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
     }
 
     protected DBCollection getCollection(final String kind) {
@@ -881,33 +882,30 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-        WriteConcern writeConcern = wc;
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+        WriteConcern writeConcern = wc;
+        if (writeConcern == null) {
+            writeConcern = getWriteConcern(entities.iterator().next());
+        }
+        final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         if (morphia.getUseBulkWriteOperations()) {
             BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
-            final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
             for (final T entity : entities) {
-                if (writeConcern == null) {
-                    writeConcern = getWriteConcern(entity);
-                }
-                DBObject dbObj = toDbObject(entity, involvedObjects);
-                bulkWriteOperation.insert(dbObj);
-                savedKeys.add(postSaveGetKey(entity, dbObj, dbColl, new LinkedHashMap<Object, DBObject>()));
+                bulkWriteOperation.insert(toDbObject(entity, involvedObjects));
             }
             bulkWriteOperation.execute(writeConcern);
-            postSaveOperations(involvedObjects);
-
         } else {
             writeConcern = getWriteConcern(entities.iterator().next());
             final List<DBObject> list = new ArrayList<DBObject>();
             for (final T entity : entities) {
-                list.add(toDbObject(entity, new LinkedHashMap<Object, DBObject>()));
+                list.add(toDbObject(entity, involvedObjects));
             }
             dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
-            int index = 0;
-            for (T entity : entities) {
-                savedKeys.add(postSaveGetKey(entity, list.get(index++), dbColl, new LinkedHashMap<Object, DBObject>()));
-            }
+        }
+        postSaveOperations(involvedObjects);
+        for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
+            final Key<T> key = postSaveGetKey(entry.getKey(), entry.getValue(), dbColl, involvedObjects);
+            savedKeys.add(key);
         }
 
         return savedKeys;
@@ -981,7 +979,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * call postSaveOperations and returns Key for entity
      */
     @SuppressWarnings("unchecked")
-    protected <T> Key<T> postSaveGetKey(final T entity, final DBObject dbObj, final DBCollection dbColl,
+    protected <T> Key<T> postSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl,
                                         final Map<Object, DBObject> involvedObjects) {
         if (dbObj.get(Mapper.ID_KEY) == null) {
             throw new MappingException("Missing _id after save!");

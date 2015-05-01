@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 class EmbeddedMapper implements CustomMapper {
+    @Override
     public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
                            final Mapper mapper) {
         final String name = mf.getNameToStore();
@@ -133,6 +134,7 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
+    @Override
     public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
                              final Mapper mapper) {
         try {
