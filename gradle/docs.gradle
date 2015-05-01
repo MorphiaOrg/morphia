@@ -1,0 +1,10 @@
+task website(dependsOn : [ 'javadoc' ]) << {
+    exec {
+        workingDir 'docs/reference'
+        commandLine 'hugo'
+    }
+    copy {
+        from 'morphia/build/docs'       
+        into 'docs/reference/public'
+    }
+}
