@@ -2,8 +2,10 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.geo.CoordinateReferenceSystem;
 import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.GeometryQueryConverter;
+import org.mongodb.morphia.geo.NamedCoordinateReferenceSystemConverter;
 
 import static org.mongodb.morphia.query.FilterOperator.NEAR;
 
@@ -14,6 +16,14 @@ import static org.mongodb.morphia.query.FilterOperator.NEAR;
 class StandardGeoFieldCriteria extends FieldCriteria {
     private final Integer maxDistanceMeters;
     private final DBObject geometryAsDBObject;
+    private CoordinateReferenceSystem crs;
+
+    protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
+                                       final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes, 
+                                       final CoordinateReferenceSystem crs) {
+        this(query, field, operator, value, maxDistanceMeters, validateNames, validateTypes);
+        this.crs = crs;
+    }
 
     protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
                                        final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes) {
@@ -38,6 +48,9 @@ class StandardGeoFieldCriteria extends FieldCriteria {
             case GEO_WITHIN:
             case INTERSECTS:
                 query = BasicDBObjectBuilder.start(operator.val(), geometryAsDBObject);
+                if (crs != null) {
+                    ((DBObject) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
+                }
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));

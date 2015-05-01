@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import org.mongodb.morphia.geo.CoordinateReferenceSystem;
 import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
@@ -51,6 +52,17 @@ public interface FieldEnd<T> {
      * @return any documents where the GeoJson intersects with a specified {@code geometry}.
      */
     T intersects(Geometry geometry);
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
+     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     *
+     * @param geometry the shape to use to query for any stored shapes that intersect
+     * @param crs      the coordinate reference system to use with the query
+     * @return any documents where the GeoJson intersects with a specified {@code geometry}.
+     * @see <a href="http://docs.mongodb.org/manual/reference/operator/query/geometry/#op._S_geometry">$geometry</a>
+     */
+    T intersects(Geometry geometry, final CoordinateReferenceSystem crs);
 
     T lessThan(Object val);
 
@@ -126,4 +138,28 @@ public interface FieldEnd<T> {
      * @return T
      */
     T within(MultiPolygon boundaries);
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point numbers.
+     * <p/>
+     * These queries are only compatible with MongoDB 2.4 or greater.
+     *
+     * @param boundary a polygon describing the boundary to search within.
+     * @return T
+     */
+    T within(Polygon boundary, CoordinateReferenceSystem crs);
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
+     * determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
+     * numbers.
+     * <p/>
+     * These queries are only compatible with MongoDB 2.6 or greater.
+     *
+     * @param boundaries a multi-polygon describing the areas to search within.
+     * @return T
+     */
+    T within(MultiPolygon boundaries, CoordinateReferenceSystem crs);
+
 }
