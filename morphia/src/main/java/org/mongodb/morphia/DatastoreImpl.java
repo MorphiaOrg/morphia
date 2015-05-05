@@ -881,6 +881,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return insert(db.getCollection(kind), entities, wc);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         WriteConcern writeConcern = wc;
@@ -904,7 +905,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         postSaveOperations(involvedObjects);
         for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
-            savedKeys.add(this.<T>postSaveGetKey(entry.getKey(), entry.getValue(), dbColl));
+            savedKeys.add(mapper.getKey((T) entry.getKey(), dbColl.getName()));
         }
 
         return savedKeys;
@@ -968,7 +969,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         postSaveOperations(involvedObjects);
-        return postSaveGetKey(entity, dbObj, dbColl);
+        return mapper.getKey(entity, dbColl.getName());
     }
 
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
@@ -979,7 +980,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * call postSaveOperations and returns Key for entity
      */
     @SuppressWarnings("unchecked")
-    protected <T> Key<T> postSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl) {
+    protected <T> Key<T> dpostSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl) {
         if (dbObj.get(Mapper.ID_KEY) == null) {
             throw new MappingException("Missing _id after save!");
         }
@@ -1051,7 +1052,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         postSaveOperations(involvedObjects);
-        return postSaveGetKey(entity, dbObj, dbColl);
+        return mapper.getKey(entity, dbColl.getName());
     }
 
     protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
@@ -1259,10 +1260,16 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private void postSaveOperations(final Map<Object, DBObject> involvedObjects) {
         for (final Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
-            final Object ent = e.getKey();
-            final DBObject dbO = e.getValue();
-            final MappedClass mc = mapper.getMappedClass(ent);
-            mc.callLifecycleMethods(PostPersist.class, ent, dbO, mapper);
+            final Object entity = e.getKey();
+            final DBObject dbObj = involvedObjects.get(entity);
+            final MappedClass mc = mapper.getMappedClass(entity);
+            mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapper);
+//            postSaveGetKey(entry.getKey(), entry.getValue(), dbColl)
+                
+            if (dbObj.get(Mapper.ID_KEY) == null && mc.getMappedIdField() != null) {
+                throw new MappingException("Missing _id after save!");
+            }
+            mapper.updateKeyInfo(entity, dbObj, createCache());
         }
     }
 

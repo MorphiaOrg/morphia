@@ -515,6 +515,23 @@ public class Mapper {
         return id == null ? null : new Key<T>(aClass, getCollectionName(aClass), id);
     }
 
+    public <T> Key<T> getKey(final T entity, final String collection) {
+        T unwrapped = entity;
+        if (unwrapped instanceof ProxiedEntityReference) {
+            final ProxiedEntityReference proxy = (ProxiedEntityReference) unwrapped;
+            return (Key<T>) proxy.__getKey();
+        }
+
+        unwrapped = ProxyHelper.unwrap(unwrapped);
+        if (unwrapped instanceof Key) {
+            return (Key<T>) unwrapped;
+        }
+
+        final Object id = getId(unwrapped);
+        final Class<T> aClass = (Class<T>) unwrapped.getClass();
+        return id == null ? null : new Key<T>(aClass, collection, id);
+    }
+
     /**
      * Converts an entity (POJO) to a DBObject; A special field will be added to keep track of the class: {@link
      * Mapper#CLASS_NAME_FIELDNAME}

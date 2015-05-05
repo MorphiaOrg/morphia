@@ -86,7 +86,7 @@ public class TestPostPersist extends TestBase {
         @PostPersist
         public void doIt() {
             if (one != null) {
-                throw new RuntimeException();
+                throw new RuntimeException("@PostPersist methods should only be called once");
             }
             one = value;
         }
