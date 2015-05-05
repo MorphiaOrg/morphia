@@ -904,8 +904,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         postSaveOperations(involvedObjects);
         for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
-            final Key<T> key = postSaveGetKey(entry.getKey(), entry.getValue(), dbColl, involvedObjects);
-            savedKeys.add(key);
+            savedKeys.add(this.<T>postSaveGetKey(entry.getKey(), entry.getValue(), dbColl));
         }
 
         return savedKeys;
@@ -968,7 +967,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl.insert(dbObj, wc);
         }
 
-        return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
+        postSaveOperations(involvedObjects);
+        return postSaveGetKey(entity, dbObj, dbColl);
     }
 
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
@@ -979,18 +979,13 @@ public class DatastoreImpl implements AdvancedDatastore {
      * call postSaveOperations and returns Key for entity
      */
     @SuppressWarnings("unchecked")
-    protected <T> Key<T> postSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl,
-                                        final Map<Object, DBObject> involvedObjects) {
+    protected <T> Key<T> postSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl) {
         if (dbObj.get(Mapper.ID_KEY) == null) {
             throw new MappingException("Missing _id after save!");
         }
         mapper.updateKeyInfo(entity, dbObj, createCache());
 
-        postSaveOperations(involvedObjects);
-        final Key<T> key = new Key<T>((Class<? extends T>) entity.getClass(), dbColl.getName(), mapper.getId(entity));
-        key.setType((Class<? extends T>) entity.getClass());
-
-        return key;
+        return new Key<T>((Class<? extends T>) entity.getClass(), dbColl.getName(), mapper.getId(entity));
     }
 
     @Override
@@ -1055,7 +1050,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
-        return postSaveGetKey(entity, dbObj, dbColl, involvedObjects);
+        postSaveOperations(involvedObjects);
+        return postSaveGetKey(entity, dbObj, dbColl);
     }
 
     protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,

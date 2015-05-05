@@ -19,8 +19,8 @@ public class TestPostPersist extends TestBase {
         getMorphia().setUseBulkWriteOperations(false);
         getDs().getDB().dropDatabase();
 
-        TestObject to1 = new TestObject();
-        TestObject to2 = new TestObject();
+        TestObject to1 = new TestObject("post value 1");
+        TestObject to2 = new TestObject("post value 2");
         getAds().insert(to1, to2);
 
         assertNotNull("normal insert1:", to1.id);
@@ -31,8 +31,8 @@ public class TestPostPersist extends TestBase {
         getMorphia().setUseBulkWriteOperations(true);
         getDs().getDB().dropDatabase();
 
-        to1 = new TestObject();
-        to2 = new TestObject();
+        to1 = new TestObject("post value 1");
+        to2 = new TestObject("post value 2");
         getAds().insert(to1, to2);
 
         assertNotNull("bulk insert1:", to1.id);
@@ -46,7 +46,7 @@ public class TestPostPersist extends TestBase {
         final ProblematicPostPersistEntity p = new ProblematicPostPersistEntity();
         getDs().save(p);
         Assert.assertTrue(p.called);
-        Assert.assertTrue(p.i.called);
+        Assert.assertTrue(p.i.innerCalled);
     }
 
     public static class ProblematicPostPersistEntity {
@@ -56,13 +56,11 @@ public class TestPostPersist extends TestBase {
         private boolean called;
 
         static class Inner {
-            private boolean called;
-
-            private String foo = "foo";
+            private boolean innerCalled;
 
             @PostPersist
             void m2() {
-                called = true;
+                innerCalled = true;
             }
         }
 
@@ -75,13 +73,22 @@ public class TestPostPersist extends TestBase {
     @Entity
     public static class TestObject {
 
+        private final String value;
         @Id
         private ObjectId id;
         private String one;
 
+        public TestObject(final String value) {
+
+            this.value = value;
+        }
+
         @PostPersist
         public void doIt() {
-            one = "one";
+            if (one != null) {
+                throw new RuntimeException();
+            }
+            one = value;
         }
     }
 }
