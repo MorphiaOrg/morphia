@@ -65,6 +65,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -712,7 +713,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         // String clazzKind = (clazz==null) ? null :
         // getMapper().getCollectionName(clazz);
         for (final Key<?> key : keys) {
-            mapper.updateKind(key);
+            mapper.updateCollection(key);
 
             // if (clazzKind != null && !key.getKind().equals(clazzKind))
             // throw new IllegalArgumentException("Types are not equal (" +
@@ -759,10 +760,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
-        final String kind = mapper.getCollectionName(clazz);
-        final String keyKind = mapper.updateKind(key);
-        if (!kind.equals(keyKind)) {
-            throw new RuntimeException("collection names don't match for key and class: " + kind + " != " + keyKind);
+        final String collectionName = mapper.getCollectionName(clazz);
+        final String keyCollection = mapper.updateCollection(key);
+        if (!collectionName.equals(keyCollection)) {
+            throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
         }
 
         return get(clazz, key.getId());
@@ -883,7 +884,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @SuppressWarnings("unchecked")
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         WriteConcern writeConcern = wc;
         if (writeConcern == null) {
             writeConcern = getWriteConcern(entities.iterator().next());
@@ -903,12 +903,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
             dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
         }
-        postSaveOperations(involvedObjects);
-        for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
-            savedKeys.add(mapper.getKey((T) entry.getKey(), dbColl.getName()));
-        }
 
-        return savedKeys;
+        return postSaveOperations(entities, involvedObjects, dbColl);
     }
 
     private <T> DBObject toDbObject(final T ent, final Map<Object, DBObject> involvedObjects) {
@@ -931,7 +927,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Iterable<Key<T>> insert(final T... entities) {
-        return insert(Arrays.asList(entities), getWriteConcern(entities[0]));
+        return insert(asList(entities), getWriteConcern(entities[0]));
     }
 
     @Override
@@ -968,25 +964,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl.insert(dbObj, wc);
         }
 
-        postSaveOperations(involvedObjects);
-        return mapper.getKey(entity, dbColl.getName());
+        return postSaveOperations(Collections.singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
-    }
-
-    /**
-     * call postSaveOperations and returns Key for entity
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> Key<T> dpostSaveGetKey(final Object entity, final DBObject dbObj, final DBCollection dbColl) {
-        if (dbObj.get(Mapper.ID_KEY) == null) {
-            throw new MappingException("Missing _id after save!");
-        }
-        mapper.updateKeyInfo(entity, dbObj, createCache());
-
-        return new Key<T>((Class<? extends T>) entity.getClass(), dbColl.getName(), mapper.getId(entity));
     }
 
     @Override
@@ -1027,13 +1009,9 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final MappedClass mc = mapper.getMappedClass(entity);
         if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(
-                                          "Entity type: " + mc.getClazz().getName()
-                                          + " is marked as NotSaved which means you should not try to save it!"
-            );
+            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
+                                              mc.getClazz().getName()));
         }
-
-        WriteResult wr;
 
         //involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
@@ -1041,7 +1019,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         //try to do an update if there is a @Version field
         final Object idValue = dbObj.get(Mapper.ID_KEY);
-        wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, mc);
+        WriteResult wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, mc);
 
         if (wr == null) {
             if (wc == null) {
@@ -1051,8 +1029,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
-        postSaveOperations(involvedObjects);
-        return mapper.getKey(entity, dbColl.getName());
+        return postSaveOperations(Collections.singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
     protected <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
@@ -1209,7 +1186,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbObj.put(Mapper.ID_KEY, res.getNewId());
         }
 
-        postSaveOperations(involvedObjects);
+        postSaveOperations(Collections.singletonList(entity), involvedObjects, getCollection(entity), false);
         return res;
     }
 
@@ -1254,23 +1231,40 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Nothing updated");
         }
 
-        postSaveOperations(involvedObjects);
+        dbObj.put(Mapper.ID_KEY, idValue);
+        postSaveOperations(Collections.<Object>singletonList(entity), involvedObjects, dbColl, false);
         return key;
     }
 
-    private void postSaveOperations(final Map<Object, DBObject> involvedObjects) {
-        for (final Map.Entry<Object, DBObject> e : involvedObjects.entrySet()) {
-            final Object entity = e.getKey();
-            final DBObject dbObj = involvedObjects.get(entity);
-            final MappedClass mc = mapper.getMappedClass(entity);
-            mc.callLifecycleMethods(PostPersist.class, entity, dbObj, mapper);
-//            postSaveGetKey(entry.getKey(), entry.getValue(), dbColl)
+    private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities, final Map<Object, DBObject> involvedObjects,
+                                                final DBCollection collection) {
+        return postSaveOperations(entities, involvedObjects, collection, true);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities, final Map<Object, DBObject> involvedObjects,
+                                                final DBCollection collection, final boolean fetchKeys) {
+        List<Key<T>> keys = new ArrayList<Key<T>>();
+        for (final T entity : entities) {
+            final DBObject dbObj = involvedObjects.remove(entity);
+            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
                 
-            if (dbObj.get(Mapper.ID_KEY) == null && mc.getMappedIdField() != null) {
-                throw new MappingException("Missing _id after save!");
+            if (fetchKeys) {
+                if (dbObj.get(Mapper.ID_KEY) == null) {
+                    throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
+                }
+                mapper.updateKeyInfo(entity, dbObj, createCache());
+                keys.add(new Key<T>((Class<? extends T>) entity.getClass(), collection.getName(), mapper.getId(entity)));
             }
-            mapper.updateKeyInfo(entity, dbObj, createCache());
         }
+        
+        for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
+            final Object key = entry.getKey();
+            mapper.getMappedClass(key)
+                  .callLifecycleMethods(PostPersist.class, key, entry.getValue());
+            
+        }
+        return keys;
     }
 
     @SuppressWarnings("rawtypes")

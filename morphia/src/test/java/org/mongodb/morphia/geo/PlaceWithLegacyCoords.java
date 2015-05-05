@@ -1,5 +1,7 @@
 package org.mongodb.morphia.geo;
 
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.utils.IndexDirection;
 
@@ -7,6 +9,8 @@ import java.util.Arrays;
 
 @SuppressWarnings("unused")
 class PlaceWithLegacyCoords {
+    @Id
+    private ObjectId id;
     @Indexed(IndexDirection.GEO2D)
     private double[] location = new double[2];
     private String name;

@@ -32,13 +32,11 @@ public class MapImplTest extends TestBase {
     private static class ContainsMapOfEmbeddedGoos {
         @Id
         private ObjectId id;
-        @Embedded
         private final Map<String, Goo> values = new HashMap<String, Goo>();
     }
 
+    @Embedded
     private static class Goo implements Serializable {
-        @Id
-        private ObjectId id;
         private String name;
 
         Goo() {

@@ -149,7 +149,7 @@ public class Mapper {
     public boolean isMapped(final Class c) {
         return mappedClasses.containsKey(c.getName());
     }
-
+    
     /**
      * Creates a MappedClass and validates it.
      */
@@ -235,7 +235,6 @@ public class Mapper {
         }
 
         MappedClass mc = mappedClasses.get(type.getName());
-//        if (mc == null && !isPropertyType(type) && !isPrimitiveLike(type)) {
         if (mc == null) {
             mc = new MappedClass(type, this);
             // no validation
@@ -563,7 +562,7 @@ public class Mapper {
         }
 
         if (lifecycle) {
-            dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
+            dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
         }
 
         for (final MappedField mf : mc.getPersistenceFields()) {
@@ -578,7 +577,7 @@ public class Mapper {
         }
 
         if (lifecycle) {
-            mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
+            mc.callLifecycleMethods(PreSave.class, entity, dbObject);
         }
 
         return dbObject;
@@ -606,7 +605,7 @@ public class Mapper {
 
         final MappedClass mc = getMappedClass(entity);
 
-        final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
+        final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
         try {
             for (final MappedField mf : mc.getPersistenceFields()) {
                 readMappedField(updated, mf, entity, cache);
@@ -621,7 +620,7 @@ public class Mapper {
             final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
             cache.putEntity(key, entity);
         }
-        mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
+        mc.callLifecycleMethods(PostLoad.class, entity, updated);
         return entity;
     }
 
@@ -741,7 +740,7 @@ public class Mapper {
         return key == null ? null : key.getId();
     }
 
-    public String updateKind(final Key key) {
+    public String updateCollection(final Key key) {
         if (key.getCollection() == null && key.getType() == null) {
             throw new IllegalStateException("Key is invalid! " + toString());
         } else if (key.getCollection() == null) {

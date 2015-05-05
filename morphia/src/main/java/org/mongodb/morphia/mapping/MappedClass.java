@@ -105,14 +105,14 @@ public class MappedClass {
     /**
      * Annotations we were interested in, and found.
      */
-    private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations
-    = new HashMap<Class<? extends Annotation>, List<Annotation>>();
+    private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations = 
+        new HashMap<Class<? extends Annotation>, List<Annotation>>();
 
     /**
      * Methods which are life-cycle events
      */
-    private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods
-    = new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
+    private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = 
+        new HashMap<Class<? extends Annotation>, List<ClassMethodPair>>();
 
     /**
      * a list of the fields to map
@@ -379,8 +379,7 @@ public class MappedClass {
      * Call the lifecycle methods
      */
     @SuppressWarnings({"WMI", "unchecked"})
-    public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
-                                         final Mapper mapper) {
+    public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
         DBObject retDbObj = dbObj;
         try {
@@ -425,7 +424,7 @@ public class MappedClass {
                 }
             }
 
-            callGlobalInterceptors(event, entity, dbObj, mapper, mapper.getInterceptors());
+            callGlobalInterceptors(event, entity, dbObj, mapper.getInterceptors());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
@@ -453,7 +452,7 @@ public class MappedClass {
     }
 
     private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
-                                        final Mapper mapper, final Collection<EntityInterceptor> interceptors) {
+                                        final Collection<EntityInterceptor> interceptors) {
         for (final EntityInterceptor ei : interceptors) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);

@@ -88,7 +88,7 @@ public class TestMapping extends TestBase {
 
 
     @Entity
-    private static class MissingId {
+    public static class MissingId {
         private String  id;
     }
 
@@ -374,8 +374,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testEmbeddedEntity() throws Exception {
         getMorphia().map(ContainsEmbeddedEntity.class);
-        final ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
-        getDs().save(cee);
+        getDs().save(new ContainsEmbeddedEntity());
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class).get();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
