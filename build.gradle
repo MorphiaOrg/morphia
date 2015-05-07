@@ -165,7 +165,7 @@ project(':morphia') {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0"
             println "Building with the 3.x java driver"
         } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.0"
+            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
             println "Building with the 2.13 java driver"
         }
 
