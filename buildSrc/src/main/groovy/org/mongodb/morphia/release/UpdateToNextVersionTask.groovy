@@ -34,7 +34,14 @@ class UpdateToNextVersionTask extends DefaultTask {
 
     static incrementToNextVersion(String old) {
         String[] split = old.split('\\.')
-        def next = (split.last() as int) + 1
+        def last = split.last()
+        def next
+        if(last.contains("rc")) {
+            def end = last.indexOf("rc") + 2
+            next = last.substring(0, end) + ((last.substring(end) as int) + 1)
+        } else {
+            next = (last as int) + 1
+        }
 
         def updated = split[0..-2].join('.')
         updated += ".${next}-SNAPSHOT"

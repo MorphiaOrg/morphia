@@ -3,6 +3,14 @@ package org.mongodb.morphia.release
 import spock.lang.Specification
 
 class UpdateToNextVersionTaskSpecification extends Specification {
+    def 'should parse an RC string to correctly increment the version number'() {
+        when:
+        def newVersion = UpdateToNextVersionTask.incrementToNextVersion('1.0.0-rc0')
+        
+        then:
+        newVersion == '1.0.0-rc1-SNAPSHOT'
+    }
+
     def 'should parse a string to correctly increment the version number'() {
         when:
         def newVersion = UpdateToNextVersionTask.incrementToNextVersion('0.109')
