@@ -115,3 +115,7 @@ a code {
 .jsEnabled #search {
   visibility: visible;
 }
+
+.fa-at:before {
+  content: "\0040";
+}
