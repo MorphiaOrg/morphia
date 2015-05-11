@@ -9,4 +9,4 @@ title = "Reference Guides"
 
 ## Reference Guides
 
-  * [Annotations]({{< ref "guides/annotations.md" >}})z
+  * [Annotations]({{< ref "guides/annotations.md" >}})
