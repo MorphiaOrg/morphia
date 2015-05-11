@@ -32,7 +32,7 @@ morphia.mapPackage("org.mongodb.morphia.example");
 
 // create the Datastore connecting to the database running on the default port on the local host
 final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");
-datastore.ensureIndexes();;
+datastore.ensureIndexes();
 ```
 
 This snippet creates the morphia instance we'll be using in our simple application.  The `Morphia` class exists to configure the `Mapper`
@@ -101,11 +101,104 @@ For the most part, you treat your Java objects just like you normally would.  Wh
 a one liner:
 
 ```java
-final Employee employee = new Employee("Elmer Fudd", 50000.0);
-datastore.save(employee);
+final Employee elmer = new Employee("Elmer Fudd", 50000.0);
+datastore.save(elmer);
 ```
 
 Taking it one step further, lets define some relationships and save those, too.
 
 ```java
+final Employee daffy = new Employee("Daffy Duck", 40000.0);
+datastore.save(daffy);
+
+final Employee pepe = new Employee("Pepé Lepew", 25000.0);
+datastore.save(pepe);
+
+elmer.getDirectReports().add(daffy);
+elmer.getDirectReports().add(pepe);
+
+datastore.save(elmer);
 ```
+
+As you can see, we just need to create and save the other Employees then we can simply add them to the direct reports list and 
+save.  Morphia takes care of saving the keys in Elmer's document that refer to Daffy and Pepé.  Updating data in mongodb is as simple as 
+updating your Java objects and then calling `datastore.save()` with them again.  For bulk updates (everyone gets a raise!) this is not 
+the most efficient way doing updates.  It is possible to update directly in the database without having to pull in every document, 
+convert to java, update, convert back to a document, and write back to mongodb.  In order to show you that piece, first we need to see 
+how to query.
+
+## Querying
+
+Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by morphia 
+directly and only rarely do you need to take additional action.  As with everything else, `Datastore` is where we start:
+
+```java
+final Query<Employee> query = datastore.createQuery(Employee.class);
+final List<Employee> employees = query.asList();
+```
+
+This is a basic morphia query.  Here, we're telling the `Datastore` to create a query that's been typed to `Employee`.  In this simple 
+case, we're fetching every `Employee` in to a `List`.  Ignoring the obvious potential for memory errors, this is not usually that helpful
+.  Most queries will, of course, want to filter the data in some way.  There are two ways of doing this:
+
+```java
+List<Employee> underpaid = datastore.createQuery(Employee.class)
+                                    .filter("salary <=", 30000)
+                                    .asList();
+```
+
+This approach uses the `filter()` method which is a little more freeform than the alternative.  Here we can embed certain operators in 
+the query string.  While this is less verbose than the alternative, it does leave more things in the string to validate and potentially 
+get wrong.  If you prefer a more compile-time validation, this approach create the same query:
+
+```java
+underpaid = datastore.createQuery(Employee.class)
+                     .field("salary").lessThanOrEq(30000)
+                     .asList();
+```
+
+Either query works.  It comes down to a question of preference in most cases.  In either approach, morphia will validate that there is a 
+field called `salary` on the `Employee` class.  If you happen to have mapped that field such that the name in the database doesn't match 
+the Java field, morphia can use either form and will validate against either name.
+
+## Updates
+
+Now that we can query, however simply, we can take a look at in database updates.  These updates take two components: a query, and a set 
+of update operations.  In this example, we'll find all the underpaid employees and give them raise of 10000.  The first step is to create
+ the query to find all the underpaid employees.  This is one we've already seen:
+ 
+```java
+final Query<Employee> underPaidQuery = datastore.createQuery(Employee.class)
+                                             .filter("salary <=", 30000);
+```
+
+To define how we want to update the documents matched by this query, we define an `UpdateOperations`:
+
+```java
+final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperations(Employee.class)
+                                                   .inc("salary", 10000);
+```
+
+There are many operations on this class but in this case, we're updating the "salary" field by 10000.  This corresponds to the [`$inc` 
+operator](http://docs.mongodb.org/manual/reference/operator/update/inc/).  There's one last step involved here:
+
+```java
+final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
+```
+
+This line executes the update in the database without having to pull in however documents are matched by the query.  The `UpdateResults` 
+instance returned will contain various statistics about the update operation.
+
+## Removes
+
+After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and 
+then tell the `Datastore` to delete them:
+
+```java
+final Query<Employee> overPaidQuery = datastore.createQuery(Employee.class)
+                                                .filter("salary >", 100000);
+datastore.delete(overPaidQuery);
+```
+
+There are a couple of variations on `delete()` but this is probably the most common usage.  If you already have an object in hand, there 
+is a `delete` that can take that reference and delete it.  There is more information in the [javadoc](/javadoc).
