@@ -1,11 +1,79 @@
-task website(dependsOn : [ 'javadoc' ]) << {
+task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
+
+    def simpleVersion = version.split('\\.')[0..1].join('.')
+    
+    def dest = file("build/gh-pages/${simpleVersion}")
+    dest.mkdirs()
+    copy {
+        from 'docs/reference/public'
+        into dest
+    }
+    exec {
+        workingDir dest
+        commandLine "/usr/local/bin/git"
+        args("add", ".")
+    }
+}
+
+task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
+    def dest = file("build/gh-pages")
+    dest.mkdirs()
+    copy {
+        from 'docs/landing/public'
+        into dest
+    }
+    exec {
+        workingDir dest
+        commandLine "/usr/local/bin/git"
+        args("add", ".")
+    }
+}
+
+task landing << {
+    exec {
+        workingDir 'docs/landing'
+        commandLine '/usr/local/bin/hugo'
+    }
+}
+
+task reference(dependsOn: 'javadoc') << {
     exec {
         workingDir 'docs/reference'
-        commandLine 'hugo'
+        commandLine '/usr/local/bin/hugo'
     }
     copy {
         from 'morphia/build/docs'       
         into 'docs/reference/public'
+    }
+}
+
+task clonePages << {
+    def pages = new File("build/gh-pages")
+    if (!pages.exists()) {
+        def stream = new ByteArrayOutputStream()
+
+        exec {
+            workingDir rootDir
+            commandLine "/usr/local/bin/git"
+            args("config", "--get", "remote.origin.url")
+            standardOutput = stream
+        }
+
+        def url = new String(stream.toByteArray()).trim()
+        new File("build").mkdirs()
+        exec {
+            workingDir 'build'
+            commandLine "/usr/local/bin/git"
+            args("clone", url, "-b", "gh-pages", "gh-pages")
+        }
+    } else {
+        println "${pages} already exists.  skipping clone."
+        exec {
+            workingDir 'build/gh-pages'
+            commandLine "/usr/local/bin/git"
+            args("pull")
+        }
+        
     }
 }
 
