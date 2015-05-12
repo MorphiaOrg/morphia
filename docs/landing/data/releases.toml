@@ -16,8 +16,3 @@ current = "1.0.0-rc0"
   name = "morphia"
   description = "The MongoDB Java Object Document Mapper"
   versions = "1.0.0-rc0,0.111"
-  
-[[drivers]]
-  name = "morphia-logger"
-  description = "The MongoDB Java Object Document Mapper"
-  versions = "0.111"

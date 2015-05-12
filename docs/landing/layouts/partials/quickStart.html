@@ -16,7 +16,7 @@
     <div class="row downloadForm">
       <form>
         <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
-        <h5>morphia</h5>
+        <h5></h5>
         </div>
     <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
     {{ $.Scratch.Set "qs.pos" 0 }}
@@ -59,8 +59,8 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb&lt;/groupId&gt;
-              &lt;artifactId&gt;{{$currentDriver.name}}&lt;/artifactId&gt;
+              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -80,7 +80,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-            compile 'org.mongodb:{{$currentDriver.name}}:{{$currentVersion.version}}'
+            compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
         }
         repositories {
           maven {
@@ -94,8 +94,8 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb&lt;/groupId&gt;
-              &lt;artifactId&gt;{{$currentDriver.name}}&lt;/artifactId&gt;
+              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -105,7 +105,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-          compile 'org.mongodb:{{$currentDriver.name}}:{{$currentVersion.version}}'
+          compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
         }
 
 
