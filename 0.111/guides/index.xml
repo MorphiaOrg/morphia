@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Guides on Morphia</title>
-    <link>/morphia/1.0/guides/</link>
+    <link>/morphia/0.111/guides/</link>
     <description>Recent content in Guides on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
-    <atom:link href="/morphia/1.0/guides/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/morphia/0.111/guides/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Annotations</title>
-      <link>/morphia/1.0/guides/annotations/</link>
+      <link>/morphia/0.111/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/guides/annotations/</guid>
+      <guid>/morphia/0.111/guides/annotations/</guid>
       <description>
 
 &lt;h1 id=&#34;annotations&#34;&gt;Annotations&lt;/h1&gt;
@@ -503,16 +503,16 @@ class BankAccountWatcher{
     
     <item>
       <title>Reference Guides</title>
-      <link>/morphia/1.0/guides/</link>
+      <link>/morphia/0.111/guides/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/guides/</guid>
+      <guid>/morphia/0.111/guides/</guid>
       <description>
 
 &lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/0.111/morphia/0.111/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

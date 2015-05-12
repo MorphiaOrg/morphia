@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Morphia</title>
-    <link>/morphia/1.0/</link>
+    <link>/morphia/0.111/</link>
     <description>Recent content on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 18 Mar 2015 16:56:14 +0000</lastBuildDate>
-    <atom:link href="/morphia/1.0/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/morphia/0.111/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Issues &amp; Help</title>
-      <link>/morphia/1.0/issues-help/</link>
+      <link>/morphia/0.111/issues-help/</link>
       <pubDate>Wed, 18 Mar 2015 16:56:14 +0000</pubDate>
       
-      <guid>/morphia/1.0/issues-help/</guid>
+      <guid>/morphia/0.111/issues-help/</guid>
       <description>
 
 &lt;h1 id=&#34;issues-help&#34;&gt;Issues &amp;amp; Help&lt;/h1&gt;
@@ -57,10 +57,10 @@ $ git checkout -b myNewFeature
     
     <item>
       <title>Quick Tour</title>
-      <link>/morphia/1.0/getting-started/quick-tour/</link>
+      <link>/morphia/0.111/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/getting-started/quick-tour/</guid>
+      <guid>/morphia/0.111/getting-started/quick-tour/</guid>
       <description>
 
 &lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
@@ -127,11 +127,11 @@ class Employee {
 &lt;p&gt;There are a few things here to discuss and others we&amp;rsquo;ll defer to later sections.  This class is annotated using the &lt;code&gt;@Entity&lt;/code&gt; annotation
 so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
-&lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the &lt;a href=&#34;/morphia/1.0/javadoc&#34;&gt;javadoc&lt;/a&gt; covers those details.&lt;/p&gt;
+&lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the &lt;a href=&#34;/morphia/0.111/javadoc&#34;&gt;javadoc&lt;/a&gt; covers those details.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which annotations morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  &lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/#indexes&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+  &lt;a href=&#34;/morphia/0.111/morphia/0.111/guides/annotations/#indexes&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ve marked the &lt;code&gt;id&lt;/code&gt; field to be used as our primary key (the &lt;code&gt;_id&lt;/code&gt; field in the document).  In this instance we&amp;rsquo;re using the Java driver
 type of &lt;code&gt;ObjectId&lt;/code&gt; as the ID type.  The ID can be any type you&amp;rsquo;d like but is generally something like &lt;code&gt;ObjectId&lt;/code&gt; or &lt;code&gt;Long&lt;/code&gt;.  There are
@@ -244,16 +244,16 @@ datastore.delete(overPaidQuery);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There are a couple of variations on &lt;code&gt;delete()&lt;/code&gt; but this is probably the most common usage.  If you already have an object in hand, there
-is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.  There is more information in the &lt;a href=&#34;/morphia/1.0/javadoc&#34;&gt;javadoc&lt;/a&gt;.&lt;/p&gt;
+is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.  There is more information in the &lt;a href=&#34;/morphia/0.111/javadoc&#34;&gt;javadoc&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Getting Started</title>
-      <link>/morphia/1.0/getting-started/</link>
+      <link>/morphia/0.111/getting-started/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/getting-started/</guid>
+      <guid>/morphia/0.111/getting-started/</guid>
       <description>
 
 &lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
@@ -261,18 +261,18 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
 &lt;p&gt;To help you get started quickly with morphia follow:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/0.111/morphia/0.111/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/0.111/morphia/0.111/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
       <title>Annotations</title>
-      <link>/morphia/1.0/guides/annotations/</link>
+      <link>/morphia/0.111/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/guides/annotations/</guid>
+      <guid>/morphia/0.111/guides/annotations/</guid>
       <description>
 
 &lt;h1 id=&#34;annotations&#34;&gt;Annotations&lt;/h1&gt;
@@ -761,10 +761,10 @@ class BankAccountWatcher{
     
     <item>
       <title>Installation Guide</title>
-      <link>/morphia/1.0/getting-started/installation-guide/</link>
+      <link>/morphia/0.111/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
+      <guid>/morphia/0.111/getting-started/installation-guide/</guid>
       <description>
 
 &lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
@@ -783,7 +783,7 @@ class BankAccountWatcher{
     &amp;lt;dependency&amp;gt;
         &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
         &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
+        &amp;lt;version&amp;gt;0.111&amp;lt;/version&amp;gt;
     &amp;lt;/dependency&amp;gt;
 &amp;lt;/dependencies&amp;gt;
 
@@ -792,14 +792,14 @@ class BankAccountWatcher{
 &lt;section class=&#34;gradle hidden&#34;&gt;
 &lt;pre&gt;&lt;code&gt;
   dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
+      compile &#39;org.mongodb.morphia:morphia:0.111&#39;
   }
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/section&gt;
 &lt;section class=&#34;downloadInfo&#34;&gt;
 &lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/0.111&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
   from sonatype.&lt;/a&gt;
 &lt;/p&gt;
 
@@ -810,26 +810,26 @@ class BankAccountWatcher{
     
     <item>
       <title>Reference Guides</title>
-      <link>/morphia/1.0/guides/</link>
+      <link>/morphia/0.111/guides/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/guides/</guid>
+      <guid>/morphia/0.111/guides/</guid>
       <description>
 
 &lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/0.111/morphia/0.111/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
       <title>Morphia</title>
-      <link>/morphia/1.0/</link>
+      <link>/morphia/0.111/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/</guid>
+      <guid>/morphia/0.111/</guid>
       <description>
 
 &lt;h2 id=&#34;morphia-documentation&#34;&gt;Morphia Documentation&lt;/h2&gt;
@@ -842,7 +842,7 @@ For reference documentation please see the driver documentation.&lt;/p&gt;
 
 &lt;h3 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h3&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/&#34;&gt;Getting Started&lt;/a&gt; guide contains installation instructions
+&lt;p&gt;The &lt;a href=&#34;/morphia/0.111/morphia/0.111/getting-started/&#34;&gt;Getting Started&lt;/a&gt; guide contains installation instructions
 and a simple tutorial to get up and running quickly.&lt;/p&gt;
 </description>
     </item>
