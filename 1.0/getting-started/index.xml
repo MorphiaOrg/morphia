@@ -19,7 +19,7 @@
 
 &lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
 
-&lt;p&gt;To help you get started quickly with morphia follow:&lt;/p&gt;
+&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
@@ -38,7 +38,7 @@
 
 &lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
 
-&lt;p&gt;The recommended way to get started using morphia in your project is with a dependency management system.&lt;/p&gt;
+&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
 
 &lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
   &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
@@ -88,21 +88,21 @@
 &lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
 
 &lt;p&gt;Morphia wraps the mongodb Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
-abstract much of that way but if something is confusing, it wouldn&amp;rsquo;t hurt to consult the Java driver &lt;a href=&#34;http://mongodb.github
-.io/mongo-java-driver/&#34;&gt;docs&lt;/a&gt; as well.&lt;/p&gt;
+abstract much of that away but if something is confusing it wouldn&amp;rsquo;t hurt to consult the Java driver &lt;a href=&#34;http://mongodb.github
+.io/mongo-java-driver/&#34;&gt;documentation&lt;/a&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.java&lt;/code&gt; example code
 that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.0.x/morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java
-&#34;&gt;morphia source&lt;/a&gt;.&lt;/p&gt;
+&#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
 
-&lt;p&gt;The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of
+&lt;p&gt;The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
 Morphia maps your entities and validates your queries.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final Morphia morphia = new Morphia();
 
-// tell morphia where to find your classes
+// tell Morphia where to find your classes
 // can be called multiple times with different packages or classes
 morphia.mapPackage(&amp;quot;org.mongodb.morphia.example&amp;quot;);
 
@@ -111,21 +111,21 @@ final Datastore datastore = morphia.createDatastore(new MongoClient(), &amp;quot
 datastore.ensureIndexes();
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This snippet creates the morphia instance we&amp;rsquo;ll be using in our simple application.  The &lt;code&gt;Morphia&lt;/code&gt; class exists to configure the &lt;code&gt;Mapper&lt;/code&gt;
+&lt;p&gt;This snippet creates the Morphia instance we&amp;rsquo;ll be using in our simple application.  The &lt;code&gt;Morphia&lt;/code&gt; class exists to configure the &lt;code&gt;Mapper&lt;/code&gt;
  to be used and to define various system-wide defaults.  It is also what is used to create the &lt;code&gt;Datastore&lt;/code&gt; we&amp;rsquo;ll be using.  With this
- approach we could conceivable configure morphia once and then connect to multiple databases by creating different &lt;code&gt;Datastore&lt;/code&gt; instances.
+ approach we could conceivable configure Morphia once and then connect to multiple databases by creating different &lt;code&gt;Datastore&lt;/code&gt; instances.
    In practice, this is likely pretty rare but it is possible.  The &lt;code&gt;Datastore&lt;/code&gt; takes two parameters:  the &lt;code&gt;MongoClient&lt;/code&gt; used to connect
-   to the database process and the name of the database to use in the &lt;code&gt;Datastore&lt;/code&gt;.&lt;/p&gt;
+   to mongodb and the name of the database to use.&lt;/p&gt;
 
-&lt;p&gt;The second line, which we skipped over, deserves a bit of consideration.  In this case, we&amp;rsquo;re tell morphia to look at every class in the
+&lt;p&gt;The second line, which we skipped over, deserves a bit of consideration.  In this case, we&amp;rsquo;re telling Morphia to look at every class in the
 package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@Entity&lt;/code&gt; (which we&amp;rsquo;ll cover shortly) and discover the mapping metadata we&amp;rsquo;ve
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.&lt;/p&gt;
 
 &lt;h2 id=&#34;mapping-classes&#34;&gt;Mapping Classes&lt;/h2&gt;
 
-&lt;p&gt;There are two ways that morphia can handle your classes:  as top level entities or embedded.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt; is
-treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
+&lt;p&gt;There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt;
+ is treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
 define which field to use as the &lt;code&gt;_id&lt;/code&gt; value in the document written to mongodb.  &lt;code&gt;@Embedded&lt;/code&gt; indicates that the class will result in a
 subdocument inside another document.  &lt;code&gt;@Embedded&lt;/code&gt; classes do not require the presence of an &lt;code&gt;@Id&lt;/code&gt; field.&lt;/p&gt;
 
@@ -147,32 +147,33 @@ class Employee {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There are a few things here to discuss and others we&amp;rsquo;ll defer to later sections.  This class is annotated using the &lt;code&gt;@Entity&lt;/code&gt; annotation
-so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, morphia will use the class
+so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
-&lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the &lt;a href=&#34;/morphia/1.0/javadoc&#34;&gt;javadoc&lt;/a&gt; covers those details.&lt;/p&gt;
+&lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the
+&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/#entity&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which annotations morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
+&lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which annotations Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
   &lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/#indexes&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ve marked the &lt;code&gt;id&lt;/code&gt; field to be used as our primary key (the &lt;code&gt;_id&lt;/code&gt; field in the document).  In this instance we&amp;rsquo;re using the Java driver
 type of &lt;code&gt;ObjectId&lt;/code&gt; as the ID type.  The ID can be any type you&amp;rsquo;d like but is generally something like &lt;code&gt;ObjectId&lt;/code&gt; or &lt;code&gt;Long&lt;/code&gt;.  There are
-two other annotations to cover but it should be pointed out now that other than transient and static fields, morphia will attempt copy
+two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt copy
 every field&amp;rsquo;s value in to a document bound for the database.&lt;/p&gt;
 
 &lt;p&gt;The simplest of the two remaining annotations is &lt;code&gt;@Property&lt;/code&gt;.  This annotation is entirely optional.  If you leave this annotation off,
-morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&amp;rsquo;ll want to change
+Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&amp;rsquo;ll want to change
 the document field name for any number of reasons.  In those cases, you can use &lt;code&gt;@Property&lt;/code&gt; and pass it the name to be used when this
 class is serialized out to a document to be handed off to mongodb.&lt;/p&gt;
 
-&lt;p&gt;This just leave &lt;code&gt;@Reference&lt;/code&gt;.  This annotation is telling morphia that this field refers to other morphia mapped entities.  In this case
-morphia will store what mongodb calls a &lt;code&gt;DBRef&lt;/code&gt; which is just a collection name and key value.  These referenced entities must already be
- saved or at least have an ID assigned or morphia will error out.&lt;/p&gt;
+&lt;p&gt;This just leaves &lt;code&gt;@Reference&lt;/code&gt;.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
+Morphia will store what mongodb calls a &lt;code&gt;DBRef&lt;/code&gt; which is just a collection name and key value.  These referenced entities must already be
+ saved or at least have an ID assigned or Morphia will throw an exception.&lt;/p&gt;
 
 &lt;h2 id=&#34;saving-data&#34;&gt;Saving Data&lt;/h2&gt;
 
 &lt;p&gt;For the most part, you treat your Java objects just like you normally would.  When you&amp;rsquo;re ready to write an object to the database, it&amp;rsquo;s
-a one liner:&lt;/p&gt;
+as simple as this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final Employee elmer = new Employee(&amp;quot;Elmer Fudd&amp;quot;, 50000.0);
 datastore.save(elmer);
@@ -192,23 +193,25 @@ elmer.getDirectReports().add(pepe);
 datastore.save(elmer);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;As you can see, we just need to create and save the other Employees then we can simply add them to the direct reports list and
+&lt;p&gt;As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and
 save.  Morphia takes care of saving the keys in Elmer&amp;rsquo;s document that refer to Daffy and Pepé.  Updating data in mongodb is as simple as
 updating your Java objects and then calling &lt;code&gt;datastore.save()&lt;/code&gt; with them again.  For bulk updates (everyone gets a raise!) this is not
 the most efficient way doing updates.  It is possible to update directly in the database without having to pull in every document,
-convert to java, update, convert back to a document, and write back to mongodb.  In order to show you that piece, first we need to see
+convert to Java objects, update, convert back to a document, and write back to mongodb.  But in order to show you that piece, first we need
+ to
+see
 how to query.&lt;/p&gt;
 
 &lt;h2 id=&#34;querying&#34;&gt;Querying&lt;/h2&gt;
 
-&lt;p&gt;Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by morphia
+&lt;p&gt;Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
 directly and only rarely do you need to take additional action.  As with everything else, &lt;code&gt;Datastore&lt;/code&gt; is where we start:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final Query&amp;lt;Employee&amp;gt; query = datastore.createQuery(Employee.class);
 final List&amp;lt;Employee&amp;gt; employees = query.asList();
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This is a basic morphia query.  Here, we&amp;rsquo;re telling the &lt;code&gt;Datastore&lt;/code&gt; to create a query that&amp;rsquo;s been typed to &lt;code&gt;Employee&lt;/code&gt;.  In this simple
+&lt;p&gt;This is a basic Morphia query.  Here, we&amp;rsquo;re telling the &lt;code&gt;Datastore&lt;/code&gt; to create a query that&amp;rsquo;s been typed to &lt;code&gt;Employee&lt;/code&gt;.  In this
 case, we&amp;rsquo;re fetching every &lt;code&gt;Employee&lt;/code&gt; in to a &lt;code&gt;List&lt;/code&gt;.  Ignoring the obvious potential for memory errors, this is not usually that helpful
 .  Most queries will, of course, want to filter the data in some way.  There are two ways of doing this:&lt;/p&gt;
 
@@ -219,20 +222,20 @@ case, we&amp;rsquo;re fetching every &lt;code&gt;Employee&lt;/code&gt; in to a &
 
 &lt;p&gt;This approach uses the &lt;code&gt;filter()&lt;/code&gt; method which is a little more freeform than the alternative.  Here we can embed certain operators in
 the query string.  While this is less verbose than the alternative, it does leave more things in the string to validate and potentially
-get wrong.  If you prefer a more compile-time validation, this approach create the same query:&lt;/p&gt;
+get wrong.  If you prefer more compile-time validation, this approach creates the same query:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;underpaid = datastore.createQuery(Employee.class)
                      .field(&amp;quot;salary&amp;quot;).lessThanOrEq(30000)
                      .asList();
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Either query works.  It comes down to a question of preference in most cases.  In either approach, morphia will validate that there is a
+&lt;p&gt;Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a
 field called &lt;code&gt;salary&lt;/code&gt; on the &lt;code&gt;Employee&lt;/code&gt; class.  If you happen to have mapped that field such that the name in the database doesn&amp;rsquo;t match
-the Java field, morphia can use either form and will validate against either name.&lt;/p&gt;
+the Java field, Morphia can use either form and will validate against either name.&lt;/p&gt;
 
 &lt;h2 id=&#34;updates&#34;&gt;Updates&lt;/h2&gt;
 
-&lt;p&gt;Now that we can query, however simply, we can take a look at in database updates.  These updates take two components: a query, and a set
+&lt;p&gt;Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
 of update operations.  In this example, we&amp;rsquo;ll find all the underpaid employees and give them raise of 10000.  The first step is to create
  the query to find all the underpaid employees.  This is one we&amp;rsquo;ve already seen:&lt;/p&gt;
 
@@ -240,20 +243,20 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
                                              .filter(&amp;quot;salary &amp;lt;=&amp;quot;, 30000);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To define how we want to update the documents matched by this query, we define an &lt;code&gt;UpdateOperations&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;To define how we want to update the documents matched by this query, we create an &lt;code&gt;UpdateOperations&lt;/code&gt; instance:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final UpdateOperations&amp;lt;Employee&amp;gt; updateOperations = datastore.createUpdateOperations(Employee.class)
                                                    .inc(&amp;quot;salary&amp;quot;, 10000);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;There are many operations on this class but in this case, we&amp;rsquo;re updating the &amp;ldquo;salary&amp;rdquo; field by 10000.  This corresponds to the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/&#34;&gt;&lt;code&gt;$inc&lt;/code&gt;
-operator&lt;/a&gt;.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
+&lt;p&gt;There are many operations on this class but, in this case, we&amp;rsquo;re only updating the &lt;code&gt;salary&lt;/code&gt; field by 10000.  This corresponds to the
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/&#34;&gt;&lt;code&gt;$inc&lt;/code&gt; operator&lt;/a&gt;.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This line executes the update in the database without having to pull in however documents are matched by the query.  The &lt;code&gt;UpdateResults&lt;/code&gt;
-instance returned will contain various statistics about the update operation.&lt;/p&gt;
+&lt;p&gt;This line executes the update in the database without having to pull in however many documents are matched by the query.  The
+&lt;code&gt;UpdateResults&lt;/code&gt; instance returned will contain various statistics about the update operation.&lt;/p&gt;
 
 &lt;h2 id=&#34;removes&#34;&gt;Removes&lt;/h2&gt;
 

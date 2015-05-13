@@ -57,7 +57,7 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;noClassnameStored()&lt;/td&gt;
-&lt;td&gt;Tells morphia to not store the classname in the document.  The default is to store the classname.&lt;/td&gt;
+&lt;td&gt;Tells Morphia to not store the classname in the document.  The default is to store the classname.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -143,7 +143,7 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;disableValidation()&lt;/td&gt;
-&lt;td&gt;By default, morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
+&lt;td&gt;By default, Morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -248,13 +248,13 @@ this annotation looks like this:&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;disableValidation()&lt;/td&gt;
-&lt;td&gt;By default, morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
+&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;disableValidation()&lt;/td&gt;
+&lt;td&gt;By default, Morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -269,22 +269,83 @@ this annotation looks like this:&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+&lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
+
+&lt;p&gt;Applied to a Java field, marks the field to be indexed by mongodb.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Indexed {
+    IndexDirection value() default IndexDirection.ASC;
+    String name() default &amp;quot;&amp;quot;;
+    boolean unique() default false;
+    boolean dropDups() default false;
+    boolean background() default false;
+    boolean sparse() default false;
+    int expireAfterSeconds() default -1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;value()&lt;/td&gt;
+&lt;td&gt;The sort direction for the index&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;name()&lt;/td&gt;
+&lt;td&gt;The name of the index&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;unique()&lt;/td&gt;
+&lt;td&gt;Requires values in the index to be unique&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dropDups()&lt;/td&gt;
+&lt;td&gt;Drop any duplicate values during the creation of a unique index.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;background()&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;sparse()&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
 &lt;h2 id=&#34;id&#34;&gt;Id&lt;/h2&gt;
 
 &lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to be the &amp;ldquo;_id&amp;rdquo; field in mongodb.&lt;/p&gt;
 
 &lt;h2 id=&#34;property&#34;&gt;Property&lt;/h2&gt;
 
-&lt;p&gt;An optional annotation instructing morphia to persist field in to the document given to mongodb.  By default, the field name is used as
+&lt;p&gt;An optional annotation instructing Morphia to persist field in to the document given to mongodb.  By default, the field name is used as
 the property name.  This can be overridden by passing a String with the new name to the annotation.&lt;/p&gt;
 
 &lt;h2 id=&#34;transient&#34;&gt;Transient&lt;/h2&gt;
 
-&lt;p&gt;Instructs morphia to ignore this field when converting an entity to a document.  The java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
+&lt;p&gt;Instructs Morphia to ignore this field when converting an entity to a document.  The java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
 
 &lt;h2 id=&#34;serialized&#34;&gt;Serialized&lt;/h2&gt;
 
-&lt;p&gt;Instructs morphia to serialize this field.&lt;/p&gt;
+&lt;p&gt;Instructs Morphia to serialize this field.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Serialized {
   String value() default Mapper.IGNORED_FIELDNAME;
@@ -308,21 +369,21 @@ the property name.  This can be overridden by passing a String with the new name
 
 &lt;tr&gt;
 &lt;td&gt;disableCompression()&lt;/td&gt;
-&lt;td&gt;By default, morphia compresses the &lt;code&gt;byte[]&lt;/code&gt; after serialization.  Setting this to true disables the compression.&lt;/td&gt;
+&lt;td&gt;By default, Morphia compresses the &lt;code&gt;byte[]&lt;/code&gt; after serialization.  Setting this to true disables the compression.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;h2 id=&#34;notsaved&#34;&gt;NotSaved&lt;/h2&gt;
 
-&lt;p&gt;Instructs morphia to ignore this field when saving but will still be loaded.&lt;/p&gt;
+&lt;p&gt;Instructs Morphia to ignore this field when saving but will still be loaded.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Good for data migration.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;alsoload&#34;&gt;AlsoLoad&lt;/h2&gt;
 
 &lt;p&gt;When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation
-to tell morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names
+to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names
 when loading a document.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Good for data migration.&lt;/em&gt;&lt;/p&gt;
@@ -347,10 +408,6 @@ when loading a document.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
-&lt;h2 id=&#34;indexed&#34;&gt;Indexed&lt;/h2&gt;
-
-&lt;p&gt;The field will be indexed. See &lt;a href=&#34;Datastore&#34;&gt;the datastore docs&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;version&#34;&gt;Version&lt;/h2&gt;
 
@@ -404,19 +461,19 @@ class MyClass {
 
 &lt;tr&gt;
 &lt;td&gt;lazy()&lt;/td&gt;
-&lt;td&gt;Instructs morphia to defer loading of the referenced document.&lt;/td&gt;
+&lt;td&gt;Instructs Morphia to defer loading of the referenced document.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;idOnly()&lt;/td&gt;
-&lt;td&gt;Instructs morphia to only store the key of the referenced document rather than a full &lt;code&gt;DBRef&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Instructs Morphia to only store the key of the referenced document rather than a full &lt;code&gt;DBRef&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;h2 id=&#34;embedded&#34;&gt;Embedded&lt;/h2&gt;
 
-&lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection, &lt;code&gt;@Embedded&lt;/code&gt; tells morphia
+&lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection, &lt;code&gt;@Embedded&lt;/code&gt; tells Morphia
 to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of
 the embedded type or on the field holding the embedded instance.&lt;/p&gt;
 
