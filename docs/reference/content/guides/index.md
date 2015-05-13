@@ -4,7 +4,7 @@ title = "Reference Guides"
 [menu.main]
   identifier = "Reference Guides"
   weight = 30
-  pre = "<i class='fa fa-road'></i>"
+  pre = "<i class='fa fa-book'></i>"
 +++
 
 ## Reference Guides
