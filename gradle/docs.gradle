@@ -24,7 +24,8 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
     }
     exec {
         workingDir dest
-        commandLine "/usr/local/bin/git"
+        environment System.getenv()
+        commandLine "git"
         args("add", ".")
     }
 }
@@ -32,14 +33,16 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
 task landing << {
     exec {
         workingDir 'docs/landing'
-        commandLine '/usr/local/bin/hugo'
+        environment System.getenv()
+        commandLine 'hugo'
     }
 }
 
 task reference(dependsOn: 'javadoc') << {
     exec {
         workingDir 'docs/reference'
-        commandLine '/usr/local/bin/hugo'
+        environment System.getenv()
+        commandLine 'hugo'
     }
     copy {
         from 'morphia/build/docs'       
@@ -54,7 +57,8 @@ task clonePages << {
 
         exec {
             workingDir rootDir
-            commandLine "/usr/local/bin/git"
+            environment System.getenv()
+            commandLine "git"
             args("config", "--get", "remote.origin.url")
             standardOutput = stream
         }
@@ -63,14 +67,16 @@ task clonePages << {
         new File("build").mkdirs()
         exec {
             workingDir 'build'
-            commandLine "/usr/local/bin/git"
+            environment System.getenv()
+            commandLine "git"
             args("clone", url, "-b", "gh-pages", "gh-pages")
         }
     } else {
         println "${pages} already exists.  skipping clone."
         exec {
             workingDir 'build/gh-pages'
-            commandLine "/usr/local/bin/git"
+            environment System.getenv()
+            commandLine "git"
             args("pull")
         }
         
