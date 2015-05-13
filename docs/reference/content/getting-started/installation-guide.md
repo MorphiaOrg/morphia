@@ -10,7 +10,7 @@ title = "Installation Guide"
 
 # Installation
 
-The recommended way to get started using morphia in your project is with a dependency management system.
+The recommended way to get started using Morphia in your project is with a dependency management system.
 
 {{< distroPicker >}}
 

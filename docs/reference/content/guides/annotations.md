@@ -29,7 +29,7 @@ public @interface Entity {
 | ------------------- | --------------  |
 | value()             | Defines the collection to use.  Defaults to using the classname |
 | cap()               | Marks this collection as capped and sets the size to use.  See the [`@Capped`]({{< ref "#capped" >}}) below|
-| noClassnameStored() | Tells morphia to not store the classname in the document.  The default is to store the classname. |
+| noClassnameStored() | Tells Morphia to not store the classname in the document.  The default is to store the classname. |
 | queryNonPrimary()   | Indicates that queries against this collection can use secondaries.  The default is primary only reads. |
 | concern()           | The WriteConcern to use when writing to this collection. |
 
@@ -74,7 +74,7 @@ There are two pieces to this annotation that are mutually exclusive.  The first 
 | dropDups() | Drop any duplicate values during the creation of a unique index. |
 | background()| Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
 | sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
-| disableValidation() | By default, morphia will validate field names being index.  This disables those checks. |
+| disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
 | expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
 | fields() | This is the new way to define which fields to index. [Details]({{< ref "#Field" >}}) can be found below. |
 | options() | This is the new way to define index options. [Details]({{< ref "#IndexOptions" >}}) can be found below.  |
@@ -115,23 +115,47 @@ public @interface IndexOptions {
 | dropDups() | Drop any duplicate values during the creation of a unique index. |
 | background() | Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
 | sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
-| disableValidation() | By default, morphia will validate field names being index.  This disables those checks. |
 | expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
+| disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
 | language() | Default language for the index. |
 | languageOverride() | The field in the document to use to override the default language. |
+
+#### Indexed
+Applied to a Java field, marks the field to be indexed by mongodb.
+
+```java
+public @interface Indexed {
+    IndexDirection value() default IndexDirection.ASC;
+    String name() default "";
+    boolean unique() default false;
+    boolean dropDups() default false;
+    boolean background() default false;
+    boolean sparse() default false;
+    int expireAfterSeconds() default -1;
+}
+```
+| Parameter           | Usage           |
+| ------------------- | --------------  |
+| value() | The sort direction for the index |
+| name() | The name of the index |
+| unique() | Requires values in the index to be unique |
+| dropDups() | Drop any duplicate values during the creation of a unique index. |
+| background() | Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
+| sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
+| expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
 
 ## Id
 Marks a field in an `@Entity` to be the "_id" field in mongodb.
 
 ## Property
-An optional annotation instructing morphia to persist field in to the document given to mongodb.  By default, the field name is used as 
+An optional annotation instructing Morphia to persist field in to the document given to mongodb.  By default, the field name is used as 
 the property name.  This can be overridden by passing a String with the new name to the annotation.
 
 ## Transient
-Instructs morphia to ignore this field when converting an entity to a document.  The java keyword `transient` can also be used instead.
+Instructs Morphia to ignore this field when converting an entity to a document.  The java keyword `transient` can also be used instead.
 
 ## Serialized
-Instructs morphia to serialize this field.
+Instructs Morphia to serialize this field.
 
 ```java
 public @interface Serialized {
@@ -142,17 +166,17 @@ public @interface Serialized {
 | Parameter           | Usage           |
 | ------------------- | --------------  |
 | value() | the field name to use in the document |
-| disableCompression() | By default, morphia compresses the `byte[]` after serialization.  Setting this to true disables the compression. |
+| disableCompression() | By default, Morphia compresses the `byte[]` after serialization.  Setting this to true disables the compression. |
 
 
 ## NotSaved
-Instructs morphia to ignore this field when saving but will still be loaded.
+Instructs Morphia to ignore this field when saving but will still be loaded.
  
 _Good for data migration._
 
 ## AlsoLoad
 When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation 
-to tell morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names 
+to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names 
 when loading a document.
 
 _Good for data migration._
@@ -166,9 +190,6 @@ public @interface AlsoLoad {
 | Parameter           | Usage           |
 | ------------------- | --------------  |
 | value() | The array of names to try when loading the field |
-
-## Indexed
-The field will be indexed. See [the datastore docs](Datastore).
 
 ## Version
 Marks a field in an `@Entity` to control optimistic locking for that entity. If the versions change while modifying an entity (including 
@@ -204,12 +225,12 @@ public @interface Reference {
 | ------------------- | --------------  |
 | value() | The field name to use in the document.  Defaults to the Java field name. |
 | ignoreMissing() | Ignore any missing documents |
-| lazy() | Instructs morphia to defer loading of the referenced document. |
-| idOnly() | Instructs morphia to only store the key of the referenced document rather than a full `DBRef` |
+| lazy() | Instructs Morphia to defer loading of the referenced document. |
+| idOnly() | Instructs Morphia to only store the key of the referenced document rather than a full `DBRef` |
 
 
 ## Embedded
-In contrast to `@Reference` where a nested Java reference ends up as a separate document in a collection, `@Embedded` tells morphia 
+In contrast to `@Reference` where a nested Java reference ends up as a separate document in a collection, `@Embedded` tells Morphia 
 to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of 
 the embedded type or on the field holding the embedded instance.
 

@@ -19,15 +19,15 @@ encountered a bug, the mailing list is the place to start.
 ## Bugs / Feature Requests
 
 If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
- [github](https://github.com/mongodb/morphia/issues). Please provide as much information as possible about the issue type and how to 
- reproduce it.
+ [github](https://github.com/mongodb/morphia/issues). Please provide as much information as possible (including version numbers) about the 
+ issue type and how to reproduce it.
 
 If you’ve identified a security vulnerability in a driver or any other
 MongoDB project, please report it according to the [instructions here](http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
 
 ## Pull Requests
 
-We are happy to accept contributions to help improve morphia.  We will guide user contributions to ensure they meet the standards of the 
+We are happy to accept contributions to help improve Morphia.  We will guide user contributions to ensure they meet the standards of the 
 codebase. Please ensure that any pull requests include documentation, tests and also pass a the gradle checks.
 
 To get started check out the source and work on a branch:
