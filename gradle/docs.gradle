@@ -30,6 +30,8 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
     }
 }
 
+task publishDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {}
+
 task landing << {
     exec {
         workingDir 'docs/landing'

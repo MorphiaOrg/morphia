@@ -11,7 +11,7 @@ title = "Quick Tour"
 # Quick Tour
 
 Morphia wraps the mongodb Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to 
-abstract much of that away but if something is confusing it wouldn't hurt to consult the Java driver [documentation](http://mongodb.github
+abstract much of that away but if something is confusing, please consult the Java driver [documentation](http://mongodb.github
 .io/mongo-java-driver/) as well.
 
 The following code snippets come from the `QuickTour.java` example code
@@ -37,9 +37,9 @@ datastore.ensureIndexes();
 
 This snippet creates the Morphia instance we'll be using in our simple application.  The `Morphia` class exists to configure the `Mapper`
  to be used and to define various system-wide defaults.  It is also what is used to create the `Datastore` we'll be using.  With this 
- approach we could conceivable configure Morphia once and then connect to multiple databases by creating different `Datastore` instances.
+ approach we could conceivably configure Morphia once and then connect to multiple databases by creating different `Datastore` instances.
    In practice, this is likely pretty rare but it is possible.  The `Datastore` takes two parameters:  the `MongoClient` used to connect 
-   to mongodb and the name of the database to use.
+   to MongoDB and the name of the database to use.
    
 The second line, which we skipped over, deserves a bit of consideration.  In this case, we're telling Morphia to look at every class in the 
 package we've given and find every class annotated with `@Entity` (which we'll cover shortly) and discover the mapping metadata we've 
