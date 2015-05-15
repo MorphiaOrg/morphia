@@ -36,10 +36,10 @@ datastore.ensureIndexes();
 ```
 
 This snippet creates the Morphia instance we'll be using in our simple application.  The `Morphia` class exists to configure the `Mapper`
- to be used and to define various system-wide defaults.  It is also what is used to create the `Datastore` we'll be using.  With this 
+ to be used and to define various system-wide defaults.  It is also what is used to create the `Datastore` we'll be using.  The 
+ `Datastore` takes two parameters:  the `MongoClient` used to connect to MongoDB and the name of the database to use.  With this 
  approach we could conceivably configure Morphia once and then connect to multiple databases by creating different `Datastore` instances.
-   In practice, this is likely pretty rare but it is possible.  The `Datastore` takes two parameters:  the `MongoClient` used to connect 
-   to MongoDB and the name of the database to use.
+   In practice, this is likely pretty rare but it is possible.
    
 The second line, which we skipped over, deserves a bit of consideration.  In this case, we're telling Morphia to look at every class in the 
 package we've given and find every class annotated with `@Entity` (which we'll cover shortly) and discover the mapping metadata we've 
