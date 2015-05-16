@@ -20,33 +20,22 @@ package org.mongodb.morphia.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
- * Optional annotation for specifying persistence behavior
+ * Marker for fields that should be (java) serialized
  *
- * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
 @Documented
-@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Property {
+public @interface Serialized {
 
-  /**
-   * The name of the key to store the field in; Defaults to the field name.
-   */
-  String value() default Mapper.IGNORED_FIELDNAME;
+  boolean disableCompression() default false;
 
-  /**
-   * Specify the concrete class to instantiate.
-   */
-  Class<?> concreteClass() default Object.class;
+  String value() default Const.IGNORED_FIELDNAME;
 }

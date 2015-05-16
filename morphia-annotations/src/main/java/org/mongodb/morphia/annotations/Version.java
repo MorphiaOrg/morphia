@@ -6,8 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
  * supposed to be used on a Long or long field for optimistic locking.
@@ -17,5 +15,5 @@ import org.mongodb.morphia.mapping.Mapper;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Version {
-  String value() default Mapper.IGNORED_FIELDNAME;
+  String value() default Const.IGNORED_FIELDNAME;
 }

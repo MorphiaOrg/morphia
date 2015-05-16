@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
 
@@ -84,7 +85,7 @@ public class MapImplTest extends TestBase {
                                                                      .findOne()
                                                                      .get("values")).get(
                                                                                         "first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(Const.CLASS_NAME_FIELDNAME);
         assertTrue(!hasF);
     }
 
@@ -101,7 +102,7 @@ public class MapImplTest extends TestBase {
                                                                      .findOne()
                                                                      .get("values"))
                                                   .get("first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(Const.CLASS_NAME_FIELDNAME);
         assertTrue(hasF);
     }
 
@@ -120,7 +121,7 @@ public class MapImplTest extends TestBase {
                                                                      .findOne()
                                                                      .get("values"))
                                                   .get("second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(Const.CLASS_NAME_FIELDNAME);
         assertTrue("className should be here.", hasF);
     }
 
@@ -140,7 +141,7 @@ public class MapImplTest extends TestBase {
                                                                      .findOne()
                                                                      .get("values")).get(
                                                                                         "second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(Const.CLASS_NAME_FIELDNAME);
         assertTrue("className should not be here.", !hasF);
     }
 }

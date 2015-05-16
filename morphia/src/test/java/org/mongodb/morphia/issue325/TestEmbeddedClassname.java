@@ -6,12 +6,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,21 +80,21 @@ public class TestEmbeddedClassname extends TestBase {
         DBObject aRaw = r.singleA.raw;
 
         // Test that singleA does not contain the class name
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(aRaw.containsField(Const.CLASS_NAME_FIELDNAME));
 
         // Test that aList does not contain the class name
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(aRaw.containsField(Const.CLASS_NAME_FIELDNAME));
 
         // Test that bList does not contain the class name of the subclass
         ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).add("bList", new B()));
         r = ds.get(Root.class, "id");
 
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(aRaw.containsField(Const.CLASS_NAME_FIELDNAME));
 
         DBObject bRaw = r.bList.get(0).getRaw();
-        Assert.assertFalse(bRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(bRaw.containsField(Const.CLASS_NAME_FIELDNAME));
 
         ds.delete(ds.createQuery(Root.class));
 
@@ -107,9 +107,9 @@ public class TestEmbeddedClassname extends TestBase {
         
         // test that singleA.raw *does* contain the classname because we stored a subclass there
         aRaw = r.singleA.raw;
-        Assert.assertTrue(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertTrue(aRaw.containsField(Const.CLASS_NAME_FIELDNAME));
         DBObject bRaw2 = r.aList.get(0).raw;
-        Assert.assertTrue(bRaw2.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertTrue(bRaw2.containsField(Const.CLASS_NAME_FIELDNAME));
     }
 
 }

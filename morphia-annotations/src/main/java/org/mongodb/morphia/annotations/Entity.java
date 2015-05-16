@@ -26,8 +26,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
  * Allows marking and naming the collectionName
@@ -40,7 +38,7 @@ import org.mongodb.morphia.mapping.Mapper;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface Entity {
-  String value() default Mapper.IGNORED_FIELDNAME;
+  String value() default Const.IGNORED_FIELDNAME;
 
   CappedAt cap() default @CappedAt(0);
 

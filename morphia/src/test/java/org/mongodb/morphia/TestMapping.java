@@ -28,11 +28,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestInheritanceMappings.MapLike;
 import org.mongodb.morphia.annotations.AlsoLoad;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.testmodel.Address;
@@ -390,7 +390,7 @@ public class TestMapping extends TestBase {
         cea.res = new RenamedEmbedded[]{new RenamedEmbedded()};
 
         final DBObject dbObj = getMorphia().toDBObject(cea);
-        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0)).containsField(Const.CLASS_NAME_FIELDNAME));
     }
 
     @Test
@@ -400,7 +400,7 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final DBObject dbObj = getMorphia().toDBObject(cee);
-        assertTrue(!((DBObject) dbObj.get("cil")).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) dbObj.get("cil")).containsField(Const.CLASS_NAME_FIELDNAME));
     }
 
     @Test
@@ -818,7 +818,7 @@ public class TestMapping extends TestBase {
         borg.setAddress(address);
 
         BasicDBObject hotelDbObj = (BasicDBObject) getMorphia().toDBObject(borg);
-        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)));
+        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0)).containsField(Const.CLASS_NAME_FIELDNAME)));
 
 
         hotels.save(hotelDbObj);
@@ -846,8 +846,8 @@ public class TestMapping extends TestBase {
         agencies.save(agencyDbObj);
 
         final TravelAgency agencyLoaded = getMorphia().fromDBObject(TravelAgency.class,
-                                                                    agencies.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                       agencyDbObj.get(Mapper.ID_KEY))),
+                                                                    agencies.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                       agencyDbObj.get(Const.ID_KEY))),
                                                                     new DefaultEntityCache());
 
         assertEquals(agency.getName(), agencyLoaded.getName());
@@ -862,7 +862,7 @@ public class TestMapping extends TestBase {
         hotelDbObj = (BasicDBObject) getMorphia().toDBObject(borgLoaded);
         hotels.save(hotelDbObj);
 
-        hotelDbObj = (BasicDBObject) hotels.findOne(new BasicDBObject(Mapper.ID_KEY, hotelDbObj.get(Mapper.ID_KEY)));
+        hotelDbObj = (BasicDBObject) hotels.findOne(new BasicDBObject(Const.ID_KEY, hotelDbObj.get(Const.ID_KEY)));
 
         borgLoaded = getMorphia().fromDBObject(Hotel.class, hotelDbObj, new DefaultEntityCache());
         assertNull(borgLoaded.getAddress());
@@ -880,8 +880,8 @@ public class TestMapping extends TestBase {
         articles.save(relatedDbObj);
 
         final Article relatedLoaded = getMorphia().fromDBObject(Article.class,
-                                                                articles.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                   relatedDbObj.get(Mapper.ID_KEY))),
+                                                                articles.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                   relatedDbObj.get(Const.ID_KEY))),
                                                                 new DefaultEntityCache());
 
         final Article article = new Article();
@@ -899,8 +899,8 @@ public class TestMapping extends TestBase {
 
         final Article articleLoaded = getMorphia().fromDBObject(Article.class,
                                                                 articles.findOne(
-                                                                                    new BasicDBObject(Mapper.ID_KEY,
-                                                                                                      articleDbObj.get(Mapper.ID_KEY))),
+                                                                                    new BasicDBObject(Const.ID_KEY,
+                                                                                                      articleDbObj.get(Const.ID_KEY))),
                                                                 new DefaultEntityCache());
 
         assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
@@ -940,12 +940,12 @@ public class TestMapping extends TestBase {
         stuff.save(childDbObj);
 
         final RecursiveParent parentLoaded = getMorphia().fromDBObject(RecursiveParent.class,
-                                                                       stuff.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                       parentDbObj.get(Mapper.ID_KEY))),
+                                                                       stuff.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                       parentDbObj.get(Const.ID_KEY))),
                                                                        new DefaultEntityCache());
         final RecursiveChild childLoaded = getMorphia().fromDBObject(RecursiveChild.class,
-                                                                     stuff.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                     childDbObj.get(Mapper.ID_KEY))),
+                                                                     stuff.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                     childDbObj.get(Const.ID_KEY))),
                                                                      new DefaultEntityCache());
 
         parentLoaded.setChild(childLoaded);
@@ -955,13 +955,13 @@ public class TestMapping extends TestBase {
         stuff.save(getMorphia().toDBObject(childLoaded));
 
         final RecursiveParent finalParentLoaded = getMorphia().fromDBObject(RecursiveParent.class,
-                                                                            stuff.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                            parentDbObj.get(Mapper
+                                                                            stuff.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                            parentDbObj.get(Const
                                                                                                                                 .ID_KEY))),
                                                                             new DefaultEntityCache());
         final RecursiveChild finalChildLoaded = getMorphia().fromDBObject(RecursiveChild.class,
-                                                                          stuff.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                          childDbObj.get(Mapper.ID_KEY))),
+                                                                          stuff.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                          childDbObj.get(Const.ID_KEY))),
                                                                           new DefaultEntityCache());
 
         assertNotNull(finalParentLoaded.getChild());

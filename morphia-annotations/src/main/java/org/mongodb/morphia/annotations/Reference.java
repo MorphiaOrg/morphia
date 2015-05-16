@@ -20,24 +20,67 @@ package org.mongodb.morphia.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
- * Marker for fields that should be (java) serialized
- *
+ * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
 @Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Serialized {
+public @interface Reference {
+  /**
+   * The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
+   *
+   * @return the name of the Mongo value storing the field value
+   */
+  String value() default Const.IGNORED_FIELDNAME;
 
-  boolean disableCompression() default false;
+  /**
+   * Specify the concrete class to instantiate.
+   */
+  Class<?> concreteClass() default Object.class;
 
-  String value() default Mapper.IGNORED_FIELDNAME;
+  /**
+   * Ignore any reference that don't resolve (aren't in mongodb)
+   */
+  boolean ignoreMissing() default false;
+
+  /**
+   * Create a proxy around the reference which will be resolved on the first method call.
+   */
+  boolean lazy() default false;
+
+  /**
+   * Specifies whether only _id should be stored versus storing a DBRef
+   */
+  boolean idOnly() default false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

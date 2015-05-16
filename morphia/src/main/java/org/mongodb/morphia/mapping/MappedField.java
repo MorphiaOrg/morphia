@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.AlsoLoad;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
@@ -385,30 +386,30 @@ public class MappedField {
      */
     protected String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
-            return Mapper.ID_KEY;
+            return Const.ID_KEY;
         } else if (hasAnnotation(Property.class)) {
             final Property mv = (Property) foundAnnotations.get(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            if (!mv.value().equals(Const.IGNORED_FIELDNAME)) {
                 return mv.value();
             }
         } else if (hasAnnotation(Reference.class)) {
             final Reference mr = (Reference) foundAnnotations.get(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            if (!mr.value().equals(Const.IGNORED_FIELDNAME)) {
                 return mr.value();
             }
         } else if (hasAnnotation(Embedded.class)) {
             final Embedded me = (Embedded) foundAnnotations.get(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            if (!me.value().equals(Const.IGNORED_FIELDNAME)) {
                 return me.value();
             }
         } else if (hasAnnotation(Serialized.class)) {
             final Serialized me = (Serialized) foundAnnotations.get(Serialized.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            if (!me.value().equals(Const.IGNORED_FIELDNAME)) {
                 return me.value();
             }
         } else if (hasAnnotation(Version.class)) {
             final Version me = (Version) foundAnnotations.get(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            if (!me.value().equals(Const.IGNORED_FIELDNAME)) {
                 return me.value();
             }
         }

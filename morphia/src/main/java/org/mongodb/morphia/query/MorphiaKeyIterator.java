@@ -4,6 +4,7 @@ package org.mongodb.morphia.query;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.mapping.Mapper;
 
 
@@ -18,7 +19,7 @@ public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
     @Override
     @SuppressWarnings("unchecked")
     protected Key<T> convertItem(final DBObject dbObj) {
-        return new Key<T>(getClazz(), getCollection(), dbObj.get(Mapper.ID_KEY));
+        return new Key<T>(getClazz(), getCollection(), dbObj.get(Const.ID_KEY));
     }
 
 }

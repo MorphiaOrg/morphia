@@ -22,7 +22,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.junit.Test;
-import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
@@ -51,8 +51,8 @@ public class TestInterfaces extends TestBase {
         final DBObject rectangleDbObj = getMorphia().toDBObject(rectangle);
         shapes.save(rectangleDbObj);
 
-        final BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                    rectangleDbObj.get(Mapper.ID_KEY)));
+        final BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                    rectangleDbObj.get(Const.ID_KEY)));
         final Shape rectangleLoaded = getMorphia().fromDBObject(Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
 
         assertTrue(rectangle.getArea() == rectangleLoaded.getArea());
@@ -67,8 +67,8 @@ public class TestInterfaces extends TestBase {
         final DBObject shifterDbObj = getMorphia().toDBObject(shifter);
         shapeshifters.save(shifterDbObj);
 
-        final BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Mapper.ID_KEY,
-                                                                                                         shifterDbObj.get(Mapper.ID_KEY)));
+        final BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject(Const.ID_KEY,
+                                                                                                         shifterDbObj.get(Const.ID_KEY)));
         final ShapeShifter shifterLoaded = getMorphia().fromDBObject(ShapeShifter.class, shifterDbObjLoaded, new DefaultEntityCache());
 
         assertNotNull(shifterLoaded);

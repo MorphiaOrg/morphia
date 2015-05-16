@@ -19,6 +19,7 @@ import com.mongodb.WriteResult;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -153,12 +154,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
+        return delete(find(kind, clazz).filter(Const.ID_KEY, id));
     }
 
     @Override
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(find(kind, clazz).filter(Const.ID_KEY, id), wc);
     }
 
     @Override
@@ -167,12 +168,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(createQuery(clazz).filter(Const.ID_KEY, id), wc);
     }
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
-        final Query<T> q = find(clazz).filter(Mapper.ID_KEY + " in", ids);
+        final Query<T> q = find(clazz).filter(Const.ID_KEY + " in", ids);
         return delete(q);
     }
 
@@ -695,7 +696,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
-        return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
+        return find(clazz).disableValidation().filter(Const.ID_KEY + " in", ids).enableValidation();
     }
 
     @Override
@@ -743,7 +744,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> T get(final String kind, final Class<T> clazz, final V id) {
-        final List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
+        final List<T> results = find(kind, clazz, Const.ID_KEY, id, 0, 1).asList();
         if (results == null || results.isEmpty()) {
             return null;
         }
@@ -753,7 +754,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> T get(final Class<T> clazz, final V id) {
-        return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1, true).get();
+        return find(getCollection(clazz).getName(), clazz, Const.ID_KEY, id, 0, 1, true).get();
     }
 
 
@@ -802,7 +803,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId());
+        return find(key.getCollection(), key.getType()).filter(Const.ID_KEY, key.getId());
     }
 
     @Override
@@ -1017,7 +1018,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBObject dbObj = entityToDBObj(entity, involvedObjects);
 
         //try to do an update if there is a @Version field
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
+        final Object idValue = dbObj.get(Const.ID_KEY);
         WriteResult wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, mc);
 
         if (wr == null) {
@@ -1048,7 +1049,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
-            final UpdateResults res = update(find(dbColl.getName(), entity.getClass()).filter(Mapper.ID_KEY, idValue)
+            final UpdateResults res = update(find(dbColl.getName(), entity.getClass()).filter(Const.ID_KEY, idValue)
                                                                                       .filter(versionKeyName, oldVersion),
                                              dbObj,
                                              false,
@@ -1128,7 +1129,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final MappedClass mc = mapper.getMappedClass(ent);
         final Query<T> q = (Query<T>) createQuery(mc.getClazz());
-        q.disableValidation().filter(Mapper.ID_KEY, mapper.getId(ent));
+        q.disableValidation().filter(Const.ID_KEY, mapper.getId(ent));
 
         if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
             final MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
@@ -1147,7 +1148,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (clazz == null) {
             clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
         }
-        return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), ops);
+        return updateFirst(createQuery(clazz).disableValidation().filter(Const.ID_KEY, key.getId()), ops);
     }
 
     @Override
@@ -1182,7 +1183,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         //update _id field
         if (res.getInsertedCount() > 0) {
-            dbObj.put(Mapper.ID_KEY, res.getNewId());
+            dbObj.put(Const.ID_KEY, res.getNewId());
         }
 
         postSaveOperations(Collections.singletonList(entity), involvedObjects, getCollection(entity), false);
@@ -1208,8 +1209,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         //remove (immutable) _id field for update.
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
-        dbObj.removeField(Mapper.ID_KEY);
+        final Object idValue = dbObj.get(Const.ID_KEY);
+        dbObj.removeField(Const.ID_KEY);
 
         WriteResult wr;
 
@@ -1220,7 +1221,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, mc);
 
         if (wr == null) {
-            final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
+            final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Const.ID_KEY, id);
             wr = update(query, new BasicDBObject("$set", dbObj), false, false, wc).getWriteResult();
         }
 
@@ -1230,7 +1231,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Nothing updated");
         }
 
-        dbObj.put(Mapper.ID_KEY, idValue);
+        dbObj.put(Const.ID_KEY, idValue);
         postSaveOperations(Collections.<Object>singletonList(entity), involvedObjects, dbColl, false);
         return key;
     }
@@ -1249,7 +1250,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
                 
             if (fetchKeys) {
-                if (dbObj.get(Mapper.ID_KEY) == null) {
+                if (dbObj.get(Const.ID_KEY) == null) {
                     throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
                 }
                 mapper.updateKeyInfo(entity, dbObj, createCache());

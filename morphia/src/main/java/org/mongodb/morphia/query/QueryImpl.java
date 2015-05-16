@@ -13,6 +13,7 @@ import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -176,7 +177,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         
         Entity entityAnnotation = mc.getEntityAnnotation();
         if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
-            fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
+            fieldsFilter.put(Const.CLASS_NAME_FIELDNAME, 1);
         }
 
         return new BasicDBObject(fieldsFilter);
@@ -302,7 +303,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public MorphiaKeyIterator<T> fetchKeys() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
+        fields = new String[]{Const.ID_KEY};
         includeFields = true;
         final DBCursor cursor = prepareCursor();
 
@@ -355,7 +356,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public MorphiaIterator<T, T> fetchEmptyEntities() {
         final String[] oldFields = fields;
         final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
+        fields = new String[]{Const.ID_KEY};
         includeFields = true;
         final MorphiaIterator<T, T> res = fetch();
         fields = oldFields;

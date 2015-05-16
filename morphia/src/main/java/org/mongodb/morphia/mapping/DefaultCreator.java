@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping;
 
 import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.ConstructorArgs;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -118,8 +119,8 @@ public class DefaultCreator implements ObjectFactory {
     private <T> Class<T> getClass(final DBObject dbObj) {
         // see if there is a className value
         Class c = null;
-        if (dbObj.containsField(Mapper.CLASS_NAME_FIELDNAME)) {
-            final String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
+        if (dbObj.containsField(Const.CLASS_NAME_FIELDNAME)) {
+            final String className = (String) dbObj.get(Const.CLASS_NAME_FIELDNAME);
             // try to Class.forName(className) as defined in the dbObject first,
             // otherwise return the entityClass
             try {

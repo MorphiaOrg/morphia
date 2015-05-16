@@ -29,13 +29,13 @@ import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
 import org.mongodb.morphia.TestMapper.CustomId;
 import org.mongodb.morphia.TestMapper.UsesCustomIdObject;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.ValidationException;
@@ -276,7 +276,7 @@ public class TestQuery extends TestBase {
                                                  .find(ContainsRenamedFields.class)
                                                  .retrievedFields(true, "_id", "first_name");
         DBObject fields = query.getFieldsObject();
-        Assert.assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertNull(fields.get(Const.CLASS_NAME_FIELDNAME));
 
     }
 

@@ -21,10 +21,10 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.Arrays;
@@ -152,7 +152,7 @@ public class TestIdField extends TestBase {
         final Rectangle r = new Rectangle(1, 12);
         final BasicDBObject dbObj = (BasicDBObject) getMorphia().toDBObject(r);
         assertFalse(dbObj.containsField("id"));
-        assertTrue(dbObj.containsField(Mapper.ID_KEY));
+        assertTrue(dbObj.containsField(Const.ID_KEY));
         assertEquals(4, dbObj.size()); //_id, h, w, className
     }
 
