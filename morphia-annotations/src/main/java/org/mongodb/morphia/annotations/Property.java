@@ -25,25 +25,23 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
+ * Optional annotation for specifying persistence behavior
+ *
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.TYPE })
-public @interface Embedded {
+@Target(ElementType.FIELD)
+public @interface Property {
 
   /**
-   * The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
-   *
-   * @return the name of the Mongo value storing the field value (use on fields only, not applicable for Type level)
+   * The name of the key to store the field in; Defaults to the field name.
    */
-  String value() default Mapper.IGNORED_FIELDNAME;
+  String value() default Const.IGNORED_FIELDNAME;
 
   /**
    * Specify the concrete class to instantiate.

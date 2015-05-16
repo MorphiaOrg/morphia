@@ -4,6 +4,7 @@ package org.mongodb.morphia.query;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
@@ -73,7 +74,7 @@ public class FieldCriteria extends AbstractCriteria {
 
         //TODO: investigate and/or add option to control this.
         if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
-            ((DBObject) mappedValue).removeField(Mapper.ID_KEY);
+            ((DBObject) mappedValue).removeField(Const.ID_KEY);
         }
 
         this.field = sb.toString();

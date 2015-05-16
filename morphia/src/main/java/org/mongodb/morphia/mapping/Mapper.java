@@ -21,6 +21,7 @@ import org.bson.BSONEncoder;
 import org.bson.BasicBSONEncoder;
 import org.mongodb.morphia.EntityInterceptor;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.NotSaved;
@@ -76,20 +77,6 @@ import static org.mongodb.morphia.utils.ReflectionUtils.isPropertyType;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
     private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
-
-    /**
-     * The @{@link org.mongodb.morphia.annotations.Id} field name that is stored with mongodb.
-     */
-    public static final String ID_KEY = "_id";
-    /**
-     * Special name that can never be used. Used as default for some fields to indicate default state.
-     */
-    public static final String IGNORED_FIELDNAME = ".";
-    /**
-     * Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to
-     * support polymorphism
-     */
-    public static final String CLASS_NAME_FIELDNAME = "className";
 
     /**
      * Set of classes that registered by this mapper
@@ -262,7 +249,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         // update id field, if there.
-        if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get(ID_KEY) != null)) {
+        if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get(Const.ID_KEY) != null)) {
             try {
                 final MappedField mf = mc.getMappedIdField();
                 final Object oldIdValue = mc.getIdField().get(entity);
@@ -350,7 +337,7 @@ public class Mapper {
             if (isSingleValue && !isPropertyType(type)) {
                 final DBObject dbObj = toDBObject(newObj);
                 if (!includeClassName) {
-                    dbObj.removeField(CLASS_NAME_FIELDNAME);
+                    dbObj.removeField(Const.CLASS_NAME_FIELDNAME);
                 }
                 return dbObj;
             } else if (newObj instanceof DBObject) {
@@ -439,13 +426,13 @@ public class Mapper {
                     if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
                         for (Object o : list) {
                             if (o instanceof DBObject) {
-                                ((DBObject) o).removeField(CLASS_NAME_FIELDNAME);
+                                ((DBObject) o).removeField(Const.CLASS_NAME_FIELDNAME);
                             }
                         }
                     }
                 }
             } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
-                ((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
+                ((DBObject) mappedValue).removeField(Const.CLASS_NAME_FIELDNAME);
             }
         }
 
@@ -533,7 +520,7 @@ public class Mapper {
 
     /**
      * Converts an entity (POJO) to a DBObject; A special field will be added to keep track of the class: {@link
-     * Mapper#CLASS_NAME_FIELDNAME}
+     * Const#CLASS_NAME_FIELDNAME}
      *
      * @param entity The POJO
      */
@@ -543,7 +530,7 @@ public class Mapper {
 
     /**
      * <p> Converts an entity (POJO) to a DBObject (for use with low-level driver); A special field will be added to keep track of the
-     * class: {@link Mapper#CLASS_NAME_FIELDNAME} </p>
+     * class: {@link Const#CLASS_NAME_FIELDNAME} </p>
      *
      * @param entity          The POJO
      * @param involvedObjects A Map of (already converted) POJOs
@@ -558,7 +545,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored()) {
-            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
+            dbObject.put(Const.CLASS_NAME_FIELDNAME, entity.getClass().getName());
         }
 
         if (lifecycle) {
@@ -592,9 +579,9 @@ public class Mapper {
 
         // check the history key (a key is the namespace + id)
 
-        if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
+        if (dbObject.containsField(Const.ID_KEY) && getMappedClass(entity).getIdField() != null
             && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(ID_KEY));
+            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(Const.ID_KEY));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
                 return cachedInstance;
@@ -611,13 +598,13 @@ public class Mapper {
                 readMappedField(updated, mf, entity, cache);
             }
         } catch (final MappingException e) {
-            Object id = dbObject.get(ID_KEY);
+            Object id = dbObject.get(Const.ID_KEY);
             String entityName = entity.getClass().getName();
             throw new MappingException(format("Could not map %s with ID: %s", entityName, id), e);
         }
 
-        if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
-            final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
+        if (updated.containsField(Const.ID_KEY) && getMappedClass(entity).getIdField() != null) {
+            final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(Const.ID_KEY));
             cache.putEntity(key, entity);
         }
         mc.callLifecycleMethods(PostLoad.class, entity, updated);

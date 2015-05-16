@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.utils.IterHelper;
 import org.mongodb.morphia.utils.IterHelper.MapIterCallback;
@@ -38,7 +39,7 @@ class EmbeddedMapper implements CustomMapper {
             final DBObject dbObj = fieldValue == null ? null : mapper.toDBObject(fieldValue, involvedObjects);
             if (dbObj != null) {
                 if (!shouldSaveClassName(fieldValue, dbObj, mf)) {
-                    dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                    dbObj.removeField(Const.CLASS_NAME_FIELDNAME);
                 }
 
                 if (!dbObj.keySet().isEmpty() || mapper.getOptions().isStoreEmpties()) {
@@ -77,7 +78,7 @@ class EmbeddedMapper implements CustomMapper {
                     }
 
                     if (!shouldSaveClassName(o, val, mf)) {
-                        ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
+                        ((DBObject) val).removeField(Const.CLASS_NAME_FIELDNAME);
                     }
 
                     values.add(val);
@@ -116,10 +117,10 @@ class EmbeddedMapper implements CustomMapper {
                         if (val instanceof List) {
                             List<DBObject> list = (List<DBObject>) val;
                             for (DBObject o : list) {
-                                o.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                                o.removeField(Const.CLASS_NAME_FIELDNAME);
                             }
                         } else {
-                            ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
+                            ((DBObject) val).removeField(Const.CLASS_NAME_FIELDNAME);
                         }
                     }
                 }

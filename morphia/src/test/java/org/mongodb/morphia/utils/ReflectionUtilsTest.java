@@ -2,14 +2,13 @@ package org.mongodb.morphia.utils;
 
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.mapping.Mapper;
 
-import java.awt.print.Book;
 import java.io.Serializable;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class ReflectionUtilsTest extends TestBase {
 
         assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
 
-        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
+        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Const.IGNORED_FIELDNAME));
     }
 
     @Test

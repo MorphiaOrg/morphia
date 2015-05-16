@@ -25,6 +25,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
 import org.mongodb.morphia.annotations.Id;
@@ -33,7 +34,6 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.testmodel.Address;
 import org.mongodb.morphia.testmodel.Hotel;
@@ -161,8 +161,8 @@ public class TestDatastore extends TestBase {
         @PostPersist
         void postPersistWithParam(final DBObject dbObj) {
             postPersistWithParam = true;
-            if (!dbObj.containsField(Mapper.ID_KEY)) {
-                throw new RuntimeException("missing " + Mapper.ID_KEY);
+            if (!dbObj.containsField(Const.ID_KEY)) {
+                throw new RuntimeException("missing " + Const.ID_KEY);
             }
         }
 

@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping;
 
 import com.mongodb.DBObject;
 import org.mongodb.morphia.EntityInterceptor;
+import org.mongodb.morphia.annotations.Const;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -537,7 +538,7 @@ public class MappedClass {
      * @return the collName
      */
     public String getCollectionName() {
-        if (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
+        if (entityAn == null || entityAn.value().equals(Const.IGNORED_FIELDNAME)) {
             return mapper.getOptions().isUseLowerCaseCollectionNames() ? clazz.getSimpleName().toLowerCase() : clazz.getSimpleName();
         }
         return entityAn.value();
