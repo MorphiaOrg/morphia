@@ -9,7 +9,7 @@ title = "Annotations"
 
 # Annotations
 
-Below is a list of all the annotations and a brief descriptions of how to use them.
+Below is a list of all the annotations and a brief description of how to use them.
 
 ## Entity
 Marks entities to be stored directly in a collection. This annotations is optional in most cases (though this is likely to change in 
@@ -31,7 +31,7 @@ public @interface Entity {
 | cap()               | Marks this collection as capped and sets the size to use.  See the [`@Capped`]({{< ref "#capped" >}}) below|
 | noClassnameStored() | Tells Morphia to not store the classname in the document.  The default is to store the classname. |
 | queryNonPrimary()   | Indicates that queries against this collection can use secondaries.  The default is primary only reads. |
-| concern()           | The WriteConcern to use when writing to this collection. |
+| concern()           | The WriteConcern to use when writing to this collection.  The [default](http://docs.mongodb.org/manual/core/write-concern/#default-write-concern) WriteConcern is used if this parameter is left blank. |
 
 
 ## Indexes
@@ -64,7 +64,8 @@ public @interface Index {
 ```
 
 There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use since but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the `@Field` annotation.
+ to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the `@IndexOptions` 
+ annotation.
  
 | Parameter           | Usage           |
 | ------------------- | --------------  |
@@ -121,7 +122,7 @@ public @interface IndexOptions {
 | languageOverride() | The field in the document to use to override the default language. |
 
 #### Indexed
-Applied to a Java field, marks the field to be indexed by mongodb.
+Applied to a Java field, marks the field to be indexed by MongoDB.
 
 ```java
 public @interface Indexed {
@@ -145,17 +146,18 @@ public @interface Indexed {
 | expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
 
 ## Id
-Marks a field in an `@Entity` to be the "_id" field in mongodb.
+Marks a field in an `@Entity` to be the "_id" field in MongoDB.
 
 ## Property
-An optional annotation instructing Morphia to persist field in to the document given to mongodb.  By default, the field name is used as 
-the property name.  This can be overridden by passing a String with the new name to the annotation.
+An optional annotation instructing Morphia to persist then field in to the document given to MongoDB.  By default, the field name is used
+ as the property name.  This can be overridden by passing a String with the new name to the annotation.
 
 ## Transient
-Instructs Morphia to ignore this field when converting an entity to a document.  The java keyword `transient` can also be used instead.
+Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword `transient` can also be used instead.
 
 ## Serialized
-Instructs Morphia to serialize this field.
+Instructs Morphia to serialize this field using JDK serialization.  The field's value essentially gets converted to a `byte[]` and passed
+ off to MongoDB.
 
 ```java
 public @interface Serialized {
@@ -194,7 +196,7 @@ public @interface AlsoLoad {
 ## Version
 Marks a field in an `@Entity` to control optimistic locking for that entity. If the versions change while modifying an entity (including 
 deletes) a `ConcurrentModificationException` will be thrown. This field will be automatically managed for you -- there is no need to set
- a value and you should not do so anyway.  If the another name beside the Java field name is desired, a name can be passed to this 
+ a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this 
  annotation to change the document's field name.
 
 ```java
@@ -207,7 +209,7 @@ class MyClass {
 
 ## Reference
 Marks fields as stored in another collection and which are linked (by a `DBRef` field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an `@Reference` field must have already been saved in mongodb or have the Java object's
+ can also be loaded.  Any document referenced via an `@Reference` field must have already been saved in MongoDB or have the Java object's
   `@Id` already assigned.  Otherwise, no key can be copied in to the `Key` for storage in the database.  If you're always saving the 
   referenced entity in the mapped collection (`Datastore` can be told to save in to a collection other than the mapped collection) a lot 
   of space can be saved by using the `idOnly()` parameter to just save the key value.
@@ -252,13 +254,14 @@ There are various annotations which can be used to register callbacks on certain
 - `@PreLoad` - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)
 - `@PostLoad` - Called after mapping to the entity
 - `@PrePersist` - Called before save, it can return a DBObject in place of an empty one.
-- `@PostPersist` - Called after the save call to the datastore
 - `@PostSave` - Called before the save call to the datastore
+- `@PostPersist` - Called after the save call to the datastore
 
 ### Examples
-[Here](https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is a one of the test classes.
+[This](https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is one of the test 
+classes.
 
-All parameters and return values are options in your implemented methods.
+All parameters and return values are optional in your implemented methods.
 
 #### `@PrePersist`
 Here is a simple example of an entity that always saves the Date it was last updated at.
@@ -286,7 +289,3 @@ class BankAccountWatcher{
 
 }
 ```
-
-### No Delete Support
-Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are
-  enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.

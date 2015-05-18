@@ -10,7 +10,7 @@ title = "Quick Tour"
 
 # Quick Tour
 
-Morphia wraps the mongodb Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to 
+Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to 
 abstract much of that away but if something is confusing, please consult the Java driver [documentation](http://mongodb.github
 .io/mongo-java-driver/) as well.
 
@@ -50,7 +50,7 @@ put on our classes.  There are several variations of mapping that can be done an
 
 There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with `@Entity`
  is treated as a top level document stored directly in a collection.  Any class with `@Entity` must have a field annotated with `@Id` to 
-define which field to use as the `_id` value in the document written to mongodb.  `@Embedded` indicates that the class will result in a 
+define which field to use as the `_id` value in the document written to MongoDB.  `@Embedded` indicates that the class will result in a 
 subdocument inside another document.  `@Embedded` classes do not require the presence of an `@Id` field.
 
 ```java
@@ -89,11 +89,12 @@ every field's value in to a document bound for the database.
 The simplest of the two remaining annotations is `@Property`.  This annotation is entirely optional.  If you leave this annotation off, 
 Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you'll want to change 
 the document field name for any number of reasons.  In those cases, you can use `@Property` and pass it the name to be used when this 
-class is serialized out to a document to be handed off to mongodb.  
+class is serialized out to a document to be handed off to MongoDB.  
 
 This just leaves `@Reference`.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case 
-Morphia will store what mongodb calls a `DBRef` which is just a collection name and key value.  These referenced entities must already be
- saved or at least have an ID assigned or Morphia will throw an exception.
+Morphia will store what MongoDB calls a [`DBRef`](http://docs.mongodb.org/manual/reference/database-references/#dbrefs) which is just a 
+collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
+ exception.
  
 ## Saving Data
 
@@ -111,7 +112,7 @@ Taking it one step further, lets define some relationships and save those, too.
 final Employee daffy = new Employee("Daffy Duck", 40000.0);
 datastore.save(daffy);
 
-final Employee pepe = new Employee("Pepé Lepew", 25000.0);
+final Employee pepe = new Employee("Pepé Le Pew", 25000.0);
 datastore.save(pepe);
 
 elmer.getDirectReports().add(daffy);
@@ -120,13 +121,11 @@ elmer.getDirectReports().add(pepe);
 datastore.save(elmer);
 ```
 
-As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and 
-save.  Morphia takes care of saving the keys in Elmer's document that refer to Daffy and Pepé.  Updating data in mongodb is as simple as 
-updating your Java objects and then calling `datastore.save()` with them again.  For bulk updates (everyone gets a raise!) this is not 
-the most efficient way doing updates.  It is possible to update directly in the database without having to pull in every document, 
-convert to Java objects, update, convert back to a document, and write back to mongodb.  But in order to show you that piece, first we need
- to 
-see 
+As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and save.  Morphia 
+takes care of saving the keys in Elmer's document that refer to Daffy and Pepé.  Updating data in MongoDB is as simple as updating your 
+Java objects and then calling `datastore.save()` with them again.  For bulk updates (e.g., everyone gets a raise!) this is not the most 
+efficient way of doing updates.  It is possible to update directly in the database without having to pull in every document, convert to 
+Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see 
 how to query.
 
 ## Querying
@@ -140,23 +139,29 @@ final List<Employee> employees = query.asList();
 ```
 
 This is a basic Morphia query.  Here, we're telling the `Datastore` to create a query that's been typed to `Employee`.  In this 
-case, we're fetching every `Employee` in to a `List`.  Ignoring the obvious potential for memory errors, this is not usually that helpful
-.  Most queries will, of course, want to filter the data in some way.  There are two ways of doing this:
-
-```java
-List<Employee> underpaid = datastore.createQuery(Employee.class)
-                                    .filter("salary <=", 30000)
-                                    .asList();
-```
-
-This approach uses the `filter()` method which is a little more freeform than the alternative.  Here we can embed certain operators in 
-the query string.  While this is less verbose than the alternative, it does leave more things in the string to validate and potentially 
-get wrong.  If you prefer more compile-time validation, this approach creates the same query:
+case, we're fetching every `Employee` in to a `List`.  For very large query results, this could very well be too much to fit in to 
+memory.  For this simple example, using `asList()` is fine but in practice `fetch()` is usually the more appropriate choice.  Most queries 
+will, of course, want to filter the data in some way. There are two ways of doing this:
 
 ```java
 underpaid = datastore.createQuery(Employee.class)
                      .field("salary").lessThanOrEq(30000)
                      .asList();
+```
+
+The `field()` method here is used to filter on the named field and returns an instance of an interface with a number of methods to build 
+a query.  This approach is helpful is compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
+ query building can be done quite safely.
+ 
+ 
+The other approach uses the `filter()` method which is a little more free form and succinct than `field()`.  Here we can embed 
+certain operators in the query string.  While this is less verbose than the alternative, it does leave more things in the string to 
+validate and potentially get wrong:
+
+```java
+List<Employee> underpaid = datastore.createQuery(Employee.class)
+                                    .filter("salary <=", 30000)
+                                    .asList();
 ```
 
 Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a 

@@ -42,7 +42,7 @@ public final class QuickTour {
         final Employee daffy = new Employee("Daffy Duck", 40000.0);
         datastore.save(daffy);
 
-        final Employee pepe = new Employee("Pepé Lepew", 25000.0);
+        final Employee pepe = new Employee("Pepé Le Pew", 25000.0);
         datastore.save(pepe);
 
         elmer.getDirectReports().add(daffy);

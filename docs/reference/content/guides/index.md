@@ -10,3 +10,4 @@ title = "Reference Guides"
 ## Reference Guides
 
   * [Annotations]({{< ref "guides/annotations.md" >}})
+  * [Aggregation]({{< ref "guides/aggregation.md" >}})
