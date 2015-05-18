@@ -51,11 +51,11 @@ The differences, however, can have huge implications on the performance of your 
 The `options` reference passed to `out()` above is an instance of [`AggregationOptions`]
 (http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html).  There are a handful options here but there's one that deserves some 
 extra attention. As mentioned, the aggregation pipeline, by default, returns everything "inline" but as of MongoDB 2.6 you can tell 
-the aggregation engine to return a cursor instead.  This is what the value of [AggregationOptions#getOutputMode()](http://api.mongodb
+the aggregation framework to return a cursor instead.  This is what the value of [AggregationOptions#getOutputMode()](http://api.mongodb
 .org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--) determines.  The default value is to return them inline but it can be
  configured to return a cursor instead which means that your result size can be much larger than 16MB.  The options can also be 
  configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
-  the aggregation engine to use disk space which allows, among other things, sorting of larger datasets than what can fit in to memory 
+  the aggregation framework to use disk space which allows, among other things, sorting of larger datasets than what can fit in to memory 
   on the server.
     
 ### $out
@@ -67,7 +67,7 @@ if it does not exist, will be created upon execution of the pipeline.  _**Any ex
 by the output of the aggregation.**_
 
 Using `out()` is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation 
-engine is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit `find` on the output 
+framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit `find` on the output 
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the 
 output mode to `CURSOR` with `aggregate()` and your application need not know the difference.  It does, of course, have an impact on your 
 database and any existing data.  The use of `$out` and `out()` can be greatly beneficial in scenarios such as precomputed aggregated 
