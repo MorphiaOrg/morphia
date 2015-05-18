@@ -665,7 +665,7 @@ this annotation looks like this:</p>
 
 <tr>
 <td>concern()</td>
-<td>The WriteConcern to use when writing to this collection.  The <a href="http://docs.mongodb.org/manual/core/write-concern/#default-write-concern">default</a> WriteConcern is used if this parameter is left blank.</td>
+<td>The WriteConcern to use when writing to this collection.  The default WriteConcern depends on how the <code>MongoClient</code> passed to the <code>Datastore</code> was created.</td>
 </tr>
 </tbody>
 </table>
@@ -935,7 +935,7 @@ this annotation looks like this:</p>
 
 <h2 id="property">Property</h2>
 
-<p>An optional annotation instructing Morphia to persist then field in to the document given to MongoDB.  By default, the field name is used
+<p>An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
  as the property name.  This can be overridden by passing a String with the new name to the annotation.</p>
 
 <h2 id="transient">Transient</h2>
@@ -944,7 +944,7 @@ this annotation looks like this:</p>
 
 <h2 id="serialized">Serialized</h2>
 
-<p>Instructs Morphia to serialize this field using JDK serialization.  The field&rsquo;s value essentially gets converted to a <code>byte[]</code> and passed
+<p>Instructs Morphia to serialize this field using JDK serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed
  off to MongoDB.</p>
 
 <pre><code class="language-java">public @interface Serialized {

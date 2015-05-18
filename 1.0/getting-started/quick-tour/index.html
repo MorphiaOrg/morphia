@@ -658,8 +658,8 @@ name as the collection name.  If you pass a String instead, it will use that val
 
 <p>We&rsquo;ve marked the <code>id</code> field to be used as our primary key (the <code>_id</code> field in the document).  In this instance we&rsquo;re using the Java driver
 type of <code>ObjectId</code> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <code>ObjectId</code> or <code>Long</code>.  There are
-two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt copy
-every field&rsquo;s value in to a document bound for the database.</p>
+two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy
+every field to a document bound for the database.</p>
 
 <p>The simplest of the two remaining annotations is <code>@Property</code>.  This annotation is entirely optional.  If you leave this annotation off,
 Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&rsquo;ll want to change

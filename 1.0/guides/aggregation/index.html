@@ -639,11 +639,11 @@
 
 <h1 id="aggregation">Aggregation</h1>
 
-<p>The <a href="http://docs.mongodb.org/manual/aggregation/">aggregation</a> framework in MongoDB allows you to define a series of operations and
-filters (called a pipeline) against the data in a collection.  These pipelines can be used for analytics or they can be used to convert
-your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official MongoDB
-<a href="http://docs.mongodb.org/manual/aggregation/">documentation</a> has extensive tutorials on such details.  Rather, this guide will focus on
-the Morphia API.  The examples shown here are taken from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+<p>The <a href="http://docs.mongodb.org/manual/aggregation/">aggregation</a> framework in MongoDB allows you to define a series (called a pipeline) of
+operations (called stages) against the data in a collection.  These pipelines can be used for analytics or they can be used to
+convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official
+ MongoDB <a href="http://docs.mongodb.org/manual/aggregation/">documentation</a> has extensive tutorials on such details.  Rather, this guide will
+ focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
 ">tests</a> in Morphia itself.</p>
 
 <p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <code>Datastore</code>:</p>
@@ -653,41 +653,62 @@ the Morphia API.  The examples shown here are taken from the <a href="https://gi
       .out(Author.class, options);
 </code></pre>
 
-<p>As with querying, <code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
+<p><code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
 against.  Because of the transformational operations available in the aggregation <a href="http://docs.mongodb
 .org/manual/core/aggregation-pipeline/">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actual exist when referencing them in your pipeline.</p>
 
 <h2 id="the-pipeline">The Pipeline</h2>
 
-<p>Aggregation operations are comprised of a series of steps (or stages) in a pipeline.  Our example here has only the one stage: <code>group()</code>.
-  This method is the Morphia equivalent of the <code>$group</code> operator.  This stage, as the name suggests, groups together documents based on the
-  given field&rsquo;s
-  values.  In this
-  example,
-   we are collecting
-  together all the books by authort.</p>
+<p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <code>group()</code>.  This method is the Morphia
+equivalent of the <code>$group</code> operator.  This stage, as the name suggests, groups together documents based on the given field&rsquo;s values.  In this
+  example, we are collecting together all the books by author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting
+  documents.  Within this grouping, this pipeline takes the <code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping
+  of data, we&rsquo;re then <code>push()</code>ing the titles in to an array in the final document.  This example is the Morphia equivalent of an
+  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author">example</a> found in the aggregation
+  tutorials.  In that tutorial example, you can see what the resulting aggregation pipeline would look like as well as the resulting
+  documents after the pipeline is executed.</p>
 
-<h2 id="options">Options</h2>
+<h2 id="executing-the-pipeline">Executing the Pipeline</h2>
 
-<p>The <code>options</code> reference passed to <code>out()</code> above is an instance of <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationOptions.html"><code>AggregationOptions</code></a>.  There are a handful options here but there&rsquo;s one that deserves some
-extra attention.  The aggregation pipeline, by default, returns everything &ldquo;inline&rdquo; which has the same 16MB limitations as all other
-documents in MongoDB.  As of MongoDB 2.6, you can specify the <code>$out</code> pipeline stage to tailor this.  This is what the value of
-<a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a> determines.  The
- default value is to return them inline but it can be configured to return a cursor instead which means that your result size can be
-much larger than 16MB.</p>
+<p>There are two basic ways to execute an aggregation pipeline:  <code>aggregate()</code> and <code>out()</code>.  These methods are Morphia&rsquo;s cues to send the
+pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.<br />
+The differences, however, can have huge implications on the performance of your application.  <code>aggregate()</code> by default will use the
+&lsquo;inline&rsquo; method for return the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.  The
+ <code>options</code> reference we passed in to <code>out()</code> also applies to <code>aggregate()</code>.</p>
+
+<h3 id="aggregation-options">Aggregation Options</h3>
+
+<p>The <code>options</code> reference passed to <code>out()</code> above is an instance of <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><code>AggregationOptions</code></a>.  There are a handful options here but there&rsquo;s one that deserves some
+extra attention. As mentioned, the aggregation pipeline, by default, returns everything &ldquo;inline&rdquo; but as of MongoDB 2.6 you can tell
+the aggregation engine to return a cursor instead.  This is what the value of <a href="http://api.mongodb
+.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a> determines.  The default value is to return them inline but it can be
+ configured to return a cursor instead which means that your result size can be much larger than 16MB.  The options can also be
+ configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
+  the aggregation engine to use disk space which allows, among other things, sorting of larger datasets than what can fit in to memory
+  on the server.</p>
 
 <h3 id="out">$out</h3>
 
-<p>If the aggregation pipeline is a complicated or expensive pipeline that takes quite some time to execute, it can be beneficial to save
-the results of the pipeline for later retrieval. (Think pre-aggregation of traffic statistics, e.g.)  For these cases, the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/#pipe._S_out"><code>$out</code></a> operator was introduced in MongoDB 2.6.  Morphia
-exposes this pipeline stage via the <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java.lang.Class-"><code>out()</code></a> method on
-<code>AggregationPipeline.</code>Using this pipeline stage, the results can be deposited in to a collection and be
-retrieved at some arbitrary time later.  There is one critical caveat to be aware of,  however.  <em><strong>This operation will replace the
-collection contents and any existing data in the collection will be lost.</strong></em>  You need to be absolutely sure you give the correct output
- location when using this option because recovery might be difficult.</p>
+<p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/"><code>$out</code></a> is a new operator in MongoDB 2.6 that allows the results of a
+pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
+if it does not exist, will be created upon execution of the pipeline.  <em><strong>Any existing data in the collection will be lost and replaced
+by the output of the aggregation.</strong></em></p>
 
-<p>Whether the results are written to a new collection or simply returned as a cursor is controlled by the options you give to Morphia.</p>
+<p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
+engine is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
+collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
+output mode to <code>CURSOR</code> with <code>aggregate()</code> and your application need not know the difference.  It does, of course, have an impact on your
+database and any existing data.  The use of <code>$out</code> and <code>out()</code> can be greatly beneficial in scenarios such as precomputed aggregated
+results for later retrieval.</p>
+
+<h3 id="typed-results">Typed Results</h3>
+
+<p><code>out()</code> has several variants.  In this example, we&rsquo;re passing in <code>Author.class</code> which tells Morphia that we want to map each document
+returned to an instance of <code>Author</code>.  Because we&rsquo;re using <code>out()</code> instead of <code>aggregate()</code>, Morphia will use the mapped collection for
+<code>Author</code> as the output collection for the pipeline.  If you&rsquo;d like to use an alternate collection but still return a cursor of <code>Author</code>
+instances, you can use <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
+.lang.String-java.lang.Class-com.mongodb.AggregationOptions-"><code>out(String,Class,AggregationOptions)</code></a> instead.</p>
 
 
 
@@ -718,9 +739,11 @@ collection contents and any existing data in the collection will be lost.</stron
 <li><a href="#aggregation">Aggregation</a>
 <ul>
 <li><a href="#the-pipeline">The Pipeline</a></li>
-<li><a href="#options">Options</a>
+<li><a href="#executing-the-pipeline">Executing the Pipeline</a>
 <ul>
+<li><a href="#aggregation-options">Aggregation Options</a></li>
 <li><a href="#out">$out</a></li>
+<li><a href="#typed-results">Typed Results</a></li>
 </ul></li>
 </ul></li>
 </ul>
