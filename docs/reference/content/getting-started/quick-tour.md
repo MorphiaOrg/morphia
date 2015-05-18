@@ -83,8 +83,8 @@ The `@Indexes` annotation lists which annotations Morphia should create.  In thi
  
 We've marked the `id` field to be used as our primary key (the `_id` field in the document).  In this instance we're using the Java driver 
 type of `ObjectId` as the ID type.  The ID can be any type you'd like but is generally something like `ObjectId` or `Long`.  There are 
-two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt copy 
-every field's value in to a document bound for the database.
+two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy 
+every field to a document bound for the database.
 
 The simplest of the two remaining annotations is `@Property`.  This annotation is entirely optional.  If you leave this annotation off, 
 Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you'll want to change 

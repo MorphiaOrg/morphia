@@ -104,16 +104,6 @@ task watch_landing() << {
     exec {
         workingDir 'docs/landing'
         environment System.getenv()
-        commandLine 'hugo', 'server' , '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
+        commandLine 'hugo', 'server', '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
     }
- 
-}
-
-task watch_reference() << {
-    exec {
-        workingDir 'docs/reference'
-        environment System.getenv()
-        commandLine 'hugo', 'server' , '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
-    }
- 
 }

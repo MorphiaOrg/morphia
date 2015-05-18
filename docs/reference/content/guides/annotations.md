@@ -31,7 +31,7 @@ public @interface Entity {
 | cap()               | Marks this collection as capped and sets the size to use.  See the [`@Capped`]({{< ref "#capped" >}}) below|
 | noClassnameStored() | Tells Morphia to not store the classname in the document.  The default is to store the classname. |
 | queryNonPrimary()   | Indicates that queries against this collection can use secondaries.  The default is primary only reads. |
-| concern()           | The WriteConcern to use when writing to this collection.  The [default](http://docs.mongodb.org/manual/core/write-concern/#default-write-concern) WriteConcern is used if this parameter is left blank. |
+| concern()           | The WriteConcern to use when writing to this collection.  The default WriteConcern depends on how the `MongoClient` passed to the `Datastore` was created.| 
 
 
 ## Indexes
@@ -149,14 +149,14 @@ public @interface Indexed {
 Marks a field in an `@Entity` to be the "_id" field in MongoDB.
 
 ## Property
-An optional annotation instructing Morphia to persist then field in to the document given to MongoDB.  By default, the field name is used
+An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
  as the property name.  This can be overridden by passing a String with the new name to the annotation.
 
 ## Transient
 Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword `transient` can also be used instead.
 
 ## Serialized
-Instructs Morphia to serialize this field using JDK serialization.  The field's value essentially gets converted to a `byte[]` and passed
+Instructs Morphia to serialize this field using JDK serialization.  The field's value gets converted to a `byte[]` and passed
  off to MongoDB.
 
 ```java
