@@ -160,6 +160,9 @@ allprojects {
 project(':morphia') {
     archivesBaseName = 'morphia'
 
+    sourceSets {
+        test.java.srcDirs += ['src/examples/java']
+    }
     dependencies {
         if (buildingWith('2.x')) {
             compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
@@ -250,3 +253,4 @@ def isTrue(n) {
 
 apply from: 'gradle/osgi-compatibility.gradle'
 apply from: 'gradle/release-process.gradle'
+apply from: 'gradle/docs.gradle'

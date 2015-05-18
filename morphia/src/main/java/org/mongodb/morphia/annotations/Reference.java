@@ -46,7 +46,9 @@ public @interface Reference {
 
   /**
    * Specify the concrete class to instantiate.
+   * @deprecated unimplemented
    */
+  @Deprecated
   Class<?> concreteClass() default Object.class;
 
   /**

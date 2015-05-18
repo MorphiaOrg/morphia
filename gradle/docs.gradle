@@ -1,0 +1,109 @@
+task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
+
+    def simpleVersion = version.split('\\.')[0..1].join('.')
+    
+    def dest = file("build/gh-pages/${simpleVersion}")
+    dest.mkdirs()
+    copy {
+        from 'docs/reference/public'
+        into dest
+    }
+    exec {
+        workingDir dest
+        commandLine "/usr/local/bin/git"
+        args("add", ".")
+    }
+}
+
+task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
+    def dest = file("build/gh-pages")
+    dest.mkdirs()
+    copy {
+        from 'docs/landing/public'
+        into dest
+    }
+    exec {
+        workingDir dest
+        environment System.getenv()
+        commandLine "git"
+        args("add", ".")
+    }
+}
+
+task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
+    def dest = file("build/gh-pages")
+    exec {
+        workingDir dest
+        environment System.getenv()
+        commandLine "git"
+        args("commit", "-a", "-m", "pushing docs updates")
+    }
+    exec {
+        workingDir dest
+        environment System.getenv()
+        commandLine "git"
+        args("push")
+    }
+    
+}
+
+task landing << {
+    exec {
+        workingDir 'docs/landing'
+        environment System.getenv()
+        commandLine 'hugo'
+    }
+}
+
+task reference(dependsOn: 'javadoc') << {
+    exec {
+        workingDir 'docs/reference'
+        environment System.getenv()
+        commandLine 'hugo'
+    }
+    copy {
+        from 'morphia/build/docs'       
+        into 'docs/reference/public'
+    }
+}
+
+task clonePages << {
+    def pages = new File("build/gh-pages")
+    if (!pages.exists()) {
+        def stream = new ByteArrayOutputStream()
+
+        exec {
+            workingDir rootDir
+            environment System.getenv()
+            commandLine "git"
+            args("config", "--get", "remote.origin.url")
+            standardOutput = stream
+        }
+
+        def url = new String(stream.toByteArray()).trim()
+        new File("build").mkdirs()
+        exec {
+            workingDir 'build'
+            environment System.getenv()
+            commandLine "git"
+            args("clone", url, "-b", "gh-pages", "gh-pages")
+        }
+    } else {
+        println "${pages} already exists.  skipping clone."
+        exec {
+            workingDir 'build/gh-pages'
+            environment System.getenv()
+            commandLine "git"
+            args("pull")
+        }
+        
+    }
+}
+
+task watch_landing() << {
+    exec {
+        workingDir 'docs/landing'
+        environment System.getenv()
+        commandLine 'hugo', 'server', '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
+    }
+}
