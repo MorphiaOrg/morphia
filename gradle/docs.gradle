@@ -30,7 +30,22 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
     }
 }
 
-task publishDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {}
+task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
+    def dest = file("build/gh-pages")
+    exec {
+        workingDir dest
+        environment System.getenv()
+        commandLine "git"
+        args("commit", "-a", "-m", "pushing docs updates")
+    }
+    exec {
+        workingDir dest
+        environment System.getenv()
+        commandLine "git"
+        args("push")
+    }
+    
+}
 
 task landing << {
     exec {
