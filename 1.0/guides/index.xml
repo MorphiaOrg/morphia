@@ -19,7 +19,7 @@
 
 &lt;h1 id=&#34;annotations&#34;&gt;Annotations&lt;/h1&gt;
 
-&lt;p&gt;Below is a list of all the annotations and a brief descriptions of how to use them.&lt;/p&gt;
+&lt;p&gt;Below is a list of all the annotations and a brief description of how to use them.&lt;/p&gt;
 
 &lt;h2 id=&#34;entity&#34;&gt;Entity&lt;/h2&gt;
 
@@ -67,7 +67,7 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;concern()&lt;/td&gt;
-&lt;td&gt;The WriteConcern to use when writing to this collection.&lt;/td&gt;
+&lt;td&gt;The WriteConcern to use when writing to this collection.  The &lt;a href=&#34;http://docs.mongodb.org/manual/core/write-concern/#default-write-concern&#34;&gt;default&lt;/a&gt; WriteConcern is used if this parameter is left blank.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -100,7 +100,8 @@ this annotation looks like this:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use since but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the &lt;code&gt;@Field&lt;/code&gt; annotation.&lt;/p&gt;
+ to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the &lt;code&gt;@IndexOptions&lt;/code&gt;
+ annotation.&lt;/p&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -271,7 +272,7 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
 
-&lt;p&gt;Applied to a Java field, marks the field to be indexed by mongodb.&lt;/p&gt;
+&lt;p&gt;Applied to a Java field, marks the field to be indexed by MongoDB.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Indexed {
     IndexDirection value() default IndexDirection.ASC;
@@ -332,20 +333,21 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;h2 id=&#34;id&#34;&gt;Id&lt;/h2&gt;
 
-&lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to be the &amp;ldquo;_id&amp;rdquo; field in mongodb.&lt;/p&gt;
+&lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to be the &amp;ldquo;_id&amp;rdquo; field in MongoDB.&lt;/p&gt;
 
 &lt;h2 id=&#34;property&#34;&gt;Property&lt;/h2&gt;
 
-&lt;p&gt;An optional annotation instructing Morphia to persist field in to the document given to mongodb.  By default, the field name is used as
-the property name.  This can be overridden by passing a String with the new name to the annotation.&lt;/p&gt;
+&lt;p&gt;An optional annotation instructing Morphia to persist then field in to the document given to MongoDB.  By default, the field name is used
+ as the property name.  This can be overridden by passing a String with the new name to the annotation.&lt;/p&gt;
 
 &lt;h2 id=&#34;transient&#34;&gt;Transient&lt;/h2&gt;
 
-&lt;p&gt;Instructs Morphia to ignore this field when converting an entity to a document.  The java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
+&lt;p&gt;Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
 
 &lt;h2 id=&#34;serialized&#34;&gt;Serialized&lt;/h2&gt;
 
-&lt;p&gt;Instructs Morphia to serialize this field.&lt;/p&gt;
+&lt;p&gt;Instructs Morphia to serialize this field using JDK serialization.  The field&amp;rsquo;s value essentially gets converted to a &lt;code&gt;byte[]&lt;/code&gt; and passed
+ off to MongoDB.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Serialized {
   String value() default Mapper.IGNORED_FIELDNAME;
@@ -413,7 +415,7 @@ when loading a document.&lt;/p&gt;
 
 &lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to control optimistic locking for that entity. If the versions change while modifying an entity (including
 deletes) a &lt;code&gt;ConcurrentModificationException&lt;/code&gt; will be thrown. This field will be automatically managed for you &amp;ndash; there is no need to set
- a value and you should not do so anyway.  If the another name beside the Java field name is desired, a name can be passed to this
+ a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this
  annotation to change the document&amp;rsquo;s field name.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -426,7 +428,7 @@ class MyClass {
 &lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
 
 &lt;p&gt;Marks fields as stored in another collection and which are linked (by a &lt;code&gt;DBRef&lt;/code&gt; field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an &lt;code&gt;@Reference&lt;/code&gt; field must have already been saved in mongodb or have the Java object&amp;rsquo;s
+ can also be loaded.  Any document referenced via an &lt;code&gt;@Reference&lt;/code&gt; field must have already been saved in MongoDB or have the Java object&amp;rsquo;s
   &lt;code&gt;@Id&lt;/code&gt; already assigned.  Otherwise, no key can be copied in to the &lt;code&gt;Key&lt;/code&gt; for storage in the database.  If you&amp;rsquo;re always saving the
   referenced entity in the mapped collection (&lt;code&gt;Datastore&lt;/code&gt; can be told to save in to a collection other than the mapped collection) a lot
   of space can be saved by using the &lt;code&gt;idOnly()&lt;/code&gt; parameter to just save the key value.&lt;/p&gt;
@@ -512,15 +514,16 @@ the embedded type or on the field holding the embedded instance.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;@PreLoad&lt;/code&gt; - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;@PostLoad&lt;/code&gt; - Called after mapping to the entity&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;@PrePersist&lt;/code&gt; - Called before save, it can return a DBObject in place of an empty one.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;@PostPersist&lt;/code&gt; - Called after the save call to the datastore&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;@PostSave&lt;/code&gt; - Called before the save call to the datastore&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@PostPersist&lt;/code&gt; - Called after the save call to the datastore&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63&#34;&gt;Here&lt;/a&gt; is a one of the test classes.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63&#34;&gt;This&lt;/a&gt; is one of the test
+classes.&lt;/p&gt;
 
-&lt;p&gt;All parameters and return values are options in your implemented methods.&lt;/p&gt;
+&lt;p&gt;All parameters and return values are optional in your implemented methods.&lt;/p&gt;
 
 &lt;h4 id=&#34;prepersist&#34;&gt;&lt;code&gt;@PrePersist&lt;/code&gt;&lt;/h4&gt;
 
@@ -536,25 +539,20 @@ the embedded type or on the field holding the embedded instance.&lt;/p&gt;
 
 &lt;h4 id=&#34;entitylisteners&#34;&gt;&lt;code&gt;@EntityListeners&lt;/code&gt;&lt;/h4&gt;
 
-&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@EntityListeners(BackAccountWatcher.class)
+&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.
+```java
+@EntityListeners(BackAccountWatcher.class)
 public class BankAccount {
   @Id String id;
   Date lastUpdated = new Date();
-}
+}&lt;/p&gt;
 
-class BankAccountWatcher{
+&lt;p&gt;class BankAccountWatcher{&lt;/p&gt;
 
-  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
+&lt;p&gt;@PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}&lt;/p&gt;
 
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;no-delete-support&#34;&gt;No Delete Support&lt;/h3&gt;
-
-&lt;p&gt;Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are
-  enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.&lt;/p&gt;
+&lt;p&gt;}
+```&lt;/p&gt;
 </description>
     </item>
     
@@ -570,7 +568,70 @@ class BankAccountWatcher{
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Aggregation</title>
+      <link>/morphia/1.0/guides/aggregation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.0/guides/aggregation/</guid>
+      <description>
+
+&lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;aggregation&lt;/a&gt; framework in MongoDB allows you to define a series of operations and
+filters (called a pipeline) against the data in a collection.  These pipelines can be used for analytics or they can be used to convert
+your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official MongoDB
+&lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this guide will focus on
+the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+&#34;&gt;tests&lt;/a&gt; in Morphia itself.&lt;/p&gt;
+
+&lt;p&gt;Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the &lt;code&gt;Datastore&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;Iterator&amp;lt;Author&amp;gt; aggregate = datastore.createAggregation(Book.class)
+      .group(&amp;quot;author&amp;quot;, grouping(&amp;quot;books&amp;quot;, push(&amp;quot;title&amp;quot;)))
+      .out(Author.class, options);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As with querying, &lt;code&gt;createAggregation()&lt;/code&gt; takes a &lt;code&gt;Class&lt;/code&gt; literal.  This lets Morphia know which collection to perform this aggregation
+against.  Because of the transformational operations available in the aggregation &lt;a href=&#34;http://docs.mongodb
+.org/manual/core/aggregation-pipeline/&#34;&gt;pipeline&lt;/a&gt;, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+ document fields actual exist when referencing them in your pipeline.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
+
+&lt;p&gt;Aggregation operations are comprised of a series of steps (or stages) in a pipeline.  Our example here has only the one stage: &lt;code&gt;group()&lt;/code&gt;.
+  This method is the Morphia equivalent of the &lt;code&gt;$group&lt;/code&gt; operator.  This stage, as the name suggests, groups together documents based on the
+  given field&amp;rsquo;s
+  values.  In this
+  example,
+   we are collecting
+  together all the books by authort.&lt;/p&gt;
+
+&lt;h2 id=&#34;options&#34;&gt;Options&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;options&lt;/code&gt; reference passed to &lt;code&gt;out()&lt;/code&gt; above is an instance of &lt;a href=&#34;/morphia/1.0/javadoc/org/mongodb/morphia/aggregation/AggregationOptions.html&#34;&gt;&lt;code&gt;AggregationOptions&lt;/code&gt;&lt;/a&gt;.  There are a handful options here but there&amp;rsquo;s one that deserves some
+extra attention.  The aggregation pipeline, by default, returns everything &amp;ldquo;inline&amp;rdquo; which has the same 16MB limitations as all other
+documents in MongoDB.  As of MongoDB 2.6, you can specify the &lt;code&gt;$out&lt;/code&gt; pipeline stage to tailor this.  This is what the value of
+&lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--&#34;&gt;AggregationOptions#getOutputMode()&lt;/a&gt; determines.  The
+ default value is to return them inline but it can be configured to return a cursor instead which means that your result size can be
+much larger than 16MB.&lt;/p&gt;
+
+&lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
+
+&lt;p&gt;If the aggregation pipeline is a complicated or expensive pipeline that takes quite some time to execute, it can be beneficial to save
+the results of the pipeline for later retrieval. (Think pre-aggregation of traffic statistics, e.g.)  For these cases, the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/#pipe._S_out&#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; operator was introduced in MongoDB 2.6.  Morphia
+exposes this pipeline stage via the &lt;a href=&#34;/morphia/1.0/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java.lang.Class-&#34;&gt;&lt;code&gt;out()&lt;/code&gt;&lt;/a&gt; method on
+&lt;code&gt;AggregationPipeline.&lt;/code&gt;Using this pipeline stage, the results can be deposited in to a collection and be
+retrieved at some arbitrary time later.  There is one critical caveat to be aware of,  however.  &lt;em&gt;&lt;strong&gt;This operation will replace the
+collection contents and any existing data in the collection will be lost.&lt;/strong&gt;&lt;/em&gt;  You need to be absolutely sure you give the correct output
+ location when using this option because recovery might be difficult.&lt;/p&gt;
+
+&lt;p&gt;Whether the results are written to a new collection or simply returned as a cursor is controlled by the options you give to Morphia.&lt;/p&gt;
 </description>
     </item>
     

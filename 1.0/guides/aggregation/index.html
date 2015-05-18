@@ -9,7 +9,7 @@
 
     <link rel="shortcut icon" href="/morphia/1.0/img/favicon.png">
 
-    <title>Issues &amp; Help</title>
+    <title>Aggregation</title>
 
     <link rel="stylesheet" href="/morphia/1.0/lib/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="/morphia/1.0/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
@@ -225,57 +225,58 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
 
-
-        
-          
-        
-      
+  
+    
     
     
       
     
   
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
   
 
 
-          
-            
-            
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
+        
+      
     
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
   
 
 
@@ -403,16 +404,18 @@
 
 
 
+  
 
 
 
-<li class="toctree-l1 ">
+
+<li class="toctree-l1  current">
   <a href="/morphia/1.0/guides/" class="">
       <i class='fa fa-book'></i>
       <span>Reference Guides</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
+      <span class="menu-arrow fa fa-angle-down"></span>
   </a>
-    <ul >
+    <ul  class="current">
         
         
         
@@ -458,6 +461,8 @@
 
 
 
+
+  
 
 
 
@@ -518,8 +523,6 @@
 
 
 
-
-  
 
 
 
@@ -608,7 +611,7 @@
 
 
    
-<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/issues-help.md" target="_blank" title="Edit issues-help.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/guides/aggregation.md" target="_blank" title="Edit guides/aggregation.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
 
 
@@ -626,49 +629,65 @@
   
   
   
-  
-  <li>Issues &amp; Help</li>
+  <li><a href="/morphia/1.0/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
+  <li>Aggregation</li>
 </ul>
 </div>
 
 
 
 
-<h1 id="issues-help">Issues &amp; Help</h1>
+<h1 id="aggregation">Aggregation</h1>
 
-<p>We are lucky to have a vibrant MongoDB Java community with lots of varying
-experience of using Morphia.  We often find the quickest way to get support for
-general questions is through the <a href="https://groups.google.com/forum/#!forum/morphia">Morphia google group</a>,
-<a href="http://groups.google.com/group/mongodb-user">mongodb-user google group</a>,
-or through <a href="https://stackoverflow.com/questions/tagged/morphia">stackoverflow</a>.  Please also
-refer to our own <a href="http://www.mongodb.org/about/support">support channels</a> documentation.  If you have a question or think you&rsquo;ve
-encountered a bug, the mailing list is the place to start.</p>
+<p>The <a href="http://docs.mongodb.org/manual/aggregation/">aggregation</a> framework in MongoDB allows you to define a series of operations and
+filters (called a pipeline) against the data in a collection.  These pipelines can be used for analytics or they can be used to convert
+your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official MongoDB
+<a href="http://docs.mongodb.org/manual/aggregation/">documentation</a> has extensive tutorials on such details.  Rather, this guide will focus on
+the Morphia API.  The examples shown here are taken from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+">tests</a> in Morphia itself.</p>
 
-<h2 id="bugs-feature-requests">Bugs / Feature Requests</h2>
+<p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <code>Datastore</code>:</p>
 
-<p>If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
- <a href="https://github.com/mongodb/morphia/issues">github</a>. Please provide as much information as possible (including version numbers) about the
- issue type and how to reproduce it.</p>
-
-<p>If you’ve identified a security vulnerability in a driver or any other
-MongoDB project, please report it according to the <a href="http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report">instructions here</a>.</p>
-
-<h2 id="pull-requests">Pull Requests</h2>
-
-<p>We are happy to accept contributions to help improve Morphia.  We will guide user contributions to ensure they meet the standards of the
-codebase. Please ensure that any pull requests include documentation, tests and also pass a the gradle checks.</p>
-
-<p>To get started check out the source and work on a branch:</p>
-
-<pre><code class="language-bash">$ git clone https://github.com/mongodb/morphia.git
-$ cd morphia
-$ git checkout -b myNewFeature
+<pre><code class="language-java">Iterator&lt;Author&gt; aggregate = datastore.createAggregation(Book.class)
+      .group(&quot;author&quot;, grouping(&quot;books&quot;, push(&quot;title&quot;)))
+      .out(Author.class, options);
 </code></pre>
 
-<p>Finally, ensure that the code passes gradle checks.</p>
+<p>As with querying, <code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
+against.  Because of the transformational operations available in the aggregation <a href="http://docs.mongodb
+.org/manual/core/aggregation-pipeline/">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+ document fields actual exist when referencing them in your pipeline.</p>
 
-<pre><code class="language-bash">$ ./gradlew check
-</code></pre>
+<h2 id="the-pipeline">The Pipeline</h2>
+
+<p>Aggregation operations are comprised of a series of steps (or stages) in a pipeline.  Our example here has only the one stage: <code>group()</code>.
+  This method is the Morphia equivalent of the <code>$group</code> operator.  This stage, as the name suggests, groups together documents based on the
+  given field&rsquo;s
+  values.  In this
+  example,
+   we are collecting
+  together all the books by authort.</p>
+
+<h2 id="options">Options</h2>
+
+<p>The <code>options</code> reference passed to <code>out()</code> above is an instance of <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationOptions.html"><code>AggregationOptions</code></a>.  There are a handful options here but there&rsquo;s one that deserves some
+extra attention.  The aggregation pipeline, by default, returns everything &ldquo;inline&rdquo; which has the same 16MB limitations as all other
+documents in MongoDB.  As of MongoDB 2.6, you can specify the <code>$out</code> pipeline stage to tailor this.  This is what the value of
+<a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a> determines.  The
+ default value is to return them inline but it can be configured to return a cursor instead which means that your result size can be
+much larger than 16MB.</p>
+
+<h3 id="out">$out</h3>
+
+<p>If the aggregation pipeline is a complicated or expensive pipeline that takes quite some time to execute, it can be beneficial to save
+the results of the pipeline for later retrieval. (Think pre-aggregation of traffic statistics, e.g.)  For these cases, the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/#pipe._S_out"><code>$out</code></a> operator was introduced in MongoDB 2.6.  Morphia
+exposes this pipeline stage via the <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java.lang.Class-"><code>out()</code></a> method on
+<code>AggregationPipeline.</code>Using this pipeline stage, the results can be deposited in to a collection and be
+retrieved at some arbitrary time later.  There is one critical caveat to be aware of,  however.  <em><strong>This operation will replace the
+collection contents and any existing data in the collection will be lost.</strong></em>  You need to be absolutely sure you give the correct output
+ location when using this option because recovery might be difficult.</p>
+
+<p>Whether the results are written to a new collection or simply returned as a cursor is controlled by the options you give to Morphia.</p>
 
 
 
@@ -676,6 +695,12 @@ $ git checkout -b myNewFeature
 
 
 <div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.0/guides/annotations/">
+      <i class="fa fa-long-arrow-left"> </i> Annotations
+  </a>
+  </div>
   
   
 </div>
@@ -690,10 +715,13 @@ $ git checkout -b myNewFeature
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#issues-help">Issues &amp; Help</a>
+<li><a href="#aggregation">Aggregation</a>
 <ul>
-<li><a href="#bugs-feature-requests">Bugs / Feature Requests</a></li>
-<li><a href="#pull-requests">Pull Requests</a></li>
+<li><a href="#the-pipeline">The Pipeline</a></li>
+<li><a href="#options">Options</a>
+<ul>
+<li><a href="#out">$out</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>

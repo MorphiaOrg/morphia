@@ -87,12 +87,12 @@
 
 &lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
 
-&lt;p&gt;Morphia wraps the mongodb Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
-abstract much of that away but if something is confusing it wouldn&amp;rsquo;t hurt to consult the Java driver &lt;a href=&#34;http://mongodb.github
+&lt;p&gt;Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
+abstract much of that away but if something is confusing, please consult the Java driver &lt;a href=&#34;http://mongodb.github
 .io/mongo-java-driver/&#34;&gt;documentation&lt;/a&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.java&lt;/code&gt; example code
-that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.0.x/morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java
+that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
@@ -112,10 +112,10 @@ datastore.ensureIndexes();
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This snippet creates the Morphia instance we&amp;rsquo;ll be using in our simple application.  The &lt;code&gt;Morphia&lt;/code&gt; class exists to configure the &lt;code&gt;Mapper&lt;/code&gt;
- to be used and to define various system-wide defaults.  It is also what is used to create the &lt;code&gt;Datastore&lt;/code&gt; we&amp;rsquo;ll be using.  With this
- approach we could conceivable configure Morphia once and then connect to multiple databases by creating different &lt;code&gt;Datastore&lt;/code&gt; instances.
-   In practice, this is likely pretty rare but it is possible.  The &lt;code&gt;Datastore&lt;/code&gt; takes two parameters:  the &lt;code&gt;MongoClient&lt;/code&gt; used to connect
-   to mongodb and the name of the database to use.&lt;/p&gt;
+ to be used and to define various system-wide defaults.  It is also what is used to create the &lt;code&gt;Datastore&lt;/code&gt; we&amp;rsquo;ll be using.  The
+ &lt;code&gt;Datastore&lt;/code&gt; takes two parameters:  the &lt;code&gt;MongoClient&lt;/code&gt; used to connect to MongoDB and the name of the database to use.  With this
+ approach we could conceivably configure Morphia once and then connect to multiple databases by creating different &lt;code&gt;Datastore&lt;/code&gt; instances.
+   In practice, this is likely pretty rare but it is possible.&lt;/p&gt;
 
 &lt;p&gt;The second line, which we skipped over, deserves a bit of consideration.  In this case, we&amp;rsquo;re telling Morphia to look at every class in the
 package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@Entity&lt;/code&gt; (which we&amp;rsquo;ll cover shortly) and discover the mapping metadata we&amp;rsquo;ve
@@ -126,7 +126,7 @@ put on our classes.  There are several variations of mapping that can be done an
 
 &lt;p&gt;There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt;
  is treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
-define which field to use as the &lt;code&gt;_id&lt;/code&gt; value in the document written to mongodb.  &lt;code&gt;@Embedded&lt;/code&gt; indicates that the class will result in a
+define which field to use as the &lt;code&gt;_id&lt;/code&gt; value in the document written to MongoDB.  &lt;code&gt;@Embedded&lt;/code&gt; indicates that the class will result in a
 subdocument inside another document.  &lt;code&gt;@Embedded&lt;/code&gt; classes do not require the presence of an &lt;code&gt;@Id&lt;/code&gt; field.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity(&amp;quot;employees&amp;quot;)
@@ -164,11 +164,12 @@ every field&amp;rsquo;s value in to a document bound for the database.&lt;/p&gt;
 &lt;p&gt;The simplest of the two remaining annotations is &lt;code&gt;@Property&lt;/code&gt;.  This annotation is entirely optional.  If you leave this annotation off,
 Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&amp;rsquo;ll want to change
 the document field name for any number of reasons.  In those cases, you can use &lt;code&gt;@Property&lt;/code&gt; and pass it the name to be used when this
-class is serialized out to a document to be handed off to mongodb.&lt;/p&gt;
+class is serialized out to a document to be handed off to MongoDB.&lt;/p&gt;
 
 &lt;p&gt;This just leaves &lt;code&gt;@Reference&lt;/code&gt;.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
-Morphia will store what mongodb calls a &lt;code&gt;DBRef&lt;/code&gt; which is just a collection name and key value.  These referenced entities must already be
- saved or at least have an ID assigned or Morphia will throw an exception.&lt;/p&gt;
+Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/database-references/#dbrefs&#34;&gt;&lt;code&gt;DBRef&lt;/code&gt;&lt;/a&gt; which is just a
+collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
+ exception.&lt;/p&gt;
 
 &lt;h2 id=&#34;saving-data&#34;&gt;Saving Data&lt;/h2&gt;
 
@@ -184,7 +185,7 @@ datastore.save(elmer);
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final Employee daffy = new Employee(&amp;quot;Daffy Duck&amp;quot;, 40000.0);
 datastore.save(daffy);
 
-final Employee pepe = new Employee(&amp;quot;Pepé Lepew&amp;quot;, 25000.0);
+final Employee pepe = new Employee(&amp;quot;Pepé Le Pew&amp;quot;, 25000.0);
 datastore.save(pepe);
 
 elmer.getDirectReports().add(daffy);
@@ -193,13 +194,11 @@ elmer.getDirectReports().add(pepe);
 datastore.save(elmer);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and
-save.  Morphia takes care of saving the keys in Elmer&amp;rsquo;s document that refer to Daffy and Pepé.  Updating data in mongodb is as simple as
-updating your Java objects and then calling &lt;code&gt;datastore.save()&lt;/code&gt; with them again.  For bulk updates (everyone gets a raise!) this is not
-the most efficient way doing updates.  It is possible to update directly in the database without having to pull in every document,
-convert to Java objects, update, convert back to a document, and write back to mongodb.  But in order to show you that piece, first we need
- to
-see
+&lt;p&gt;As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and save.  Morphia
+takes care of saving the keys in Elmer&amp;rsquo;s document that refer to Daffy and Pepé.  Updating data in MongoDB is as simple as updating your
+Java objects and then calling &lt;code&gt;datastore.save()&lt;/code&gt; with them again.  For bulk updates (e.g., everyone gets a raise!) this is not the most
+efficient way of doing updates.  It is possible to update directly in the database without having to pull in every document, convert to
+Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
 how to query.&lt;/p&gt;
 
 &lt;h2 id=&#34;querying&#34;&gt;Querying&lt;/h2&gt;
@@ -212,21 +211,26 @@ final List&amp;lt;Employee&amp;gt; employees = query.asList();
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This is a basic Morphia query.  Here, we&amp;rsquo;re telling the &lt;code&gt;Datastore&lt;/code&gt; to create a query that&amp;rsquo;s been typed to &lt;code&gt;Employee&lt;/code&gt;.  In this
-case, we&amp;rsquo;re fetching every &lt;code&gt;Employee&lt;/code&gt; in to a &lt;code&gt;List&lt;/code&gt;.  Ignoring the obvious potential for memory errors, this is not usually that helpful
-.  Most queries will, of course, want to filter the data in some way.  There are two ways of doing this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List&amp;lt;Employee&amp;gt; underpaid = datastore.createQuery(Employee.class)
-                                    .filter(&amp;quot;salary &amp;lt;=&amp;quot;, 30000)
-                                    .asList();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This approach uses the &lt;code&gt;filter()&lt;/code&gt; method which is a little more freeform than the alternative.  Here we can embed certain operators in
-the query string.  While this is less verbose than the alternative, it does leave more things in the string to validate and potentially
-get wrong.  If you prefer more compile-time validation, this approach creates the same query:&lt;/p&gt;
+case, we&amp;rsquo;re fetching every &lt;code&gt;Employee&lt;/code&gt; in to a &lt;code&gt;List&lt;/code&gt;.  For very large query results, this could very well be too much to fit in to
+memory.  For this simple example, using &lt;code&gt;asList()&lt;/code&gt; is fine but in practice &lt;code&gt;fetch()&lt;/code&gt; is usually the more appropriate choice.  Most queries
+will, of course, want to filter the data in some way. There are two ways of doing this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;underpaid = datastore.createQuery(Employee.class)
                      .field(&amp;quot;salary&amp;quot;).lessThanOrEq(30000)
                      .asList();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;field()&lt;/code&gt; method here is used to filter on the named field and returns an instance of an interface with a number of methods to build
+a query.  This approach is helpful is compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
+ query building can be done quite safely.&lt;/p&gt;
+
+&lt;p&gt;The other approach uses the &lt;code&gt;filter()&lt;/code&gt; method which is a little more free form and succinct than &lt;code&gt;field()&lt;/code&gt;.  Here we can embed
+certain operators in the query string.  While this is less verbose than the alternative, it does leave more things in the string to
+validate and potentially get wrong:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;List&amp;lt;Employee&amp;gt; underpaid = datastore.createQuery(Employee.class)
+                                    .filter(&amp;quot;salary &amp;lt;=&amp;quot;, 30000)
+                                    .asList();
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a

@@ -219,6 +219,11 @@
         
       
     
+      
+      
+        
+      
+    
     
   
 
@@ -421,6 +426,35 @@
 
         
         
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.0/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
     </ul>
   </li>
 
@@ -555,7 +589,7 @@
 
 
    
-<a class="edit-link" href="https://github.com/mongodb/morphia/blob/1.0.x/docs/reference/content/guides/annotations.md" target="_blank" title="Edit guides/annotations.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/guides/annotations.md" target="_blank" title="Edit guides/annotations.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
 
 
 
@@ -583,7 +617,7 @@
 
 <h1 id="annotations">Annotations</h1>
 
-<p>Below is a list of all the annotations and a brief descriptions of how to use them.</p>
+<p>Below is a list of all the annotations and a brief description of how to use them.</p>
 
 <h2 id="entity">Entity</h2>
 
@@ -631,7 +665,7 @@ this annotation looks like this:</p>
 
 <tr>
 <td>concern()</td>
-<td>The WriteConcern to use when writing to this collection.</td>
+<td>The WriteConcern to use when writing to this collection.  The <a href="http://docs.mongodb.org/manual/core/write-concern/#default-write-concern">default</a> WriteConcern is used if this parameter is left blank.</td>
 </tr>
 </tbody>
 </table>
@@ -664,7 +698,8 @@ this annotation looks like this:</p>
 </code></pre>
 
 <p>There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use since but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the <code>@Field</code> annotation.</p>
+ to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the <code>@IndexOptions</code>
+ annotation.</p>
 
 <table>
 <thead>
@@ -835,7 +870,7 @@ this annotation looks like this:</p>
 
 <h4 id="indexed">Indexed</h4>
 
-<p>Applied to a Java field, marks the field to be indexed by mongodb.</p>
+<p>Applied to a Java field, marks the field to be indexed by MongoDB.</p>
 
 <pre><code class="language-java">public @interface Indexed {
     IndexDirection value() default IndexDirection.ASC;
@@ -896,20 +931,21 @@ this annotation looks like this:</p>
 
 <h2 id="id">Id</h2>
 
-<p>Marks a field in an <code>@Entity</code> to be the &ldquo;_id&rdquo; field in mongodb.</p>
+<p>Marks a field in an <code>@Entity</code> to be the &ldquo;_id&rdquo; field in MongoDB.</p>
 
 <h2 id="property">Property</h2>
 
-<p>An optional annotation instructing Morphia to persist field in to the document given to mongodb.  By default, the field name is used as
-the property name.  This can be overridden by passing a String with the new name to the annotation.</p>
+<p>An optional annotation instructing Morphia to persist then field in to the document given to MongoDB.  By default, the field name is used
+ as the property name.  This can be overridden by passing a String with the new name to the annotation.</p>
 
 <h2 id="transient">Transient</h2>
 
-<p>Instructs Morphia to ignore this field when converting an entity to a document.  The java keyword <code>transient</code> can also be used instead.</p>
+<p>Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
 
 <h2 id="serialized">Serialized</h2>
 
-<p>Instructs Morphia to serialize this field.</p>
+<p>Instructs Morphia to serialize this field using JDK serialization.  The field&rsquo;s value essentially gets converted to a <code>byte[]</code> and passed
+ off to MongoDB.</p>
 
 <pre><code class="language-java">public @interface Serialized {
   String value() default Mapper.IGNORED_FIELDNAME;
@@ -977,7 +1013,7 @@ when loading a document.</p>
 
 <p>Marks a field in an <code>@Entity</code> to control optimistic locking for that entity. If the versions change while modifying an entity (including
 deletes) a <code>ConcurrentModificationException</code> will be thrown. This field will be automatically managed for you &ndash; there is no need to set
- a value and you should not do so anyway.  If the another name beside the Java field name is desired, a name can be passed to this
+ a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this
  annotation to change the document&rsquo;s field name.</p>
 
 <pre><code class="language-java">@Entity
@@ -990,7 +1026,7 @@ class MyClass {
 <h2 id="reference">Reference</h2>
 
 <p>Marks fields as stored in another collection and which are linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an <code>@Reference</code> field must have already been saved in mongodb or have the Java object&rsquo;s
+ can also be loaded.  Any document referenced via an <code>@Reference</code> field must have already been saved in MongoDB or have the Java object&rsquo;s
   <code>@Id</code> already assigned.  Otherwise, no key can be copied in to the <code>Key</code> for storage in the database.  If you&rsquo;re always saving the
   referenced entity in the mapped collection (<code>Datastore</code> can be told to save in to a collection other than the mapped collection) a lot
   of space can be saved by using the <code>idOnly()</code> parameter to just save the key value.</p>
@@ -1076,15 +1112,16 @@ the embedded type or on the field holding the embedded instance.</p>
 <li><code>@PreLoad</code> - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after mapping to the entity</li>
 <li><code>@PrePersist</code> - Called before save, it can return a DBObject in place of an empty one.</li>
-<li><code>@PostPersist</code> - Called after the save call to the datastore</li>
 <li><code>@PostSave</code> - Called before the save call to the datastore</li>
+<li><code>@PostPersist</code> - Called after the save call to the datastore</li>
 </ul>
 
 <h3 id="examples">Examples</h3>
 
-<p><a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63">Here</a> is a one of the test classes.</p>
+<p><a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63">This</a> is one of the test
+classes.</p>
 
-<p>All parameters and return values are options in your implemented methods.</p>
+<p>All parameters and return values are optional in your implemented methods.</p>
 
 <h4 id="prepersist"><code>@PrePersist</code></h4>
 
@@ -1100,25 +1137,20 @@ the embedded type or on the field holding the embedded instance.</p>
 
 <h4 id="entitylisteners"><code>@EntityListeners</code></h4>
 
-<p>In addition, you can separate the lifecycle event implementation in an external class, or many.</p>
-
-<pre><code class="language-java">@EntityListeners(BackAccountWatcher.class)
+<p>In addition, you can separate the lifecycle event implementation in an external class, or many.
+```java
+@EntityListeners(BackAccountWatcher.class)
 public class BankAccount {
   @Id String id;
   Date lastUpdated = new Date();
-}
+}</p>
 
-class BankAccountWatcher{
+<p>class BankAccountWatcher{</p>
 
-  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
+<p>@PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}</p>
 
-}
-</code></pre>
-
-<h3 id="no-delete-support">No Delete Support</h3>
-
-<p>Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are
-  enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.</p>
+<p>}
+```</p>
 
 
 
@@ -1127,6 +1159,11 @@ class BankAccountWatcher{
 
 <div id="btnv">
   
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/morphia/1.0/guides/aggregation/">
+    Aggregation <i class="fa fa-long-arrow-right"> </i>
+  </a>
   
 </div>
 </div>
@@ -1168,7 +1205,6 @@ class BankAccountWatcher{
 <li><a href="#prepersist"><code>@PrePersist</code></a></li>
 <li><a href="#entitylisteners"><code>@EntityListeners</code></a></li>
 </ul></li>
-<li><a href="#no-delete-support">No Delete Support</a></li>
 </ul></li>
 </ul></li>
 </ul>
