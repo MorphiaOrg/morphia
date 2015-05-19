@@ -106,7 +106,7 @@ Morphia maps your entities and validates your queries.&lt;/p&gt;
 // can be called multiple times with different packages or classes
 morphia.mapPackage(&amp;quot;org.mongodb.morphia.example&amp;quot;);
 
-// create the Datastore connecting to the database running on the default port on the local host
+// create the Datastore connecting to the default port on the local host
 final Datastore datastore = morphia.createDatastore(new MongoClient(), &amp;quot;morphia_example&amp;quot;);
 datastore.ensureIndexes();
 &lt;/code&gt;&lt;/pre&gt;
@@ -121,6 +121,15 @@ datastore.ensureIndexes();
 package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@Entity&lt;/code&gt; (which we&amp;rsquo;ll cover shortly) and discover the mapping metadata we&amp;rsquo;ve
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.&lt;/p&gt;
+
+&lt;h3 id=&#34;mapping-options&#34;&gt;Mapping Options&lt;/h3&gt;
+
+&lt;p&gt;Once you have an instance of Morphia, you can configure various mapping options via the &lt;code&gt;MappingOptions&lt;/code&gt; class.  While it&amp;rsquo;s possible to
+specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia, most users will use the default mapper.  In either case, the &lt;code&gt;Mapper&lt;/code&gt; can
+ be fetched using the &lt;code&gt;getMapper()&lt;/code&gt; method on the &lt;code&gt;Morphia&lt;/code&gt; instance.  The two most common elements to configure are &lt;code&gt;storeEmpties&lt;/code&gt; and
+ &lt;code&gt;storeNulls&lt;/code&gt;.  By default Morphia will not store empty &lt;code&gt;List&lt;/code&gt; or &lt;code&gt;Map&lt;/code&gt; values nor will it store null values in to MongoDB.  If your
+ application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
+ for you.  There are a few other options to configure on &lt;code&gt;MappingOptions&lt;/code&gt;, but we&amp;rsquo;ll not be covering them here.&lt;/p&gt;
 
 &lt;h2 id=&#34;mapping-classes&#34;&gt;Mapping Classes&lt;/h2&gt;
 

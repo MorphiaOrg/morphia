@@ -656,47 +656,57 @@ convert your data from one form to another.  This guide will not go in to the de
 <p><code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
 against.  Because of the transformational operations available in the aggregation <a href="http://docs.mongodb
 .org/manual/core/aggregation-pipeline/">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
- document fields actual exist when referencing them in your pipeline.</p>
+ document fields actually exist when referencing them in your pipeline.</p>
 
 <h2 id="the-pipeline">The Pipeline</h2>
 
 <p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <code>group()</code>.  This method is the Morphia
-equivalent of the <code>$group</code> operator.  This stage, as the name suggests, groups together documents based on the given field&rsquo;s values.  In this
-  example, we are collecting together all the books by author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting
-  documents.  Within this grouping, this pipeline takes the <code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping
-  of data, we&rsquo;re then <code>push()</code>ing the titles in to an array in the final document.  This example is the Morphia equivalent of an
-  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author">example</a> found in the aggregation
-  tutorials.  In that tutorial example, you can see what the resulting aggregation pipeline would look like as well as the resulting
-  documents after the pipeline is executed.</p>
+equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/"><code>$group</code></a> operator.  This stage, as the name
+suggests, groups together documents based on the given field&rsquo;s values.  In this example, we are collecting together all the books by
+author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting documents.  Within this grouping, this pipeline takes the
+<code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping of data, we&rsquo;re then <code>push()</code>ing the titles in to an array
+in the final document.  This example is the Morphia equivalent of an <a href="http://docs.mongodb
+.org/manual/reference/operator/aggregation/group/#group-title-by-author">example</a> found in the aggregation tutorials.  This results in a series of
+ documents that look like this:</p>
+
+<pre><code class="language-json"> { &quot;_id&quot; : &quot;Homer&quot;, &quot;books&quot; : [ &quot;The Odyssey&quot;, &quot;Iliad&quot; ] }
+ { &quot;_id&quot; : &quot;Dante&quot;, &quot;books&quot; : [ &quot;The Banquet&quot;, &quot;Divine Comedy&quot;, &quot;Eclogues&quot; ] }
+</code></pre>
 
 <h2 id="executing-the-pipeline">Executing the Pipeline</h2>
 
 <p>There are two basic ways to execute an aggregation pipeline:  <code>aggregate()</code> and <code>out()</code>.  These methods are Morphia&rsquo;s cues to send the
-pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.<br />
-The differences, however, can have huge implications on the performance of your application.  <code>aggregate()</code> by default will use the
-&lsquo;inline&rsquo; method for return the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.  The
- <code>options</code> reference we passed in to <code>out()</code> also applies to <code>aggregate()</code>.</p>
+ pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
+  The differences, however, can have huge implications on the performance of your application.  <code>aggregate()</code> by default will use the
+ &lsquo;inline&rsquo; method for returning the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.
+  We can changes this behavior using the <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><code>AggregationOptions</code></a>
+  class.  The <code>options</code> reference we passed to <code>out()</code> also applies to <code>aggregate()</code>.</p>
 
 <h3 id="aggregation-options">Aggregation Options</h3>
 
-<p>The <code>options</code> reference passed to <code>out()</code> above is an instance of <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><code>AggregationOptions</code></a>.  There are a handful options here but there&rsquo;s one that deserves some
-extra attention. As mentioned, the aggregation pipeline, by default, returns everything &ldquo;inline&rdquo; but as of MongoDB 2.6 you can tell
-the aggregation engine to return a cursor instead.  This is what the value of <a href="http://api.mongodb
-.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a> determines.  The default value is to return them inline but it can be
- configured to return a cursor instead which means that your result size can be much larger than 16MB.  The options can also be
+<p>There are a handful options here but there&rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
+ returns everything &ldquo;inline&rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
+ value of <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a>
+ determines.  By setting the output mode to <code>CURSOR</code>, MongoDB can return a result size much larger than 16MB.  The options can also be
  configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
-  the aggregation engine to use disk space which allows, among other things, sorting of larger datasets than what can fit in to memory
+  the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.</p>
 
 <h3 id="out">$out</h3>
 
 <p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/"><code>$out</code></a> is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
-if it does not exist, will be created upon execution of the pipeline.  <em><strong>Any existing data in the collection will be lost and replaced
-by the output of the aggregation.</strong></em></p>
+if it does not exist, will be created upon execution of the pipeline.</p>
+
+<p><div class="admonition important">
+<h5 class="admonition-title">important</h5>
+<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
+
+</div>
+</p>
 
 <p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
-engine is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
+framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
 output mode to <code>CURSOR</code> with <code>aggregate()</code> and your application need not know the difference.  It does, of course, have an impact on your
 database and any existing data.  The use of <code>$out</code> and <code>out()</code> can be greatly beneficial in scenarios such as precomputed aggregated
