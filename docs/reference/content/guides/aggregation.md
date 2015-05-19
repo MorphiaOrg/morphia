@@ -26,36 +26,40 @@ Iterator<Author> aggregate = datastore.createAggregation(Book.class)
 `createAggregation()` takes a `Class` literal.  This lets Morphia know which collection to perform this aggregation 
 against.  Because of the transformational operations available in the aggregation [pipeline](http://docs.mongodb
 .org/manual/core/aggregation-pipeline/), Morphia can not validate as much as it can with querying so care will need to be taken to ensure
- document fields actual exist when referencing them in your pipeline.  
+ document fields actually exist when referencing them in your pipeline.  
  
 ## The Pipeline
 Aggregation operations are comprised of a series stages.  Our example here has only one stage: `group()`.  This method is the Morphia 
-equivalent of the `$group` operator.  This stage, as the name suggests, groups together documents based on the given field's values.  In this 
-  example, we are collecting together all the books by author.  The first parameter to `group()` defines the `_id` of the resulting 
-  documents.  Within this grouping, this pipeline takes the `books` fields for each author and extracts the `title`.  With this grouping 
-  of data, we're then `push()`ing the titles in to an array in the final document.  This example is the Morphia equivalent of an 
-  [example](http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author) found in the aggregation 
-  tutorials.  In that tutorial example, you can see what the resulting aggregation pipeline would look like as well as the resulting 
-  documents after the pipeline is executed.
+equivalent of the [`$group`](http://docs.mongodb.org/manual/reference/operator/aggregation/group/) operator.  This stage, as the name 
+suggests, groups together documents based on the given field's values.  In this example, we are collecting together all the books by 
+author.  The first parameter to `group()` defines the `_id` of the resulting documents.  Within this grouping, this pipeline takes the 
+`books` fields for each author and extracts the `title`.  With this grouping of data, we're then `push()`ing the titles in to an array 
+in the final document.  This example is the Morphia equivalent of an [example](http://docs.mongodb
+.org/manual/reference/operator/aggregation/group/#group-title-by-author) found in the aggregation tutorials.  This results in a series of
+ documents that look like this:
+ 
+ ```json
+ { "_id" : "Homer", "books" : [ "The Odyssey", "Iliad" ] }
+ { "_id" : "Dante", "books" : [ "The Banquet", "Divine Comedy", "Eclogues" ] }
+ ```
   
 ## Executing the Pipeline
 
 There are two basic ways to execute an aggregation pipeline:  `aggregate()` and `out()`.  These methods are Morphia's cues to send the 
-pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.  
-The differences, however, can have huge implications on the performance of your application.  `aggregate()` by default will use the 
-'inline' method for return the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.  The
- `options` reference we passed in to `out()` also applies to `aggregate()`.
+ pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar. 
+  The differences, however, can have huge implications on the performance of your application.  `aggregate()` by default will use the 
+ 'inline' method for returning the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share. 
+  We can changes this behavior using the [`AggregationOptions`](http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html) 
+  class.  The `options` reference we passed to `out()` also applies to `aggregate()`.
 
 ### Aggregation Options
 
-The `options` reference passed to `out()` above is an instance of [`AggregationOptions`]
-(http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html).  There are a handful options here but there's one that deserves some 
-extra attention. As mentioned, the aggregation pipeline, by default, returns everything "inline" but as of MongoDB 2.6 you can tell 
-the aggregation framework to return a cursor instead.  This is what the value of [AggregationOptions#getOutputMode()](http://api.mongodb
-.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--) determines.  The default value is to return them inline but it can be
- configured to return a cursor instead which means that your result size can be much larger than 16MB.  The options can also be 
+There are a handful options here but there's one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
+ returns everything "inline" but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the 
+ value of [AggregationOptions#getOutputMode()](http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--) 
+ determines.  By setting the output mode to `CURSOR`, MongoDB can return a result size much larger than 16MB.  The options can also be 
  configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
-  the aggregation framework to use disk space which allows, among other things, sorting of larger datasets than what can fit in to memory 
+  the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory 
   on the server.
     
 ### $out
@@ -63,8 +67,11 @@ the aggregation framework to return a cursor instead.  This is what the value of
 But this example doesn't use `aggregate()`, of course, it uses `out()` which gives us access to the `$out` pipeline stage.  [`$out`]
 (http://docs.mongodb.org/manual/reference/operator/aggregation/out/) is a new operator in MongoDB 2.6 that allows the results of a 
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection, 
-if it does not exist, will be created upon execution of the pipeline.  _**Any existing data in the collection will be lost and replaced 
-by the output of the aggregation.**_
+if it does not exist, will be created upon execution of the pipeline.  
+
+{{% note class="important" %}}
+Any existing data in the collection will be lost and replaced by the output of the aggregation.
+{{% /note %}}
 
 Using `out()` is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation 
 framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit `find` on the output 
