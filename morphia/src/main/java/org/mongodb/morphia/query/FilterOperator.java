@@ -60,6 +60,8 @@ public enum FilterOperator {
     @Deprecated
     WITHIN("$within", "within"),
     
+    GEO_NEAR("$geoNear", "geoNear"),
+    
     GEO_WITHIN("$geoWithin", "geoWithin"),
 
     INTERSECTS("$geoIntersects", "geoIntersects");

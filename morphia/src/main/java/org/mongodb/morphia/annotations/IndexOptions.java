@@ -78,9 +78,4 @@ public @interface IndexOptions {
      * The field to use to override the default language.
      */
     String languageOverride() default "";
-
-    /**
-     * Used for internal tracking.  Do not use.
-     */
-    boolean userDefined() default true;
 }

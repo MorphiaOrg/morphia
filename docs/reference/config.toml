@@ -1,0 +1,23 @@
+baseurl = "/morphia/1.0"
+languageCode = "en-us"
+title = "Morphia"
+theme = "mongodb"
+canonifyurls = false
+
+[blackfriday]
+  plainIdAnchors = true
+
+# Update versions in mongodb.toml as well
+[[menu.main]]
+    name = "API Documentation"
+    pre = "<i class='fa fa-file-text-o'></i>"
+    weight = 80
+    identifier = "apiDocs"
+    url = "/javadoc"
+
+[[menu.main]]
+    name = "Source Code"
+    pre = "<i class='fa fa-github'></i>"
+    weight = 100
+    identifier = "githubLink"
+    url = "https://github.com/mongodb/morphia"

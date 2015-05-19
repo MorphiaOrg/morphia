@@ -1,0 +1,121 @@
+<h2 id="quickStart">Quick Start</h2>
+
+<p>
+  The recommended way to get started using Morphia in your project is with a dependency management system.
+  Select the version and dependency management system below and the snippet can be copied and pasted into your build.
+</p>
+<p>
+  Alternatively, head over to our documentation to learn more about getting started with Morphia.
+</p>
+
+{{ range where $.Site.Data.releases.versions "version" $.Site.Data.releases.current  }}{{ $.Scratch.Set "qs.currentReleasedVersion" . }}{{end }}
+{{$currentReleasedVersion := $.Scratch.Get "qs.currentReleasedVersion"}}
+
+<div id="downloadWidget">
+  <div class="container">
+    <div class="row downloadForm">
+      <form>
+        <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
+        <h5></h5>
+        </div>
+    <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
+    {{ $.Scratch.Set "qs.pos" 0 }}
+    {{ $firstDriver := $.Scratch.Get "qs.firstDriver"}}
+    {{ with $.Site.Data.releases.versions }}
+      <select class="releasePicker">
+        {{ range . }}
+        <option value="{{$.Scratch.Get "qs.pos"}}">{{.version}}</option>
+        {{ $.Scratch.Add "qs.pos" 1 }}
+        {{ end }}
+      </select>
+    {{ end }}
+    </div>
+    <div class="col-lg-2 col-lg-push-2 ">
+    <input type="checkbox" checked class="distroPicker" data-toggle="toggle" data-on="Maven" data-off="Gradle" data-offstyle="success">
+    </div>
+  </form>
+  <div class="hidden-md hidden-sm hidden-xs col-lg-2 col-lg-pull-10 downloadLink">
+  <a href="https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/{{$currentReleasedVersion.version}}/"
+     id="downloadLink" class="btn btn-dark btn-download" target="_blank">Download</a>
+  </div>
+  </div>
+
+
+  <div class="row">
+  <div class="clipboard" title="copy">
+  <button class="btn btn-dark"><i class="fa fa-clipboard fa-2"></i></button>
+  </div>
+  {{ $currentNode := . }}
+  {{ $currentDriver := $.Site.Data.releases.driverName }}
+  {{ $.Scratch.Set "qs.firstDriver" true }}
+  {{ with $.Site.Data.releases.versions }}
+    {{ $.Scratch.Set "qs.versionPos" 0 }}
+    {{ range . }}
+      {{ $currentVersion := . }}
+      {{ $firstDriver := $.Scratch.Get "qs.firstDriver"}}
+      {{ $versionPos := $.Scratch.Get "qs.versionPos" }}
+      {{ if in $currentVersion.version "SNAPSHOT" }}
+      <div id="maven-{{$versionPos}}" class="download {{if or (ne $firstDriver true) (ne $currentVersion.status "current") }} hidden{{end}}">
+      <pre><code>
+      &lt;dependencies&gt;
+          &lt;dependency&gt;
+              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
+          &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+      &lt;repositories&gt;
+          &lt;repository&gt;
+              &lt;id&gt;sonatype-snapshots&lt;/id&gt;
+              &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
+              &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+              &lt;snapshots&gt;
+                  &lt;enabled&gt;true&lt;/enabled&gt;
+              &lt;/snapshots&gt;
+          &lt;/repository&gt;
+      &lt;/repositories&gt;
+
+      </code></pre>
+      </div>
+      <div id="gradle-{{$versionPos}}" class="download hidden">
+      <pre><code>
+        dependencies {
+            compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
+        }
+        repositories {
+          maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+          }
+        }
+      </code></pre>
+      </div>
+      {{ else }}
+      <div id="maven-{{$versionPos}}" class="download {{if or (ne $firstDriver true) (ne $currentVersion.status "current") }} hidden{{end}}">
+      <pre><code>
+      &lt;dependencies&gt;
+          &lt;dependency&gt;
+              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
+          &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+
+      </code></pre>
+      </div>
+      <div id="gradle-{{$versionPos}}" class="download hidden">
+      <pre><code>
+        dependencies {
+          compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
+        }
+
+
+      </code></pre>
+      </div>
+      {{ end }}
+          {{ $.Scratch.Set "qs.firstDriver" false }}
+          {{ $.Scratch.Add "qs.versionPos" 1 }}
+          {{ end }}
+      {{ end }}
+    </div>
+    </div>
+  </div>

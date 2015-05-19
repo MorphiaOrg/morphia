@@ -1,5 +1,9 @@
 archivesBaseName = 'morphia'
 
+sourceSets {
+    test.java.srcDirs += ['src/examples/java']
+}
+
 dependencies {
     if (buildingWith('2.x')) {
         compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"

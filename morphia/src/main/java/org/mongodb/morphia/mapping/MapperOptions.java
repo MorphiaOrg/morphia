@@ -10,25 +10,10 @@ import org.mongodb.morphia.ObjectFactory;
  * @author Scott Hernandez
  */
 public class MapperOptions {
-    /**
-     * <p>Treat java transient fields as if they have {@code @Transient} on them</p>
-     */
     private boolean actLikeSerializer;
-    /**
-     * <p>Controls if final fields are stored. </p>
-     */
     private boolean ignoreFinals; //ignore final fields.
-    /**
-     * <p>Controls if null are stored. </p>
-     */
     private boolean storeNulls;
-    /**
-     * <p>Controls if empty collection/arrays are stored. </p>
-     */
     private boolean storeEmpties;
-    /**
-     * <p>Controls if default entity collection name should be lowercase.</p>
-     */
     private boolean useLowerCaseCollectionNames;
 
     private ObjectFactory objectFactory = new DefaultCreator();
@@ -45,6 +30,9 @@ public class MapperOptions {
         return actLikeSerializer;
     }
 
+    /**
+     * Treat java transient fields as if they have {@code @Transient} on them
+     */
     public void setActLikeSerializer(final boolean actLikeSerializer) {
         this.actLikeSerializer = actLikeSerializer;
     }
@@ -69,6 +57,9 @@ public class MapperOptions {
         return ignoreFinals;
     }
 
+    /**
+     * Controls if final fields are stored.
+     */
     public void setIgnoreFinals(final boolean ignoreFinals) {
         this.ignoreFinals = ignoreFinals;
     }
@@ -77,6 +68,10 @@ public class MapperOptions {
         return objectFactory;
     }
 
+    /**
+     * Sets the ObjectFactory to use when instantiating entity classes.  The default factory is a simple reflection based factory but 
+     * this could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
+     */
     public void setObjectFactory(final ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
@@ -93,6 +88,9 @@ public class MapperOptions {
         return storeEmpties;
     }
 
+    /**
+     * Controls if empty collection/arrays are stored.
+     */
     public void setStoreEmpties(final boolean storeEmpties) {
         this.storeEmpties = storeEmpties;
     }
@@ -101,6 +99,9 @@ public class MapperOptions {
         return storeNulls;
     }
 
+    /**
+     * Controls if null are stored.
+     */
     public void setStoreNulls(final boolean storeNulls) {
         this.storeNulls = storeNulls;
     }
@@ -117,6 +118,9 @@ public class MapperOptions {
         return useLowerCaseCollectionNames;
     }
 
+    /**
+     * Controls if default entity collection name should be lowercase.
+     */
     public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
         this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
     }

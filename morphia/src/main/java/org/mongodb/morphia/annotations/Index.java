@@ -55,7 +55,7 @@ public @interface Index {
     /**
      * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
      */
-    IndexOptions options() default @IndexOptions(userDefined = false);
+    IndexOptions options() default @IndexOptions();
 
     /**
      * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
