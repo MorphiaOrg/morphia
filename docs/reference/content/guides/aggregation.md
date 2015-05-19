@@ -70,7 +70,7 @@ pipeline to be stored in to a named collection.  This collection can not be shar
 if it does not exist, will be created upon execution of the pipeline.  
 
 {{% note class="important" %}}
-Any existing data in the collection will be lost and replaced by the output of the aggregation.
+Any existing data in the collection will be replaced by the output of the aggregation.
 {{% /note %}}
 
 Using `out()` is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation 
