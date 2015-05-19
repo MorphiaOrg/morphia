@@ -11,7 +11,7 @@ public class ThreadLocalDatastoreProvider implements DatastoreProvider {
 
     private static final long serialVersionUID = 1L;
 
-    private final ThreadLocal<Datastore> datastores = new ThreadLocal<Datastore>();
+    private final transient ThreadLocal<Datastore> datastores = new ThreadLocal<Datastore>();
 
     @Override
     public Datastore get() {

@@ -12,7 +12,7 @@ public class SingleDatastoreProvider implements DatastoreProvider {
 
     private static final long serialVersionUID = 1L;
 
-    private Datastore datastore;
+    private transient Datastore datastore;
 
     @Override
     public Datastore get() {
