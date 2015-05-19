@@ -1,0 +1,4 @@
+dependencies {
+    compile 'com.google.inject:guice:3.0'
+    compile project(':morphia')
+}

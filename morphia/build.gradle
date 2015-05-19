@@ -1,0 +1,23 @@
+archivesBaseName = 'morphia'
+
+dependencies {
+    if (buildingWith('2.x')) {
+        compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
+        println "Building with the 2.x java driver"
+    } else {
+        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.1"
+        println "Building with the 3.x java driver"
+    }
+
+    compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
+    compile 'cglib:cglib-nodep:2.2.2', optional
+    testCompile 'org.zeroturnaround:zt-exec:1.5'
+    testCompile 'com.jayway.awaitility:awaitility:1.5.0'
+    testCompile 'org.skyscreamer:jsonassert:1.2.3'
+}
+
+clirr {
+    excludeFilter = new File("$configDir/clirr-exclude.yml")
+    baseline = ['org.mongodb.morphia:morphia:1.0.0-rc0'].join(':')
+    failOnErrors = false
+}

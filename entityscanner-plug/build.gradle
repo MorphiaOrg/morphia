@@ -1,0 +1,15 @@
+dependencies {
+    compile('org.reflections:reflections:0.9.8') {
+        'servlet-api:javax.servlet'
+        'com.google.code.gson:gson'
+        'logback-classic:ch.qos.logback'
+        'xml-apis:xml-apis'
+        'com.google.guava:guava'
+    }
+    compile 'com.google.guava:guava:14.0.1'
+    compile('org.scannotation:scannotation:1.0.3') {
+        'javassist:javassist'
+    }
+    compile project(':morphia')
+    testCompile "org.slf4j:slf4j-simple:${slf4jVersion}"
+}
