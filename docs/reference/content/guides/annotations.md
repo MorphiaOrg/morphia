@@ -45,6 +45,9 @@ public @interface Indexes {
 }
 ```
 
+To see the next few annotations in context, please refer to [TestIndexCollections.java]({{< srcref 
+"morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java">}}) in the Morphia source.
+
 ### Index
  
 ```java
@@ -94,6 +97,8 @@ There are two pieces to this annotation that are mutually exclusive.  The first 
 | value() | The field to include in the index |
 | type() | The type of index to create.  This includes the following values:   `ASC`, `DESC`, `GEO2D`, `GEO2DSPHERE`, `TEXT` |
 | weight() | When defining a text index, this is the weight to apply |
+
+
 
 #### IndexOptions
 ```java
