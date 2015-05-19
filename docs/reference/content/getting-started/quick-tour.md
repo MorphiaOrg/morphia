@@ -30,7 +30,7 @@ final Morphia morphia = new Morphia();
 // can be called multiple times with different packages or classes
 morphia.mapPackage("org.mongodb.morphia.example");
 
-// create the Datastore connecting to the database running on the default port on the local host
+// create the Datastore connecting to the default port on the local host
 final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");
 datastore.ensureIndexes();
 ```
@@ -45,6 +45,15 @@ The second line, which we skipped over, deserves a bit of consideration.  In thi
 package we've given and find every class annotated with `@Entity` (which we'll cover shortly) and discover the mapping metadata we've 
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.
+ 
+### Mapping Options
+
+Once you have an instance of Morphia, you can configure various mapping options via the `MappingOptions` class.  While it's possible to 
+specify the `Mapper` when creating an instance of Morphia, most users will use the default mapper.  In either case, the `Mapper` can
+ be fetched using the `getMapper()` method on the `Morphia` instance.  The two most common elements to configure are `storeEmpties` and
+ `storeNulls`.  By default Morphia will not store empty `List` or `Map` values nor will it store null values in to MongoDB.  If your 
+ application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them 
+ for you.  There are a few other options to configure on `MappingOptions`, but we'll not be covering them here.
  
 ## Mapping Classes
 
