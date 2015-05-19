@@ -46,7 +46,8 @@ public @interface Indexes {
 ```
 
 To see the next few annotations in context, please refer to [TestIndexCollections.java]({{< srcref 
-"morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java">}}) in the Morphia source.
+"morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java">}}) or [TestIndexed.java]({{< srcref
+ "morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java">}}) in the Morphia source.
 
 ### Index
  
