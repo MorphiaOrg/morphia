@@ -3,7 +3,11 @@ package org.mongodb.morphia.annotations;
 /**
  * Created by mbessler on 5/15/15.
  */
-public class Const {
+public final class Const {
+
+    private Const(){
+    }
+
     /**
      * The @{@link Id} field name that is stored with mongodb.
      */
