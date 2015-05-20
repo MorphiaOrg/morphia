@@ -23,7 +23,7 @@ If you think you’ve found a bug or want to see a new feature in the Morphia, p
  issue type and how to reproduce it.
 
 If you’ve identified a security vulnerability in a driver or any other
-MongoDB project, please report it according to the [instructions here](http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
+MongoDB project, please report it according to the [instructions here]({{< docsref "tutorial/create-a-vulnerability-report" >}}).
 
 ## Pull Requests
 

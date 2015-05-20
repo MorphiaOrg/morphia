@@ -8,10 +8,11 @@ title = "Aggregation"
 
 # Aggregation
 
-The [aggregation](http://docs.mongodb.org/manual/aggregation/) framework in MongoDB allows you to define a series (called a pipeline) of 
+The [aggregation framework]({{< docsref "aggregation" >}}) in MongoDB allows you to define a series (called a pipeline) of 
 operations (called stages) against the data in a collection.  These pipelines can be used for analytics or they can be used to 
 convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official 
- MongoDB [documentation](http://docs.mongodb.org/manual/aggregation/) has extensive tutorials on such details.  Rather, this guide will 
+ MongoDB [documentation]({{< docsref "aggregation" >}}) has extensive tutorials on such details.  Rather, this 
+ guide will 
  focus on the Morphia API.  The examples shown here are taken from the [tests]({{< srcref 
   "morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java">}}) in Morphia itself.
 
@@ -24,18 +25,18 @@ Iterator<Author> aggregate = datastore.createAggregation(Book.class)
 ```
 
 `createAggregation()` takes a `Class` literal.  This lets Morphia know which collection to perform this aggregation 
-against.  Because of the transformational operations available in the aggregation [pipeline](http://docs.mongodb
-.org/manual/core/aggregation-pipeline/), Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+against.  Because of the transformational operations available in the aggregation [pipeline]({{< docsref "core/aggregation-pipeline" >}}),
+ Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.  
  
 ## The Pipeline
 Aggregation operations are comprised of a series stages.  Our example here has only one stage: `group()`.  This method is the Morphia 
-equivalent of the [`$group`](http://docs.mongodb.org/manual/reference/operator/aggregation/group/) operator.  This stage, as the name 
+equivalent of the [`$group`]({{< docsref "reference/operator/aggregation/group/" >}}) operator.  This stage, as the name 
 suggests, groups together documents based on the given field's values.  In this example, we are collecting together all the books by 
 author.  The first parameter to `group()` defines the `_id` of the resulting documents.  Within this grouping, this pipeline takes the 
 `books` fields for each author and extracts the `title`.  With this grouping of data, we're then `push()`ing the titles in to an array 
-in the final document.  This example is the Morphia equivalent of an [example](http://docs.mongodb
-.org/manual/reference/operator/aggregation/group/#group-title-by-author) found in the aggregation tutorials.  This results in a series of
+in the final document.  This example is the Morphia equivalent of an [example]({{< docsref 
+"reference/operator/aggregation/group/#group-title-by-author" >}}) found in the aggregation tutorials.  This results in a series of
  documents that look like this:
  
  ```json
@@ -65,7 +66,7 @@ There are a handful options here but there's one that deserves some extra attent
 ### $out
 
 But this example doesn't use `aggregate()`, of course, it uses `out()` which gives us access to the `$out` pipeline stage.  [`$out`]
-(http://docs.mongodb.org/manual/reference/operator/aggregation/out/) is a new operator in MongoDB 2.6 that allows the results of a 
+({{< docsref "reference/operator/aggregation/out/" >}}) is a new operator in MongoDB 2.6 that allows the results of a 
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection, 
 if it does not exist, will be created upon execution of the pipeline.  
 

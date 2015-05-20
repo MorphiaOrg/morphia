@@ -101,7 +101,7 @@ the document field name for any number of reasons.  In those cases, you can use 
 class is serialized out to a document to be handed off to MongoDB.  
 
 This just leaves `@Reference`.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case 
-Morphia will store what MongoDB calls a [`DBRef`](http://docs.mongodb.org/manual/reference/database-references/#dbrefs) which is just a 
+Morphia will store what MongoDB calls a [`DBRef`]({{< docsref "reference/database-references/#dbrefs" >}}) which is just a 
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.
  
@@ -196,7 +196,7 @@ final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperat
 ```
 
 There are many operations on this class but, in this case, we're only updating the `salary` field by 10000.  This corresponds to the 
-[`$inc` operator](http://docs.mongodb.org/manual/reference/operator/update/inc/).  There's one last step involved here:
+[`$inc`]({{< docsref "reference/operator/update/inc/" >}}) operator.  There's one last step involved here:
 
 ```java
 final UpdateResults results = datastore.update(underPaidQuery, updateOperations);

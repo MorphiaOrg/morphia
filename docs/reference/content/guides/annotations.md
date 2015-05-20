@@ -77,10 +77,10 @@ There are two pieces to this annotation that are mutually exclusive.  The first 
 | name() | The name of the index |
 | unique() | Requires values in the index to be unique |
 | dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background()| Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
-| sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
+| background()| Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
+| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
 | disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
-| expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
+| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
 | fields() | This is the new way to define which fields to index. [Details]({{< ref "#Field" >}}) can be found below. |
 | options() | This is the new way to define index options. [Details]({{< ref "#IndexOptions" >}}) can be found below.  |
 
@@ -120,9 +120,9 @@ public @interface IndexOptions {
 | name() | The name of the index |
 | unique() | Requires values in the index to be unique |
 | dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background() | Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
-| sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
-| expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
+| background() | Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
+| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
+| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
 | disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
 | language() | Default language for the index. |
 | languageOverride() | The field in the document to use to override the default language. |
@@ -147,9 +147,9 @@ public @interface Indexed {
 | name() | The name of the index |
 | unique() | Requires values in the index to be unique |
 | dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background() | Create this index in the background.  There are some [considerations](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations) to keep in mind.
-| sparse() | Create a [sparse](http://docs.mongodb.org/manual/core/index-sparse/) index |
-| expireAfterSeconds() | Creates a [TTL Index](http://docs.mongodb.org/manual/core/index-ttl/) on a date field. |
+| background() | Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
+| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
+| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
 
 ## Id
 Marks a field in an `@Entity` to be the "_id" field in MongoDB.
