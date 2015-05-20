@@ -737,12 +737,14 @@ this annotation looks like this:</p>
 
 <tr>
 <td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations">considerations</a> to keep in mind.</td>
+<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+">considerations</a> to keep in mind.</td>
 </tr>
 
 <tr>
 <td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/">sparse</a> index</td>
+<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
+">sparse</a> index</td>
 </tr>
 
 <tr>
@@ -752,7 +754,8 @@ this annotation looks like this:</p>
 
 <tr>
 <td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL Index</a> on a date field.</td>
+<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
+">TTL Index</a> on a date field.</td>
 </tr>
 
 <tr>
@@ -843,17 +846,20 @@ this annotation looks like this:</p>
 
 <tr>
 <td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations">considerations</a> to keep in mind.</td>
+<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+">considerations</a> to keep in mind.</td>
 </tr>
 
 <tr>
 <td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/">sparse</a> index</td>
+<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
+">sparse</a> index</td>
 </tr>
 
 <tr>
 <td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL Index</a> on a date field.</td>
+<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
+">TTL Index</a> on a date field.</td>
 </tr>
 
 <tr>
@@ -919,17 +925,20 @@ this annotation looks like this:</p>
 
 <tr>
 <td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations">considerations</a> to keep in mind.</td>
+<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+">considerations</a> to keep in mind.</td>
 </tr>
 
 <tr>
 <td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/">sparse</a> index</td>
+<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
+">sparse</a> index</td>
 </tr>
 
 <tr>
 <td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL Index</a> on a date field.</td>
+<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
+">TTL Index</a> on a date field.</td>
 </tr>
 </tbody>
 </table>
@@ -1142,20 +1151,20 @@ classes.</p>
 
 <h4 id="entitylisteners"><code>@EntityListeners</code></h4>
 
-<p>In addition, you can separate the lifecycle event implementation in an external class, or many.
-```java
-@EntityListeners(BackAccountWatcher.class)
+<p>In addition, you can separate the lifecycle event implementation in an external class, or many.</p>
+
+<pre><code class="language-java">@EntityListeners(BackAccountWatcher.class)
 public class BankAccount {
   @Id String id;
   Date lastUpdated = new Date();
-}</p>
+}
 
-<p>class BankAccountWatcher{</p>
+class BankAccountWatcher{
 
-<p>@PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}</p>
+  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
 
-<p>}
-```</p>
+}
+</code></pre>
 
 
 

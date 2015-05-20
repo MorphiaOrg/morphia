@@ -176,7 +176,8 @@ the document field name for any number of reasons.  In those cases, you can use 
 class is serialized out to a document to be handed off to MongoDB.&lt;/p&gt;
 
 &lt;p&gt;This just leaves &lt;code&gt;@Reference&lt;/code&gt;.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
-Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/database-references/#dbrefs&#34;&gt;&lt;code&gt;DBRef&lt;/code&gt;&lt;/a&gt; which is just a
+Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/database-references/#dbrefs
+&#34;&gt;&lt;code&gt;DBRef&lt;/code&gt;&lt;/a&gt; which is just a
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.&lt;/p&gt;
 
@@ -263,7 +264,8 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There are many operations on this class but, in this case, we&amp;rsquo;re only updating the &lt;code&gt;salary&lt;/code&gt; field by 10000.  This corresponds to the
-&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/&#34;&gt;&lt;code&gt;$inc&lt;/code&gt; operator&lt;/a&gt;.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/
+&#34;&gt;&lt;code&gt;$inc&lt;/code&gt;&lt;/a&gt; operator.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
 &lt;/code&gt;&lt;/pre&gt;

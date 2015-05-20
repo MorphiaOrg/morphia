@@ -677,7 +677,8 @@ the document field name for any number of reasons.  In those cases, you can use 
 class is serialized out to a document to be handed off to MongoDB.</p>
 
 <p>This just leaves <code>@Reference</code>.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
-Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/reference/database-references/#dbrefs"><code>DBRef</code></a> which is just a
+Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/reference/database-references/#dbrefs
+"><code>DBRef</code></a> which is just a
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.</p>
 
@@ -764,7 +765,8 @@ of update operations.  In this example, we&rsquo;ll find all the underpaid emplo
 </code></pre>
 
 <p>There are many operations on this class but, in this case, we&rsquo;re only updating the <code>salary</code> field by 10000.  This corresponds to the
-<a href="http://docs.mongodb.org/manual/reference/operator/update/inc/"><code>$inc</code> operator</a>.  There&rsquo;s one last step involved here:</p>
+<a href="http://docs.mongodb.org/manual/reference/operator/update/inc/
+"><code>$inc</code></a> operator.  There&rsquo;s one last step involved here:</p>
 
 <pre><code class="language-java">final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
 </code></pre>

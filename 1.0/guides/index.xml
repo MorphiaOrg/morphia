@@ -138,12 +138,14 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -153,7 +155,8 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -244,17 +247,20 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -320,17 +326,20 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -543,20 +552,20 @@ classes.&lt;/p&gt;
 
 &lt;h4 id=&#34;entitylisteners&#34;&gt;&lt;code&gt;@EntityListeners&lt;/code&gt;&lt;/h4&gt;
 
-&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.
-```java
-@EntityListeners(BackAccountWatcher.class)
+&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@EntityListeners(BackAccountWatcher.class)
 public class BankAccount {
   @Id String id;
   Date lastUpdated = new Date();
-}&lt;/p&gt;
+}
 
-&lt;p&gt;class BankAccountWatcher{&lt;/p&gt;
+class BankAccountWatcher{
 
-&lt;p&gt;@PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}&lt;/p&gt;
+  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
 
-&lt;p&gt;}
-```&lt;/p&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -587,10 +596,13 @@ public class BankAccount {
 
 &lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
 
-&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;aggregation&lt;/a&gt; framework in MongoDB allows you to define a series (called a pipeline) of
+&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
+&#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
 operations (called stages) against the data in a collection.  These pipelines can be used for analytics or they can be used to
 convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official
- MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this guide will
+ MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
+&#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this
+ guide will
  focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
 &#34;&gt;tests&lt;/a&gt; in Morphia itself.&lt;/p&gt;
 
@@ -602,19 +614,21 @@ convert your data from one form to another.  This guide will not go in to the de
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;code&gt;createAggregation()&lt;/code&gt; takes a &lt;code&gt;Class&lt;/code&gt; literal.  This lets Morphia know which collection to perform this aggregation
-against.  Because of the transformational operations available in the aggregation &lt;a href=&#34;http://docs.mongodb
-.org/manual/core/aggregation-pipeline/&#34;&gt;pipeline&lt;/a&gt;, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+against.  Because of the transformational operations available in the aggregation &lt;a href=&#34;http://docs.mongodb.org/manual/core/aggregation-pipeline
+&#34;&gt;pipeline&lt;/a&gt;,
+ Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
-equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/&#34;&gt;&lt;code&gt;$group&lt;/code&gt;&lt;/a&gt; operator.  This stage, as the name
+equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
+&#34;&gt;&lt;code&gt;$group&lt;/code&gt;&lt;/a&gt; operator.  This stage, as the name
 suggests, groups together documents based on the given field&amp;rsquo;s values.  In this example, we are collecting together all the books by
 author.  The first parameter to &lt;code&gt;group()&lt;/code&gt; defines the &lt;code&gt;_id&lt;/code&gt; of the resulting documents.  Within this grouping, this pipeline takes the
 &lt;code&gt;books&lt;/code&gt; fields for each author and extracts the &lt;code&gt;title&lt;/code&gt;.  With this grouping of data, we&amp;rsquo;re then &lt;code&gt;push()&lt;/code&gt;ing the titles in to an array
-in the final document.  This example is the Morphia equivalent of an &lt;a href=&#34;http://docs.mongodb
-.org/manual/reference/operator/aggregation/group/#group-title-by-author&#34;&gt;example&lt;/a&gt; found in the aggregation tutorials.  This results in a series of
+in the final document.  This example is the Morphia equivalent of an &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author
+&#34;&gt;example&lt;/a&gt; found in the aggregation tutorials.  This results in a series of
  documents that look like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt; { &amp;quot;_id&amp;quot; : &amp;quot;Homer&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Odyssey&amp;quot;, &amp;quot;Iliad&amp;quot; ] }
@@ -642,7 +656,8 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
 
 &lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
 
-&lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/&#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
+&lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+&#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.&lt;/p&gt;
 

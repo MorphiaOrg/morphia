@@ -34,7 +34,8 @@ encountered a bug, the mailing list is the place to start.&lt;/p&gt;
  issue type and how to reproduce it.&lt;/p&gt;
 
 &lt;p&gt;If you’ve identified a security vulnerability in a driver or any other
-MongoDB project, please report it according to the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report&#34;&gt;instructions here&lt;/a&gt;.&lt;/p&gt;
+MongoDB project, please report it according to the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report
+&#34;&gt;instructions here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;pull-requests&#34;&gt;Pull Requests&lt;/h2&gt;
 
@@ -52,6 +53,74 @@ $ git checkout -b myNewFeature
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ./gradlew check
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/morphia/1.0/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/morphia/1.0/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
+  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;section class=&#34;maven&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
+&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
+        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
+        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
+    &amp;lt;/dependency&amp;gt;
+&amp;lt;/dependencies&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;gradle hidden&#34;&gt;
+&lt;pre&gt;&lt;code&gt;
+  dependencies {
+      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
+  }
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;downloadInfo&#34;&gt;
+&lt;p class=&#34;small&#34;&gt;You can also download the jars
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  from sonatype.&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;/section&gt;
+&lt;/p&gt;
 </description>
     </item>
     
@@ -184,12 +253,14 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -199,7 +270,8 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -290,17 +362,20 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -366,17 +441,20 @@ this annotation looks like this:&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
+&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
+&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
+&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
+&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -589,69 +667,20 @@ classes.&lt;/p&gt;
 
 &lt;h4 id=&#34;entitylisteners&#34;&gt;&lt;code&gt;@EntityListeners&lt;/code&gt;&lt;/h4&gt;
 
-&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.
-```java
-@EntityListeners(BackAccountWatcher.class)
+&lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@EntityListeners(BackAccountWatcher.class)
 public class BankAccount {
   @Id String id;
   Date lastUpdated = new Date();
-}&lt;/p&gt;
+}
 
-&lt;p&gt;class BankAccountWatcher{&lt;/p&gt;
+class BankAccountWatcher{
 
-&lt;p&gt;@PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}&lt;/p&gt;
+  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
 
-&lt;p&gt;}
-```&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Installation Guide</title>
-      <link>/morphia/1.0/getting-started/installation-guide/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
-      <description>
-
-&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
-
-&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
-  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
-&lt;/div&gt;
-&lt;/p&gt;
-
-&lt;p&gt;
-&lt;section class=&#34;maven&#34;&gt;
-&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
-&amp;lt;dependencies&amp;gt;
-    &amp;lt;dependency&amp;gt;
-        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
-        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
-    &amp;lt;/dependency&amp;gt;
-&amp;lt;/dependencies&amp;gt;
-
+}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;gradle hidden&#34;&gt;
-&lt;pre&gt;&lt;code&gt;
-  dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
-  }
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;downloadInfo&#34;&gt;
-&lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
-  from sonatype.&lt;/a&gt;
-&lt;/p&gt;
-
-&lt;/section&gt;
-&lt;/p&gt;
 </description>
     </item>
     
@@ -754,7 +783,8 @@ the document field name for any number of reasons.  In those cases, you can use 
 class is serialized out to a document to be handed off to MongoDB.&lt;/p&gt;
 
 &lt;p&gt;This just leaves &lt;code&gt;@Reference&lt;/code&gt;.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
-Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/database-references/#dbrefs&#34;&gt;&lt;code&gt;DBRef&lt;/code&gt;&lt;/a&gt; which is just a
+Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/database-references/#dbrefs
+&#34;&gt;&lt;code&gt;DBRef&lt;/code&gt;&lt;/a&gt; which is just a
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.&lt;/p&gt;
 
@@ -841,7 +871,8 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There are many operations on this class but, in this case, we&amp;rsquo;re only updating the &lt;code&gt;salary&lt;/code&gt; field by 10000.  This corresponds to the
-&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/&#34;&gt;&lt;code&gt;$inc&lt;/code&gt; operator&lt;/a&gt;.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/inc/
+&#34;&gt;&lt;code&gt;$inc&lt;/code&gt;&lt;/a&gt; operator.  There&amp;rsquo;s one last step involved here:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
 &lt;/code&gt;&lt;/pre&gt;
@@ -865,20 +896,18 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>/morphia/1.0/getting-started/</link>
+      <title>Reference Guides</title>
+      <link>/morphia/1.0/guides/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/getting-started/</guid>
+      <guid>/morphia/1.0/guides/</guid>
       <description>
 
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
+&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -907,23 +936,6 @@ and a simple tutorial to get up and running quickly.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Reference Guides</title>
-      <link>/morphia/1.0/guides/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/guides/</guid>
-      <description>
-
-&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Aggregation</title>
       <link>/morphia/1.0/guides/aggregation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -933,10 +945,13 @@ and a simple tutorial to get up and running quickly.&lt;/p&gt;
 
 &lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
 
-&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;aggregation&lt;/a&gt; framework in MongoDB allows you to define a series (called a pipeline) of
+&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
+&#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
 operations (called stages) against the data in a collection.  These pipelines can be used for analytics or they can be used to
 convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official
- MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation/&#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this guide will
+ MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
+&#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this
+ guide will
  focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
 &#34;&gt;tests&lt;/a&gt; in Morphia itself.&lt;/p&gt;
 
@@ -948,19 +963,21 @@ convert your data from one form to another.  This guide will not go in to the de
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;code&gt;createAggregation()&lt;/code&gt; takes a &lt;code&gt;Class&lt;/code&gt; literal.  This lets Morphia know which collection to perform this aggregation
-against.  Because of the transformational operations available in the aggregation &lt;a href=&#34;http://docs.mongodb
-.org/manual/core/aggregation-pipeline/&#34;&gt;pipeline&lt;/a&gt;, Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+against.  Because of the transformational operations available in the aggregation &lt;a href=&#34;http://docs.mongodb.org/manual/core/aggregation-pipeline
+&#34;&gt;pipeline&lt;/a&gt;,
+ Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
-equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/&#34;&gt;&lt;code&gt;$group&lt;/code&gt;&lt;/a&gt; operator.  This stage, as the name
+equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
+&#34;&gt;&lt;code&gt;$group&lt;/code&gt;&lt;/a&gt; operator.  This stage, as the name
 suggests, groups together documents based on the given field&amp;rsquo;s values.  In this example, we are collecting together all the books by
 author.  The first parameter to &lt;code&gt;group()&lt;/code&gt; defines the &lt;code&gt;_id&lt;/code&gt; of the resulting documents.  Within this grouping, this pipeline takes the
 &lt;code&gt;books&lt;/code&gt; fields for each author and extracts the &lt;code&gt;title&lt;/code&gt;.  With this grouping of data, we&amp;rsquo;re then &lt;code&gt;push()&lt;/code&gt;ing the titles in to an array
-in the final document.  This example is the Morphia equivalent of an &lt;a href=&#34;http://docs.mongodb
-.org/manual/reference/operator/aggregation/group/#group-title-by-author&#34;&gt;example&lt;/a&gt; found in the aggregation tutorials.  This results in a series of
+in the final document.  This example is the Morphia equivalent of an &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author
+&#34;&gt;example&lt;/a&gt; found in the aggregation tutorials.  This results in a series of
  documents that look like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt; { &amp;quot;_id&amp;quot; : &amp;quot;Homer&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Odyssey&amp;quot;, &amp;quot;Iliad&amp;quot; ] }
@@ -988,7 +1005,8 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
 
 &lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
 
-&lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/&#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
+&lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+&#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.&lt;/p&gt;
 
