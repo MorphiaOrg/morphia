@@ -281,7 +281,6 @@ public class TestDatastore extends TestBase {
         fbUsers.add(new FacebookUser(3, "user 3"));
         fbUsers.add(new FacebookUser(4, "user 4"));
 
-
         getDs().save(fbUsers);
         assertEquals(4, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
@@ -472,4 +471,23 @@ public class TestDatastore extends TestBase {
             Assert.assertNotNull(user.getId());
         }
     }
+
+    @Test
+    public void multipleDatabases() {
+        final Datastore db1 = getMorphia().createDatastore(getMongoClient(), "db1");
+        final Datastore db2 = getMorphia().createDatastore(getMongoClient(), "db2");
+        
+        db1.save(new FacebookUser(1, "DB1 FaceBook User"));
+        db2.save(new FacebookUser(2, "DB2 FaceBook User"));
+
+        Assert.assertNotNull(db1.find(FacebookUser.class, "id", 1).get());
+        Assert.assertNull(db2.find(FacebookUser.class, "id", 1).get());
+
+        Assert.assertNull(db1.find(FacebookUser.class, "id", 2).get());
+        Assert.assertNotNull(db2.find(FacebookUser.class, "id", 2).get());
+
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 1).get());
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 2).get());
+    }
+
 }
