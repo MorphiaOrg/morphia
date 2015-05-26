@@ -38,7 +38,6 @@ import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -107,7 +106,6 @@ public class Mapper {
 
     // TODO: make these configurable
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
-    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
     private final org.mongodb.morphia.converters.Converters converters;
 
     public Mapper() {
@@ -118,10 +116,15 @@ public class Mapper {
         this();
         this.opts = opts;
     }
-    
+
+    /**
+     * 
+     * @deprecated Use Mapper#setDatastoreProvider(DatastoreProvider) instead
+     */
+    @Deprecated
     public Mapper(final DatastoreProvider datastoreProvider) {
         this();
-        this.datastoreProvider = datastoreProvider;
+        getOptions().setDatastoreProvider(datastoreProvider);
     }
 
     /**
@@ -786,7 +789,7 @@ public class Mapper {
     }
 
     public DatastoreProvider getDatastoreProvider() {
-        return datastoreProvider;
+        return getOptions().getDatastoreProvider();
     }
 
 }

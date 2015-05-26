@@ -2,6 +2,8 @@ package org.mongodb.morphia.mapping;
 
 
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
+import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 
 
 /**
@@ -15,27 +17,12 @@ public class MapperOptions {
     private boolean storeNulls;
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
-
     private ObjectFactory objectFactory = new DefaultCreator();
-    
     private CustomMapper embeddedMapper = new EmbeddedMapper();
-
     private CustomMapper defaultMapper = embeddedMapper;
-    
     private CustomMapper referenceMapper = new ReferenceMapper();
-    
     private CustomMapper valueMapper = new ValueMapper();
-
-    public boolean isActLikeSerializer() {
-        return actLikeSerializer;
-    }
-
-    /**
-     * Treat java transient fields as if they have {@code @Transient} on them
-     */
-    public void setActLikeSerializer(final boolean actLikeSerializer) {
-        this.actLikeSerializer = actLikeSerializer;
-    }
+    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 
     public CustomMapper getDefaultMapper() {
         return defaultMapper;
@@ -53,24 +40,13 @@ public class MapperOptions {
         embeddedMapper = pEmbeddedMapper;
     }
 
-    public boolean isIgnoreFinals() {
-        return ignoreFinals;
-    }
-
-    /**
-     * Controls if final fields are stored.
-     */
-    public void setIgnoreFinals(final boolean ignoreFinals) {
-        this.ignoreFinals = ignoreFinals;
-    }
-
     public ObjectFactory getObjectFactory() {
         return objectFactory;
     }
 
     /**
-     * Sets the ObjectFactory to use when instantiating entity classes.  The default factory is a simple reflection based factory but 
-     * this could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
+     * Sets the ObjectFactory to use when instantiating entity classes.  The default factory is a simple reflection based factory but this
+     * could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
      */
     public void setObjectFactory(final ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
@@ -82,6 +58,36 @@ public class MapperOptions {
 
     public void setReferenceMapper(final CustomMapper pReferenceMapper) {
         referenceMapper = pReferenceMapper;
+    }
+
+    public CustomMapper getValueMapper() {
+        return valueMapper;
+    }
+
+    public void setValueMapper(final CustomMapper pValueMapper) {
+        valueMapper = pValueMapper;
+    }
+
+    public boolean isActLikeSerializer() {
+        return actLikeSerializer;
+    }
+
+    /**
+     * Treat java transient fields as if they have {@code @Transient} on them
+     */
+    public void setActLikeSerializer(final boolean actLikeSerializer) {
+        this.actLikeSerializer = actLikeSerializer;
+    }
+
+    public boolean isIgnoreFinals() {
+        return ignoreFinals;
+    }
+
+    /**
+     * Controls if final fields are stored.
+     */
+    public void setIgnoreFinals(final boolean ignoreFinals) {
+        this.ignoreFinals = ignoreFinals;
     }
 
     public boolean isStoreEmpties() {
@@ -106,14 +112,6 @@ public class MapperOptions {
         this.storeNulls = storeNulls;
     }
 
-    public CustomMapper getValueMapper() {
-        return valueMapper;
-    }
-
-    public void setValueMapper(final CustomMapper pValueMapper) {
-        valueMapper = pValueMapper;
-    }
-
     public boolean isUseLowerCaseCollectionNames() {
         return useLowerCaseCollectionNames;
     }
@@ -123,5 +121,14 @@ public class MapperOptions {
      */
     public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
         this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+    }
+
+    public DatastoreProvider getDatastoreProvider() {
+        return datastoreProvider;
+    }
+
+    public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
+        datastoreProvider.register(this.getDatastoreProvider().get());
+        this.datastoreProvider = datastoreProvider;
     }
 }
