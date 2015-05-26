@@ -72,6 +72,7 @@ import static java.util.Arrays.asList;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
@@ -1246,7 +1247,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<Key<T>> keys = new ArrayList<Key<T>>();
         for (final T entity : entities) {
             final DBObject dbObj = involvedObjects.remove(entity);
-            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
                 
             if (fetchKeys) {
                 if (dbObj.get(Mapper.ID_KEY) == null) {
@@ -1255,6 +1255,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 mapper.updateKeyInfo(entity, dbObj, createCache());
                 keys.add(new Key<T>((Class<? extends T>) entity.getClass(), collection.getName(), mapper.getId(entity)));
             }
+            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
         }
         
         for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {

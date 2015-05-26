@@ -9,6 +9,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.mapping.MappedClass;
 
+@SuppressWarnings("deprecation")
 public abstract class TestBase {
     private final MongoClient mongoClient;
     private final Morphia morphia = new Morphia();
