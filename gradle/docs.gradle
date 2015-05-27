@@ -55,7 +55,7 @@ task landing << {
     }
 }
 
-task reference(dependsOn: 'javadoc') << {
+task reference(dependsOn: ':morphia:javadoc') << {
     exec {
         workingDir 'docs/reference'
         environment System.getenv()
