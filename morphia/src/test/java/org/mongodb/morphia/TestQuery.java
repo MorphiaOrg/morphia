@@ -75,7 +75,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRenamedFieldQuery() throws Exception {
-        getDs().save(new ContainsRenamedFields());
+        getDs().save(new ContainsRenamedFields("Scott", "Bakula"));
 
         assertNotNull(getDs().find(ContainsRenamedFields.class).field("firstName").equal("Scott").get());
 
