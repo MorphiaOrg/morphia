@@ -57,74 +57,6 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>/morphia/1.0/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Installation Guide</title>
-      <link>/morphia/1.0/getting-started/installation-guide/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
-      <description>
-
-&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
-
-&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
-  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
-&lt;/div&gt;
-&lt;/p&gt;
-
-&lt;p&gt;
-&lt;section class=&#34;maven&#34;&gt;
-&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
-&amp;lt;dependencies&amp;gt;
-    &amp;lt;dependency&amp;gt;
-        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
-        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
-    &amp;lt;/dependency&amp;gt;
-&amp;lt;/dependencies&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;gradle hidden&#34;&gt;
-&lt;pre&gt;&lt;code&gt;
-  dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
-  }
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;downloadInfo&#34;&gt;
-&lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
-  from sonatype.&lt;/a&gt;
-&lt;/p&gt;
-
-&lt;/section&gt;
-&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Annotations</title>
       <link>/morphia/1.0/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -685,6 +617,25 @@ class BankAccountWatcher{
     </item>
     
     <item>
+      <title>Getting Started</title>
+      <link>/morphia/1.0/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Quick Tour</title>
       <link>/morphia/1.0/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -896,19 +847,51 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
     </item>
     
     <item>
-      <title>Reference Guides</title>
-      <link>/morphia/1.0/guides/</link>
+      <title>Installation Guide</title>
+      <link>/morphia/1.0/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.0/guides/</guid>
+      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
       <description>
 
-&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
 
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
+  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;section class=&#34;maven&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
+&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
+        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
+        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
+    &amp;lt;/dependency&amp;gt;
+&amp;lt;/dependencies&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;gradle hidden&#34;&gt;
+&lt;pre&gt;&lt;code&gt;
+  dependencies {
+      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
+  }
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;downloadInfo&#34;&gt;
+&lt;p class=&#34;small&#34;&gt;You can also download the jars
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  from sonatype.&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;/section&gt;
+&lt;/p&gt;
 </description>
     </item>
     
@@ -932,6 +915,24 @@ For reference documentation please see the driver documentation.&lt;/p&gt;
 
 &lt;p&gt;The &lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/&#34;&gt;Getting Started&lt;/a&gt; guide contains installation instructions
 and a simple tutorial to get up and running quickly.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reference Guides</title>
+      <link>/morphia/1.0/guides/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/guides/</guid>
+      <description>
+
+&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -1031,6 +1032,262 @@ returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsqu
 &lt;code&gt;Author&lt;/code&gt; as the output collection for the pipeline.  If you&amp;rsquo;d like to use an alternate collection but still return a cursor of &lt;code&gt;Author&lt;/code&gt;
 instances, you can use &lt;a href=&#34;/morphia/1.0/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
 .lang.String-java.lang.Class-com.mongodb.AggregationOptions-&#34;&gt;&lt;code&gt;out(String,Class,AggregationOptions)&lt;/code&gt;&lt;/a&gt; instead.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Querying</title>
+      <link>/morphia/1.0/guides/querying/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.0/guides/querying/</guid>
+      <description>
+
+&lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
+
+&lt;p&gt;Using the Java driver directly involves &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.0/driver/reference/crud/#crud&#34;&gt;creating&lt;/a&gt; a lot of
+&lt;code&gt;Document&lt;/code&gt; instances to capture a query.   Morphia, on the other hand, offers a fluent API with which to build up a query and attempts to
+provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
+the type of your entity.&lt;/p&gt;
+
+&lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;Datastore&lt;/code&gt; is the key class when using Morphia.  Virtually all operations begin with the &lt;code&gt;Datastore&lt;/code&gt;.  To create the &lt;code&gt;Query&lt;/code&gt;, we
+invoke the following code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;Query&amp;lt;Product&amp;gt; query = datastore.createQuery(Product.class);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;createQuery()&lt;/code&gt; returns an instance of &lt;code&gt;Query&lt;/code&gt; with which we can build a query.&lt;/p&gt;
+
+&lt;h3 id=&#34;filter&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The first method of interest is &lt;code&gt;filter()&lt;/code&gt;.  This method takes two values: a condition string and a value.  The &lt;code&gt;value&lt;/code&gt; parameter is, of
+course, the value to use when applying the &lt;code&gt;condition&lt;/code&gt; clause.  The &lt;code&gt;condition&lt;/code&gt; parameter is a bit more complicated.  At its simplest,
+the condition is just a field name.  In this case, the condition is assumed to be an &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/query/eq/
+&#34;&gt;equality&lt;/a&gt; check.  There is a slightly more complicated variant, however.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;condition&lt;/code&gt; value can also contain an operator.  For example, to compare a numeric field against a value, you might write something
+like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.filter(&amp;quot;price &amp;gt;=&amp;quot;, 1000);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this case, we&amp;rsquo;re instructing Morphia to add a filter using &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/query/gte/
+&#34;&gt;$gte&lt;/a&gt;.  This would result
+ in a query that looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{ price: { $gte: 1000 } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The list of supported filter operations can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
+&#34;&gt;FilterOperator&lt;/a&gt; class.  Each filter operator can either be referenced by its
+ Mongodb &amp;ldquo;dollar name&amp;rdquo; or by the aliases listed afterward.  For example, with the &lt;code&gt;EQUAL&lt;/code&gt; operator you can use the canonical &lt;code&gt;$eq&lt;/code&gt; operator
+  as you would when building a query in the shell, or you could opt to use either &lt;code&gt;=&lt;/code&gt; or &lt;code&gt;==&lt;/code&gt; which might feel a little more natural to
+  use than the dollar operators.&lt;/p&gt;
+
+&lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
+returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
+&#34;&gt;class&lt;/a&gt; providing methods with which
+ to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
+ &lt;code&gt;filter()&lt;/code&gt; can be.  To perform the same query as above, you&amp;rsquo;d write this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.field(&amp;quot;price&amp;quot;).greaterThanOrEq(1000);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in the exact same query as the &lt;code&gt;filter()&lt;/code&gt; version but has the advantage that any typo in the operation name (method in this
+case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+&lt;code&gt;@Property&lt;/code&gt; annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+result in an error.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;complex-queries&#34;&gt;Complex Queries&lt;/h2&gt;
+
+&lt;p&gt;Of course, queries are usually more complex than single field comparisons.  Morphia offers both &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; to build up more
+complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;q.and(
+    q.criteria(&amp;quot;width&amp;quot;).equal(10),
+    q.criteria(&amp;quot;height&amp;quot;).equal(1)
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An &lt;code&gt;or&lt;/code&gt; clause looks exactly the same except for using &lt;code&gt;or()&lt;/code&gt; instead of &lt;code&gt;and()&lt;/code&gt;, of course.  For these clauses we use the &lt;code&gt;criteria()&lt;/code&gt;
+method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the same fashion.  &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; take a &lt;a href=&#34;https://docs.oracle
+.com/javase/8/docs/technotes/guides/language/varargs.html&#34;&gt;&lt;code&gt;varargs&lt;/code&gt;&lt;/a&gt; parameter of type &lt;code&gt;Criteria&lt;/code&gt; so you can include as many filters as necessary.&lt;/p&gt;
+
+&lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
+
+&lt;p&gt;Morphia also supports MongoDB&amp;rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
+have a &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text/
+&#34;&gt;text index&lt;/a&gt; defined first.  Using Morphia that definition would look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Indexes(@Index(fields = @Field(value = &amp;quot;$**&amp;quot;, type = IndexType.TEXT)))
+public static class Greeting {
+    @Id
+    private ObjectId id;
+    private String value;
+    private String language;
+    
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;$**&lt;/code&gt; value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
+&#34;&gt;test&lt;/a&gt; does:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;morphia.map(Greeting.class);
+datastore.ensureIndexes();
+
+datastore.save(new Greeting(&amp;quot;good morning&amp;quot;, &amp;quot;english&amp;quot;));
+datastore.save(new Greeting(&amp;quot;good afternoon&amp;quot;, &amp;quot;english&amp;quot;));
+datastore.save(new Greeting(&amp;quot;good night&amp;quot;, &amp;quot;english&amp;quot;));
+datastore.save(new Greeting(&amp;quot;good riddance&amp;quot;, &amp;quot;english&amp;quot;));
+
+datastore.save(new Greeting(&amp;quot;guten Morgen&amp;quot;, &amp;quot;german&amp;quot;));
+datastore.save(new Greeting(&amp;quot;guten Tag&amp;quot;, &amp;quot;german&amp;quot;));
+datastore.save(new Greeting(&amp;quot;guten Nacht&amp;quot;, &amp;quot;german&amp;quot;));
+
+datastore.save(new Greeting(&amp;quot;buenos días&amp;quot;, &amp;quot;spanish&amp;quot;));
+datastore.save(new Greeting(&amp;quot;buenas tardes&amp;quot;, &amp;quot;spanish&amp;quot;));
+datastore.save(new Greeting(&amp;quot;buenos noches&amp;quot;, &amp;quot;spanish&amp;quot;));
+
+List&amp;lt;Greeting&amp;gt; good = datastore.createQuery(Greeting.class)
+                             .search(&amp;quot;good&amp;quot;)
+                             .order(&amp;quot;_id&amp;quot;)
+                             .asList();
+Assert.assertEquals(4, good.size());
+Assert.assertEquals(&amp;quot;good morning&amp;quot;, good.get(0).value);
+Assert.assertEquals(&amp;quot;good afternoon&amp;quot;, good.get(1).value);
+Assert.assertEquals(&amp;quot;good night&amp;quot;, good.get(2).value);
+Assert.assertEquals(&amp;quot;good riddance&amp;quot;, good.get(3).value);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the work
+&amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
+
+&lt;p&gt;There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
+the query results in different ways.&lt;/p&gt;
+
+&lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.find/#projections
+&#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+&#34;&gt;unit tests&lt;/a&gt;, this is an example of this feature in action:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ContainsRenamedFields user = new ContainsRenamedFields(&amp;quot;Frank&amp;quot;, &amp;quot;Zappa&amp;quot;);
+getDs().save(user);
+
+ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, &amp;quot;first_name&amp;quot;).get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);
+
+found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, &amp;quot;firstName&amp;quot;).get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see here, we&amp;rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
+ the returned instance of our type.  It&amp;rsquo;s also worth noting that this project works with both the mapped document field name
+ &lt;code&gt;&amp;quot;first_name&amp;quot;&lt;/code&gt; and the Java field name &lt;code&gt;&amp;quot;firstName&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;While projections can be a nice performance win in some cases, it&amp;rsquo;s important to note that this object can not be safely saved back to
+ MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
+  saved. For example, in the example above if &lt;code&gt;found&lt;/code&gt; is saved back to MongoDB, the &lt;code&gt;last_name&lt;/code&gt; field that currently exists in the database
+  for this entity will be removed.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;limiting-and-skipping&#34;&gt;Limiting and Skipping&lt;/h3&gt;
+
+&lt;p&gt;Pagination of query results is often done as a combination of skips and limits.  Morphia offers &lt;code&gt;Query.limit(int)&lt;/code&gt; and &lt;code&gt;Query.offset(int)&lt;/code&gt;
+for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;datastore.createQuery(Person.class)
+    .offset(1)
+    .limit(10)
+    .asList()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This query will skip the first element and take up to the next 10 items found by the query.  There&amp;rsquo;s a caveat to using skip/limit for
+pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/cursor.skip
+&#34;&gt;skip&lt;/a&gt; documentation for more detail.&lt;/p&gt;
+
+&lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
+
+&lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.0/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
+.  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
+ for a particular field simply prefix that field with a &lt;code&gt;-&lt;/code&gt;.  For example, to sort by age (youngest to oldest) and then income (highest
+ to lowest), you would use this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.order(&amp;quot;age,-income&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;tailable-cursors&#34;&gt;Tailable Cursors&lt;/h3&gt;
+
+&lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
+&#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
+are added to the collection that match your query, they&amp;rsquo;ll be returned by the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
+&#34;&gt;tailable cursor&lt;/a&gt;.  An example of this feature in action can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+&#34;&gt;unit tests&lt;/a&gt; in the &lt;code&gt;testTailableCursors()&lt;/code&gt; test:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;getMorphia().map(CappedPic.class);
+getDs().ensureCaps();                                                                 // #1
+final Query&amp;lt;CappedPic&amp;gt; query = getDs().createQuery(CappedPic.class);
+final List&amp;lt;CappedPic&amp;gt; found = new ArrayList&amp;lt;CappedPic&amp;gt;();
+final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+Assert.assertEquals(0, query.countAll());
+
+executorService.scheduleAtFixedRate(new Runnable() {
+    @Override
+    public void run() {
+        getDs().save(new CappedPic(System.currentTimeMillis() + &amp;quot;&amp;quot;));                 // #2
+    }
+}, 0, 500, TimeUnit.MILLISECONDS);
+
+final Iterator&amp;lt;CappedPic&amp;gt; tail = query.tail();
+Awaitility                                                                            // #3
+    .await()
+    .pollDelay(1, TimeUnit.SECONDS)
+    .atMost(30, TimeUnit.SECONDS)
+    .until(new Callable&amp;lt;Boolean&amp;gt;() {
+        @Override
+        public Boolean call() throws Exception {
+            found.add(tail.next());                                                   // #4
+            return found.size() &amp;gt;= 10;
+        }
+    });
+executorService.shutdownNow();
+Assert.assertTrue(query.countAll() &amp;gt;= 10);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There&amp;rsquo;s a lot to unwind here so let&amp;rsquo;s take it one item at a time.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.0/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
+created correctly.&lt;/li&gt;
+&lt;li&gt;Periodically add documents to the collection&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jayway/awaitility&#34;&gt;Awaitility&lt;/a&gt; is handy utility to wait for a certain condition to be met while also timing out
+if things take too long.  For more information, please see its &lt;a href=&#34;https://github.com/jayway/awaitility&#34;&gt;website&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  If your application can&amp;rsquo;t block
+on &lt;code&gt;next()&lt;/code&gt;, &lt;code&gt;hasNext()&lt;/code&gt; works as you&amp;rsquo;d expect an Iterator to.&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     

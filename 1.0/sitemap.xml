@@ -13,17 +13,12 @@
   </url>
   
   <url>
-    <loc>/morphia/1.0/getting-started/</loc>
-    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/morphia/1.0/getting-started/installation-guide/</loc>
-    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/morphia/1.0/guides/annotations/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.0/getting-started/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
@@ -33,7 +28,7 @@
   </url>
   
   <url>
-    <loc>/morphia/1.0/guides/</loc>
+    <loc>/morphia/1.0/getting-started/installation-guide/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
@@ -43,7 +38,16 @@
   </url>
   
   <url>
+    <loc>/morphia/1.0/guides/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/morphia/1.0/guides/aggregation/</loc>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.0/guides/querying/</loc>
   </url>
   
 </urlset>
