@@ -57,6 +57,55 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
+      <title>Installation Guide</title>
+      <link>/morphia/1.0/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
+  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;section class=&#34;maven&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
+&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
+        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
+        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
+    &amp;lt;/dependency&amp;gt;
+&amp;lt;/dependencies&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;gradle hidden&#34;&gt;
+&lt;pre&gt;&lt;code&gt;
+  dependencies {
+      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
+  }
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;downloadInfo&#34;&gt;
+&lt;p class=&#34;small&#34;&gt;You can also download the jars
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  from sonatype.&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;/section&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Annotations</title>
       <link>/morphia/1.0/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -847,73 +896,6 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
     </item>
     
     <item>
-      <title>Installation Guide</title>
-      <link>/morphia/1.0/getting-started/installation-guide/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/getting-started/installation-guide/</guid>
-      <description>
-
-&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
-
-&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
-  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
-&lt;/div&gt;
-&lt;/p&gt;
-
-&lt;p&gt;
-&lt;section class=&#34;maven&#34;&gt;
-&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
-&amp;lt;dependencies&amp;gt;
-    &amp;lt;dependency&amp;gt;
-        &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
-        &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.0-rc0&amp;lt;/version&amp;gt;
-    &amp;lt;/dependency&amp;gt;
-&amp;lt;/dependencies&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;gradle hidden&#34;&gt;
-&lt;pre&gt;&lt;code&gt;
-  dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.0-rc0&#39;
-  }
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/section&gt;
-&lt;section class=&#34;downloadInfo&#34;&gt;
-&lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.0-rc0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
-  from sonatype.&lt;/a&gt;
-&lt;/p&gt;
-
-&lt;/section&gt;
-&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Reference Guides</title>
-      <link>/morphia/1.0/guides/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/guides/</guid>
-      <description>
-
-&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Morphia</title>
       <link>/morphia/1.0/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -933,6 +915,24 @@ For reference documentation please see the driver documentation.&lt;/p&gt;
 
 &lt;p&gt;The &lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/&#34;&gt;Getting Started&lt;/a&gt; guide contains installation instructions
 and a simple tutorial to get up and running quickly.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reference Guides</title>
+      <link>/morphia/1.0/guides/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/guides/</guid>
+      <description>
+
+&lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -1258,7 +1258,15 @@ complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something lik
 
 &lt;p&gt;An &lt;code&gt;or&lt;/code&gt; clause looks exactly the same except for using &lt;code&gt;or()&lt;/code&gt; instead of &lt;code&gt;and()&lt;/code&gt;, of course.  For these clauses we use the &lt;code&gt;criteria()&lt;/code&gt;
 method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the same fashion.  &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; take a &lt;a href=&#34;https://docs.oracle
-.com/javase/8/docs/technotes/guides/language/varargs.html&#34;&gt;&lt;code&gt;varargs&lt;/code&gt;&lt;/a&gt; parameter of type &lt;code&gt;Criteria&lt;/code&gt; so you can include as many filters as necessary.&lt;/p&gt;
+.com/javase/8/docs/technotes/guides/language/varargs.html&#34;&gt;&lt;code&gt;varargs&lt;/code&gt;&lt;/a&gt; parameter of type &lt;code&gt;Criteria&lt;/code&gt; so you can include as many filters as necessary.
+ If all you need is an &lt;code&gt;and&lt;/code&gt; clause, you don&amp;rsquo;t need an explicit call to &lt;code&gt;and()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;datastore.createQuery(UserLocation.class)
+    .field(&amp;quot;x&amp;quot;).lessThan(5)
+    .field(&amp;quot;y&amp;quot;).greaterThan(4);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; between the two field comparisons.&lt;/p&gt;
 
 &lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
 

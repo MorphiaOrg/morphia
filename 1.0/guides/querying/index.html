@@ -887,7 +887,15 @@ complex queries.  An <code>and</code> query might look something like this:</p>
 
 <p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.  For these clauses we use the <code>criteria()</code>
 method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a <a href="https://docs.oracle
-.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.</p>
+.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.
+ If all you need is an <code>and</code> clause, you don&rsquo;t need an explicit call to <code>and()</code>:</p>
+
+<pre><code class="language-java">datastore.createQuery(UserLocation.class)
+    .field(&quot;x&quot;).lessThan(5)
+    .field(&quot;y&quot;).greaterThan(4);
+</code></pre>
+
+<p>This generates an implicit <code>and</code> between the two field comparisons.</p>
 
 <h2 id="text-searching">Text Searching</h2>
 
