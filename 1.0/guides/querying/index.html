@@ -709,10 +709,147 @@ like this:</p>
 </code></pre>
 
 <p>The list of supported filter operations can be found in the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
-">FilterOperator</a> class.  Each filter operator can either be referenced by its
- Mongodb &ldquo;dollar name&rdquo; or by the aliases listed afterward.  For example, with the <code>EQUAL</code> operator you can use the canonical <code>$eq</code> operator
-  as you would when building a query in the shell, or you could opt to use either <code>=</code> or <code>==</code> which might feel a little more natural to
-  use than the dollar operators.</p>
+">FilterOperator</a> class.</p>
+
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Alias</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>$center</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$centerSphere</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$box</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$eq</td>
+<td>=, ==</td>
+</tr>
+
+<tr>
+<td>$ne</td>
+<td>!=, &lt;&gt;</td>
+</tr>
+
+<tr>
+<td>$gt</td>
+<td>&gt;</td>
+</tr>
+
+<tr>
+<td>$gte</td>
+<td>&gt;=</td>
+</tr>
+
+<tr>
+<td>$lt</td>
+<td>&lt;</td>
+</tr>
+
+<tr>
+<td>$lte</td>
+<td>&lt;=</td>
+</tr>
+
+<tr>
+<td>$exists</td>
+<td>exists</td>
+</tr>
+
+<tr>
+<td>$type</td>
+<td>type</td>
+</tr>
+
+<tr>
+<td>$not</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$mod</td>
+<td>mod</td>
+</tr>
+
+<tr>
+<td>$size</td>
+<td>size</td>
+</tr>
+
+<tr>
+<td>$in</td>
+<td>in</td>
+</tr>
+
+<tr>
+<td>$nin</td>
+<td>nin</td>
+</tr>
+
+<tr>
+<td>$all</td>
+<td>all</td>
+</tr>
+
+<tr>
+<td>$elemMatch</td>
+<td>elem, elemMatch</td>
+</tr>
+
+<tr>
+<td>$where</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$near</td>
+<td>near</td>
+</tr>
+
+<tr>
+<td>$nearSphere</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$within (deprecated replaced by $geoWithin)</td>
+<td>within</td>
+</tr>
+
+<tr>
+<td>$geoNear</td>
+<td>geoNear</td>
+</tr>
+
+<tr>
+<td>$geoWithin</td>
+<td>geoWithin</td>
+</tr>
+
+<tr>
+<td>$geoIntersects</td>
+<td>geoIntersects</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each filter operator can either be referenced by its Mongodb &ldquo;dollar operator&rdquo; or by the aliases listed afterward.  For example, with
+ the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use
+ either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
 
 <h3 id="field"><code>field()</code></h3>
 
@@ -785,19 +922,11 @@ datastore.save(new Greeting(&quot;guten Morgen&quot;, &quot;german&quot;));
 datastore.save(new Greeting(&quot;guten Tag&quot;, &quot;german&quot;));
 datastore.save(new Greeting(&quot;guten Nacht&quot;, &quot;german&quot;));
 
-datastore.save(new Greeting(&quot;buenos días&quot;, &quot;spanish&quot;));
-datastore.save(new Greeting(&quot;buenas tardes&quot;, &quot;spanish&quot;));
-datastore.save(new Greeting(&quot;buenos noches&quot;, &quot;spanish&quot;));
-
 List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
                              .search(&quot;good&quot;)
                              .order(&quot;_id&quot;)
                              .asList();
 Assert.assertEquals(4, good.size());
-Assert.assertEquals(&quot;good morning&quot;, good.get(0).value);
-Assert.assertEquals(&quot;good afternoon&quot;, good.get(1).value);
-Assert.assertEquals(&quot;good night&quot;, good.get(2).value);
-Assert.assertEquals(&quot;good riddance&quot;, good.get(3).value);
 </code></pre>
 
 <p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the work
@@ -818,11 +947,15 @@ document.  This is useful when you need to only return a smaller view of a large
 <pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
 getDs().save(user);
 
-ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, &quot;first_name&quot;).get();
+ContainsRenamedFields found = getDs()
+    .find(ContainsRenamedFields.class)
+    .retrievedFields(true, &quot;first_name&quot;).get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
-found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, &quot;firstName&quot;).get();
+found = getDs()
+    .find(ContainsRenamedFields.class)
+    .retrievedFields(true, &quot;firstName&quot;).get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 </code></pre>
@@ -890,11 +1023,12 @@ while(found.size() &lt; 10) {
 }
 </code></pre>
 
-<p>There&rsquo;s a lot to unwind here so let&rsquo;s take it one item at a time.</p>
+<p>There are two things to note about this code sample:</p>
 
 <ol>
 <li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
-created correctly.</li>
+created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
+">update</a> your collection to be a capped collection.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>next()</code> will block until a new item is found.  If your application can&rsquo;t block
 on <code>next()</code>, <code>hasNext()</code> works as you&rsquo;d expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out
 objects until we have 10 of them and then proceed with the rest of the application.</li>
