@@ -113,8 +113,16 @@ q.and(
 
 An `or` clause looks exactly the same except for using `or()` instead of `and()`, of course.  For these clauses we use the `criteria()` 
 method instead of `field()` but it is used in much the same fashion.  `and()` and `or()` take a [`varargs`](https://docs.oracle
-.com/javase/8/docs/technotes/guides/language/varargs.html) parameter of type `Criteria` so you can include as many filters as necessary.
+.com/javase/8/docs/technotes/guides/language/varargs.html) parameter of type `Criteria` so you can include as many filters as necessary. 
+ If all you need is an `and` clause, you don't need an explicit call to `and()`:
+ 
+```java
+datastore.createQuery(UserLocation.class)
+    .field("x").lessThan(5)
+    .field("y").greaterThan(4);
+```
 
+This generates an implicit `and` between the two field comparisons.
 
 ## Text Searching
 
