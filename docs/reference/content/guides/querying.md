@@ -8,9 +8,8 @@ title = "Querying"
 
 # Querying
 
-Using the Java driver directly involves [creating](http://mongodb.github.io/mongo-java-driver/3.0/driver/reference/crud/#crud) a lot of 
-`Document` instances to capture a query.   Morphia, on the other hand, offers a fluent API with which to build up a query and attempts to 
-provide as much type safety and validation as possible.  To this end, Morphia offers the `Query<T>` class which can be parameterized to 
+Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
+ to provide as much type safety and validation as possible.  To this end, Morphia offers the `Query<T>` class which can be parameterized to 
 the type of your entity.
 
 ## Creating a Query
@@ -147,7 +146,7 @@ the query results in different ways.
 
 ### Projections
 
-[Projections]({{< docsref "reference/method/db.collection.find/#projections" >}}) allow you to return only a subset of the fields in a 
+[Projections]({{< docsref "tutorial/project-fields-from-query-results/" >}}) allow you to return only a subset of the fields in a 
 document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the [unit tests]({{< srcref 
 "morphia/src/test/java/org/mongodb/morphia/TestQuery.java" >}}), this is an example of this feature in action:
 
@@ -166,7 +165,12 @@ Assert.assertNull(found.lastName);
 
 As you can see here, we're saving this entity with a first and last name but our query only returns the first name (and the _id value) in
  the returned instance of our type.  It's also worth noting that this project works with both the mapped document field name 
- `"first_name"` and the Java field name `"firstName"`.
+ `"first_name"` and the Java field name `"firstName"`.  
+ 
+ The boolean value passed in to the first parameter instructs Morphia to either include (`true`) or exclude (`false`) the fields listed.
+   The second parameter is a [`varargs`](https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html) String parameter
+    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both 
+    inclusions and exclusions in one query.
  
 {{% note class="important" %}}
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to 
@@ -210,41 +214,19 @@ are added to the collection that match your query, they'll be returned by the [t
 
 ```java
 getMorphia().map(CappedPic.class);
-getDs().ensureCaps();                                                                 // #1
+getDs().ensureCaps();                                                          // #1
 final Query<CappedPic> query = getDs().createQuery(CappedPic.class);
 final List<CappedPic> found = new ArrayList<CappedPic>();
-final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-
-Assert.assertEquals(0, query.countAll());
-
-executorService.scheduleAtFixedRate(new Runnable() {
-    @Override
-    public void run() {
-        getDs().save(new CappedPic(System.currentTimeMillis() + ""));                 // #2
-    }
-}, 0, 500, TimeUnit.MILLISECONDS);
 
 final Iterator<CappedPic> tail = query.tail();
-Awaitility                                                                            // #3
-    .await()
-    .pollDelay(1, TimeUnit.SECONDS)
-    .atMost(30, TimeUnit.SECONDS)
-    .until(new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws Exception {
-            found.add(tail.next());                                                   // #4
-            return found.size() >= 10;
-        }
-    });
-executorService.shutdownNow();
-Assert.assertTrue(query.countAll() >= 10);
+while(found.size() < 10) {
+    found.add(tail.next());                                                    // #2
+}
 ```
 There's a lot to unwind here so let's take it one item at a time.
 
 1.  This tells Morphia to make sure that any entity [configured](/guides/annotations/#entity) to use a capped collection has its collection 
 created correctly.
-1.  Periodically add documents to the collection
-1.  [Awaitility](https://github.com/jayway/awaitility) is handy utility to wait for a certain condition to be met while also timing out 
-if things take too long.  For more information, please see its [website](https://github.com/jayway/awaitility).
 1.  Since this `Iterator` is backed by a tailable cursor, `next()` will block until a new item is found.  If your application can't block
- on `next()`, `hasNext()` works as you'd expect an Iterator to.
+ on `next()`, `hasNext()` works as you'd expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out 
+ objects until we have 10 of them and then proceed with the rest of the application.
