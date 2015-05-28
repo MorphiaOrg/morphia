@@ -75,7 +75,7 @@ The list of supported filter operations can be found in the [FilterOperator]({{<
 |$geoWithin | geoWithin |
 |$geoIntersects | geoIntersects |
 
- Each filter operator can either be referenced by its Mongodb "dollar operator" or by the aliases listed afterward.  For example, with 
+ Each filter operator can either be referenced by its MongoDB "dollar operator" or by the aliases listed afterward.  For example, with 
  the equal operator, you can use the canonical `$eq` operator as you would when building a query in the shell or you could opt to use 
  either the `=` or `==` aliases which might feel a little more natural to use than the dollar operators.
  
