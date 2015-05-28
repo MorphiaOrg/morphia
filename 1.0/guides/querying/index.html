@@ -674,9 +674,8 @@
 
 <h1 id="querying">Querying</h1>
 
-<p>Using the Java driver directly involves <a href="http://mongodb.github.io/mongo-java-driver/3.0/driver/reference/crud/#crud">creating</a> a lot of
-<code>Document</code> instances to capture a query.   Morphia, on the other hand, offers a fluent API with which to build up a query and attempts to
-provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
+<p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
+ to provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
 the type of your entity.</p>
 
 <h2 id="creating-a-query">Creating a Query</h2>
@@ -811,7 +810,7 @@ the query results in different ways.</p>
 
 <h3 id="projections">Projections</h3>
 
-<p><a href="http://docs.mongodb.org/manual/reference/method/db.collection.find/#projections
+<p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
 document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
@@ -831,6 +830,11 @@ Assert.assertNull(found.lastName);
 <p>As you can see here, we&rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
  the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
  <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
+
+<p>The boolean value passed in to the first parameter instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the fields listed.
+   The second parameter is a <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> String parameter
+    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both
+    inclusions and exclusions in one query.</p>
 
 <p><div class="admonition important">
 <h5 class="admonition-title">important</h5>
@@ -876,34 +880,14 @@ are added to the collection that match your query, they&rsquo;ll be returned by 
 ">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 
 <pre><code class="language-java">getMorphia().map(CappedPic.class);
-getDs().ensureCaps();                                                                 // #1
+getDs().ensureCaps();                                                          // #1
 final Query&lt;CappedPic&gt; query = getDs().createQuery(CappedPic.class);
 final List&lt;CappedPic&gt; found = new ArrayList&lt;CappedPic&gt;();
-final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-
-Assert.assertEquals(0, query.countAll());
-
-executorService.scheduleAtFixedRate(new Runnable() {
-    @Override
-    public void run() {
-        getDs().save(new CappedPic(System.currentTimeMillis() + &quot;&quot;));                 // #2
-    }
-}, 0, 500, TimeUnit.MILLISECONDS);
 
 final Iterator&lt;CappedPic&gt; tail = query.tail();
-Awaitility                                                                            // #3
-    .await()
-    .pollDelay(1, TimeUnit.SECONDS)
-    .atMost(30, TimeUnit.SECONDS)
-    .until(new Callable&lt;Boolean&gt;() {
-        @Override
-        public Boolean call() throws Exception {
-            found.add(tail.next());                                                   // #4
-            return found.size() &gt;= 10;
-        }
-    });
-executorService.shutdownNow();
-Assert.assertTrue(query.countAll() &gt;= 10);
+while(found.size() &lt; 10) {
+    found.add(tail.next());                                                    // #2
+}
 </code></pre>
 
 <p>There&rsquo;s a lot to unwind here so let&rsquo;s take it one item at a time.</p>
@@ -911,11 +895,9 @@ Assert.assertTrue(query.countAll() &gt;= 10);
 <ol>
 <li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
 created correctly.</li>
-<li>Periodically add documents to the collection</li>
-<li><a href="https://github.com/jayway/awaitility">Awaitility</a> is handy utility to wait for a certain condition to be met while also timing out
-if things take too long.  For more information, please see its <a href="https://github.com/jayway/awaitility">website</a>.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>next()</code> will block until a new item is found.  If your application can&rsquo;t block
-on <code>next()</code>, <code>hasNext()</code> works as you&rsquo;d expect an Iterator to.</li>
+on <code>next()</code>, <code>hasNext()</code> works as you&rsquo;d expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out
+objects until we have 10 of them and then proceed with the rest of the application.</li>
 </ol>
 
 

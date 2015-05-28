@@ -696,9 +696,8 @@ instances, you can use &lt;a href=&#34;/morphia/1.0/javadoc/org/mongodb/morphia/
 
 &lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
 
-&lt;p&gt;Using the Java driver directly involves &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.0/driver/reference/crud/#crud&#34;&gt;creating&lt;/a&gt; a lot of
-&lt;code&gt;Document&lt;/code&gt; instances to capture a query.   Morphia, on the other hand, offers a fluent API with which to build up a query and attempts to
-provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
+&lt;p&gt;Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
+ to provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
 the type of your entity.&lt;/p&gt;
 
 &lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
@@ -833,7 +832,7 @@ the query results in different ways.&lt;/p&gt;
 
 &lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.find/#projections
+&lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
 document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 &#34;&gt;unit tests&lt;/a&gt;, this is an example of this feature in action:&lt;/p&gt;
@@ -853,6 +852,11 @@ Assert.assertNull(found.lastName);
 &lt;p&gt;As you can see here, we&amp;rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
  the returned instance of our type.  It&amp;rsquo;s also worth noting that this project works with both the mapped document field name
  &lt;code&gt;&amp;quot;first_name&amp;quot;&lt;/code&gt; and the Java field name &lt;code&gt;&amp;quot;firstName&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The boolean value passed in to the first parameter instructs Morphia to either include (&lt;code&gt;true&lt;/code&gt;) or exclude (&lt;code&gt;false&lt;/code&gt;) the fields listed.
+   The second parameter is a &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html&#34;&gt;&lt;code&gt;varargs&lt;/code&gt;&lt;/a&gt; String parameter
+    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both
+    inclusions and exclusions in one query.&lt;/p&gt;
 
 &lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
 &lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
@@ -898,34 +902,14 @@ are added to the collection that match your query, they&amp;rsquo;ll be returned
 &#34;&gt;unit tests&lt;/a&gt; in the &lt;code&gt;testTailableCursors()&lt;/code&gt; test:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;getMorphia().map(CappedPic.class);
-getDs().ensureCaps();                                                                 // #1
+getDs().ensureCaps();                                                          // #1
 final Query&amp;lt;CappedPic&amp;gt; query = getDs().createQuery(CappedPic.class);
 final List&amp;lt;CappedPic&amp;gt; found = new ArrayList&amp;lt;CappedPic&amp;gt;();
-final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-
-Assert.assertEquals(0, query.countAll());
-
-executorService.scheduleAtFixedRate(new Runnable() {
-    @Override
-    public void run() {
-        getDs().save(new CappedPic(System.currentTimeMillis() + &amp;quot;&amp;quot;));                 // #2
-    }
-}, 0, 500, TimeUnit.MILLISECONDS);
 
 final Iterator&amp;lt;CappedPic&amp;gt; tail = query.tail();
-Awaitility                                                                            // #3
-    .await()
-    .pollDelay(1, TimeUnit.SECONDS)
-    .atMost(30, TimeUnit.SECONDS)
-    .until(new Callable&amp;lt;Boolean&amp;gt;() {
-        @Override
-        public Boolean call() throws Exception {
-            found.add(tail.next());                                                   // #4
-            return found.size() &amp;gt;= 10;
-        }
-    });
-executorService.shutdownNow();
-Assert.assertTrue(query.countAll() &amp;gt;= 10);
+while(found.size() &amp;lt; 10) {
+    found.add(tail.next());                                                    // #2
+}
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;There&amp;rsquo;s a lot to unwind here so let&amp;rsquo;s take it one item at a time.&lt;/p&gt;
@@ -933,11 +917,9 @@ Assert.assertTrue(query.countAll() &amp;gt;= 10);
 &lt;ol&gt;
 &lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.0/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
 created correctly.&lt;/li&gt;
-&lt;li&gt;Periodically add documents to the collection&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jayway/awaitility&#34;&gt;Awaitility&lt;/a&gt; is handy utility to wait for a certain condition to be met while also timing out
-if things take too long.  For more information, please see its &lt;a href=&#34;https://github.com/jayway/awaitility&#34;&gt;website&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  If your application can&amp;rsquo;t block
-on &lt;code&gt;next()&lt;/code&gt;, &lt;code&gt;hasNext()&lt;/code&gt; works as you&amp;rsquo;d expect an Iterator to.&lt;/li&gt;
+on &lt;code&gt;next()&lt;/code&gt;, &lt;code&gt;hasNext()&lt;/code&gt; works as you&amp;rsquo;d expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out
+objects until we have 10 of them and then proceed with the rest of the application.&lt;/li&gt;
 &lt;/ol&gt;
 </description>
     </item>
