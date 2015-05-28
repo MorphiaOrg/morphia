@@ -45,10 +45,39 @@ In this case, we're instructing Morphia to add a filter using [$gte]({{< docsref
 ```
 
 The list of supported filter operations can be found in the [FilterOperator]({{< srcref
- "morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java">}}) class.  Each filter operator can either be referenced by its 
- Mongodb "dollar name" or by the aliases listed afterward.  For example, with the `EQUAL` operator you can use the canonical `$eq` operator
-  as you would when building a query in the shell, or you could opt to use either `=` or `==` which might feel a little more natural to 
-  use than the dollar operators.
+ "morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java">}}) class.  
+ 
+| Operator | Alias |
+| ---------|------- |
+|$center | |
+|$centerSphere | |
+|$box | |
+|$eq | =, == |
+|$ne | !=, <> |
+|$gt | > |
+|$gte | >= |
+|$lt | < |
+|$lte | <= |
+|$exists | exists |
+|$type | type |
+|$not | |
+|$mod | mod |
+|$size | size |
+|$in | in |
+|$nin | nin |
+|$all | all |
+|$elemMatch | elem, elemMatch |
+|$where | |
+|$near | near |
+|$nearSphere | |
+|$within (deprecated replaced by $geoWithin) | within |
+|$geoNear | geoNear |
+|$geoWithin | geoWithin |
+|$geoIntersects | geoIntersects |
+
+ Each filter operator can either be referenced by its Mongodb "dollar operator" or by the aliases listed afterward.  For example, with 
+ the equal operator, you can use the canonical `$eq` operator as you would when building a query in the shell or you could opt to use 
+ either the `=` or `==` aliases which might feel a little more natural to use than the dollar operators.
  
 ### `field()`
 
@@ -121,19 +150,11 @@ datastore.save(new Greeting("guten Morgen", "german"));
 datastore.save(new Greeting("guten Tag", "german"));
 datastore.save(new Greeting("guten Nacht", "german"));
 
-datastore.save(new Greeting("buenos días", "spanish"));
-datastore.save(new Greeting("buenas tardes", "spanish"));
-datastore.save(new Greeting("buenos noches", "spanish"));
-
 List<Greeting> good = datastore.createQuery(Greeting.class)
                              .search("good")
                              .order("_id")
                              .asList();
 Assert.assertEquals(4, good.size());
-Assert.assertEquals("good morning", good.get(0).value);
-Assert.assertEquals("good afternoon", good.get(1).value);
-Assert.assertEquals("good night", good.get(2).value);
-Assert.assertEquals("good riddance", good.get(3).value);
 ```
 
 As you can see here, we create `Greeting` objects for multiple languages.  In our test query, we're looking for occurrences of the work 
@@ -154,11 +175,15 @@ document.  This is useful when you need to only return a smaller view of a large
 ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
 getDs().save(user);
 
-ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
+ContainsRenamedFields found = getDs()
+    .find(ContainsRenamedFields.class)
+    .retrievedFields(true, "first_name").get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
-found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
+found = getDs()
+    .find(ContainsRenamedFields.class)
+    .retrievedFields(true, "firstName").get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 ```
@@ -223,10 +248,11 @@ while(found.size() < 10) {
     found.add(tail.next());                                                    // #2
 }
 ```
-There's a lot to unwind here so let's take it one item at a time.
+There are two things to note about this code sample:
 
 1.  This tells Morphia to make sure that any entity [configured](/guides/annotations/#entity) to use a capped collection has its collection 
-created correctly.
+created correctly.  If the collection already exists and is not capped, you will have to manually [update]({{< docsref 
+"core/capped-collections/#convert-a-collection-to-capped" >}}) your collection to be a capped collection.
 1.  Since this `Iterator` is backed by a tailable cursor, `next()` will block until a new item is found.  If your application can't block
  on `next()`, `hasNext()` works as you'd expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out 
  objects until we have 10 of them and then proceed with the rest of the application.
