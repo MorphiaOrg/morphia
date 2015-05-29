@@ -75,6 +75,9 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good night", good.get(2).value);
         Assert.assertEquals("good riddance", good.get(3).value);
 
+        Assert.assertEquals(0, getDs().createQuery(Greeting.class)
+                                      .search("good", "german")
+                                      .asList().size());
         Assert.assertEquals(1, getDs().createQuery(Greeting.class)
                                       .search("riddance")
                                       .asList().size());

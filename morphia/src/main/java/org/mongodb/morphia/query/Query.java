@@ -15,6 +15,82 @@ import java.util.concurrent.TimeUnit;
  * @author Scott Hernandez
  */
 public interface Query<T> extends QueryResults<T>, Cloneable {
+    CriteriaContainer and(Criteria... criteria);
+
+    /**
+     * Batch-size of the fetched result (cursor).
+     *
+     * @param value must be >= 0.  A value of 0 indicates the server default.
+     */
+    Query<T> batchSize(int value);
+
+    /**
+     * Creates and returns a copy of this {@link Query}.
+     */
+    Query<T> cloneQuery();
+
+    /**
+     * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments can make
+     * your profile data much easier to interpret and trace.
+     *
+     * @param comment the comment to add
+     * @return the Query to enable chaining of commands
+     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment">
+     * http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment</a>
+     */
+    Query<T> comment(String comment);
+
+    /**
+     * Criteria builder interface
+     */
+    FieldEnd<? extends CriteriaContainerImpl> criteria(String field);
+
+    /**
+     * Disables cursor timeout on server.
+     */
+    Query<T> disableCursorTimeout();
+
+    /**
+     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates. *
+     */
+    Query<T> disableSnapshotMode();
+
+    /**
+     * Turns off validation (for all calls made after)
+     */
+    Query<T> disableValidation();
+
+    /**
+     * Enables cursor timeout on server.
+     */
+    Query<T> enableCursorTimeout();
+
+    /**
+     * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
+     * compatible with order/sort and hint. *
+     */
+    Query<T> enableSnapshotMode();
+
+    /**
+     * Turns on validation (for all calls made after); by default validation is on
+     */
+    Query<T> enableValidation();
+
+    /**
+     * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
+     * may be useful when optimizing a query.
+     *
+     * @return Map describing the process used to return the query results.
+     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/explain/"> http://docs.mongodb
+     * .org/manual/reference/operator/meta/explain/</a>
+     */
+    Map<String, Object> explain();
+
+    /**
+     * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
+     */
+    FieldEnd<? extends Query<T>> field(String field);
+
     /**
      * <p>Create a filter based on the specified condition and value. </p> <p><b>Note</b>: Property is in the form of "name op" ("age
      * >").</p> <p>Valid operators are ["=", "==","!=", "<>", ">", "<", ">=", "<=", "in", "nin", "all", "size", "exists"] </p>
@@ -24,43 +100,62 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * filter("rooms.bathrooms exists", 1)}</li> <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li>
      * <li>{@code filter("quantity mod", new Long[]{4, 0}) // customers ordered in packs of 4)}</li> <li>{@code filter("age >=", age)}</li>
      * <li>{@code filter("age =", age)}</li> <li>{@code filter("age", age)} (if no operator, = is assumed)</li> <li>{@code filter("age !=",
-     *age)}</li> <li>{@code filter("age in", ageList)}</li> <li>{@code filter("customers.loyaltyYears in", yearsList)}</li> </ul>
+     * age)}</li> <li>{@code filter("age in", ageList)}</li> <li>{@code filter("customers.loyaltyYears in", yearsList)}</li> </ul>
      * <p/>
      * <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
      */
     Query<T> filter(String condition, Object value);
 
     /**
-     * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
+     * Returns the batch size
+     *
+     * @see #batchSize(int)
      */
-    FieldEnd<? extends Query<T>> field(String field);
+    int getBatchSize();
 
     /**
-     * Criteria builder interface
+     * Returns the {@link DBCollection} of the {@link Query}.
      */
-    FieldEnd<? extends CriteriaContainerImpl> criteria(String field);
-
-    CriteriaContainer and(Criteria... criteria);
-
-    CriteriaContainer or(Criteria... criteria);
+    DBCollection getCollection();
 
     /**
-     * Limit the query using this javascript block; only one per query
+     * Returns the entity {@link Class}.
      */
-    Query<T> where(String js);
+    Class<T> getEntityClass();
 
     /**
-     * Limit the query using this javascript block; only one per query
+     * Returns the Mongo fields {@link DBObject}.
      */
-    Query<T> where(CodeWScope js);
+    DBObject getFieldsObject();
 
     /**
-     * <p>Sorts based on a property (defines return order).  Examples:</p>
-     * <p/>
-     * <ul> <li>{@code order("age")}</li> <li>{@code order("-age")} (descending order)</li> <li>{@code order("age, date")}</li> <li>{@code
-     * order("age,-date")} (age ascending, date descending)</li> </ul>
+     * Returns the limit
+     *
+     * @see #limit(int)
      */
-    Query<T> order(String condition);
+    int getLimit();
+
+    /**
+     * Returns the offset.
+     *
+     * @see #offset(int)
+     */
+    int getOffset();
+
+    /**
+     * Returns the Mongo query {@link DBObject}.
+     */
+    DBObject getQueryObject();
+
+    /**
+     * Returns the Mongo sort {@link DBObject}.
+     */
+    DBObject getSortObject();
+
+    /**
+     * Hints as to which index should be used.
+     */
+    Query<T> hintIndex(String idxName);
 
     /**
      * Limit the fetched result set to a certain number of values.
@@ -71,11 +166,15 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> limit(int value);
 
     /**
-     * Batch-size of the fetched result (cursor).
+     * <p> Specify the inclusive lower bound for a specific index in order to constrain the results of this query. <p/> You can chain
+     * key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.lowerIndexBound(new
+     * BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
      *
-     * @param value must be >= 0.  A value of 0 indicates the server default.
+     * @param lowerBound The inclusive lower bound.
+     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/min/"> http://docs.mongodb
+     * .org/manual/reference/operator/meta/min/</a>
      */
-    Query<T> batchSize(int value);
+    Query<T> lowerIndexBound(DBObject lowerBound);
 
     /**
      * Constrains the query to only scan the specified number of documents when fulfilling the query.
@@ -95,15 +194,48 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
 
     /**
-     * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments can make
-     * your profile data much easier to interpret and trace.
+     * Starts the query results at a particular zero-based offset.
      *
-     * @param comment the comment to add
-     * @return the Query to enable chaining of commands
-     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment">
-     * http://docs.mongodb.org/manual/reference/operator/meta/comment/#op._S_comment</a>
+     * @param value must be >= 0
      */
-    Query<T> comment(String comment);
+    Query<T> offset(int value);
+
+    CriteriaContainer or(Criteria... criteria);
+
+    /**
+     * <p>Sorts based on a property (defines return order).  Examples:</p>
+     * <p/>
+     * <ul> <li>{@code order("age")}</li> <li>{@code order("-age")} (descending order)</li> <li>{@code order("age, date")}</li> <li>{@code
+     * order("age,-date")} (age ascending, date descending)</li> </ul>
+     */
+    Query<T> order(String condition);
+
+    /**
+     * Route query to non-primary node
+     *
+     * @see ReadPreference#secondary()
+     * @see ReadPreference#secondaryPreferred()
+     * @deprecated use #useReadPreference(ReadPreference) instead
+     */
+    Query<T> queryNonPrimary();
+
+    /**
+     * Route query to primary node
+     *
+     * @see ReadPreference#primary()
+     * @deprecated use #useReadPreference(ReadPreference)
+     */
+    Query<T> queryPrimaryOnly();
+
+    /**
+     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
+     */
+    Query<T> retrieveKnownFields();
+
+    /**
+     * Limits the fields retrieved
+     */
+    Query<T> retrievedFields(boolean include, String... fields);
 
     /**
      * Only return the index field or fields for the results of the query. If $returnKey is set to true and the query does not use an index
@@ -116,9 +248,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 
     /**
      * Perform a text search on the content of the fields indexed with a text index..
-     * 
+     *
      * @param text the text to search for
-     *             
      * @return the Query to enable chaining of commands
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/query/text/">Text Search</a>
      */
@@ -126,106 +257,13 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 
     /**
      * Perform a text search on the content of the fields indexed with a text index..
-     * 
-     * @param text the text to search for
+     *
+     * @param text     the text to search for
      * @param language the language to use during the search
-     *             
      * @return the Query to enable chaining of commands
      * @see <a href="http://docs.mongodb.org/manual/reference/operator/query/text/">Text Search</a>
      */
     Query<T> search(String text, String language);
-
-    /**
-     * Starts the query results at a particular zero-based offset.
-     *
-     * @param value must be >= 0
-     */
-    Query<T> offset(int value);
-
-    /**
-     * <p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query.
-     * <p/>
-     * You can chain key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.upperIndexBound(new
-     *BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
-     *
-     * @param upperBound The exclusive upper bound.
-     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/max/"> http://docs.mongodb
-     * .org/manual/reference/operator/meta/max/</a>
-     */
-    Query<T> upperIndexBound(DBObject upperBound);
-
-    /**
-     * <p> Specify the inclusive lower bound for a specific index in order to constrain the results of this query.
-     * <p/>
-     * You can chain key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.lowerIndexBound(new
-     *BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
-     *
-     * @param lowerBound The inclusive lower bound.
-     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/min/"> http://docs.mongodb
-     * .org/manual/reference/operator/meta/min/</a>
-     */
-    Query<T> lowerIndexBound(DBObject lowerBound);
-
-    /**
-     * Turns on validation (for all calls made after); by default validation is on
-     */
-    Query<T> enableValidation();
-
-    /**
-     * Turns off validation (for all calls made after)
-     */
-    Query<T> disableValidation();
-
-    /**
-     * Hints as to which index should be used.
-     */
-    Query<T> hintIndex(String idxName);
-
-    /**
-     * Limits the fields retrieved
-     */
-    Query<T> retrievedFields(boolean include, String... fields);
-
-    /**
-     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
-     */
-    Query<T> retrieveKnownFields();
-
-    /**
-     * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
-     * compatible with order/sort and hint. *
-     */
-    Query<T> enableSnapshotMode();
-
-    /**
-     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates. *
-     */
-    Query<T> disableSnapshotMode();
-
-    /**
-     * Route query to non-primary node
-     */
-    Query<T> queryNonPrimary();
-
-    /**
-     * Route query to primary node
-     */
-    Query<T> queryPrimaryOnly();
-
-    /**
-     * Route query ReadPreference
-     */
-    Query<T> useReadPreference(ReadPreference readPref);
-
-    /**
-     * Disables cursor timeout on server.
-     */
-    Query<T> disableCursorTimeout();
-
-    /**
-     * Enables cursor timeout on server.
-     */
-    Query<T> enableCursorTimeout();
 
     /**
      * <p>Generates a string that consistently and uniquely specifies this query.  There is no way to convert this string back into a query
@@ -235,63 +273,28 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     String toString();
 
     /**
-     * Returns the entity {@link Class}.
-     */
-    Class<T> getEntityClass();
-
-    /**
-     * Returns the offset.
+     * <p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query. <p/> You can chain
+     * key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.upperIndexBound(new
+     * BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
      *
-     * @see #offset(int)
+     * @param upperBound The exclusive upper bound.
+     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/max/"> http://docs.mongodb
+     * .org/manual/reference/operator/meta/max/</a>
      */
-    int getOffset();
+    Query<T> upperIndexBound(DBObject upperBound);
 
     /**
-     * Returns the limit
-     *
-     * @see #limit(int)
+     * Route query ReadPreference
      */
-    int getLimit();
+    Query<T> useReadPreference(ReadPreference readPref);
 
     /**
-     * Returns the batch size
-     *
-     * @see #batchSize(int)
+     * Limit the query using this javascript block; only one per query
      */
-    int getBatchSize();
+    Query<T> where(String js);
 
     /**
-     * Returns the Mongo query {@link DBObject}.
+     * Limit the query using this javascript block; only one per query
      */
-    DBObject getQueryObject();
-
-    /**
-     * Returns the Mongo sort {@link DBObject}.
-     */
-    DBObject getSortObject();
-
-    /**
-     * Returns the Mongo fields {@link DBObject}.
-     */
-    DBObject getFieldsObject();
-
-    /**
-     * Returns the {@link DBCollection} of the {@link Query}.
-     */
-    DBCollection getCollection();
-
-    /**
-     * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
-     * may be useful when optimizing a query.
-     *
-     * @return Map describing the process used to return the query results.
-     * @see <a href="http://docs.mongodb.org/manual/reference/operator/meta/explain/"> http://docs.mongodb
-     * .org/manual/reference/operator/meta/explain/</a>
-     */
-    Map<String, Object> explain();
-
-    /**
-     * Creates and returns a copy of this {@link Query}.
-     */
-    Query<T> cloneQuery();
+    Query<T> where(CodeWScope js);
 }

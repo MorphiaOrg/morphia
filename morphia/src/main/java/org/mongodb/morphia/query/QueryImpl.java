@@ -659,12 +659,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Query<T> queryNonPrimary() {
         readPref = ReadPreference.secondary();
         return this;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Query<T> queryPrimaryOnly() {
         readPref = ReadPreference.primary();
         return this;

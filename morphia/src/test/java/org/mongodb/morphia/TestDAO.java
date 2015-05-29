@@ -178,8 +178,8 @@ public class TestDAO extends TestBase {
         final List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().offset(1).limit(10)).asList().size());
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
+        assertEquals(1, hotelDAO.createQuery().offset(1).limit(10).asList().size());
+        assertEquals(1, hotelDAO.createQuery().limit(1).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 

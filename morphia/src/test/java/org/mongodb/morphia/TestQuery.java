@@ -15,6 +15,7 @@
 package org.mongodb.morphia;
 
 
+import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -29,6 +30,7 @@ import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
 import org.mongodb.morphia.TestMapper.CustomId;
 import org.mongodb.morphia.TestMapper.UsesCustomIdObject;
+import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -50,6 +52,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static org.hamcrest.core.Is.is;
@@ -69,7 +75,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRenamedFieldQuery() throws Exception {
-        getDs().save(new ContainsRenamedFields());
+        getDs().save(new ContainsRenamedFields("Scott", "Bakula"));
 
         assertNotNull(getDs().find(ContainsRenamedFields.class).field("firstName").equal("Scott").get());
 
@@ -261,8 +267,17 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRetrievedFields() throws Exception {
-        getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
-        getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
+        ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
+        getDs().save(user);
+
+        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
+        Assert.assertNotNull(found.firstName);
+        Assert.assertNull(found.lastName);
+
+        found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
+        Assert.assertNotNull(found.firstName);
+        Assert.assertNull(found.lastName);
+
         try {
             getDs()
                 .find(ContainsRenamedFields.class)
@@ -900,6 +915,39 @@ public class TestQuery extends TestBase {
         assertNull("ID should not be populated", foundItem.getId());
     }
 
+    @Test
+    public void testTailableCursors() {
+        getMorphia().map(CappedPic.class);
+        getDs().ensureCaps();
+        final Query<CappedPic> query = getDs().createQuery(CappedPic.class);
+        final List<CappedPic> found = new ArrayList<CappedPic>();
+        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+        Assert.assertEquals(0, query.countAll());
+        
+        executorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                getDs().save(new CappedPic(System.currentTimeMillis() + ""));
+            }
+        }, 0, 500, TimeUnit.MILLISECONDS);
+
+        final Iterator<CappedPic> tail = query.tail();
+        Awaitility
+            .await()
+            .pollDelay(1, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
+            .until(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    found.add(tail.next());
+                    return found.size() >= 10;
+                }
+            });
+        executorService.shutdownNow();
+        Assert.assertTrue(query.countAll() >= 10);
+    }
+    
     @After
     public void tearDown() {
         turnOffProfilingAndDropProfileCollection();
@@ -1040,15 +1088,25 @@ public class TestQuery extends TestBase {
             this.name = name;
         }
     }
+    
+    @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
+    public static class CappedPic extends Pic {
+        public CappedPic() {
+        }
+
+        public CappedPic(final String name) {
+            super(name);
+        }
+    }
 
     @Entity(noClassnameStored = true)
     public static class ContainsRenamedFields {
         @Id
         private ObjectId id;
         @Property("first_name")
-        private String firstName = "Scott";
+        private String firstName;
         @Property("last_name")
-        private String lastName = "Hernandez";
+        private String lastName;
 
         public ContainsRenamedFields() {
         }

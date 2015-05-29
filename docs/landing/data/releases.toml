@@ -1,7 +1,7 @@
-current = "1.0.0-rc0"
+current = "1.0.0-rc1"
 
 [[versions]]
-  version = "1.0.0-rc0"
+  version = "1.0.0-rc1"
   status = "current"
   docs = "./1.0"
   api = ""
@@ -15,4 +15,4 @@ current = "1.0.0-rc0"
 [[drivers]]
   name = "morphia"
   description = "The MongoDB Java Object Document Mapper"
-  versions = "1.0.0-rc0,0.111"
+  versions = "1.0.0-rc1,0.111"

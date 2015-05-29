@@ -1,7 +1,7 @@
 package org.mongodb.morphia.query;
 
 /**
- * Internal class to represent groups of {@see Criteria} intances via $and and $or query clauses 
+ * Internal class to represent groups of {@link Criteria} instances via $and and $or query clauses 
  */
 public interface CriteriaContainer extends Criteria {
   void add(Criteria... criteria);

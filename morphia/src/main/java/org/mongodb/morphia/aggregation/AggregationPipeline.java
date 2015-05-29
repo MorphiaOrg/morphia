@@ -32,7 +32,7 @@ public interface AggregationPipeline {
     AggregationPipeline group(String id, Group... groupings);
 
     /**
-     * @see #group(String, Group...}
+     * @see #group(String, Group...)
      */
     AggregationPipeline group(List<Group> id, Group... groupings);
 
