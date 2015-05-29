@@ -166,7 +166,7 @@ List<Greeting> good = datastore.createQuery(Greeting.class)
 Assert.assertEquals(4, good.size());
 ```
 
-As you can see here, we create `Greeting` objects for multiple languages.  In our test query, we're looking for occurrences of the work 
+As you can see here, we create `Greeting` objects for multiple languages.  In our test query, we're looking for occurrences of the word 
 "good" in any document.  We created four such documents and our query returns exactly those four.
 
 ## Other Query Options
@@ -262,7 +262,6 @@ There are two things to note about this code sample:
 1.  This tells Morphia to make sure that any entity [configured](/guides/annotations/#entity) to use a capped collection has its collection 
 created correctly.  If the collection already exists and is not capped, you will have to manually [update]({{< docsref 
 "core/capped-collections/#convert-a-collection-to-capped" >}}) your collection to be a capped collection.
-1.  Since this `Iterator` is backed by a tailable cursor, `next()` will block until a new item is found.  If your application can't block
- on `next()`, checking the return value of `hasNext()` periodically would allow your application to do other things while the cursor 
- waits for the next item.  In this version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and 
- then proceed with the rest of the application.
+1.  Since this `Iterator` is backed by a tailable cursor, `hasNext()` and `next()` will block until a new item is found.  In this 
+version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the 
+application.
