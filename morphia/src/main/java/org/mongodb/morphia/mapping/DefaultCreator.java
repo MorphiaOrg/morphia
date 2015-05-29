@@ -15,13 +15,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
  * @author ScottHernandez
  */
 public class DefaultCreator implements ObjectFactory {
+
     private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
+
+    private Map<String, Class> classNameCache = new ConcurrentHashMap<String, Class>();
+
+    private MapperOptions options = null;
+
+    public DefaultCreator() {
+    }
+
+    public DefaultCreator(MapperOptions options) {
+        this.options = options;
+    }
 
     /**
      * creates an instance of testType (if it isn't Object.class or null) or fallbackType
@@ -123,7 +136,15 @@ public class DefaultCreator implements ObjectFactory {
             // try to Class.forName(className) as defined in the dbObject first,
             // otherwise return the entityClass
             try {
-                c = Class.forName(className, true, getClassLoaderForClass());
+                if (options != null && options.isCacheClassLookups()) {
+                    c = classNameCache.get(className);
+                    if (c == null) {
+                        c = Class.forName(className, true, getClassLoaderForClass());
+                        classNameCache.put(className, c);
+                    }
+                } else {
+                    c = Class.forName(className, true, getClassLoaderForClass());
+                }
             } catch (ClassNotFoundException e) {
                 if (LOG.isWarningEnabled()) {
                     LOG.warning("Class not found defined in dbObj: ", e);
@@ -152,4 +173,11 @@ public class DefaultCreator implements ObjectFactory {
             throw new MappingException("No usable constructor for " + clazz.getName(), e);
         }
     }
+
+    public Map<String, Class> getClassNameCache() {
+        HashMap<String, Class> copy = new HashMap<String, Class>();
+        copy.putAll(classNameCache);
+        return copy;
+    }
+
 }

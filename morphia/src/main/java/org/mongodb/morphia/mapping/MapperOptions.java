@@ -17,7 +17,8 @@ public class MapperOptions {
     private boolean storeNulls;
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
-    private ObjectFactory objectFactory = new DefaultCreator();
+    private boolean cacheClassLookups = false;
+    private ObjectFactory objectFactory = new DefaultCreator(this);
     private CustomMapper embeddedMapper = new EmbeddedMapper();
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
@@ -130,5 +131,13 @@ public class MapperOptions {
     public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
         datastoreProvider.register(this.getDatastoreProvider().get());
         this.datastoreProvider = datastoreProvider;
+    }
+
+    public boolean isCacheClassLookups() {
+        return cacheClassLookups;
+    }
+
+    public void setCacheClassLookups(final boolean cacheClassLookups) {
+        this.cacheClassLookups = cacheClassLookups;
     }
 }

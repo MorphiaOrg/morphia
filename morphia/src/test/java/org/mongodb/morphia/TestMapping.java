@@ -32,6 +32,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Serialized;
+import org.mongodb.morphia.mapping.DefaultCreator;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
@@ -794,6 +795,23 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBasicMapping() throws Exception {
+        performBasicMappingTest();
+        assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().isEmpty());
+    }
+
+    @Test
+    public void testBasicMappingWithCachedClasses() throws Exception {
+        getMorphia().getMapper().getOptions().setCacheClassLookups(true);
+        try {
+            performBasicMappingTest();
+            assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().containsKey(Hotel.class.getName()));
+            assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().containsKey(TravelAgency.class.getName()));
+        } finally {
+            getMorphia().getMapper().getOptions().setCacheClassLookups(false);
+        }
+    }
+
+    private void performBasicMappingTest() {
         final DBCollection hotels = getDb().getCollection("hotels");
         final DBCollection agencies = getDb().getCollection("agencies");
 
