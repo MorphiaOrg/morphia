@@ -263,5 +263,6 @@ There are two things to note about this code sample:
 created correctly.  If the collection already exists and is not capped, you will have to manually [update]({{< docsref 
 "core/capped-collections/#convert-a-collection-to-capped" >}}) your collection to be a capped collection.
 1.  Since this `Iterator` is backed by a tailable cursor, `next()` will block until a new item is found.  If your application can't block
- on `next()`, `hasNext()` works as you'd expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out 
- objects until we have 10 of them and then proceed with the rest of the application.
+ on `next()`, checking the return value of `hasNext()` periodically would allow your application to do other things while the cursor 
+ waits for the next item.  In this version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and 
+ then proceed with the rest of the application.
