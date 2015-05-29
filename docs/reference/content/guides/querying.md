@@ -119,10 +119,11 @@ method instead of `field()` but it is used in much the same fashion.  `and()` an
 ```java
 datastore.createQuery(UserLocation.class)
     .field("x").lessThan(5)
-    .field("y").greaterThan(4);
+    .field("y").greaterThan(4)
+    .field("z").greaterThan(10);
 ```
 
-This generates an implicit `and` between the two field comparisons.
+This generates an implicit `and` across the field comparisons.
 
 ## Text Searching
 
