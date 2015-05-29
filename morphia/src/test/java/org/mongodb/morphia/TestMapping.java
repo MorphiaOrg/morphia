@@ -796,7 +796,10 @@ public class TestMapping extends TestBase {
     @Test
     public void testBasicMapping() throws Exception {
         performBasicMappingTest();
-        assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().isEmpty());
+        assertTrue(
+            ((DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache()
+                .isEmpty()
+        );
     }
 
     @Test
@@ -804,8 +807,14 @@ public class TestMapping extends TestBase {
         getMorphia().getMapper().getOptions().setCacheClassLookups(true);
         try {
             performBasicMappingTest();
-            assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().containsKey(Hotel.class.getName()));
-            assertTrue(((DefaultCreator)getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache().containsKey(TravelAgency.class.getName()));
+            assertTrue(
+                ((DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache()
+                    .containsKey(Hotel.class.getName())
+            );
+            assertTrue(
+                ((DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory()).getClassNameCache()
+                    .containsKey(TravelAgency.class.getName())
+            );
         } finally {
             getMorphia().getMapper().getOptions().setCacheClassLookups(false);
         }

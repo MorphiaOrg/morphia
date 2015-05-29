@@ -32,7 +32,7 @@ public class DefaultCreator implements ObjectFactory {
     public DefaultCreator() {
     }
 
-    public DefaultCreator(MapperOptions options) {
+    public DefaultCreator(final MapperOptions options) {
         this.options = options;
     }
 
