@@ -57,25 +57,6 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>/morphia/1.0/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.0/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Installation Guide</title>
       <link>/morphia/1.0/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -121,6 +102,25 @@ $ git checkout -b myNewFeature
 
 &lt;/section&gt;
 &lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/morphia/1.0/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.0/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.0/morphia/1.0/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
