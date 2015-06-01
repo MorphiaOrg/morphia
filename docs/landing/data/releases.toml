@@ -4,7 +4,7 @@ current = "1.0.0"
   version = "1.0.0"
   status = "current"
   docs = "./1.0"
-  api = ""
+  api = "/javadoc"
 
 [[drivers]]
   name = "morphia"
