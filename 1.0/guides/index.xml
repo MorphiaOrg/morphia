@@ -914,10 +914,11 @@ method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the sa
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;datastore.createQuery(UserLocation.class)
     .field(&amp;quot;x&amp;quot;).lessThan(5)
-    .field(&amp;quot;y&amp;quot;).greaterThan(4);
+    .field(&amp;quot;y&amp;quot;).greaterThan(4)
+    .field(&amp;quot;z&amp;quot;).greaterThan(10);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; between the two field comparisons.&lt;/p&gt;
+&lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; across the field comparisons.&lt;/p&gt;
 
 &lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
 
@@ -959,7 +960,7 @@ List&amp;lt;Greeting&amp;gt; good = datastore.createQuery(Greeting.class)
 Assert.assertEquals(4, good.size());
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the work
+&lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the word
 &amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
 
 &lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
@@ -1059,9 +1060,9 @@ while(found.size() &amp;lt; 10) {
 &lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.0/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
 created correctly.  If the collection already exists and is not capped, you will have to manually &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 &#34;&gt;update&lt;/a&gt; your collection to be a capped collection.&lt;/li&gt;
-&lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  If your application can&amp;rsquo;t block
-on &lt;code&gt;next()&lt;/code&gt;, &lt;code&gt;hasNext()&lt;/code&gt; works as you&amp;rsquo;d expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out
-objects until we have 10 of them and then proceed with the rest of the application.&lt;/li&gt;
+&lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;hasNext()&lt;/code&gt; and &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  In this
+version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
+application.&lt;/li&gt;
 &lt;/ol&gt;
 </description>
     </item>

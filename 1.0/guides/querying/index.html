@@ -892,10 +892,11 @@ method instead of <code>field()</code> but it is used in much the same fashion. 
 
 <pre><code class="language-java">datastore.createQuery(UserLocation.class)
     .field(&quot;x&quot;).lessThan(5)
-    .field(&quot;y&quot;).greaterThan(4);
+    .field(&quot;y&quot;).greaterThan(4)
+    .field(&quot;z&quot;).greaterThan(10);
 </code></pre>
 
-<p>This generates an implicit <code>and</code> between the two field comparisons.</p>
+<p>This generates an implicit <code>and</code> across the field comparisons.</p>
 
 <h2 id="text-searching">Text Searching</h2>
 
@@ -937,7 +938,7 @@ List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
 Assert.assertEquals(4, good.size());
 </code></pre>
 
-<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the work
+<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
 &ldquo;good&rdquo; in any document.  We created four such documents and our query returns exactly those four.</p>
 
 <h2 id="other-query-options">Other Query Options</h2>
@@ -1037,9 +1038,9 @@ while(found.size() &lt; 10) {
 <li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
 created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
-<li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>next()</code> will block until a new item is found.  If your application can&rsquo;t block
-on <code>next()</code>, <code>hasNext()</code> works as you&rsquo;d expect an Iterator to.  In this version of the unit test, we tail the cursor and pull out
-objects until we have 10 of them and then proceed with the rest of the application.</li>
+<li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
+version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
+application.</li>
 </ol>
 
 
