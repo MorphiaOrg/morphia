@@ -31,6 +31,8 @@ import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.generics.model.ChildEmbedded;
+import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 import org.mongodb.morphia.mapping.lazy.ThreadLocalDatastoreProvider;
@@ -53,7 +55,9 @@ import java.util.concurrent.TimeoutException;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
 import static com.mongodb.WriteConcern.REPLICA_ACKNOWLEDGED;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -564,6 +568,19 @@ public class TestDatastore extends TestBase {
         public List<Key<FacebookUser>> getUsers() {
             return users;
         }
+    }
+
+    @Test
+    public void shouldSaveGenericTypeVariables() throws Exception {
+        // given
+        ChildEntity child = new ChildEntity();
+        child.setEmbeddedList(singletonList(new ChildEmbedded()));
+
+        // when
+        Key<ChildEntity> saveResult = getDs().save(child);
+
+        // then
+        assertNotEquals(null, saveResult);
     }
 
 }

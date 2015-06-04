@@ -12,22 +12,22 @@ public class ChildEmbedded extends FatherEmbedded {
     }
 
     @Override
-    public int hashCode() {
-        return childField.hashCode();
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ChildEmbedded)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        final ChildEmbedded that = (ChildEmbedded) o;
+        ChildEmbedded that = (ChildEmbedded) o;
 
-        return childField.equals(that.childField);
+        return !(childField != null ? !childField.equals(that.childField) : that.childField != null);
 
+    }
+
+    @Override
+    public int hashCode() {
+        return childField != null ? childField.hashCode() : 0;
     }
 }
