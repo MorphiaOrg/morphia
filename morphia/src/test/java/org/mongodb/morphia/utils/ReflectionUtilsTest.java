@@ -1,5 +1,6 @@
 package org.mongodb.morphia.utils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -9,7 +10,6 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.Mapper;
 
-import java.awt.print.Book;
 import java.io.Serializable;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -93,6 +93,15 @@ public class ReflectionUtilsTest extends TestBase {
             assertThat(clazz.getPackage().getName(), is("org.junit"));
         }
     }
+
+
+    @Test
+    @Ignore("Not implemented yet")
+    public void shouldAcceptInterfacesWithoutGenericParameters() {
+        Class parameterizedClass = ReflectionUtils.getParameterizedClass(InterfaceWithoutGenericTypes.class);
+
+        assertThat(parameterizedClass, is(exactClass(Integer.class)));
+    }
   
     @Entity("Base")
     @Indexes(@Index(fields = @Field("id")))
@@ -140,4 +149,6 @@ public class ReflectionUtilsTest extends TestBase {
     private static class Sub extends Super3<Integer> {
     }
 
+    private interface InterfaceWithoutGenericTypes extends List<Integer> {
+    }
 }
