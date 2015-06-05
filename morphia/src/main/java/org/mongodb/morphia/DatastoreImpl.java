@@ -1049,8 +1049,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
-            final UpdateResults res = update(find(dbColl.getName(), entity.getClass()).filter(Mapper.ID_KEY, idValue)
-                                                                                      .filter(versionKeyName, oldVersion),
+            final UpdateResults res = update(find(dbColl.getName(), entity.getClass())
+                                            .disableValidation().filter(Mapper.ID_KEY, idValue).enableValidation()
+                                            .filter(versionKeyName, oldVersion),
                                              dbObj,
                                              false,
                                              false,
