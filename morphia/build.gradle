@@ -1,3 +1,5 @@
+apply plugin: 'org.kordamp.gradle.clirr'
+
 archivesBaseName = 'morphia'
 
 sourceSets {
@@ -9,7 +11,7 @@ dependencies {
         compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
         println "Building with the 2.x java driver"
     } else {
-        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.1"
+        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.2"
         println "Building with the 3.x java driver"
     }
 

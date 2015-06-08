@@ -35,7 +35,6 @@ allprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
     apply plugin: 'jacoco'
-    apply plugin: 'org.kordamp.gradle.clirr'
     apply plugin: 'optional-base'
   
     group = 'org.mongodb.morphia'
