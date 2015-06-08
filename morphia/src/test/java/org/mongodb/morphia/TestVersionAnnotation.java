@@ -11,9 +11,7 @@
  * and limitations under the License.
  */
 
-
 package org.mongodb.morphia;
-
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,24 +31,6 @@ import static org.junit.Assert.assertThat;
 
 public class TestVersionAnnotation extends TestBase {
 
-    @Test
-    public void testVersionedUpsert() {
-        final Datastore datastore = getDs();
-
-        Versioned entity = new Versioned();
-        entity.setName("Value 1");
-
-        Query<Versioned> query = datastore.createQuery(Versioned.class);
-        query.filter("name", "Value 1");
-        UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
-        ops.set("name", "Value 3");
-        datastore.update(query, ops, true);
-
-        entity = datastore.createQuery(Versioned.class).get();
-        Assert.assertEquals("Value 3", entity.getName());
-        Assert.assertEquals(1, entity.getVersion().longValue());
-    }
-    
     @Test
     public void testBulkUpdate() {
         final Datastore datastore = getDs();
@@ -81,7 +61,29 @@ public class TestVersionAnnotation extends TestBase {
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(3, entity.getVersion().longValue());
     }
-    
+
+    @Test
+    public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
+        // when
+        Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.entities.version");
+
+        // then
+        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        assertThat(mappedClasses.size(), is(1));
+        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+    }
+
+    @Test
+    public void testCanMapAnEntityWithAnAbstractVersionedParent() {
+        // when
+        Morphia morphia = getMorphia().map(VersionedChildEntity.class);
+
+        // then
+        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        assertThat(mappedClasses.size(), is(1));
+        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+    }
+
     @Test
     public void testEntityUpdate() {
         final Datastore datastore = getDs();
@@ -120,25 +122,24 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
-    public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        // when
-        Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.entities.version");
+    public void testIncVersionNotOverridingOtherInc() {
+        final Versioned version1 = new Versioned();
+        version1.setCount(0);
+        getDs().save(version1);
 
-        // then
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
-    }
+        assertEquals(new Long(1), version1.getVersion());
+        assertEquals(0, version1.getCount());
 
-    @Test
-    public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        // when
-        Morphia morphia = getMorphia().map(VersionedChildEntity.class);
+        Query<Versioned> query = getDs().createQuery(Versioned.class);
+        query.field("_id").equal(version1.getId());
+        UpdateOperations<Versioned> up = getDs().createUpdateOperations(Versioned.class).inc("count");
 
-        // then
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+        getDs().updateFirst(query, up, true);
+
+        final Versioned version2 = getDs().get(Versioned.class, version1.getId());
+
+        assertEquals(new Long(2), version2.getVersion());
+        assertEquals(1, version2.getCount());
     }
 
     @Test(expected = ConcurrentModificationException.class)
@@ -187,6 +188,24 @@ public class TestVersionAnnotation extends TestBase {
         for (Versioned versioned : versioneds) {
             assertNotNull(versioned.getVersion());
         }
+    }
+
+    @Test
+    public void testVersionedUpsert() {
+        final Datastore datastore = getDs();
+
+        Versioned entity = new Versioned();
+        entity.setName("Value 1");
+
+        Query<Versioned> query = datastore.createQuery(Versioned.class);
+        query.filter("name", "Value 1");
+        UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
+        ops.set("name", "Value 3");
+        datastore.update(query, ops, true);
+
+        entity = datastore.createQuery(Versioned.class).get();
+        Assert.assertEquals("Value 3", entity.getName());
+        Assert.assertEquals(1, entity.getVersion().longValue());
     }
 
 }
