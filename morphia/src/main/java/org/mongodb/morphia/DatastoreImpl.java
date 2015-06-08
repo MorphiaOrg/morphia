@@ -51,6 +51,7 @@ import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexType;
+import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -1026,10 +1027,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
-            final UpdateResults res = update(
-                                                find(dbColl.getName(), entity.getClass()).filter(Mapper.ID_KEY, idValue)
-                                                                                         .filter(versionKeyName, oldVersion), dbObj,
-                                                false, false, wc);
+            final Query<?> query = find(dbColl.getName(), entity.getClass());
+            boolean compoundId = !ReflectionUtils.isPrimitiveLike(mc.getMappedIdField().getType())
+                                 && idValue instanceof DBObject;
+            if (compoundId) {
+                query.disableValidation();
+            }
+            query.filter(Mapper.ID_KEY, idValue);
+            if (compoundId) {
+                query.enableValidation();
+            }
+            query.filter(versionKeyName, oldVersion);
+            final UpdateResults res = update(query, dbObj, false, false, wc);
 
             wr = res.getWriteResult();
 

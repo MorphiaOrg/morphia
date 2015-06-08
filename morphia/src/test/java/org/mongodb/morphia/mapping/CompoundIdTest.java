@@ -8,8 +8,11 @@ import org.junit.Test;
 import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Version;
+import org.mongodb.morphia.dao.BasicDAO;
 
 import java.io.Serializable;
 
@@ -83,7 +86,108 @@ public class CompoundIdTest extends TestBase {
         }
     }
 
+    public static class ConfigKey {
+        private String env;
+        private String subenv;
+        private String key;
 
+        public ConfigKey() {
+        }
+
+        public ConfigKey(final String env, final String key, final String subenv) {
+            this.env = env;
+            this.key = key;
+            this.subenv = subenv;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final ConfigKey configKey = (ConfigKey) o;
+
+            if (!env.equals(configKey.env)) {
+                return false;
+            }
+            if (!subenv.equals(configKey.subenv)) {
+                return false;
+            }
+            return key.equals(configKey.key);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = env.hashCode();
+            result = 31 * result + subenv.hashCode();
+            result = 31 * result + key.hashCode();
+            return result;
+        }
+    }
+    
+    @Entity(noClassnameStored = true)
+    public static class ConfigEntry {
+        @Id
+        private ConfigKey key;
+        private String value;
+        @Version
+        private long version;
+        private String lastModifiedUser;
+        private long lastModifiedMillis;
+
+        public ConfigEntry() {
+        }
+
+        public ConfigEntry(final ConfigKey key) {
+            this.key = key;
+        }
+
+        public ConfigKey getKey() {
+            return key;
+        }
+
+        public void setKey(final ConfigKey key) {
+            this.key = key;
+        }
+
+        public long getLastModifiedMillis() {
+            return lastModifiedMillis;
+        }
+
+        public void setLastModifiedMillis(final long lastModifiedMillis) {
+            this.lastModifiedMillis = lastModifiedMillis;
+        }
+
+        public String getLastModifiedUser() {
+            return lastModifiedUser;
+        }
+
+        public void setLastModifiedUser(final String lastModifiedUser) {
+            this.lastModifiedUser = lastModifiedUser;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(final String value) {
+            this.value = value;
+        }
+
+        public long getVersion() {
+            return version;
+        }
+
+        public void setVersion(final long version) {
+            this.version = version;
+        }
+    }
+    
     @Test
     public void testMapping() throws Exception {
         CompoundIdEntity entity = new CompoundIdEntity();
@@ -111,6 +215,15 @@ public class CompoundIdTest extends TestBase {
 
         getDs().save(entity);
         ((AdvancedDatastore) getDs()).delete(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class, entity.id);
+    }
+    
+    @Test
+    public void testFetchKey() {
+        getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
+        BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
+        ConfigEntry entry = innerDAO.find().get();
+        entry.setValue("something");
+        innerDAO.save(entry);
     }
 
     @Test
