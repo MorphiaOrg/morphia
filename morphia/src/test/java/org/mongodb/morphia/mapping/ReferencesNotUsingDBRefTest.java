@@ -216,6 +216,18 @@ public class ReferencesNotUsingDBRefTest extends ProxyTestBase {
         getDs().save(container);
         allNull(container);
     }
+    
+    @Test
+    public void testFindByEntityReference() {
+        final Ref ref = new Ref("refId");
+        getDs().save(ref);
+
+        final Container container = new Container();
+        container.singleRef = ref;
+        getDs().save(container);
+        
+        Assert.assertNotNull(getDs().find(Container.class, "singleRef", ref).get());
+    }
 
     private void allNull(final Container container) {
         Assert.assertNull(container.lazyMapRef);
