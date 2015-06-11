@@ -416,7 +416,10 @@ public class Mapper {
                     if (key == null) {
                         mappedValue = toMongoObject(value, false);
                     } else {
-                        mappedValue = keyToRef(key);
+                        final Reference refAnn = mf.getAnnotation(Reference.class);
+                        mappedValue = refAnn != null && refAnn.idOnly()
+                                      ? keyToManualRef(key)
+                                      : keyToRef(key);
                         if (mappedValue == value) {
                             throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
                         }
