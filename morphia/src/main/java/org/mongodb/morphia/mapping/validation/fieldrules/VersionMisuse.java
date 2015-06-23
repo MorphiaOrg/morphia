@@ -1,20 +1,26 @@
 package org.mongodb.morphia.mapping.validation.fieldrules;
 
 
-import java.util.Set;
-
+import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Version;
-import org.mongodb.morphia.mapping.DefaultCreator;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
+
+import java.util.Set;
 
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class VersionMisuse extends FieldConstraint {
+
+  private ObjectFactory creator;
+
+  public VersionMisuse(final ObjectFactory creator) {
+    this.creator = creator;
+  }
 
   @Override
   protected void check(final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
@@ -23,7 +29,7 @@ public class VersionMisuse extends FieldConstraint {
       if (Long.class.equals(type) || long.class.equals(type)) {
 
         //TODO: Replace this will a read ObjectFactory call -- requires Mapper instance.
-        final Object testInstance = new DefaultCreator().createInst(mc.getClazz());
+        final Object testInstance = creator.createInstance(mc.getClazz());
 
         // check initial value
         if (Long.class.equals(type)) {

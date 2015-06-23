@@ -1,5 +1,6 @@
 package org.mongodb.morphia.mapping.validation;
 
+import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
@@ -42,6 +43,11 @@ import static java.lang.String.format;
 public class MappingValidator {
 
     private static final Logger LOG = MorphiaLoggerFactory.get(MappingValidator.class);
+    private ObjectFactory creator;
+
+    public MappingValidator(final ObjectFactory objectFactory) {
+        creator = objectFactory;
+    }
 
     public void validate(final List<MappedClass> classes) {
         final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
@@ -101,7 +107,7 @@ public class MappingValidator {
         constraints.add(new LazyReferenceOnArray());
         constraints.add(new MapKeyDifferentFromString());
         constraints.add(new MapNotSerializable());
-        constraints.add(new VersionMisuse());
+        constraints.add(new VersionMisuse(creator));
         //
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Serialized.class));
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));

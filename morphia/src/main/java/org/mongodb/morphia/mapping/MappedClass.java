@@ -352,7 +352,7 @@ public class MappedClass {
 
     @SuppressWarnings("deprecation")
     public void validate() {
-        new MappingValidator().validate(this);
+        new MappingValidator(mapper.getOptions().getObjectFactory()).validate(this);
     }
 
     @Override
