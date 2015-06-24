@@ -1,6 +1,6 @@
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 
-    def simpleVersion = version.split('\\.')[0..1].join('.')
+//    def simpleVersion = version.split('\\.')[0..1].join('.')
     
     def dest = file("build/gh-pages/${simpleVersion}")
     dest.mkdirs()
