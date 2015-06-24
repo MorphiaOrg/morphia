@@ -1,5 +1,6 @@
 ext.configDir = new File(rootDir, 'config')
 ext.slf4jVersion = '1.7.5'
+ext.simpleVersion = version.split('\\.')[0..1].join('.')
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
@@ -105,6 +106,7 @@ allprojects {
         options.version = true
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
         options.links 'http://api.mongodb.org/java/3.0/'
+        title "Morphia ${simpleVersion} API"
     }
 
     test {
