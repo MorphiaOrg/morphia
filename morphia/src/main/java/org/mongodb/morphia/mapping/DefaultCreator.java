@@ -48,7 +48,7 @@ public class DefaultCreator implements ObjectFactory {
                 throw new RuntimeException(e);
             }
         }
-        return createInst(fallbackType);
+        return createInstance(fallbackType);
     }
 
     private static <T> Constructor<T> getNoArgsConstructor(final Class<T> type) {
@@ -62,8 +62,20 @@ public class DefaultCreator implements ObjectFactory {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T createInstance(final Class<T> clazz) {
-        return createInst(clazz);
+        try {
+            return getNoArgsConstructor(clazz).newInstance();
+        } catch (Exception e) {
+            if (Collection.class.isAssignableFrom(clazz)) {
+                return (T) createList(null);
+            } else if (Map.class.isAssignableFrom(clazz)) {
+                return (T) createMap(null);
+            } else if (Set.class.isAssignableFrom(clazz)) {
+                return (T) createSet(null);
+            }
+            throw new MappingException("No usable constructor for " + clazz.getName(), e);
+        }
     }
 
     @Override
@@ -158,20 +170,15 @@ public class DefaultCreator implements ObjectFactory {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * @deprecated use {@link #createInstance(Class)} instead
+     * @param clazz the Class of the type to create
+     * @param <T> the type of the class
+     * @return the new instance
+     */
+    @Deprecated
     public <T> T createInst(final Class<T> clazz) {
-        try {
-            return getNoArgsConstructor(clazz).newInstance();
-        } catch (Exception e) {
-            if (Collection.class.isAssignableFrom(clazz)) {
-                return (T) createList(null);
-            } else if (Map.class.isAssignableFrom(clazz)) {
-                return (T) createMap(null);
-            } else if (Set.class.isAssignableFrom(clazz)) {
-                return (T) createSet(null);
-            }
-            throw new MappingException("No usable constructor for " + clazz.getName(), e);
-        }
+        return createInstance(clazz);
     }
 
     public Map<String, Class> getClassNameCache() {
