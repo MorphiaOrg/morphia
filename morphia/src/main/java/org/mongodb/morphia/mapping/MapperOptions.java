@@ -2,6 +2,8 @@ package org.mongodb.morphia.mapping;
 
 
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
+import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 
@@ -19,6 +21,7 @@ public class MapperOptions {
     private boolean useLowerCaseCollectionNames;
     private boolean cacheClassLookups = false;
     private ObjectFactory objectFactory = new DefaultCreator(this);
+    private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
@@ -139,5 +142,13 @@ public class MapperOptions {
 
     public void setCacheClassLookups(final boolean cacheClassLookups) {
         this.cacheClassLookups = cacheClassLookups;
+    }
+
+    public EntityCacheFactory getCacheFactory() {
+        return cacheFactory;
+    }
+
+    public void setCacheFactory(final EntityCacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 }
