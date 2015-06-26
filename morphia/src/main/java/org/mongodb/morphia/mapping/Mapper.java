@@ -118,7 +118,7 @@ public class Mapper {
     }
 
     /**
-     * 
+     *
      * @deprecated Use Mapper#setDatastoreProvider(DatastoreProvider) instead
      */
     @Deprecated
@@ -152,12 +152,12 @@ public class Mapper {
     public boolean isMapped(final Class c) {
         return mappedClasses.containsKey(c.getName());
     }
-    
+
     /**
      * Creates a MappedClass and validates it.
      */
     public MappedClass addMappedClass(final Class c) {
-        
+
         MappedClass mappedClass = mappedClasses.get(c.getName());
         if (mappedClass == null) {
             mappedClass = new MappedClass(c, this);
@@ -205,7 +205,7 @@ public class Mapper {
                     }
                 }
             }
-        
+
         }
     }
 
@@ -686,7 +686,7 @@ public class Mapper {
     }
 
     public EntityCache createEntityCache() {
-        return new DefaultEntityCache();
+        return getOptions().getCacheFactory().createCache();
     }
 
     public <T> Key<T> refToKey(final DBRef ref) {
@@ -727,7 +727,7 @@ public class Mapper {
         return keys;
     }
 
-    
+
     public DBRef keyToRef(final Key key) {
         if (key == null) {
             return null;
