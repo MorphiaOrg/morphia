@@ -35,7 +35,6 @@ import org.mongodb.morphia.converters.CustomConverters;
 import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
-import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;

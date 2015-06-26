@@ -148,7 +148,7 @@ public class MapperOptions {
         return cacheFactory;
     }
 
-    public void setCacheFactory(EntityCacheFactory cacheFactory) {
+    public void setCacheFactory(final EntityCacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
     }
 }
