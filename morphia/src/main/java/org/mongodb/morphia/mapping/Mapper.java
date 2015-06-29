@@ -771,7 +771,7 @@ public class Mapper {
 
     public Class<?> getClassFromCollection(final String collection) {
         final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
-        if (mcs.isEmpty()) {
+        if (mcs == null || mcs.isEmpty()) {
             throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
         }
         if (mcs.size() > 1) {

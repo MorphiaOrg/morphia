@@ -199,6 +199,8 @@ class ReferenceMapper implements CustomMapper {
                                 final EntityCache cache, final Mapper mapper) {
         // multiple references in a List
         final Class referenceObjClass = mf.getSubClass();
+         // load reference class.  this "fixes" #816
+        mapper.getMappedClass(referenceObjClass);
         Collection references = mf.isSet() ? mapper.getOptions().getObjectFactory().createSet(mf)
                                            : mapper.getOptions().getObjectFactory().createList(mf);
 
