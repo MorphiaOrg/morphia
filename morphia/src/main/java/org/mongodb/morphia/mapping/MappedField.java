@@ -196,7 +196,25 @@ public class MappedField {
         } else if (genericType instanceof Class) {
             realType = (Class) genericType;
         } else if (genericType instanceof GenericArrayType) {
-            realType = (Class) ((GenericArrayType) genericType).getGenericComponentType();
+            final Type genericComponentType = ((GenericArrayType) genericType).getGenericComponentType();
+            if (genericComponentType instanceof ParameterizedType) {
+                pt = (ParameterizedType) genericComponentType;
+                realType = toClass(genericType);
+
+                final Type[] types = pt.getActualTypeArguments();
+                for (Type type : types) {
+                    if (type instanceof ParameterizedType) {
+                        typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, getMapper()));
+                    } else {
+                        if (type instanceof WildcardType) {
+                            type = ((WildcardType) type).getUpperBounds()[0];
+                        }
+                        typeParameters.add(new EphemeralMappedField(type, this, getMapper()));
+                    }
+                }
+            } else {
+                realType = (Class) genericComponentType;
+            }
         }
 
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
@@ -221,6 +239,7 @@ public class MappedField {
                 final Method m = an.getClass().getMethod("concreteClass");
                 m.setAccessible(true);
                 final Object o = m.invoke(an);
+                //noinspection EqualsBetweenInconvertibleTypes
                 if (o != null && !(o.equals(Object.class))) {
                     type = (Class) o;
                     break;
@@ -436,8 +455,11 @@ public class MappedField {
         } else if (t instanceof Class) {
             return (Class) t;
         } else if (t instanceof GenericArrayType) {
-            final Class type = (Class) ((GenericArrayType) t).getGenericComponentType();
-            return Array.newInstance(type, 0).getClass();
+            final Type type = ((GenericArrayType) t).getGenericComponentType();
+            return Array.newInstance(type instanceof ParameterizedType 
+                                     ? (Class) ((ParameterizedType) type).getRawType()
+                                     : (Class) type, 0
+                                    ).getClass();
         } else if (t instanceof ParameterizedType) {
             return (Class) ((ParameterizedType) t).getRawType();
         } else if (t instanceof WildcardType) {

@@ -103,6 +103,19 @@ public class ReflectionUtilsTest extends TestBase {
         assertThat(parameterizedClass, is(exactClass(Integer.class)));
     }
   
+    @Test
+    public void shouldSupportGenericArrays() {
+        getMorphia().map(MyEntity.class);
+    }
+
+    @Entity("generic_arrays")
+    static class MyEntity {
+        @Id
+        private String id;
+        private Integer[] integers;
+        private Super3<Integer>[] super3s;
+    }
+
     @Entity("Base")
     @Indexes(@Index(fields = @Field("id")))
     private static class Foo {
