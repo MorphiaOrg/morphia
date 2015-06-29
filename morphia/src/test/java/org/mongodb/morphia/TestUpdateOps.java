@@ -126,32 +126,34 @@ public class TestUpdateOps extends TestBase {
             getDs().save(rect);
         }
 
-        final Query<Rectangle> q1 = getDs().find(Rectangle.class, "height", 1D);
-        final Query<Rectangle> q2 = getDs().find(Rectangle.class, "height", 2D);
+        final Query<Rectangle> heightOf1 = getDs().find(Rectangle.class, "height", 1D);
+        final Query<Rectangle> heightOf2 = getDs().find(Rectangle.class, "height", 2D);
 
-        assertThat(getDs().getCount(q1), is(3L));
-        assertThat(getDs().getCount(q2), is(0L));
+        assertThat(getDs().getCount(heightOf1), is(3L));
+        assertThat(getDs().getCount(heightOf2), is(0L));
 
-        final UpdateResults results = getDs().update(q1, getDs().createUpdateOperations(Rectangle.class).inc("height"));
+        final UpdateResults results = getDs().update(heightOf1, getDs().createUpdateOperations(Rectangle.class)
+                                                                .inc("height"));
         assertUpdated(results, 3);
 
-        assertThat(getDs().getCount(q1), is(0L));
-        assertThat(getDs().getCount(q2), is(3L));
+        assertThat(getDs().getCount(heightOf1), is(0L));
+        assertThat(getDs().getCount(heightOf2), is(3L));
 
-        getDs().update(q2, getDs().createUpdateOperations(Rectangle.class).dec("height"));
-        assertThat(getDs().getCount(q1), is(3L));
-        assertThat(getDs().getCount(q2), is(0L));
+        getDs().update(heightOf2, getDs().createUpdateOperations(Rectangle.class).dec("height"));
+        assertThat(getDs().getCount(heightOf1), is(3L));
+        assertThat(getDs().getCount(heightOf2), is(0L));
 
-        getDs().update(getDs().find(Rectangle.class, "width", 1D),
-                       getDs().createUpdateOperations(Rectangle.class).set("height", 1D).set("width", 1D),
-                       true);
+        getDs().update(getDs().find(Rectangle.class, "height", 1D),
+                       getDs().createUpdateOperations(Rectangle.class)
+                              .set("height", 1D)
+                              .inc("width", 20D));
 
-        assertThat(getDs().find(Rectangle.class, "width", 1D).get(), is(notNullValue()));
-        assertThat(getDs().find(Rectangle.class, "width", 2D).get(), is(nullValue()));
+        assertThat(getDs().getCount(Rectangle.class), is(5L));
+        assertThat(getDs().find(Rectangle.class, "height", 1D).get(), is(notNullValue()));
+        assertThat(getDs().find(Rectangle.class, "width", 30D).get(), is(notNullValue()));
 
-        getDs().update(getDs().find(Rectangle.class, "width", 1D),
-                       getDs().createUpdateOperations(Rectangle.class).set("height", 2D).set("width", 2D),
-                       true);
+        getDs().update(getDs().find(Rectangle.class, "width", 30D),
+                       getDs().createUpdateOperations(Rectangle.class).set("height", 2D).set("width", 2D));
         assertThat(getDs().find(Rectangle.class, "width", 1D).get(), is(nullValue()));
         assertThat(getDs().find(Rectangle.class, "width", 2D).get(), is(notNullValue()));
     }
