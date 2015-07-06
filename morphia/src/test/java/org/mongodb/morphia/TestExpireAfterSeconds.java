@@ -69,7 +69,7 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Entity
     public static class HasExpiryField {
-        @Indexed(expireAfterSeconds = 5)
+        @Indexed(options = @IndexOptions(expireAfterSeconds = 5))
         private final Date offerExpiresAt = new Date();
         @Id
         private ObjectId id;

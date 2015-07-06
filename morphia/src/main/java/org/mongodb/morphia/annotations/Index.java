@@ -42,6 +42,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     boolean background() default false;
 
     /**
@@ -49,6 +50,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     boolean disableValidation() default false;
 
     /**
@@ -56,6 +58,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     boolean dropDups() default false;
 
     /**
@@ -63,6 +66,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     int expireAfterSeconds() default -1;
 
     /**
@@ -76,6 +80,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     String name() default "";
 
     /**
@@ -88,6 +93,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     boolean sparse() default false;
 
     /**
@@ -95,6 +101,7 @@ public @interface Index {
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     boolean unique() default false;
 
     /**
@@ -103,6 +110,7 @@ public @interface Index {
      *
      * @deprecated use {@link #fields()}
      */
+    @Deprecated
     String value() default "";
 
 }

@@ -16,6 +16,7 @@ package org.mongodb.morphia.indexes;
 import com.mongodb.DBObject;
 import com.mongodb.DuplicateKeyException;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
@@ -34,6 +35,7 @@ import org.mongodb.morphia.entities.IndexOnValue;
 import org.mongodb.morphia.entities.NamedIndexOnValue;
 import org.mongodb.morphia.entities.UniqueIndexOnValue;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexType;
 
@@ -72,21 +74,42 @@ public class TestIndexed extends TestBase {
         assertEquals(1, indexes.size());
     }
 
-    @Test(expected = DuplicateKeyException.class)
+    @Test
     public void shouldThrowExceptionWhenAddingADuplicateValueForAUniqueIndex() {
-        // given
         getMorphia().map(UniqueIndexOnValue.class);
         getDs().ensureIndexes();
-        final long value = 7L;
+        long value = 7L;
 
-        final UniqueIndexOnValue entityWithUniqueName = new UniqueIndexOnValue();
-        entityWithUniqueName.setValue(value);
-        getDs().save(entityWithUniqueName);
+        try {
+            final UniqueIndexOnValue entityWithUniqueName = new UniqueIndexOnValue();
+            entityWithUniqueName.setValue(value);
+            entityWithUniqueName.setUnique(1);
+            getDs().save(entityWithUniqueName);
 
-        // when
-        final UniqueIndexOnValue entityWithSameName = new UniqueIndexOnValue();
-        entityWithSameName.setValue(value);
-        getDs().save(entityWithSameName);
+            final UniqueIndexOnValue entityWithSameName = new UniqueIndexOnValue();
+            entityWithSameName.setValue(value);
+            entityWithSameName.setUnique(2);
+            getDs().save(entityWithSameName);
+
+            Assert.fail("Should have gotten a duplicate key exception");
+        } catch (Exception ignored) {
+        }
+
+        value = 10L;
+        try {
+            final UniqueIndexOnValue first = new UniqueIndexOnValue();
+            first.setValue(1);
+            first.setUnique(value);
+            getDs().save(first);
+
+            final UniqueIndexOnValue second = new UniqueIndexOnValue();
+            second.setValue(2);
+            second.setUnique(value);
+            getDs().save(second);
+
+            Assert.fail("Should have gotten a duplicate key exception");
+        } catch (Exception ignored) {
+        }
     }
 
     @Test
@@ -177,6 +200,11 @@ public class TestIndexed extends TestBase {
         // this should throw...
         getDs().save(new UniqueIndexOnValue("v"));
     }
+    @Test(expected = MappingException.class)
+    public void testMixedIndexDefinitions() throws Exception {
+        getMorphia().map(MixedIndexDefinitions.class);
+        getDs().ensureIndexes(MixedIndexDefinitions.class);
+    }
 
     @SuppressWarnings("unused")
     private static class Place {
@@ -251,4 +279,12 @@ public class TestIndexed extends TestBase {
         private IndexOnValue indexedClass;
     }
 
+
+    @Entity
+    private static class MixedIndexDefinitions {
+        @Id
+        private ObjectId id;
+        @Indexed(unique = true, options = @IndexOptions(dropDups = true))
+        private String name;
+    }
 }

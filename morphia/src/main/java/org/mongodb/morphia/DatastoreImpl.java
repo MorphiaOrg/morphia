@@ -116,7 +116,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * Creates a copy of this Datastore and all its configuaration but with a new database
+     * Creates a copy of this Datastore and all its configuration but with a new database
      *
      * @param database the new database to use for operations
      * @return the new Datastore instance
@@ -232,7 +232,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
                     } else {
                         LOG.warning("DBCollection already exists with same name(" + collName
-                                    + ") and is not capped; not creating capped version!");
+                                        + ") and is not capped; not creating capped version!");
                     }
                 } else {
                     getDB().createCollection(collName, dbCapOpts.get());
@@ -1080,9 +1080,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         dbColl.createIndex(fields, opts);
     }
 
-    protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options) {
+    protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options,
+                               final boolean background) {
         DBObject keys = new BasicDBObject();
-        DBObject opts = extractOptions(options);
+        DBObject opts = extractOptions(options, background);
         for (Field field : fields) {
             String value = field.value();
             String key = value;
@@ -1115,6 +1116,12 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
+        dbColl.createIndex(keys, opts);
+    }
+
+    protected void ensureIndex(final DBCollection dbColl, final DBObject keys, final IndexOptions options, final boolean background) {
+        DBObject opts = extractOptions(options, background);
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
         dbColl.createIndex(keys, opts);
     }
@@ -1214,12 +1221,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         long newVersion = nextValue(oldVersion);
 
         dbObj.put(versionKeyName, newVersion);
-//        mfVersion.setFieldValue(entity, newVersion);
+        //        mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
             final Query<?> query = find(dbColl.getName(), entity.getClass());
             boolean compoundId = !ReflectionUtils.isPrimitiveLike(mc.getMappedIdField().getType())
-                                 && idValue instanceof DBObject;
+                                     && idValue instanceof DBObject;
             if (compoundId) {
                 query.disableValidation();
             }
@@ -1275,7 +1282,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         field.append(mf.getNameToStore());
 
         DBObject keys = new BasicDBObject(field.toString(), IndexType.TEXT.toIndexValue());
-        DBObject opts = extractOptions(index.options());
+        DBObject opts = extractOptions(index.options(), false);
         if (index.value() != -1) {
             DBObject weights = new BasicDBObject();
             opts.put("weights", weights);
@@ -1289,18 +1296,32 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
 
-    private DBObject extractOptions(final IndexOptions options) {
+    private DBObject extractOptions(final IndexOptions options, final boolean background) {
         final DBObject opts = new BasicDBObject();
 
         putIfNotEmpty(opts, "name", options.name());
         putIfNotEmpty(opts, "default_language", options.language());
         putIfNotEmpty(opts, "language_override", options.languageOverride());
-        putIfTrue(opts, "background", options.background());
+        putIfTrue(opts, "background", options.background() || background);
         putIfTrue(opts, "dropDups", options.dropDups());
         putIfTrue(opts, "sparse", options.sparse());
         putIfTrue(opts, "unique", options.unique());
         if (options.expireAfterSeconds() != -1) {
             opts.put("expireAfterSeconds", options.expireAfterSeconds());
+        }
+        return opts;
+    }
+
+    private DBObject extractOptions(final Indexed indexed) {
+        final DBObject opts = new BasicDBObject();
+
+        putIfNotEmpty(opts, "name", indexed.name());
+        putIfTrue(opts, "background", indexed.background());
+        putIfTrue(opts, "dropDups", indexed.dropDups());
+        putIfTrue(opts, "sparse", indexed.sparse());
+        putIfTrue(opts, "unique", indexed.unique());
+        if (indexed.expireAfterSeconds() != -1) {
+            opts.put("expireAfterSeconds", indexed.expireAfterSeconds());
         }
         return opts;
     }
@@ -1410,10 +1431,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (idx.value().length > 0) {
                     for (final Index index : idx.value()) {
                         if (index.fields().length != 0) {
-                            ensureIndex(mc, dbColl, index.fields(), index.options());
+                            ensureIndex(mc, dbColl, index.fields(), index.options(), background);
                         } else {
                             LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
+                                                   + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                             final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapper,
                                                                                      !index.disableValidation());
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
@@ -1446,14 +1467,26 @@ public class DatastoreImpl implements AdvancedDatastore {
 
                 field.append(mf.getNameToStore());
 
-                ensureIndex(dbColl,
-                            index.name(),
-                            new BasicDBObject(field.toString(), index.value().toIndexValue()),
-                            index.unique(),
-                            index.dropDups(),
-                            index.background() ? index.background() : background,
-                            index.sparse(),
-                            index.expireAfterSeconds());
+                final BasicDBObject oldOptions = (BasicDBObject) extractOptions(index);
+                final IndexOptions options = index.options();
+                final BasicDBObject newOptions = (BasicDBObject) extractOptions(options, false);
+                if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
+                    throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
+                                                   + "allowed.  Please migrate all settings to @IndexOptions");
+                }
+                if (!newOptions.isEmpty()) {
+                    ensureIndex(dbColl, new BasicDBObject(field.toString(), index.value().toIndexValue()), options, background);
+                } else {
+
+                    ensureIndex(dbColl,
+                                index.name(),
+                                new BasicDBObject(field.toString(), index.value().toIndexValue()),
+                                index.unique(),
+                                index.dropDups(),
+                                index.background() || background,
+                                index.sparse(),
+                                index.expireAfterSeconds());
+                }
             }
 
             if (mf.hasAnnotation(Text.class)) {
@@ -1461,7 +1494,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
 
             if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
+                    && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
                 final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
                 final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
                 newParentClasses.add(mc);
@@ -1566,7 +1599,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Executing update(" + dbColl.getName() + ") for query: " + q + ", ops: " + u + ", multi: " + multi + ", upsert: "
-                      + createIfMissing);
+                          + createIfMissing);
         }
 
         final WriteResult wr;
