@@ -1089,7 +1089,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             String key = value;
             if (!"$**".equals(value)) {
                 List<String> namePath = new ArrayList<String>();
-                if (!options.disableValidation() && findField(namePath, mc, value) == null) {
+                final MappedField mappedField = findField(namePath, mc, value);
+                if (!options.disableValidation() && mappedField == null) {
                     throw new MappingException(format("Unknown field '%s' for index: %s", value, mc.getClazz().getName()));
                 } else {
                     StringBuilder sb = new StringBuilder();
