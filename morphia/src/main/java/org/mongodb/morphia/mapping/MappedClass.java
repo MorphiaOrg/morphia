@@ -398,6 +398,14 @@ public class MappedClass {
     }
 
     /**
+     * @return the ID field for the class
+     */
+    public MappedField getMappedVersionField() {
+        List<MappedField> fields = getFieldsAnnotatedWith(Version.class);
+        return fields.isEmpty() ? null : fields.get(0);
+    }
+
+    /**
      * @return the Mapper this class is bound to
      */
     public Mapper getMapper() {

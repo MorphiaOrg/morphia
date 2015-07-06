@@ -1,6 +1,7 @@
 package org.mongodb.morphia.optimisticlocks;
 
 
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
@@ -69,6 +70,16 @@ public class VersionTest extends TestBase {
     }
 
     @Test
+    public void testVersionInHashcode() throws Exception {
+        getMorphia().mapPackage("com.example");
+
+        final VersionInHashcode model = new VersionInHashcode();
+        model.data = "whatever";
+        getDs().save(model);
+        Assert.assertNotNull(model.version);
+    }
+
+    @Test
     public void testVersions() throws Exception {
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.hubba);
@@ -81,6 +92,23 @@ public class VersionTest extends TestBase {
         final long version2 = a.hubba;
 
         Assert.assertFalse(version1 == version2);
+    }
+
+    @Entity
+    public static class VersionInHashcode {
+        @Id
+        private ObjectId id;
+        @Version
+        private Long version;
+
+        private String data;
+
+        @Override
+        public int hashCode() {
+            final int dataHashCode = (data == null) ? 0 : data.hashCode();
+            final int versionHashCode = (version == null) ? 0 : version.hashCode();
+            return dataHashCode + versionHashCode;
+        }
     }
 
     public static class ALongPrimitive extends TestEntity {

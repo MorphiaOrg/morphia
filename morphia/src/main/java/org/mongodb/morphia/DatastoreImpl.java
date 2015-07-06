@@ -1207,14 +1207,14 @@ public class DatastoreImpl implements AdvancedDatastore {
             return null;
         }
 
-        final MappedField mfVersion = mc.getFieldsAnnotatedWith(Version.class).get(0);
+        final MappedField mfVersion = mc.getMappedVersionField();
         final String versionKeyName = mfVersion.getNameToStore();
 
         Long oldVersion = (Long) mfVersion.getFieldValue(entity);
         long newVersion = nextValue(oldVersion);
 
         dbObj.put(versionKeyName, newVersion);
-        mfVersion.setFieldValue(entity, newVersion);
+//        mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
             final Query<?> query = find(dbColl.getName(), entity.getClass());
@@ -1244,7 +1244,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
-        // update the version.
         return wr;
     }
 
@@ -1387,7 +1386,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (dbObj.get(Mapper.ID_KEY) == null) {
                     throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
                 }
-                mapper.updateKeyInfo(entity, dbObj, createCache());
+                mapper.updateKeyAndVersionInfo(entity, dbObj, createCache());
                 keys.add(new Key<T>((Class<? extends T>) entity.getClass(), collection.getName(), mapper.getId(entity)));
             }
             mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);

@@ -627,13 +627,13 @@ public class Mapper {
     }
 
     /**
-     * Updates the @{@link org.mongodb.morphia.annotations.Id} fields.
+     * Updates the @{@link org.mongodb.morphia.annotations.Id} and @{@link org.mongodb.morphia.annotations.Version} fields.
      *
      * @param entity The object to update
      * @param dbObj  Value to update with; null means skip
      * @param cache  the EntityCache
      */
-    public void updateKeyInfo(final Object entity, final DBObject dbObj, final EntityCache cache) {
+    public void updateKeyAndVersionInfo(final Object entity, final DBObject dbObj, final EntityCache cache) {
         final MappedClass mc = getMappedClass(entity);
 
         // update id field, if there.
@@ -642,18 +642,15 @@ public class Mapper {
                 final MappedField mf = mc.getMappedIdField();
                 final Object oldIdValue = mc.getIdField().get(entity);
                 readMappedField(dbObj, mf, entity, cache);
-                final Object dbIdValue = mc.getIdField().get(entity);
                 if (oldIdValue != null) {
-                    // The entity already had an id set. Check to make sure it
-                    // hasn't changed. That would be unexpected, and could
+                    // The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could
                     // indicate a bad state.
+                    final Object dbIdValue = mf.getFieldValue(entity);
                     if (!dbIdValue.equals(oldIdValue)) {
                         mf.setFieldValue(entity, oldIdValue); //put the value back...
                         throw new RuntimeException(format("@Id mismatch: %s != %s for %s", oldIdValue, dbIdValue,
                                                           entity.getClass().getName()));
                     }
-                } else {
-                    mc.getIdField().set(entity, dbIdValue);
                 }
             } catch (Exception e) {
                 if (e instanceof RuntimeException) {
@@ -662,6 +659,9 @@ public class Mapper {
 
                 throw new RuntimeException("Error setting @Id field after save/insert.", e);
             }
+        }
+        if (mc.getMappedVersionField() != null && (dbObj != null)) {
+            readMappedField(dbObj, mc.getMappedVersionField(), entity, cache);
         }
     }
 
