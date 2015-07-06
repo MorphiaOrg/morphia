@@ -38,6 +38,7 @@ import static org.mongodb.morphia.query.QueryValidator.validateQuery;
  * @param <T> The type we will be querying for, and returning.
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
     private final DatastoreImpl ds;
