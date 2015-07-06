@@ -10,47 +10,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Defines a container of Criteria and a join method.
+ *
+ * @see CriteriaJoin
+ */
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private CriteriaJoin joinMethod;
     private List<Criteria> children;
 
     private QueryImpl<?> query;
 
-    protected CriteriaContainerImpl(final CriteriaJoin joinMethod) {
-        this.joinMethod = joinMethod;
-        children = new ArrayList<Criteria>();
-    }
-
     protected CriteriaContainerImpl(final QueryImpl<?> query, final CriteriaJoin joinMethod) {
         this(joinMethod);
         this.query = query;
     }
 
-    public List<Criteria> getChildren() {
-        return children;
-    }
-
-    public void setChildren(final List<Criteria> children) {
-        this.children = children;
-    }
-
-    public CriteriaJoin getJoinMethod() {
-        return joinMethod;
-    }
-
-    public void setJoinMethod(final CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(final CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
+        children = new ArrayList<Criteria>();
     }
 
-    public QueryImpl<?> getQuery() {
-        return query;
-    }
-
-    public void setQuery(final QueryImpl<?> query) {
-        this.query = query;
-    }
-
+    @Override
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
             c.attach(this);
@@ -58,10 +39,27 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         }
     }
 
+    @Override
+    public CriteriaContainer and(final Criteria... criteria) {
+        return collect(CriteriaJoin.AND, criteria);
+    }
+
+    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
+        return criteria(name, query.isValidatingNames());
+    }
+
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        return collect(CriteriaJoin.OR, criteria);
+    }
+
+    @Override
     public void remove(final Criteria criteria) {
         children.remove(criteria);
     }
 
+    @Override
     public void addTo(final DBObject obj) {
         if (joinMethod == CriteriaJoin.AND) {
             final Set<String> fields = new HashSet<String>();
@@ -102,12 +100,61 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         }
     }
 
-    public CriteriaContainer and(final Criteria... criteria) {
-        return collect(CriteriaJoin.AND, criteria);
+    @Override
+    public String getFieldName() {
+        return joinMethod.toString();
     }
 
-    public CriteriaContainer or(final Criteria... criteria) {
-        return collect(CriteriaJoin.OR, criteria);
+    /**
+     * @return the Criteria in this CriteriaContainer
+     */
+    public List<Criteria> getChildren() {
+        return children;
+    }
+
+    /**
+     * Sets the Criteria in this CriteriaContainer
+     *
+     * @param children the Criteria
+     */
+
+    public void setChildren(final List<Criteria> children) {
+        this.children = children;
+    }
+
+    /**
+     * @return the join method of this CriteriaContainer
+     * @see CriteriaJoin
+     */
+    public CriteriaJoin getJoinMethod() {
+        return joinMethod;
+    }
+
+    /**
+     * Sets the join method of this CriteriaContainer
+     *
+     * @param joinMethod the CriteriaJoin to use
+     * @see CriteriaJoin
+     */
+
+    public void setJoinMethod(final CriteriaJoin joinMethod) {
+        this.joinMethod = joinMethod;
+    }
+
+    /**
+     * @return the Query for this CriteriaContainer
+     */
+    public QueryImpl<?> getQuery() {
+        return query;
+    }
+
+    /**
+     * Sets the Query for this CriteriaContainer
+     *
+     * @param query the query
+     */
+    public void setQuery(final QueryImpl<?> query) {
+        this.query = query;
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
@@ -122,15 +169,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         return parent;
     }
 
-    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return criteria(name, query.isValidatingNames());
-    }
-
     private FieldEnd<? extends CriteriaContainer> criteria(final String field, final boolean validateName) {
         return new FieldEndImpl<CriteriaContainerImpl>(query, field, this, validateName);
-    }
-
-    public String getFieldName() {
-        return joinMethod.toString();
     }
 }

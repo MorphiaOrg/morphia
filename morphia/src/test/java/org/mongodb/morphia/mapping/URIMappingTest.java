@@ -17,19 +17,6 @@ import java.util.Map;
  */
 public class URIMappingTest extends TestBase {
 
-    private static class ContainsURI {
-        @Id
-        private ObjectId id;
-        private URI uri;
-    }
-
-    private static class ContainsURIKeyedMap {
-        @Id
-        private ObjectId id;
-        private final Map<URI, String> uris = new HashMap<URI, String>();
-    }
-
-
     @Test
     public void testURIField() throws Exception {
         final ContainsURI entity = new ContainsURI();
@@ -55,5 +42,17 @@ public class URIMappingTest extends TestBase {
         Assert.assertEquals(1, loaded.uris.size());
         Assert.assertEquals(testURI, loaded.uris.keySet().iterator().next());
 
+    }
+
+    private static class ContainsURI {
+        @Id
+        private ObjectId id;
+        private URI uri;
+    }
+
+    private static class ContainsURIKeyedMap {
+        private final Map<URI, String> uris = new HashMap<URI, String>();
+        @Id
+        private ObjectId id;
     }
 }

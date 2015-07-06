@@ -15,15 +15,30 @@ import org.mongodb.morphia.annotations.PrePersist;
 public class TestMultipleCallbackMethods extends TestBase {
     private static int loading;
 
+    @Test
+    public void testMultipleCallbackAnnotation() throws Exception {
+        final SomeEntity entity = new SomeEntity();
+        getDs().save(entity);
+
+        Assert.assertEquals(4, entity.getFoo());
+        Assert.assertEquals(0, loading);
+
+        final SomeEntity someEntity = getDs().find(SomeEntity.class, "_id", entity.getId()).get();
+
+        Assert.assertEquals(4, entity.getFoo());
+
+        Assert.assertEquals(-1, someEntity.getFoo());
+        Assert.assertEquals(2, loading);
+    }
+
     abstract static class CallbackAbstractEntity {
         @Id
         private final ObjectId id = new ObjectId();
+        private int foo;
 
         public ObjectId getId() {
             return id;
         }
-
-        private int foo;
 
         int getFoo() {
             return foo;
@@ -81,21 +96,5 @@ public class TestMultipleCallbackMethods extends TestBase {
 
     static class SomeEntity extends CallbackAbstractEntity {
 
-    }
-
-    @Test
-    public void testMultipleCallbackAnnotation() throws Exception {
-        final SomeEntity entity = new SomeEntity();
-        getDs().save(entity);
-
-        Assert.assertEquals(4, entity.getFoo());
-        Assert.assertEquals(0, loading);
-
-        final SomeEntity someEntity = getDs().find(SomeEntity.class, "_id", entity.getId()).get();
-
-        Assert.assertEquals(4, entity.getFoo());
-
-        Assert.assertEquals(-1, someEntity.getFoo());
-        Assert.assertEquals(2, loading);
     }
 }

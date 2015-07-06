@@ -21,13 +21,13 @@ public class GeometryQueryConverter extends TypeConverter implements SimpleValue
     }
 
     @Override
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        Object encode = getMapper().getConverters().encode(((Geometry) value));
-        return new BasicDBObject("$geometry", encode);
+    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        throw new UnsupportedOperationException("Should never have to decode a query object");
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        throw new UnsupportedOperationException("Should never have to decode a query object");
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+        Object encode = getMapper().getConverters().encode(((Geometry) value));
+        return new BasicDBObject("$geometry", encode);
     }
 }

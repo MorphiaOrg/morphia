@@ -32,30 +32,20 @@ import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 public class QueryValidatorTest {
     @Test
-    public void shouldNotErrorWhenValidateQueryCalledWithNullValue() {
-        // this unit test is to drive fixing a null pointer in the logging code.  It's a bit stupid but it's an edge case that wasn't 
-        // caught.
-        // when this is called, don't error
-        validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("name"), EQUAL, null, true, true);
+    public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, Arrays.asList(1, 2),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, Collections.emptySet(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, new HashMap<String, String>(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, new int[0],
+                                                          new ArrayList<ValidationFailure>()), is(true));
     }
 
-    // All of the following tests are whitebox, as I have retrofitted them afterwards.  I have no idea if this is the required 
+    // All of the following tests are whitebox, as I have retrofitted them afterwards.  I have no idea if this is the required
     // functionality or not
-
-    @Test
-    public void shouldBeCompatibleIfValueIsNull() {
-        // expect
-        // frankly not sure we should just let nulls through
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, EQUAL, null, new ArrayList<ValidationFailure>()),
-                   is(true));
-    }
-
-    @Test
-    public void shouldBeCompatibleIfTypeIsNull() {
-        // expect
-        // frankly not sure we should just let nulls through
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, null, EQUAL, "value", new ArrayList<ValidationFailure>()), is(true));
-    }
 
     @Test
     public void shouldAllowBooleanValuesForExistsOperator() {
@@ -65,19 +55,59 @@ public class QueryValidatorTest {
     }
 
     @Test
-    public void shouldNotAllowNonBooleanValuesForExistsOperator() {
-        // given
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, EXISTS, "value",
-                                                          new ArrayList<ValidationFailure>()), is(false));
+    public void shouldAllowGeoWithinOperatorWithAllAppropriateTrimmings() {
+        // expect
+        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("array");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, GEO_WITHIN, new BasicDBObject("$box", 1),
+                                                          new ArrayList<ValidationFailure>()), is(true));
     }
 
     @Test
-    public void shouldAllowSizeOperatorForListTypesAndIntegerValues() {
+    public void shouldAllowInOperatorForIterableMapAndArrayValues() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, Arrays.asList(1, 2),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, Collections.emptySet(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, new HashMap<String, String>(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null,
+                                                          null,
+                                                          SimpleEntity.class,
+                                                          IN,
+                                                          new int[0],
+                                                          new ArrayList<ValidationFailure>()),
+                   is(true));
+    }
+
+    @Test
+    public void shouldAllowModOperatorForArrayOfIntegerValues() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new int[2],
+                                                          new ArrayList<ValidationFailure>()), is(true));
+    }
+
+    @Test
+    public void shouldAllowNotInOperatorForIterableMapAndArrayValues() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, Arrays.asList(1, 2),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, Collections.emptySet(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, new HashMap<String, String>(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null,
+                                                          null, SimpleEntity.class, NOT_IN, new int[0], new ArrayList<ValidationFailure>()),
+                   is(true));
+    }
+
+    @Test
+    //this used to fail
+    public void shouldAllowSizeOperatorForArrayListTypesAndIntegerValues() {
         // given
         MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("listOfIntegers");
+        MappedField mappedField = mappedClass.getMappedField("arrayListOfIntegers");
 
         // expect
         assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
@@ -106,11 +136,10 @@ public class QueryValidatorTest {
     }
 
     @Test
-    //this used to fail
-    public void shouldAllowSizeOperatorForArrayListTypesAndIntegerValues() {
+    public void shouldAllowSizeOperatorForListTypesAndIntegerValues() {
         // given
         MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("arrayListOfIntegers");
+        MappedField mappedField = mappedClass.getMappedField("listOfIntegers");
 
         // expect
         assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
@@ -123,198 +152,36 @@ public class QueryValidatorTest {
     }
 
     @Test
-    public void shouldNotAllowSizeOperatorForNonListTypes() {
-        // given
-        MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("notAnArrayOrList");
-
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField,
-                                                          NullClass.class,
-                                                          SIZE,
-                                                          3,
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false));
-    }
-
-    @Test
-    public void shouldNotAllowSizeOperatorForNonIntegerValues() {
+    public void shouldAllowTypeThatMatchesKeyTypeValue() {
         // expect
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField,
-                                                          ArrayList.class,
-                                                          SIZE,
-                                                          "value",
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false));
+        MappedField mappedField = mappedClass.getMappedField("integer");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, Integer.class, EQUAL,
+                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
+                                                          new ArrayList<ValidationFailure>()), is(true));
     }
 
     @Test
-    public void shouldAllowInOperatorForIterableMapAndArrayValues() {
+    public void shouldAllowValueOfPatternWithTypeOfString() {
         // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, Arrays.asList(1, 2),
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, String.class, EQUAL, Pattern.compile("."),
                                                           new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, Collections.emptySet(),
+    }
+
+    @Test
+    public void shouldAllowValueWithEntityAnnotationAndTypeOfKey() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, Key.class, EQUAL, new SimpleEntity(),
                                                           new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, IN, new HashMap<String, String>(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null,
-                                                          null,
-                                                          SimpleEntity.class,
-                                                          IN,
-                                                          new int[0],
-                                                          new ArrayList<ValidationFailure>()),
+    }
+
+    @Test
+    public void shouldAllowValuesOfIntegerIfTypeIsDouble() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, 1, new ArrayList<ValidationFailure>()),
                    is(true));
-    }
-
-    @Test
-    public void shouldNotAllowOtherValuesForInOperator() {
-        // expect
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField,
-                                                          String.class,
-                                                          IN,
-                                                          "value",
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false));
-    }
-
-    @Test
-    public void shouldAllowNotInOperatorForIterableMapAndArrayValues() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, Arrays.asList(1, 2),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, Collections.emptySet(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, NOT_IN, new HashMap<String, String>(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null,
-                                                          null, SimpleEntity.class, NOT_IN, new int[0], new ArrayList<ValidationFailure>()),
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, double.class, EQUAL, 1, new ArrayList<ValidationFailure>()),
                    is(true));
-    }
-
-    @Test
-    public void shouldNotAllowOtherValuesForNotInOperator() {
-        // expect
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, NOT_IN, "value",
-                                                          new ArrayList<ValidationFailure>()), is(false));
-    }
-
-    @Test
-    public void shouldAllowModOperatorForArrayOfIntegerValues() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new int[2],
-                                                          new ArrayList<ValidationFailure>()), is(true));
-    }
-
-    @Test
-    //this used to fail
-    public void shouldNotErrorIfModOperatorIsUsedWithZeroLengthArrayOfIntegerValues() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new int[0],
-                                                          new ArrayList<ValidationFailure>()), is(false));
-    }
-
-    @Test
-    public void shouldNotAllowModOperatorWithNonIntegerArray() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new String[]{"value"},
-                                                          new ArrayList<ValidationFailure>()), is(false));
-    }
-
-    @Test
-    //this used to fail
-    public void shouldNotErrorModOperatorWithArrayOfNullValues() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new String[1],
-                                                          new ArrayList<ValidationFailure>()), is(false));
-    }
-
-    @Test
-    //this used to fail
-    public void shouldNotAllowModOperatorWithNonArrayValue() {
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, String.class, MOD, "value", new ArrayList<ValidationFailure>()),
-                   is(false));
-    }
-
-    @Test
-    public void shouldAllowGeoWithinOperatorWithAllAppropriateTrimmings() {
-        // expect
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("array");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, GEO_WITHIN, new BasicDBObject("$box", 1),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-    }
-
-    @Test
-    public void shouldNotAllowGeoWithinWhenValueDoesNotContainKeyword() {
-        // expect
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("array");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField,
-                                                          List.class,
-                                                          GEO_WITHIN,
-                                                          new BasicDBObject("notValidKey", 1),
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false)
-                  );
-    }
-
-    @Test
-    public void shouldNotAllowGeoOperatorIfValueDoesNotContainCorrectField() {
-        // expect
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("array");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField,
-                                                          List.class,
-                                                          GEO_WITHIN,
-                                                          new BasicDBObject("name", "value"),
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false)
-                  );
-    }
-
-    @Test
-    public void shouldNotAllowGeoOperatorIfValueIsNotDBObject() {
-        // expect
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("array");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
-                                                          mappedField, List.class, GEO_WITHIN, "value", new ArrayList<ValidationFailure>()),
-                   is(false));
-    }
-
-    @Test
-    public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, Arrays.asList(1, 2),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, Collections.emptySet(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, new HashMap<String, String>(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, ALL, new int[0],
-                                                          new ArrayList<ValidationFailure>()), is(true));
-    }
-
-    @Test
-    public void shouldNotAllowOtherValuesForAllOperator() {
-        // given
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, ALL, "value",
-                                                          new ArrayList<ValidationFailure>()), is(false));
     }
 
     @Test
@@ -336,6 +203,91 @@ public class QueryValidatorTest {
     }
 
     @Test
+    public void shouldAllowValuesOfList() {
+        // expect
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, EQUAL, new ArrayList<String>(),
+                                                          new ArrayList<ValidationFailure>()), is(true));
+    }
+
+    @Test
+    public void shouldAllowValuesOfLongIfTypeIsDouble() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, 1L, new ArrayList<ValidationFailure>()),
+                   is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, double.class, EQUAL, 1L, new ArrayList<ValidationFailure>()),
+                   is(true));
+    }
+
+    @Test
+    public void shouldBeCompatibleIfTypeIsNull() {
+        // expect
+        // frankly not sure we should just let nulls through
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, null, EQUAL, "value", new ArrayList<ValidationFailure>()), is(true));
+    }
+
+    @Test
+    public void shouldBeCompatibleIfValueIsNull() {
+        // expect
+        // frankly not sure we should just let nulls through
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, EQUAL, null, new ArrayList<ValidationFailure>()),
+                   is(true));
+    }
+
+    @Test
+    public void shouldNotAllowGeoOperatorIfValueDoesNotContainCorrectField() {
+        // expect
+        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("array");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, GEO_WITHIN,
+                                                          new BasicDBObject("name", "value"), new ArrayList<ValidationFailure>()),
+                   is(false));
+    }
+
+    @Test
+    public void shouldNotAllowGeoOperatorIfValueIsNotDBObject() {
+        // expect
+        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("array");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, GEO_WITHIN, "value",
+                                                          new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
+    public void shouldNotAllowGeoWithinWhenValueDoesNotContainKeyword() {
+        // expect
+        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("array");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, GEO_WITHIN,
+                                                          new BasicDBObject("notValidKey", 1), new ArrayList<ValidationFailure>()),
+                   is(false));
+    }
+
+    @Test
+    //this used to fail
+    public void shouldNotAllowModOperatorWithNonArrayValue() {
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, String.class, MOD, "value", new ArrayList<ValidationFailure>()),
+                   is(false));
+    }
+
+    @Test
+    public void shouldNotAllowModOperatorWithNonIntegerArray() {
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new String[]{"value"},
+                                                          new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
+    public void shouldNotAllowNonBooleanValuesForExistsOperator() {
+        // given
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, EXISTS, "value",
+                                                          new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
     public void shouldNotAllowNonIntegerTypeIfValueIsInt() {
         // expect
         MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
@@ -352,35 +304,14 @@ public class QueryValidatorTest {
     }
 
     @Test
-    public void shouldAllowValuesOfIntegerIfTypeIsDouble() {
+    public void shouldNotAllowNonKeyTypeWithKeyValue() {
         // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, 1, new ArrayList<ValidationFailure>()),
-                   is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, double.class, EQUAL, 1, new ArrayList<ValidationFailure>()),
-                   is(true));
-    }
-
-    @Test
-    public void shouldAllowValuesOfLongIfTypeIsDouble() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, 1L, new ArrayList<ValidationFailure>()),
-                   is(true));
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, double.class, EQUAL, 1L, new ArrayList<ValidationFailure>()),
-                   is(true));
-    }
-
-    @Test
-    public void shouldRejectNonDoubleValuesIfTypeIsDouble() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, "Not a double",
-                                                          new ArrayList<ValidationFailure>()), is(false));
-    }
-
-    @Test
-    public void shouldAllowValueOfPatternWithTypeOfString() {
-        // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, String.class, EQUAL, Pattern.compile("."),
-                                                          new ArrayList<ValidationFailure>()), is(true));
+        MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("listOfIntegers");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, EQUAL,
+                                                          new Key<String>(String.class, "kind", new ObjectId()),
+                                                          new ArrayList<ValidationFailure>()),
+                   is(false));
     }
 
     @Test
@@ -389,6 +320,70 @@ public class QueryValidatorTest {
         // expect
         assertThat(QueryValidator.isCompatibleForOperator(null, null, Pattern.class, EQUAL, Pattern.compile("."),
                                                           new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
+    public void shouldNotAllowOtherValuesForAllOperator() {
+        // given
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, ALL, "value",
+                                                          new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
+    public void shouldNotAllowOtherValuesForInOperator() {
+        // expect
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
+                                                          mappedField,
+                                                          String.class,
+                                                          IN,
+                                                          "value",
+                                                          new ArrayList<ValidationFailure>()),
+                   is(false));
+    }
+
+    @Test
+    public void shouldNotAllowOtherValuesForNotInOperator() {
+        // expect
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, NOT_IN, "value",
+                                                          new ArrayList<ValidationFailure>()), is(false));
+    }
+
+    @Test
+    public void shouldNotAllowSizeOperatorForNonIntegerValues() {
+        // expect
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
+                                                          mappedField,
+                                                          ArrayList.class,
+                                                          SIZE,
+                                                          "value",
+                                                          new ArrayList<ValidationFailure>()),
+                   is(false));
+    }
+
+    @Test
+    public void shouldNotAllowSizeOperatorForNonListTypes() {
+        // given
+        MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("notAnArrayOrList");
+
+        // expect
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass,
+                                                          mappedField,
+                                                          NullClass.class,
+                                                          SIZE,
+                                                          3,
+                                                          new ArrayList<ValidationFailure>()),
+                   is(false));
     }
 
     @Test
@@ -401,10 +396,13 @@ public class QueryValidatorTest {
     }
 
     @Test
-    public void shouldAllowValueWithEntityAnnotationAndTypeOfKey() {
+    public void shouldNotAllowTypeThatDoesNotMatchKeyTypeValue() {
         // expect
-        assertThat(QueryValidator.isCompatibleForOperator(null, null, Key.class, EQUAL, new SimpleEntity(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
+        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
+        MappedField mappedField = mappedClass.getMappedField("name");
+        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, String.class, EQUAL,
+                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
+                                                          new ArrayList<ValidationFailure>()), is(false));
     }
 
     @Test
@@ -422,43 +420,34 @@ public class QueryValidatorTest {
     }
 
     @Test
-    public void shouldAllowTypeThatMatchesKeyTypeValue() {
+    //this used to fail
+    public void shouldNotErrorIfModOperatorIsUsedWithZeroLengthArrayOfIntegerValues() {
         // expect
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("integer");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, Integer.class, EQUAL,
-                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
-                                                          new ArrayList<ValidationFailure>()), is(true));
-    }
-
-    @Test
-    public void shouldNotAllowTypeThatDoesNotMatchKeyTypeValue() {
-        // expect
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, String.class, EQUAL,
-                                                          new Key<Number>(Integer.class, "Integer", new ObjectId()),
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new int[0],
                                                           new ArrayList<ValidationFailure>()), is(false));
     }
 
     @Test
-    public void shouldNotAllowNonKeyTypeWithKeyValue() {
+    //this used to fail
+    public void shouldNotErrorModOperatorWithArrayOfNullValues() {
         // expect
-        MappedClass mappedClass = new MappedClass(EntityWithListsAndArrays.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("listOfIntegers");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, SimpleEntity.class, EQUAL,
-                                                          new Key<String>(String.class, "kind", new ObjectId()),
-                                                          new ArrayList<ValidationFailure>()),
-                   is(false));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, SimpleEntity.class, MOD, new String[1],
+                                                          new ArrayList<ValidationFailure>()), is(false));
     }
 
     @Test
-    public void shouldAllowValuesOfList() {
+    public void shouldNotErrorWhenValidateQueryCalledWithNullValue() {
+        // this unit test is to drive fixing a null pointer in the logging code.  It's a bit stupid but it's an edge case that wasn't
+        // caught.
+        // when this is called, don't error
+        validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("name"), EQUAL, null, true, true);
+    }
+
+    @Test
+    public void shouldRejectNonDoubleValuesIfTypeIsDouble() {
         // expect
-        MappedClass mappedClass = new MappedClass(SimpleEntity.class, new Mapper());
-        MappedField mappedField = mappedClass.getMappedField("name");
-        assertThat(QueryValidator.isCompatibleForOperator(mappedClass, mappedField, List.class, EQUAL, new ArrayList<String>(),
-                                                          new ArrayList<ValidationFailure>()), is(true));
+        assertThat(QueryValidator.isCompatibleForOperator(null, null, Double.class, EQUAL, "Not a double",
+                                                          new ArrayList<ValidationFailure>()), is(false));
     }
 
     @Test

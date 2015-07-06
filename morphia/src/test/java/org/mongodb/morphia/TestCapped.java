@@ -10,23 +10,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestCapped extends TestBase {
-    @Entity(cap = @CappedAt(count = 1))
-    private static class CurrentStatus {
-        @Id
-        private ObjectId id;
-        private String message;
-
-        private CurrentStatus() {
-        }
-
-        public CurrentStatus(final String msg) {
-            message = msg;
-        }
-    }
-
     @Test
     public void testCappedEntity() throws Exception {
-        // given 
+        // given
         getMorphia().map(CurrentStatus.class);
         getDs().ensureCaps();
 
@@ -43,6 +29,20 @@ public class TestCapped extends TestBase {
         assertEquals(1, getDs().getCount(CurrentStatus.class));
         getDs().save(new CurrentStatus("Kinda Bad4"));
         assertEquals(1, getDs().getCount(CurrentStatus.class));
+    }
+
+    @Entity(cap = @CappedAt(count = 1))
+    private static class CurrentStatus {
+        @Id
+        private ObjectId id;
+        private String message;
+
+        private CurrentStatus() {
+        }
+
+        public CurrentStatus(final String msg) {
+            message = msg;
+        }
     }
 
 }

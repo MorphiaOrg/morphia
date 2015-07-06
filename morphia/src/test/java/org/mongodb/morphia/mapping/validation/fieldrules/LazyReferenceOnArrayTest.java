@@ -13,17 +13,17 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 public class LazyReferenceOnArrayTest extends TestBase {
 
+    @Test(expected = ConstraintViolationException.class)
+    public void testLazyRefOnArray() {
+        getMorphia().map(LazyOnArray.class);
+    }
+
     public static class R extends TestEntity {
     }
-    
+
     public static class LazyOnArray extends TestEntity {
         @Reference(lazy = true)
         private R[] r;
 
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testLazyRefOnArray() {
-        getMorphia().map(LazyOnArray.class);
     }
 }

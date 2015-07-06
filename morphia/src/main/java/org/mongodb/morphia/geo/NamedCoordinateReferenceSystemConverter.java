@@ -21,8 +21,8 @@ public class NamedCoordinateReferenceSystemConverter extends TypeConverter imple
     }
 
     @Override
-    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
-        return CoordinateReferenceSystem.class.isAssignableFrom(c);
+    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        throw new UnsupportedOperationException("We should never need to decode these");
     }
 
     @Override
@@ -30,12 +30,12 @@ public class NamedCoordinateReferenceSystemConverter extends TypeConverter imple
         NamedCoordinateReferenceSystem crs = (NamedCoordinateReferenceSystem) value;
         final BasicDBObject dbObject = new BasicDBObject("type", crs.getType().getTypeName());
         dbObject.put("properties", new BasicDBObject("name", crs.getName()));
-        
+
         return dbObject;
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        throw new UnsupportedOperationException("We should never need to decode these");
+    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
+        return CoordinateReferenceSystem.class.isAssignableFrom(c);
     }
 }

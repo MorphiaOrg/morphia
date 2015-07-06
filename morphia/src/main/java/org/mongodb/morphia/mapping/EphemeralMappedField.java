@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This is a MappedField facade that allows us to convert and collect values to be gathered back in to a Map or Collection, e.g., rather 
+ * This is a MappedField facade that allows us to convert and collect values to be gathered back in to a Map or Collection, e.g., rather
  * than directly on a mapped entity.  This are not mapped directly to a field on a class like MappedFields are.
  */
 public class EphemeralMappedField extends MappedField {
@@ -20,6 +20,13 @@ public class EphemeralMappedField extends MappedField {
     private Object value;
     private MappedField parent;
 
+    /**
+     * Creates an EphemeralMappedField.
+     *
+     * @param t      the parameterized type of the field
+     * @param mf     the parent MappedField
+     * @param mapper the Mapper to use
+     */
     public EphemeralMappedField(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
         super(t, mapper);
         parent = mf;
@@ -32,13 +39,16 @@ public class EphemeralMappedField extends MappedField {
         setIsMongoType(ReflectionUtils.isPropertyType(getSubClass()));
     }
 
+    /**
+     * Creates an EphemeralMappedField.
+     *
+     * @param t      the type of the field
+     * @param mf     the parent MappedField
+     * @param mapper the Mapper to use
+     */
     public EphemeralMappedField(final Type t, final MappedField mf, final Mapper mapper) {
         super(t, mapper);
         parent = mf;
-    }
-
-    public MappedField getParent() {
-        return parent;
     }
 
     @Override
@@ -49,8 +59,19 @@ public class EphemeralMappedField extends MappedField {
     public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
     }
 
-    public Object getValue() {
+    @Override
+    public Object getDbObjectValue(final DBObject dbObj) {
+        return dbObj;
+    }
+
+    @Override
+    public Object getFieldValue(final Object instance) {
         return value;
+    }
+
+    @Override
+    public Class getMapKeyClass() {
+        return (Class) (isMap() ? pType.getActualTypeArguments()[0] : null);
     }
 
     @Override
@@ -59,18 +80,13 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    public Object getDbObjectValue(final DBObject dbObj) {
-        return dbObj;
+    public Class getSubClass() {
+        return toClass(getSubType());
     }
 
     @Override
-    public boolean hasAnnotation(final Class ann) {
-        return Embedded.class.equals(ann);
-    }
-
-    @Override
-    public String toString() {
-        return "EphemeralMappedField for " + super.toString();
+    public Type getSubType() {
+        return pType != null ? pType.getActualTypeArguments()[isMap() ? 1 : 0] : null;
     }
 
     @Override
@@ -85,18 +101,8 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    public Class getMapKeyClass() {
-        return (Class) (isMap() ? pType.getActualTypeArguments()[0] : null);
-    }
-
-    @Override
-    public Type getSubType() {
-        return pType != null ? pType.getActualTypeArguments()[isMap() ? 1 : 0] : null;
-    }
-
-    @Override
-    public Class getSubClass() {
-        return toClass(getSubType());
+    public boolean hasAnnotation(final Class ann) {
+        return Embedded.class.equals(ann);
     }
 
     @Override
@@ -105,17 +111,31 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    public Object getFieldValue(final Object classInst) {
-        return value;
+    public void setFieldValue(final Object instance, final Object val) {
+        value = val;
     }
 
     @Override
-    public void setFieldValue(final Object classInst, final Object val) {
-        value = val;
+    public String toString() {
+        return "EphemeralMappedField for " + super.toString();
     }
 
     @Override
     protected String getMappedFieldName() {
         return "";
+    }
+
+    /**
+     * @return the parent MappedField
+     */
+    public MappedField getParent() {
+        return parent;
+    }
+
+    /**
+     * @return the value of the field
+     */
+    public Object getValue() {
+        return value;
     }
 }

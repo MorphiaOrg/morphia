@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 
@@ -68,8 +65,8 @@ import java.util.regex.Pattern;
  */
 public final class ReflectionUtils {
     private static final Logger LOG = MorphiaLoggerFactory.get(ReflectionUtils.class);
-    
-    
+
+
     private ReflectionUtils() {
     }
 
@@ -89,6 +86,24 @@ public final class ReflectionUtils {
             parent = parent.getSuperclass();
         }
         return allFields.toArray(new Field[allFields.size()]);
+    }
+
+    /**
+     * Scans the array fields and returns any fields that are not static or (optionally) final.
+     *
+     * @param fields            the fields to process
+     * @param returnFinalFields include final fields in the results
+     * @return the valid fields
+     */
+    public static List<Field> getValidFields(final Field[] fields, final boolean returnFinalFields) {
+        final List<Field> validFields = new ArrayList<Field>();
+        // we ignore static and final fields
+        for (final Field field : fields) {
+            if (!Modifier.isStatic(field.getModifiers()) && (returnFinalFields || !Modifier.isFinal(field.getModifiers()))) {
+                validFields.add(field);
+            }
+        }
+        return validFields;
     }
 
     /**
@@ -118,17 +133,6 @@ public final class ReflectionUtils {
         return list;
     }
 
-    public static List<Field> getValidFields(final Field[] fields, final boolean returnFinalFields) {
-        final List<Field> validFields = new ArrayList<Field>();
-        // we ignore static and final fields
-        for (final Field field : fields) {
-            if (!Modifier.isStatic(field.getModifiers()) && (returnFinalFields || !Modifier.isFinal(field.getModifiers()))) {
-                validFields.add(field);
-            }
-        }
-        return validFields;
-    }
-
     //    public static boolean implementsAnyInterface(final Class type, final Class... interfaceClasses)
     //    {
     //        for (Class iF : interfaceClasses)
@@ -140,18 +144,6 @@ public final class ReflectionUtils {
     //        }
     //        return false;
     //    }
-
-    /**
-     * Check if a class implements a specific interface.
-     *
-     * @param type           the class we want to check
-     * @param interfaceClass the interface class we want to check against
-     * @return true if type implements interfaceClass, else false
-     */
-    public static boolean implementsInterface(final Class<?> type, final Class<?> interfaceClass) {
-        return interfaceClass.isAssignableFrom(type);
-    }
-
 
     /**
      * Checks if the class is an integer type, i.e., is numeric but not a floating point type.
@@ -177,28 +169,7 @@ public final class ReflectionUtils {
         if (type instanceof ParameterizedType) {
             return isPropertyType(((ParameterizedType) type).getRawType());
         }
-        if (type instanceof Class) {
-            return isPropertyType((Class) type);
-        }
-        return false;
-    }
-
-    public static boolean isPropertyType(final Class type) {
-        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
-                                || type == CodeWScope.class || type == ObjectId.class || type == Key.class
-                                || type == DBObject.class || type == BasicDBObject.class);
-
-    }
-
-    public static boolean isPrimitiveLike(final Class type) {
-        return type != null && (type == String.class || type == char.class
-                                || type == Character.class || type == short.class || type == Short.class
-                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
-                                || type == Double.class || type == double.class || type == float.class || type == Float.class
-                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
-                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
-                                || type == URI.class || type.isEnum());
-
+        return type instanceof Class && isPropertyType((Class) type);
     }
 
     /**
@@ -251,6 +222,13 @@ public final class ReflectionUtils {
         return getParameterizedClass(field.getType());
     }
 
+    /**
+     * Returns the parameterized type for a field
+     *
+     * @param field the field to examine
+     * @param index the location of the parameter to return
+     * @return the type
+     */
     public static Type getParameterizedType(final Field field, final int index) {
         if (field != null) {
             if (field.getGenericType() instanceof ParameterizedType) {
@@ -269,7 +247,7 @@ public final class ReflectionUtils {
                             // TODO: Figure out what to do... Walk back up the to
                             // the parent class and try to get the variable type
                             // from the T/V/X
-                            // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) 
+                            // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable)
                             // paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
                             return paramType;
                         } else if (paramType instanceof WildcardType) {
@@ -286,34 +264,27 @@ public final class ReflectionUtils {
             // Not defined on field, but may be on class or super class...
             return getParameterizedClass(field.getType());
         }
-        
+
         return null;
     }
 
     /**
-     * @deprecated this class is unused in morphia and will be removed in a future release
+     * Returns the parameterized type of a Class
+     *
+     * @param c the class to examine
+     * @return the type
      */
-    public static Class getTypeArgumentOfParameterizedClass(final Field field, final int index, final int typeIndex) {
-        if (field.getGenericType() instanceof ParameterizedType) {
-            final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            final Type paramType = type.getActualTypeArguments()[index];
-            if (!(paramType instanceof GenericArrayType)) {
-                if (paramType instanceof ParameterizedType) {
-                    final ParameterizedType paramPType = (ParameterizedType) paramType;
-                    final Type paramParamType = paramPType.getActualTypeArguments()[typeIndex];
-                    if (!(paramParamType instanceof ParameterizedType)) {
-                        return (Class) paramParamType;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
     public static Class getParameterizedClass(final Class c) {
         return getParameterizedClass(c, 0);
     }
 
+    /**
+     * Returns the parameterized type in the given position
+     *
+     * @param c     the class to examine
+     * @param index the position of the type to return
+     * @return the type
+     */
     public static Class getParameterizedClass(final Class c, final int index) {
         final TypeVariable[] typeVars = c.getTypeParameters();
         if (typeVars.length > 0) {
@@ -365,6 +336,17 @@ public final class ReflectionUtils {
     }
 
     /**
+     * Check if a class implements a specific interface.
+     *
+     * @param type           the class we want to check
+     * @param interfaceClass the interface class we want to check against
+     * @return true if type implements interfaceClass, else false
+     */
+    public static boolean implementsInterface(final Class<?> type, final Class<?> interfaceClass) {
+        return interfaceClass.isAssignableFrom(type);
+    }
+
+    /**
      * Check if the field supplied is parameterized with a valid JCR property type.
      *
      * @param field the field
@@ -383,8 +365,56 @@ public final class ReflectionUtils {
         return false;
     }
 
-    public static <T> T getAnnotation(final Class c, final Class<T> annClass) {
-        final List<T> found = getAnnotations(c, annClass);
+    /**
+     * Checks if the Class given is a property type
+     *
+     * @param type the Class to examine
+     * @return true if the Class's type is considered a property type
+     */
+    public static boolean isPropertyType(final Class type) {
+        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
+                                || type == CodeWScope.class || type == ObjectId.class || type == Key.class
+                                || type == DBObject.class || type == BasicDBObject.class);
+
+    }
+
+    /**
+     * Checks if the Class given is a primitive type.  This includes the Java primitive types and their wrapper types.
+     *
+     * @param type the Class to examine
+     * @return true if the Class's type is considered a primitive type
+     */
+    public static boolean isPrimitiveLike(final Class type) {
+        return type != null && (type == String.class || type == char.class
+                                || type == Character.class || type == short.class || type == Short.class
+                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
+                                || type == Double.class || type == double.class || type == float.class || type == Float.class
+                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
+                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
+                                || type == URI.class || type.isEnum());
+
+    }
+
+    /**
+     * Returns the @Embedded annotation on a Class if present
+     *
+     * @param c the class to examine
+     * @return the annotation.  may be null.
+     */
+    public static Embedded getClassEmbeddedAnnotation(final Class c) {
+        return getAnnotation(c, Embedded.class);
+    }
+
+    /**
+     * Returns an annotation on a Class if present
+     *
+     * @param c          the class to examine
+     * @param annotation the annotation to find
+     * @param <T>        the type of the annotation
+     * @return the annotation.  may be null.
+     */
+    public static <T> T getAnnotation(final Class c, final Class<T> annotation) {
+        final List<T> found = getAnnotations(c, annotation);
         if (found != null && !found.isEmpty()) {
             return found.get(0);
         } else {
@@ -394,25 +424,30 @@ public final class ReflectionUtils {
 
     /**
      * Returns the (first) instance of the annotation, on the class (or any superclass, or interfaces implemented).
+     *
+     * @param c          the class to examine
+     * @param annotation the annotation to find
+     * @param <T>        the type of the annotation
+     * @return the list of annotations
      */
     @SuppressWarnings("unchecked")
-    public static <T> List<T> getAnnotations(final Class c, final Class<T> annClass) {
+    public static <T> List<T> getAnnotations(final Class c, final Class<T> annotation) {
         final List<T> found = new ArrayList<T>();
         // TODO isn't that actually breaking the contract of @Inherited?
-        if (c.isAnnotationPresent(annClass)) {
-            found.add((T) c.getAnnotation(annClass));
+        if (c.isAnnotationPresent(annotation)) {
+            found.add((T) c.getAnnotation(annotation));
         }
 
         Class parent = c.getSuperclass();
         while ((parent != null) && (parent != Object.class)) {
-            if (parent.isAnnotationPresent(annClass)) {
-                found.add((T) parent.getAnnotation(annClass));
+            if (parent.isAnnotationPresent(annotation)) {
+                found.add((T) parent.getAnnotation(annotation));
             }
 
             // ...and interfaces that the superclass implements
             for (final Class interfaceClass : parent.getInterfaces()) {
-                if (interfaceClass.isAnnotationPresent(annClass)) {
-                    found.add((T) interfaceClass.getAnnotation(annClass));
+                if (interfaceClass.isAnnotationPresent(annotation)) {
+                    found.add((T) interfaceClass.getAnnotation(annotation));
                 }
             }
 
@@ -421,77 +456,47 @@ public final class ReflectionUtils {
 
         // ...and all implemented interfaces
         for (final Class interfaceClass : c.getInterfaces()) {
-            if (interfaceClass.isAnnotationPresent(annClass)) {
-                found.add((T) interfaceClass.getAnnotation(annClass));
+            if (interfaceClass.isAnnotationPresent(annotation)) {
+                found.add((T) interfaceClass.getAnnotation(annotation));
             }
         }
         // no annotation found, use the defaults
         return found;
     }
 
-    public static Embedded getClassEmbeddedAnnotation(final Class c) {
-        return getAnnotation(c, Embedded.class);
-    }
-
+    /**
+     * Returns the @Entity annotation on a Class if present
+     *
+     * @param c the class to examine
+     * @return the annotation.  may be null.
+     */
     public static Entity getClassEntityAnnotation(final Class c) {
         return getAnnotation(c, Entity.class);
     }
 
-    private static String stripFilenameExtension(final String filename) {
-        if (filename.indexOf('.') != -1) {
-            return filename.substring(0, filename.lastIndexOf('.'));
-        } else {
-            return filename;
-        }
-    }
-
-    private static String getPackageName(final String filename) {
-        return filename.contains("/") ? filename.substring(0, filename.lastIndexOf('/')) : filename;
-    }
-
-    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName)
-        throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
-        if (directory.exists()) {
-            for (final String file : directory.list()) {
-                if (file.endsWith(".class")) {
-                    final String name = packageName + '.' + stripFilenameExtension(file);
-                    final Class<?> clazz = Class.forName(name, true, loader);
-                    classes.add(clazz);
-                }
-            }
-        }
-        return classes;
-    }
-
-    public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName)
-        throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
-        final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
-        try {
-            JarEntry jarEntry;
-            do {
-                jarEntry = jarFile.getNextJarEntry();
-                if (jarEntry != null) {
-                    String className = jarEntry.getName();
-                    if (className.endsWith(".class") && getPackageName(className).equals(packageName)) {
-                        className = stripFilenameExtension(className);
-                        classes.add(Class.forName(className.replace('/', '.'), true, loader));
-                    }
-                }
-            } while (jarEntry != null);
-        } finally {
-            jarFile.close();
-        }
-        return classes;
-    }
-
+    /**
+     * Returns the classes in a package
+     *
+     * @param packageName the package to scan
+     * @return the list of classes
+     * @throws IOException            thrown if an error is encountered scanning packages
+     * @throws ClassNotFoundException thrown if a class can not be found
+     */
     public static Set<Class<?>> getClasses(final String packageName) throws IOException, ClassNotFoundException {
         final ClassLoader loader = Thread.currentThread()
                                          .getContextClassLoader();
         return getClasses(loader, packageName);
     }
 
+    /**
+     * Returns the classes in a package
+     *
+     * @param loader      the ClassLoader to use
+     * @param packageName the package to scan
+     * @return the list of classes
+     * @throws IOException            thrown if an error is encountered scanning packages
+     * @throws ClassNotFoundException thrown if a class can not be found
+     */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName) throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final String path = packageName.replace('.', '/');
@@ -527,6 +532,81 @@ public final class ReflectionUtils {
         return classes;
     }
 
+    /**
+     * Returns the classes in a package found in a jar
+     *
+     * @param loader      the ClassLoader to use
+     * @param jar         the jar to scan
+     * @param packageName the package to scan
+     * @return the list of classes
+     * @throws IOException            thrown if an error is encountered scanning packages
+     * @throws ClassNotFoundException thrown if a class can not be found
+     */
+    public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName)
+        throws IOException, ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
+        try {
+            JarEntry jarEntry;
+            do {
+                jarEntry = jarFile.getNextJarEntry();
+                if (jarEntry != null) {
+                    String className = jarEntry.getName();
+                    if (className.endsWith(".class") && getPackageName(className).equals(packageName)) {
+                        className = stripFilenameExtension(className);
+                        classes.add(Class.forName(className.replace('/', '.'), true, loader));
+                    }
+                }
+            } while (jarEntry != null);
+        } finally {
+            jarFile.close();
+        }
+        return classes;
+    }
+
+    /**
+     * Returns the classes in a package found in a directory
+     *
+     * @param loader      the ClassLoader to use
+     * @param directory   the directory to scan
+     * @param packageName the package to scan
+     * @return the list of classes
+     * @throws ClassNotFoundException thrown if a class can not be found
+     */
+    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName)
+        throws ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        if (directory.exists()) {
+            for (final String file : directory.list()) {
+                if (file.endsWith(".class")) {
+                    final String name = packageName + '.' + stripFilenameExtension(file);
+                    final Class<?> clazz = Class.forName(name, true, loader);
+                    classes.add(clazz);
+                }
+            }
+        }
+        return classes;
+    }
+
+    private static String getPackageName(final String filename) {
+        return filename.contains("/") ? filename.substring(0, filename.lastIndexOf('/')) : filename;
+    }
+
+    private static String stripFilenameExtension(final String filename) {
+        if (filename.indexOf('.') != -1) {
+            return filename.substring(0, filename.lastIndexOf('.'));
+        } else {
+            return filename;
+        }
+    }
+
+    /**
+     * Converts an Iterable to a List
+     *
+     * @param it  the Iterable
+     * @param <T> the types of the elements in the Iterable
+     * @return the List
+     */
     public static <T> List<T> iterToList(final Iterable<T> it) {
         if (it instanceof List) {
             return (List<T>) it;
@@ -543,6 +623,13 @@ public final class ReflectionUtils {
         return ar;
     }
 
+    /**
+     * Converts a List to an array
+     *
+     * @param type   the Class type of the elements of the List
+     * @param values the List to convert
+     * @return the array
+     */
     public static Object convertToArray(final Class type, final List<?> values) {
         final Object exampleArray = Array.newInstance(type, values.size());
         try {
@@ -589,6 +676,7 @@ public final class ReflectionUtils {
      *
      * @param baseClass  the base class
      * @param childClass the child class
+     * @param <T>        the type of the base class
      * @return a list of the raw classes for the actual type arguments.
      * @deprecated this class is unused in morphia and will be removed in a future release
      */
@@ -637,6 +725,14 @@ public final class ReflectionUtils {
         return typeArgumentsAsClasses;
     }
 
+    /**
+     * Returns the type argument
+     *
+     * @param clazz the Class to examine
+     * @param tv    the TypeVariable to look for
+     * @param <T>   the type of the Class
+     * @return the Class type
+     */
     public static <T> Class<?> getTypeArgument(final Class<? extends T> clazz, final TypeVariable<? extends GenericDeclaration> tv) {
         final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
         Type type = clazz;

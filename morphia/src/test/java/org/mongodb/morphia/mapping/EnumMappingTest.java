@@ -117,7 +117,7 @@ public class EnumMappingTest extends TestBase {
 
         private String text;
 
-        private WebTemplateType(final String text) {
+        WebTemplateType(final String text) {
             this.text = text;
         }
 

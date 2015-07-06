@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 public @interface NotSaved {
 
 }

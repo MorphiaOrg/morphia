@@ -19,19 +19,6 @@ public final class ExistsOperationValidator extends OperationValidator {
     private ExistsOperationValidator() {
     }
 
-    @Override
-    protected void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures) {
-        if (value.getClass() != Boolean.class) {
-            validationFailures.add(new ValidationFailure(format("For an $exists operation, value '%s' should be a boolean type.  "
-                                                                + "Instead it was a: %s", value, value.getClass())));
-        }
-    }
-
-    @Override
-    protected FilterOperator getOperator() {
-        return EXISTS;
-    }
-
     /**
      * Get the instance.
      *
@@ -39,5 +26,18 @@ public final class ExistsOperationValidator extends OperationValidator {
      */
     public static ExistsOperationValidator getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected FilterOperator getOperator() {
+        return EXISTS;
+    }
+
+    @Override
+    protected void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures) {
+        if (value.getClass() != Boolean.class) {
+            validationFailures.add(new ValidationFailure(format("For an $exists operation, value '%s' should be a boolean type.  "
+                                                                + "Instead it was a: %s", value, value.getClass())));
+        }
     }
 }

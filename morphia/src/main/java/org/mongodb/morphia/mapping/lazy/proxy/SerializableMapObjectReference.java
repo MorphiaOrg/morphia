@@ -18,6 +18,14 @@ public class SerializableMapObjectReference extends AbstractReference implements
     private static final long serialVersionUID = 1L;
     private final HashMap<Object, Key<?>> keyMap;
 
+    /**
+     * Creates a SerializableMapObjectReference
+     *
+     * @param mapToProxy        the map to proxy
+     * @param referenceObjClass the referenced objects' Class
+     * @param ignoreMissing     ignore missing referenced documents
+     * @param p                 the DatastoreProvider to use
+     */
     public SerializableMapObjectReference(final Map mapToProxy, final Class referenceObjClass, final boolean ignoreMissing,
                                           final DatastoreProvider p) {
 
@@ -27,10 +35,25 @@ public class SerializableMapObjectReference extends AbstractReference implements
     }
 
     //CHECKSTYLE:OFF
+    @Override
+    public Map<Object, Key<?>> __getReferenceMap() {
+        return keyMap;
+    }
+    //CHECKSTYLE:ON
+
+    //CHECKSTYLE:OFF
+    @Override
     public void __put(final Object key, final Key k) {
         keyMap.put(key, k);
     }
-    //CHECKSTYLE:ON
+
+    @Override
+    protected void beforeWriteObject() {
+        if (__isFetched()) {
+            syncKeys();
+            ((Map) object).clear();
+        }
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -48,14 +71,6 @@ public class SerializableMapObjectReference extends AbstractReference implements
         return m;
     }
 
-    @Override
-    protected void beforeWriteObject() {
-        if (__isFetched()) {
-            syncKeys();
-            ((Map) object).clear();
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void syncKeys() {
         final Datastore ds = p.get();
@@ -65,11 +80,6 @@ public class SerializableMapObjectReference extends AbstractReference implements
         for (final Map.Entry<Object, Object> e : map.entrySet()) {
             keyMap.put(e.getKey(), ds.getKey(e.getValue()));
         }
-    }
-
-    //CHECKSTYLE:OFF
-    public Map<Object, Key<?>> __getReferenceMap() {
-        return keyMap;
     }
     //CHECKSTYLE:ON
 

@@ -12,10 +12,10 @@ import org.junit.Before;
 @SuppressWarnings("deprecation")
 public abstract class TestBase {
     private final MongoClient mongoClient;
+    private final Morphia morphia = new Morphia();
     private DB db;
     private Datastore ds;
     private AdvancedDatastore ads;
-    private final Morphia morphia = new Morphia();
 
     protected TestBase() {
         try {
@@ -23,6 +23,42 @@ public abstract class TestBase {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public AdvancedDatastore getAds() {
+        return ads;
+    }
+
+    public void setAds(final AdvancedDatastore ads) {
+        this.ads = ads;
+    }
+
+    public DB getDb() {
+        return db;
+    }
+
+    public void setDb(final DB db) {
+        this.db = db;
+    }
+
+    public Datastore getDs() {
+        return ds;
+    }
+
+    public void setDs(final Datastore ds) {
+        this.ds = ds;
+    }
+
+    public MongoClient getMongoClient() {
+        return mongoClient;
+    }
+
+    public Morphia getMorphia() {
+        return morphia;
+    }
+
+    public boolean isReplicaSet() {
+        return runIsMaster().get("setName") != null;
     }
 
     @Before
@@ -33,17 +69,25 @@ public abstract class TestBase {
         cleanup();
     }
 
+    @After
+    public void tearDown() {
+        cleanup();
+        getMongoClient().close();
+    }
+
+    protected void checkMaxServerVersion(final double version) {
+        Assume.assumeTrue(serverIsAtMostVersion(version));
+    }
+
+    protected void checkMinServerVersion(final double version) {
+        Assume.assumeTrue(serverIsAtLeastVersion(version));
+    }
+
     protected void cleanup() {
         DB db = getDb();
         if (db != null) {
             db.dropDatabase();
         }
-    }
-
-    @After
-    public void tearDown() {
-        cleanup();
-        getMongoClient().close();
     }
 
     /**
@@ -55,10 +99,6 @@ public abstract class TestBase {
         return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
     }
 
-    protected void checkMinServerVersion(final double version) {
-        Assume.assumeTrue(serverIsAtLeastVersion(version));
-    }
-
     /**
      * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
@@ -66,46 +106,6 @@ public abstract class TestBase {
     protected boolean serverIsAtMostVersion(final double version) {
         String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
         return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
-    }
-
-    protected void checkMaxServerVersion(final double version) {
-        Assume.assumeTrue(serverIsAtMostVersion(version));
-    }
-
-    public AdvancedDatastore getAds() {
-        return ads;
-    }
-
-    public DB getDb() {
-        return db;
-    }
-
-    public Datastore getDs() {
-        return ds;
-    }
-
-    public MongoClient getMongoClient() {
-        return mongoClient;
-    }
-
-    public Morphia getMorphia() {
-        return morphia;
-    }
-
-    public void setDb(final DB db) {
-        this.db = db;
-    }
-
-    public void setDs(final Datastore ds) {
-        this.ds = ds;
-    }
-
-    public void setAds(final AdvancedDatastore ads) {
-        this.ads = ads;
-    }
-
-    public boolean isReplicaSet() {
-        return runIsMaster().get("setName") != null;
     }
 
     private CommandResult runIsMaster() {

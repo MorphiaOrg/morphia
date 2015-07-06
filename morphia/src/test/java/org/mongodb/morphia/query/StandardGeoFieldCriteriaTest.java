@@ -18,9 +18,9 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
-                                                                                                      .latitude(latitude)
-                                                                                                      .longitude(longitude)
-                                                                                                      .build(),
+                                                                                                          .latitude(latitude)
+                                                                                                          .longitude(longitude)
+                                                                                                          .build(),
                                                                          maxDistanceMeters, false, false);
 
         // when
@@ -48,9 +48,9 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
 
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
-                                                                                                      .latitude(latitude)
-                                                                                                      .longitude(longitude)
-                                                                                                      .build(),
+                                                                                                          .latitude(latitude)
+                                                                                                          .longitude(longitude)
+                                                                                                          .build(),
                                                                          null, false, false);
 
         // when

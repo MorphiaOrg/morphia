@@ -16,6 +16,11 @@ public enum IndexType {
         direction = o;
     }
 
+    /**
+     * Returns the value as needed by the index definition document
+     *
+     * @return the value
+     */
     public Object toIndexValue() {
         return direction;
     }

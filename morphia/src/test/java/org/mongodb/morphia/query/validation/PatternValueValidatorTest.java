@@ -21,17 +21,6 @@ public class PatternValueValidatorTest {
     }
 
     @Test
-    public void shouldRejectNonStringTypeWithValueOfPattern() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = PatternValueValidator.getInstance().apply(Pattern.class, Pattern.compile("."), validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(1));
-    }
-
-    @Test
     public void shouldNotApplyValidationWhenValueIsNotAPattern() {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -40,5 +29,16 @@ public class PatternValueValidatorTest {
         // then
         assertThat(validationApplied, is(false));
         assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldRejectNonStringTypeWithValueOfPattern() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = PatternValueValidator.getInstance().apply(Pattern.class, Pattern.compile("."), validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(1));
     }
 }

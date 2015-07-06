@@ -5,17 +5,25 @@ import org.mongodb.morphia.utils.IndexDirection;
 
 public final class Route {
     private String name;
-    
+
     @Indexed(IndexDirection.GEO2DSPHERE)
     private LineString route;
 
-    @SuppressWarnings("UnusedDeclaration") // needed by Morphia
+    @SuppressWarnings("UnusedDeclaration")
+        // needed by Morphia
     Route() {
     }
 
     public Route(final String name, final LineString route) {
         this.name = name;
         this.route = route;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (route != null ? route.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -37,13 +45,6 @@ public final class Route {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (route != null ? route.hashCode() : 0);
-        return result;
     }
 
     @Override

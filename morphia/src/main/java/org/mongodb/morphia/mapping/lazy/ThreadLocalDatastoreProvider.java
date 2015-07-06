@@ -4,7 +4,7 @@ import org.mongodb.morphia.Datastore;
 
 /**
  * Stores one active datastore per thread, based on the most recently registered datastore
- * 
+ *
  * @author Michael Houston
  */
 public class ThreadLocalDatastoreProvider implements DatastoreProvider {
@@ -18,7 +18,7 @@ public class ThreadLocalDatastoreProvider implements DatastoreProvider {
         Datastore datastore = datastores.get();
         if (datastore == null) {
             throw new IllegalStateException(
-                    "ThreadLocal does not carry a Datastore for this thread.");
+                                               "ThreadLocal does not carry a Datastore for this thread.");
         }
         return datastore;
     }

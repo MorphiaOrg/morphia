@@ -19,6 +19,13 @@ public class City {
     }
 
     @Override
+    public int hashCode() {
+        int result = location != null ? location.hashCode() : 0;
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -34,13 +41,6 @@ public class City {
         }
         return name.equals(city.name);
 
-    }
-
-    @Override
-    public int hashCode() {
-        int result = location != null ? location.hashCode() : 0;
-        result = 31 * result + name.hashCode();
-        return result;
     }
 
     @Override

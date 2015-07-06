@@ -9,5 +9,5 @@ import org.mongodb.morphia.Key;
  */
 //CHECKSTYLE:OFF
 public interface ProxiedEntityReference extends ProxiedReference {
-  Key<?> __getKey();
+    Key<?> __getKey();
 }

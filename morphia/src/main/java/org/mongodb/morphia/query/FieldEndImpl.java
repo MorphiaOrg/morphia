@@ -17,7 +17,11 @@ import java.util.regex.Pattern;
 import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
 import static org.mongodb.morphia.query.FilterOperator.INTERSECTS;
 
-
+/**
+ * Represents a document field in a query and presents the operations available to querying against that field.
+ *
+ * @param <T> the type of the CriteriaContainer
+ */
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
@@ -27,6 +31,14 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     private final boolean validateName;
     private boolean not;
 
+    /**
+     * Creates a FieldEnd for a particular field.
+     *
+     * @param query        the owning query
+     * @param field        the field to consider
+     * @param target       the CriteriaContainer
+     * @param validateName true if the field name should be validated
+     */
     public FieldEndImpl(final QueryImpl<?> query, final String field, final T target, final boolean validateName) {
 
         this(query, field, target, validateName, false);
@@ -94,7 +106,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T hasAllOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
-        Assert.parameterNotEmpty(values, "values");
+        Assert.parameterNotEmpty("values", values);
         return addCriteria(FilterOperator.ALL, values);
     }
 
@@ -112,7 +124,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T hasNoneOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
-        Assert.parameterNotEmpty(values, "values");
+        Assert.parameterNotEmpty("values", values);
         return addCriteria(FilterOperator.NOT_IN, values);
     }
 
@@ -128,6 +140,23 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
+    public T in(final Iterable<?> values) {
+        return hasAnyOf(values);
+    }
+
+    @Override
+    public T intersects(final Geometry geometry) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
+        return target;
+    }
+
+    @Override
+    public T intersects(final Geometry geometry, final CoordinateReferenceSystem crs) {
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false, crs));
+        return target;
+    }
+
+    @Override
     public T lessThan(final Object val) {
         Assert.parametersNotNull("val", val);
         return addCriteria(FilterOperator.LESS_THAN, val);
@@ -140,13 +169,42 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
-    public T in(final Iterable<?> values) {
-        return hasAnyOf(values);
+    public T mod(final long divisor, final long remainder) {
+        return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
     }
 
     @Override
-    public T mod(final long divisor, final long remainder) {
-        return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
+    public T near(final double longitude, final double latitude) {
+        return near(longitude, latitude, false);
+    }
+
+    @Override
+    public T near(final double longitude, final double latitude, final boolean spherical) {
+        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{longitude, latitude}, null);
+    }
+
+    @Override
+    public T near(final double longitude, final double latitude, final double radius) {
+        return near(longitude, latitude, radius, false);
+    }
+
+    @Override
+    public T near(final double longitude, final double latitude, final double radius, final boolean spherical) {
+        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR,
+                              new double[]{longitude, latitude},
+                              opts("$maxDistance", radius));
+    }
+
+    @Override
+    public T near(final Point point, final int maxDistance) {
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, maxDistance, validateName, false));
+        return target;
+    }
+
+    @Override
+    public T near(final Point point) {
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, null, validateName, false));
+        return target;
     }
 
     @Override
@@ -163,37 +221,6 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T notIn(final Iterable<?> values) {
         return hasNoneOf(values);
-    }
-
-    @Override
-    public T near(final double x, final double y) {
-        return near(x, y, false);
-    }
-
-    private T addGeoCriteria(final FilterOperator op, final Object val, final Map<String, Object> opts) {
-        if (not) {
-            throw new QueryException("Geospatial queries cannot be negated with 'not'.");
-        }
-
-        target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
-        return target;
-    }
-
-    @Override
-    public T near(final double x, final double y, final boolean spherical) {
-        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{x, y}, null);
-    }
-
-    @Override
-    public T near(final double x, final double y, final double radius) {
-        return near(x, y, radius, false);
-    }
-
-    @Override
-    public T near(final double x, final double y, final double radius, final boolean spherical) {
-        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR,
-                              new double[]{x, y},
-                              opts("$maxDistance", radius));
     }
 
     @Override
@@ -214,26 +241,14 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
-    public T within(final Shape shape) {
-        Assert.parametersNotNull("shape", shape);
-        return addCriteria(GEO_WITHIN, shape.toDBObject());
-    }
-
-    @Override
     public T type(final Type type) {
         return addCriteria(FilterOperator.TYPE, type.val());
     }
 
     @Override
-    public T near(final Point point, final int maxDistance) {
-        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, maxDistance, validateName, false));
-        return target;
-    }
-
-    @Override
-    public T near(final Point point) {
-        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, null, validateName, false));
-        return target;
+    public T within(final Shape shape) {
+        Assert.parametersNotNull("shape", shape);
+        return addCriteria(GEO_WITHIN, shape.toDBObject());
     }
 
     @Override
@@ -260,9 +275,20 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
         return target;
     }
 
-    @Override
-    public T intersects(final Geometry geometry) {
-        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
+    /**
+     * Add a criteria
+     */
+    private T addCriteria(final FilterOperator op, final Object val) {
+        target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not));
+        return target;
+    }
+
+    private T addGeoCriteria(final FilterOperator op, final Object val, final Map<String, Object> opts) {
+        if (not) {
+            throw new QueryException("Geospatial queries cannot be negated with 'not'.");
+        }
+
+        target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
         return target;
     }
 
@@ -270,20 +296,5 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
         final Map<String, Object> opts = new HashMap<String, Object>();
         opts.put(s, v);
         return opts;
-    }
-
-    /**
-     * Add a criteria
-     */
-    private T addCriteria(final FilterOperator op, final Object val) {
-        target.add(new FieldCriteria(query, field, op, val, validateName, query
-                                                                              .isValidatingTypes(), not));
-        return target;
-    }
-
-    @Override
-    public T intersects(final Geometry geometry, final CoordinateReferenceSystem crs) {
-        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false, crs));
-        return target;
     }
 }

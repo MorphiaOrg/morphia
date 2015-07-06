@@ -18,26 +18,28 @@ package org.mongodb.morphia.geo;
 
 import static java.lang.String.format;
 
-// borrowed from the 3.0 Java driver and will be replaced by that version after the move to 3.0
+/**
+ * A GeoJSON named Coordinate Reference System.
+ */
 public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSystem {
 
     /**
      * The EPSG:4326 Coordinate Reference System.
      */
     public static final NamedCoordinateReferenceSystem EPSG_4326 =
-    new NamedCoordinateReferenceSystem("EPSG:4326");
+        new NamedCoordinateReferenceSystem("EPSG:4326");
 
     /**
      * The urn:ogc:def:crs:OGC:1.3:CRS84 Coordinate Reference System
      */
     public static final NamedCoordinateReferenceSystem CRS_84 =
-    new NamedCoordinateReferenceSystem("urn:ogc:def:crs:OGC:1.3:CRS84");
+        new NamedCoordinateReferenceSystem("urn:ogc:def:crs:OGC:1.3:CRS84");
 
     /**
      * A custom MongoDB EPSG:4326 Coordinate Reference System that uses a strict counter-clockwise winding order.
      */
     public static final NamedCoordinateReferenceSystem EPSG_4326_STRICT_WINDING =
-    new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326");
+        new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326");
 
     private final String name;
 
@@ -51,11 +53,6 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
 
     }
 
-    @Override
-    public CoordinateReferenceSystemType getType() {
-        return CoordinateReferenceSystemType.NAME;
-    }
-
     /**
      * Gets the name of this Coordinate Reference System.
      *
@@ -63,6 +60,16 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public CoordinateReferenceSystemType getType() {
+        return CoordinateReferenceSystemType.NAME;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     @Override
@@ -78,11 +85,6 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
 
         return name.equals(that.name);
 
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 
     @Override

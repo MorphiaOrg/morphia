@@ -13,23 +13,13 @@ import java.util.List;
 
 
 public class ByteMappingTest extends TestBase {
-    private static class Bytes {
-        @Id
-        private ObjectId id;
-        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
-        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
-        private List<Byte> listWrapper = new ArrayList<Byte>();
-        private byte singlePrimitive;
-        private Byte singleWrapper;
-        private byte[] primitiveArray;
-        private Byte[] wrapperArray;
-        private byte[][] nestedPrimitiveArray;
-        private Byte[][] nestedWrapperArray;
-    }
-
-    private static class MbbDocument {
-        @Id
-        private ObjectId id;
+    @Test
+    public void blobs() {
+        getMorphia().map(Bytes.class);
+        final String data = "{ \"primitiveArray\": BinData(0, "
+                            + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
+        getDb().eval("db.Bytes.insert(" + data + ")");
+        final Bytes loaded = getDs().find(Bytes.class).get();
     }
 
     @Test
@@ -63,12 +53,22 @@ public class ByteMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
-    @Test
-    public void blobs() {
-        getMorphia().map(Bytes.class);
-        final String data = "{ \"primitiveArray\": BinData(0, "
-                            + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
-        getDb().eval("db.Bytes.insert(" + data + ")");
-        final Bytes loaded = getDs().find(Bytes.class).get();
+    private static class Bytes {
+        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
+        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
+        @Id
+        private ObjectId id;
+        private List<Byte> listWrapper = new ArrayList<Byte>();
+        private byte singlePrimitive;
+        private Byte singleWrapper;
+        private byte[] primitiveArray;
+        private Byte[] wrapperArray;
+        private byte[][] nestedPrimitiveArray;
+        private Byte[][] nestedWrapperArray;
+    }
+
+    private static class MbbDocument {
+        @Id
+        private ObjectId id;
     }
 }

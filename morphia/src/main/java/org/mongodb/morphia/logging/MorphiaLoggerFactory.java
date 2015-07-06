@@ -5,10 +5,12 @@ import org.mongodb.morphia.logging.jdk.JDKLoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Morphia's logging factory that can return either an slf4j LoggerFactory or a JDK LoggerFactory.
+ */
 public final class MorphiaLoggerFactory {
-    private static LoggerFactory loggerFactory;
-
     private static final List<String> FACTORIES = new ArrayList<String>();
+    private static LoggerFactory loggerFactory;
 
     static {
         FACTORIES.add("org.mongodb.morphia.logging.slf4j.SLF4JLoggerImplFactory");
@@ -17,7 +19,18 @@ public final class MorphiaLoggerFactory {
 
     private MorphiaLoggerFactory() {
     }
-    
+
+    /**
+     * Gets or creates a Logger for the given class.
+     *
+     * @param c the class to use for naming
+     * @return the Logger
+     */
+    public static Logger get(final Class<?> c) {
+        init();
+        return loggerFactory.get(c);
+    }
+
     private static synchronized void init() {
         if (loggerFactory == null) {
             chooseLoggerFactory();
@@ -43,13 +56,10 @@ public final class MorphiaLoggerFactory {
         }
     }
 
-    public static Logger get(final Class<?> c) {
-        init();
-        return loggerFactory.get(c);
-    }
-
     /**
-     * Register a LoggerFactory; last one registered is used. *
+     * Register a LoggerFactory; last one registered is used.
+     *
+     * @param factoryClass the factory class
      */
     public static void registerLogger(final Class<? extends LoggerFactory> factoryClass) {
         if (loggerFactory == null) {
@@ -59,6 +69,9 @@ public final class MorphiaLoggerFactory {
         }
     }
 
+    /**
+     * Clears the logger factory
+     */
     public static void reset() {
         loggerFactory = null;
     }

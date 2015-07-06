@@ -19,15 +19,68 @@ public abstract class TypeConverter {
         supportedTypes = copy(types);
     }
 
+    /**
+     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
+     *
+     * @param targetClass  the class to create and populate
+     * @param fromDBObject the DBObject to use when populating the new instance
+     * @return the new instance
+     */
+    public final Object decode(final Class targetClass, final Object fromDBObject) {
+        return decode(targetClass, fromDBObject, null);
+    }
+
+    /**
+     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object <br><b>NOTE: optionalExtraInfo might
+     * be
+     * null</b>
+     *
+     * @param targetClass       the class to create and populate
+     * @param fromDBObject      the DBObject to use when populating the new instance
+     * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding
+     * @return the new instance
+     */
+    public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
+
+    /**
+     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
+     *
+     * @param value The object to encode
+     * @return the encoded version of the object
+     */
+    public final Object encode(final Object value) {
+        return encode(value, null);
+    }
+
+    /**
+     * encode the (type-safe) java object into the corresponding {@link com.mongodb.DBObject}
+     *
+     * @param value             The object to encode
+     * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding
+     * @return the encoded version of the object
+     */
+    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+        return value; // as a default impl
+    }
+
+    /**
+     * @return the mapper used by the converter
+     */
     public Mapper getMapper() {
         return mapper;
     }
 
-    Class[] copy(final Class[] array) {
-        return array == null ? null : Arrays.copyOf(array, array.length);
+    /**
+     * Sets the Mapper to use.
+     *
+     * @param mapper the Mapper to use
+     */
+    public void setMapper(final Mapper mapper) {
+        this.mapper = mapper;
     }
 
     /**
+     * @return an array of supported convertable types
      * @deprecated use #getSupportedTypes()
      */
     @Deprecated
@@ -36,17 +89,7 @@ public abstract class TypeConverter {
     }
 
     /**
-     * returns list of supported convertable types
-     */
-    final Class[] getSupportedTypes() {
-        return copy(supportedTypes);
-    }
-
-    public void setSupportedTypes(final Class[] supportedTypes) {
-        this.supportedTypes = copy(supportedTypes);
-    }
-
-    /**
+     * @param supportTypes the types this converter supports
      * @deprecated use #setSupportedTypes(Class[])
      */
     @Deprecated
@@ -54,11 +97,14 @@ public abstract class TypeConverter {
         this.supportedTypes = copy(supportTypes);
     }
 
-    /**
-     * checks if the class is supported for this converter.
-     */
-    final boolean canHandle(final Class c) {
-        return isSupported(c, null);
+    @Override
+    public int hashCode() {
+        return getClass().getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj != null && getClass().equals(obj.getClass());
     }
 
     /**
@@ -66,34 +112,6 @@ public abstract class TypeConverter {
      */
     protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
         return false;
-    }
-
-    /**
-     * checks if the MappedField is supported for this converter.
-     */
-    final boolean canHandle(final MappedField mf) {
-        return isSupported(mf.getType(), mf);
-    }
-
-    /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
-     * <br><b>NOTE: optionalExtraInfo might be null</b>
-     *
-     */
-    public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
-
-    /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
-     */
-    public final Object decode(final Class targetClass, final Object fromDBObject) {
-        return decode(targetClass, fromDBObject, null);
-    }
-
-    /**
-     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
-     */
-    public final Object encode(final Object value) {
-        return encode(value, null);
     }
 
     /**
@@ -115,24 +133,37 @@ public abstract class TypeConverter {
         return false;
     }
 
+    Class[] copy(final Class[] array) {
+        return array == null ? null : Arrays.copyOf(array, array.length);
+    }
+
     /**
-     * encode the (type-safe) java object into the corresponding {@link com.mongodb.DBObject}
+     * @return an array of supported convertable types
      */
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        return value; // as a default impl
+    final Class[] getSupportedTypes() {
+        return copy(supportedTypes);
     }
 
-    public void setMapper(final Mapper mapper) {
-        this.mapper = mapper;
+    /**
+     * Sets the types supported by this converter.
+     *
+     * @param supportedTypes the types this converter supports
+     */
+    public void setSupportedTypes(final Class[] supportedTypes) {
+        this.supportedTypes = copy(supportedTypes);
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        return obj != null && getClass().equals(obj.getClass());
+    /**
+     * checks if the class is supported for this converter.
+     */
+    final boolean canHandle(final Class c) {
+        return isSupported(c, null);
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().getName().hashCode();
+    /**
+     * checks if the MappedField is supported for this converter.
+     */
+    final boolean canHandle(final MappedField mf) {
+        return isSupported(mf.getType(), mf);
     }
 }

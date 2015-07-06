@@ -13,26 +13,6 @@ import java.util.Map;
 
 
 public class UpdateRetainsClassInfoTest extends TestBase {
-    public abstract static class E {
-        @Id
-        private ObjectId id = new ObjectId();
-    }
-
-    public static class E1 extends E {
-        private String foo;
-    }
-
-    public static class E2 extends E {
-        private String bar;
-    }
-
-    public static class X {
-        @Id
-        private ObjectId id;
-        private final Map<String, E> map = new HashMap<String, E>();
-
-    }
-
     @Test
     public void retainsClassName() {
         final X x = new X();
@@ -55,5 +35,25 @@ public class UpdateRetainsClassInfoTest extends TestBase {
 
         // fails due to type now missing
         getDs().find(X.class).get();
+    }
+
+    public abstract static class E {
+        @Id
+        private ObjectId id = new ObjectId();
+    }
+
+    public static class E1 extends E {
+        private String foo;
+    }
+
+    public static class E2 extends E {
+        private String bar;
+    }
+
+    public static class X {
+        private final Map<String, E> map = new HashMap<String, E>();
+        @Id
+        private ObjectId id;
+
     }
 }

@@ -14,29 +14,6 @@ import java.util.EnumSet;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class EnumSetTest extends TestBase {
-    public enum NastyEnum {
-        A {
-            @Override
-            public String toString() {
-                return "Never use toString for other purposes than debugging";
-            }
-        },
-        B {
-            public String toString() {
-                return "Never use toString for other purposes than debugging ";
-            }
-        },
-        C,
-        D
-    }
-
-    public static class NastyEnumEntity extends TestEntity {
-        private final EnumSet<NastyEnum> in = EnumSet.of(NastyEnum.B, NastyEnum.C, NastyEnum.D);
-        private final EnumSet<NastyEnum> out = EnumSet.of(NastyEnum.A);
-        private final EnumSet<NastyEnum> empty = EnumSet.noneOf(NastyEnum.class);
-        private EnumSet<NastyEnum> isNull;
-    }
-
     @Test
     public void testNastyEnumPersistence() throws Exception {
         NastyEnumEntity n = new NastyEnumEntity();
@@ -67,5 +44,28 @@ public class EnumSetTest extends TestBase {
         q = getDs().find(NastyEnumEntity.class, "out", NastyEnum.C);
         Assert.assertEquals(0, q.countAll());
 
+    }
+
+    public enum NastyEnum {
+        A {
+            @Override
+            public String toString() {
+                return "Never use toString for other purposes than debugging";
+            }
+        },
+        B {
+            public String toString() {
+                return "Never use toString for other purposes than debugging ";
+            }
+        },
+        C,
+        D
+    }
+
+    public static class NastyEnumEntity extends TestEntity {
+        private final EnumSet<NastyEnum> in = EnumSet.of(NastyEnum.B, NastyEnum.C, NastyEnum.D);
+        private final EnumSet<NastyEnum> out = EnumSet.of(NastyEnum.A);
+        private final EnumSet<NastyEnum> empty = EnumSet.noneOf(NastyEnum.class);
+        private EnumSet<NastyEnum> isNull;
     }
 }

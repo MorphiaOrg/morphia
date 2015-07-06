@@ -13,21 +13,6 @@ import java.util.List;
 
 
 public class ShortMappingTest extends TestBase {
-    private static class Shorts {
-        @Id
-        private ObjectId id;
-        private final List<Short[]> listWrapperArray = new ArrayList<Short[]>();
-        private final List<short[]> listPrimitiveArray = new ArrayList<short[]>();
-        private final List<Short> listWrapper = new ArrayList<Short>();
-        private short singlePrimitive;
-        private Short singleWrapper;
-        private short[] primitiveArray;
-        private Short[] wrapperArray;
-        private short[][] nestedPrimitiveArray;
-        private Short[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Shorts.class);
@@ -56,5 +41,19 @@ public class ShortMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
         Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+    }
+
+    private static class Shorts {
+        private final List<Short[]> listWrapperArray = new ArrayList<Short[]>();
+        private final List<short[]> listPrimitiveArray = new ArrayList<short[]>();
+        private final List<Short> listWrapper = new ArrayList<Short>();
+        @Id
+        private ObjectId id;
+        private short singlePrimitive;
+        private Short singleWrapper;
+        private short[] primitiveArray;
+        private Short[] wrapperArray;
+        private short[][] nestedPrimitiveArray;
+        private Short[][] nestedWrapperArray;
     }
 }

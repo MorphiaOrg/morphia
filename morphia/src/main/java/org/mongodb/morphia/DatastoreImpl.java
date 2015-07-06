@@ -90,6 +90,17 @@ public class DatastoreImpl implements AdvancedDatastore {
      * Create a new DatastoreImpl
      *
      * @param morphia     the Morphia instance
+     * @param mongoClient the connection to the MongoDB instance
+     * @param dbName      the name of the database for this data store.
+     */
+    public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
+        this(morphia, morphia.getMapper(), mongoClient, dbName);
+    }
+
+    /**
+     * Create a new DatastoreImpl
+     *
+     * @param morphia     the Morphia instance
      * @param mapper      an initialised Mapper
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
@@ -105,62 +116,32 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * Create a new DatastoreImpl
+     * Creates a copy of this Datastore and all its configuaration but with a new database
      *
-     * @param morphia     the Morphia instance
-     * @param mongoClient the connection to the MongoDB instance
-     * @param dbName      the name of the database for this data store.
+     * @param database the new database to use for operations
+     * @return the new Datastore instance
      */
-    public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
-        this(morphia, morphia.getMapper(), mongoClient, dbName);
-    }
-
-    public static long nextValue(final Long oldVersion) {
-        return oldVersion == null ? 1 : oldVersion + 1;
-    }
-
     public DatastoreImpl copy(final String database) {
         return new DatastoreImpl(morphia, mapper, mongoClient, database);
     }
 
+    /**
+     * @param source the initial type/collection to aggregate against
+     * @return a new query bound to the kind (a specific {@link DBCollection})
+     */
     @Override
-    public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
-        if (id == null) {
-            throw new MappingException("Could not get id for " + clazz.getName());
-        }
-        return new DBRef(getCollection(clazz).getName(), id);
+    public AggregationPipeline createAggregation(final Class source) {
+        return new AggregationPipelineImpl(this, source);
     }
 
     @Override
-    public <T> DBRef createRef(final T entity) {
-        final T wrapped = ProxyHelper.unwrap(entity);
-        final Object id = mapper.getId(wrapped);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + wrapped.getClass().getName());
-        }
-        return createRef(wrapped.getClass(), id);
-    }
-
-    @Deprecated
-    protected Object getId(final Object entity) {
-        return mapper.getId(entity);
+    public <T> Query<T> createQuery(final Class<T> collection) {
+        return newQuery(collection, getCollection(collection));
     }
 
     @Override
-    @Deprecated
-    // use mapper instead.
-    public <T> Key<T> getKey(final T entity) {
-        return mapper.getKey(entity);
-    }
-
-    @Override
-    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
-    }
-
-    @Override
-    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
+    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {
+        return new UpdateOpsImpl<T>(clazz, getMapper());
     }
 
     @Override
@@ -168,34 +149,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(clazz, id, getWriteConcern(clazz));
     }
 
-    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
-    }
-
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
         final Query<T> q = find(clazz).filter(Mapper.ID_KEY + " in", ids);
         return delete(q);
-    }
-
-    @Override
-    public <T> WriteResult delete(final T entity) {
-        return delete(entity, getWriteConcern(entity));
-    }
-
-    @Override
-    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
-        final T wrapped = ProxyHelper.unwrap(entity);
-        if (wrapped instanceof Class<?>) {
-            throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
-        }
-        try {
-            final Object id = mapper.getId(wrapped);
-            return delete(wrapped.getClass(), id, wc);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -235,6 +192,57 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> WriteResult delete(final T entity) {
+        return delete(entity, getWriteConcern(entity));
+    }
+
+    @Override
+    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
+        final T wrapped = ProxyHelper.unwrap(entity);
+        if (wrapped instanceof Class<?>) {
+            throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
+        }
+        try {
+            final Object id = mapper.getId(wrapped);
+            return delete(wrapped.getClass(), id, wc);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ensureCaps() {
+        for (final MappedClass mc : mapper.getMappedClasses()) {
+            if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
+                final CappedAt cap = mc.getEntityAnnotation().cap();
+                final String collName = mapper.getCollectionName(mc.getClazz());
+                final BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
+                if (cap.value() > 0) {
+                    dbCapOpts.add("size", cap.value());
+                }
+                if (cap.count() > 0) {
+                    dbCapOpts.add("max", cap.count());
+                }
+                final DB database = getDB();
+                if (database.getCollectionNames().contains(collName)) {
+                    final DBObject dbResult = database.command(BasicDBObjectBuilder.start("collstats", collName).get());
+                    if (dbResult.containsField("capped")) {
+                        // TODO: check the cap options.
+                        LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
+                    } else {
+                        LOG.warning("DBCollection already exists with same name(" + collName
+                                    + ") and is not capped; not creating capped version!");
+                    }
+                } else {
+                    getDB().createCollection(collName, dbCapOpts.get());
+                    LOG.debug("Created capped DBCollection (" + collName + ") with opts " + dbCapOpts);
+                }
+            }
+        }
+    }
+
+    @Override
     public <T> void ensureIndex(final Class<T> type, final String fields) {
         ensureIndex(type, null, fields, false, false);
     }
@@ -245,23 +253,802 @@ public class DatastoreImpl implements AdvancedDatastore {
         ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate, false, false, -1);
     }
 
+    @Override
+    public void ensureIndexes() {
+        ensureIndexes(false);
+    }
+
+    @Override
+    public void ensureIndexes(final boolean background) {
+        // loops over mappedClasses and call ensureIndex for each @Entity object
+        // (for now)
+        for (final MappedClass mc : mapper.getMappedClasses()) {
+            ensureIndexes(mc, background);
+        }
+    }
+
+    @Override
+    public <T> void ensureIndexes(final Class<T> clazz) {
+        ensureIndexes(clazz, false);
+    }
+
+    @Override
+    public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
+        final MappedClass mc = mapper.getMappedClass(clazz);
+        ensureIndexes(mc, background);
+    }
+
+    @Override
+    public Key<?> exists(final Object entityOrKey) {
+        final Query<?> query = buildExistsQuery(entityOrKey);
+        return query.getKey();
+    }
+
+    @Override
+    public <T> Query<T> find(final Class<T> clazz) {
+        return createQuery(clazz);
+    }
+
+    @Override
+    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
+        final Query<T> query = createQuery(clazz);
+        return query.filter(property, value);
+    }
+
+    @Override
+    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
+        final Query<T> query = createQuery(clazz);
+        query.offset(offset);
+        query.limit(size);
+        return query.filter(property, value);
+    }
+
+    @Override
+    public <T> T findAndDelete(final Query<T> query) {
+        DBCollection dbColl = query.getCollection();
+        // TODO remove this after testing.
+        if (dbColl == null) {
+            dbColl = getCollection(query.getEntityClass());
+        }
+
+        final EntityCache cache = createCache();
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
+        }
+
+        final DBObject result = dbColl.findAndModify(query.getQueryObject(),
+                                                     query.getFieldsObject(),
+                                                     query.getSortObject(),
+                                                     true,
+                                                     null,
+                                                     false,
+                                                     false);
+
+        if (result != null) {
+            return mapper.fromDBObject(query.getEntityClass(), result, cache);
+        }
+
+        return null;
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations) {
+        return findAndModify(query, operations, false);
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
+        return findAndModify(query, operations, oldVersion, false);
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
+                               final boolean createIfMissing) {
+
+        DBCollection dbColl = query.getCollection();
+        // TODO remove this after testing.
+        if (dbColl == null) {
+            dbColl = getCollection(query.getEntityClass());
+        }
+
+        if (LOG.isTraceEnabled()) {
+            LOG.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
+        }
+        DBObject res = null;
+        try {
+            res = dbColl.findAndModify(query.getQueryObject(), query.getFieldsObject(), query.getSortObject(), false,
+                                       ((UpdateOpsImpl<T>) operations).getOps(), !oldVersion, createIfMissing);
+        } catch (MongoException e) {
+            if (e.getMessage() == null || !e.getMessage().contains("matching")) {
+                throw e;
+            }
+        }
+
+        if (res == null) {
+            return null;
+        } else {
+            return mapper.fromDBObject(query.getEntityClass(), res, createCache());
+        }
+    }
+
+    @Override
+    public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
+        return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
+    }
+
+    @Override
+    public <T, V> T get(final Class<T> clazz, final V id) {
+        return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1, true).get();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T get(final T entity) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        final Object id = mapper.getId(unwrapped);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
+        }
+        return (T) get(unwrapped.getClass(), id);
+    }
+
+    @Override
+    public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
+        final String collectionName = mapper.getCollectionName(clazz);
+        final String keyCollection = mapper.updateCollection(key);
+        if (!collectionName.equals(keyCollection)) {
+            throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
+        }
+
+        return get(clazz, key.getId());
+    }
+
+    @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
+
+        final Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
+        final List<T> entities = new ArrayList<T>();
+        // String clazzKind = (clazz==null) ? null :
+        // getMapper().getCollectionName(clazz);
+        for (final Key<?> key : keys) {
+            mapper.updateCollection(key);
+
+            // if (clazzKind != null && !key.getKind().equals(clazzKind))
+            // throw new IllegalArgumentException("Types are not equal (" +
+            // clazz + "!=" + key.getKindClass() +
+            // ") for key and method parameter clazz");
+            //
+            if (kindMap.containsKey(key.getCollection())) {
+                kindMap.get(key.getCollection()).add(key);
+            } else {
+                kindMap.put(key.getCollection(), new ArrayList<Key>(Collections.singletonList((Key) key)));
+            }
+        }
+        for (final Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
+            final List<Key> kindKeys = entry.getValue();
+
+            final List<Object> objIds = new ArrayList<Object>();
+            for (final Key key : kindKeys) {
+                objIds.add(key.getId());
+            }
+            final List kindResults = find(entry.getKey(), null).disableValidation().filter("_id in", objIds).asList();
+            entities.addAll(kindResults);
+        }
+
+        // TODO: order them based on the incoming Keys.
+        return entities;
+    }
+
+    @Override
+    public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
+        return getByKeys(null, keys);
+    }
+
+    @Override
+    public DBCollection getCollection(final Class clazz) {
+        final String collName = mapper.getCollectionName(clazz);
+        return getDB().getCollection(collName);
+    }
+
+    @Override
+    public <T> long getCount(final T entity) {
+        return getCollection(ProxyHelper.unwrap(entity)).count();
+    }
+
+    @Override
+    public <T> long getCount(final Class<T> clazz) {
+        return getCollection(clazz).count();
+    }
+
+    @Override
+    public <T> long getCount(final Query<T> query) {
+        return query.countAll();
+    }
+
+    @Override
+    public DB getDB() {
+        return db;
+    }
+
+    @Override
+    public WriteConcern getDefaultWriteConcern() {
+        return defConcern;
+    }
+
+    @Override
+    public void setDefaultWriteConcern(final WriteConcern wc) {
+        defConcern = wc;
+    }
+
+    @Override
+    @Deprecated
+    // use mapper instead.
+    public <T> Key<T> getKey(final T entity) {
+        return mapper.getKey(entity);
+    }
+
+    @Override
+    public MongoClient getMongo() {
+        return mongoClient;
+    }
+
+    @Override
+    public QueryFactory getQueryFactory() {
+        return queryFactory;
+    }
+
+    @Override
+    public void setQueryFactory(final QueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
+    }
+
+    @Override
+    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
+                                             final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
+
+        final DBCollection dbColl = query.getCollection();
+
+        final String outColl = mapper.getCollectionName(outputType);
+
+        final OutputType outType;
+        switch (type) {
+            case REDUCE:
+                outType = OutputType.REDUCE;
+                break;
+            case MERGE:
+                outType = OutputType.MERGE;
+                break;
+            case INLINE:
+                outType = OutputType.INLINE;
+                break;
+            default:
+                outType = OutputType.REPLACE;
+                break;
+        }
+
+        final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, outType, query.getQueryObject());
+
+        if (query.getLimit() > 0) {
+            cmd.setLimit(query.getLimit());
+        }
+        if (query.getSortObject() != null) {
+            cmd.setSort(query.getSortObject());
+        }
+
+        if (finalize != null && finalize.length() != 0) {
+            cmd.setFinalize(finalize);
+        }
+
+        if (scopeFields != null && !scopeFields.isEmpty()) {
+            cmd.setScope(scopeFields);
+        }
+
+        return mapReduce(type, query, outputType, cmd);
+    }
+
+    @Override
+    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
+                                             final MapReduceCommand baseCommand) {
+
+        Assert.parametersNotNull("map", baseCommand.getMap());
+        Assert.parameterNotEmpty("map", baseCommand.getMap());
+        Assert.parametersNotNull("reduce", baseCommand.getReduce());
+        Assert.parameterNotEmpty("reduce", baseCommand.getMap());
+
+        if (query.getOffset() != 0 || query.getFieldsObject() != null) {
+            throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
+        }
+
+        final OutputType outType;
+        switch (type) {
+            case REDUCE:
+                outType = OutputType.REDUCE;
+                break;
+            case MERGE:
+                outType = OutputType.MERGE;
+                break;
+            case INLINE:
+                outType = OutputType.INLINE;
+                break;
+            default:
+                outType = OutputType.REPLACE;
+                break;
+        }
+
+        final DBCollection dbColl = query.getCollection();
+
+        final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
+                                                          baseCommand.getOutputTarget(), outType, query.getQueryObject());
+        cmd.setFinalize(baseCommand.getFinalize());
+        cmd.setScope(baseCommand.getScope());
+
+        if (query.getLimit() > 0) {
+            cmd.setLimit(query.getLimit());
+        }
+        if (query.getSortObject() != null) {
+            cmd.setSort(query.getSortObject());
+        }
+
+        if (LOG.isTraceEnabled()) {
+            LOG.info("Executing " + cmd.toString());
+        }
+
+        final EntityCache cache = createCache();
+        MapreduceResults<T> results = new MapreduceResults<T>(dbColl.mapReduce(baseCommand));
+
+        results.setType(type);
+        if (MapreduceType.INLINE.equals(type)) {
+            results.setInlineRequiredOptions(outputType, getMapper(), cache);
+        } else {
+            results.setQuery(newQuery(outputType, db.getCollection(results.getOutputCollectionName())));
+        }
+
+        return results;
+
+    }
+
+    @Override
+    public <T> Key<T> merge(final T entity) {
+        return merge(entity, getWriteConcern(entity));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Key<T> merge(final T entity, final WriteConcern wc) {
+        T unwrapped = entity;
+        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+        final DBObject dbObj = mapper.toDBObject(unwrapped, involvedObjects);
+        final Key<T> key = mapper.getKey(unwrapped);
+        unwrapped = ProxyHelper.unwrap(unwrapped);
+        final Object id = mapper.getId(unwrapped);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
+        }
+
+        // remove (immutable) _id field for update.
+        final Object idValue = dbObj.get(Mapper.ID_KEY);
+        dbObj.removeField(Mapper.ID_KEY);
+
+        WriteResult wr;
+
+        final MappedClass mc = mapper.getMappedClass(unwrapped);
+        final DBCollection dbColl = getCollection(unwrapped);
+
+        // try to do an update if there is a @Version field
+        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, mc);
+
+        if (wr == null) {
+            final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
+            wr = update(query, new BasicDBObject("$set", dbObj), false, false, wc).getWriteResult();
+        }
+
+        final UpdateResults res = new UpdateResults(wr);
+
+        if (res.getUpdatedCount() == 0) {
+            throw new UpdateException("Nothing updated");
+        }
+
+        dbObj.put(Mapper.ID_KEY, idValue);
+        postSaveOperations(Collections.<Object>singletonList(entity), involvedObjects, dbColl, false);
+        return key;
+    }
+
+    @Override
+    public <T> Query<T> queryByExample(final T ex) {
+        return queryByExample(getCollection(ex), ex);
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
+        if (entities == null) {
+            return new ArrayList<Key<T>>();
+        }
+        Iterator<T> iterator = entities.iterator();
+        if (!iterator.hasNext()) {
+            return new ArrayList<Key<T>>();
+        }
+        return save(entities, getWriteConcern(iterator.next()));
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
+        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+        for (final T ent : entities) {
+            savedKeys.add(save(ent, wc));
+        }
+        return savedKeys;
+
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> save(final T... entities) {
+        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
+        for (final T ent : entities) {
+            savedKeys.add(save(ent));
+        }
+        return savedKeys;
+    }
+
+    @Override
+    public <T> Key<T> save(final T entity) {
+        return save(entity, getWriteConcern(entity));
+    }
+
+    @Override
+    public <T> Key<T> save(final T entity, final WriteConcern wc) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        return save(getCollection(unwrapped), unwrapped, wc);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> UpdateResults update(final T entity, final UpdateOperations<T> operations) {
+        if (entity instanceof Query) {
+            return update((Query<T>) entity, operations);
+        }
+
+        final MappedClass mc = mapper.getMappedClass(entity);
+        final Query<T> q = (Query<T>) createQuery(mc.getClazz());
+        q.disableValidation().filter(Mapper.ID_KEY, mapper.getId(entity));
+
+        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
+            final MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
+            final Long oldVer = (Long) versionMF.getFieldValue(entity);
+            q.filter(versionMF.getNameToStore(), oldVer);
+            operations.set(versionMF.getNameToStore(), nextValue(oldVer));
+        }
+
+        return update(q, operations);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> operations) {
+        Class<T> clazz = (Class<T>) key.getType();
+        if (clazz == null) {
+            clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
+        }
+        return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), operations);
+    }
+
+    @Override
+    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations) {
+        return update(query, operations, false, true);
+    }
+
+    @Override
+    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
+        return update(query, operations, createIfMissing, getWriteConcern(query.getEntityClass()));
+    }
+
+    @Override
+    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
+                                    final WriteConcern wc) {
+        return update(query, operations, createIfMissing, true, wc);
+    }
+
+    @Override
+    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
+        return update(query, operations, false, false);
+    }
+
+    @Override
+    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
+        return update(query, operations, createIfMissing, false);
+
+    }
+
+    @Override
+    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
+                                         final WriteConcern wc) {
+        return update(query, operations, createIfMissing, false, wc);
+    }
+
+    @Override
+    public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
+        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+        final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
+
+        final UpdateResults res = update(query, dbObj, createIfMissing, false, getWriteConcern(entity));
+
+        // update _id field
+        if (res.getInsertedCount() > 0) {
+            dbObj.put(Mapper.ID_KEY, res.getNewId());
+        }
+
+        postSaveOperations(Collections.singletonList(entity), involvedObjects, getCollection(entity), false);
+        return res;
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final String collection, final Class<T> type) {
+        return newQuery(type, db.getCollection(collection));
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final Class<T> clazz, final DBObject q) {
+        return newQuery(clazz, getCollection(clazz), q);
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final String collection, final Class<T> type, final DBObject q) {
+        return newQuery(type, getCollection(collection), q);
+    }
+
+    @Override
+    public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
+        if (id == null) {
+            throw new MappingException("Could not get id for " + clazz.getName());
+        }
+        return new DBRef(getCollection(clazz).getName(), id);
+    }
+
+    @Override
+    public <T> DBRef createRef(final T entity) {
+        final T wrapped = ProxyHelper.unwrap(entity);
+        final Object id = mapper.getId(wrapped);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + wrapped.getClass().getName());
+        }
+        return createRef(wrapped.getClass(), id);
+    }
+
+    @Override
+    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> type, final DBObject ops) {
+        final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
+        upOps.setOps(ops);
+        return upOps;
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id) {
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id));
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
+    }
+
+    @Override
+    public <T> void ensureIndex(final String collection, final Class<T> type, final String fields) {
+        ensureIndex(collection, type, null, fields, false, false);
+    }
+
+    @Override
+    public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
+                                final boolean dropDupsOnCreate) {
+        ensureIndex(getCollection(collection), name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate,
+                    false, false, -1);
+    }
+
+    @Override
+    public <T> void ensureIndexes(final String collection, final Class<T> clazz) {
+        ensureIndexes(collection, clazz, false);
+    }
+
+    @Override
+    public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
+        final MappedClass mc = mapper.getMappedClass(clazz);
+        ensureIndexes(collection, mc, background);
+    }
+
+    @Override
+    public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
+        final Query<?> query = buildExistsQuery(entityOrKey);
+        if (readPreference != null) {
+            query.useReadPreference(readPreference);
+        }
+        return query.getKey();
+    }
+
+    @Override
+    public <T> Query<T> find(final String collection, final Class<T> clazz) {
+        return createQuery(collection, clazz);
+    }
+
+    @Override
+    public <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
+                                final int size) {
+        return find(collection, clazz, property, value, offset, size, true);
+    }
+
+    @Override
+    public <T> T get(final Class<T> clazz, final DBRef ref) {
+        DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
+        return mapper.fromDBObject(clazz, object, createCache());
+    }
+
+    @Override
+    public <T, V> T get(final String collection, final Class<T> clazz, final V id) {
+        final List<T> results = find(collection, clazz, Mapper.ID_KEY, id, 0, 1).asList();
+        if (results == null || results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
+    @Override
+    public long getCount(final String collection) {
+        return getCollection(collection).count();
+    }
+
+    @Override
+    public DBDecoderFactory getDecoderFact() {
+        return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
+    }
+
+    @Override
+    public void setDecoderFact(final DBDecoderFactory fact) {
+        decoderFactory = fact;
+    }
+
+    @Override
+    public <T> Key<T> insert(final String collection, final T entity) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        final DBCollection dbColl = getCollection(collection);
+        return insert(dbColl, unwrapped, getWriteConcern(unwrapped));
+    }
+
+    @Override
+    public <T> Key<T> insert(final T entity) {
+        return insert(entity, getWriteConcern(entity));
+    }
+
+    @Override
+    public <T> Key<T> insert(final T entity, final WriteConcern wc) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        final DBCollection dbColl = getCollection(unwrapped);
+        return insert(dbColl, unwrapped, wc);
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> insert(final T... entities) {
+        return insert(asList(entities), getWriteConcern(entities[0]));
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
+        return insert(getCollection(entities.iterator().next()), entities, wc);
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities) {
+        return insert(collection, entities, null);
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final WriteConcern wc) {
+        return insert(db.getCollection(collection), entities, wc);
+    }
+
+    @Override
+    public <T> Query<T> queryByExample(final String collection, final T ex) {
+        return queryByExample(db.getCollection(collection), ex);
+    }
+
+    @Override
+    public <T> Key<T> save(final String collection, final T entity) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        return save(collection, entity, getWriteConcern(unwrapped));
+    }
+
+    @Override
+    public <T> Key<T> save(final String collection, final T entity, final WriteConcern wc) {
+        return save(getCollection(collection), ProxyHelper.unwrap(entity), wc);
+    }
+
+    /**
+     * Deletes entities based on the query, with the WriteConcern
+     *
+     * @param clazz the clazz to query against when finding documents to delete
+     * @param id    the ID to look for
+     * @param wc    the WriteConcern to use when deleting
+     * @param <T>   the type to delete
+     * @param <V>   the type of the key
+     * @return results of the delete
+     */
+    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
+    }
+
+    /**
+     * Find all instances by type in a different collection than what is mapped on the class given skipping some documents and returning a
+     * fixed number of the remaining.
+     *
+     * @param collection The collection use when querying
+     * @param clazz      the class to use for mapping the results
+     * @param property   the document property to query against
+     * @param value      the value to check for
+     * @param offset     the number of results to skip
+     * @param size       the maximum number of results to return
+     * @param validate   if true, validate the query
+     * @param <T>        the type to query
+     * @param <V>        the type to filter value
+     * @return the query
+     */
+    public <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
+                                final int size, final boolean validate) {
+        final Query<T> query = find(collection, clazz);
+        if (!validate) {
+            query.disableValidation();
+        }
+        query.offset(offset);
+        query.limit(size);
+        return query.filter(property, value).enableValidation();
+    }
+
+    /**
+     * @param obj the instance to use for looking up the collection mapping
+     * @return the collection mapped for the type of obj
+     */
+    public DBCollection getCollection(final Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
+    }
+
+    /**
+     * @return the Mapper used by this Datastore
+     */
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    /**
+     * Inserts entities in to the database
+     *
+     * @param entities the entities to insert
+     * @param <T>      the type of the entities
+     * @return the keys of entities
+     */
+    public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
+        return insert(entities, null);
+    }
+
+    /**
+     * Inserts an entity in to the database
+     *
+     * @param collection the collection to query against
+     * @param entity     the entity to insert
+     * @param wc         the WriteConcern to use when deleting
+     * @param <T>        the type of the entities
+     * @return the key of entity
+     */
+    public <T> Key<T> insert(final String collection, final T entity, final WriteConcern wc) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        final DBCollection dbColl = getCollection(collection);
+        return insert(dbColl, unwrapped, wc);
+    }
+
     protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
                                    final boolean dropDupsOnCreate, final boolean background, final boolean sparse,
                                    final int expireAfterSeconds) {
         final DBCollection dbColl = getCollection(clazz);
         ensureIndex(dbColl, name, fields, unique, dropDupsOnCreate, background, sparse, expireAfterSeconds);
-    }
-
-    @Override
-    public <T> void ensureIndex(final String collName, final Class<T> type, final String fields) {
-        ensureIndex(collName, type, null, fields, false, false);
-    }
-
-    @Override
-    public <T> void ensureIndex(final String collName, final Class<T> clazz, final String name, final String fields, final boolean unique,
-                                final boolean dropDupsOnCreate) {
-        ensureIndex(getCollection(collName), name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate,
-                    false, false, -1);
     }
 
     protected void ensureIndex(final DBCollection dbColl, final String name, final BasicDBObject fields, final boolean unique,
@@ -291,80 +1078,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), fields, opts));
         dbColl.createIndex(fields, opts);
-    }
-
-    protected void ensureIndexes(final MappedClass mc, final boolean background) {
-        ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
-    }
-
-    protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
-                                 final List<MappedField> parentMFs) {
-        ensureIndexes(getCollection(mc.getClazz()), mc, background, parentMCs, parentMFs);
-    }
-
-    protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
-        ensureIndexes(getCollection(collName), mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
-    }
-
-    protected void ensureIndexes(final DBCollection dbColl, final MappedClass mc, final boolean background,
-                                 final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
-        if (parentMCs.contains(mc)) {
-            return;
-        }
-
-        if (mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
-            return;
-        }
-        processClassAnnotations(dbColl, mc, background);
-
-        processEmbeddedAnnotations(dbColl, mc, background, parentMCs, parentMFs);
-    }
-
-    /**
-     * Ensure indexes from field annotations, and embedded entities
-     */
-    private void processEmbeddedAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background,
-                                            final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
-        List<MappedField> annotatedWith = mc.getFieldsAnnotatedWith(Text.class);
-        if (annotatedWith.size() > 1) {
-            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-        }
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (mf.hasAnnotation(Indexed.class)) {
-                final Indexed index = mf.getAnnotation(Indexed.class);
-                final StringBuilder field = new StringBuilder();
-                if (!parentMCs.isEmpty()) {
-                    for (final MappedField pmf : parentMFs) {
-                        field.append(pmf.getNameToStore()).append(".");
-                    }
-                }
-
-                field.append(mf.getNameToStore());
-
-                ensureIndex(dbColl,
-                            index.name(),
-                            new BasicDBObject(field.toString(), index.value().toIndexValue()),
-                            index.unique(),
-                            index.dropDups(),
-                            index.background() ? index.background() : background,
-                            index.sparse(),
-                            index.expireAfterSeconds());
-            }
-
-            if (mf.hasAnnotation(Text.class)) {
-                createTextIndex(dbColl, parentMCs, parentMFs, mf);
-            }
-
-            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
-                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
-                final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
-                newParentClasses.add(mc);
-                newParents.add(mf);
-                ensureIndexes(dbColl, mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background,
-                              newParentClasses, newParents);
-            }
-        }
     }
 
     protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options) {
@@ -406,398 +1119,31 @@ public class DatastoreImpl implements AdvancedDatastore {
         dbColl.createIndex(keys, opts);
     }
 
-    private MappedField findField(final List<String> namePath, final MappedClass mc, final String value) {
-        if (value.contains(".")) {
-            String segment = value.substring(0, value.indexOf("."));
-            MappedField field = findField(namePath, mc, segment);
-            MappedClass mappedClass = getMapper().getMappedClass(field.getSubType() != null ? field.getSubType() : field.getConcreteType());
-            return findField(namePath, mappedClass, value.substring(value.indexOf(".") + 1));
-        } else {
-            MappedField mf = mc.getMappedField(value);
-            if (mf == null) {
-                mf = mc.getMappedFieldByJavaField(value);
-            }
-            if (mf != null) {
-                namePath.add(mf.getNameToStore());
-            }
-            return mf;
-        }
+    protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
+                                 final List<MappedField> parentMFs) {
+        ensureIndexes(getCollection(mc.getClazz()), mc, background, parentMCs, parentMFs);
     }
 
-    private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
-                                 final MappedField mf) {
-        final Text index = mf.getAnnotation(Text.class);
-        final StringBuilder field = new StringBuilder();
-        if (!parentMCs.isEmpty()) {
-            for (final MappedField pmf : parentMFs) {
-                field.append(pmf.getNameToStore()).append(".");
-            }
+    protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
+        ensureIndexes(getCollection(collName), mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
+    }
+
+    protected void ensureIndexes(final DBCollection dbColl, final MappedClass mc, final boolean background,
+                                 final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
+        if (parentMCs.contains(mc)) {
+            return;
         }
 
-        field.append(mf.getNameToStore());
-
-        DBObject keys = new BasicDBObject(field.toString(), IndexType.TEXT.toIndexValue());
-        DBObject opts = extractOptions(index.options());
-        if (index.value() != -1) {
-            DBObject weights = new BasicDBObject();
-            opts.put("weights", weights);
-            weights.put(field.toString(), index.value());
+        if (mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
+            return;
         }
-        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
-        dbColl.createIndex(keys, opts);
+        processClassAnnotations(dbColl, mc, background);
+
+        processEmbeddedAnnotations(dbColl, mc, background, parentMCs, parentMFs);
     }
 
-    @SuppressWarnings("deprecation")
-    private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background) {
-        // Ensure indexes from class annotation
-        final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
-        if (indexes != null) {
-            for (final Annotation ann : indexes) {
-                final Indexes idx = (Indexes) ann;
-                if (idx.value().length > 0) {
-                    for (final Index index : idx.value()) {
-                        if (index.fields().length != 0) {
-                            ensureIndex(mc, dbColl, index.fields(), index.options());
-                        } else {
-                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                            final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapper,
-                                                                                     !index.disableValidation());
-                            ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
-                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public <T> void ensureIndexes(final Class<T> clazz) {
-        ensureIndexes(clazz, false);
-    }
-
-    @Override
-    public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
-        final MappedClass mc = mapper.getMappedClass(clazz);
-        ensureIndexes(mc, background);
-    }
-
-    @Override
-    public void ensureIndexes() {
-        ensureIndexes(false);
-    }
-
-    @Override
-    public void ensureIndexes(final boolean background) {
-        // loops over mappedClasses and call ensureIndex for each @Entity object
-        // (for now)
-        for (final MappedClass mc : mapper.getMappedClasses()) {
-            ensureIndexes(mc, background);
-        }
-    }
-
-    @Override
-    public <T> void ensureIndexes(final String collName, final Class<T> clazz) {
-        ensureIndexes(collName, clazz, false);
-    }
-
-    @Override
-    public <T> void ensureIndexes(final String collName, final Class<T> clazz, final boolean background) {
-        final MappedClass mc = mapper.getMappedClass(clazz);
-        ensureIndexes(collName, mc, background);
-    }
-
-    private DBObject extractOptions(final IndexOptions options) {
-        final DBObject opts = new BasicDBObject();
-
-        putIfNotEmpty(opts, "name", options.name());
-        putIfNotEmpty(opts, "default_language", options.language());
-        putIfNotEmpty(opts, "language_override", options.languageOverride());
-        putIfTrue(opts, "background", options.background());
-        putIfTrue(opts, "dropDups", options.dropDups());
-        putIfTrue(opts, "sparse", options.sparse());
-        putIfTrue(opts, "unique", options.unique());
-        if (options.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", options.expireAfterSeconds());
-        }
-        return opts;
-    }
-
-    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
-        if (!value.equals("")) {
-            opts.put(key, value);
-        }
-    }
-
-    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
-        if (value) {
-            opts.put(key, true);
-        }
-    }
-
-    @Override
-    public void ensureCaps() {
-        for (final MappedClass mc : mapper.getMappedClasses()) {
-            if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
-                final CappedAt cap = mc.getEntityAnnotation().cap();
-                final String collName = mapper.getCollectionName(mc.getClazz());
-                final BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
-                if (cap.value() > 0) {
-                    dbCapOpts.add("size", cap.value());
-                }
-                if (cap.count() > 0) {
-                    dbCapOpts.add("max", cap.count());
-                }
-                final DB database = getDB();
-                if (database.getCollectionNames().contains(collName)) {
-                    final DBObject dbResult = database.command(BasicDBObjectBuilder.start("collstats", collName).get());
-                    if (dbResult.containsField("capped")) {
-                        // TODO: check the cap options.
-                        LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
-                    } else {
-                        LOG.warning("DBCollection already exists with same name(" + collName
-                                    + ") and is not capped; not creating capped version!");
-                    }
-                } else {
-                    getDB().createCollection(collName, dbCapOpts.get());
-                    LOG.debug("Created capped DBCollection (" + collName + ") with opts " + dbCapOpts);
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
-     *
-     * @see QueryFactory#createQuery(Datastore, DBCollection, Class)
-     */
-    private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection) {
-        return getQueryFactory().createQuery(this, collection, type);
-    }
-
-    /**
-     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
-     *
-     * @see QueryFactory#createQuery(Datastore, DBCollection, Class, DBObject)
-     */
-    private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection, final DBObject query) {
-        return getQueryFactory().createQuery(this, collection, type, query);
-    }
-
-    @Override
-    public <T> Query<T> queryByExample(final T ex) {
-        return queryByExample(getCollection(ex), ex);
-    }
-
-    @Override
-    public <T> Query<T> queryByExample(final String kind, final T ex) {
-        return queryByExample(db.getCollection(kind), ex);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Query<T> queryByExample(final DBCollection coll, final T example) {
-        // TODO: think about remove className from baseQuery param below.
-        final Class<T> type = (Class<T>) example.getClass();
-        final DBObject query = entityToDBObj(example, new HashMap<Object, DBObject>());
-        return newQuery(type, coll, query);
-    }
-
-    /**
-     * Returns a new query bound to the kind (a specific {@link DBCollection})
-     */
-    @Override
-    public AggregationPipeline createAggregation(final Class source) {
-        return new AggregationPipelineImpl(this, source);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final Class<T> type) {
-        return newQuery(type, getCollection(type));
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final String kind, final Class<T> type) {
-        return newQuery(type, db.getCollection(kind));
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final Class<T> type, final DBObject q) {
-        return newQuery(type, getCollection(type), q);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final String kind, final Class<T> type, final DBObject q) {
-        return newQuery(type, getCollection(kind), q);
-    }
-
-    @Override
-    public <T> Query<T> find(final String kind, final Class<T> clazz) {
-        return createQuery(kind, clazz);
-    }
-
-    @Override
-    public <T> Query<T> find(final Class<T> clazz) {
-        return createQuery(clazz);
-    }
-
-    @Override
-    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
-        final Query<T> query = createQuery(clazz);
-        return query.filter(property, value);
-    }
-
-    @Override
-    public <T, V> Query<T> find(final String kind, final Class<T> clazz, final String property, final V value, final int offset,
-                                final int size) {
-        return find(kind, clazz, property, value, offset, size, true);
-    }
-
-    public <T, V> Query<T> find(final String kind, final Class<T> clazz, final String property, final V value, final int offset,
-                                final int size, final boolean validate) {
-        final Query<T> query = find(kind, clazz);
-        if (!validate) {
-            query.disableValidation();
-        }
-        query.offset(offset);
-        query.limit(size);
-        return query.filter(property, value).enableValidation();
-    }
-
-    @Override
-    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
-        final Query<T> query = createQuery(clazz);
-        query.offset(offset);
-        query.limit(size);
-        return query.filter(property, value);
-    }
-
-    @Override
-    public <T> T get(final Class<T> clazz, final DBRef ref) {
-        DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
-        return mapper.fromDBObject(clazz, object, createCache());
-    }
-
-    @Override
-    public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
-        return find(clazz).disableValidation().filter(Mapper.ID_KEY + " in", ids).enableValidation();
-    }
-
-    @Override
-    public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
-        return getByKeys(null, keys);
-    }
-
-    @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
-
-        final Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
-        final List<T> entities = new ArrayList<T>();
-        // String clazzKind = (clazz==null) ? null :
-        // getMapper().getCollectionName(clazz);
-        for (final Key<?> key : keys) {
-            mapper.updateCollection(key);
-
-            // if (clazzKind != null && !key.getKind().equals(clazzKind))
-            // throw new IllegalArgumentException("Types are not equal (" +
-            // clazz + "!=" + key.getKindClass() +
-            // ") for key and method parameter clazz");
-            //
-            if (kindMap.containsKey(key.getCollection())) {
-                kindMap.get(key.getCollection()).add(key);
-            } else {
-                kindMap.put(key.getCollection(), new ArrayList<Key>(Collections.singletonList((Key) key)));
-            }
-        }
-        for (final Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
-            final List<Key> kindKeys = entry.getValue();
-
-            final List<Object> objIds = new ArrayList<Object>();
-            for (final Key key : kindKeys) {
-                objIds.add(key.getId());
-            }
-            final List kindResults = find(entry.getKey(), null).disableValidation().filter("_id in", objIds).asList();
-            entities.addAll(kindResults);
-        }
-
-        // TODO: order them based on the incoming Keys.
-        return entities;
-    }
-
-    @Override
-    public <T, V> T get(final String kind, final Class<T> clazz, final V id) {
-        final List<T> results = find(kind, clazz, Mapper.ID_KEY, id, 0, 1).asList();
-        if (results == null || results.isEmpty()) {
-            return null;
-        }
-        return results.get(0);
-    }
-
-    @Override
-    public <T, V> T get(final Class<T> clazz, final V id) {
-        return find(getCollection(clazz).getName(), clazz, Mapper.ID_KEY, id, 0, 1, true).get();
-    }
-
-    @Override
-    public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
-        final String collectionName = mapper.getCollectionName(clazz);
-        final String keyCollection = mapper.updateCollection(key);
-        if (!collectionName.equals(keyCollection)) {
-            throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
-        }
-
-        return get(clazz, key.getId());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final Object id = mapper.getId(unwrapped);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
-        }
-        return (T) get(unwrapped.getClass(), id);
-    }
-
-    @Override
-    public Key<?> exists(final Object entityOrKey) {
-        final Query<?> query = buildExistsQuery(entityOrKey);
-        return query.getKey();
-    }
-
-    @Override
-    public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
-        final Query<?> query = buildExistsQuery(entityOrKey);
-        if (readPreference != null) {
-            query.useReadPreference(readPreference);
-        }
-        return query.getKey();
-    }
-
-    private Query<?> buildExistsQuery(final Object entityOrKey) {
-        final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
-        final Key<?> key = mapper.getKey(unwrapped);
-        final Object id = key.getId();
-        if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
-        }
-
-        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId());
-    }
-
-    @Override
-    public DBCollection getCollection(final Class clazz) {
-        final String collName = mapper.getCollectionName(clazz);
-        return getDB().getCollection(collName);
-    }
-
-    public DBCollection getCollection(final Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
+    protected void ensureIndexes(final MappedClass mc, final boolean background) {
+        ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
     }
 
     protected DBCollection getCollection(final String kind) {
@@ -807,130 +1153,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getDB().getCollection(kind);
     }
 
-    @Override
-    public <T> long getCount(final T entity) {
-        return getCollection(ProxyHelper.unwrap(entity)).count();
-    }
-
-    @Override
-    public <T> long getCount(final Class<T> clazz) {
-        return getCollection(clazz).count();
-    }
-
-    @Override
-    public long getCount(final String kind) {
-        return getCollection(kind).count();
-    }
-
-    @Override
-    public <T> long getCount(final Query<T> query) {
-        return query.countAll();
-    }
-
-    @Override
-    public MongoClient getMongo() {
-        return mongoClient;
-    }
-
-    @Override
-    public DB getDB() {
-        return db;
-    }
-
-    public Mapper getMapper() {
-        return mapper;
-    }
-
-    public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
-        return insert(entities, null);
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        return insert(getCollection(entities.iterator().next()), entities, wc);
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities) {
-        return insert(kind, entities, null);
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final String kind, final Iterable<T> entities, final WriteConcern wc) {
-        return insert(db.getCollection(kind), entities, wc);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
-        WriteConcern writeConcern = wc;
-        if (writeConcern == null) {
-            writeConcern = getWriteConcern(entities.iterator().next());
-        }
-        final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        if (morphia.getUseBulkWriteOperations()) {
-            BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
-            for (final T entity : entities) {
-                bulkWriteOperation.insert(toDbObject(entity, involvedObjects));
-            }
-            bulkWriteOperation.execute(writeConcern);
-        } else {
-            writeConcern = getWriteConcern(entities.iterator().next());
-            final List<DBObject> list = new ArrayList<DBObject>();
-            for (final T entity : entities) {
-                list.add(toDbObject(entity, involvedObjects));
-            }
-            dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
-        }
-
-        return postSaveOperations(entities, involvedObjects, dbColl);
-    }
-
-    private <T> DBObject toDbObject(final T ent, final Map<Object, DBObject> involvedObjects) {
-        final MappedClass mc = mapper.getMappedClass(ent);
-        if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                                              mc.getClazz().getName()));
-        }
-        DBObject dbObject = entityToDBObj(ent, involvedObjects);
-        List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
-        for (MappedField mappedField : versionFields) {
-            String name = mappedField.getNameToStore();
-            if (dbObject.get(name) == null) {
-                dbObject.put(name, 1);
-                mappedField.setFieldValue(ent, 1L);
-            }
-        }
-        return dbObject;
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final T... entities) {
-        return insert(asList(entities), getWriteConcern(entities[0]));
-    }
-
-    @Override
-    public <T> Key<T> insert(final T entity) {
-        return insert(entity, getWriteConcern(entity));
-    }
-
-    @Override
-    public <T> Key<T> insert(final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(unwrapped);
-        return insert(dbColl, unwrapped, wc);
-    }
-
-    @Override
-    public <T> Key<T> insert(final String kind, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(kind);
-        return insert(dbColl, unwrapped, getWriteConcern(unwrapped));
-    }
-
-    public <T> Key<T> insert(final String kind, final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(kind);
-        return insert(dbColl, unwrapped, wc);
+    @Deprecated
+    protected Object getId(final Object entity) {
+        return mapper.getId(entity);
     }
 
     protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final WriteConcern wc) {
@@ -943,41 +1168,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return postSaveOperations(Collections.singletonList(entity), involvedObjects, dbColl).get(0);
-    }
-
-    private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
-        return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        if (entities == null) {
-            return new ArrayList<Key<T>>();
-        }
-        Iterator<T> iterator = entities.iterator();
-        if (!iterator.hasNext()) {
-            return new ArrayList<Key<T>>();
-        }
-        return save(entities, getWriteConcern(iterator.next()));
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        for (final T ent : entities) {
-            savedKeys.add(save(ent, wc));
-        }
-        return savedKeys;
-
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> save(final T... entities) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        for (final T ent : entities) {
-            savedKeys.add(save(ent));
-        }
-        return savedKeys;
     }
 
     protected <T> Key<T> save(final DBCollection dbColl, final T entity, final WriteConcern wc) {
@@ -1058,164 +1248,127 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wr;
     }
 
-    @Override
-    public <T> Key<T> save(final T entity) {
-        return save(entity, getWriteConcern(entity));
-    }
-
-    @Override
-    public <T> Key<T> save(final String kind, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(kind, entity, getWriteConcern(unwrapped));
-    }
-
-    @Override
-    public <T> Key<T> save(final String kind, final T entity, final WriteConcern wc) {
-        return save(getCollection(kind), ProxyHelper.unwrap(entity), wc);
-    }
-
-    @Override
-    public <T> Key<T> save(final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, wc);
-    }
-
-    @Override
-    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {
-        return new UpdateOpsImpl<T>(clazz, getMapper());
-    }
-
-    @Override
-    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> kind, final DBObject ops) {
-        final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(kind);
-        upOps.setOps(ops);
-        return upOps;
-    }
-
-    @Override
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing) {
-        return update(query, ops, createIfMissing, getWriteConcern(query.getEntityClass()));
-    }
-
-    @Override
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
-                                    final WriteConcern wc) {
-        return update(query, ops, createIfMissing, true, wc);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> UpdateResults update(final T ent, final UpdateOperations<T> ops) {
-        if (ent instanceof Query) {
-            return update((Query<T>) ent, ops);
-        }
-
-        final MappedClass mc = mapper.getMappedClass(ent);
-        final Query<T> q = (Query<T>) createQuery(mc.getClazz());
-        q.disableValidation().filter(Mapper.ID_KEY, mapper.getId(ent));
-
-        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            final MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
-            final Long oldVer = (Long) versionMF.getFieldValue(ent);
-            q.filter(versionMF.getNameToStore(), oldVer);
-            ops.set(versionMF.getNameToStore(), nextValue(oldVer));
-        }
-
-        return update(q, ops);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> ops) {
-        Class<T> clazz = (Class<T>) key.getType();
-        if (clazz == null) {
-            clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
-        }
-        return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), ops);
-    }
-
-    @Override
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops) {
-        return update(query, ops, false, true);
-    }
-
-    @Override
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops) {
-        return update(query, ops, false, false);
-    }
-
-    @Override
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing) {
-        return update(query, ops, createIfMissing, false);
-
-    }
-
-    @Override
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
-                                         final WriteConcern wc) {
-        return update(query, ops, createIfMissing, false, wc);
-    }
-
-    @Override
-    public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
-        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
-
-        final UpdateResults res = update(query, dbObj, createIfMissing, false, getWriteConcern(entity));
-
-        // update _id field
-        if (res.getInsertedCount() > 0) {
-            dbObj.put(Mapper.ID_KEY, res.getNewId());
-        }
-
-        postSaveOperations(Collections.singletonList(entity), involvedObjects, getCollection(entity), false);
-        return res;
-    }
-
-    @Override
-    public <T> Key<T> merge(final T entity) {
-        return merge(entity, getWriteConcern(entity));
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> Key<T> merge(final T entity, final WriteConcern wc) {
-        T unwrapped = entity;
-        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = mapper.toDBObject(unwrapped, involvedObjects);
-        final Key<T> key = mapper.getKey(unwrapped);
-        unwrapped = ProxyHelper.unwrap(unwrapped);
-        final Object id = mapper.getId(unwrapped);
+    private Query<?> buildExistsQuery(final Object entityOrKey) {
+        final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
+        final Key<?> key = mapper.getKey(unwrapped);
+        final Object id = key.getId();
         if (id == null) {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        // remove (immutable) _id field for update.
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
-        dbObj.removeField(Mapper.ID_KEY);
+        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId());
+    }
 
-        WriteResult wr;
+    private EntityCache createCache() {
+        return mapper.createEntityCache();
+    }
 
-        final MappedClass mc = mapper.getMappedClass(unwrapped);
-        final DBCollection dbColl = getCollection(unwrapped);
-
-        // try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, mc);
-
-        if (wr == null) {
-            final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
-            wr = update(query, new BasicDBObject("$set", dbObj), false, false, wc).getWriteResult();
+    private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
+                                 final MappedField mf) {
+        final Text index = mf.getAnnotation(Text.class);
+        final StringBuilder field = new StringBuilder();
+        if (!parentMCs.isEmpty()) {
+            for (final MappedField pmf : parentMFs) {
+                field.append(pmf.getNameToStore()).append(".");
+            }
         }
 
-        final UpdateResults res = new UpdateResults(wr);
+        field.append(mf.getNameToStore());
 
-        if (res.getUpdatedCount() == 0) {
-            throw new UpdateException("Nothing updated");
+        DBObject keys = new BasicDBObject(field.toString(), IndexType.TEXT.toIndexValue());
+        DBObject opts = extractOptions(index.options());
+        if (index.value() != -1) {
+            DBObject weights = new BasicDBObject();
+            opts.put("weights", weights);
+            weights.put(field.toString(), index.value());
+        }
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
+        dbColl.createIndex(keys, opts);
+    }
+
+    private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
+        return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
+    }
+
+    private DBObject extractOptions(final IndexOptions options) {
+        final DBObject opts = new BasicDBObject();
+
+        putIfNotEmpty(opts, "name", options.name());
+        putIfNotEmpty(opts, "default_language", options.language());
+        putIfNotEmpty(opts, "language_override", options.languageOverride());
+        putIfTrue(opts, "background", options.background());
+        putIfTrue(opts, "dropDups", options.dropDups());
+        putIfTrue(opts, "sparse", options.sparse());
+        putIfTrue(opts, "unique", options.unique());
+        if (options.expireAfterSeconds() != -1) {
+            opts.put("expireAfterSeconds", options.expireAfterSeconds());
+        }
+        return opts;
+    }
+
+    private MappedField findField(final List<String> namePath, final MappedClass mc, final String value) {
+        if (value.contains(".")) {
+            String segment = value.substring(0, value.indexOf("."));
+            MappedField field = findField(namePath, mc, segment);
+            MappedClass mappedClass = getMapper().getMappedClass(field.getSubType() != null ? field.getSubType() : field.getConcreteType());
+            return findField(namePath, mappedClass, value.substring(value.indexOf(".") + 1));
+        } else {
+            MappedField mf = mc.getMappedField(value);
+            if (mf == null) {
+                mf = mc.getMappedFieldByJavaField(value);
+            }
+            if (mf != null) {
+                namePath.add(mf.getNameToStore());
+            }
+            return mf;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
+        WriteConcern writeConcern = wc;
+        if (writeConcern == null) {
+            writeConcern = getWriteConcern(entities.iterator().next());
+        }
+        final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+        if (morphia.getUseBulkWriteOperations()) {
+            BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
+            for (final T entity : entities) {
+                bulkWriteOperation.insert(toDbObject(entity, involvedObjects));
+            }
+            bulkWriteOperation.execute(writeConcern);
+        } else {
+            writeConcern = getWriteConcern(entities.iterator().next());
+            final List<DBObject> list = new ArrayList<DBObject>();
+            for (final T entity : entities) {
+                list.add(toDbObject(entity, involvedObjects));
+            }
+            dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
         }
 
-        dbObj.put(Mapper.ID_KEY, idValue);
-        postSaveOperations(Collections.<Object>singletonList(entity), involvedObjects, dbColl, false);
-        return key;
+        return postSaveOperations(entities, involvedObjects, dbColl);
+    }
+
+    /**
+     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
+     *
+     * @see QueryFactory#createQuery(Datastore, DBCollection, Class, DBObject)
+     */
+    private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection, final DBObject query) {
+        return getQueryFactory().createQuery(this, collection, type, query);
+    }
+
+    /**
+     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
+     *
+     * @see QueryFactory#createQuery(Datastore, DBCollection, Class)
+     */
+    private <T> Query<T> newQuery(final Class<T> type, final DBCollection collection) {
+        return getQueryFactory().createQuery(this, collection, type);
+    }
+
+    private long nextValue(final Long oldVersion) {
+        return oldVersion == null ? 1 : oldVersion + 1;
     }
 
     private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities, final Map<Object, DBObject> involvedObjects,
@@ -1248,6 +1401,120 @@ public class DatastoreImpl implements AdvancedDatastore {
         return keys;
     }
 
+    @SuppressWarnings("deprecation")
+    private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background) {
+        // Ensure indexes from class annotation
+        final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
+        if (indexes != null) {
+            for (final Annotation ann : indexes) {
+                final Indexes idx = (Indexes) ann;
+                if (idx.value().length > 0) {
+                    for (final Index index : idx.value()) {
+                        if (index.fields().length != 0) {
+                            ensureIndex(mc, dbColl, index.fields(), index.options());
+                        } else {
+                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
+                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
+                            final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapper,
+                                                                                     !index.disableValidation());
+                            ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
+                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Ensure indexes from field annotations, and embedded entities
+     */
+    private void processEmbeddedAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background,
+                                            final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
+        List<MappedField> annotatedWith = mc.getFieldsAnnotatedWith(Text.class);
+        if (annotatedWith.size() > 1) {
+            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
+        }
+        for (final MappedField mf : mc.getPersistenceFields()) {
+            if (mf.hasAnnotation(Indexed.class)) {
+                final Indexed index = mf.getAnnotation(Indexed.class);
+                final StringBuilder field = new StringBuilder();
+                if (!parentMCs.isEmpty()) {
+                    for (final MappedField pmf : parentMFs) {
+                        field.append(pmf.getNameToStore()).append(".");
+                    }
+                }
+
+                field.append(mf.getNameToStore());
+
+                ensureIndex(dbColl,
+                            index.name(),
+                            new BasicDBObject(field.toString(), index.value().toIndexValue()),
+                            index.unique(),
+                            index.dropDups(),
+                            index.background() ? index.background() : background,
+                            index.sparse(),
+                            index.expireAfterSeconds());
+            }
+
+            if (mf.hasAnnotation(Text.class)) {
+                createTextIndex(dbColl, parentMCs, parentMFs, mf);
+            }
+
+            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
+                && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
+                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
+                final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
+                newParentClasses.add(mc);
+                newParents.add(mf);
+                ensureIndexes(dbColl, mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background,
+                              newParentClasses, newParents);
+            }
+        }
+    }
+
+    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
+        if (!value.equals("")) {
+            opts.put(key, value);
+        }
+    }
+
+    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
+        if (value) {
+            opts.put(key, true);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Query<T> queryByExample(final DBCollection coll, final T example) {
+        // TODO: think about remove className from baseQuery param below.
+        final Class<T> type = (Class<T>) example.getClass();
+        final DBObject query = entityToDBObj(example, new HashMap<Object, DBObject>());
+        return newQuery(type, coll, query);
+    }
+
+    private <T> DBObject toDbObject(final T ent, final Map<Object, DBObject> involvedObjects) {
+        final MappedClass mc = mapper.getMappedClass(ent);
+        if (mc.getAnnotation(NotSaved.class) != null) {
+            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
+                                              mc.getClazz().getName()));
+        }
+        DBObject dbObject = entityToDBObj(ent, involvedObjects);
+        List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
+        for (MappedField mappedField : versionFields) {
+            String name = mappedField.getNameToStore();
+            if (dbObject.get(name) == null) {
+                dbObject.put(name, 1);
+                mappedField.setFieldValue(ent, 1L);
+            }
+        }
+        return dbObject;
+    }
+
+    private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi) {
+        return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));
+    }
+
     @SuppressWarnings("rawtypes")
     private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi,
                                      final WriteConcern wc) {
@@ -1258,10 +1525,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             return update(q, u, createIfMissing, multi, wc);
         }
         return update(query, u, createIfMissing, multi, wc);
-    }
-
-    private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi) {
-        return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));
     }
 
     @SuppressWarnings("unchecked")
@@ -1317,182 +1580,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return new UpdateResults(wr);
     }
 
-    @Override
-    public <T> T findAndDelete(final Query<T> qi) {
-        DBCollection dbColl = qi.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(qi.getEntityClass());
-        }
-
-        final EntityCache cache = createCache();
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
-        }
-
-        final DBObject result = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), true, null, false,
-                                                     false);
-
-        if (result != null) {
-            return mapper.fromDBObject(qi.getEntityClass(), result, cache);
-        }
-
-        return null;
-    }
-
-    @Override
-    public <T> T findAndModify(final Query<T> q, final UpdateOperations<T> ops) {
-        return findAndModify(q, ops, false);
-    }
-
-    @Override
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> ops, final boolean oldVersion) {
-        return findAndModify(query, ops, oldVersion, false);
-    }
-
-    @Override
-    public <T> T findAndModify(final Query<T> qi, final UpdateOperations<T> ops, final boolean oldVersion, final boolean createIfMissing) {
-
-        DBCollection dbColl = qi.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(qi.getEntityClass());
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
-        }
-        DBObject res = null;
-        try {
-            res = dbColl.findAndModify(qi.getQueryObject(), qi.getFieldsObject(), qi.getSortObject(), false,
-                                       ((UpdateOpsImpl<T>) ops).getOps(), !oldVersion, createIfMissing);
-        } catch (MongoException e) {
-            if (e.getMessage() == null || !e.getMessage().contains("matching")) {
-                throw e;
-            }
-        }
-
-        if (res == null) {
-            return null;
-        } else {
-            return mapper.fromDBObject(qi.getEntityClass(), res, createCache());
-        }
-    }
-
-    @Override
-    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
-                                             final MapReduceCommand baseCommand) {
-
-        Assert.parametersNotNull("map", baseCommand.getMap());
-        Assert.parameterNotEmpty(baseCommand.getMap(), "map");
-        Assert.parametersNotNull("reduce", baseCommand.getReduce());
-        Assert.parameterNotEmpty(baseCommand.getMap(), "reduce");
-
-        if (query.getOffset() != 0 || query.getFieldsObject() != null) {
-            throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
-        }
-
-        final OutputType outType;
-        switch (type) {
-            case REDUCE:
-                outType = OutputType.REDUCE;
-                break;
-            case MERGE:
-                outType = OutputType.MERGE;
-                break;
-            case INLINE:
-                outType = OutputType.INLINE;
-                break;
-            default:
-                outType = OutputType.REPLACE;
-                break;
-        }
-
-        final DBCollection dbColl = query.getCollection();
-
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
-                                                          baseCommand.getOutputTarget(), outType, query.getQueryObject());
-        cmd.setFinalize(baseCommand.getFinalize());
-        cmd.setScope(baseCommand.getScope());
-
-        if (query.getLimit() > 0) {
-            cmd.setLimit(query.getLimit());
-        }
-        if (query.getSortObject() != null) {
-            cmd.setSort(query.getSortObject());
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.info("Executing " + cmd.toString());
-        }
-
-        final EntityCache cache = createCache();
-        MapreduceResults<T> results = new MapreduceResults<T>(dbColl.mapReduce(baseCommand));
-
-        results.setType(type);
-        if (MapreduceType.INLINE.equals(type)) {
-            results.setInlineRequiredOptions(outputType, getMapper(), cache);
-        } else {
-            results.setQuery(newQuery(outputType, db.getCollection(results.getOutputCollectionName())));
-        }
-
-        return results;
-
-    }
-
-    @Override
-    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
-                                             final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
-
-        final DBCollection dbColl = query.getCollection();
-
-        final String outColl = mapper.getCollectionName(outputType);
-
-        final OutputType outType;
-        switch (type) {
-            case REDUCE:
-                outType = OutputType.REDUCE;
-                break;
-            case MERGE:
-                outType = OutputType.MERGE;
-                break;
-            case INLINE:
-                outType = OutputType.INLINE;
-                break;
-            default:
-                outType = OutputType.REPLACE;
-                break;
-        }
-
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, outType, query.getQueryObject());
-
-        if (query.getLimit() > 0) {
-            cmd.setLimit(query.getLimit());
-        }
-        if (query.getSortObject() != null) {
-            cmd.setSort(query.getSortObject());
-        }
-
-        if (finalize != null && finalize.length() != 0) {
-            cmd.setFinalize(finalize);
-        }
-
-        if (scopeFields != null && !scopeFields.isEmpty()) {
-            cmd.setScope(scopeFields);
-        }
-
-        return mapReduce(type, query, outputType, cmd);
-    }
-
-    private EntityCache createCache() {
-        return mapper.createEntityCache();
-    }
-
     /**
      * Gets the write concern for entity or returns the default write concern for this datastore
+     *
+     * @param clazzOrEntity the class or entity to use when looking up the WriteConcern
      */
-    public WriteConcern getWriteConcern(final Object clazzOrEntity) {
+    WriteConcern getWriteConcern(final Object clazzOrEntity) {
         WriteConcern wc = defConcern;
         if (clazzOrEntity != null) {
             final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
@@ -1502,37 +1595,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return wc;
-    }
-
-    @Override
-    public WriteConcern getDefaultWriteConcern() {
-        return defConcern;
-    }
-
-    @Override
-    public void setDefaultWriteConcern(final WriteConcern wc) {
-        defConcern = wc;
-    }
-
-    @Override
-    public DBDecoderFactory setDecoderFact(final DBDecoderFactory fact) {
-        decoderFactory = fact;
-        return decoderFactory;
-    }
-
-    @Override
-    public DBDecoderFactory getDecoderFact() {
-        return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
-    }
-
-    @Override
-    public void setQueryFactory(final QueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
-
-    @Override
-    public QueryFactory getQueryFactory() {
-        return queryFactory;
     }
 
 }

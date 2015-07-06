@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-
+/**
+ * A formatter providing a short format
+ */
 public class ShortFormatter extends Formatter {
     private static final MessageFormat FORMAT = new MessageFormat("[{1}|{2}|{3,date,h:mm:ss}]{0} :{4}");
     private static final Logger LOG = MorphiaLoggerFactory.get(ShortFormatter.class);

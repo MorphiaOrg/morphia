@@ -1,9 +1,9 @@
 package org.mongodb.morphia.query;
 
 /**
- * 
- * @author suresh chaudhari
+ * Defines BSON types for use in querying against field types.
  *
+ * @author suresh chaudhari
  */
 public enum Type {
 
@@ -47,10 +47,13 @@ public enum Type {
 
     private final int value;
 
-    private Type(final int value) {
-       this.value = value;
-     }
+    Type(final int value) {
+        this.value = value;
+    }
 
+    /**
+     * @return the BSON type value
+     */
     public int val() {
         return value;
     }

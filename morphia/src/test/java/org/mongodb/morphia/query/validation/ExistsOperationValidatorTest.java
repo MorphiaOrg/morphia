@@ -14,7 +14,7 @@ public class ExistsOperationValidatorTest {
 
     @Test
     public void shouldAllowBooleanValuesForExistsOperator() {
-        // given 
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
@@ -27,7 +27,7 @@ public class ExistsOperationValidatorTest {
 
     @Test
     public void shouldAllowPrimitiveBooleanValuesForExistsOperator() {
-        // given 
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
@@ -39,21 +39,8 @@ public class ExistsOperationValidatorTest {
     }
 
     @Test
-    public void shouldRejectNonBooleanValuesForExistsOperator() {
-        // given 
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = ExistsOperationValidator.getInstance().apply(null, EXISTS, "value", validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(1));
-    }
-
-    @Test
     public void shouldNotApplyValidationIfOperatorIsNotExistsOperator() {
-        // given 
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
@@ -62,5 +49,18 @@ public class ExistsOperationValidatorTest {
         // then
         assertThat(validationApplied, is(false));
         assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldRejectNonBooleanValuesForExistsOperator() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = ExistsOperationValidator.getInstance().apply(null, EXISTS, "value", validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(1));
     }
 }

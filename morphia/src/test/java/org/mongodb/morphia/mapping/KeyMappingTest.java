@@ -27,6 +27,18 @@ public class KeyMappingTest extends TestBase {
         Assert.assertTrue(followedChannels.contains(datastore.getKey(channel)));
     }
 
+    @Test
+    public void testKeyComparisons() throws Exception {
+        final User user = new User("Luke Skywalker");
+        getDs().save(user);
+        final Key<User> k1 = new Key<User>(User.class, "User", user.id);
+        final Key<User> k2 = getDs().getKey(user);
+
+        Assert.assertTrue(k1.equals(k2));
+        Assert.assertTrue(k2.equals(k1));
+
+    }
+
     private void insertData() {
         final Datastore datastore = getDs();
 
@@ -41,20 +53,8 @@ public class KeyMappingTest extends TestBase {
         final List<Key<Channel>> followedChannels = new ArrayList<Key<Channel>>();
         followedChannels.add(datastore.getKey(sportChannel));
         followedChannels.add(datastore.getKey(fitnessChannel));
-        
+
         datastore.save(new User("Roberto", datastore.getKey(sportChannel), followedChannels));
-    }
-
-    @Test
-    public void testKeyComparisons() throws Exception {
-        final User user = new User("Luke Skywalker");
-        getDs().save(user);
-        final Key<User> k1 = new Key<User>(User.class, "User", user.id);
-        final Key<User> k2 = getDs().getKey(user);
-
-        Assert.assertTrue(k1.equals(k2));
-        Assert.assertTrue(k2.equals(k1));
-
     }
 
     @Entity(noClassnameStored = true)

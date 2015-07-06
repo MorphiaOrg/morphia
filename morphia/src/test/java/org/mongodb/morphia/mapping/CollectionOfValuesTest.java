@@ -19,30 +19,6 @@ import java.util.List;
  */
 public class CollectionOfValuesTest extends TestBase {
 
-    public static class ContainsListOfList {
-        @Id
-        private ObjectId id;
-        @Embedded
-        private List<List<String>> listOfList;
-    }
-
-    public static class ContainsTwoDimensionalArray {
-        @Id
-        private ObjectId id;
-        private byte[] oneDimArray;
-        private byte[][] twoDimArray;
-    }
-
-    @Entity(noClassnameStored = true)
-    public static class City {
-        @Id
-        private ObjectId id;
-        private String name;
-        @Embedded
-        private byte[] array;
-        private int[][] cells = new int[2][2];
-    }
-
     @Test
     public void testCity() {
         getMorphia().map(City.class);
@@ -63,32 +39,6 @@ public class CollectionOfValuesTest extends TestBase {
         for (int i = 0; i < city.cells.length; i++) {
             compare(city.cells[i], loaded.cells[i]);
         }
-    }
-
-    @Test
-    public void testTwoDimensionalArrayMapping() throws Exception {
-        getMorphia().map(ContainsTwoDimensionalArray.class);
-        final ContainsTwoDimensionalArray entity = new ContainsTwoDimensionalArray();
-        entity.oneDimArray = "Joseph".getBytes();
-        entity.twoDimArray = new byte[][]{"Joseph".getBytes(), "uwe".getBytes()};
-        final Key<ContainsTwoDimensionalArray> savedKey = getDs().save(entity);
-        final ContainsTwoDimensionalArray loaded = getDs().get(ContainsTwoDimensionalArray.class, entity.id);
-        Assert.assertNotNull(loaded.id);
-        Assert.assertNotNull(loaded.oneDimArray);
-        Assert.assertNotNull(loaded.twoDimArray);
-
-        compare(entity.oneDimArray, loaded.oneDimArray);
-
-        compare(entity.twoDimArray[0], loaded.twoDimArray[0]);
-        compare(entity.twoDimArray[1], loaded.twoDimArray[1]);
-    }
-
-    private void compare(final int[] left, final int[] right) {
-        Assert.assertArrayEquals(left, right);
-    }
-
-    private void compare(final byte[] left, final byte[] right) {
-        Assert.assertArrayEquals(left, right);
     }
 
     @Test
@@ -116,6 +66,56 @@ public class CollectionOfValuesTest extends TestBase {
         Assert.assertEquals(element1, loadedElement1);
         Assert.assertEquals(element1.get(0), loadedElement1.get(0));
         Assert.assertNotNull(loaded.id);
+    }
+
+    @Test
+    public void testTwoDimensionalArrayMapping() throws Exception {
+        getMorphia().map(ContainsTwoDimensionalArray.class);
+        final ContainsTwoDimensionalArray entity = new ContainsTwoDimensionalArray();
+        entity.oneDimArray = "Joseph".getBytes();
+        entity.twoDimArray = new byte[][]{"Joseph".getBytes(), "uwe".getBytes()};
+        final Key<ContainsTwoDimensionalArray> savedKey = getDs().save(entity);
+        final ContainsTwoDimensionalArray loaded = getDs().get(ContainsTwoDimensionalArray.class, entity.id);
+        Assert.assertNotNull(loaded.id);
+        Assert.assertNotNull(loaded.oneDimArray);
+        Assert.assertNotNull(loaded.twoDimArray);
+
+        compare(entity.oneDimArray, loaded.oneDimArray);
+
+        compare(entity.twoDimArray[0], loaded.twoDimArray[0]);
+        compare(entity.twoDimArray[1], loaded.twoDimArray[1]);
+    }
+
+    private void compare(final byte[] left, final byte[] right) {
+        Assert.assertArrayEquals(left, right);
+    }
+
+    private void compare(final int[] left, final int[] right) {
+        Assert.assertArrayEquals(left, right);
+    }
+
+    public static class ContainsListOfList {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private List<List<String>> listOfList;
+    }
+
+    public static class ContainsTwoDimensionalArray {
+        @Id
+        private ObjectId id;
+        private byte[] oneDimArray;
+        private byte[][] twoDimArray;
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class City {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Embedded
+        private byte[] array;
+        private int[][] cells = new int[2][2];
     }
 
 }

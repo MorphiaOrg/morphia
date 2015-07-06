@@ -35,34 +35,19 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 public @interface IndexOptions {
     /**
-     * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
-     */
-    String name() default "";
-
-    /**
-     * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
-     */
-    boolean unique() default false;
-
-    /**
-     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
-     */
-    boolean dropDups() default false;
-
-    /**
      * Create the index in the background
      */
     boolean background() default false;
 
     /**
-     * Create the index with the sparse option
-     */
-    boolean sparse() default false;
-
-    /**
      * disables validation for the field name
      */
     boolean disableValidation() default false;
+
+    /**
+     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
+     */
+    boolean dropDups() default false;
 
     /**
      * defines the time to live for documents in the collection
@@ -73,9 +58,24 @@ public @interface IndexOptions {
      * Default language for the index.
      */
     String language() default "";
-    
+
     /**
      * The field to use to override the default language.
      */
     String languageOverride() default "";
+
+    /**
+     * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
+     */
+    String name() default "";
+
+    /**
+     * Create the index with the sparse option
+     */
+    boolean sparse() default false;
+
+    /**
+     * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
+     */
+    boolean unique() default false;
 }

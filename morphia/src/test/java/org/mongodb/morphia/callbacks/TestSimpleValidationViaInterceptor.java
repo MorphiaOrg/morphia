@@ -27,6 +27,32 @@ import java.util.List;
  */
 public class TestSimpleValidationViaInterceptor extends TestBase {
 
+    static {
+        MappedField.addInterestingAnnotation(NonNull.class);
+    }
+
+    @Test
+    public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
+
+        getMorphia().getMapper().addInterceptor(new NonNullValidation());
+        getMorphia().map(E.class);
+        getMorphia().map(E2.class);
+
+        getDs().save(new E());
+        try {
+            getDs().save(new E2());
+            Assert.fail();
+        } catch (NonNullValidationException e) {
+            // expected
+        }
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    public @interface NonNull {
+    }
+
     static class E {
         @Id
         private final ObjectId id = new ObjectId();
@@ -48,11 +74,6 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
         private String mustFailValidation;
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface NonNull {
-    }
-
     public static class NonNullValidation extends AbstractEntityInterceptor {
         @Override
         public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
@@ -72,26 +93,5 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
             }
 
         }
-    }
-
-    static {
-        MappedField.addInterestingAnnotation(NonNull.class);
-    }
-
-    @Test
-    public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
-
-        getMorphia().getMapper().addInterceptor(new NonNullValidation());
-        getMorphia().map(E.class);
-        getMorphia().map(E2.class);
-
-        getDs().save(new E());
-        try {
-            getDs().save(new E2());
-            Assert.fail();
-        } catch (NonNullValidationException e) {
-            // expected
-        }
-
     }
 }

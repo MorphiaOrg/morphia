@@ -20,6 +20,20 @@ public final class SizeOperationValidator extends OperationValidator {
     private SizeOperationValidator() {
     }
 
+    /**
+     * Get the instance
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static SizeOperationValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected FilterOperator getOperator() {
+        return SIZE;
+    }
+
     @Override
     protected void validate(final MappedField mappedField, final Object value,
                             final List<ValidationFailure> validationFailures) {
@@ -33,19 +47,5 @@ public final class SizeOperationValidator extends OperationValidator {
                                                                 + "Instead it was a: %s",
                                                                 mappedField, mappedField.getType())));
         }
-    }
-
-    @Override
-    protected FilterOperator getOperator() {
-        return SIZE;
-    }
-
-    /**
-     * Get the instance
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static SizeOperationValidator getInstance() {
-        return INSTANCE;
     }
 }

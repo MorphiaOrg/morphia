@@ -18,6 +18,20 @@ public final class InOperationValidator extends OperationValidator {
     private InOperationValidator() {
     }
 
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static InOperationValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected FilterOperator getOperator() {
+        return IN;
+    }
+
     @Override
     protected void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures) {
         if (value == null) {
@@ -28,19 +42,5 @@ public final class InOperationValidator extends OperationValidator {
                                                                 value, value.getClass()
                                                                )));
         }
-    }
-
-    @Override
-    protected FilterOperator getOperator() {
-        return IN;
-    }
-
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static InOperationValidator getInstance() {
-        return INSTANCE;
     }
 }

@@ -1,13 +1,11 @@
 package org.mongodb.morphia.converters;
 
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.geo.GeometryConverter;
 import org.mongodb.morphia.geo.GeometryShapeConverter;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
  * Default encoders
@@ -19,6 +17,11 @@ public class DefaultConverters extends Converters {
     private final IdentityConverter identityConverter;
     private final SerializedObjectConverter serializedConverter;
 
+    /**
+     * Creates a bundle with a particular Mapper.
+     *
+     * @param mapper the Mapper to use
+     */
     public DefaultConverters(final Mapper mapper) {
         super(mapper);
         addConverter(new IdentityConverter(DBObject.class, BasicDBObject.class));

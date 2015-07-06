@@ -12,6 +12,19 @@ import org.mongodb.morphia.query.Type;
 
 public class TestTypeCriteria extends TestBase {
 
+    @Test
+    public void getStringTypeData() throws Exception {
+        Class1 entity = new Class1();
+        entity.firstName = "first_name";
+        getDs().save(entity);
+
+        getMorphia().map(Class1.class);
+
+        Query<Class1> query = getDs().createQuery(Class1.class);
+        query.criteria("first_name").type(Type.STRING);
+        Assert.assertTrue(query.asList().size() > 0);
+    }
+
     @Entity(value = "user", noClassnameStored = true)
     public static class Class1 {
         @Id
@@ -28,19 +41,6 @@ public class TestTypeCriteria extends TestBase {
         @Property("create_date")
         private long createDt;
 
-    }
-
-    @Test
-    public void getStringTypeData() throws Exception {
-        Class1 entity = new Class1();
-        entity.firstName = "first_name";
-        getDs().save(entity);
-        
-        getMorphia().map(Class1.class);
-
-        Query<Class1> query = getDs().createQuery(Class1.class);
-        query.criteria("first_name").type(Type.STRING);
-        Assert.assertTrue(query.asList().size() > 0);
     }
 
 }

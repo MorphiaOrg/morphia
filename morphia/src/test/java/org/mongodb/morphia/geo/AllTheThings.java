@@ -9,13 +9,21 @@ public final class AllTheThings {
     @Indexed(IndexDirection.GEO2DSPHERE)
     private GeometryCollection everything;
 
-    @SuppressWarnings("UnusedDeclaration") // used by morphia
+    @SuppressWarnings("UnusedDeclaration")
+        // used by morphia
     AllTheThings() {
     }
 
     public AllTheThings(final String name, final GeometryCollection everything) {
         this.name = name;
         this.everything = everything;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = everything.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override
@@ -37,13 +45,6 @@ public final class AllTheThings {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = everything.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
     }
 
     @Override

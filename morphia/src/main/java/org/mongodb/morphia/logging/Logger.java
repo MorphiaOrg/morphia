@@ -20,44 +20,133 @@ package org.mongodb.morphia.logging;
  * A generic logger interface used internally by Morphia.  At runtime the actual implementation used is chosen to match which logging
  * framework (e.g., java.util.logging vs slf4j) is used in the application.
  */
+@SuppressWarnings("unused")
 public interface Logger {
-    boolean isTraceEnabled();
-
-    void trace(String msg);
-
-    void trace(String format, Object... arg);
-
-    void trace(String msg, Throwable t);
-
-    boolean isDebugEnabled();
-
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     */
     void debug(String msg);
 
-    void debug(String format, Object... arg);
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param arg formatting arguments for the message
+     */
+    void debug(String msg, Object... arg);
 
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param t   the Throwable to log
+     */
     void debug(String msg, Throwable t);
 
-    boolean isInfoEnabled();
-
-    void info(String msg);
-
-    void info(String format, Object... arg);
-
-    void info(String msg, Throwable t);
-
-    boolean isWarningEnabled();
-
-    void warning(String msg);
-
-    void warning(String format, Object... arg);
-
-    void warning(String msg, Throwable t);
-
-    boolean isErrorEnabled();
-
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     */
     void error(String msg);
 
-    void error(String format, Object... arg);
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param arg formatting arguments for the message formatting arguments for the message
+     */
+    void error(String msg, Object... arg);
 
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param t   the Throwable to log
+     */
     void error(String msg, Throwable t);
+
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     */
+    void info(String msg);
+
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param arg formatting arguments for the message
+     */
+    void info(String msg, Object... arg);
+
+    /**
+     * Logs a message at this level.
+     *
+     * @param msg the message to log
+     * @param t   the Throwable to log the Throwable to log
+     */
+    void info(String msg, Throwable t);
+
+    /**
+     * @return true if logging is enabled at this level
+     */
+    boolean isDebugEnabled();
+
+    /**
+     * @return true if logging is enabled at this level
+     */
+    boolean isErrorEnabled();
+
+    /**
+     * @return true if logging is enabled at this level
+     */
+    boolean isInfoEnabled();
+
+    /**
+     * @return true if logging is enabled at this level
+     */
+    boolean isTraceEnabled();
+
+    /**
+     * @return true if logging is enabled at this level
+     */
+    boolean isWarningEnabled();
+
+    /**
+     * @param msg the message to log
+     */
+    void trace(String msg);
+
+    /**
+     * @param msg the message to log
+     * @param arg formatting arguments for the message
+     */
+    void trace(String msg, Object... arg);
+
+    /**
+     * @param msg the message to log
+     * @param t   the Throwable to log
+     */
+    void trace(String msg, Throwable t);
+
+    /**
+     * @param msg the message to log
+     */
+    void warning(String msg);
+
+    /**
+     * @param msg the message to log
+     * @param arg formatting arguments for the message
+     */
+    void warning(String msg, Object... arg);
+
+    /**
+     * @param msg the message to log
+     * @param t   the Throwable to log
+     */
+    void warning(String msg, Throwable t);
 }

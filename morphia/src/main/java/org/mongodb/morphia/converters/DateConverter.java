@@ -18,6 +18,9 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
     private static final Logger LOG = MorphiaLoggerFactory.get(DateConverter.class);
 
 
+    /**
+     * Creates the Converter.
+     */
     public DateConverter() {
         this(Date.class);
     }
@@ -48,7 +51,7 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
             }
 
         }
-        
+
         throw new IllegalArgumentException("Can't convert to Date from " + val);
     }
 }

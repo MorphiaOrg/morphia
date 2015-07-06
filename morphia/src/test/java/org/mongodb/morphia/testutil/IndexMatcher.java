@@ -23,30 +23,6 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
         this.indexShouldBePresent = indexShouldBePresent;
     }
 
-    @Override
-    protected boolean matchesSafely(final List<DBObject> indexes) {
-        boolean indexFound = false;
-        for (final DBObject dbObj : indexes) {
-            if (dbObj.get("name").equals(indexName)) {
-                indexFound = true;
-            }
-        }
-        return (indexFound && indexShouldBePresent) // index is there and it SHOULD be there 
-               || (!indexFound && !indexShouldBePresent); // index is not there and it SHOULD NOT be there
-    }
-
-    @Override
-    protected void describeMismatchSafely(final List<DBObject> indexes, final Description mismatchDescription) {
-        fail(format("Expected %s to find index with name '%s' in %s",
-                    indexShouldBePresent ? "" : "not",
-                    indexName, indexes));
-    }
-
-    @Override
-    public void describeTo(final Description description) {
-        description.appendValue(indexName);
-    }
-
     /**
      * Use this matcher to determine if a list of DBObjects representing the indexes of a Collection contains an index with the given name.
      *
@@ -66,5 +42,29 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
      */
     public static Matcher<? super List<DBObject>> doesNotHaveIndexNamed(final String indexName) {
         return new IndexMatcher(indexName, false);
+    }
+
+    @Override
+    public void describeTo(final Description description) {
+        description.appendValue(indexName);
+    }
+
+    @Override
+    protected boolean matchesSafely(final List<DBObject> indexes) {
+        boolean indexFound = false;
+        for (final DBObject dbObj : indexes) {
+            if (dbObj.get("name").equals(indexName)) {
+                indexFound = true;
+            }
+        }
+        return (indexFound && indexShouldBePresent) // index is there and it SHOULD be there
+               || (!indexFound && !indexShouldBePresent); // index is not there and it SHOULD NOT be there
+    }
+
+    @Override
+    protected void describeMismatchSafely(final List<DBObject> indexes, final Description mismatchDescription) {
+        fail(format("Expected %s to find index with name '%s' in %s",
+                    indexShouldBePresent ? "" : "not",
+                    indexName, indexes));
     }
 }

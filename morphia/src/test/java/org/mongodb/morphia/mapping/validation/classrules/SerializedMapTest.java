@@ -18,27 +18,6 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class SerializedMapTest extends TestBase {
 
-    public static class Map1 extends TestEntity {
-        @Serialized(disableCompression = false)
-        private final Map<Integer, Foo> shouldBeOk = new HashMap();
-
-    }
-
-    public static class Map2 extends TestEntity {
-        @Serialized(disableCompression = true)
-        private final Map<Integer, Foo> shouldBeOk = new HashMap();
-
-    }
-
-    public static class Foo implements Serializable {
-
-        private final String id;
-
-        public Foo(final String id) {
-            this.id = id;
-        }
-    }
-
     @Test
     public void testSerialization() throws Exception {
         Map1 map1 = new Map1();
@@ -65,5 +44,26 @@ public class SerializedMapTest extends TestBase {
         Assert.assertEquals("peter", map2.shouldBeOk.get(3).id);
         Assert.assertEquals("paul", map2.shouldBeOk.get(27).id);
 
+    }
+
+    public static class Map1 extends TestEntity {
+        @Serialized(disableCompression = false)
+        private final Map<Integer, Foo> shouldBeOk = new HashMap();
+
+    }
+
+    public static class Map2 extends TestEntity {
+        @Serialized(disableCompression = true)
+        private final Map<Integer, Foo> shouldBeOk = new HashMap();
+
+    }
+
+    public static class Foo implements Serializable {
+
+        private final String id;
+
+        public Foo(final String id) {
+            this.id = id;
+        }
     }
 }

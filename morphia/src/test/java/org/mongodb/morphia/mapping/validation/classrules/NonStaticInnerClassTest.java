@@ -13,6 +13,16 @@ import org.mongodb.morphia.mapping.MappingException;
  */
 public class NonStaticInnerClassTest extends TestBase {
 
+    @Test(expected = MappingException.class)
+    public void testInValidInnerClass() throws Exception {
+        getMorphia().map(InValid.class);
+    }
+
+    @Test
+    public void testValidInnerClass() throws Exception {
+        getMorphia().map(Valid.class);
+    }
+
     static class Valid {
         @Id
         private ObjectId id;
@@ -21,15 +31,5 @@ public class NonStaticInnerClassTest extends TestBase {
     class InValid {
         @Id
         private ObjectId id;
-    }
-
-    @Test
-    public void testValidInnerClass() throws Exception {
-        getMorphia().map(Valid.class);
-    }
-
-    @Test(expected = MappingException.class)
-    public void testInValidInnerClass() throws Exception {
-        getMorphia().map(InValid.class);
     }
 }

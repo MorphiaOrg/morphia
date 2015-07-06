@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents a series of lines, which will saved into MongoDB as per the 
- * <a href="http://geojson.org/geojson-spec.html#id6">GeoJSON specification</a>. 
+ * This class represents a series of lines, which will saved into MongoDB as per the <a href="http://geojson.org/geojson-spec
+ * .html#id6">GeoJSON
+ * specification</a>.
  * <p/>
  * The factory for creating a MultiLineString is the {@code GeoJson.multiLineString} method.
  *
- * @see org.mongodb.morphia.geo.GeoJson#multiLineString(LineString...) 
+ * @see org.mongodb.morphia.geo.GeoJson#multiLineString(LineString...)
  */
 public class MultiLineString implements Geometry {
     private final List<LineString> coordinates;
@@ -33,6 +34,11 @@ public class MultiLineString implements Geometry {
         return coordinates;
     }
 
+    @Override
+    public int hashCode() {
+        return coordinates.hashCode();
+    }
+
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
     public boolean equals(final Object o) {
@@ -50,11 +56,6 @@ public class MultiLineString implements Geometry {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return coordinates.hashCode();
     }
 
     @Override

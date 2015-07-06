@@ -11,11 +11,6 @@ import org.mongodb.morphia.mapping.MappedField;
 public class EnumConverter extends TypeConverter implements SimpleValueConverter {
 
     @Override
-    protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
-        return c.isEnum();
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
         if (fromDBObject == null) {
@@ -31,6 +26,11 @@ public class EnumConverter extends TypeConverter implements SimpleValueConverter
         }
 
         return getName((Enum) value);
+    }
+
+    @Override
+    protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
+        return c.isEnum();
     }
 
     private <T extends Enum> String getName(final T value) {

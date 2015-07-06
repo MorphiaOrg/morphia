@@ -12,8 +12,14 @@ import org.mongodb.morphia.utils.Assert;
  */
 public class GuiceExtension {
 
+    /**
+     * Creates a GuiceExtension to configure Morphia to use Guice
+     *
+     * @param morphia  the Morphia instance to update
+     * @param injector the Guice Injector to use when instantiating Entities
+     */
     public GuiceExtension(final Morphia morphia, final Injector injector) {
-        Assert.parameterNotNull(morphia, "morphia");
+        Assert.parameterNotNull("morphia", morphia);
         final MapperOptions options = morphia.getMapper()
                                              .getOptions();
         options.setObjectFactory(new GuiceObjectFactory(options.getObjectFactory(), injector));

@@ -52,6 +52,68 @@ public class TestLazyCircularReference extends ProxyTestBase {
     }
 
     @Test
+    public final void testGetKeyWithoutFetching() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+        reference.parent = root;
+
+        root.r = reference;
+        reference.setFoo("bar");
+
+        final Key<ReferencedEntity> k = getDs().save(reference);
+        final String keyAsString = k.getId().toString();
+        getDs().save(root);
+
+        root = getDs().get(root);
+
+        final ReferencedEntity p = root.r;
+
+        assertIsProxy(p);
+        assertNotFetched(p);
+        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
+        // still not fetched?
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
+    }
+
+    @Test
+    public final void testSerialization() {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        RootEntity e1 = new RootEntity();
+        final ReferencedEntity e2 = new ReferencedEntity();
+        e2.parent = e1;
+
+        e1.r = e2;
+        e2.setFoo("bar");
+
+        getDs().save(e2, e1);
+
+        e1 = deserialize(getDs().get(e1));
+
+        assertNotFetched(e1.r);
+        Assert.assertEquals("bar", e1.r.getFoo());
+        assertFetched(e1.r);
+
+        e1 = deserialize(e1);
+        assertNotFetched(e1.r);
+        Assert.assertEquals("bar", e1.r.getFoo());
+        assertFetched(e1.r);
+
+    }
+
+    @Test
     public final void testShortcutInterface() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
@@ -96,69 +158,6 @@ public class TestLazyCircularReference extends ProxyTestBase {
         assertNotFetched(p);
     }
 
-
-    @Test
-    public final void testSerialization() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
-
-        RootEntity e1 = new RootEntity();
-        final ReferencedEntity e2 = new ReferencedEntity();
-        e2.parent = e1;
-
-        e1.r = e2;
-        e2.setFoo("bar");
-
-        getDs().save(e2, e1);
-
-        e1 = deserialize(getDs().get(e1));
-
-        assertNotFetched(e1.r);
-        Assert.assertEquals("bar", e1.r.getFoo());
-        assertFetched(e1.r);
-
-        e1 = deserialize(e1);
-        assertNotFetched(e1.r);
-        Assert.assertEquals("bar", e1.r.getFoo());
-        assertFetched(e1.r);
-
-    }
-
-    @Test
-    public final void testGetKeyWithoutFetching() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
-
-        RootEntity root = new RootEntity();
-        final ReferencedEntity reference = new ReferencedEntity();
-        reference.parent = root;
-
-        root.r = reference;
-        reference.setFoo("bar");
-
-        final Key<ReferencedEntity> k = getDs().save(reference);
-        final String keyAsString = k.getId().toString();
-        getDs().save(root);
-
-        root = getDs().get(root);
-
-        final ReferencedEntity p = root.r;
-
-        assertIsProxy(p);
-        assertNotFetched(p);
-        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
-        // still not fetched?
-        assertNotFetched(p);
-        p.getFoo();
-        // should be fetched now.
-        assertFetched(p);
-
-    }
-
     public static class RootEntity extends TestEntity {
         @Reference(lazy = true)
         private ReferencedEntity r;
@@ -173,12 +172,12 @@ public class TestLazyCircularReference extends ProxyTestBase {
         @Reference(lazy = true)
         private RootEntity parent;
 
-        public void setFoo(final String string) {
-            foo = string;
-        }
-
         public String getFoo() {
             return foo;
+        }
+
+        public void setFoo(final String string) {
+            foo = string;
         }
     }
 

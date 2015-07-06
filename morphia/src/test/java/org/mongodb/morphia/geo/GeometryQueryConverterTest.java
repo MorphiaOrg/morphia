@@ -13,7 +13,7 @@ public class GeometryQueryConverterTest extends TestBase {
         // given
         GeometryQueryConverter geometryConverter = new GeometryQueryConverter(getMorphia().getMapper());
         geometryConverter.setMapper(getMorphia().getMapper());
-        
+
         Point point = point(3.0, 7.0);
 
         // when
@@ -27,5 +27,4 @@ public class GeometryQueryConverterTest extends TestBase {
                                                               + "  }"
                                                               + "}"));
     }
-
 }

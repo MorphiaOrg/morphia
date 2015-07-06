@@ -13,7 +13,7 @@ import java.util.List;
  * The factory for creating a Polygon is {@code PolygonBuilder}, which is accessible via the {@code GeoJson.polygonBuilder} method.
  * Alternatively, simple polygons without inner rings can be created via the {@code GeoJson.polygon} factory method.
  *
- * @see org.mongodb.morphia.geo.GeoJson#polygon(LineString, LineString...) 
+ * @see org.mongodb.morphia.geo.GeoJson#polygon(LineString, LineString...)
  * @see org.mongodb.morphia.geo.GeoJson#polygon(Point...)
  */
 public class Polygon implements Geometry {
@@ -40,6 +40,14 @@ public class Polygon implements Geometry {
         }
     }
 
+    @Override
+    public List<LineString> getCoordinates() {
+        List<LineString> polygonBoundaries = new ArrayList<LineString>();
+        polygonBoundaries.add(exteriorBoundary);
+        polygonBoundaries.addAll(interiorBoundaries);
+        return polygonBoundaries;
+    }
+
     /**
      * Returns a LineString representing the exterior boundary of this Polygon.  Polygons should have an exterior boundary where the end
      * point is the same as the start point.
@@ -60,11 +68,10 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<LineString> getCoordinates() {
-        List<LineString> polygonBoundaries = new ArrayList<LineString>();
-        polygonBoundaries.add(exteriorBoundary);
-        polygonBoundaries.addAll(interiorBoundaries);
-        return polygonBoundaries;
+    public int hashCode() {
+        int result = exteriorBoundary.hashCode();
+        result = 31 * result + interiorBoundaries.hashCode();
+        return result;
     }
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
@@ -87,13 +94,6 @@ public class Polygon implements Geometry {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = exteriorBoundary.hashCode();
-        result = 31 * result + interiorBoundaries.hashCode();
-        return result;
     }
 
     @Override

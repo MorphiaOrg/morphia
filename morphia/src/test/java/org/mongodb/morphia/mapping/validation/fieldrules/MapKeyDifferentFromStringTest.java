@@ -19,6 +19,21 @@ import java.util.Map;
  */
 public class MapKeyDifferentFromStringTest extends TestBase {
 
+    @Test
+    public void testCheck() {
+        getMorphia().map(MapWithWrongKeyType1.class);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testInvalidKeyType() {
+        getMorphia().map(MapWithWrongKeyType3.class);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testInvalidReferenceType() {
+        getMorphia().map(MapWithWrongKeyType2.class);
+    }
+
     public static class MapWithWrongKeyType1 extends TestEntity {
         @Serialized
         private Map<Integer, Integer> shouldBeOk = new HashMap<Integer, Integer>();
@@ -35,21 +50,6 @@ public class MapKeyDifferentFromStringTest extends TestBase {
         @Embedded
         private Map<BigDecimal, Integer> shouldBeOk = new HashMap<BigDecimal, Integer>();
 
-    }
-
-    @Test
-    public void testCheck() {
-        getMorphia().map(MapWithWrongKeyType1.class);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testInvalidReferenceType() {
-        getMorphia().map(MapWithWrongKeyType2.class);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testInvalidKeyType() {
-        getMorphia().map(MapWithWrongKeyType3.class);
     }
 
 }

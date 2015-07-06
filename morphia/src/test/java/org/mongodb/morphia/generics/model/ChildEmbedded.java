@@ -12,6 +12,11 @@ public class ChildEmbedded extends FatherEmbedded {
     }
 
     @Override
+    public int hashCode() {
+        return childField != null ? childField.hashCode() : 0;
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -24,10 +29,5 @@ public class ChildEmbedded extends FatherEmbedded {
 
         return !(childField != null ? !childField.equals(that.childField) : that.childField != null);
 
-    }
-
-    @Override
-    public int hashCode() {
-        return childField != null ? childField.hashCode() : 0;
     }
 }

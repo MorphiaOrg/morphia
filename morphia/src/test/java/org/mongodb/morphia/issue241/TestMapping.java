@@ -43,6 +43,13 @@ public class TestMapping extends TestBase {
         private ObjectId id;
 
         @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 97 * hash + (id != null ? id.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
         public boolean equals(final Object obj) {
             if (obj == null) {
                 return false;
@@ -52,13 +59,6 @@ public class TestMapping extends TestBase {
             }
             final User other = (User) obj;
             return !(id != other.id && (id == null || !id.equals(other.id)));
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 3;
-            hash = 97 * hash + (id != null ? id.hashCode() : 0);
-            return hash;
         }
     }
 }

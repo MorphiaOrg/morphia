@@ -25,11 +25,11 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2'
+    gradleVersion = '2.4'
 }
 
 
-allprojects {
+configure(subprojects.findAll { it.name != 'util' }) {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
@@ -37,11 +37,11 @@ allprojects {
     apply plugin: 'findbugs'
     apply plugin: 'jacoco'
     apply plugin: 'optional-base'
-  
+
     group = 'org.mongodb.morphia'
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
-    
+
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -50,6 +50,7 @@ allprojects {
 
     dependencies {
         testCompile 'junit:junit:4.12'
+        testCompile project(':util')
     }
 
     project.archivesBaseName = "morphia-${project.name}"
@@ -61,6 +62,7 @@ allprojects {
     task testCoverage(dependsOn: check)
 
     checkstyle {
+        toolVersion = "6.7"
         configFile = new File("$configDir/checkstyle.xml")
     }
 
@@ -100,14 +102,6 @@ allprojects {
         }
     }
 
-    javadoc {
-        options.encoding = "UTF-8"
-        options.author = true
-        options.version = true
-        options.links 'http://docs.oracle.com/javase/6/docs/api/'
-        options.links 'http://api.mongodb.org/java/3.0/'
-        title "Morphia ${simpleVersion} API"
-    }
 
     test {
         // set heap size for the test JVM(s)
@@ -116,7 +110,21 @@ allprojects {
     }
 
     task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest']) {}
-    
+
+    gradle.taskGraph.whenReady { taskGraph ->
+        taskGraph.getAllTasks().each { task ->
+            javadoc {
+                options.encoding = "UTF-8"
+                options.tagletPath project(':util').sourceSets.main.output.classesDir
+                options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
+                options.author = true
+                options.version = true
+                options.links 'http://docs.oracle.com/javase/6/docs/api/'
+                options.links 'http://api.mongodb.org/java/3.0/'
+                title "Morphia ${simpleVersion} API"
+            }
+        }
+    }
 }
 
 task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {

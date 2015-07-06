@@ -11,6 +11,9 @@ import java.lang.reflect.Array;
  * @author scotthernandez
  */
 public class CharArrayConverter extends TypeConverter implements SimpleValueConverter {
+    /**
+     * Creates the Converter.
+     */
     public CharArrayConverter() {
         super(char[].class, Character[].class);
     }
@@ -26,15 +29,6 @@ public class CharArrayConverter extends TypeConverter implements SimpleValueConv
             return convertToWrapperArray(chars);
         }
         return chars;
-    }
-
-    public static Object convertToWrapperArray(final char[] values) {
-        final int length = values.length;
-        final Object array = Array.newInstance(Character.class, length);
-        for (int i = 0; i < length; i++) {
-            Array.set(array, i, values[i]);
-        }
-        return array;
     }
 
     @Override
@@ -53,5 +47,14 @@ public class CharArrayConverter extends TypeConverter implements SimpleValueConv
                 return builder.toString();
             }
         }
+    }
+
+    Object convertToWrapperArray(final char[] values) {
+        final int length = values.length;
+        final Object array = Array.newInstance(Character.class, length);
+        for (int i = 0; i < length; i++) {
+            Array.set(array, i, values[i]);
+        }
+        return array;
     }
 }

@@ -24,51 +24,33 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
 
 public class TestIndexCollections extends TestBase {
 
-    @Entity
-    @Indexes({@Index(fields = @Field(value = "field2", type = DESC)),
-              @Index(fields = @Field("field3"))})
-    private static class SingleFieldIndex {
-        @Id
-        private ObjectId id;
-        @Indexed
-        private String field;
-        @Property
-        private String field2;
-        @Property("f3")
-        private String field3;
+    @Test
+    public void testEmbedded() {
+        AdvancedDatastore ads = getAds();
+        DB db = getDb();
+        getMorphia().map(HasEmbeddedIndex.class);
+        ads.ensureIndexes();
+
+        ads.ensureIndexes("b_2", HasEmbeddedIndex.class);
+        BasicDBObject[] indexes = new BasicDBObject[]{
+            new BasicDBObject("name", 1),
+            new BasicDBObject("embeddedIndex.name", 1),
+            new BasicDBObject("embeddedIndex.color", -1),
+        };
+
+        testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
+        testIndex(ads.getCollection(HasEmbeddedIndex.class).getIndexInfo(), indexes);
     }
 
-    @Entity
-    @Indexes({@Index(fields = @Field(value = "field2", type = DESC)),
-              @Index(fields = @Field("field3"))})
-    private static class OldStyleIndexing {
-        @Id
-        private ObjectId id;
-        @Indexed
-        private String field;
-        @Property
-        private String field2;
-        @Property("f3")
-        private String field3;
-    }
-
-    @Entity
-    @Indexes(@Index(fields = @Field(value = "embeddedIndex.color", type = DESC))) 
-    private static class HasEmbeddedIndex {
-        @Id
-        private ObjectId id;
-        @Indexed
-        private String name;
-        @Embedded
-        private EmbeddedIndex embeddedIndex;
-    }
-
-    @Embedded
-    //    @Indexes(@Index(fields = @Field(value = "color", type = DESC))) https://github.com/mongodb/morphia/issues/734
-    private static class EmbeddedIndex {
-        @Indexed
-        private String name;
-        private String color;
+    @Test
+    public void testOldStyleIndexing() {
+        getMorphia().map(OldStyleIndexing.class);
+        getDb().dropDatabase();
+        getAds().ensureIndexes();
+        testIndex(getAds().getCollection(OldStyleIndexing.class).getIndexInfo(),
+                  new BasicDBObject("field", 1),
+                  new BasicDBObject("field2", -1),
+                  new BasicDBObject("f3", 1));
     }
 
     @Test
@@ -96,35 +78,6 @@ public class TestIndexCollections extends TestBase {
                                                               .append("field2", 1));
     }
 
-    @Test
-    public void testOldStyleIndexing() {
-        getMorphia().map(OldStyleIndexing.class);
-        getDb().dropDatabase();
-        getAds().ensureIndexes();
-        testIndex(getAds().getCollection(OldStyleIndexing.class).getIndexInfo(),
-                  new BasicDBObject("field", 1),
-                  new BasicDBObject("field2", -1),
-                  new BasicDBObject("f3", 1));
-    }
-
-    @Test
-    public void testEmbedded() {
-        AdvancedDatastore ads = getAds();
-        DB db = getDb();
-        getMorphia().map(HasEmbeddedIndex.class);
-        ads.ensureIndexes();
-
-        ads.ensureIndexes("b_2", HasEmbeddedIndex.class);
-        BasicDBObject[] indexes = new BasicDBObject[]{
-                                                         new BasicDBObject("name", 1),
-                                                         new BasicDBObject("embeddedIndex.name", 1),
-                                                         new BasicDBObject("embeddedIndex.color", -1),
-        };
-
-        testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
-        testIndex(ads.getCollection(HasEmbeddedIndex.class).getIndexInfo(), indexes);
-    }
-
     private void testIndex(final List<DBObject> indexInfo, final BasicDBObject... indexes) {
         Iterator<DBObject> iterator = indexInfo.iterator();
         while (iterator.hasNext()) {
@@ -140,5 +93,50 @@ public class TestIndexCollections extends TestBase {
             }
         }
         Assert.assertTrue("Should have found all the indexes.  Remaining: " + indexInfo, indexInfo.isEmpty());
+    }
+
+    @Entity
+    @Indexes({@Index(fields = @Field(value = "field2", type = DESC)), @Index(fields = @Field("field3"))})
+    private static class SingleFieldIndex {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private String field;
+        @Property
+        private String field2;
+        @Property("f3")
+        private String field3;
+    }
+
+    @Entity
+    @Indexes({@Index(fields = @Field(value = "field2", type = DESC)), @Index(fields = @Field("field3"))})
+    private static class OldStyleIndexing {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private String field;
+        @Property
+        private String field2;
+        @Property("f3")
+        private String field3;
+    }
+
+    @Entity
+    @Indexes(@Index(fields = @Field(value = "embeddedIndex.color", type = DESC)))
+    private static class HasEmbeddedIndex {
+        @Id
+        private ObjectId id;
+        @Indexed
+        private String name;
+        @Embedded
+        private EmbeddedIndex embeddedIndex;
+    }
+
+    @Embedded
+    //    @Indexes(@Index(fields = @Field(value = "color", type = DESC))) https://github.com/mongodb/morphia/issues/734
+    private static class EmbeddedIndex {
+        @Indexed
+        private String name;
+        private String color;
     }
 }

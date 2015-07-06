@@ -41,7 +41,7 @@ import static org.mongodb.morphia.aggregation.Sort.ascending;
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
  *
- * @see <a href="http://docs.mongodb.org/manual/tutorial/aggregation-zip-code-data-set/">Aggregation with the Zip Code Data Set</a>
+ * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
 public class ZipCodeDataSetTest extends TestBase {
     public static final String MONGO_IMPORT;
@@ -56,6 +56,16 @@ public class ZipCodeDataSetTest extends TestBase {
         } else {
             MONGO_IMPORT = "/usr/local/bin/mongoimport";
         }
+    }
+
+    @Test
+    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        installSampleData();
+        AggregationPipeline pipeline = getDs().createAggregation(City.class)
+                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+                                              .group("_id.state", grouping("avgCityPop", average("pop")));
+        validate(pipeline.aggregate(Population.class), "MN", 5372);
     }
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
@@ -77,22 +87,6 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    private void download(final URL url, final File file) throws IOException {
-        LOG.info("Downloading zip data set to " + file);
-        InputStream inputStream = url.openStream();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        try {
-            byte[] read = new byte[49152];
-            int count;
-            while ((count = inputStream.read(read)) != -1) {
-                outputStream.write(read, 0, count);
-            }
-        } finally {
-            inputStream.close();
-            outputStream.close();
-        }
-    }
-
     @Test
     public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
@@ -107,16 +101,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
         validate(pipeline.aggregate(Population.class), "CA", 29754890);
         validate(pipeline.aggregate(Population.class), "OH", 10846517);
-    }
-
-    @Test
-    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
-        installSampleData();
-        AggregationPipeline pipeline = getDs().createAggregation(City.class)
-                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-                                              .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate(pipeline.aggregate(Population.class), "MN", 5372);
     }
 
     @Test
@@ -163,6 +147,22 @@ public class ZipCodeDataSetTest extends TestBase {
         } finally {
 
             ((MorphiaIterator) iterator).close();
+        }
+    }
+
+    private void download(final URL url, final File file) throws IOException {
+        LOG.info("Downloading zip data set to " + file);
+        InputStream inputStream = url.openStream();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        try {
+            byte[] read = new byte[49152];
+            int count;
+            while ((count = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, count);
+            }
+        } finally {
+            inputStream.close();
+            outputStream.close();
         }
     }
 

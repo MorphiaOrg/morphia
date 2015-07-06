@@ -16,11 +16,23 @@ import java.util.Set;
 public class ValidationExtension extends AbstractEntityInterceptor {
     private ValidatorFactory validationFactory;
 
+    /**
+     * Creates a ValidationExtension
+     *
+     * @param m the Morphia instance to use
+     */
     public ValidationExtension(final Morphia m) {
         final Configuration<?> configuration = Validation.byDefaultProvider().configure();
         validationFactory = configuration.buildValidatorFactory();
 
         m.getMapper().addInterceptor(this);
+    }
+
+    /**
+     * @return the ValidatorFactory
+     */
+    public ValidatorFactory getValidatorFactory() {
+        return this.validationFactory;
     }
 
     @Override
@@ -30,9 +42,5 @@ public class ValidationExtension extends AbstractEntityInterceptor {
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);
         }
-    }
-
-    public ValidatorFactory getValidatorFactory() {
-        return this.validationFactory;
     }
 }

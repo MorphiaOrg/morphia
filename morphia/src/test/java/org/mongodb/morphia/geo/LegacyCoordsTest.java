@@ -17,7 +17,8 @@ import static org.mongodb.morphia.testutil.IndexMatcher.hasIndexNamed;
 import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
 
 /**
- * This test shows how to define an entity that uses the legacy co-ordinate pairs standard, which works with MongoDB server versions 2.2 and
+ * This test shows how to define an entity that uses the legacy co-ordinate pairs standard, which works with MongoDB server versions 2.2
+ * and
  * earlier.  If you are using a server version higher than 2.2 (i.e. 2.4 and onwards) you should store location information as <a
  * href="http://docs.mongodb.org/manual/reference/glossary/#term-geojson">GeoJSON</a> and consult the documentation for indexes and queries
  * that work on this format.  Storing the location as GeoJSON gives you access to a wider range of queries.
@@ -37,6 +38,72 @@ public class LegacyCoordsTest extends TestBase {
         // then
         List<DBObject> indexes = getDs().getCollection(PlaceWithLegacyCoords.class).getIndexInfo();
         assertThat(indexes, hasIndexNamed("location_2d"));
+    }
+
+    @Test
+    public void shouldFindPointWithExactMatch() {
+        // given
+        final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
+        getDs().save(nearbyPlace);
+        getDs().ensureIndexes();
+
+        // when
+        List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
+                                                   .field("location")
+                                                   .equal(new double[]{1.1, 2.3})
+                                                   .asList();
+
+        // then
+        assertThat(found, is(notNullValue()));
+        assertThat(found.size(), is(1));
+        assertThat(found.get(0), is(nearbyPlace));
+    }
+
+    @Test
+    // Issue #275
+    public void shouldGenerateCorrectQueryForNearSphereWithRadius() {
+        // when
+        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
+                                                    .field("location")
+                                                    .near(42.08563, -87.99822, 2, true);
+
+        // then
+        assertThat(query.getQueryObject().toString(),
+                   jsonEqual("{ \"location\" : "
+                             + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
+                             + "\"$maxDistance\" : 2.0}}"));
+    }
+
+    @Test
+    // Issue #275
+    public void shouldGenerateCorrectQueryForNearWithMaxDistance() {
+        // when
+        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
+                                                    .field("location")
+                                                    .near(42.08563, -87.99822, 2);
+
+        // then
+        assertThat(query.getQueryObject().toString(),
+                   jsonEqual("{ \"location\" : "
+                             + "{ \"$near\" : [ 42.08563 , -87.99822] , "
+                             + "\"$maxDistance\" : 2.0}}"));
+
+    }
+
+    @Test
+    public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() throws Exception {
+        // given
+        final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
+        getDs().save(nearbyPlace);
+        getDs().ensureIndexes();
+
+        // when
+        Query<PlaceWithLegacyCoords> locationQuery = getDs().find(PlaceWithLegacyCoords.class)
+                                                            .field("location")
+                                                            .near(1.0, 2.0, 0.1);
+        // then
+        assertThat(locationQuery.asList().size(), is(0));
+        assertThat(locationQuery.get(), is(nullValue()));
     }
 
     @Test
@@ -63,7 +130,7 @@ public class LegacyCoordsTest extends TestBase {
 
     @Test
     public void shouldReturnOnlyThosePlacesWithinTheGivenRadius() throws Exception {
-        // given 
+        // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
         final PlaceWithLegacyCoords furtherAwayPlace = new PlaceWithLegacyCoords(new double[]{10.1, 12.3}, "Further Away Place");
@@ -81,44 +148,9 @@ public class LegacyCoordsTest extends TestBase {
         assertThat(found.get(0), is(nearbyPlace));
     }
 
-    @Test
-    public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() throws Exception {
-        // given 
-        final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
-        getDs().save(nearbyPlace);
-        getDs().ensureIndexes();
-
-        // when
-        Query<PlaceWithLegacyCoords> locationQuery = getDs().find(PlaceWithLegacyCoords.class)
-                                                            .field("location")
-                                                            .near(1.0, 2.0, 0.1);
-        // then
-        assertThat(locationQuery.asList().size(), is(0));
-        assertThat(locationQuery.get(), is(nullValue()));
-    }
-
-    @Test
-    public void shouldFindPointWithExactMatch() {
-        // given
-        final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
-        getDs().save(nearbyPlace);
-        getDs().ensureIndexes();
-
-        // when
-        List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
-                                                   .field("location")
-                                                   .equal(new double[]{1.1, 2.3})
-                                                   .asList();
-
-        // then
-        assertThat(found, is(notNullValue()));
-        assertThat(found.size(), is(1));
-        assertThat(found.get(0), is(nearbyPlace));
-    }
-
     @Test(expected = MongoException.class)
     public void shouldThrowAnExceptionIfQueryingWithoutA2dIndex() throws Exception {
-        // given 
+        // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
         List<DBObject> indexes = getDs().getCollection(PlaceWithLegacyCoords.class).getIndexInfo();
@@ -131,36 +163,5 @@ public class LegacyCoordsTest extends TestBase {
                .get();
 
         // then expect the Exception
-    }
-
-    @Test
-    // Issue #275
-    public void shouldGenerateCorrectQueryForNearSphereWithRadius() {
-        // when
-        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
-                                                    .field("location")
-                                                    .near(42.08563, -87.99822, 2, true);
-
-        // then
-        assertThat(query.getQueryObject().toString(),
-                jsonEqual("{ \"location\" : "
-                        + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
-                        + "\"$maxDistance\" : 2.0}}"));
-    }
-
-    @Test
-    // Issue #275
-    public void shouldGenerateCorrectQueryForNearWithMaxDistance() {
-        // when
-        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
-                                                    .field("location")
-                                                    .near(42.08563, -87.99822, 2);
-
-        // then
-        assertThat(query.getQueryObject().toString(),
-                jsonEqual("{ \"location\" : "
-                        + "{ \"$near\" : [ 42.08563 , -87.99822] , "
-                        + "\"$maxDistance\" : 2.0}}"));
-
     }
 }

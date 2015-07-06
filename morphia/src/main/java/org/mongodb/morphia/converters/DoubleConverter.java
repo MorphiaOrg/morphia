@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class DoubleConverter extends TypeConverter implements SimpleValueConverter {
 
+    /**
+     * Creates the Converter.
+     */
     public DoubleConverter() {
         super(double.class, Double.class, double[].class, Double[].class);
     }

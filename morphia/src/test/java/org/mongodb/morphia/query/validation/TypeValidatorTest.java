@@ -13,12 +13,6 @@ import static org.junit.Assert.assertThat;
 
 public class TypeValidatorTest {
     @Test
-    public void shouldAcceptListTypes() {
-        // expect
-        assertThat(CollectionTypeValidator.typeIsAListOrArray(List.class), is(true));
-    }
-
-    @Test
     public void shouldAcceptArrayListTypes() {
         // expect
         assertThat(CollectionTypeValidator.typeIsAListOrArray(ArrayList.class), is(true));
@@ -31,15 +25,9 @@ public class TypeValidatorTest {
     }
 
     @Test
-    public void shouldRejectIterablesThatAreNotListOrArray() {
+    public void shouldAcceptListTypes() {
         // expect
-        assertThat(CollectionTypeValidator.typeIsAListOrArray(Set.class), is(false));
-    }
-
-    @Test
-    public void shouldRejectOtherTypes() {
-        // expect
-        assertThat(CollectionTypeValidator.typeIsAListOrArray(String.class), is(false));
+        assertThat(CollectionTypeValidator.typeIsAListOrArray(List.class), is(true));
     }
 
     @Test
@@ -52,13 +40,25 @@ public class TypeValidatorTest {
 
     @Test
     public void shouldAllowMapTypesAndRejectOtherTypes() {
-        // given 
+        // given
         assertThat(CollectionTypeValidator.typeIsMap(HashMap.class), is(true));
         assertThat(CollectionTypeValidator.typeIsMap(Map.class), is(true));
 
         assertThat(CollectionTypeValidator.typeIsMap(Set.class), is(false));
         assertThat(CollectionTypeValidator.typeIsMap(List.class), is(false));
         assertThat(CollectionTypeValidator.typeIsMap(int[].class), is(false));
+    }
+
+    @Test
+    public void shouldRejectIterablesThatAreNotListOrArray() {
+        // expect
+        assertThat(CollectionTypeValidator.typeIsAListOrArray(Set.class), is(false));
+    }
+
+    @Test
+    public void shouldRejectOtherTypes() {
+        // expect
+        assertThat(CollectionTypeValidator.typeIsAListOrArray(String.class), is(false));
     }
 
 }

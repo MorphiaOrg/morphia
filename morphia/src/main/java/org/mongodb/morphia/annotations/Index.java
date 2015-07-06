@@ -38,65 +38,71 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 public @interface Index {
     /**
-     * List of fields (prepended with "-" for desc; defaults to asc).  If a value is defined for {@link #fields()} this value will be 
-     * ignored and logged.
-     * 
-     * @deprecated use {@link #fields()}
+     * Create the index in the background
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
-    String value() default "";
+    boolean background() default false;
 
     /**
-     * List of fields to include in the index.  At least one field must be defined unless defining a text index.  
-     * Use of this field implies use of {@link #options()} and any options defined directly on this annotation will be ignored.
+     * disables validation for the field name
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     */
+    boolean disableValidation() default false;
+
+    /**
+     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     */
+    boolean dropDups() default false;
+
+    /**
+     * defines the time to live for documents in the collection
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     */
+    int expireAfterSeconds() default -1;
+
+    /**
+     * List of fields to include in the index.  At least one field must be defined unless defining a text index. Use of this field implies
+     * use of {@link #options()} and any options defined directly on this annotation will be ignored.
      */
     Field[] fields() default {};
-    
-    
+
+    /**
+     * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     */
+    String name() default "";
+
     /**
      * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
      */
     IndexOptions options() default @IndexOptions();
 
     /**
-     * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    String name() default "";
-
-    /**
-     * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    boolean unique() default false;
-
-    /**
-     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    boolean dropDups() default false;
-
-    /**
-     * Create the index in the background
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    boolean background() default false;
-
-    /**
      * Create the index with the sparse option
+     *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
     boolean sparse() default false;
 
     /**
-     * disables validation for the field name
+     * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
+     *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
-    boolean disableValidation() default false;
+    boolean unique() default false;
 
     /**
-     * defines the time to live for documents in the collection
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     * List of fields (prepended with "-" for desc; defaults to asc).  If a value is defined for {@link #fields()} this value will be
+     * ignored and logged.
+     *
+     * @deprecated use {@link #fields()}
      */
-    int expireAfterSeconds() default -1;
+    String value() default "";
 
 }

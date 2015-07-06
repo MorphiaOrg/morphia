@@ -29,26 +29,19 @@ public class DefaultCreator implements ObjectFactory {
 
     private MapperOptions options = null;
 
+    /**
+     * Creates a new DefaultCreator with no options
+     */
     public DefaultCreator() {
     }
 
+    /**
+     * Creates a new DefaultCreator with options
+     *
+     * @param options the options to apply
+     */
     public DefaultCreator(final MapperOptions options) {
         this.options = options;
-    }
-
-    /**
-     * creates an instance of testType (if it isn't Object.class or null) or fallbackType
-     */
-    private <T> T newInstance(final Constructor<T> tryMe, final Class<T> fallbackType) {
-        if (tryMe != null) {
-            tryMe.setAccessible(true);
-            try {
-                return tryMe.newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return createInstance(fallbackType);
     }
 
     private static <T> Constructor<T> getNoArgsConstructor(final Class<T> type) {
@@ -59,6 +52,17 @@ public class DefaultCreator implements ObjectFactory {
         } catch (NoSuchMethodException e) {
             throw new MappingException("No usable constructor for " + type.getName(), e);
         }
+    }
+
+    /**
+     * @param clazz the Class of the type to create
+     * @param <T>   the type of the class
+     * @return the new instance
+     * @deprecated use {@link #createInstance(Class)} instead
+     */
+    @Deprecated
+    public <T> T createInst(final Class<T> clazz) {
+        return createInstance(clazz);
     }
 
     @Override
@@ -105,7 +109,7 @@ public class DefaultCreator implements ObjectFactory {
             final Object[] args = new Object[argAnn.value().length];
             final Class[] argTypes = new Class[argAnn.value().length];
             for (int i = 0; i < argAnn.value().length; i++) {
-                //TODO: run converters and stuff against these. Kinda like the List of List stuff, 
+                // TODO: run converters and stuff against these. Kinda like the List of List stuff,
                 // using a fake MappedField to hold the value
                 final Object val = dbObj.get(argAnn.value()[i]);
                 args[i] = val;
@@ -123,20 +127,33 @@ public class DefaultCreator implements ObjectFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Map createMap(final MappedField mf) {
-        return newInstance(mf != null ? mf.getCTor() : null, HashMap.class);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public List createList(final MappedField mf) {
         return newInstance(mf != null ? mf.getCTor() : null, ArrayList.class);
     }
 
     @Override
     @SuppressWarnings("unchecked")
+    public Map createMap(final MappedField mf) {
+        return newInstance(mf != null ? mf.getCTor() : null, HashMap.class);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public Set createSet(final MappedField mf) {
         return newInstance(mf != null ? mf.getCTor() : null, HashSet.class);
+    }
+
+    /**
+     * @return the cache of classnames
+     */
+    public Map<String, Class> getClassNameCache() {
+        HashMap<String, Class> copy = new HashMap<String, Class>();
+        copy.putAll(classNameCache);
+        return copy;
+    }
+
+    protected ClassLoader getClassLoaderForClass() {
+        return Thread.currentThread().getContextClassLoader();
     }
 
     @SuppressWarnings("unchecked")
@@ -166,25 +183,19 @@ public class DefaultCreator implements ObjectFactory {
         return c;
     }
 
-    protected ClassLoader getClassLoaderForClass() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
     /**
-     * @deprecated use {@link #createInstance(Class)} instead
-     * @param clazz the Class of the type to create
-     * @param <T> the type of the class
-     * @return the new instance
+     * creates an instance of testType (if it isn't Object.class or null) or fallbackType
      */
-    @Deprecated
-    public <T> T createInst(final Class<T> clazz) {
-        return createInstance(clazz);
-    }
-
-    public Map<String, Class> getClassNameCache() {
-        HashMap<String, Class> copy = new HashMap<String, Class>();
-        copy.putAll(classNameCache);
-        return copy;
+    private <T> T newInstance(final Constructor<T> tryMe, final Class<T> fallbackType) {
+        if (tryMe != null) {
+            tryMe.setAccessible(true);
+            try {
+                return tryMe.newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return createInstance(fallbackType);
     }
 
 }

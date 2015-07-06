@@ -21,7 +21,7 @@ public class TriangleConverter extends TypeConverter implements SimpleValueConve
         }
 
         throw new RuntimeException(
-                "Did not expect " + fromDBObject.getClass().getName());
+                                      "Did not expect " + fromDBObject.getClass().getName());
     }
 
     @Override
@@ -32,7 +32,7 @@ public class TriangleConverter extends TypeConverter implements SimpleValueConve
 
         if (!(value instanceof Triangle)) {
             throw new RuntimeException(
-                    "Did not expect " + value.getClass().getName());
+                                          "Did not expect " + value.getClass().getName());
         }
 
         return "Triangle";

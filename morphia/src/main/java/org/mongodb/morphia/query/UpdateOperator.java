@@ -28,21 +28,30 @@ public enum UpdateOperator {
         value = val;
     }
 
-    private boolean equals(final String val) {
-        return value.equals(val);
-    }
-
-    public String val() {
-        return value;
-    }
-
+    /**
+     * Creates an UpdateOperator from a String
+     *
+     * @param val the value to convert
+     * @return the UpdateOperator
+     */
     public static UpdateOperator fromString(final String val) {
         for (int i = 0; i < values().length; i++) {
             final UpdateOperator fo = values()[i];
-            if (fo.equals(val)) {
+            if (fo.sameAs(val)) {
                 return fo;
             }
         }
         return null;
+    }
+
+    /**
+     * @return the value of the UpdateOperator
+     */
+    public String val() {
+        return value;
+    }
+
+    private boolean sameAs(final String val) {
+        return value.equals(val);
     }
 }

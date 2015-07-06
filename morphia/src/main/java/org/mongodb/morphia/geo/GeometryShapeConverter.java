@@ -35,32 +35,19 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
     }
 
     @Override
+    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        return decodeObject(((DBObject) fromDBObject).get("coordinates"), factories);
+    }
+
+    @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         if (value != null) {
             Object encodedObjects = encodeObjects(((Geometry) value).getCoordinates());
             return new BasicDBObject("type", geoJsonType.getType())
-                   .append("coordinates", encodedObjects);
+                       .append("coordinates", encodedObjects);
         } else {
             return null;
         }
-    }
-
-    private Object encodeObjects(final List value) {
-        List<Object> encodedObjects = new ArrayList<Object>();
-        for (final Object object : value) {
-            if (object instanceof Geometry) {
-                //iterate through the list of geometry objects recursively until you find the lowest-level
-                encodedObjects.add(encodeObjects(((Geometry) object).getCoordinates()));
-            } else {
-                encodedObjects.add(getMapper().getConverters().encode(object));
-            }
-        }
-        return encodedObjects;
-    }
-
-    @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        return decodeObject(((DBObject) fromDBObject).get("coordinates"), factories);
     }
 
     @SuppressWarnings("unchecked") // always have unchecked casts when dealing with raw classes
@@ -79,6 +66,19 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
         return getMapper().getConverters().encode(fromDBObject);
     }
 
+    private Object encodeObjects(final List value) {
+        List<Object> encodedObjects = new ArrayList<Object>();
+        for (final Object object : value) {
+            if (object instanceof Geometry) {
+                //iterate through the list of geometry objects recursively until you find the lowest-level
+                encodedObjects.add(encodeObjects(((Geometry) object).getCoordinates()));
+            } else {
+                encodedObjects.add(getMapper().getConverters().encode(object));
+            }
+        }
+        return encodedObjects;
+    }
+
     /**
      * Extends and therefore configures GeometryShapeConverter to provide the specific configuration for converting MultiPolygon objects to
      * and from <a href="http://geojson.org/geojson-spec.html#id7">MongoDB representations</a> of the GeoJson.
@@ -92,55 +92,70 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
         }
     }
 
+    /**
+     * Defines a new PolygonConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
+     * configuration for converting Polygon objects to and from <a href="http://geojson.org/geojson-spec.html#id4">MongoDB
+     * representations</a> of the GeoJson.
+     */
     public static class PolygonConverter extends GeometryShapeConverter {
         /**
-         * Creates a new PolygonConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
-         * configuration for converting Polygon objects to and from <a href="http://geojson.org/geojson-spec.html#id4">MongoDB
-         * representations</a> of the GeoJson.
+         * Creates a new PolygonConverter.
          */
         public PolygonConverter() {
             super(POLYGON, LINE_STRING, POINT);
         }
     }
 
+    /**
+     * Defines a new MultiLineStringConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
+     * configuration for converting MultiLineString objects to and from <a href="http://geojson.org/geojson-spec.html#id6">MongoDB
+     * representations</a> of the GeoJson.
+     */
     public static class MultiLineStringConverter extends GeometryShapeConverter {
         /**
-         * Creates a new MultiLineStringConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
-         * configuration for converting MultiLineString objects to and from <a href="http://geojson.org/geojson-spec.html#id6">MongoDB
-         * representations</a> of the GeoJson.
+         * Creates a new MultiLineStringConverter.
          */
         public MultiLineStringConverter() {
             super(MULTI_LINE_STRING, LINE_STRING, POINT);
         }
     }
 
+    /**
+     * Defines a new MultiPointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
+     * configuration for converting MultiPoint objects to and from <a href="http://geojson.org/geojson-spec.html#id5">MongoDB
+     * representations</a> of the GeoJson.
+     */
     public static class MultiPointConverter extends GeometryShapeConverter {
         /**
-         * Creates a new MultiPointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
-         * configuration for converting MultiPoint objects to and from <a href="http://geojson.org/geojson-spec.html#id5">MongoDB
-         * representations</a> of the GeoJson.
+         * Creates a new MultiPointConverter.
          */
         public MultiPointConverter() {
             super(MULTI_POINT, POINT);
         }
     }
 
+    /**
+     * Defines a new LineStringConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
+     * configuration for converting LineString objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB
+     * representations</a> of the GeoJson.
+     */
     public static class LineStringConverter extends GeometryShapeConverter {
         /**
-         * Creates a new LineStringConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
-         * configuration for converting LineString objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB
-         * representations</a> of the GeoJson.
+         * Creates a new LineStringConverter.
          */
         public LineStringConverter() {
             super(LINE_STRING, POINT);
         }
     }
 
+    /**
+     * Defines a new PointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific configuration
+     * for converting Point objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB representations</a> of the
+     * GeoJson.
+     */
     public static class PointConverter extends GeometryShapeConverter {
         /**
-         * Creates a new PointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific configuration
-         * for converting Point objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB representations</a> of the
-         * GeoJson.
+         * Creates a new PointConverter.
          */
         public PointConverter() {
             super(POINT);

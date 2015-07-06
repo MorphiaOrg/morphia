@@ -17,6 +17,35 @@ import java.io.Serializable;
  */
 public class AnonymousClassTest extends TestBase {
 
+    @Test
+    public void testDelete() throws Exception {
+        final E e = new E();
+        e.id = new CId("test");
+
+        final Key<E> key = getDs().save(e);
+        getDs().delete(E.class, e.id);
+    }
+
+    @Test
+    public void testMapping() throws Exception {
+        E e = new E();
+        e.id = new CId("test");
+
+        getDs().save(e);
+        e = getDs().get(e);
+        Assert.assertEquals("test", e.id.name);
+        Assert.assertNotNull(e.id.id);
+    }
+
+    @Test
+    public void testOtherDelete() throws Exception {
+        final E e = new E();
+        e.id = new CId("test");
+
+        getDs().save(e);
+        getAds().delete(getDs().getCollection(E.class).getName(), E.class, e.id);
+    }
+
     @Embedded
     private static class CId implements Serializable {
         private final ObjectId id = new ObjectId();
@@ -51,36 +80,6 @@ public class AnonymousClassTest extends TestBase {
         @Id
         private CId id;
         private String e;
-    }
-
-
-    @Test
-    public void testMapping() throws Exception {
-        E e = new E();
-        e.id = new CId("test");
-
-        getDs().save(e);
-        e = getDs().get(e);
-        Assert.assertEquals("test", e.id.name);
-        Assert.assertNotNull(e.id.id);
-    }
-
-    @Test
-    public void testDelete() throws Exception {
-        final E e = new E();
-        e.id = new CId("test");
-
-        final Key<E> key = getDs().save(e);
-        getDs().delete(E.class, e.id);
-    }
-
-    @Test
-    public void testOtherDelete() throws Exception {
-        final E e = new E();
-        e.id = new CId("test");
-
-        getDs().save(e);
-        getAds().delete(getDs().getCollection(E.class).getName(), E.class, e.id);
     }
 
 }

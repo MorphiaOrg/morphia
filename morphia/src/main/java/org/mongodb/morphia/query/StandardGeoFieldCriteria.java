@@ -19,7 +19,7 @@ class StandardGeoFieldCriteria extends FieldCriteria {
     private CoordinateReferenceSystem crs;
 
     protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
-                                       final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes, 
+                                       final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes,
                                        final CoordinateReferenceSystem crs) {
         this(query, field, operator, value, maxDistanceMeters, validateNames, validateTypes);
         this.crs = crs;

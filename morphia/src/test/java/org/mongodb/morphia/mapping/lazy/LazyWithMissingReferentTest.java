@@ -16,37 +16,6 @@ import java.util.Iterator;
 
 public class LazyWithMissingReferentTest extends TestBase {
 
-    static class E {
-        @Id
-        private ObjectId id = new ObjectId();
-        @Reference
-        private E2 e2;
-    }
-
-    static class ELazy {
-        @Id
-        private ObjectId id = new ObjectId();
-        @Reference(lazy = true)
-        private E2 e2;
-    }
-
-    static class ELazyIgnoreMissing {
-        @Id
-        private ObjectId id = new ObjectId();
-        @Reference(lazy = true, ignoreMissing = true)
-        private E2 e2;
-    }
-
-    static class E2 extends TestEntity {
-        @Id
-        private ObjectId id = new ObjectId();
-        private String foo = "bar";
-
-        void foo() {
-        }
-
-    }
-
     @Test(expected = MappingException.class)
     public void testMissingRef() throws Exception {
         final E e = new E();
@@ -77,5 +46,36 @@ public class LazyWithMissingReferentTest extends TestBase {
         final ELazyIgnoreMissing x = i.next();
 
         x.e2.foo();
+    }
+
+    static class E {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private E2 e2;
+    }
+
+    static class ELazy {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference(lazy = true)
+        private E2 e2;
+    }
+
+    static class ELazyIgnoreMissing {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference(lazy = true, ignoreMissing = true)
+        private E2 e2;
+    }
+
+    static class E2 extends TestEntity {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String foo = "bar";
+
+        void foo() {
+        }
+
     }
 }

@@ -17,7 +17,9 @@ import java.util.Map;
 
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
-// TODO used for querying?
+/**
+ * Defines a Criteria against a field
+ */
 public class FieldCriteria extends AbstractCriteria {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
 
@@ -56,7 +58,7 @@ public class FieldCriteria extends AbstractCriteria {
                 }
             }
         } catch (Exception e) {
-            //Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will 
+            // Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will
             // fail/return-empty anyway)
             LOG.debug("Error during mapping of filter criteria: ", e);
         }
@@ -82,22 +84,7 @@ public class FieldCriteria extends AbstractCriteria {
         this.not = not;
     }
 
-    public String getField() {
-        return field;
-    }
-
-    public boolean isNot() {
-        return not;
-    }
-
-    public FilterOperator getOperator() {
-        return operator;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
+    @Override
     @SuppressWarnings("unchecked")
     public void addTo(final DBObject obj) {
         if (FilterOperator.EQUAL.equals(operator)) {
@@ -105,7 +92,7 @@ public class FieldCriteria extends AbstractCriteria {
             if (not) {
                 obj.put(field, new BasicDBObject("$not", value));
             } else {
-                obj.put(field, value); 
+                obj.put(field, value);
             }
 
         } else {
@@ -126,8 +113,38 @@ public class FieldCriteria extends AbstractCriteria {
         }
     }
 
+    @Override
     public String getFieldName() {
         return field;
+    }
+
+    /**
+     * @return the field
+     */
+    public String getField() {
+        return field;
+    }
+
+    /**
+     * @return the operator used against this field
+     * @see FilterOperator
+     */
+    public FilterOperator getOperator() {
+        return operator;
+    }
+
+    /**
+     * @return the value used in the Criteria
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    /**
+     * @return true if 'not' has been applied against this Criteria
+     */
+    public boolean isNot() {
+        return not;
     }
 
     @Override

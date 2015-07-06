@@ -18,7 +18,7 @@ import java.util.List;
 @Entity(noClassnameStored = true)
 public class Point implements Geometry {
     private final List<Double> coordinates = new ArrayList<Double>();
-        
+
     Point(final double latitude, final double longitude) {
         coordinates.add(longitude);
         coordinates.add(latitude);
@@ -51,6 +51,11 @@ public class Point implements Geometry {
         return coordinates.get(0);
     }
 
+    @Override
+    public int hashCode() {
+        return coordinates.hashCode();
+    }
+
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
     public boolean equals(final Object o) {
@@ -74,11 +79,6 @@ public class Point implements Geometry {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return coordinates.hashCode();
     }
 
     @Override

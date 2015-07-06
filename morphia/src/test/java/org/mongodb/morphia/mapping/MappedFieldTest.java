@@ -22,13 +22,15 @@ import static java.util.Arrays.asList;
 
 public class MappedFieldTest extends TestBase {
     @Test
-    public void idFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "id"), TestEntity.class, getMorphia().getMapper());
+    public void arrayFieldMapping() {
+        final MappedField field = new MappedField(getField(TestEntity.class, "arrayOfInt"), TestEntity.class, getMorphia().getMapper());
 
-        Assert.assertTrue(field.isSingleValue());
-        Assert.assertTrue(ObjectId.class == field.getType());
-        Assert.assertEquals("id", field.getJavaFieldName());
-        Assert.assertEquals("_id", field.getNameToStore());
+        Assert.assertFalse(field.isSingleValue());
+        Assert.assertTrue(field.isMultipleValues());
+        Assert.assertTrue(field.isArray());
+        Assert.assertTrue(field.getType().isArray());
+        Assert.assertEquals("arrayOfInt", field.getJavaFieldName());
+        Assert.assertEquals("arrayOfInt", field.getNameToStore());
     }
 
     @Test
@@ -52,6 +54,16 @@ public class MappedFieldTest extends TestBase {
         Assert.assertTrue(String.class == field.getSubType());
         Assert.assertEquals("listOfString", field.getJavaFieldName());
         Assert.assertEquals("listOfString", field.getNameToStore());
+    }
+
+    @Test
+    public void idFieldMapping() {
+        final MappedField field = new MappedField(getField(TestEntity.class, "id"), TestEntity.class, getMorphia().getMapper());
+
+        Assert.assertTrue(field.isSingleValue());
+        Assert.assertTrue(ObjectId.class == field.getType());
+        Assert.assertEquals("id", field.getJavaFieldName());
+        Assert.assertEquals("_id", field.getNameToStore());
     }
 
     @Test
@@ -94,18 +106,6 @@ public class MappedFieldTest extends TestBase {
         final BasicDBList list = new BasicDBList();
         Collections.addAll(list, values);
         return list;
-    }
-
-    @Test
-    public void arrayFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "arrayOfInt"), TestEntity.class, getMorphia().getMapper());
-
-        Assert.assertFalse(field.isSingleValue());
-        Assert.assertTrue(field.isMultipleValues());
-        Assert.assertTrue(field.isArray());
-        Assert.assertTrue(field.getType().isArray());
-        Assert.assertEquals("arrayOfInt", field.getJavaFieldName());
-        Assert.assertEquals("arrayOfInt", field.getNameToStore());
     }
 
     private Field getField(final Class c, final String field) {

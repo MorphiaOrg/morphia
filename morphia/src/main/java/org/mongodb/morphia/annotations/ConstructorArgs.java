@@ -18,5 +18,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConstructorArgs {
-  String[] value();
+    /**
+     * The fields to use
+     */
+    String[] value();
 }

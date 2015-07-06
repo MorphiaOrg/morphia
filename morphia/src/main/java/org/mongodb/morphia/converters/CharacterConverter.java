@@ -10,6 +10,9 @@ import org.mongodb.morphia.mapping.MappingException;
  * @author scotthernandez
  */
 public class CharacterConverter extends TypeConverter implements SimpleValueConverter {
+    /**
+     * Creates the Converter.
+     */
     public CharacterConverter() {
         super(char.class, Character.class);
     }

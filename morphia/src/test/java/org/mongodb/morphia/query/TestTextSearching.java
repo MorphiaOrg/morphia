@@ -21,22 +21,6 @@ public class TestTextSearching extends TestBase {
         super.setUp();
     }
 
-    @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
-    public static class Greeting {
-        @Id
-        private ObjectId id;
-        private String value;
-        private String language;
-
-        public Greeting() {
-        }
-
-        public Greeting(final String value, final String language) {
-            this.language = language;
-            this.value = value;
-        }
-    }
-
     @Test
     public void testTextSearch() {
         getMorphia().map(Greeting.class);
@@ -84,5 +68,21 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals(1, getDs().createQuery(Greeting.class)
                                       .search("Tag")
                                       .asList().size());
+    }
+
+    @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
+    public static class Greeting {
+        @Id
+        private ObjectId id;
+        private String value;
+        private String language;
+
+        public Greeting() {
+        }
+
+        public Greeting(final String value, final String language) {
+            this.language = language;
+            this.value = value;
+        }
     }
 }

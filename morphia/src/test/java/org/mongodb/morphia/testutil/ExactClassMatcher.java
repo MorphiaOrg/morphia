@@ -10,9 +10,8 @@ public class ExactClassMatcher extends TypeSafeMatcher<Class> {
         this.expectedClass = expectedClass;
     }
 
-    @Override
-    protected boolean matchesSafely(final Class item) {
-        return expectedClass == item;
+    public static ExactClassMatcher exactClass(final Class expectedValue) {
+        return new ExactClassMatcher(expectedValue);
     }
 
     @Override
@@ -20,7 +19,8 @@ public class ExactClassMatcher extends TypeSafeMatcher<Class> {
         description.appendValue(expectedClass.getCanonicalName());
     }
 
-    public static final ExactClassMatcher exactClass(final Class expectedValue) {
-        return new ExactClassMatcher(expectedValue);
+    @Override
+    protected boolean matchesSafely(final Class item) {
+        return expectedClass == item;
     }
 }

@@ -11,11 +11,24 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+/**
+ * A list of proxied elements
+ *
+ * @param <T> the type of the proxied items
+ */
 public class SerializableCollectionObjectReference<T> extends AbstractReference implements ProxiedEntityReferenceList {
 
     private static final long serialVersionUID = 1L;
     private final List<Key<?>> listOfKeys;
 
+    /**
+     * Creates a SerializableCollectionObjectReference
+     *
+     * @param type              the collection
+     * @param referenceObjClass the Class of the referenced objects
+     * @param ignoreMissing     ignore missing referenced documents
+     * @param p                 the DatastoreProvider
+     */
     public SerializableCollectionObjectReference(final Collection<T> type, final Class<T> referenceObjClass, final boolean ignoreMissing,
                                                  final DatastoreProvider p) {
 
@@ -24,6 +37,36 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
         object = type;
         listOfKeys = new ArrayList<Key<?>>();
     }
+
+    @Override
+    //CHECKSTYLE:OFF
+    public void __add(final Key key) {
+        //CHECKSTYLE:ON
+        listOfKeys.add(key);
+    }
+
+    @Override
+    //CHECKSTYLE:OFF
+    public void __addAll(final Collection<? extends Key<?>> keys) {
+        //CHECKSTYLE:ON
+        listOfKeys.addAll(keys);
+    }
+
+    //CHECKSTYLE:OFF
+    @Override
+    public List<Key<?>> __getKeysAsList() {
+        return Collections.unmodifiableList(listOfKeys);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void beforeWriteObject() {
+        if (__isFetched()) {
+            syncKeys();
+            ((Collection<T>) object).clear();
+        }
+    }
+    //CHECKSTYLE:ON
 
     @Override
     @SuppressWarnings("unchecked")
@@ -51,29 +94,6 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
 
         c.addAll(retrievedEntities);
         return c;
-    }
-
-    //CHECKSTYLE:OFF
-    public List<Key<?>> __getKeysAsList() {
-        return Collections.unmodifiableList(listOfKeys);
-    }
-
-    public void __add(final Key key) {
-        listOfKeys.add(key);
-    }
-
-    public void __addAll(final Collection<? extends Key<?>> keys) {
-        listOfKeys.addAll(keys);
-    }
-    //CHECKSTYLE:ON
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void beforeWriteObject() {
-        if (__isFetched()) {
-            syncKeys();
-            ((Collection<T>) object).clear();
-        }
     }
 
     private void syncKeys() {

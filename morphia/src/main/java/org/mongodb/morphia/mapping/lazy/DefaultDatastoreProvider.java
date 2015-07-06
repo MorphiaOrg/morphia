@@ -11,19 +11,20 @@ import org.mongodb.morphia.Datastore;
  * @author uwe schaefer
  */
 public class DefaultDatastoreProvider implements DatastoreProvider {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public Datastore get() {
-    final Datastore datastore = DatastoreHolder.getInstance().get();
-    if (datastore == null) {
-      throw new IllegalStateException("DatastoreHolder does not carry a Datastore.");
+    @Override
+    public Datastore get() {
+        final Datastore datastore = DatastoreHolder.getInstance().get();
+        if (datastore == null) {
+            throw new IllegalStateException("DatastoreHolder does not carry a Datastore.");
+        }
+        return datastore;
     }
-    return datastore;
-  }
 
-  @Override
-  public void register(final Datastore ds) {
-     DatastoreHolder.getInstance().set(ds);
-  }
+    @Override
+    public void register(final Datastore ds) {
+        DatastoreHolder.getInstance().set(ds);
+    }
 
 }

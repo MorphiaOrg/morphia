@@ -10,6 +10,36 @@ import org.mongodb.morphia.testutil.TestEntity;
 
 public class CustomConverterDefaultTest extends TestBase {
 
+    @Test
+    public void testConversion() throws Exception {
+        final FooConverter fc = new FooConverter();
+        getMorphia().getMapper().getConverters().addConverter(fc);
+        getMorphia().map(E.class);
+        E e = new E();
+        e.foo = new Foo("test");
+        getDs().save(e);
+
+        Assert.assertTrue(fc.didConversion());
+
+        e = getDs().find(E.class).get();
+        Assert.assertNotNull(e.foo);
+        Assert.assertEquals("test", e.foo.string);
+    }
+
+    @Test
+    public void testRemoveConverter() {
+        Converters converters = getMorphia().getMapper().getConverters();
+        try {
+            Assert.assertTrue(converters.isRegistered(DoubleConverter.class));
+            converters.removeConverter(new DoubleConverter());
+            Assert.assertFalse(converters.isRegistered(DoubleConverter.class));
+        } finally {
+            if (!converters.isRegistered(DoubleConverter.class)) {
+                converters.addConverter(DoubleConverter.class);
+            }
+        }
+    }
+
     public static class E extends TestEntity {
         @Property
         private Foo foo;
@@ -51,36 +81,6 @@ public class CustomConverterDefaultTest extends TestBase {
 
         public boolean didConversion() {
             return done;
-        }
-    }
-
-    @Test
-    public void testConversion() throws Exception {
-        final FooConverter fc = new FooConverter();
-        getMorphia().getMapper().getConverters().addConverter(fc);
-        getMorphia().map(E.class);
-        E e = new E();
-        e.foo = new Foo("test");
-        getDs().save(e);
-
-        Assert.assertTrue(fc.didConversion());
-
-        e = getDs().find(E.class).get();
-        Assert.assertNotNull(e.foo);
-        Assert.assertEquals("test", e.foo.string);
-    }
-
-    @Test
-    public void testRemoveConverter() {
-        Converters converters = getMorphia().getMapper().getConverters();
-        try {
-            Assert.assertTrue(converters.isRegistered(DoubleConverter.class));
-            converters.removeConverter(new DoubleConverter());
-            Assert.assertFalse(converters.isRegistered(DoubleConverter.class));
-        } finally {
-            if (!converters.isRegistered(DoubleConverter.class)) {
-                converters.addConverter(DoubleConverter.class);
-            }
         }
     }
 }

@@ -19,6 +19,64 @@ import java.io.Serializable;
 
 public class CompoundIdTest extends TestBase {
 
+    @Test
+    public void testDelete() throws Exception {
+        final CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("test");
+
+        getDs().save(entity);
+        getDs().delete(CompoundIdEntity.class, entity.id);
+    }
+
+    @Test
+    public void testFetchKey() {
+        getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
+        BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
+        ConfigEntry entry = innerDAO.find().get();
+        entry.setValue("something");
+        innerDAO.save(entry);
+    }
+
+    @Test
+    public void testMapping() throws Exception {
+        CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("test");
+
+        getDs().save(entity);
+        entity = getDs().get(entity);
+        Assert.assertEquals("test", entity.id.name);
+        Assert.assertNotNull(entity.id.id);
+    }
+
+    @Test
+    public void testOtherDelete() throws Exception {
+        final CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("test");
+
+        getDs().save(entity);
+        ((AdvancedDatastore) getDs()).delete(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class, entity.id);
+    }
+
+    @Test
+    @Ignore("https://github.com/mongodb/morphia/issues/675")
+    public void testReference() {
+        getMorphia().map(CompoundIdEntity.class, CompoundId.class);
+        getDs().getCollection(CompoundIdEntity.class).drop();
+
+        final CompoundIdEntity sibling = new CompoundIdEntity();
+        sibling.id = new CompoundId("sibling ID");
+        getDs().save(sibling);
+
+        final CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("entity ID");
+        entity.e = "some value";
+        entity.sibling = sibling;
+        getDs().save(entity);
+
+        final CompoundIdEntity loaded = getDs().get(entity);
+        Assert.assertEquals(entity, loaded);
+    }
+
     @Embedded
     private static class CompoundId implements Serializable {
         private final ObjectId id = new ObjectId();
@@ -129,7 +187,7 @@ public class CompoundIdTest extends TestBase {
             return result;
         }
     }
-    
+
     @Entity(noClassnameStored = true)
     public static class ConfigEntry {
         @Id
@@ -186,63 +244,5 @@ public class CompoundIdTest extends TestBase {
         public void setVersion(final long version) {
             this.version = version;
         }
-    }
-    
-    @Test
-    public void testMapping() throws Exception {
-        CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("test");
-
-        getDs().save(entity);
-        entity = getDs().get(entity);
-        Assert.assertEquals("test", entity.id.name);
-        Assert.assertNotNull(entity.id.id);
-    }
-
-    @Test
-    public void testDelete() throws Exception {
-        final CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("test");
-
-        getDs().save(entity);
-        getDs().delete(CompoundIdEntity.class, entity.id);
-    }
-
-    @Test
-    public void testOtherDelete() throws Exception {
-        final CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("test");
-
-        getDs().save(entity);
-        ((AdvancedDatastore) getDs()).delete(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class, entity.id);
-    }
-    
-    @Test
-    public void testFetchKey() {
-        getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
-        BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
-        ConfigEntry entry = innerDAO.find().get();
-        entry.setValue("something");
-        innerDAO.save(entry);
-    }
-
-    @Test
-    @Ignore("https://github.com/mongodb/morphia/issues/675")
-    public void testReference() {
-        getMorphia().map(CompoundIdEntity.class, CompoundId.class);
-        getDs().getCollection(CompoundIdEntity.class).drop();
-
-        final CompoundIdEntity sibling = new CompoundIdEntity();
-        sibling.id = new CompoundId("sibling ID");
-        getDs().save(sibling);
-
-        final CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("entity ID");
-        entity.e = "some value";
-        entity.sibling = sibling;
-        getDs().save(entity);
-
-        final CompoundIdEntity loaded = getDs().get(entity);
-        Assert.assertEquals(entity, loaded);
     }
 }

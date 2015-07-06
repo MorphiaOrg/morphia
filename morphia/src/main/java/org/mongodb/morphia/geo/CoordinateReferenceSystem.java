@@ -3,7 +3,7 @@ package org.mongodb.morphia.geo;
 /**
  * Defines the coordinate reference system to be used in certain geo queries.
  *
- * @see <a href="http://docs.mongodb.org/manual/reference/operator/query/geometry/#op._S_geometry">$geometry</a>
+ * @mongodb.driver.manual reference/operator/query/geometry $geometry
  */
 public abstract class CoordinateReferenceSystem {
 

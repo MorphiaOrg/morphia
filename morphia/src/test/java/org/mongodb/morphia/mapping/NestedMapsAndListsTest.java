@@ -36,7 +36,7 @@ public class NestedMapsAndListsTest extends TestBase {
         ListOfList listOfList = getDs().createQuery(ListOfList.class).get();
         Assert.assertEquals(list, listOfList);
     }
-    
+
     @Test
     public void testListOfListOfPerson() {
         getMorphia().map(ListListPerson.class);
@@ -78,12 +78,6 @@ public class NestedMapsAndListsTest extends TestBase {
         getDs().save(listMap);
 
         Assert.assertEquals(listMap, getDs().createQuery(ListMapPerson.class).get());
-    }
-
-    private Map<String, Person> map(final String nick, final Person person) {
-        final HashMap<String, Person> map = new HashMap<String, Person>();
-        map.put(nick, person);
-        return map;
     }
 
     @Test
@@ -142,7 +136,13 @@ public class NestedMapsAndListsTest extends TestBase {
         Assert.assertEquals("values", mapOfMap.mom.get("root").get("deep"));
         Assert.assertNotNull("lame", mapOfMap.mom.get("root").get("peer"));
     }
-    
+
+    private Map<String, Person> map(final String nick, final Person person) {
+        final HashMap<String, Person> map = new HashMap<String, Person>();
+        map.put(nick, person);
+        return map;
+    }
+
     @Entity
     private static class ListOfMap {
         @Property

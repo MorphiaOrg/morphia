@@ -51,7 +51,7 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     @Test
-    public final void testShortcutInterface() {
+    public final void testGetKeyWithoutFetching() {
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }
@@ -68,29 +68,17 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         root = getDs().get(root);
 
-        ReferencedEntity p = root.r;
+        final ReferencedEntity p = root.r;
 
         assertIsProxy(p);
         assertNotFetched(p);
-        Assert.assertEquals(keyAsString, ((ProxiedEntityReference) p).__getKey().getId().toString());
+        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
         // still not fetched?
         assertNotFetched(p);
         p.getFoo();
         // should be fetched now.
         assertFetched(p);
 
-        root = deserialize(root);
-        p = root.r;
-        assertNotFetched(p);
-        p.getFoo();
-        // should be fetched now.
-        assertFetched(p);
-
-        root = getDs().get(root);
-        p = root.r;
-        assertNotFetched(p);
-        getDs().save(root);
-        assertNotFetched(p);
     }
 
     @Test
@@ -142,7 +130,7 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     @Test
-    public final void testGetKeyWithoutFetching() {
+    public final void testShortcutInterface() {
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
         }
@@ -159,17 +147,29 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         root = getDs().get(root);
 
-        final ReferencedEntity p = root.r;
+        ReferencedEntity p = root.r;
 
         assertIsProxy(p);
         assertNotFetched(p);
-        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
+        Assert.assertEquals(keyAsString, ((ProxiedEntityReference) p).__getKey().getId().toString());
         // still not fetched?
         assertNotFetched(p);
         p.getFoo();
         // should be fetched now.
         assertFetched(p);
 
+        root = deserialize(root);
+        p = root.r;
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
+        root = getDs().get(root);
+        p = root.r;
+        assertNotFetched(p);
+        getDs().save(root);
+        assertNotFetched(p);
     }
 
     public static class RootEntity extends TestEntity {
@@ -183,12 +183,12 @@ public class TestLazySingleReference extends ProxyTestBase {
     public static class ReferencedEntity extends TestEntity {
         private String foo;
 
-        public void setFoo(final String string) {
-            foo = string;
-        }
-
         public String getFoo() {
             return foo;
+        }
+
+        public void setFoo(final String string) {
+            foo = string;
         }
     }
 

@@ -67,7 +67,7 @@ public class CustomConvertersTest extends TestBase {
         final EntityWithListsAndArrays entity = new EntityWithListsAndArrays();
         entity.setListOfStrings(Arrays.asList("string 1", "string 2", "string 3"));
         getDs().save(entity);
-        
+
         final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
         Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
 
@@ -113,7 +113,8 @@ public class CustomConvertersTest extends TestBase {
     }
 
     /**
-     * This test is green when {@link MyEntity#valueObject} is annotated with {@code @Property}, as in this case the field is not serialized
+     * This test is green when {@link MyEntity#valueObject} is annotated with {@code @Property}, as in this case the field is not
+     * serialized
      * at all. However, the bson encoder would fail to encode the object of type ValueObject (as shown by {@link
      * #testFullBSONSerialization()}).
      */
@@ -172,7 +173,8 @@ public class CustomConvertersTest extends TestBase {
 
     /**
      * This test shows an issue with an {@code @Embedded} class A inheriting from an {@code @Embedded} class B that both have a Converter
-     * assigned (A has AConverter, B has BConverter). <p> When an object (here MyEntity) has a property/field of type A and is deserialized,
+     * assigned (A has AConverter, B has BConverter). <p> When an object (here MyEntity) has a property/field of type A and is
+     * deserialized,
      * the deserialization fails with a "org.mongodb.morphia.mapping.MappingException: No usable constructor for A" . </p>
      */
     @Entity(noClassnameStored = true)
@@ -254,7 +256,9 @@ public class CustomConvertersTest extends TestBase {
                 super(clazz);
             }
 
-            @Override
+            protected ValueObject create(final Long source) {
+                return new ValueObject(source);
+            }            @Override
             protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
                 return c.isAssignableFrom(ValueObject.class);
             }
@@ -267,9 +271,7 @@ public class CustomConvertersTest extends TestBase {
                 return create((Long) fromDBObject);
             }
 
-            protected ValueObject create(final Long source) {
-                return new ValueObject(source);
-            }
+
 
             @Override
             public Long encode(final Object value, final MappedField optionalExtraInfo) {

@@ -23,48 +23,25 @@ public class QueryInForReferencedListTest extends TestBase {
 
     private String classpath;
 
-    @Entity
-    private static class HasRefs implements Serializable {
-        @Id
-        private ObjectId id = new ObjectId();
-        @Reference
-        private List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
-    }
-
-    @Entity
-    private static class ReferencedEntity extends TestEntity {
-        private String foo;
-
-        public ReferencedEntity() {
-        }
-
-        public ReferencedEntity(final String s) {
-            foo = s;
-        }
-    }
-
-    @Entity("docs")
-    private static class Doc {
-        @Id
-        private long id = 4;
-    }
-
-
-    @Entity(value = "as", noClassnameStored = true)
-    public static class HasIdOnly {
-        @Id
-        private ObjectId id;
-        private String name;
-        @Reference(idOnly = true)
-        private List<ReferencedEntity> list;
-        @Reference(idOnly = true)
-        private ReferencedEntity entity;
-    }
-
     @Test
-    public void testMapping() throws Exception {
-        getMorphia().map(HasRefs.class);
-        getMorphia().map(ReferencedEntity.class);
+    public void testIdOnly() {
+        ReferencedEntity b = new ReferencedEntity();
+        b.setId(new ObjectId("111111111111111111111111"));
+        getDs().save(b);
+
+        HasIdOnly has = new HasIdOnly();
+        has.list = new ArrayList<ReferencedEntity>();
+        has.list.add(b);
+        has.entity = b;
+        getDs().save(has);
+
+        Query<HasIdOnly> q = getDs().createQuery(HasIdOnly.class);
+        q.criteria("list").in(Arrays.asList(b));
+        Assert.assertEquals(1, q.asList().size());
+
+        q = getDs().createQuery(HasIdOnly.class);
+        q.criteria("entity").equal(b.getId());
+        Assert.assertEquals(1, q.asList().size());
     }
 
     @Test
@@ -100,6 +77,12 @@ public class QueryInForReferencedListTest extends TestBase {
     }
 
     @Test
+    public void testMapping() throws Exception {
+        getMorphia().map(HasRefs.class);
+        getMorphia().map(ReferencedEntity.class);
+    }
+
+    @Test
     public void testReferenceDoesNotExist() {
         final HasRefs hr = new HasRefs();
         getDs().save(hr);
@@ -110,25 +93,41 @@ public class QueryInForReferencedListTest extends TestBase {
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
     }
-    
-    @Test
-    public void testIdOnly() {
-        ReferencedEntity b = new ReferencedEntity();
-        b.setId(new ObjectId("111111111111111111111111"));
-        getDs().save(b);
-        
-        HasIdOnly has = new HasIdOnly();
-        has.list =  new ArrayList<ReferencedEntity>();
-        has.list.add(b);
-        has.entity = b;
-        getDs().save(has);
-        
-        Query<HasIdOnly> q = getDs().createQuery(HasIdOnly.class);
-        q.criteria("list").in(Arrays.asList(b));
-        Assert.assertEquals(1, q.asList().size());
-        
-        q = getDs().createQuery(HasIdOnly.class);
-        q.criteria("entity").equal(b.getId());
-        Assert.assertEquals(1, q.asList().size());
+
+    @Entity
+    private static class HasRefs implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
+    }
+
+    @Entity
+    private static class ReferencedEntity extends TestEntity {
+        private String foo;
+
+        public ReferencedEntity() {
+        }
+
+        public ReferencedEntity(final String s) {
+            foo = s;
+        }
+    }
+
+    @Entity("docs")
+    private static class Doc {
+        @Id
+        private long id = 4;
+    }
+
+    @Entity(value = "as", noClassnameStored = true)
+    public static class HasIdOnly {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Reference(idOnly = true)
+        private List<ReferencedEntity> list;
+        @Reference(idOnly = true)
+        private ReferencedEntity entity;
     }
 }

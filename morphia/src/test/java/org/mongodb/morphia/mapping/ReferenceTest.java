@@ -113,15 +113,6 @@ public class ReferenceTest extends ProxyTestBase {
         allNull(container);
     }
 
-    private void allNull(final Container container) {
-        Assert.assertNull(container.lazyMapRef);
-        Assert.assertNull(container.singleRef);
-        Assert.assertNull(container.lazySingleRef);
-        Assert.assertNull(container.collectionRef);
-        Assert.assertNull(container.lazyCollectionRef);
-        Assert.assertNull(container.mapRef);
-    }
-
     @Test
     public void testReferencesWithoutMapping() throws Exception {
         Child child1 = new Child();
@@ -140,6 +131,15 @@ public class ReferenceTest extends ProxyTestBase {
 
         parentList = localDs.find(Parent.class).asList();
         Assert.assertEquals(1, parentList.size());
+    }
+
+    private void allNull(final Container container) {
+        Assert.assertNull(container.lazyMapRef);
+        Assert.assertNull(container.singleRef);
+        Assert.assertNull(container.lazySingleRef);
+        Assert.assertNull(container.collectionRef);
+        Assert.assertNull(container.lazyCollectionRef);
+        Assert.assertNull(container.mapRef);
     }
 
     public static class Container {

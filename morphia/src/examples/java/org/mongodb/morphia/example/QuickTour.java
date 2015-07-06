@@ -20,6 +20,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
+ */
 public final class QuickTour {
     private QuickTour() {
     }
@@ -68,22 +71,20 @@ public final class QuickTour {
         final Query<Employee> underPaidQuery = datastore.createQuery(Employee.class)
                                                         .filter("salary <=", 30000);
         final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperations(Employee.class)
-                                                           .inc("salary", 10000);
+                                                                     .inc("salary", 10000);
 
         final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
-        
+
         Assert.assertEquals(1, results.getUpdatedCount());
 
         final Query<Employee> overPaidQuery = datastore.createQuery(Employee.class)
-                                                        .filter("salary >", 100000);
+                                                       .filter("salary >", 100000);
         datastore.delete(overPaidQuery);
     }
 }
 
 @Entity("employees")
-@Indexes(
-            @Index(value = "salary", fields = @Field("salary"))
-)
+@Indexes(@Index(value = "salary", fields = @Field("salary")))
 class Employee {
     @Id
     private ObjectId id;

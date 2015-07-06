@@ -19,54 +19,6 @@ import java.util.List;
 
 public class TestEmbeddedClassname extends TestBase {
 
-    @Entity(noClassnameStored = true)
-    private static class Root {
-        @Id
-        private String id = "id";
-
-        @Embedded
-        private A singleA;
-
-        @Embedded
-        private final List<A> aList = new ArrayList<A>();
-
-        @Embedded
-        private final List<B> bList = new ArrayList<B>();
-    }
-
-    @Embedded
-    private static class A {
-        private String name = "some name";
-
-        @Transient
-        private DBObject raw;
-
-        @PreLoad
-        void preLoad(final DBObject dbObj) {
-            raw = dbObj;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-
-        public DBObject getRaw() {
-            return raw;
-        }
-
-        public void setRaw(final DBObject raw) {
-            this.raw = raw;
-        }
-    }
-
-    private static class B extends A {
-        private String description = "<description here>";
-    }
-
     @Test
     public final void testEmbeddedClassname() {
         Datastore ds = getDs();
@@ -104,12 +56,57 @@ public class TestEmbeddedClassname extends TestBase {
         ds.save(entity);
         ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).add("aList", new B()));
         r = ds.get(Root.class, "id");
-        
+
         // test that singleA.raw *does* contain the classname because we stored a subclass there
         aRaw = r.singleA.raw;
         Assert.assertTrue(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
         DBObject bRaw2 = r.aList.get(0).raw;
         Assert.assertTrue(bRaw2.containsField(Mapper.CLASS_NAME_FIELDNAME));
+    }
+
+    @Entity(noClassnameStored = true)
+    private static class Root {
+        @Embedded
+        private final List<A> aList = new ArrayList<A>();
+        @Embedded
+        private final List<B> bList = new ArrayList<B>();
+        @Id
+        private String id = "id";
+        @Embedded
+        private A singleA;
+    }
+
+    @Embedded
+    private static class A {
+        private String name = "some name";
+
+        @Transient
+        private DBObject raw;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+
+        public DBObject getRaw() {
+            return raw;
+        }
+
+        public void setRaw(final DBObject raw) {
+            this.raw = raw;
+        }
+
+        @PreLoad
+        void preLoad(final DBObject dbObj) {
+            raw = dbObj;
+        }
+    }
+
+    private static class B extends A {
+        private String description = "<description here>";
     }
 
 }

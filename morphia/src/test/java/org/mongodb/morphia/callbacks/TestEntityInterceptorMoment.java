@@ -17,6 +17,14 @@ import org.mongodb.morphia.mapping.Mapper;
  */
 public class TestEntityInterceptorMoment extends TestBase {
 
+    @Test
+    public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
+        getMorphia().map(E.class);
+        getMorphia().getMapper().addInterceptor(new Interceptor());
+
+        getDs().save(new E());
+    }
+
     static class E {
         @Id
         private final ObjectId id = new ObjectId();
@@ -51,13 +59,5 @@ public class TestEntityInterceptorMoment extends TestBase {
         public void preSave(final Object ent, final DBObject dbObj, final Mapper mapper) {
         }
 
-    }
-
-    @Test
-    public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
-        getMorphia().map(E.class);
-        getMorphia().getMapper().addInterceptor(new Interceptor());
-
-        getDs().save(new E());
     }
 }

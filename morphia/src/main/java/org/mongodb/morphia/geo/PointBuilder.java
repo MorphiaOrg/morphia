@@ -13,6 +13,24 @@ public class PointBuilder {
     private double latitude;
 
     /**
+     * Convenience method to return a new PointBuilder.
+     *
+     * @return a new instance of PointBuilder.
+     */
+    public static PointBuilder pointBuilder() {
+        return new PointBuilder();
+    }
+
+    /**
+     * Creates an immutable point
+     *
+     * @return the Point with the specifications from this builder.
+     */
+    public Point build() {
+        return new Point(latitude, longitude);
+    }
+
+    /**
      * Add a latitude.
      *
      * @param latitude the latitude of the point
@@ -32,23 +50,5 @@ public class PointBuilder {
     public PointBuilder longitude(final double longitude) {
         this.longitude = longitude;
         return this;
-    }
-
-    /**
-     * Creates an immutable point
-     *
-     * @return the Point with the specifications from this builder.
-     */
-    public Point build() {
-        return new Point(latitude, longitude);
-    }
-
-    /**
-     * Convenience method to return a new PointBuilder.
-     *
-     * @return a new instance of PointBuilder.
-     */
-    public static PointBuilder pointBuilder() {
-        return new PointBuilder();
     }
 }

@@ -27,26 +27,6 @@ public class QueryInForKeyTest extends TestBase {
 
     private String classpath;
 
-    @Entity
-    private static class HasRefs implements Serializable {
-        @Id
-        private ObjectId id = new ObjectId();
-        @Reference
-        private Key<ReferencedEntity> ref;
-    }
-
-    @Entity
-    private static class ReferencedEntity extends TestEntity {
-        private String foo;
-
-        public ReferencedEntity() {
-        }
-
-        public ReferencedEntity(final String s) {
-            foo = s;
-        }
-    }
-
     @Test
     public void testInQueryByKey() throws Exception {
         checkMinServerVersion(2.5);
@@ -69,6 +49,26 @@ public class QueryInForKeyTest extends TestBase {
         } catch (MongoException e) {
             LOG.debug("query = " + query);
             throw e;
+        }
+    }
+
+    @Entity
+    private static class HasRefs implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private Key<ReferencedEntity> ref;
+    }
+
+    @Entity
+    private static class ReferencedEntity extends TestEntity {
+        private String foo;
+
+        public ReferencedEntity() {
+        }
+
+        public ReferencedEntity(final String s) {
+            foo = s;
         }
     }
 }

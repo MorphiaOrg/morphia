@@ -12,13 +12,6 @@ import org.mongodb.morphia.annotations.Id;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class ByteArrayMappingTest extends TestBase {
-    private static class ContainsByteArray {
-        @Id
-        private ObjectId id;
-        private Byte[] ba;
-    }
-
-
     @Test
     public void testCharMapping() throws Exception {
         getMorphia().map(ContainsByteArray.class);
@@ -33,6 +26,12 @@ public class ByteArrayMappingTest extends TestBase {
             Assert.assertEquals(c, entity.ba[i]);
         }
         Assert.assertNotNull(loaded.id);
+    }
+
+    private static class ContainsByteArray {
+        @Id
+        private ObjectId id;
+        private Byte[] ba;
     }
 
 }

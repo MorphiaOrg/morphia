@@ -84,7 +84,7 @@ public class TestReferenceCollection extends ProxyTestBase {
 
         Origin reloaded = getDs().get(origin);
         Assert.assertEquals("b1", reloaded.lazyList.iterator().next().foo);
-        Collections.swap((List<Endpoint>) reloaded.lazyList, 0, 1);
+        Collections.swap(reloaded.lazyList, 0, 1);
         Assert.assertEquals("b2", reloaded.lazyList.iterator().next().foo);
 
         getDs().save(reloaded);
@@ -109,12 +109,12 @@ public class TestReferenceCollection extends ProxyTestBase {
     public static class Endpoint extends TestEntity {
         private String foo;
 
-        public void setFoo(final String string) {
-            foo = string;
-        }
-
         public String getFoo() {
             return foo;
+        }
+
+        public void setFoo(final String string) {
+            foo = string;
         }
 
         @Override

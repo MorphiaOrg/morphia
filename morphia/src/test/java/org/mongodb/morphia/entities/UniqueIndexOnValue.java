@@ -14,7 +14,7 @@ public class UniqueIndexOnValue {
     private long value = 4;
 
     private String name;
-    
+
     public UniqueIndexOnValue() {
     }
 

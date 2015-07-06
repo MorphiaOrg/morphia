@@ -33,30 +33,28 @@ import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
 /**
- * <p>Implementation of Query</p>
+ * Implementation of Query
  *
  * @param <T> The type we will be querying for, and returning.
  * @author Scott Hernandez
  */
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
-
+    private final DatastoreImpl ds;
+    private final DBCollection dbColl;
+    private final Class<T> clazz;
     private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
-
     private String[] fields;
     private Boolean includeFields;
     private BasicDBObject sort;
     private BasicDBObject max;
     private BasicDBObject min;
-    private final DatastoreImpl ds;
-    private final DBCollection dbColl;
     private int offset;
     private int limit = -1;
     private int batchSize;
     private String indexHint;
-    private final Class<T> clazz;
     private BasicDBObject baseQuery;
     private boolean snapshotted;
     private boolean noTimeout;
@@ -69,6 +67,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private String comment;
     private boolean returnKey;
 
+    /**
+     * Creates a Query for the given type and collection
+     *
+     * @param clazz the type to return
+     * @param coll  the collection to query
+     * @param ds    the Datastore to use
+     */
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         super(CriteriaJoin.AND);
 
@@ -85,6 +90,158 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                        ? ReadPreference.secondaryPreferred()
                        : null;
         }
+    }
+
+    /**
+     * Parses the string and validates each part
+     *
+     * @param str      the String to parse
+     * @param clazz    the class to use when validating
+     * @param mapper   the Mapper to use
+     * @param validate true if the results should be validated
+     * @return the DBObject
+     */
+    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
+        BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
+        final String[] parts = str.split(",");
+        for (String s : parts) {
+            s = s.trim();
+            int dir = 1;
+
+            if (s.startsWith("-")) {
+                dir = -1;
+                s = s.substring(1).trim();
+            }
+
+            if (validate) {
+                final StringBuilder sb = new StringBuilder(s);
+                validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
+                s = sb.toString();
+            }
+            ret = ret.add(s, dir);
+        }
+        return (BasicDBObject) ret.get();
+    }
+
+    @Override
+    public List<Key<T>> asKeyList() {
+        final List<Key<T>> results = new ArrayList<Key<T>>();
+        MorphiaKeyIterator<T> keys = fetchKeys();
+        try {
+            for (final Key<T> key : keys) {
+                results.add(key);
+            }
+        } finally {
+            keys.close();
+        }
+        return results;
+    }
+
+    @Override
+    public List<T> asList() {
+        final List<T> results = new ArrayList<T>();
+        final MorphiaIterator<T, T> iter = fetch();
+        try {
+            for (final T ent : iter) {
+                results.add(ent);
+            }
+        } finally {
+            iter.close();
+        }
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
+                             dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats(),
+                             getQueryObject()));
+        }
+
+        return results;
+    }
+
+    @Override
+    public long countAll() {
+        final DBObject query = getQueryObject();
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
+        }
+        return dbColl.getCount(query);
+    }
+
+    @Override
+    public MorphiaIterator<T, T> fetch() {
+        final DBCursor cursor = prepareCursor();
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
+        }
+
+        return new MorphiaIterator<T, T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
+    }
+
+    @Override
+    public MorphiaIterator<T, T> fetchEmptyEntities() {
+        final String[] oldFields = fields;
+        final Boolean oldInclude = includeFields;
+        fields = new String[]{Mapper.ID_KEY};
+        includeFields = true;
+        final MorphiaIterator<T, T> res = fetch();
+        fields = oldFields;
+        includeFields = oldInclude;
+        return res;
+    }
+
+    @Override
+    public MorphiaKeyIterator<T> fetchKeys() {
+        final String[] oldFields = fields;
+        final Boolean oldInclude = includeFields;
+        fields = new String[]{Mapper.ID_KEY};
+        includeFields = true;
+        final DBCursor cursor = prepareCursor();
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
+        }
+
+        fields = oldFields;
+        includeFields = oldInclude;
+        return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
+    }
+
+    @Override
+    public T get() {
+        final int oldLimit = limit;
+        limit = 1;
+        final Iterator<T> it = fetch().iterator();
+        limit = oldLimit;
+        return (it.hasNext()) ? it.next() : null;
+    }
+
+    @Override
+    public Key<T> getKey() {
+        final int oldLimit = limit;
+        limit = 1;
+        final Iterator<Key<T>> it = fetchKeys().iterator();
+        limit = oldLimit;
+        return (it.hasNext()) ? it.next() : null;
+    }
+
+    @Override
+    public MorphiaIterator<T, T> tail() {
+        return tail(true);
+    }
+
+    @Override
+    public MorphiaIterator<T, T> tail(final boolean awaitData) {
+        //Create a new query for this, so the current one is not affected.
+        final QueryImpl<T> tailQ = cloneQuery();
+        tailQ.tail = true;
+        tailQ.tailAwaitData = awaitData;
+        return tailQ.fetch();
+    }
+
+    @Override
+    public Query<T> batchSize(final int value) {
+        batchSize = value;
+        return this;
     }
 
     @Override
@@ -116,10 +273,79 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return n;
     }
 
-    private String[] copy() {
-        final String[] copy = new String[fields.length];
-        System.arraycopy(fields, 0, copy, 0, fields.length);
-        return copy;
+    @Override
+    public Query<T> comment(final String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    @Override
+    public Query<T> disableCursorTimeout() {
+        noTimeout = true;
+        return this;
+    }
+
+    @Override
+    public Query<T> disableSnapshotMode() {
+        snapshotted = false;
+        return this;
+    }
+
+    @Override
+    public Query<T> disableValidation() {
+        validateName = false;
+        validateType = false;
+        return this;
+    }
+
+    @Override
+    public Query<T> enableCursorTimeout() {
+        noTimeout = false;
+        return this;
+    }
+
+    @Override
+    public Query<T> enableSnapshotMode() {
+        snapshotted = true;
+        return this;
+    }
+
+    @Override
+    public Query<T> enableValidation() {
+        validateName = true;
+        validateType = true;
+        return this;
+    }
+
+    @Override
+    public Map<String, Object> explain() {
+        DBCursor cursor = prepareCursor();
+        return (BasicDBObject) cursor.explain();
+    }
+
+    @Override
+    public FieldEnd<? extends Query<T>> field(final String name) {
+        return field(name, validateName);
+    }
+
+    @Override
+    public Query<T> filter(final String condition, final Object value) {
+        final String[] parts = condition.trim().split(" ");
+        if (parts.length < 1 || parts.length > 6) {
+            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
+        }
+
+        final String prop = parts[0].trim();
+        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
+
+        add(new FieldCriteria(this, prop, op, value, validateName, validateType));
+
+        return this;
+    }
+
+    @Override
+    public int getBatchSize() {
+        return batchSize;
     }
 
     @Override
@@ -127,18 +353,43 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return dbColl;
     }
 
-    public void setQueryObject(final DBObject query) {
-        baseQuery = (BasicDBObject) query;
+    @Override
+    public Class<T> getEntityClass() {
+        return clazz;
     }
 
     @Override
-    public int getOffset() {
-        return offset;
+    public DBObject getFieldsObject() {
+        if (fields == null || fields.length == 0) {
+            return null;
+        }
+
+        final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
+        for (String field : fields) {
+            final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db
+            validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+            field = sb.toString();
+            fieldsFilter.put(field, (includeFields ? 1 : 0));
+        }
+
+        final MappedClass mc = ds.getMapper().getMappedClass(clazz);
+
+        Entity entityAnnotation = mc.getEntityAnnotation();
+        if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
+            fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
+        }
+
+        return new BasicDBObject(fieldsFilter);
     }
 
     @Override
     public int getLimit() {
         return limit;
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
     }
 
     @Override
@@ -154,32 +405,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return obj;
     }
 
-    public DatastoreImpl getDatastore() {
-        return ds;
-    }
-
-    @Override
-    public DBObject getFieldsObject() {
-        if (fields == null || fields.length == 0) {
-            return null;
-        }
-
-        final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
-        for (String field : fields) {
-            final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db 
-            validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
-            field = sb.toString();
-            fieldsFilter.put(field, (includeFields ? 1 : 0));
-        }
-
-        final MappedClass mc = ds.getMapper().getMappedClass(clazz);
-        
-        Entity entityAnnotation = mc.getEntityAnnotation();
-        if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
-            fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
-        }
-
-        return new BasicDBObject(fieldsFilter);
+    /**
+     * Sets query structure directly
+     *
+     * @param query the DBObject containing the query
+     */
+    public void setQueryObject(final DBObject query) {
+        baseQuery = (BasicDBObject) query;
     }
 
     @Override
@@ -187,23 +419,186 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return (sort == null) ? null : sort;
     }
 
+    @Override
+    public Query<T> hintIndex(final String idxName) {
+        indexHint = idxName;
+        return this;
+    }
+
+    @Override
+    public Query<T> limit(final int value) {
+        limit = value;
+        return this;
+    }
+
+    @Override
+    public Query<T> lowerIndexBound(final DBObject lowerBound) {
+        if (lowerBound != null) {
+            min = new BasicDBObject(lowerBound.toMap());
+        }
+
+        return this;
+    }
+
+    @Override
+    public Query<T> maxScan(final int value) {
+        maxScan = value > 0 ? value : null;
+        return this;
+    }
+
+    @Override
+    public Query<T> maxTime(final long value, final TimeUnit timeUnitValue) {
+        maxTime = value > 0 ? value : null;
+        maxTimeUnit = timeUnitValue;
+        return this;
+    }
+
+    @Override
+    public Query<T> offset(final int value) {
+        offset = value;
+        return this;
+    }
+
+    @Override
+    public Query<T> order(final String sort) {
+        if (snapshotted) {
+            throw new QueryException("order cannot be used on a snapshotted query.");
+        }
+        this.sort = parseFieldsString(sort, clazz, ds.getMapper(), validateName);
+
+        return this;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public Query<T> queryNonPrimary() {
+        readPref = ReadPreference.secondary();
+        return this;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public Query<T> queryPrimaryOnly() {
+        readPref = ReadPreference.primary();
+        return this;
+    }
+
+    @Override
+    public Query<T> retrieveKnownFields() {
+        final MappedClass mc = ds.getMapper().getMappedClass(clazz);
+        final List<String> fields = new ArrayList<String>(mc.getPersistenceFields().size() + 1);
+        for (final MappedField mf : mc.getPersistenceFields()) {
+            fields.add(mf.getNameToStore());
+        }
+        retrievedFields(true, fields.toArray(new String[fields.size()]));
+        return this;
+    }
+
+    @Override
+    public Query<T> retrievedFields(final boolean include, final String... list) {
+        if (includeFields != null && include != includeFields) {
+            throw new IllegalStateException("You cannot mix include and excluded fields together!");
+        }
+        includeFields = include;
+        fields = list;
+        return this;
+    }
+
+    @Override
+    public Query<T> returnKey() {
+        this.returnKey = true;
+        return this;
+    }
+
+    @Override
+    public Query<T> search(final String search) {
+
+        final BasicDBObject op = new BasicDBObject("$search", search);
+
+        this.criteria("$text", false).equal(op);
+
+        return this;
+    }
+
+    @Override
+    public Query<T> search(final String search, final String language) {
+
+        final BasicDBObject op = new BasicDBObject("$search", search)
+                                     .append("$language", language);
+
+        this.criteria("$text", false).equal(op);
+
+        return this;
+    }
+
+    @Override
+    public Query<T> upperIndexBound(final DBObject upperBound) {
+        if (upperBound != null) {
+            max = new BasicDBObject(upperBound.toMap());
+        }
+
+        return this;
+    }
+
+    @Override
+    public Query<T> useReadPreference(final ReadPreference readPref) {
+        this.readPref = readPref;
+        return this;
+    }
+
+    @Override
+    public Query<T> where(final String js) {
+        add(new WhereCriteria(js));
+        return this;
+    }
+
+    @Override
+    public Query<T> where(final CodeWScope js) {
+        add(new WhereCriteria(js));
+        return this;
+    }
+
+    @Override
+    public FieldEnd<? extends CriteriaContainerImpl> criteria(final String field) {
+        return criteria(field, validateName);
+    }
+
+    @Override
+    public String getFieldName() {
+        return null;
+    }
+
+    /**
+     * @return the Datastore
+     */
+    public DatastoreImpl getDatastore() {
+        return ds;
+    }
+
+    /**
+     * @return true if field names are being validated
+     */
     public boolean isValidatingNames() {
         return validateName;
     }
 
+    /**
+     * @return true if query parameter value types are being validated against the field types
+     */
     public boolean isValidatingTypes() {
         return validateType;
     }
 
     @Override
-    public long countAll() {
-        final DBObject query = getQueryObject();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
-        }
-        return dbColl.getCount(query);
+    public MorphiaIterator<T, T> iterator() {
+        return fetch();
     }
 
+    /**
+     * Prepares cursor for iteration
+     *
+     * @return the cursor
+     */
     public DBCursor prepareCursor() {
         final DBObject query = getQueryObject();
         final DBObject fields = getFieldsObject();
@@ -275,92 +670,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             cursor.addSpecial("$min", min);
         }
 
-        if (comment != null){
+        if (comment != null) {
             cursor.addSpecial("$comment", comment);
         }
 
-        if (returnKey){
+        if (returnKey) {
             cursor.returnKey();
         }
 
         return cursor;
     }
 
-
     @Override
-    public MorphiaIterator<T, T> fetch() {
-        final DBCursor cursor = prepareCursor();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
-        }
-
-        return new MorphiaIterator<T, T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
-    }
-
-
-    @Override
-    public MorphiaKeyIterator<T> fetchKeys() {
-        final String[] oldFields = fields;
-        final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
-        includeFields = true;
-        final DBCursor cursor = prepareCursor();
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
-        }
-
-        fields = oldFields;
-        includeFields = oldInclude;
-        return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
-    }
-
-    @Override
-    public List<T> asList() {
-        final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = fetch();
-        try {
-            for (final T ent : iter) {
-                results.add(ent);
-            }
-        } finally {
-            iter.close();
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
-                             dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats(),
-                             getQueryObject()));
-        }
-
-        return results;
-    }
-
-    @Override
-    public List<Key<T>> asKeyList() {
-        final List<Key<T>> results = new ArrayList<Key<T>>();
-        MorphiaKeyIterator<T> keys = fetchKeys();
-        try {
-            for (final Key<T> key : keys) {
-                results.add(key);
-            }
-        } finally {
-            keys.close();
-        }
-        return results;
-    }
-
-
-    @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities() {
-        final String[] oldFields = fields;
-        final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
-        includeFields = true;
-        final MorphiaIterator<T, T> res = fetch();
-        fields = oldFields;
-        includeFields = oldInclude;
-        return res;
+    public String toString() {
+        return getQueryObject().toString();
     }
 
     /**
@@ -371,333 +694,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return FilterOperator.fromString(operator);
     }
 
-    @Override
-    public Query<T> filter(final String condition, final Object value) {
-        final String[] parts = condition.trim().split(" ");
-        if (parts.length < 1 || parts.length > 6) {
-            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
-        }
-
-        final String prop = parts[0].trim();
-        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
-
-        add(new FieldCriteria(this, prop, op, value, validateName, validateType));
-
-        return this;
-    }
-
-    @Override
-    public Query<T> where(final CodeWScope js) {
-        add(new WhereCriteria(js));
-        return this;
-    }
-
-    @Override
-    public Query<T> where(final String js) {
-        add(new WhereCriteria(js));
-        return this;
-    }
-
-    @Override
-    public Query<T> enableValidation() {
-        validateName = true;
-        validateType = true;
-        return this;
-    }
-
-    @Override
-    public Query<T> disableValidation() {
-        validateName = false;
-        validateType = false;
-        return this;
-    }
-
-    @Override
-    public T get() {
-        final int oldLimit = limit;
-        limit = 1;
-        final Iterator<T> it = fetch().iterator();
-        limit = oldLimit;
-        return (it.hasNext()) ? it.next() : null;
-    }
-
-
-    @Override
-    public Key<T> getKey() {
-        final int oldLimit = limit;
-        limit = 1;
-        final Iterator<Key<T>> it = fetchKeys().iterator();
-        limit = oldLimit;
-        return (it.hasNext()) ? it.next() : null;
-    }
-
-
-    @Override
-    public Query<T> limit(final int value) {
-        limit = value;
-        return this;
-    }
-
-    @Override
-    public Query<T> batchSize(final int value) {
-        batchSize = value;
-        return this;
-    }
-
-    @Override
-    public Query<T> maxScan(final int value) {
-        maxScan = value > 0 ? value : null;
-        return this;
-    }
-
-    @Override
-    public Query<T> maxTime(final long value, final TimeUnit timeUnitValue) {
-        maxTime = value > 0 ? value : null;
-        maxTimeUnit = timeUnitValue;
-        return this;
-    }
-
-    @Override
-    public Query<T> comment(final String comment) {
-        this.comment = comment;
-        return this;
-    }
-
-    @Override
-    public Query<T> returnKey() {
-        this.returnKey = true;
-        return this;
-    }
-
-    @Override
-    public Query<T> search(final String search) {
-
-        final BasicDBObject op = new BasicDBObject("$search", search);
-
-        this.criteria("$text", false).equal(op);
-
-        return this;
-    }
-    
-    @Override
-    public Query<T> search(final String search, final String language) {
-
-        final BasicDBObject op = new BasicDBObject("$search", search)
-            .append("$language", language);
-
-        this.criteria("$text", false).equal(op);
-
-        return this;
-    }
-    
-    @Override
-    public int getBatchSize() {
-        return batchSize;
-    }
-
-    @Override
-    public Query<T> offset(final int value) {
-        offset = value;
-        return this;
-    }
-
-
-    @Override
-    public Query<T> order(final String condition) {
-        if (snapshotted) {
-            throw new QueryException("order cannot be used on a snapshotted query.");
-        }
-        sort = parseFieldsString(condition, clazz, ds.getMapper(), validateName);
-
-        return this;
-    }
-
-    @Override
-    public Query<T> upperIndexBound(final DBObject upperBound) {
-        if (upperBound != null) {
-            max = new BasicDBObject(upperBound.toMap());
-        }
-
-        return this;
-    }
-
-    @Override
-    public Query<T> lowerIndexBound(final DBObject lowerBound) {
-        if (lowerBound != null) {
-            min = new BasicDBObject(lowerBound.toMap());
-        }
-
-        return this;
-    }
-
-
-    /**
-     * parses the string and validates each part
-     */
-    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
-        BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            int dir = 1;
-
-            if (s.startsWith("-")) {
-                dir = -1;
-                s = s.substring(1).trim();
-            }
-
-            if (validate) {
-                final StringBuilder sb = new StringBuilder(s);
-                validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
-                s = sb.toString();
-            }
-            ret = ret.add(s, dir);
-        }
-        return (BasicDBObject) ret.get();
-    }
-
-    @Override
-    public MorphiaIterator<T, T> iterator() {
-        return fetch();
-    }
-
-    @Override
-    public MorphiaIterator<T, T> tail() {
-        return tail(true);
-    }
-
-    @Override
-    public MorphiaIterator<T, T> tail(final boolean awaitData) {
-        //Create a new query for this, so the current one is not affected.
-        final QueryImpl<T> tailQ = cloneQuery();
-        tailQ.tail = true;
-        tailQ.tailAwaitData = awaitData;
-        return tailQ.fetch();
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return clazz;
-    }
-
-    public String toString() {
-        return getQueryObject().toString();
-    }
-
-    @Override
-    public FieldEnd<? extends Query<T>> field(final String name) {
-        return field(name, validateName);
+    private String[] copy() {
+        final String[] copy = new String[fields.length];
+        System.arraycopy(fields, 0, copy, 0, fields.length);
+        return copy;
     }
 
     private FieldEnd<? extends Query<T>> field(final String field, final boolean validate) {
         return new FieldEndImpl<QueryImpl<T>>(this, field, this, validate);
     }
 
-    @Override
-    public FieldEnd<? extends CriteriaContainerImpl> criteria(final String field) {
-        return criteria(field, validateName);
-    }
-
-    private FieldEnd<? extends CriteriaContainerImpl> criteria(final String field, final boolean validate) {
+    FieldEnd<? extends CriteriaContainerImpl> criteria(final String field, final boolean validate) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
         add(container);
 
         return new FieldEndImpl<CriteriaContainerImpl>(this, field, container, validate);
-    }
-
-    //TODO: test this.
-    @Override
-    public Query<T> hintIndex(final String idxName) {
-        indexHint = idxName;
-        return this;
-    }
-
-    @Override
-    public Query<T> retrievedFields(final boolean include, final String... list) {
-        if (includeFields != null && include != includeFields) {
-            throw new IllegalStateException("You cannot mix include and excluded fields together!");
-        }
-        includeFields = include;
-        fields = list;
-        return this;
-    }
-
-    @Override
-    public Query<T> retrieveKnownFields() {
-        final MappedClass mc = ds.getMapper().getMappedClass(clazz);
-        final List<String> fields = new ArrayList<String>(mc.getPersistenceFields().size() + 1);
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            fields.add(mf.getNameToStore());
-        }
-        retrievedFields(true, fields.toArray(new String[fields.size()]));
-        return this;
-    }
-
-    /**
-     * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
-     * compatible with order/sort and hint.
-     */
-    @Override
-    public Query<T> enableSnapshotMode() {
-        snapshotted = true;
-        return this;
-    }
-
-    /**
-     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates. *
-     */
-    @Override
-    public Query<T> disableSnapshotMode() {
-        snapshotted = false;
-        return this;
-    }
-
-    @Override
-    public Query<T> useReadPreference(final ReadPreference readPref) {
-        this.readPref = readPref;
-        return this;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public Query<T> queryNonPrimary() {
-        readPref = ReadPreference.secondary();
-        return this;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public Query<T> queryPrimaryOnly() {
-        readPref = ReadPreference.primary();
-        return this;
-    }
-
-    /**
-     * Disables cursor timeout on server.
-     */
-    @Override
-    public Query<T> disableCursorTimeout() {
-        noTimeout = true;
-        return this;
-    }
-
-    /**
-     * Enables cursor timeout on server.
-     */
-    @Override
-    public Query<T> enableCursorTimeout() {
-        noTimeout = false;
-        return this;
-    }
-
-    @Override
-    public String getFieldName() {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> explain() {
-        DBCursor cursor = prepareCursor();
-        return (BasicDBObject) cursor.explain();
     }
 }

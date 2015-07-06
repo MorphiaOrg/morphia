@@ -15,12 +15,6 @@ import java.util.List;
  */
 public class QueryInIdTest extends TestBase {
 
-    @Entity("docs")
-    private static class Doc {
-        @Id
-        private long id = 4;
-    }
-
     @Test
     public void testInIdList() throws Exception {
         final Doc doc = new Doc();
@@ -35,6 +29,12 @@ public class QueryInIdTest extends TestBase {
         // this causes an NPE
         getDs().find(Doc.class).field("_id").in(idList).asList();
 
+    }
+
+    @Entity("docs")
+    private static class Doc {
+        @Id
+        private long id = 4;
     }
 
 }

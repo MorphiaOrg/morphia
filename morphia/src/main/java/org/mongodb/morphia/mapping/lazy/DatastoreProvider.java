@@ -1,9 +1,9 @@
 package org.mongodb.morphia.mapping.lazy;
 
 
-import java.io.Serializable;
-
 import org.mongodb.morphia.Datastore;
+
+import java.io.Serializable;
 
 
 /**
@@ -14,7 +14,15 @@ import org.mongodb.morphia.Datastore;
  * @see LazyProxyFactory
  */
 public interface DatastoreProvider extends Serializable {
-  Datastore get();
+    /**
+     * @return the Datastore
+     */
+    Datastore get();
 
-  void register(Datastore ds);
+    /**
+     * Registers a Datastore with this provider
+     *
+     * @param ds the Datastore
+     */
+    void register(Datastore ds);
 }

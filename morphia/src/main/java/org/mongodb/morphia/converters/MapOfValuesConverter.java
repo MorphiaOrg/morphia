@@ -13,15 +13,6 @@ import java.util.Map;
  */
 public class MapOfValuesConverter extends TypeConverter {
     @Override
-    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
-        if (optionalExtraInfo != null) {
-            return optionalExtraInfo.isMap();
-        } else {
-            return ReflectionUtils.implementsInterface(c, Map.class);
-        }
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
         if (fromDBObject == null) {
@@ -32,8 +23,8 @@ public class MapOfValuesConverter extends TypeConverter {
         final Map values = getMapper().getOptions().getObjectFactory().createMap(mf);
         new IterHelper<Object, Object>().loopMap(fromDBObject, new MapIterCallback<Object, Object>() {
             @Override
-            public void eval(final Object key, final Object val) {
-                final Object objKey = getMapper().getConverters().decode(mf.getMapKeyClass(), key, mf);
+            public void eval(final Object k, final Object val) {
+                final Object objKey = getMapper().getConverters().decode(mf.getMapKeyClass(), k, mf);
                 values.put(objKey, val != null ? getMapper().getConverters().decode(mf.getSubClass(), val, mf) : null);
             }
         });
@@ -58,5 +49,14 @@ public class MapOfValuesConverter extends TypeConverter {
             return mapForDb;
         }
         return null;
+    }
+
+    @Override
+    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
+        if (optionalExtraInfo != null) {
+            return optionalExtraInfo.isMap();
+        } else {
+            return ReflectionUtils.implementsInterface(c, Map.class);
+        }
     }
 }

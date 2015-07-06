@@ -22,6 +22,6 @@
 
 <suppressions>
     <!--Do not check test classes -->
+    <suppress checks="Javadoc*" files="QuickTour"/>
     <suppress checks="Javadoc*" files=".*test.*"/>
-
 </suppressions>

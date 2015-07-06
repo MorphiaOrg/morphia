@@ -12,16 +12,6 @@ import static org.junit.Assert.assertEquals;
  * @author ScottHernandez
  */
 public class LongIdEntityTest extends TestBase {
-    static class MyEntity extends LongIdEntity {
-        protected MyEntity() {
-            super(null);
-        }
-
-        public MyEntity(final Datastore ds) {
-            super(ds);
-        }
-    }
-
     @Test
     public void testMonoIncreasingId() throws Exception {
         MyEntity ent = new MyEntity(getDs());
@@ -30,6 +20,16 @@ public class LongIdEntityTest extends TestBase {
         ent = new MyEntity(getDs());
         getDs().save(ent);
         assertEquals(2L, ent.getMyLongId(), 0);
+    }
+
+    static class MyEntity extends LongIdEntity {
+        protected MyEntity() {
+            super(null);
+        }
+
+        public MyEntity(final Datastore ds) {
+            super(ds);
+        }
     }
 
 }

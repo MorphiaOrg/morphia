@@ -20,18 +20,28 @@ import java.util.List;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class CharacterMappingTest extends TestBase {
-    public static class Characters {
-        @Id
-        private ObjectId id;
-        private List<Character[]> listWrapperArray = new ArrayList<Character[]>();
-        private List<char[]> listPrimitiveArray = new ArrayList<char[]>();
-        private List<Character> listWrapper = new ArrayList<Character>();
-        private char singlePrimitive;
-        private Character singleWrapper;
-        private char[] primitiveArray;
-        private Character[] wrapperArray;
-        private char[][] nestedPrimitiveArray;
-        private Character[][] nestedWrapperArray;
+    @Test
+    public void emptyStringToPrimitive() {
+        final Characters characters = testMapping("singlePrimitive", "");
+        Assert.assertEquals(0, characters.singlePrimitive);
+    }
+
+    @Test
+    public void emptyStringToPrimitiveArray() {
+        final Characters characters = testMapping("primitiveArray", "");
+        Assert.assertArrayEquals("".toCharArray(), characters.primitiveArray);
+    }
+
+    @Test
+    public void emptyStringToWrapper() {
+        final Characters characters = testMapping("singleWrapper", "");
+        Assert.assertEquals(new Character((char) 0), characters.singleWrapper);
+    }
+
+    @Test
+    public void emptyStringToWrapperArray() {
+        final Characters characters = testMapping("wrapperArray", "");
+        compare("", characters.wrapperArray);
     }
 
     @Test
@@ -63,22 +73,16 @@ public class CharacterMappingTest extends TestBase {
     }
 
     @Test
-    public void singleCharToPrimitiveArray() {
-        final Characters characters = testMapping("primitiveArray", "a");
-        Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
-        getDs().save(characters, WriteConcern.FSYNCED);
-    }
-
-    @Test
     public void singleCharToPrimitive() {
         final Characters characters = testMapping("singlePrimitive", "a");
         Assert.assertEquals('a', characters.singlePrimitive);
     }
 
     @Test
-    public void singleCharToWrapperArray() {
-        final Characters characters = testMapping("wrapperArray", "a");
-        compare("a", characters.wrapperArray);
+    public void singleCharToPrimitiveArray() {
+        final Characters characters = testMapping("primitiveArray", "a");
+        Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
+        getDs().save(characters, WriteConcern.FSYNCED);
     }
 
     @Test
@@ -87,14 +91,15 @@ public class CharacterMappingTest extends TestBase {
         Assert.assertEquals(new Character('a'), characters.singleWrapper);
     }
 
-    @Test(expected = MappingException.class)
-    public void stringToPrimitive() {
-        final Characters characters = testMapping("singlePrimitive", "ab");
+    @Test
+    public void singleCharToWrapperArray() {
+        final Characters characters = testMapping("wrapperArray", "a");
+        compare("a", characters.wrapperArray);
     }
 
     @Test(expected = MappingException.class)
-    public void stringToWrapper() {
-        final Characters characters = testMapping("singleWrapper", "ab");
+    public void stringToPrimitive() {
+        final Characters characters = testMapping("singlePrimitive", "ab");
     }
 
     @Test
@@ -103,34 +108,22 @@ public class CharacterMappingTest extends TestBase {
         Assert.assertArrayEquals("abc".toCharArray(), characters.primitiveArray);
     }
 
+    @Test(expected = MappingException.class)
+    public void stringToWrapper() {
+        final Characters characters = testMapping("singleWrapper", "ab");
+    }
+
     @Test
     public void stringToWrapperArray() {
         final Characters characters = testMapping("wrapperArray", "abc");
         compare("abc", characters.wrapperArray);
     }
 
-    @Test
-    public void emptyStringToPrimitiveArray() {
-        final Characters characters = testMapping("primitiveArray", "");
-        Assert.assertArrayEquals("".toCharArray(), characters.primitiveArray);
-    }
-
-    @Test
-    public void emptyStringToWrapperArray() {
-        final Characters characters = testMapping("wrapperArray", "");
-        compare("", characters.wrapperArray);
-    }
-
-    @Test
-    public void emptyStringToPrimitive() {
-        final Characters characters = testMapping("singlePrimitive", "");
-        Assert.assertEquals(0, characters.singlePrimitive);
-    }
-
-    @Test
-    public void emptyStringToWrapper() {
-        final Characters characters = testMapping("singleWrapper", "");
-        Assert.assertEquals(new Character((char) 0), characters.singleWrapper);
+    private void compare(final String abc, final Character[] wrapperArray) {
+        Assert.assertEquals(abc.length(), wrapperArray.length);
+        for (int i = 0; i < wrapperArray.length; i++) {
+            Assert.assertEquals(abc.charAt(i), wrapperArray[i].charValue());
+        }
     }
 
     private Characters testMapping(final String field, final String value) {
@@ -142,10 +135,17 @@ public class CharacterMappingTest extends TestBase {
         return getDs().find(Characters.class).get();
     }
 
-    private void compare(final String abc, final Character[] wrapperArray) {
-        Assert.assertEquals(abc.length(), wrapperArray.length);
-        for (int i = 0; i < wrapperArray.length; i++) {
-            Assert.assertEquals(abc.charAt(i), wrapperArray[i].charValue());
-        }
+    public static class Characters {
+        @Id
+        private ObjectId id;
+        private List<Character[]> listWrapperArray = new ArrayList<Character[]>();
+        private List<char[]> listPrimitiveArray = new ArrayList<char[]>();
+        private List<Character> listWrapper = new ArrayList<Character>();
+        private char singlePrimitive;
+        private Character singleWrapper;
+        private char[] primitiveArray;
+        private Character[] wrapperArray;
+        private char[][] nestedPrimitiveArray;
+        private Character[][] nestedWrapperArray;
     }
 }

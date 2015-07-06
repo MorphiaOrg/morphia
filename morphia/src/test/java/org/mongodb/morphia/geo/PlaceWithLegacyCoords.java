@@ -23,6 +23,13 @@ class PlaceWithLegacyCoords {
     PlaceWithLegacyCoords() {
     }
 
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(location);
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
     // equals(), hashCode() and toString() all needed for testing
     @Override
     public boolean equals(final Object o) {
@@ -43,13 +50,6 @@ class PlaceWithLegacyCoords {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Arrays.hashCode(location);
-        result = 31 * result + name.hashCode();
-        return result;
     }
 
     @Override

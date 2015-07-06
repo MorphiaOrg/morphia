@@ -9,6 +9,28 @@ import static org.junit.Assert.assertThat;
 
 public class DoubleTypeValidatorTest {
     @Test
+    public void shouldAllowDoubleTypeWithDoublePrimitiveValue() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, 2.2, validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldAllowDoubleTypeWithDoubleValue() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, new Double(2.2), validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
     public void shouldAllowValuesOfIntegerIfTypeIsDouble() {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -25,17 +47,6 @@ public class DoubleTypeValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         boolean validationApplied = DoubleTypeValidator.getInstance().apply(double.class, new Integer(1), validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldOnlyValuesOfLongIfTypeIsDouble() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, new Long(1), validationFailures);
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(0));
@@ -64,6 +75,17 @@ public class DoubleTypeValidatorTest {
     }
 
     @Test
+    public void shouldOnlyValuesOfLongIfTypeIsDouble() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, new Long(1), validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
     public void shouldRejectValueThatIsNotApplicableToDouble() {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -72,27 +94,5 @@ public class DoubleTypeValidatorTest {
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(1));
-    }
-
-    @Test
-    public void shouldAllowDoubleTypeWithDoublePrimitiveValue() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, 2.2, validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowDoubleTypeWithDoubleValue() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = DoubleTypeValidator.getInstance().apply(Double.class, new Double(2.2), validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
     }
 }

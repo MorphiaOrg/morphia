@@ -19,17 +19,11 @@ import java.util.List;
  */
 public class RegisterAfterUseTest extends TestBase {
 
-    public static class Broken extends TestEntity {
-        @Property("foo")
-        @Embedded("bar")
-        private List l;
-    }
-
     @Test(expected = ConstraintViolationException.class)
     @Ignore("https://github.com/mongodb/morphia/issues/583")
     public void testRegisterAfterUse() throws Exception {
 
-        // this would have failed: 
+        // this would have failed:
         //        getMorphia().map(Broken.class);
 
         final Broken b = new Broken();
@@ -40,5 +34,11 @@ public class RegisterAfterUseTest extends TestBase {
         // doe not revalidate due to being used already!
         getMorphia().map(Broken.class);
         Assert.fail();
+    }
+
+    public static class Broken extends TestEntity {
+        @Property("foo")
+        @Embedded("bar")
+        private List l;
     }
 }

@@ -13,6 +13,34 @@ import java.util.List;
 
 
 public class LazyWithNoProxiesTest extends ProxyTestBase {
+    @Test
+    public void testLoadingOfRefInField() throws Exception {
+        getMorphia().map(EmbedWithRef.class);
+        getMorphia().map(OtherEntity.class);
+
+        EmbedWithRef entity = new EmbedWithRef();
+        OtherEntity otherEntity1 = new OtherEntity(SomeEnum.B);
+        int count = 10;
+        for (int x = 0; x < count; x++) {
+            OtherEntity item = new OtherEntity(SomeEnum.A);
+            getDs().save(item);
+            entity.list.add(item);
+        }
+        entity.otherEntity = otherEntity1;
+
+        getDs().save(otherEntity1, entity);
+
+        OtherEntity loadedOther = getDs().get(otherEntity1);
+        EmbedWithRef loadedEntity = getDs().get(entity);
+        Assert.assertNotNull(loadedOther);
+        Assert.assertNotNull(loadedEntity);
+        assertNotProxy(loadedEntity.otherEntity);
+        Assert.assertEquals(count, loadedEntity.list.size());
+        for (OtherEntity item : loadedEntity.list) {
+            assertNotProxy(item);
+        }
+    }
+
     public enum SomeEnum {
         B,
         A
@@ -39,33 +67,5 @@ public class LazyWithNoProxiesTest extends ProxyTestBase {
 
         @Reference(lazy = true)
         private List<OtherEntity> list = new ArrayList<OtherEntity>();
-    }
-
-    @Test
-    public void testLoadingOfRefInField() throws Exception {
-        getMorphia().map(EmbedWithRef.class);
-        getMorphia().map(OtherEntity.class);
-
-        EmbedWithRef entity = new EmbedWithRef();
-        OtherEntity otherEntity1 = new OtherEntity(SomeEnum.B);
-        int count = 10;
-        for (int x = 0; x < count; x++) {
-            OtherEntity item = new OtherEntity(SomeEnum.A);
-            getDs().save(item);
-            entity.list.add(item);
-        }
-        entity.otherEntity = otherEntity1;
-        
-        getDs().save(otherEntity1, entity);
-
-        OtherEntity loadedOther = getDs().get(otherEntity1);
-        EmbedWithRef loadedEntity = getDs().get(entity);
-        Assert.assertNotNull(loadedOther);
-        Assert.assertNotNull(loadedEntity);
-        assertNotProxy(loadedEntity.otherEntity);
-        Assert.assertEquals(count, loadedEntity.list.size());
-        for (OtherEntity item : loadedEntity.list) {
-            assertNotProxy(item);
-        }
     }
 }

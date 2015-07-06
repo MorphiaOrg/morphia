@@ -25,6 +25,61 @@ import static org.junit.Assert.assertThat;
  */
 public class CustomConverterInEmbedTest extends TestBase {
 
+    @Test
+    public void testConversionInList() throws Exception {
+        final FooConverter fc = new FooConverter();
+        getMorphia().getMapper().getConverters().addConverter(fc);
+        final E1 e = new E1();
+        e.foo.add(new Foo("bar"));
+        getDs().save(e);
+        Assert.assertTrue(fc.didConversion());
+    }
+
+    @Test
+    public void testConversionInMap() throws Exception {
+        final FooConverter fc = new FooConverter();
+        getMorphia().getMapper().getConverters().addConverter(fc);
+        E2 e = new E2();
+        e.foo.put("bar", new Foo("bar"));
+        getDs().save(e);
+
+        Assert.assertTrue(fc.didConversion());
+
+        e = getDs().find(E2.class).get();
+        Assert.assertNotNull(e.foo);
+        Assert.assertFalse(e.foo.isEmpty());
+        Assert.assertTrue(e.foo.containsKey("bar"));
+        Assert.assertEquals("bar", e.foo.get("bar").string);
+    }
+
+    @Test
+    public void testEmbeddedComplexArrayType() throws Exception {
+        ArrayBar bar = new ArrayBar();
+        bar.foo = new ArrayFoo("firstValue", "secondValue");
+        getDs().save(bar);
+
+        ArrayBar fromDb = getDs().get(ArrayBar.class, bar.getId());
+        assertThat("bar is not null", fromDb, notNullValue());
+        assertThat("foo is not null", fromDb.foo, notNullValue());
+        assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));
+        assertThat("foo has the correct second value", fromDb.foo.second(), equalTo("secondValue"));
+    }
+
+    @Test
+    public void testEmbeddedComplexType() throws Exception {
+        ComplexBar bar = new ComplexBar();
+        bar.foo = new ComplexFoo("firstValue", "secondValue");
+        getDs().save(bar);
+
+        ComplexBar fromDb = getDs().get(ComplexBar.class, bar.getId());
+        assertThat("bar is not null", fromDb, notNullValue());
+        assertThat("foo is not null", fromDb.foo, notNullValue());
+        assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));
+        assertThat("foo has the correct second value", fromDb.foo.second(), equalTo("secondValue"));
+    }
+
+    //FIXME issue 101
+
     public static class E1 extends TestEntity {
         private final List<Foo> foo = new LinkedList<Foo>();
     }
@@ -63,44 +118,16 @@ public class CustomConverterInEmbedTest extends TestBase {
             return new Foo((String) fromDBObject);
         }
 
+        public boolean didConversion() {
+            return done;
+        }
+
         @Override
         public Object encode(final Object value, final MappedField optionalExtraInfo) {
             done = true;
             return value.toString();
         }
 
-        public boolean didConversion() {
-            return done;
-        }
-    }
-
-    //FIXME issue 101
-
-    @Test
-    public void testConversionInList() throws Exception {
-        final FooConverter fc = new FooConverter();
-        getMorphia().getMapper().getConverters().addConverter(fc);
-        final E1 e = new E1();
-        e.foo.add(new Foo("bar"));
-        getDs().save(e);
-        Assert.assertTrue(fc.didConversion());
-    }
-
-    @Test
-    public void testConversionInMap() throws Exception {
-        final FooConverter fc = new FooConverter();
-        getMorphia().getMapper().getConverters().addConverter(fc);
-        E2 e = new E2();
-        e.foo.put("bar", new Foo("bar"));
-        getDs().save(e);
-
-        Assert.assertTrue(fc.didConversion());
-
-        e = getDs().find(E2.class).get();
-        Assert.assertNotNull(e.foo);
-        Assert.assertFalse(e.foo.isEmpty());
-        Assert.assertTrue(e.foo.containsKey("bar"));
-        Assert.assertEquals("bar", e.foo.get("bar").string);
     }
 
     /**
@@ -225,32 +252,6 @@ public class CustomConverterInEmbedTest extends TestBase {
             dbObject.put(2, complex.second());
             return dbObject;
         }
-    }
-
-    @Test
-    public void testEmbeddedComplexType() throws Exception {
-        ComplexBar bar = new ComplexBar();
-        bar.foo = new ComplexFoo("firstValue", "secondValue");
-        getDs().save(bar);
-
-        ComplexBar fromDb = getDs().get(ComplexBar.class, bar.getId());
-        assertThat("bar is not null", fromDb, notNullValue());
-        assertThat("foo is not null", fromDb.foo, notNullValue());
-        assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));
-        assertThat("foo has the correct second value", fromDb.foo.second(), equalTo("secondValue"));
-    }
-
-    @Test
-    public void testEmbeddedComplexArrayType() throws Exception {
-        ArrayBar bar = new ArrayBar();
-        bar.foo = new ArrayFoo("firstValue", "secondValue");
-        getDs().save(bar);
-
-        ArrayBar fromDb = getDs().get(ArrayBar.class, bar.getId());
-        assertThat("bar is not null", fromDb, notNullValue());
-        assertThat("foo is not null", fromDb.foo, notNullValue());
-        assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));
-        assertThat("foo has the correct second value", fromDb.foo.second(), equalTo("secondValue"));
     }
 
 }

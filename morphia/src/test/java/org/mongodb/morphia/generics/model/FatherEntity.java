@@ -16,10 +16,6 @@ public abstract class FatherEntity<T extends FatherEmbedded> {
         super();
     }
 
-    public void setEmbeddedList(final List<? extends FatherEmbedded> embeddedList) {
-        this.embeddedList = embeddedList;
-    }
-
     @Override
     public int hashCode() {
         int result = id.hashCode();
@@ -40,5 +36,9 @@ public abstract class FatherEntity<T extends FatherEmbedded> {
 
         return id.equals(that.id) && embeddedList.equals(that.embeddedList);
 
+    }
+
+    public void setEmbeddedList(final List<? extends FatherEmbedded> embeddedList) {
+        this.embeddedList = embeddedList;
     }
 }

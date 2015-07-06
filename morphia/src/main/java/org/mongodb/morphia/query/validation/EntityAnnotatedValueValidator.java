@@ -7,9 +7,24 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+/**
+ * Ensures that a Class is annotated with @Entity.
+ *
+ * @see Entity
+ */
 public final class EntityAnnotatedValueValidator extends TypeValidator {
     private static final EntityAnnotatedValueValidator INSTANCE = new EntityAnnotatedValueValidator();
+
     private EntityAnnotatedValueValidator() {
+    }
+
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static EntityAnnotatedValueValidator getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -24,14 +39,5 @@ public final class EntityAnnotatedValueValidator extends TypeValidator {
                                                                 + "Value '%s' was a %s", value, value.getClass())));
 
         }
-    }
-
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static EntityAnnotatedValueValidator getInstance() {
-        return INSTANCE;
     }
 }

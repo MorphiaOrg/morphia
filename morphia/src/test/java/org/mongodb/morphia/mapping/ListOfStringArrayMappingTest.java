@@ -15,14 +15,6 @@ import java.util.List;
  * @author scotthernandez
  */
 public class ListOfStringArrayMappingTest extends TestBase {
-    private static class ContainsListStringArray {
-        @Id
-        private ObjectId id;
-        private final List<String[]> listOfStrings = new ArrayList<String[]>();
-        private String[] arrayOfStrings;
-        private String string;
-    }
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(ContainsListStringArray.class);
@@ -37,5 +29,13 @@ public class ListOfStringArrayMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.listOfStrings.get(0), loaded.listOfStrings.get(0));
         Assert.assertArrayEquals(ent.arrayOfStrings, loaded.arrayOfStrings);
         Assert.assertEquals(ent.string, loaded.string);
+    }
+
+    private static class ContainsListStringArray {
+        private final List<String[]> listOfStrings = new ArrayList<String[]>();
+        @Id
+        private ObjectId id;
+        private String[] arrayOfStrings;
+        private String string;
     }
 }

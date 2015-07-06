@@ -17,15 +17,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class CollectionInheritanceTest extends TestBase {
 
-    /**
-     * Real test
-     */
-    @Test
-    public void testSavingBook() throws Exception {
-        // Test saving
-        getDs().save(newBook());
-
-        assertEquals(1, getDs().getCollection(Book.class).count());
+    private static Book newBook() {
+        final Book book = new Book();
+        book.authors.add(new Author("Hergé"));
+        book.authors.add(new Author("George R. R. Martin"));
+        return book;
     }
 
     /**
@@ -44,11 +40,15 @@ public class CollectionInheritanceTest extends TestBase {
 
     }
 
-    private static Book newBook() {
-        final Book book = new Book();
-        book.authors.add(new Author("Hergé"));
-        book.authors.add(new Author("George R. R. Martin"));
-        return book;
+    /**
+     * Real test
+     */
+    @Test
+    public void testSavingBook() throws Exception {
+        // Test saving
+        getDs().save(newBook());
+
+        assertEquals(1, getDs().getCollection(Book.class).count());
     }
 
     private static class Author {

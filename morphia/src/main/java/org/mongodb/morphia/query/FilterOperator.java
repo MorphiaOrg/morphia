@@ -1,6 +1,5 @@
 package org.mongodb.morphia.query;
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,9 +58,9 @@ public enum FilterOperator {
      */
     @Deprecated
     WITHIN("$within", "within"),
-    
+
     GEO_NEAR("$geoNear", "geoNear"),
-    
+
     GEO_WITHIN("$geoWithin", "geoWithin"),
 
     INTERSECTS("$geoIntersects", "geoIntersects");
@@ -74,14 +73,12 @@ public enum FilterOperator {
         filters = Arrays.asList(filterValues);
     }
 
-    public String val() {
-        return value;
-    }
-
-    public boolean matches(final String filter) {
-        return filter != null && filters.contains(filter.trim().toLowerCase());
-    }
-
+    /**
+     * Creates a FilterOperator from a String
+     *
+     * @param operator the String to convert
+     * @return the FilterOperator
+     */
     public static FilterOperator fromString(final String operator) {
         final String filter = operator.trim().toLowerCase();
         for (FilterOperator filterOperator : FilterOperator.values()) {
@@ -90,5 +87,21 @@ public enum FilterOperator {
             }
         }
         throw new IllegalArgumentException(format("Unknown operator '%s'", operator));
+    }
+
+    /**
+     * Returns true if the given filter matches the filters on this FilterOperator
+     * @param filter the filter to check
+     * @return true if the given filter matches the filters on this FilterOperator
+     */
+    public boolean matches(final String filter) {
+        return filter != null && filters.contains(filter.trim().toLowerCase());
+    }
+
+    /**
+     * @return the value of this FilterOperator
+     */
+    public String val() {
+        return value;
     }
 }

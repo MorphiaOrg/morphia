@@ -16,25 +16,6 @@ import static org.junit.Assert.assertEquals;
 
 public class QueryHasAnyOfForReferencedList extends TestBase {
 
-    @Entity(noClassnameStored = true)
-    private static class Plan implements Serializable {
-
-        @Id
-        private ObjectId id;
-        @Property("name")
-        private String name;
-    }
-
-    @Entity(noClassnameStored = true)    
-    private static class Org implements Serializable {
-        @Id
-        private ObjectId id;
-        @Property("name")
-        private String name;
-        @Reference("plan")
-        private Plan plan;
-    }
-
     @Test
     public void testInQuery() throws Exception {
 
@@ -73,6 +54,25 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
 
         count = getDs().createQuery(Org.class).field("plan").hasAnyOf(plans).countAll();
         assertEquals(2, count);
+    }
+
+    @Entity(noClassnameStored = true)
+    private static class Plan implements Serializable {
+
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+    }
+
+    @Entity(noClassnameStored = true)
+    private static class Org implements Serializable {
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+        @Reference("plan")
+        private Plan plan;
     }
 
 }

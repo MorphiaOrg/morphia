@@ -20,52 +20,6 @@ import java.util.ConcurrentModificationException;
 public class VersionTest extends TestBase {
 
 
-    public static class ALongPrimitive extends TestEntity {
-
-        @Version
-        private long hubba;
-
-        private String text;
-    }
-
-    public static class ALong extends TestEntity {
-        @Version("versionNameContributedByAnnotation")
-        private Long v;
-
-        private String text;
-    }
-
-    @Entity
-    static class InvalidVersionUse {
-        @Id
-        private String id;
-        @Version
-        private long version1;
-        @Version
-        private long version2;
-
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testInvalidVersionUse() throws Exception {
-        getMorphia().map(InvalidVersionUse.class);
-    }
-
-    @Test
-    public void testVersions() throws Exception {
-        final ALongPrimitive a = new ALongPrimitive();
-        Assert.assertEquals(0, a.hubba);
-        getDs().save(a);
-        Assert.assertTrue(a.hubba > 0);
-        final long version1 = a.hubba;
-
-        getDs().save(a);
-        Assert.assertTrue(a.hubba > 0);
-        final long version2 = a.hubba;
-
-        Assert.assertFalse(version1 == version2);
-    }
-
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetection() throws Exception {
         getMorphia().map(ALongPrimitive.class);
@@ -103,10 +57,56 @@ public class VersionTest extends TestBase {
         getDs().merge(a);
     }
 
+    @Test(expected = ConstraintViolationException.class)
+    public void testInvalidVersionUse() throws Exception {
+        getMorphia().map(InvalidVersionUse.class);
+    }
+
     @Test
     public void testVersionFieldNameContribution() throws Exception {
         final MappedField mappedFieldByJavaField = getMorphia().getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
         Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getNameToStore());
+    }
+
+    @Test
+    public void testVersions() throws Exception {
+        final ALongPrimitive a = new ALongPrimitive();
+        Assert.assertEquals(0, a.hubba);
+        getDs().save(a);
+        Assert.assertTrue(a.hubba > 0);
+        final long version1 = a.hubba;
+
+        getDs().save(a);
+        Assert.assertTrue(a.hubba > 0);
+        final long version2 = a.hubba;
+
+        Assert.assertFalse(version1 == version2);
+    }
+
+    public static class ALongPrimitive extends TestEntity {
+
+        @Version
+        private long hubba;
+
+        private String text;
+    }
+
+    public static class ALong extends TestEntity {
+        @Version("versionNameContributedByAnnotation")
+        private Long v;
+
+        private String text;
+    }
+
+    @Entity
+    static class InvalidVersionUse {
+        @Id
+        private String id;
+        @Version
+        private long version1;
+        @Version
+        private long version2;
+
     }
 
 }

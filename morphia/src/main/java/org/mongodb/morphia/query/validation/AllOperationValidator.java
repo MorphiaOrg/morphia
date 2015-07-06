@@ -18,6 +18,20 @@ public final class AllOperationValidator extends OperationValidator {
     private AllOperationValidator() {
     }
 
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static AllOperationValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected FilterOperator getOperator() {
+        return ALL;
+    }
+
     @Override
     protected void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures) {
         if (value == null) {
@@ -28,20 +42,6 @@ public final class AllOperationValidator extends OperationValidator {
                                                                 value, value.getClass()
                                                                )));
         }
-    }
-
-    @Override
-    protected FilterOperator getOperator() {
-        return ALL;
-    }
-
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static AllOperationValidator getInstance() {
-        return INSTANCE;
     }
 
 }

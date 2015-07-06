@@ -9,13 +9,21 @@ public final class Area {
     @Indexed(IndexDirection.GEO2DSPHERE)
     private Polygon area;
 
-    @SuppressWarnings("UnusedDeclaration") // Used by Morphia
+    @SuppressWarnings("UnusedDeclaration")
+        // Used by Morphia
     Area() {
     }
 
     public Area(final String name, final Polygon area) {
         this.name = name;
         this.area = area;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (area != null ? area.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -37,13 +45,6 @@ public final class Area {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (area != null ? area.hashCode() : 0);
-        return result;
     }
 
     @Override

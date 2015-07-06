@@ -17,39 +17,6 @@ import java.util.List;
 public class TestLargeObjectsWithCursor extends TestBase {
     private int documentsNb;
 
-    @Entity
-    public static class E extends BaseEntity {
-        private final Integer index;
-        private final byte[] largeContent;
-
-        public E() {
-            index = null;
-            largeContent = null;
-        }
-
-        private byte[] createLargeByteArray() {
-            final int size = (int) (4000 + Math.random() * 100000);
-            final byte[] arr = new byte[size];
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = 'a';
-            }
-            return arr;
-        }
-
-        public E(final int i) {
-            index = i;
-            largeContent = createLargeByteArray();
-        }
-
-        public Integer getIndex() {
-            return index;
-        }
-
-        public byte[] getLargeContent() {
-            return largeContent;
-        }
-    }
-
     @Override
     @Before
     public void setUp() {
@@ -69,5 +36,38 @@ public class TestLargeObjectsWithCursor extends TestBase {
         final List<E> list = query.asList();
         Assert.assertEquals(documentsNb, countAll);
         Assert.assertEquals(documentsNb, list.size());
+    }
+
+    @Entity
+    public static class E extends BaseEntity {
+        private final Integer index;
+        private final byte[] largeContent;
+
+        public E() {
+            index = null;
+            largeContent = null;
+        }
+
+        public E(final int i) {
+            index = i;
+            largeContent = createLargeByteArray();
+        }
+
+        public Integer getIndex() {
+            return index;
+        }
+
+        public byte[] getLargeContent() {
+            return largeContent;
+        }
+
+        private byte[] createLargeByteArray() {
+            final int size = (int) (4000 + Math.random() * 100000);
+            final byte[] arr = new byte[size];
+            for (int i = 0; i < arr.length; i++) {
+                arr[i] = 'a';
+            }
+            return arr;
+        }
     }
 }

@@ -11,7 +11,10 @@ import java.util.NoSuchElementException;
 
 
 /**
+ * @param <T> the original type being iterated
+ * @param <V> the type of the values returned
  * @author Scott Hernandez
+ * @see MorphiaKeyIterator
  */
 public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     private final Iterator<DBObject> wrapped;
@@ -22,6 +25,15 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     private long driverTime;
     private long mapperTime;
 
+    /**
+     * Creates a MorphiaIterator
+     *
+     * @param it         the Iterator to use
+     * @param mapper     the Mapper to use
+     * @param clazz      the original type being iterated
+     * @param collection the mongodb collection
+     * @param cache      the EntityCache
+     */
     public MorphiaIterator(final Iterator<DBObject> it, final Mapper mapper, final Class<T> clazz, final String collection,
                            final EntityCache cache) {
         wrapped = it;
@@ -31,21 +43,55 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         this.cache = cache;
     }
 
+    /**
+     * Closes the underlying cursor.
+     */
+    public void close() {
+        if (wrapped != null && wrapped instanceof DBCursor) {
+            ((DBCursor) wrapped).close();
+        }
+    }
+
+    /**
+     * @return the original class type.
+     */
     public Class<T> getClazz() {
         return clazz;
     }
 
+    /**
+     * @return the mongodb collection
+     */
     public String getCollection() {
         return collection;
     }
 
+    /**
+     * @return the underlying DBCursor
+     */
+    public DBCursor getCursor() {
+        return (DBCursor) wrapped;
+    }
+
+    /**
+     * @return the time spent calling the driver in ms
+     */
+    public long getDriverTime() {
+        return driverTime;
+    }
+
+    /**
+     * @return the Mapper being used
+     */
     public Mapper getMapper() {
         return mapper;
     }
 
-    @Override
-    public Iterator<V> iterator() {
-        return this;
+    /**
+     * @return the time spent calling the mapper in ms
+     */
+    public long getMapperTime() {
+        return mapperTime;
     }
 
     @Override
@@ -68,11 +114,21 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return processItem(dbObj);
     }
 
-    protected V processItem(final DBObject dbObj) {
+    @Override
+    public void remove() {
         final long start = System.currentTimeMillis();
-        final V item = convertItem(dbObj);
-        mapperTime += System.currentTimeMillis() - start;
-        return item;
+        wrapped.remove();
+        driverTime += System.currentTimeMillis() - start;
+    }
+
+    @Override
+    public Iterator<V> iterator() {
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected V convertItem(final DBObject dbObj) {
+        return (V) mapper.fromDBObject(clazz, dbObj, cache);
     }
 
     protected DBObject getNext() {
@@ -82,39 +138,11 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return dbObj;
     }
 
-    @SuppressWarnings("unchecked")
-    protected V convertItem(final DBObject dbObj) {
-        return (V) mapper.fromDBObject(clazz, dbObj, cache);
-    }
-
-    @Override
-    public void remove() {
+    protected V processItem(final DBObject dbObj) {
         final long start = System.currentTimeMillis();
-        wrapped.remove();
-        driverTime += System.currentTimeMillis() - start;
+        final V item = convertItem(dbObj);
+        mapperTime += System.currentTimeMillis() - start;
+        return item;
     }
 
-    /**
-     * Returns the time spent calling the driver in ms
-     */
-    public long getDriverTime() {
-        return driverTime;
-    }
-
-    /**
-     * Returns the time spent calling the mapper in ms
-     */
-    public long getMapperTime() {
-        return mapperTime;
-    }
-
-    public DBCursor getCursor() {
-        return (DBCursor) wrapped;
-    }
-
-    public void close() {
-        if (wrapped != null && wrapped instanceof DBCursor) {
-            ((DBCursor) wrapped).close();
-        }
-    }
 }

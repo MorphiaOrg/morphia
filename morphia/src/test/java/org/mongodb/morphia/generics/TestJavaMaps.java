@@ -19,7 +19,7 @@ public class TestJavaMaps {
         Morphia morphia = new Morphia();
         morphia.map(Employee.class);
 
-        final BasicDBObject dbObject = new BasicDBObject("byteMap", new BasicDBObject("b", (Integer) 1));
+        final BasicDBObject dbObject = new BasicDBObject("byteMap", new BasicDBObject("b", 1));
         Employee loaded = morphia.getMapper().fromDBObject(Employee.class, dbObject, new DefaultEntityCache());
 
         assertEquals(Byte.class, (((Map) loaded.getByteMap()).get("b").getClass()));

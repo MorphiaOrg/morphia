@@ -5,9 +5,20 @@ import org.mongodb.morphia.mapping.Mapper;
 
 import static java.lang.String.format;
 
+/**
+ * Defines a bundle of converters that will delegate to the DefaultConverters for unknown types but provides a chance to override the
+ * converter used for different types.
+ *
+ * @see DefaultConverters
+ */
 public class CustomConverters extends Converters {
     private final DefaultConverters defaultConverters;
 
+    /**
+     * Creates a bundle with a particular Mapper.
+     *
+     * @param mapper the Mapper to use
+     */
     public CustomConverters(final Mapper mapper) {
         super(mapper);
         defaultConverters = new DefaultConverters(mapper);

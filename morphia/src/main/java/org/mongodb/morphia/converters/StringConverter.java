@@ -12,6 +12,9 @@ import java.util.List;
  * @author scotthernandez
  */
 public class StringConverter extends TypeConverter implements SimpleValueConverter {
+    /**
+     * Creates the Converter.
+     */
     public StringConverter() {
         super(String.class, String[].class);
     }

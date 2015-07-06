@@ -14,23 +14,14 @@ import java.util.Collections;
 public class TestQueryParams extends TestBase {
     private FieldEnd<?> e;
 
-    @Entity
-    static class E extends BaseEntity {
-
-    }
-
     @Before
     public void createQ() {
         e = getDs().createQuery(E.class).field("_id");
     }
 
-    @Test
-    public void testNullAcceptance() {
-
-        // have to succeed:
-        e.equal(null);
-        e.notEqual(null);
-        e.hasThisOne(null);
+    @Test(expected = Assert.AssertionFailedException.class)
+    public void testAnyOfNull() {
+        e.hasAnyOf(null);
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
@@ -44,13 +35,14 @@ public class TestQueryParams extends TestBase {
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
-    public void testHasAllOfNull() {
-        e.hasAllOf(null);
+    public void testHasAllOfEmptyList() {
+        final Query<E> q = getDs().createQuery(E.class);
+        q.field("_id").hasAllOf(Collections.emptyList());
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
-    public void testAnyOfNull() {
-        e.hasAnyOf(null);
+    public void testHasAllOfNull() {
+        e.hasAllOf(null);
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
@@ -74,8 +66,18 @@ public class TestQueryParams extends TestBase {
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
-    public void testStartsWithNull() {
-        e.startsWith(null);
+    public void testNoneOfEmptyList() {
+        final Query<E> q = getDs().createQuery(E.class);
+        q.field("_id").hasNoneOf(Collections.emptyList());
+    }
+
+    @Test
+    public void testNullAcceptance() {
+
+        // have to succeed:
+        e.equal(null);
+        e.notEqual(null);
+        e.hasThisOne(null);
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
@@ -84,14 +86,12 @@ public class TestQueryParams extends TestBase {
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
-    public void testHasAllOfEmptyList() {
-        final Query<E> q = getDs().createQuery(E.class);
-        q.field("_id").hasAllOf(Collections.emptyList());
+    public void testStartsWithNull() {
+        e.startsWith(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
-    public void testNoneOfEmptyList() {
-        final Query<E> q = getDs().createQuery(E.class);
-        q.field("_id").hasNoneOf(Collections.emptyList());
+    @Entity
+    static class E extends BaseEntity {
+
     }
 }

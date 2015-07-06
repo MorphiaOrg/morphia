@@ -3,9 +3,8 @@ package org.mongodb.morphia.mapping.lazy;
 import org.mongodb.morphia.Datastore;
 
 /**
- * This will only ever return the first datastore created by an associated
- * Mapper instance
- * 
+ * This will only ever return the first datastore created by an associated Mapper instance
+ *
  * @author Michael Houston
  */
 public class SingleDatastoreProvider implements DatastoreProvider {
@@ -18,7 +17,7 @@ public class SingleDatastoreProvider implements DatastoreProvider {
     public Datastore get() {
         if (datastore == null) {
             throw new IllegalStateException(
-                    "SingleDatastoreProvider does not carry a Datastore.");
+                                               "SingleDatastoreProvider does not carry a Datastore.");
         }
         return datastore;
     }

@@ -8,13 +8,13 @@ import org.mongodb.morphia.TestBase;
 
 public class KnownFieldsTest extends TestBase {
 
-    private static class A {
-        private String foo;
-        private String bar;
-    }
-
     @Test
     public void testKnownFields() {
         Assert.assertNotNull(getDs().createQuery(A.class).retrieveKnownFields());
+    }
+
+    private static class A {
+        private String foo;
+        private String bar;
     }
 }

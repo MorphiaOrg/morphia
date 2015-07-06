@@ -14,6 +14,47 @@ import java.util.Set;
 
 
 public class TestEmptyEntityMapping extends TestBase {
+    @Test
+    public void testEmptyEmbeddedNotNullAfterReload() throws Exception {
+        A a = new A();
+        a.b = new B();
+
+        getDs().save(a);
+        Assert.assertNotNull(a.b);
+
+        a = getDs().find(A.class, "_id", a.getId()).get();
+        Assert.assertNull(a.b);
+    }
+
+    @Test
+    public void testSizeOnEmptyElements() {
+        User u = new User();
+        u.setFullName("User Name");
+        u.setUserId("USERID");
+        getDs().save(u);
+
+        Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0).get());
+        Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0).get());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist().get());
+        getDs().delete(getDs().createQuery(User.class));
+
+        u = new User();
+        u.setFullName("User Name");
+        u.setUserId("USERID");
+        u.getRights().add(Rights.ADMIN);
+        getDs().save(u);
+
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1).get());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1).get());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists().get());
+    }
+
+
+    @Entity
+    public enum Rights {
+        ADMIN
+    }
+
     @Entity
     static class A extends TestEntity {
         @Embedded
@@ -26,14 +67,8 @@ public class TestEmptyEntityMapping extends TestBase {
         private String foo;
     }
 
-
     @Entity
     public static class UserType extends TestEntity {
-    }
-
-    @Entity
-    public static enum Rights {
-        ADMIN
     }
 
     @Entity
@@ -52,14 +87,6 @@ public class TestEmptyEntityMapping extends TestBase {
         @Embedded
         private Set<NotificationAddress> notificationAddresses = new HashSet<NotificationAddress>();
 
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(final String userId) {
-            this.userId = userId;
-        }
-
         public String getFullName() {
             return fullName;
         }
@@ -68,12 +95,12 @@ public class TestEmptyEntityMapping extends TestBase {
             this.fullName = fullName;
         }
 
-        public UserType getUserType() {
-            return userType;
+        public Set<NotificationAddress> getNotificationAddresses() {
+            return notificationAddresses;
         }
 
-        public void setUserType(final UserType userType) {
-            this.userType = userType;
+        public void setNotificationAddresses(final Set<NotificationAddress> notificationAddresses) {
+            this.notificationAddresses = notificationAddresses;
         }
 
         public Set<Rights> getRights() {
@@ -84,47 +111,20 @@ public class TestEmptyEntityMapping extends TestBase {
             this.rights = rights;
         }
 
-        public Set<NotificationAddress> getNotificationAddresses() {
-            return notificationAddresses;
+        public String getUserId() {
+            return userId;
         }
 
-        public void setNotificationAddresses(final Set<NotificationAddress> notificationAddresses) {
-            this.notificationAddresses = notificationAddresses;
+        public void setUserId(final String userId) {
+            this.userId = userId;
         }
-    }
 
-    @Test
-    public void testEmptyEmbeddedNotNullAfterReload() throws Exception {
-        A a = new A();
-        a.b = new B();
+        public UserType getUserType() {
+            return userType;
+        }
 
-        getDs().save(a);
-        Assert.assertNotNull(a.b);
-
-        a = getDs().find(A.class, "_id", a.getId()).get();
-        Assert.assertNull(a.b);
-    }
-    
-    @Test
-    public void testSizeOnEmptyElements() {
-        User u = new User();
-        u.setFullName("User Name");
-        u.setUserId("USERID");
-        getDs().save(u);
-
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0).get());
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist().get());
-        getDs().delete(getDs().createQuery(User.class));
-        
-        u = new User();
-        u.setFullName("User Name");
-        u.setUserId("USERID");
-        u.getRights().add(Rights.ADMIN);
-        getDs().save(u);
-
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists().get());
+        public void setUserType(final UserType userType) {
+            this.userType = userType;
+        }
     }
 }

@@ -7,10 +7,20 @@ import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 import static java.lang.String.format;
 
 
+/**
+ * A serializable object reference
+ */
 public class SerializableEntityObjectReference extends AbstractReference implements ProxiedEntityReference {
     private static final long serialVersionUID = 1L;
     private final Key key;
 
+    /**
+     * Creates a serializable object reference
+     *
+     * @param targetClass the Class of the referenced item
+     * @param p           the DatastoreProvider to use
+     * @param key         the Key value
+     */
     public SerializableEntityObjectReference(final Class targetClass, final DatastoreProvider p, final Key key) {
 
         super(p, targetClass, false);
@@ -18,10 +28,16 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
     }
 
     //CHECKSTYLE:OFF
+    @Override
     public Key __getKey() {
         return key;
     }
     //CHECKSTYLE:ON
+
+    @Override
+    protected void beforeWriteObject() {
+        object = null;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -32,10 +48,5 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
                                                             + "disappeared from the Datastore.", key));
         }
         return entity;
-    }
-
-    @Override
-    protected void beforeWriteObject() {
-        object = null;
     }
 }

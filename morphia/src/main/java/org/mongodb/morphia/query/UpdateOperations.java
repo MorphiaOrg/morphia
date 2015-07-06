@@ -5,96 +5,181 @@ import java.util.List;
 
 
 /**
- * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and client
+ * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and
+ * client
  * version of the Entity to be different </p>
- * 
+ *
  * @param <T> The Java type used in the updates
  */
 public interface UpdateOperations<T> {
-  /**
-   * sets the field value
-   */
-  UpdateOperations<T> set(String fieldExpr, Object value);
+    /**
+     * adds the value to an array field
+     *
+     * @param fieldExpr the field to update
+     * @param value     the value to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     */
+    UpdateOperations<T> add(String fieldExpr, Object value);
 
-  /**
-   * sets the field on insert.
-   */
-  UpdateOperations<T> setOnInsert(String fieldExpr, Object value);
+    /**
+     * adds the value to an array field
+     *
+     * @param fieldExpr the field to update
+     * @param value     the value to add
+     * @param addDups   if true, the value will be added even if it already exists in the array ($push)
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     */
+    UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups);
 
-  /**
-   * removes the field
-   */
-  UpdateOperations<T> unset(String fieldExpr);
+    /**
+     * adds the values to an array field
+     *
+     * @param fieldExpr the field to update
+     * @param values    the values to add
+     * @param addDups   if true, the values will be added even if they already exists in the array ($push)
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     */
+    UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups);
 
-  /**
-   * adds the value to an array field
-   */
-  UpdateOperations<T> add(String fieldExpr, Object value);
+    /**
+     * Decrements the numeric field by 1
+     *
+     * @param field the field to update
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/dec/ $dec
+     */
+    UpdateOperations<T> dec(String field);
 
-  UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups);
+    /**
+     * Turns off validation (for all calls made after)
+     *
+     * @return this
+     */
+    UpdateOperations<T> disableValidation();
 
-  /**
-   * adds the values to an array field
-   */
-  UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups);
+    /**
+     * Turns on validation (for all calls made after); by default validation is on
+     *
+     * @return this
+     */
+    UpdateOperations<T> enableValidation();
 
-  /**
-   * removes the first value from the array
-   */
-  UpdateOperations<T> removeFirst(String fieldExpr);
+    /**
+     * Increments the numeric field by 1
+     *
+     * @param field the field to update
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
+     */
+    UpdateOperations<T> inc(String field);
 
-  /**
-   * removes the last value from the array
-   */
-  UpdateOperations<T> removeLast(String fieldExpr);
+    /**
+     * increments the numeric field by value (negatives are allowed)
+     *
+     * @param field the field to update
+     * @param value the value to increment by
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
+     */
+    UpdateOperations<T> inc(String field, Number value);
 
-  /**
-   * removes the value from the array field
-   */
-  UpdateOperations<T> removeAll(String fieldExpr, Object value);
+    /**
+     * Enables isolation (so this update happens in one shot, without yielding)
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
+     */
+    UpdateOperations<T> isolated();
 
-  /**
-   * removes the values from the array field
-   */
-  UpdateOperations<T> removeAll(String fieldExpr, List<?> values);
+    /**
+     * Sets the numeric field to value if it is greater than the current value.
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/max/ $max
+     */
+    UpdateOperations<T> max(String field, Number value);
 
-  /**
-   * decrements the numeric field by 1
-   */
-  UpdateOperations<T> dec(String fieldExpr);
+    /**
+     * sets the numeric field to value if it is less than the current value.
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/min/ $min
+     */
+    UpdateOperations<T> min(String field, Number value);
 
-  /**
-   * increments the numeric field by 1
-   */
-  UpdateOperations<T> inc(String fieldExpr);
+    /**
+     * removes the value from the array field
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pull/ $pull
+     */
+    UpdateOperations<T> removeAll(String field, Object value);
 
-  /**
-   * increments the numeric field by value (negatives are allowed)
-   */
-  UpdateOperations<T> inc(String fieldExpr, Number value);
+    /**
+     * removes the values from the array field
+     *
+     * @param field  the field to update
+     * @param values the values to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pullAll/ $pullAll
+     */
+    UpdateOperations<T> removeAll(String field, List<?> values);
 
-  /**
-   * sets the numeric field to value if it is greater than the current value.
-   */
-  UpdateOperations<T> max(String fieldExpr, Number value);
+    /**
+     * removes the first value from the array
+     *
+     * @param field the field to update
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pop/ $pop
+     */
+    UpdateOperations<T> removeFirst(String field);
 
-  /**
-   * sets the numeric field to value if it is less than the current value.
-   */
-  UpdateOperations<T> min(String fieldExpr, Number value);
+    /**
+     * removes the last value from the array
+     *
+     * @param field the field to update
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pop/ $pop
+     */
+    UpdateOperations<T> removeLast(String field);
 
-  /**
-   * Turns on validation (for all calls made after); by default validation is on
-   */
-  UpdateOperations<T> enableValidation();
+    /**
+     * sets the field value
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/set/ $set
+     */
+    UpdateOperations<T> set(String field, Object value);
 
-  /**
-   * Turns off validation (for all calls made after)
-   */
-  UpdateOperations<T> disableValidation();
+    /**
+     * sets the field on insert.
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/setOnInsert/ $setOnInsert
+     */
+    UpdateOperations<T> setOnInsert(String field, Object value);
 
-  /**
-   * Enables isolation (so this update happens in one shot, without yielding)
-   */
-  UpdateOperations<T> isolated();
+    /**
+     * removes the field
+     *
+     * @param field the field to update
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/unset/ $unset
+     */
+    UpdateOperations<T> unset(String field);
 }

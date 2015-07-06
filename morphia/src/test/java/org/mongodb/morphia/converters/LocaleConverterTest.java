@@ -24,6 +24,19 @@ public class LocaleConverterTest extends TestBase {
     }
 
     @Test
+    public void shouldEncodeAndDecodeCountryOnlyLocale() {
+        // given
+        LocaleConverter converter = new LocaleConverter();
+        Locale expectedLocale = new Locale("", "FI");
+
+        // when
+        Locale decodedLocale = (Locale) converter.decode(Locale.class, converter.encode(expectedLocale));
+
+        // then
+        assertThat(decodedLocale, is(expectedLocale));
+    }
+
+    @Test
     public void shouldEncodeAndDecodeCustomLocale() {
         // given
         LocaleConverter converter = new LocaleConverter();
@@ -37,19 +50,6 @@ public class LocaleConverterTest extends TestBase {
         assertThat(decodedLocale.getLanguage(), is("de"));
         assertThat(decodedLocale.getCountry(), is("DE"));
         assertThat(decodedLocale.getVariant(), is("bavarian"));
-    }
-
-    @Test
-    public void shouldEncodeAndDecodeCountryOnlyLocale() {
-        // given
-        LocaleConverter converter = new LocaleConverter();
-        Locale expectedLocale = new Locale("", "FI");
-
-        // when
-        Locale decodedLocale = (Locale) converter.decode(Locale.class, converter.encode(expectedLocale));
-
-        // then
-        assertThat(decodedLocale, is(expectedLocale));
     }
 
     @Test

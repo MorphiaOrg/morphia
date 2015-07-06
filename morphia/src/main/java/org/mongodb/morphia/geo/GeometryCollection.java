@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents a collection of mixed GeoJson objects as per the 
- * <a href="http://geojson.org/geojson-spec.html#geometrycollection">GeoJSON specification</a>. Therefore this entity will never have its 
- * own ID or store the its Class name.
+ * This class represents a collection of mixed GeoJson objects as per the <a href="http://geojson.org/geojson-spec
+ * .html#geometrycollection">GeoJSON
+ * specification</a>. Therefore this entity will never have its own ID or store the its Class name.
  * <p/>
  * The factory for creating a MultiPoint is the {@code GeoJson.multiPoint} method.
  *
@@ -36,6 +36,13 @@ public class GeometryCollection {
     }
 
     @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + geometries.hashCode();
+        return result;
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -54,13 +61,6 @@ public class GeometryCollection {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + geometries.hashCode();
-        return result;
     }
 
     @Override

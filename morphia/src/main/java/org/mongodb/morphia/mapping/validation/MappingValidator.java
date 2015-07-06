@@ -45,13 +45,34 @@ public class MappingValidator {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappingValidator.class);
     private ObjectFactory creator;
 
+    /**
+     * Creates a mapping validator
+     *
+     * @param objectFactory the object factory to be used when creating throw away instances to use in validation
+     */
     public MappingValidator(final ObjectFactory objectFactory) {
         creator = objectFactory;
     }
 
+    /**
+     * Validates a MappedClass
+     *
+     * @param mappedClass the MappedClass to validate
+     */
+    @Deprecated
+    public void validate(final MappedClass mappedClass) {
+        validate(Arrays.asList(mappedClass));
+    }
+
+    /**
+     * Validates a List of MappedClasses
+     *
+     * @param classes the MappedClasses to validate
+     */
     public void validate(final List<MappedClass> classes) {
         final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
 
+            @Override
             public int compare(final ConstraintViolation o1, final ConstraintViolation o2) {
                 return o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1;
             }
@@ -128,6 +149,31 @@ public class MappingValidator {
             this.v = v;
         }
 
+        @Override
+        public int compareTo(final LogLine o) {
+            return v.getPrefix().compareTo(o.v.getPrefix());
+        }
+
+        @Override
+        public int hashCode() {
+            return v.hashCode();
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final LogLine logLine = (LogLine) o;
+
+            return v.equals(logLine.v);
+
+        }
+
         void log(final Logger logger) {
             switch (v.getLevel()) {
                 case SEVERE:
@@ -147,37 +193,5 @@ public class MappingValidator {
                                                            v.getLevel()));
             }
         }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final LogLine logLine = (LogLine) o;
-
-            return v.equals(logLine.v);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return v.hashCode();
-        }
-
-        public int compareTo(final LogLine o) {
-            return v.getPrefix().compareTo(o.v.getPrefix());
-        }
-    }
-
-    /**
-     * i definitely vote for all at once validation
-     */
-    @Deprecated
-    public void validate(final MappedClass mappedClass) {
-        validate(Arrays.asList(mappedClass));
     }
 }

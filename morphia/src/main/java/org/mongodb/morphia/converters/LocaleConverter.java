@@ -4,8 +4,14 @@ import org.mongodb.morphia.mapping.MappedField;
 
 import java.util.Locale;
 
+/**
+ * Converts a Locale to/from a valid database structure.
+ */
 public class LocaleConverter extends TypeConverter implements SimpleValueConverter {
 
+    /**
+     * Creates the Converter.
+     */
     public LocaleConverter() {
         super(Locale.class);
     }
@@ -24,7 +30,7 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
         return val.toString();
     }
 
-    public static Locale parseLocale(final String localeString) {
+    Locale parseLocale(final String localeString) {
         if ((localeString != null) && (localeString.length() != 0)) {
             final int index = localeString.indexOf("_");
             final int index2 = localeString.indexOf("_", index + 1);
@@ -35,9 +41,9 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
                 resultLocale = new Locale(localeString.substring(0, index), localeString.substring(index + 1));
             } else {
                 resultLocale = new Locale(
-                        localeString.substring(0, index),
-                        localeString.substring(index + 1, index2),
-                        localeString.substring(index2 + 1));
+                                             localeString.substring(0, index),
+                                             localeString.substring(index + 1, index2),
+                                             localeString.substring(index2 + 1));
 
             }
             return resultLocale;

@@ -6,9 +6,9 @@ package org.mongodb.morphia.mapping.lazy.proxy;
  */
 //CHECKSTYLE:OFF
 public interface ProxiedReference {
-  boolean __isFetched();
+    Class __getReferenceObjClass();
 
-  Class __getReferenceObjClass();
+    boolean __isFetched();
 
-  Object __unwrap();
+    Object __unwrap();
 }

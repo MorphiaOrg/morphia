@@ -13,6 +13,17 @@ import static org.junit.Assert.assertThat;
 
 public class DefaultTypeValidatorTest {
     @Test
+    public void shouldAllowTypesThatAreSuperclasses() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = DefaultTypeValidator.getInstance().apply(Map.class, new HashMap(), validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
     public void shouldAllowTypesThatMatchTheClassOfTheValue() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -27,17 +38,6 @@ public class DefaultTypeValidatorTest {
         // given
         List<Integer> valueAsList = Arrays.asList(1);
         assertThat(DefaultTypeValidator.getInstance().apply(ArrayList.class, valueAsList, validationFailures), is(true));
-    }
-
-    @Test
-    public void shouldAllowTypesThatAreSuperclasses() {
-        // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = DefaultTypeValidator.getInstance().apply(Map.class, new HashMap(), validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
     }
 
     @Test

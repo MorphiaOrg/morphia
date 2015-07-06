@@ -5,6 +5,7 @@ import org.mongodb.morphia.mapping.MappedField;
 final class MappedFieldTypeValidator implements Validator {
     private MappedFieldTypeValidator() {
     }
+
     static boolean isArrayOfNumbers(final MappedField mappedField) {
         Class subClass = mappedField.getSubClass();
         return mappedField.getType().isArray()

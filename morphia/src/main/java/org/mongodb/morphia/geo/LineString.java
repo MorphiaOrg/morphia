@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a GeoJSON LineString type.  Will be persisted into the database according to 
- * <a href="http://geojson.org/geojson-spec.html#id3">the specification</a>. 
+ * Represents a GeoJSON LineString type.  Will be persisted into the database according to <a href="http://geojson.org/geojson-spec
+ * .html#id3">the
+ * specification</a>.
  * <p/>
  * The factory for creating a LineString is the {@code GeoJson.lineString} method.
  *
- * @see org.mongodb.morphia.geo.GeoJson#lineString(Point...) 
+ * @see org.mongodb.morphia.geo.GeoJson#lineString(Point...)
  */
 public class LineString implements Geometry {
     private final List<Point> coordinates;
@@ -33,6 +34,11 @@ public class LineString implements Geometry {
         return coordinates;
     }
 
+    @Override
+    public int hashCode() {
+        return coordinates.hashCode();
+    }
+
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
     public boolean equals(final Object o) {
@@ -50,11 +56,6 @@ public class LineString implements Geometry {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return coordinates.hashCode();
     }
 
     @Override

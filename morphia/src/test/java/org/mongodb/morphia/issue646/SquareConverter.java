@@ -21,7 +21,7 @@ public class SquareConverter extends TypeConverter implements SimpleValueConvert
         }
 
         throw new RuntimeException(
-                "Did not expect " + fromDBObject.getClass().getName());
+                                      "Did not expect " + fromDBObject.getClass().getName());
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SquareConverter extends TypeConverter implements SimpleValueConvert
 
         if (!(value instanceof Square)) {
             throw new RuntimeException(
-                    "Did not expect " + value.getClass().getName());
+                                          "Did not expect " + value.getClass().getName());
         }
 
         return "Square";

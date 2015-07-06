@@ -20,75 +20,74 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class ProxyTestBase extends TestBase {
 
-  protected void assertFetched(final Object e) {
-    Assert.assertTrue(isFetched(e));
-  }
-
-  protected void assertNotFetched(final Object e) {
-    Assert.assertFalse(isFetched(e));
-  }
-
-  protected boolean isFetched(final Object e) {
-    return asProxiedReference(e).__isFetched();
-  }
-
-  protected Object unwrap(final Object proxy) {
-    return proxy instanceof ProxiedReference
-            ? ((ProxiedReference) proxy).__unwrap()
-            : proxy;
-  }
-
-  protected List unwrapList(final List list) {
-    if (list == null) {
-      return null;
+    protected ProxiedReference asProxiedReference(final Object e) {
+        return (ProxiedReference) e;
     }
 
-    final List unwrapped = new ArrayList();
-    for (Object entry : list) {
-      unwrapped.add(unwrap(entry));
+    protected void assertFetched(final Object e) {
+        Assert.assertTrue(isFetched(e));
     }
 
-    return unwrapped;
-  }
-
-  protected <K, V> Map<K, V> unwrapMap(final Map<K, V> map) {
-    if (map == null) {
-      return null;
+    protected void assertIsProxy(final Object p) {
+        Assert.assertTrue("Should be a proxy", p instanceof ProxiedReference);
     }
 
-    final Map unwrapped = new LinkedHashMap();
-    for (Map.Entry entry : map.entrySet()) {
-      unwrapped.put(entry.getKey(), unwrap(entry.getValue()));
+    protected void assertNotFetched(final Object e) {
+        Assert.assertFalse(isFetched(e));
     }
 
-    return unwrapped;
-  }
-
-  protected ProxiedReference asProxiedReference(final Object e) {
-    return (ProxiedReference) e;
-  }
-
-  protected void assertIsProxy(final Object p) {
-    Assert.assertTrue("Should be a proxy", p instanceof ProxiedReference);
-  }
-    
-  protected void assertNotProxy(final Object p) {
-    Assert.assertFalse("Should not be a proxy", p instanceof ProxiedReference);
-  }
-
-  protected <T> T deserialize(final Object t) {
-    try {
-      final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      final ObjectOutputStream os = new ObjectOutputStream(baos);
-      os.writeObject(t);
-      os.close();
-      final byte[] ba = baos.toByteArray();
-
-      return (T) new ObjectInputStream(new ByteArrayInputStream(ba)).readObject();
-    } catch (Throwable e) {
-      throw new RuntimeException(e);
+    protected void assertNotProxy(final Object p) {
+        Assert.assertFalse("Should not be a proxy", p instanceof ProxiedReference);
     }
-  }
 
+    protected <T> T deserialize(final Object t) {
+        try {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ObjectOutputStream os = new ObjectOutputStream(baos);
+            os.writeObject(t);
+            os.close();
+            final byte[] ba = baos.toByteArray();
+
+            return (T) new ObjectInputStream(new ByteArrayInputStream(ba)).readObject();
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean isFetched(final Object e) {
+        return asProxiedReference(e).__isFetched();
+    }
+
+    protected Object unwrap(final Object proxy) {
+        return proxy instanceof ProxiedReference
+               ? ((ProxiedReference) proxy).__unwrap()
+               : proxy;
+    }
+
+    protected List unwrapList(final List list) {
+        if (list == null) {
+            return null;
+        }
+
+        final List unwrapped = new ArrayList();
+        for (Object entry : list) {
+            unwrapped.add(unwrap(entry));
+        }
+
+        return unwrapped;
+    }
+
+    protected <K, V> Map<K, V> unwrapMap(final Map<K, V> map) {
+        if (map == null) {
+            return null;
+        }
+
+        final Map unwrapped = new LinkedHashMap();
+        for (Map.Entry entry : map.entrySet()) {
+            unwrapped.put(entry.getKey(), unwrap(entry.getValue()));
+        }
+
+        return unwrapped;
+    }
 
 }

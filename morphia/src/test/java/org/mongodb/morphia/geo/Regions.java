@@ -19,6 +19,13 @@ public final class Regions {
     }
 
     @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + regions.hashCode();
+        return result;
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -37,13 +44,6 @@ public final class Regions {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + regions.hashCode();
-        return result;
     }
 
     @Override

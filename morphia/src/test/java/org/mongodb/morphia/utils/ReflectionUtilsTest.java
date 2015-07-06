@@ -30,30 +30,41 @@ import static org.mongodb.morphia.testutil.ExactClassMatcher.exactClass;
 @SuppressWarnings("UnusedDeclaration")
 public class ReflectionUtilsTest extends TestBase {
 
-    /**
-     * Test method for {@link ReflectionUtils#implementsInterface(Class, Class)} .
-     */
     @Test
-    public void testImplementsInterface() {
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, List.class), is(true));
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
-        
-        assertThat(ReflectionUtils.implementsInterface(Set.class, List.class), is(false));
-        assertThat(ReflectionUtils.implementsInterface(List.class, ArrayList.class), is(false));
+    @Ignore("Not implemented yet")
+    public void shouldAcceptInterfacesWithoutGenericParameters() {
+        Class parameterizedClass = ReflectionUtils.getParameterizedClass(InterfaceWithoutGenericTypes.class);
+
+        assertThat(parameterizedClass, is(exactClass(Integer.class)));
     }
 
     @Test
-    public void testInheritedClassAnnotations() {
-        final List<Indexes> annotations = ReflectionUtils.getAnnotations(Foobie.class, Indexes.class);
-        assertThat(annotations.size(), is(2));
-        assertThat(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null, is(true));
+    public void shouldSupportGenericArrays() {
+        getMorphia().map(MyEntity.class);
+    }
 
-        assertThat("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()), is(true));
+    /**
+     * Tests that in a class hierarchy of arbitrary depth, we can get the correct declared field type
+     *
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGenericFieldTypeResolution() throws Exception {
+        Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class,
+                                                                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
+        assertThat(typeArgument, is(exactClass(Integer.class)));
+    }
 
-        assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
+    @Test
+    public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
+        //we need a jar to test with so use JUnit since it will always be there
+        String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit");
 
-        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
+        for (Class clazz : result) {
+            assertThat(clazz.getPackage().getName(), is("org.junit"));
+        }
     }
 
     @Test
@@ -71,41 +82,32 @@ public class ReflectionUtilsTest extends TestBase {
     }
 
     /**
-     * Tests that in a class hierarchy of arbitrary depth, we can get the correct declared field type
-     *
-     * @throws Exception
+     * Test method for {@link ReflectionUtils#implementsInterface(Class, Class)} .
      */
-    @SuppressWarnings("unchecked")
     @Test
-    public void testGenericFieldTypeResolution() throws Exception {
-        Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class, 
-                                                                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
-        assertThat(typeArgument, is(exactClass(Integer.class)));
+    public void testImplementsInterface() {
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, List.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+
+        assertThat(ReflectionUtils.implementsInterface(Set.class, List.class), is(false));
+        assertThat(ReflectionUtils.implementsInterface(List.class, ArrayList.class), is(false));
     }
 
     @Test
-    public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
-        //we need a jar to test with so use JUnit since it will always be there
-        String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit");
+    public void testInheritedClassAnnotations() {
+        final List<Indexes> annotations = ReflectionUtils.getAnnotations(Foobie.class, Indexes.class);
+        assertThat(annotations.size(), is(2));
+        assertThat(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null, is(true));
 
-        for (Class clazz : result) {
-            assertThat(clazz.getPackage().getName(), is("org.junit"));
-        }
+        assertThat("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()), is(true));
+
+        assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
+
+        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
     }
 
-
-    @Test
-    @Ignore("Not implemented yet")
-    public void shouldAcceptInterfacesWithoutGenericParameters() {
-        Class parameterizedClass = ReflectionUtils.getParameterizedClass(InterfaceWithoutGenericTypes.class);
-
-        assertThat(parameterizedClass, is(exactClass(Integer.class)));
-    }
-  
-    @Test
-    public void shouldSupportGenericArrays() {
-        getMorphia().map(MyEntity.class);
+    private interface InterfaceWithoutGenericTypes extends List<Integer> {
     }
 
     @Entity("generic_arrays")
@@ -160,8 +162,5 @@ public class ReflectionUtilsTest extends TestBase {
     }
 
     private static class Sub extends Super3<Integer> {
-    }
-
-    private interface InterfaceWithoutGenericTypes extends List<Integer> {
     }
 }

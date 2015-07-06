@@ -11,9 +11,9 @@ public class SubClassConvertersTest extends TestBase {
 
         getMorphia().map(SubClass.class);
         Assert.assertTrue("Converters annotated in super class are not present.",
-                getMorphia().getMapper().getConverters().isRegistered(SquareConverter.class));
+                          getMorphia().getMapper().getConverters().isRegistered(SquareConverter.class));
         Assert.assertTrue("Converters annotated in sub class are not present.",
-                getMorphia().getMapper().getConverters().isRegistered(TriangleConverter.class));
+                          getMorphia().getMapper().getConverters().isRegistered(TriangleConverter.class));
 
     }
 

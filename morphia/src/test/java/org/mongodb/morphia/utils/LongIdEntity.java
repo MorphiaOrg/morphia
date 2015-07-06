@@ -11,11 +11,10 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 
 public abstract class LongIdEntity {
-    @Id
-    private Long myLongId;
-
     @Transient
     private final Datastore ds;
+    @Id
+    private Long myLongId;
 
     protected LongIdEntity(final Datastore ds) {
         this.ds = ds;
@@ -27,22 +26,6 @@ public abstract class LongIdEntity {
 
     public Long getMyLongId() {
         return myLongId;
-    }
-
-    @PrePersist
-    void prePersist() {
-        if (myLongId == null) {
-            final String collName = ds.getCollection(getClass()).getName();
-            final Query<StoredId> q = ds.find(StoredId.class, "_id", collName);
-            final UpdateOperations<StoredId> uOps = ds.createUpdateOperations(StoredId.class).inc("value");
-            StoredId newId = ds.findAndModify(q, uOps);
-            if (newId == null) {
-                newId = new StoredId(collName);
-                ds.save(newId);
-            }
-
-            myLongId = newId.getValue();
-        }
     }
 
     /**
@@ -71,6 +54,22 @@ public abstract class LongIdEntity {
 
         public Long getValue() {
             return value;
+        }
+    }
+
+    @PrePersist
+    void prePersist() {
+        if (myLongId == null) {
+            final String collName = ds.getCollection(getClass()).getName();
+            final Query<StoredId> q = ds.find(StoredId.class, "_id", collName);
+            final UpdateOperations<StoredId> uOps = ds.createUpdateOperations(StoredId.class).inc("value");
+            StoredId newId = ds.findAndModify(q, uOps);
+            if (newId == null) {
+                newId = new StoredId(collName);
+                ds.save(newId);
+            }
+
+            myLongId = newId.getValue();
         }
     }
 }

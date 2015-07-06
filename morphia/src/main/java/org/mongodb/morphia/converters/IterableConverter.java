@@ -23,15 +23,6 @@ import static java.lang.String.format;
  */
 public class IterableConverter extends TypeConverter {
     @Override
-    protected boolean isSupported(final Class c, final MappedField mf) {
-        if (mf != null) {
-            return mf.isMultipleValues() && !mf.isMap(); //&& !mf.isTypeMongoCompatible();
-        } else {
-            return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
-        }
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
         if (mf == null || fromDBObject == null) {
@@ -110,6 +101,15 @@ public class IterableConverter extends TypeConverter {
             }
         }
         return !values.isEmpty() || getMapper().getOptions().isStoreEmpties() ? values : null;
+    }
+
+    @Override
+    protected boolean isSupported(final Class c, final MappedField mf) {
+        if (mf != null) {
+            return mf.isMultipleValues() && !mf.isMap(); //&& !mf.isTypeMongoCompatible();
+        } else {
+            return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
+        }
     }
 
     private Collection<?> createNewCollection(final MappedField mf) {
