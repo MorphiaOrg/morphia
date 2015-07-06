@@ -8,6 +8,7 @@ import org.mongodb.morphia.mapping.MappedField;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -45,7 +46,7 @@ public class DateConverter extends TypeConverter implements SimpleValueConverter
 
         if (val instanceof String) {
             try {
-                return new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy").parse((String) val);
+                return new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.US).parse((String) val);
             } catch (ParseException e) {
                 LOG.error("Can't parse Date from: " + val);
             }
