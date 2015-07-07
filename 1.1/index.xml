@@ -57,25 +57,6 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>/morphia/1.1/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/morphia/1.1/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Installation Guide</title>
       <link>/morphia/1.1/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -332,6 +313,25 @@ datastore.delete(overPaidQuery);
 
 &lt;p&gt;There are a couple of variations on &lt;code&gt;delete()&lt;/code&gt; but this is probably the most common usage.  If you already have an object in hand, there
 is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.  There is more information in the &lt;a href=&#34;/morphia/1.1/javadoc&#34;&gt;javadoc&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/morphia/1.1/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/morphia/1.1/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
