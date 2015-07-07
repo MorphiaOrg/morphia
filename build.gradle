@@ -1,6 +1,9 @@
 ext.configDir = new File(rootDir, 'config')
 ext.slf4jVersion = '1.7.5'
 ext.simpleVersion = version.split('\\.')[0..1].join('.')
+ext.docVersion = version.split('\\.')[0..1].join('.') + '-SNAPSHOT'
+
+println "********** docVersion = ${docVersion}"
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {

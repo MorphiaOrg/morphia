@@ -1,7 +1,7 @@
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 
 //    def simpleVersion = version.split('\\.')[0..1].join('.')
-    
+
     def dest = file("build/gh-pages/${simpleVersion}")
     dest.mkdirs()
     copy {
@@ -44,7 +44,7 @@ task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
         commandLine "git"
         args("push")
     }
-    
+
 }
 
 task landing << {
@@ -56,13 +56,14 @@ task landing << {
 }
 
 task reference(dependsOn: ':morphia:javadoc') << {
+    println "********** simpleVersion = ${simpleVersion}"
     exec {
         workingDir 'docs/reference'
         environment System.getenv()
         commandLine 'hugo'
     }
     copy {
-        from 'morphia/build/docs'       
+        from 'morphia/build/docs'
         into 'docs/reference/public'
     }
 }
@@ -96,7 +97,7 @@ task clonePages << {
             commandLine "git"
             args("pull")
         }
-        
+
     }
 }
 
