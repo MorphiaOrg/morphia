@@ -23,6 +23,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface Indexed {
     /**
+     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
+     */
+    IndexOptions options() default @IndexOptions();
+
+    /**
      * Create the index in the background?
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
@@ -55,11 +60,6 @@ public @interface Indexed {
     String name() default "";
 
     /**
-     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
-     */
-    IndexOptions options() default @IndexOptions();
-
-    /**
      * Create the index with the sparse option
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
@@ -77,6 +77,9 @@ public @interface Indexed {
 
     /**
      * Indicates the direction of the index (ascending, descending); default is ascending
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     IndexDirection value() default IndexDirection.ASC;
 }

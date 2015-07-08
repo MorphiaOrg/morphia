@@ -38,6 +38,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 public @interface Index {
     /**
+     * List of fields to include in the index.  At least one field must be defined unless defining a text index. Use of this field implies
+     * use of {@link #options()} and any options defined directly on this annotation will be ignored.
+     */
+    Field[] fields() default {};
+
+    /**
+     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
+     */
+    IndexOptions options() default @IndexOptions();
+
+    /**
      * Create the index in the background
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
@@ -70,23 +81,12 @@ public @interface Index {
     int expireAfterSeconds() default -1;
 
     /**
-     * List of fields to include in the index.  At least one field must be defined unless defining a text index. Use of this field implies
-     * use of {@link #options()} and any options defined directly on this annotation will be ignored.
-     */
-    Field[] fields() default {};
-
-    /**
      * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
     @Deprecated
     String name() default "";
-
-    /**
-     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
-     */
-    IndexOptions options() default @IndexOptions();
 
     /**
      * Create the index with the sparse option
