@@ -299,7 +299,13 @@ public final class ReflectionUtils {
                 return null;
             }
         } else {
-            final Type superclass = c.getGenericSuperclass();
+            Type superclass = c.getGenericSuperclass();
+            if (superclass == null && c.isInterface()) {
+                Type[] interfaces = c.getGenericInterfaces();
+                if (interfaces.length > 0) {
+                    superclass = interfaces[index];
+                }
+            }
             if (superclass instanceof ParameterizedType) {
                 final Type[] actualTypeArguments = ((ParameterizedType) superclass).getActualTypeArguments();
                 return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index] : null;
