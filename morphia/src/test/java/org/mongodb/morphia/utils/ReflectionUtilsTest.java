@@ -1,6 +1,5 @@
 package org.mongodb.morphia.utils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.isA;
@@ -31,9 +31,8 @@ import static org.mongodb.morphia.testutil.ExactClassMatcher.exactClass;
 public class ReflectionUtilsTest extends TestBase {
 
     @Test
-    @Ignore("Not implemented yet")
-    public void shouldAcceptInterfacesWithoutGenericParameters() {
-        Class parameterizedClass = ReflectionUtils.getParameterizedClass(InterfaceWithoutGenericTypes.class);
+    public void shouldAcceptMapWithoutItsOwnGenericParameters() {
+        Class parameterizedClass = ReflectionUtils.getParameterizedClass(MapWithoutGenericTypes.class);
 
         assertThat(parameterizedClass, is(exactClass(Integer.class)));
     }
@@ -107,7 +106,7 @@ public class ReflectionUtilsTest extends TestBase {
         assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
     }
 
-    private interface InterfaceWithoutGenericTypes extends List<Integer> {
+    private interface MapWithoutGenericTypes extends Map<Integer, String> {
     }
 
     @Entity("generic_arrays")
