@@ -77,10 +77,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
     private final Morphia morphia;
-    private final Mapper mapper;
     private final MongoClient mongoClient;
     private final DB db;
-    private WriteConcern defConcern = WriteConcern.SAFE;
+    private Mapper mapper;
+    private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
     private DBDecoderFactory decoderFactory;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
@@ -1020,6 +1020,15 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
+     * Sets the Mapper this Datastore uses
+     *
+     * @param mapper the new Mapper
+     */
+    public void setMapper(final Mapper mapper) {
+        this.mapper = mapper;
+    }
+
+    /**
      * Inserts entities in to the database
      *
      * @param entities the entities to insert
@@ -1417,12 +1426,12 @@ public class DatastoreImpl implements AdvancedDatastore {
                 mapper.updateKeyAndVersionInfo(entity, dbObj, createCache());
                 keys.add(new Key<T>((Class<? extends T>) entity.getClass(), collection.getName(), mapper.getId(entity)));
             }
-            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj);
+            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj, mapper);
         }
 
         for (Entry<Object, DBObject> entry : involvedObjects.entrySet()) {
             final Object key = entry.getKey();
-            mapper.getMappedClass(key).callLifecycleMethods(PostPersist.class, key, entry.getValue());
+            mapper.getMappedClass(key).callLifecycleMethods(PostPersist.class, key, entry.getValue(), mapper);
 
         }
         return keys;

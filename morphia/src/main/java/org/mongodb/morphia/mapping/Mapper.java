@@ -133,6 +133,20 @@ public class Mapper {
     }
 
     /**
+     * Creates a new Mapper with the given options and a Mapper to copy.  This is effectively a copy constructor that allows a developer
+     * to override the options.
+     *
+     * @param options the options to use
+     * @param mapper  the collection of MappedClasses to add
+     */
+    public Mapper(final MapperOptions options, final Mapper mapper) {
+        this(options);
+        for (final MappedClass mappedClass : mapper.getMappedClasses()) {
+            addMappedClass(mappedClass, false);
+        }
+    }
+
+    /**
      * Adds an {@link EntityInterceptor}
      *
      * @param ei the interceptor to add
@@ -208,7 +222,7 @@ public class Mapper {
         // check the history key (a key is the namespace + id)
 
         if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
-            && getMappedClass(entity).getEntityAnnotation() != null) {
+                && getMappedClass(entity).getEntityAnnotation() != null) {
             final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(ID_KEY));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
@@ -220,7 +234,7 @@ public class Mapper {
 
         final MappedClass mc = getMappedClass(entity);
 
-        final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject);
+        final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
         try {
             for (final MappedField mf : mc.getPersistenceFields()) {
                 readMappedField(updated, mf, entity, cache);
@@ -228,14 +242,15 @@ public class Mapper {
         } catch (final MappingException e) {
             Object id = dbObject.get(ID_KEY);
             String entityName = entity.getClass().getName();
-            throw new MappingException(format("Could not map %s with ID: %s", entityName, id), e);
+            throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
+                                              getDatastoreProvider().get().getDB().getName()), e);
         }
 
         if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
             final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
             cache.putEntity(key, entity);
         }
-        mc.callLifecycleMethods(PostLoad.class, entity, updated);
+        mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
         return entity;
     }
 
@@ -693,7 +708,7 @@ public class Mapper {
         addConverters(mc);
 
         if (validate) {
-            mc.validate();
+            mc.validate(this);
         }
 
         mappedClasses.put(mc.getClazz().getName(), mc);
@@ -739,8 +754,8 @@ public class Mapper {
 
     private boolean isAssignable(final MappedField mf, final Object value) {
         return mf != null
-               && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
-                   || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
+                   && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
+                           || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
     }
 
@@ -751,13 +766,13 @@ public class Mapper {
     private boolean isMultiValued(final MappedField mf, final Object value) {
         final Class subClass = mf.getSubClass();
         return value instanceof Iterable
-               && mf.isMultipleValues()
-               && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
+                   && mf.isMultipleValues()
+                   && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
     private void readMappedField(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache) {
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
-            || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
+                || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
             opts.getValueMapper().fromDBObject(dbObject, mf, entity, cache, this);
         } else if (mf.hasAnnotation(Embedded.class)) {
             opts.getEmbeddedMapper().fromDBObject(dbObject, mf, entity, cache, this);
@@ -780,7 +795,7 @@ public class Mapper {
         Class<? extends Annotation> annType = getFieldAnnotation(mf);
 
         if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
-            || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
+                || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
             opts.getValueMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         } else if (Reference.class.equals(annType)) {
             opts.getReferenceMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
@@ -891,7 +906,7 @@ public class Mapper {
         }
 
         if (lifecycle) {
-            dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject);
+            dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
         }
 
         for (final MappedField mf : mc.getPersistenceFields()) {
@@ -906,7 +921,7 @@ public class Mapper {
         }
 
         if (lifecycle) {
-            mc.callLifecycleMethods(PreSave.class, entity, dbObject);
+            mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
         }
 
         return dbObject;

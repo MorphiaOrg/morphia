@@ -16,8 +16,7 @@ public class SingleDatastoreProvider implements DatastoreProvider {
     @Override
     public Datastore get() {
         if (datastore == null) {
-            throw new IllegalStateException(
-                                               "SingleDatastoreProvider does not carry a Datastore.");
+            throw new IllegalStateException("SingleDatastoreProvider does not carry a Datastore.");
         }
         return datastore;
     }

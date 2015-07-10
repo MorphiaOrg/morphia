@@ -30,6 +30,33 @@ public class MapperOptions {
     private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 
     /**
+     * Creates a default options instance.
+     */
+    public MapperOptions() {
+    }
+
+    /**
+     * Copy Constructor
+     *
+     * @param options the MapperOptions to copy
+     */
+    public MapperOptions(final MapperOptions options) {
+        setActLikeSerializer(options.isActLikeSerializer());
+        setIgnoreFinals(options.isIgnoreFinals());
+        setStoreNulls(options.isStoreNulls());
+        setStoreEmpties(options.isStoreEmpties());
+        setUseLowerCaseCollectionNames(options.isUseLowerCaseCollectionNames());
+        setCacheClassLookups(options.isCacheClassLookups());
+        setObjectFactory(options.getObjectFactory());
+        setCacheFactory(options.getCacheFactory());
+        setEmbeddedMapper(options.getEmbeddedMapper());
+        setDefaultMapper(options.getDefaultMapper());
+        setReferenceMapper(options.getReferenceMapper());
+        setValueMapper(options.getValueMapper());
+        setDatastoreProvider(options.getDatastoreProvider());
+    }
+
+    /**
      * @return the factory to create an EntityCache
      */
     public EntityCacheFactory getCacheFactory() {
@@ -58,7 +85,6 @@ public class MapperOptions {
      * @param datastoreProvider the DatastoreProvider to use
      */
     public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
-        datastoreProvider.register(this.getDatastoreProvider().get());
         this.datastoreProvider = datastoreProvider;
     }
 

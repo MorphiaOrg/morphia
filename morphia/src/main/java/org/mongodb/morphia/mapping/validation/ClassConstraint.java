@@ -2,6 +2,7 @@ package org.mongodb.morphia.mapping.validation;
 
 
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.Mapper;
 
 import java.util.Set;
 
@@ -13,8 +14,9 @@ public interface ClassConstraint {
     /**
      * Check that a MappedClass meets the constraint
      *
-     * @param mc the MappedClass to check
-     * @param ve the set of violations
+     * @param mc     the MappedClass to check
+     * @param ve     the set of violations
+     * @param mapper the Mapper to use for validation
      */
-    void check(MappedClass mc, Set<ConstraintViolation> ve);
+    void check(final Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve);
 }
