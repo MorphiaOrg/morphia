@@ -687,6 +687,211 @@ instances, you can use &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/
     </item>
     
     <item>
+      <title>Indexing</title>
+      <link>/morphia/1.1/guides/indexing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.1/guides/indexing/</guid>
+      <description>
+
+&lt;h1 id=&#34;indexing&#34;&gt;Indexing&lt;/h1&gt;
+
+&lt;p&gt;Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
+an entity&amp;rsquo;s source.  In addition to the familiar ascending/descending index types, Morphia and MongoDB support &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL&lt;/a&gt;, &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
+&#34;&gt;text&lt;/a&gt;, and &lt;a href=&#34;http://docs.mongodb.org/manual/applications/geospatial-indexes/
+&#34;&gt;geospatial&lt;/a&gt;
+ indexes.   When defining &lt;a href=&#34;#text-indexing&#34;&gt;text&lt;/a&gt; indexes there are certain restrictions which will be covered below.  Full
+  details for all these types are available in the &lt;a href=&#34;http://docs.mongodb.org/manual/indexes
+&#34;&gt;manual&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are two ways to define indexes:  at the class level and at the field level.&lt;/p&gt;
+
+&lt;h2 id=&#34;class-level-indexes&#34;&gt;Class Level Indexes&lt;/h2&gt;
+
+&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
+annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#index&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
+has two primary components to cover here:  &lt;code&gt;fields&lt;/code&gt; and &lt;code&gt;options&lt;/code&gt;.  An index definition would take the following form:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
+@Indexes({
+    @Index(fields = @Field(&amp;quot;field2&amp;quot;, type = DESC)),
+    @Index(fields = @Field(&amp;quot;field3&amp;quot;, options = @IndexOptions(name = &amp;quot;indexing_test&amp;quot;)))
+})
+public class IndexExample {
+    @Id
+    private ObjectId id;
+    private String field;
+    @Property
+    private String field2;
+    @Property(&amp;quot;f3&amp;quot;)
+    private String field3;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;fields&#34;&gt;Fields&lt;/h3&gt;
+
+&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
+arbitrary number of &lt;code&gt;@Field&lt;/code&gt;s can be given but at least one must be present.&lt;/p&gt;
+
+&lt;h4 id=&#34;value&#34;&gt;value()&lt;/h4&gt;
+
+&lt;p&gt;Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
+name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#property&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
+ &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#embedded&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
+  exception is made for &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
+
+&lt;h4 id=&#34;type&#34;&gt;type()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: IndexType.ASC&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Indicates the &amp;ldquo;type&amp;rdquo; of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;weight&#34;&gt;weight()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Specifies the weight to use when creating a text index.  This value only makes sense when direction is &lt;code&gt;IndexType.TEXT&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;index-options&#34;&gt;Index Options&lt;/h3&gt;
+
+&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexoptions&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
+be found in the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
+&#34;&gt;manual&lt;/a&gt; but we&amp;rsquo;ll provide some basic coverage
+here as well.&lt;/p&gt;
+
+&lt;h4 id=&#34;background&#34;&gt;background()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This value determines if the index build is a blocking call or not.  By default, creating an index blocks all other operations on a
+database.  When building an index on a collection, the database that holds the collection is unavailable for read or write operations
+until the index build completes. For potentially long running index building operations, consider the &lt;strong&gt;background&lt;/strong&gt; operation so that the
+MongoDB database remains available during the index building operation.  The MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-creation/#background-construction
+&#34;&gt;manual&lt;/a&gt; has more detail.&lt;/p&gt;
+
+&lt;h4 id=&#34;disablevalidation&#34;&gt;disableValidation()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
+mapped document names.  Setting this to &lt;code&gt;true&lt;/code&gt; disables this validation.&lt;/p&gt;
+
+&lt;h4 id=&#34;dropdups&#34;&gt;dropDups()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;When defining a &lt;a href=&#34;#unique&#34;&gt;unique&lt;/a&gt; index, if there are duplicate values found, the index creation will.  Setting this value to
+true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;As of MongoDB version 3.0, the dropDups option is no longer available.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&#34;expireafterseconds&#34;&gt;expireAfterSeconds()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Specifies a value, in seconds, as a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
+&#34;&gt;TTL&lt;/a&gt; to control how long MongoDB retains documents in
+this collection.  The field listed must contain values that are dates.&lt;/p&gt;
+
+&lt;h4 id=&#34;language&#34;&gt;language()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the language that determines the list of stop words and the rules for the stemmer and
+tokenizer. See &lt;a href=&#34;http://docs.mongodb.org/manual/reference/text-search-languages/
+&#34;&gt;Text Search Languages&lt;/a&gt; for the available languages and &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index
+&#34;&gt;Specify a
+Language for Text Index&lt;/a&gt; for more information and examples. The default value
+ is &lt;strong&gt;english&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h4 id=&#34;languageoverride&#34;&gt;languageOverride()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the name of the field in the collection’s documents that contains the
+override language for the document. The default value is &lt;strong&gt;language&lt;/strong&gt;. See &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/#specify-language-field-text-index-example
+&#34;&gt;Use any Field to Specify the Language for a Document&lt;/a&gt; for an example.&lt;/p&gt;
+
+&lt;h4 id=&#34;name&#34;&gt;name()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The name of the index. If unspecified, MongoDB generates an index name by concatenating the names of the indexed fields and
+the sort order.&lt;/p&gt;
+
+&lt;p&gt;Whether user specified or MongoDB generated, index names including their full namespace (i.e. database.collection) cannot be longer than
+ the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length
+&#34;&gt;Index Name Limit&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&#34;sparse&#34;&gt;sparse()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;If &lt;code&gt;true&lt;/code&gt;, the index only references documents with the specified field. These indexes use less space but behave differently in
+some situations (particularly sorts).  See &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
+&#34;&gt;Sparse Indexes&lt;/a&gt; for more
+information.&lt;/p&gt;
+
+&lt;h4 id=&#34;unique&#34;&gt;unique()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
+existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a unique index.&lt;/p&gt;
+
+&lt;h2 id=&#34;field-level-indexes&#34;&gt;Field Level Indexes&lt;/h2&gt;
+
+&lt;p&gt;Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
+&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexed&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
+annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options&#34;&gt;above&lt;/a&gt;.  A field level index
+definition would look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
+private class FieldIndex {
+    @Id
+    private ObjectId id;
+    @Indexed(options = @IndexOptions(unique = true))
+    private String name;
+    private String color;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;text-indexing&#34;&gt;Text Indexing&lt;/h2&gt;
+
+&lt;p&gt;Morphia&amp;rsquo;s indexing supports MongoDB&amp;rsquo;s text indexing and search functionality as we&amp;rsquo;ve briefly seen above.  Full details can be found in
+the &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
+&#34;&gt;manual&lt;/a&gt; but there are a few Morphia specific details to cover.  Indexed field names are validated
+by default but validation is disabled when an index is defined using MongoDB&amp;rsquo;s
+&lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/#text-index-wildcard
+&#34;&gt;&lt;code&gt;$**&lt;/code&gt;&lt;/a&gt; syntax.  This special instruction tells MongoDB to create a text index on
+all fields with string content in a document.  A &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/#compound-index
+&#34;&gt;compound index&lt;/a&gt; can be created
+incorporating a text index but it&amp;rsquo;s important to note there can only be one text index on a collection.&lt;/p&gt;
+
+&lt;p&gt;A wild card text index declaration would look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    @Indexes(@Index(fields = @Field(value = &amp;quot;$**&amp;quot;, type = TEXT)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;A collection can have at most one text index.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Querying</title>
       <link>/morphia/1.1/guides/querying/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
