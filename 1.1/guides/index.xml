@@ -583,6 +583,7 @@ class BankAccountWatcher{
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
