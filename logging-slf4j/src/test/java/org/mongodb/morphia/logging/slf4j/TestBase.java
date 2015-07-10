@@ -17,7 +17,12 @@ public abstract class TestBase {
 
     @Before
     public void setUp() {
-        final MongoClient mongoClient = new MongoClient();
+        final MongoClient mongoClient;
+        try {
+            mongoClient = new MongoClient();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
 
         mongoClient.dropDatabase("morphia_test");
         morphia = new Morphia();
