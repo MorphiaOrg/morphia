@@ -12,3 +12,4 @@ title = "Reference Guides"
   * [Annotations]({{< ref "guides/annotations.md" >}})
   * [Querying]({{< ref "guides/querying.md" >}})
   * [Aggregation]({{< ref "guides/aggregation.md" >}})
+  * [Indexing]({{< ref "guides/indexing.md" >}})
