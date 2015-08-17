@@ -270,9 +270,11 @@ class EmbeddedMapper implements CustomMapper {
 
                     if (!shouldSaveClassName(entryVal, val, mf)) {
                         if (val instanceof List) {
-                            List<DBObject> list = (List<DBObject>) val;
-                            for (DBObject o : list) {
-                                o.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                            if (((List) val).get(0) instanceof DBObject) {
+                                List<DBObject> list = (List<DBObject>) val;
+                                for (DBObject o : list) {
+                                    o.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                                }
                             }
                         } else {
                             ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);

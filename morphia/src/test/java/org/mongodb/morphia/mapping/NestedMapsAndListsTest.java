@@ -96,6 +96,19 @@ public class NestedMapsAndListsTest extends TestBase {
     }
 
     @Test
+    public void testUserData() {
+        getMorphia().map(MapOfListString.class);
+        MapOfListString ud = new MapOfListString();
+        ud.id = "123";
+        ArrayList<String> d = new ArrayList<String>();
+        d.add("1");
+        d.add("2");
+        d.add("3");
+        ud.data.put("123123", d);
+        getDs().save(ud);
+    }
+
+    @Test
     public void testMapOfListOfMapMap() throws Exception {
         final HashMapOfMap mapOfMap = new HashMapOfMap();
         final Map<String, String> map = new HashMap<String, String>();
@@ -142,11 +155,11 @@ public class NestedMapsAndListsTest extends TestBase {
         map.put(nick, person);
         return map;
     }
-
     @Entity
     private static class ListOfMap {
         @Property
         private final List<Map<String, String>> listOfMap = new ArrayList<Map<String, String>>();
+
         @Id
         private long id;
 
@@ -184,11 +197,11 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
     }
-
     @Entity
     private static class ListOfList {
         @Property
         private final List<List<String>> list = new ArrayList<List<String>>();
+
         @Id
         private long id;
 
@@ -211,19 +224,19 @@ public class NestedMapsAndListsTest extends TestBase {
             return id == that.id && list.equals(that.list);
 
         }
-
         @Override
         public int hashCode() {
             int result = (int) (id ^ (id >>> 32));
             result = 31 * result + list.hashCode();
             return result;
         }
-    }
 
+    }
     @Entity
     private static class ListListPerson {
         @Embedded
         private final List<List<Person>> list = new ArrayList<List<Person>>();
+
         @Id
         private long id;
 
@@ -249,19 +262,19 @@ public class NestedMapsAndListsTest extends TestBase {
             return list.equals(that.list);
 
         }
-
         @Override
         public int hashCode() {
             int result = (int) (id ^ (id >>> 32));
             result = 31 * result + list.hashCode();
             return result;
         }
-    }
 
+    }
     @Entity
     private static class ListMapPerson {
         @Id
         private ObjectId id;
+
         private List<Map<String, Person>> list = new ArrayList<Map<String, Person>>();
 
         @Override
@@ -295,9 +308,9 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
     }
-
     @Embedded
     private static class Person {
+
         private String name;
 
         public Person() {
@@ -326,31 +339,42 @@ public class NestedMapsAndListsTest extends TestBase {
             return !(name != null ? !name.equals(person.name) : person.name != null);
 
         }
-
         @Override
         public int hashCode() {
             return name.hashCode();
         }
-    }
 
+    }
     private static class HashMapOfMap {
         @Embedded
         private final Map<String, Map<String, String>> mom = new HashMap<String, Map<String, String>>();
         @Id
         private ObjectId id;
-    }
 
+    }
     private static class HashMapOfList {
-        @Embedded
         private final Map<String, List<String>> mol = new HashMap<String, List<String>>();
         @Id
         private ObjectId id;
-    }
 
+    }
     private static class HashMapOfListOfMapMap {
         @Embedded
         private final Map<String, List<HashMapOfMap>> mol = new HashMap<String, List<HashMapOfMap>>();
         @Id
         private ObjectId id;
+
     }
+
+    public static class MapOfListString {
+        @Id
+        private String id;
+
+        private Map<String, ArrayList<String>> data = new HashMap<String, ArrayList<String>>();
+
+        public MapOfListString() {
+        }
+
+    }
+
 }
