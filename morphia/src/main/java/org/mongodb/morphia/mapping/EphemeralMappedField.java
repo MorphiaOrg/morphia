@@ -28,7 +28,7 @@ public class EphemeralMappedField extends MappedField {
      * @param mapper the Mapper to use
      */
     public EphemeralMappedField(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
-        super(t, mapper);
+        super(mf.getField(), t, mapper);
         parent = mf;
         pType = t;
         final Class rawClass = (Class) t.getRawType();
@@ -47,7 +47,7 @@ public class EphemeralMappedField extends MappedField {
      * @param mapper the Mapper to use
      */
     public EphemeralMappedField(final Type t, final MappedField mf, final Mapper mapper) {
-        super(t, mapper);
+        super(mf.getField(), t, mapper);
         parent = mf;
     }
 

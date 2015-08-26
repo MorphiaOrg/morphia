@@ -98,10 +98,12 @@ public class MappedField {
     /**
      * Creates a MappedField
      *
+     * @param field   the Type for the field
      * @param type   the Type for the field
      * @param mapper the Mapper to use
      */
-    public MappedField(final Type type, final Mapper mapper) {
+    MappedField(final Field field, final Type type, final Mapper mapper) {
+        this.field = field;
         this.mapper = mapper;
         genericType = type;
         discoverType();
@@ -499,9 +501,7 @@ public class MappedField {
         if (genericType instanceof TypeVariable) {
             tv = (TypeVariable<GenericDeclaration>) genericType;
             final Class typeArgument = ReflectionUtils.getTypeArgument(persistedClass, tv);
-            if (typeArgument != null) {
-                realType = typeArgument;
-            }
+            realType = typeArgument != null ? typeArgument : Object.class;
         } else if (genericType instanceof ParameterizedType) {
             pt = (ParameterizedType) genericType;
             final Type[] types = pt.getActualTypeArguments();
@@ -547,9 +547,8 @@ public class MappedField {
 
         if (Object.class.equals(realType) && (tv != null || pt != null)) {
             if (LOG.isWarningEnabled()) {
-                LOG.warning(
-                               "Parameterized types are treated as untyped Objects. See field '" + field.getName() + "' on "
-                               + field.getDeclaringClass());
+                LOG.warning(format("Parameterized types are treated as untyped Objects. See field '%s' on %s", field.getName(),
+                                   field.getDeclaringClass()));
             }
         }
 
