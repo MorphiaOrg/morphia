@@ -44,7 +44,6 @@ import org.mongodb.morphia.query.DefaultQueryFactory;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryException;
 import org.mongodb.morphia.query.QueryFactory;
-import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
@@ -53,7 +52,6 @@ import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,6 +65,7 @@ import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.mongodb.morphia.query.QueryImpl.parseFieldsString;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -250,7 +249,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        ensureIndex(clazz, name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate, false, false, -1);
+        ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
+                                                   Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
     }
 
     @Override
@@ -840,8 +840,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        ensureIndex(getCollection(collection), name, QueryImpl.parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate,
-                    false, false, -1);
+        ensureIndex(getCollection(collection), name,
+                    parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
+                                      Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
     }
 
     @Override
@@ -1081,12 +1082,18 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options,
-                               final boolean background) {
+                               final boolean background, final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
         DBObject keys = new BasicDBObject();
+        final StringBuilder name = new StringBuilder();
+        if (!parentMCs.isEmpty()) {
+            for (final MappedField pmf : parentMFs) {
+                name.append(pmf.getNameToStore()).append(".");
+            }
+        }
         DBObject opts = extractOptions(options, background);
         for (Field field : fields) {
             String value = field.value();
-            String key = value;
+            String key = name + value;
             if (!"$**".equals(value)) {
                 List<String> namePath = new ArrayList<String>();
                 final MappedField mappedField = findField(namePath, mc, value);
@@ -1100,7 +1107,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         }
                         sb.append(s);
                     }
-                    key = sb.toString();
+                    key = name + sb.toString();
                 }
             }
             keys.put(key, field.type().toIndexValue());
@@ -1121,10 +1128,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         dbColl.createIndex(keys, opts);
     }
 
-    protected void ensureIndex(final DBCollection dbColl, final DBObject keys, final IndexOptions options, final boolean background) {
-        DBObject opts = extractOptions(options, background);
-        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
-        dbColl.createIndex(keys, opts);
+    protected void ensureIndex(final DBCollection dbColl, final DBObject keys, final DBObject options) {
+        LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, options));
+        dbColl.createIndex(keys, options);
     }
 
     protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
@@ -1133,7 +1139,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
-        ensureIndexes(getCollection(collName), mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
+        ensureIndexes(getCollection(collName), mc, background, Collections.<MappedClass>emptyList(), Collections.<MappedField>emptyList());
     }
 
     protected void ensureIndexes(final DBCollection dbColl, final MappedClass mc, final boolean background,
@@ -1145,7 +1151,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
             return;
         }
-        processClassAnnotations(dbColl, mc, background);
+        processClassAnnotations(dbColl, mc, background, parentMCs, parentMFs);
 
         processEmbeddedAnnotations(dbColl, mc, background, parentMCs, parentMFs);
     }
@@ -1273,21 +1279,21 @@ public class DatastoreImpl implements AdvancedDatastore {
     private void createTextIndex(final DBCollection dbColl, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
                                  final MappedField mf) {
         final Text index = mf.getAnnotation(Text.class);
-        final StringBuilder field = new StringBuilder();
+        final StringBuilder prefix = new StringBuilder();
         if (!parentMCs.isEmpty()) {
             for (final MappedField pmf : parentMFs) {
-                field.append(pmf.getNameToStore()).append(".");
+                prefix.append(pmf.getNameToStore()).append(".");
             }
         }
 
-        field.append(mf.getNameToStore());
+        String field = prefix + mf.getNameToStore();
 
-        DBObject keys = new BasicDBObject(field.toString(), IndexType.TEXT.toIndexValue());
+        DBObject keys = new BasicDBObject(field, IndexType.TEXT.toIndexValue());
         DBObject opts = extractOptions(index.options(), false);
         if (index.value() != -1) {
             DBObject weights = new BasicDBObject();
             opts.put("weights", weights);
-            weights.put(field.toString(), index.value());
+            weights.put(field, index.value());
         }
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
         dbColl.createIndex(keys, opts);
@@ -1423,21 +1429,21 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @SuppressWarnings("deprecation")
-    private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background) {
+    private void processClassAnnotations(final DBCollection dbColl, final MappedClass mc, final boolean background,
+                                         final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
         // Ensure indexes from class annotation
-        final List<Annotation> indexes = mc.getAnnotations(Indexes.class);
+        final List<Indexes> indexes = mc.getAnnotations(Indexes.class);
         if (indexes != null) {
-            for (final Annotation ann : indexes) {
-                final Indexes idx = (Indexes) ann;
+            for (final Indexes idx : indexes) {
                 if (idx.value().length > 0) {
                     for (final Index index : idx.value()) {
                         if (index.fields().length != 0) {
-                            ensureIndex(mc, dbColl, index.fields(), index.options(), background);
+                            ensureIndex(mc, dbColl, index.fields(), index.options(), background, parentMCs, parentMFs);
                         } else {
                             LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                    + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                            final BasicDBObject fields = QueryImpl.parseFieldsString(index.value(), mc.getClazz(), mapper,
-                                                                                     !index.disableValidation());
+                            final BasicDBObject fields = parseFieldsString(index.value(), mc.getClazz(), mapper,
+                                                                           !index.disableValidation(), parentMCs, parentMFs);
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
                                         index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
                         }
@@ -1459,14 +1465,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed index = mf.getAnnotation(Indexed.class);
-                final StringBuilder field = new StringBuilder();
+                final StringBuilder prefix = new StringBuilder();
                 if (!parentMCs.isEmpty()) {
                     for (final MappedField pmf : parentMFs) {
-                        field.append(pmf.getNameToStore()).append(".");
+                        prefix.append(pmf.getNameToStore()).append(".");
                     }
                 }
-
-                field.append(mf.getNameToStore());
 
                 final BasicDBObject oldOptions = (BasicDBObject) extractOptions(index);
                 final IndexOptions options = index.options();
@@ -1476,12 +1480,11 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
                 if (!newOptions.isEmpty()) {
-                    ensureIndex(dbColl, new BasicDBObject(field.toString(), index.value().toIndexValue()), options, background);
+                    ensureIndex(dbColl, new BasicDBObject(prefix + mf.getNameToStore(), index.value().toIndexValue()), newOptions);
                 } else {
-
                     ensureIndex(dbColl,
                                 index.name(),
-                                new BasicDBObject(field.toString(), index.value().toIndexValue()),
+                                new BasicDBObject(prefix + mf.getNameToStore(), index.value().toIndexValue()),
                                 index.unique(),
                                 index.dropDups(),
                                 index.background() || background,

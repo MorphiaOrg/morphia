@@ -32,10 +32,9 @@ public class TestIndexCollections extends TestBase {
         ads.ensureIndexes();
 
         ads.ensureIndexes("b_2", HasEmbeddedIndex.class);
-        BasicDBObject[] indexes = new BasicDBObject[]{
-            new BasicDBObject("name", 1),
-            new BasicDBObject("embeddedIndex.name", 1),
-            new BasicDBObject("embeddedIndex.color", -1),
+        BasicDBObject[] indexes = new BasicDBObject[]{new BasicDBObject("name", 1),
+                                                         new BasicDBObject("embeddedIndex.color", -1),
+                                                         new BasicDBObject("embeddedIndex.name", 1),
         };
 
         testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
@@ -86,7 +85,8 @@ public class TestIndexCollections extends TestBase {
                 iterator.remove();
             } else {
                 for (final DBObject index : indexes) {
-                    if (dbObject.get("key").equals(index)) {
+                    final DBObject key = (DBObject) dbObject.get("key");
+                    if (key.equals(index)) {
                         iterator.remove();
                     }
                 }
@@ -122,7 +122,6 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Entity
-    @Indexes(@Index(fields = @Field(value = "embeddedIndex.color", type = DESC)))
     private static class HasEmbeddedIndex {
         @Id
         private ObjectId id;
@@ -133,7 +132,7 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Embedded
-    //    @Indexes(@Index(fields = @Field(value = "color", type = DESC))) https://github.com/mongodb/morphia/issues/734
+    @Indexes(@Index(fields = @Field(value = "color", type = DESC)))
     private static class EmbeddedIndex {
         @Indexed
         private String name;

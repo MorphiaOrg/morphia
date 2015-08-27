@@ -22,6 +22,7 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -100,9 +101,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * @param clazz    the class to use when validating
      * @param mapper   the Mapper to use
      * @param validate true if the results should be validated
+     * @param parentMCs List of parent MappedClasses for tracking potential naming schemes
+     * @param parentMFs List of parent MappedFields for tracking potential naming schemes
      * @return the DBObject
      */
-    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
+    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate,
+                                                  final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
         BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
         final String[] parts = str.split(",");
         for (String s : parts) {
@@ -465,7 +469,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (snapshotted) {
             throw new QueryException("order cannot be used on a snapshotted query.");
         }
-        this.sort = parseFieldsString(sort, clazz, ds.getMapper(), validateName);
+        this.sort = parseFieldsString(sort, clazz, ds.getMapper(), validateName, Collections.<MappedClass>emptyList(),
+                                      Collections.<MappedField>emptyList());
 
         return this;
     }

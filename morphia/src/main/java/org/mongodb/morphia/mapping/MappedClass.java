@@ -274,10 +274,11 @@ public class MappedClass {
      * Looks for an annotation in the annotations found on a class while mapping
      *
      * @param clazz the class to search for
+     * @param <T>   the type of annotation to find
      * @return the instance if it was found, if more than one was found, the last one added
      */
-    public List<Annotation> getAnnotations(final Class<? extends Annotation> clazz) {
-        return foundAnnotations.get(clazz);
+    public <T> List<T> getAnnotations(final Class<? extends Annotation> clazz) {
+        return (List<T>) foundAnnotations.get(clazz);
     }
 
     /**
