@@ -42,11 +42,16 @@ public class IterableConverter extends TypeConverter {
             // (List/Set/Array[])
             for (final Object o : (Iterable) fromDBObject) {
                 if (o instanceof DBObject) {
-                    final MappedField mappedField = mf.getTypeParameters().get(0);
-                    if (mappedField instanceof EphemeralMappedField) {
-                        final EphemeralMappedField field = (EphemeralMappedField) getMapper().fromDb((DBObject) o, mappedField,
-                                                                                                     new DefaultEntityCache());
-                        values.add(field.getValue());
+                    final List<MappedField> typeParameters = mf.getTypeParameters();
+                    if (!typeParameters.isEmpty()) {
+                        final MappedField mappedField = typeParameters.get(0);
+                        if (mappedField instanceof EphemeralMappedField) {
+                            final EphemeralMappedField field = (EphemeralMappedField) getMapper().fromDb((DBObject) o, mappedField,
+                                                                                                         new DefaultEntityCache());
+                            values.add(field.getValue());
+                        }
+                    } else {
+                        values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
                     }
                 } else {
                     values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));

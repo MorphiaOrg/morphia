@@ -1,17 +1,20 @@
 package org.mongodb.morphia.mapping;
 
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.dao.BasicDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +42,25 @@ public class CollectionOfValuesTest extends TestBase {
         for (int i = 0; i < city.cells.length; i++) {
             compare(city.cells[i], loaded.cells[i]);
         }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testCreateEntityWithBasicDBList() throws Exception {
+        BasicDAO<TestEntity, ObjectId> dao;
+        dao = new BasicDAO<TestEntity, ObjectId>(TestEntity.class, getDs());
+
+        TestEntity entity = new TestEntity();
+
+        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+        data.add(new BasicDBObject("type", "text")
+                     .append("data", new BasicDBObject("text", "sometext")));
+
+        entity.setData(data);
+        dao.save(entity);
+
+        final TestEntity fetched = dao.get(entity.getId());
+        Assert.assertEquals(entity, fetched);
     }
 
     @Test
@@ -74,7 +96,7 @@ public class CollectionOfValuesTest extends TestBase {
         final ContainsTwoDimensionalArray entity = new ContainsTwoDimensionalArray();
         entity.oneDimArray = "Joseph".getBytes();
         entity.twoDimArray = new byte[][]{"Joseph".getBytes(), "uwe".getBytes()};
-        final Key<ContainsTwoDimensionalArray> savedKey = getDs().save(entity);
+        getDs().save(entity);
         final ContainsTwoDimensionalArray loaded = getDs().get(ContainsTwoDimensionalArray.class, entity.id);
         Assert.assertNotNull(loaded.id);
         Assert.assertNotNull(loaded.oneDimArray);
@@ -92,6 +114,52 @@ public class CollectionOfValuesTest extends TestBase {
 
     private void compare(final int[] left, final int[] right) {
         Assert.assertArrayEquals(left, right);
+    }
+
+    @Entity("CreateEntityWithDBListIT-TestEntity")
+    public static class TestEntity {
+
+        @Id
+        private ObjectId id;
+        private BasicDBList data;
+
+        public BasicDBList getData() {
+            return data;
+        }
+
+        public void setData(final List<?> data) {
+            this.data = new BasicDBList();
+            this.data.addAll(data);
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (data != null ? data.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final TestEntity that = (TestEntity) o;
+
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            return !(data != null ? !data.equals(that.data) : that.data != null);
+
+        }
     }
 
     public static class ContainsListOfList {
