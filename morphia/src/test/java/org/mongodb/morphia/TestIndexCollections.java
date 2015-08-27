@@ -32,9 +32,10 @@ public class TestIndexCollections extends TestBase {
         ads.ensureIndexes();
 
         ads.ensureIndexes("b_2", HasEmbeddedIndex.class);
-        BasicDBObject[] indexes = new BasicDBObject[]{new BasicDBObject("name", 1),
-                                                         new BasicDBObject("embeddedIndex.color", -1),
-                                                         new BasicDBObject("embeddedIndex.name", 1),
+        BasicDBObject[] indexes = new BasicDBObject[]{
+            new BasicDBObject("name", 1),
+            new BasicDBObject("embeddedIndex.color", -1),
+            new BasicDBObject("embeddedIndex.name", 1),
         };
 
         testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
@@ -74,7 +75,7 @@ public class TestIndexCollections extends TestBase {
 
         ads.ensureIndex("a_3", SingleFieldIndex.class, "field, field2");
         testIndex(db.getCollection("a_3").getIndexInfo(), new BasicDBObject("field", 1)
-                                                              .append("field2", 1));
+            .append("field2", 1));
     }
 
     private void testIndex(final List<DBObject> indexInfo, final BasicDBObject... indexes) {
