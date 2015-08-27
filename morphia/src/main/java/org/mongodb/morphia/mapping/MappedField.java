@@ -24,7 +24,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -496,14 +495,10 @@ public class MappedField {
 
     @SuppressWarnings("unchecked")
     protected void discoverType() {
-        ParameterizedType pt = null;
-        TypeVariable<GenericDeclaration> tv = null;
         if (genericType instanceof TypeVariable) {
-            tv = (TypeVariable<GenericDeclaration>) genericType;
-            final Class typeArgument = ReflectionUtils.getTypeArgument(persistedClass, tv);
-            realType = typeArgument != null ? typeArgument : Object.class;
+            realType = extractTypeVariable((TypeVariable) genericType);
         } else if (genericType instanceof ParameterizedType) {
-            pt = (ParameterizedType) genericType;
+            ParameterizedType pt = (ParameterizedType) genericType;
             final Type[] types = pt.getActualTypeArguments();
             realType = toClass(pt);
 
@@ -526,7 +521,7 @@ public class MappedField {
         } else if (genericType instanceof GenericArrayType) {
             final Type genericComponentType = ((GenericArrayType) genericType).getGenericComponentType();
             if (genericComponentType instanceof ParameterizedType) {
-                pt = (ParameterizedType) genericComponentType;
+                ParameterizedType pt = (ParameterizedType) genericComponentType;
                 realType = toClass(genericType);
 
                 final Type[] types = pt.getActualTypeArguments();
@@ -541,11 +536,15 @@ public class MappedField {
                     }
                 }
             } else {
-                realType = (Class) genericComponentType;
+                if (genericComponentType instanceof TypeVariable) {
+                    realType = toClass(genericType);
+                } else {
+                    realType = (Class) genericComponentType;
+                }
             }
         }
 
-        if (Object.class.equals(realType) && (tv != null || pt != null)) {
+        if (Object.class.equals(realType) || Object[].class.equals(realType)) {
             if (LOG.isWarningEnabled()) {
                 LOG.warning(format("Parameterized types are treated as untyped Objects. See field '%s' on %s", field.getName(),
                                    field.getDeclaringClass()));
@@ -555,6 +554,11 @@ public class MappedField {
         if (realType == null) {
             throw new MappingException(format("A type could not be found for the field %s.%s", getType(), getField()));
         }
+    }
+
+    private Class extractTypeVariable(final TypeVariable<?> type) {
+        final Class typeArgument = ReflectionUtils.getTypeArgument(persistedClass, type);
+        return typeArgument != null ? typeArgument : Object.class;
     }
 
     /**
@@ -600,10 +604,18 @@ public class MappedField {
             return (Class) t;
         } else if (t instanceof GenericArrayType) {
             final Type type = ((GenericArrayType) t).getGenericComponentType();
-            return Array.newInstance(type instanceof ParameterizedType
-                                     ? (Class) ((ParameterizedType) type).getRawType()
-                                     : (Class) type, 0
-                                    ).getClass();
+            Class aClass;
+            if (type instanceof ParameterizedType) {
+                aClass = (Class) ((ParameterizedType) type).getRawType();
+            } else if (type instanceof TypeVariable) {
+                aClass = ReflectionUtils.getTypeArgument(persistedClass, (TypeVariable<?>) type);
+                if (aClass == null) {
+                    aClass = Object.class;
+                }
+            } else {
+                aClass = (Class) type;
+            }
+            return Array.newInstance(aClass, 0).getClass();
         } else if (t instanceof ParameterizedType) {
             return (Class) ((ParameterizedType) t).getRawType();
         } else if (t instanceof WildcardType) {
@@ -691,7 +703,8 @@ public class MappedField {
 
             //for debugging with issue
             if (!isMap && !isSet && !isCollection && !isArray) {
-                throw new MappingException("type is not a map/set/collection/array : " + realType);
+                throw new MappingException(format("%s.%s is not a map/set/collection/array : %s", field.getName(),
+                                                  field.getDeclaringClass(), realType));
             }
 
             // get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long

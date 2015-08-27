@@ -11,11 +11,10 @@
  * and limitations under the License.
  */
 
-
 package org.mongodb.morphia.issue80;
 
 
-import org.junit.Before;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -30,17 +29,16 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Scott Hernandez
  */
-public class TestGenericInheritanceMappings extends TestBase {
+public class GenericsMappingTest extends TestBase {
 
-    @Before
-    @Override
-    public void setUp() {
-        super.setUp();
-        getMorphia().map(HoldsAnInteger.class).map(HoldsAString.class).map(ContainsThings.class);
+    @Test
+    public void testBoundGenerics() {
+        getMorphia().map(Element.class, AudioElement.class);
     }
 
     @Test
     public void testIt() throws Exception {
+        getMorphia().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();
         hai.setThing(7);
@@ -88,4 +86,12 @@ public class TestGenericInheritanceMappings extends TestBase {
         private HoldsAnInteger integerThing;
     }
 
+    public abstract static class Element<T extends Number> {
+        @Id
+        private ObjectId id;
+        private T[] resources;
+    }
+
+    public static class AudioElement extends Element<Long> {
+    }
 }
