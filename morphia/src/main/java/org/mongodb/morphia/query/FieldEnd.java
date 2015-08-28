@@ -68,6 +68,15 @@ public interface FieldEnd<T> {
     T equal(Object val);
 
     /**
+     * Checks that a field equals a value
+     *
+     * @param val the value to check
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/eq/ $eq
+     */
+    T equalIgnoreCase(Object val);
+
+    /**
      * Checks that a field exists in a document
      *
      * @return T

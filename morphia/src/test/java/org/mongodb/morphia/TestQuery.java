@@ -84,7 +84,7 @@ public class TestQuery extends TestBase {
 
         final Query<GenericKeyValue> query = getDs().createQuery(GenericKeyValue.class).field("key").hasAnyOf(keys);
         Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
-        Assert.assertEquals(query.get().id, value.id);
+        assertEquals(query.get().id, value.id);
     }
 
     @Test
@@ -96,8 +96,8 @@ public class TestQuery extends TestBase {
 
         getDs().save(pic1, pic2, pic3, pic4);
 
-        Assert.assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
-        Assert.assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+        assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
+        assertEquals(4, getDs().createQuery(Pic.class).asList().size());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class TestQuery extends TestBase {
 
         final Query<KeyValue> query = getDs().createQuery(KeyValue.class).field("key").hasAnyOf(keys);
         Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
-        Assert.assertEquals(query.get().id, value.id);
+        assertEquals(query.get().id, value.id);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TestQuery extends TestBase {
         final Key<ReferenceKeyValue> key = getDs().save(value);
 
         final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, key);
-        Assert.assertEquals(value.id, byKey.id);
+        assertEquals(value.id, byKey.id);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testAliasedFieldSort() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 1)};
+            new Rectangle(10, 1)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -158,9 +158,42 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testCaseVariants() {
+        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+
+        assertEquals(0, getDs().createQuery(Pic.class)
+                            .field("name").contains("PIC")
+                            .asList().size());
+        assertEquals(4, getDs().createQuery(Pic.class)
+                               .field("name").containsIgnoreCase("PIC")
+                               .asList().size());
+
+        assertEquals(0, getDs().createQuery(Pic.class)
+                               .field("name").equal("PIC1")
+                               .asList().size());
+        assertEquals(1, getDs().createQuery(Pic.class)
+                               .field("name").equalIgnoreCase("PIC1")
+                               .asList().size());
+
+        assertEquals(0, getDs().createQuery(Pic.class)
+                               .field("name").endsWith("C1")
+                               .asList().size());
+        assertEquals(1, getDs().createQuery(Pic.class)
+                               .field("name").endsWithIgnoreCase("C1")
+                               .asList().size());
+
+        assertEquals(0, getDs().createQuery(Pic.class)
+                               .field("name").startsWith("PIC")
+                               .asList().size());
+        assertEquals(4, getDs().createQuery(Pic.class)
+                               .field("name").startsWithIgnoreCase("PIC")
+                               .asList().size());
+    }
+
+    @Test
     public void testCombinationQuery() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5),
-                                   new Rectangle(10, 4)};
+            new Rectangle(10, 4)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -214,7 +247,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testComplexRangeQuery() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5),
-                                   new Rectangle(10, 4)
+            new Rectangle(10, 4)
         };
         for (final Rectangle rect : array) {
             getDs().save(rect);
@@ -230,7 +263,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testCompoundSort() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 1)};
+            new Rectangle(10, 1)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -303,7 +336,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testDeleteQuery() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 10)};
+            new Rectangle(10, 10)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -346,7 +379,7 @@ public class TestQuery extends TestBase {
         Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
 
         // Then
-        Assert.assertEquals(4, ((Map) explainResult.get("executionStats")).get("nReturned"));
+        assertEquals(4, ((Map) explainResult.get("executionStats")).get("nReturned"));
     }
 
     @Test
@@ -359,7 +392,7 @@ public class TestQuery extends TestBase {
         Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
 
         // Then
-        Assert.assertEquals(4, explainResult.get("n"));
+        assertEquals(4, explainResult.get("n"));
     }
 
     @Test
@@ -567,7 +600,7 @@ public class TestQuery extends TestBase {
         final List<PhotoWithKeywords> list = getDs().find(PhotoWithKeywords.class)
                                                     .batchSize(-2)
                                                     .asList();
-        Assert.assertEquals(2, list.size());
+        assertEquals(2, list.size());
     }
 
     @Test
@@ -654,7 +687,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testQueryCount() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 10)};
+            new Rectangle(10, 10)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -704,7 +737,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testRangeQuery() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5),
-                                   new Rectangle(10, 4)
+            new Rectangle(10, 4)
         };
         for (final Rectangle rect : array) {
             getDs().save(rect);
@@ -763,12 +796,12 @@ public class TestQuery extends TestBase {
         getDs().save(user);
 
         ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
-        Assert.assertNotNull(found.firstName);
-        Assert.assertNull(found.lastName);
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
 
         found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
-        Assert.assertNotNull(found.firstName);
-        Assert.assertNull(found.lastName);
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
 
         try {
             getDs()
@@ -780,10 +813,10 @@ public class TestQuery extends TestBase {
         }
 
         Query<ContainsRenamedFields> query = getDs()
-                                                 .find(ContainsRenamedFields.class)
-                                                 .retrievedFields(true, "_id", "first_name");
+            .find(ContainsRenamedFields.class)
+            .retrievedFields(true, "_id", "first_name");
         DBObject fields = query.getFieldsObject();
-        Assert.assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
 
     }
 
@@ -831,7 +864,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testSimpleSort() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 1)};
+            new Rectangle(10, 1)};
         for (final Rectangle rect : array) {
             getDs().save(rect);
         }
@@ -899,7 +932,7 @@ public class TestQuery extends TestBase {
         final List<CappedPic> found = new ArrayList<CappedPic>();
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-        Assert.assertEquals(0, query.countAll());
+        assertEquals(0, query.countAll());
 
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
