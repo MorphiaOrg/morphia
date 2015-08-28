@@ -24,7 +24,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -486,8 +485,6 @@ public class MappedField {
 
     @SuppressWarnings("unchecked")
     protected void discoverType(final Mapper mapper) {
-        ParameterizedType pt = null;
-        TypeVariable<GenericDeclaration> tv = null;
         if (genericType instanceof TypeVariable) {
             realType = extractTypeVariable((TypeVariable) genericType);
         } else if (genericType instanceof ParameterizedType) {
