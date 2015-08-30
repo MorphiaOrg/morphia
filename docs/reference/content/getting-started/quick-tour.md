@@ -86,7 +86,7 @@ name as the collection name.  If you pass a String instead, it will use that val
 `Employee` instances will be saved in to the `employees` collection instead.  There is a little more to this annotation but the 
 [annotations guide]({{< relref "guides/annotations.md#entity" >}}) covers those details.
 
-The `@Indexes` annotation lists which annotations Morphia should create.  In this instance, we're defining an index named `salary` on the
+The `@Indexes` annotation lists which indexes Morphia should create.  In this instance, we're defining an index named `salary` on the
  field salary with the default ordering of ascending.  More information on indexing can found
   [here]({{< relref "guides/annotations.md#indexes" >}}).
  
