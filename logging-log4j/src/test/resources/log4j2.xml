@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" name="morphia-logging-log4j2">
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%-5level %d %c{1}.%M(%L): %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="trace">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+		<Logger name="org.mongodb.morphia" level="TRACE" additivity="false">
+			<AppenderRef ref="STDOUT" />
+		</Logger>
+	</Loggers>
+</Configuration>

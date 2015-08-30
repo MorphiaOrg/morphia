@@ -1,1 +1,1 @@
-include 'util', 'morphia', 'logging-slf4j', 'validation', 'entityscanner-plug', 'guice-plug', 'no-proxy-deps-tests'
+include 'util', 'morphia', 'logging-slf4j', 'logging-log4j', 'validation', 'entityscanner-plug', 'guice-plug', 'no-proxy-deps-tests'
