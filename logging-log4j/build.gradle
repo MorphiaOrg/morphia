@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':morphia')
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+}
