@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.geo.City;
+import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +39,7 @@ import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.divide;
 import static org.mongodb.morphia.aggregation.Projection.projection;
+import static org.mongodb.morphia.geo.GeoJson.point;
 
 public class AggregationTest extends TestBase {
     @Test
@@ -62,13 +65,64 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testGeoNear() {
-        // Given
+    public void testGeoNearWithSphericalGeometry() {
+        // given
+        double latitude = 51.5286416;
+        double longitude = -0.1015987;
+        City london = new City("London", point(latitude, longitude));
+        getDs().save(london);
+        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        getDs().save(manchester);
+        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        getDs().save(sevilla);
 
+        getDs().ensureIndexes();
 
-        // When
+        // when
+        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
+                                                                  .geoNear(GeoNear.builder("distance")
+                                                                                    .setNear(latitude, longitude)
+                                                                                    .setSpherical(true)
+                                                                                    .build())
+                                                                  .aggregate(City.class);
 
-        // Then
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
+    public void testGeoNearWithLegacyCoords() {
+        // given
+        double latitude = 51.5286416;
+        double longitude = -0.1015987;
+        PlaceWithLegacyCoords london = new PlaceWithLegacyCoords(new double[]{longitude, latitude}, "London");
+        getDs().save(london);
+        PlaceWithLegacyCoords manchester = new PlaceWithLegacyCoords(new double[]{-2.2235922, 53.4722454}, "Manchester");
+        getDs().save(manchester);
+        PlaceWithLegacyCoords sevilla = new PlaceWithLegacyCoords(new double[]{-5.9550582, 37.3753708}, "Sevilla");
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<PlaceWithLegacyCoords> citiesOrderedByDistanceFromLondon = getDs()
+                .createAggregation(PlaceWithLegacyCoords.class)
+                .geoNear(GeoNear.builder("distance")
+                                .setNear(latitude, longitude)
+                                .setSpherical(false)
+                                .build())
+                .aggregate(PlaceWithLegacyCoords.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
     }
 
     @Test
