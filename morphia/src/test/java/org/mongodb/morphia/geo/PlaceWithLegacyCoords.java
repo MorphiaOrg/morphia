@@ -8,14 +8,14 @@ import org.mongodb.morphia.utils.IndexDirection;
 import java.util.Arrays;
 
 @SuppressWarnings("unused")
-class PlaceWithLegacyCoords {
+public class PlaceWithLegacyCoords {
     @Id
     private ObjectId id;
     @Indexed(IndexDirection.GEO2D)
     private double[] location = new double[2];
     private String name;
 
-    PlaceWithLegacyCoords(final double[] location, final String name) {
+    public PlaceWithLegacyCoords(final double[] location, final String name) {
         this.location = location;
         this.name = name;
     }
