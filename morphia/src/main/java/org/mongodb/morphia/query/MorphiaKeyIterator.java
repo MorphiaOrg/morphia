@@ -1,12 +1,10 @@
 package org.mongodb.morphia.query;
 
-
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
  * Defines an Iterator across the Key values for a given type.
@@ -33,5 +31,4 @@ public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
     protected Key<T> convertItem(final DBObject dbObj) {
         return new Key<T>(getClazz(), getCollection(), dbObj.get(Mapper.ID_KEY));
     }
-
 }
