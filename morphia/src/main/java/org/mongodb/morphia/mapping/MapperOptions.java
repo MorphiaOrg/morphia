@@ -5,8 +5,6 @@ import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 
 
 /**
@@ -27,7 +25,6 @@ public class MapperOptions {
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
-    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 
     /**
      * Creates a default options instance.
@@ -53,7 +50,6 @@ public class MapperOptions {
         setDefaultMapper(options.getDefaultMapper());
         setReferenceMapper(options.getReferenceMapper());
         setValueMapper(options.getValueMapper());
-        setDatastoreProvider(options.getDatastoreProvider());
     }
 
     /**
@@ -70,22 +66,6 @@ public class MapperOptions {
      */
     public void setCacheFactory(final EntityCacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
-    }
-
-    /**
-     * @return the DatastoreProvider Morphia should use
-     */
-    public DatastoreProvider getDatastoreProvider() {
-        return datastoreProvider;
-    }
-
-    /**
-     * Sets the DatastoreProvider Morphia should use
-     *
-     * @param datastoreProvider the DatastoreProvider to use
-     */
-    public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
-        this.datastoreProvider = datastoreProvider;
     }
 
     /**

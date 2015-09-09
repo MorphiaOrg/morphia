@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping.lazy;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Ignore
 public class TestReferenceMap extends ProxyTestBase {
     @Test
     public final void testCreateProxy() {

@@ -17,6 +17,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.bson.BSONEncoder;
 import org.bson.BasicBSONEncoder;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.EntityInterceptor;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Converters;
@@ -34,7 +35,6 @@ import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.EntityCache;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -121,18 +121,6 @@ public class Mapper {
     }
 
     /**
-     * Sets the DatastoreProvider used by this Mapper
-     *
-     * @param datastoreProvider the DatastoreProvider to use
-     * @deprecated Use Mapper#setDatastoreProvider(DatastoreProvider) instead
-     */
-    @Deprecated
-    public Mapper(final DatastoreProvider datastoreProvider) {
-        this();
-        getOptions().setDatastoreProvider(datastoreProvider);
-    }
-
-    /**
      * Creates a new Mapper with the given options and a Mapper to copy.  This is effectively a copy constructor that allows a developer
      * to override the options.
      *
@@ -183,14 +171,15 @@ public class Mapper {
     /**
      * Converts a DBObject back to a type-safe java object (POJO)
      *
+     * @param <T>         the type of the entity
+     * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the DBObject
      * @param dbObject    the DBObject containing the document from mongodb
      * @param cache       the EntityCache to use
-     * @param <T>         the type of the entity
      * @return the new entity
      * @see Mapper#CLASS_NAME_FIELDNAME
      */
-    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
+    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
             final Throwable t = new Throwable();
             LOG.error("Somebody passed in a null dbObject; bad client!", t);
@@ -199,30 +188,31 @@ public class Mapper {
 
         T entity;
         entity = opts.getObjectFactory().createInstance(entityClass, dbObject);
-        entity = fromDb(dbObject, entity, cache);
+        entity = fromDb(datastore, dbObject, entity, cache);
         return entity;
     }
 
     /**
      * Converts a DBObject back to a type-safe java object (POJO)
      *
-     * @param dbObject the DBObject containing the document from mongodb
-     * @param entity   the instance to populate
-     * @param cache    the EntityCache to use
-     * @param <T>      the type of the entity
+     * @param <T>       the type of the entity
+     * @param datastore the Datastore to use when fetching this reference
+     * @param dbObject  the DBObject containing the document from mongodb
+     * @param entity    the instance to populate
+     * @param cache     the EntityCache to use
      * @return the entity
      */
-    public <T> T fromDb(final DBObject dbObject, final T entity, final EntityCache cache) {
+    public <T> T fromDb(final Datastore datastore, final DBObject dbObject, final T entity, final EntityCache cache) {
         //hack to bypass things and just read the value.
         if (entity instanceof MappedField) {
-            readMappedField(dbObject, (MappedField) entity, entity, cache);
+            readMappedField(datastore, (MappedField) entity, entity, cache, dbObject);
             return entity;
         }
 
         // check the history key (a key is the namespace + id)
 
         if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
-                && getMappedClass(entity).getEntityAnnotation() != null) {
+            && getMappedClass(entity).getEntityAnnotation() != null) {
             final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(ID_KEY));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
@@ -237,13 +227,13 @@ public class Mapper {
         final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
         try {
             for (final MappedField mf : mc.getPersistenceFields()) {
-                readMappedField(updated, mf, entity, cache);
+                readMappedField(datastore, mf, entity, cache, updated);
             }
         } catch (final MappingException e) {
             Object id = dbObject.get(ID_KEY);
             String entityName = entity.getClass().getName();
             throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
-                                              getDatastoreProvider().get().getDB().getName()), e);
+                                              datastore.getDB().getName()), e);
         }
 
         if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
@@ -293,13 +283,6 @@ public class Mapper {
      */
     public org.mongodb.morphia.converters.Converters getConverters() {
         return converters;
-    }
-
-    /**
-     * @return the DatastoreProvider used by this Mapper
-     */
-    public DatastoreProvider getDatastoreProvider() {
-        return getOptions().getDatastoreProvider();
     }
 
     /**
@@ -644,11 +627,12 @@ public class Mapper {
     /**
      * Updates the @{@link org.mongodb.morphia.annotations.Id} and @{@link org.mongodb.morphia.annotations.Version} fields.
      *
-     * @param entity The object to update
-     * @param dbObj  Value to update with; null means skip
-     * @param cache  the EntityCache
+     * @param datastore the Datastore to use when fetching this reference
+     * @param dbObj     Value to update with; null means skip
+     * @param cache     the EntityCache
+     * @param entity    The object to update
      */
-    public void updateKeyAndVersionInfo(final Object entity, final DBObject dbObj, final EntityCache cache) {
+    public void updateKeyAndVersionInfo(final Datastore datastore, final DBObject dbObj, final EntityCache cache, final Object entity) {
         final MappedClass mc = getMappedClass(entity);
 
         // update id field, if there.
@@ -656,7 +640,7 @@ public class Mapper {
             try {
                 final MappedField mf = mc.getMappedIdField();
                 final Object oldIdValue = mc.getIdField().get(entity);
-                readMappedField(dbObj, mf, entity, cache);
+                readMappedField(datastore, mf, entity, cache, dbObj);
                 if (oldIdValue != null) {
                     // The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could
                     // indicate a bad state.
@@ -676,7 +660,7 @@ public class Mapper {
             }
         }
         if (mc.getMappedVersionField() != null && (dbObj != null)) {
-            readMappedField(dbObj, mc.getMappedVersionField(), entity, cache);
+            readMappedField(datastore, mc.getMappedVersionField(), entity, cache, dbObj);
         }
     }
 
@@ -770,16 +754,17 @@ public class Mapper {
                    && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
-    private void readMappedField(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache) {
+    private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
+                                 final DBObject dbObject) {
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
                 || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
-            opts.getValueMapper().fromDBObject(dbObject, mf, entity, cache, this);
+            opts.getValueMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
         } else if (mf.hasAnnotation(Embedded.class)) {
-            opts.getEmbeddedMapper().fromDBObject(dbObject, mf, entity, cache, this);
+            opts.getEmbeddedMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
         } else if (mf.hasAnnotation(Reference.class)) {
-            opts.getReferenceMapper().fromDBObject(dbObject, mf, entity, cache, this);
+            opts.getReferenceMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
         } else {
-            opts.getDefaultMapper().fromDBObject(dbObject, mf, entity, cache, this);
+            opts.getDefaultMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
         }
     }
 

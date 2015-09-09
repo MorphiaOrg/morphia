@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping.lazy.proxy;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,23 +12,22 @@ import java.util.Map;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
-public class SerializableMapObjectReference extends AbstractReference implements ProxiedEntityReferenceMap {
+public class MapObjectReference extends AbstractReference implements ProxiedEntityReferenceMap {
 
     private static final long serialVersionUID = 1L;
     private final HashMap<Object, Key<?>> keyMap;
 
     /**
-     * Creates a SerializableMapObjectReference
+     * Creates a MapObjectReference
      *
+     * @param datastore         the Datastore to use when fetching this reference
      * @param mapToProxy        the map to proxy
      * @param referenceObjClass the referenced objects' Class
      * @param ignoreMissing     ignore missing referenced documents
-     * @param p                 the DatastoreProvider to use
      */
-    public SerializableMapObjectReference(final Map mapToProxy, final Class referenceObjClass, final boolean ignoreMissing,
-                                          final DatastoreProvider p) {
+    public MapObjectReference(final Datastore datastore, final Map mapToProxy, final Class referenceObjClass, final boolean ignoreMissing) {
 
-        super(p, referenceObjClass, ignoreMissing);
+        super(datastore, referenceObjClass, ignoreMissing);
         object = mapToProxy;
         keyMap = new LinkedHashMap<Object, Key<?>>();
     }
@@ -73,7 +71,7 @@ public class SerializableMapObjectReference extends AbstractReference implements
 
     @SuppressWarnings("unchecked")
     private void syncKeys() {
-        final Datastore ds = p.get();
+        final Datastore ds = getDatastore();
 
         keyMap.clear();
         final Map<Object, Object> map = (Map) object;
@@ -81,6 +79,5 @@ public class SerializableMapObjectReference extends AbstractReference implements
             keyMap.put(e.getKey(), ds.getKey(e.getValue()));
         }
     }
-    //CHECKSTYLE:ON
 
 }

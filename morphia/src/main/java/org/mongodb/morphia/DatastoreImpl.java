@@ -109,9 +109,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         db = mongoClient.getDB(dbName);
-
-        // VERY discussable
-        mapper.getDatastoreProvider().register(this);
     }
 
     /**
@@ -311,22 +308,15 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl = getCollection(query.getEntityClass());
         }
 
-        final EntityCache cache = createCache();
-
         if (LOG.isTraceEnabled()) {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        final DBObject result = dbColl.findAndModify(query.getQueryObject(),
-                                                     query.getFieldsObject(),
-                                                     query.getSortObject(),
-                                                     true,
-                                                     null,
-                                                     false,
-                                                     false);
+        final DBObject result = dbColl.findAndModify(query.getQueryObject(), query.getFieldsObject(), query.getSortObject(), true,
+                                                     null, false, false);
 
         if (result != null) {
-            return mapper.fromDBObject(query.getEntityClass(), result, cache);
+            return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
         }
 
         return null;
@@ -368,7 +358,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (res == null) {
             return null;
         } else {
-            return mapper.fromDBObject(query.getEntityClass(), res, createCache());
+            return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
         }
     }
 
@@ -600,7 +590,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         results.setType(type);
         if (MapreduceType.INLINE.equals(type)) {
-            results.setInlineRequiredOptions(outputType, getMapper(), cache);
+            results.setInlineRequiredOptions(this, outputType, getMapper(), cache);
         } else {
             results.setQuery(newQuery(outputType, db.getCollection(results.getOutputCollectionName())));
         }
@@ -879,7 +869,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> T get(final Class<T> clazz, final DBRef ref) {
         DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
-        return mapper.fromDBObject(clazz, object, createCache());
+        return mapper.fromDBObject(this, clazz, object, createCache());
     }
 
     @Override
@@ -1423,7 +1413,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (dbObj.get(Mapper.ID_KEY) == null) {
                     throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
                 }
-                mapper.updateKeyAndVersionInfo(entity, dbObj, createCache());
+                mapper.updateKeyAndVersionInfo(this, dbObj, createCache(), entity);
                 keys.add(new Key<T>((Class<? extends T>) entity.getClass(), collection.getName(), mapper.getId(entity)));
             }
             mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj, mapper);

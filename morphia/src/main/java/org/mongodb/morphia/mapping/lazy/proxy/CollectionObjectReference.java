@@ -2,7 +2,6 @@ package org.mongodb.morphia.mapping.lazy.proxy;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,23 +15,23 @@ import static java.lang.String.format;
  *
  * @param <T> the type of the proxied items
  */
-public class SerializableCollectionObjectReference<T> extends AbstractReference implements ProxiedEntityReferenceList {
+public class CollectionObjectReference<T> extends AbstractReference implements ProxiedEntityReferenceList {
 
     private static final long serialVersionUID = 1L;
     private final List<Key<?>> listOfKeys;
 
     /**
-     * Creates a SerializableCollectionObjectReference
+     * Creates a CollectionObjectReference
      *
      * @param type              the collection
      * @param referenceObjClass the Class of the referenced objects
      * @param ignoreMissing     ignore missing referenced documents
-     * @param p                 the DatastoreProvider
+     * @param datastore         the Datastore to use when fetching this reference
      */
-    public SerializableCollectionObjectReference(final Collection<T> type, final Class<T> referenceObjClass, final boolean ignoreMissing,
-                                                 final DatastoreProvider p) {
+    public CollectionObjectReference(final Collection<T> type, final Class<T> referenceObjClass, final boolean ignoreMissing,
+                                     final Datastore datastore) {
 
-        super(p, referenceObjClass, ignoreMissing);
+        super(datastore, referenceObjClass, ignoreMissing);
 
         object = type;
         listOfKeys = new ArrayList<Key<?>>();
@@ -81,14 +80,13 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
 
         // so we do it the lousy way: FIXME
         final List<T> retrievedEntities = new ArrayList<T>(listOfKeys.size());
-        final Datastore ds = p.get();
         for (final Key<?> k : listOfKeys) {
-            retrievedEntities.add((T) ds.getByKey(referenceObjClass, k));
+            retrievedEntities.add((T) getDatastore().getByKey(referenceObjClass, k));
         }
 
         if (!ignoreMissing && (numberOfEntitiesExpected != retrievedEntities.size())) {
             throw new LazyReferenceFetchingException(format("During the lifetime of a proxy of type '%s', some referenced Entities"
-                                                            + " of type '%s' have disappeared from the Datastore.",
+                                                                + " of type '%s' have disappeared from the Datastore.",
                                                             c.getClass().getSimpleName(), referenceObjClass.getSimpleName()));
         }
 
@@ -97,7 +95,7 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
     }
 
     private void syncKeys() {
-        final Datastore ds = p.get();
+        final Datastore ds = getDatastore();
 
         listOfKeys.clear();
         for (final Object e : ((Collection) object)) {

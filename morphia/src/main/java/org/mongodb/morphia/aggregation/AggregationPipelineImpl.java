@@ -66,7 +66,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
+        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collection.getName(), mapper.createEntityCache());
     }
 
     @Override

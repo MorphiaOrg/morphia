@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.utils.IterHelper;
 import org.mongodb.morphia.utils.IterHelper.MapIterCallback;
@@ -33,17 +34,17 @@ class EmbeddedMapper implements CustomMapper {
         return Map.class.isAssignableFrom(mf.getSubClass()) || Iterable.class.isAssignableFrom(mf.getSubClass());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
-                             final Mapper mapper) {
+    public void fromDBObject(final Datastore datastore, final DBObject dbObject, final MappedField mf, final Object entity,
+                             final EntityCache cache, final Mapper mapper) {
         try {
             if (mf.isMap()) {
-                readMap(dbObject, mf, entity, cache, mapper);
+                readMap(datastore, mapper, entity, cache, mf, dbObject);
             } else if (mf.isMultipleValues()) {
-                readCollection(dbObject, mf, entity, cache, mapper);
+                readCollection(datastore, mapper, entity, cache, mf, dbObject);
             } else {
                 // single element
-
                 final Object dbVal = mf.getDbObjectValue(dbObject);
                 if (dbVal != null) {
                     final boolean isDBObject = dbVal instanceof DBObject;
@@ -61,7 +62,7 @@ class EmbeddedMapper implements CustomMapper {
                         } else {
                             DBObject value = (DBObject) dbVal;
                             refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, value);
-                            refObj = mapper.fromDb(value, refObj, cache);
+                            refObj = mapper.fromDb(datastore, value, refObj, cache);
                         }
                         if (refObj != null) {
                             mf.setFieldValue(entity, refObj);
@@ -106,8 +107,8 @@ class EmbeddedMapper implements CustomMapper {
     }
 
     @SuppressWarnings("unchecked")
-    private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
-                                final Mapper mapper) {
+    private void readCollection(final Datastore datastore, final Mapper mapper, final Object entity, final EntityCache cache,
+                                final MappedField mf, final DBObject dbObject) {
         Collection values = null;
 
         final Object dbVal = mf.getDbObjectValue(dbObject);
@@ -125,7 +126,7 @@ class EmbeddedMapper implements CustomMapper {
             }
 
             EphemeralMappedField ephemeralMappedField = !mapper.isMapped(mf.getType()) && isMapOrCollection(mf)
-                                                        && (mf.getSubType() instanceof ParameterizedType)
+                                                            && (mf.getSubType() instanceof ParameterizedType)
                                                         ? new EphemeralMappedField((ParameterizedType) mf.getSubType(), mf, mapper)
                                                         : null;
             for (final Object o : dbValues) {
@@ -138,7 +139,7 @@ class EmbeddedMapper implements CustomMapper {
                                                                                     .hasSimpleValueConverter(mf.getSubClass())) {
                         newEntity = mapper.getConverters().decode(mf.getSubClass(), o, mf);
                     } else {
-                        newEntity = readMapOrCollectionOrEntity((DBObject) o, mf, cache, mapper, ephemeralMappedField);
+                        newEntity = readMapOrCollectionOrEntity(datastore, mapper, cache, mf, ephemeralMappedField, (DBObject) o);
                     }
                 }
 
@@ -155,7 +156,8 @@ class EmbeddedMapper implements CustomMapper {
     }
 
     @SuppressWarnings("unchecked")
-    private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache, final Mapper mapper) {
+    private void readMap(final Datastore datastore, final Mapper mapper, final Object entity, final EntityCache cache,
+                         final MappedField mf, final DBObject dbObject) {
         final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
 
         final DBObject dbObj = (DBObject) mf.getDbObjectValue(dbObject);
@@ -175,7 +177,7 @@ class EmbeddedMapper implements CustomMapper {
                         newEntity = mapper.getConverters().decode(mf.getSubClass(), val, mf);
                     } else {
                         if (val instanceof DBObject) {
-                            newEntity = readMapOrCollectionOrEntity((DBObject) val, mf, cache, mapper, ephemeralMappedField);
+                            newEntity = readMapOrCollectionOrEntity(datastore, mapper, cache, mf, ephemeralMappedField, (DBObject) val);
                         } else {
                             throw new MappingException("Embedded element isn't a DBObject! How can it be that is a " + val.getClass());
                         }
@@ -193,14 +195,15 @@ class EmbeddedMapper implements CustomMapper {
         }
     }
 
-    private Object readMapOrCollectionOrEntity(final DBObject dbObj, final MappedField mf, final EntityCache cache, final Mapper mapper,
-                                               final EphemeralMappedField ephemeralMappedField) {
+    private Object readMapOrCollectionOrEntity(final Datastore datastore, final Mapper mapper, final EntityCache cache,
+                                               final MappedField mf, final EphemeralMappedField ephemeralMappedField,
+                                               final DBObject dbObj) {
         if (ephemeralMappedField != null) {
-            mapper.fromDb(dbObj, ephemeralMappedField, cache);
+            mapper.fromDb(datastore, dbObj, ephemeralMappedField, cache);
             return ephemeralMappedField.getValue();
         } else {
             final Object newEntity = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, dbObj);
-            return mapper.fromDb(dbObj, newEntity, cache);
+            return mapper.fromDb(datastore, dbObj, newEntity, cache);
         }
     }
 
@@ -259,7 +262,7 @@ class EmbeddedMapper implements CustomMapper {
                 if (entryVal == null) {
                     val = null;
                 } else if (mapper.getConverters().hasSimpleValueConverter(mf)
-                           || mapper.getConverters().hasSimpleValueConverter(entryVal.getClass())) {
+                    || mapper.getConverters().hasSimpleValueConverter(entryVal.getClass())) {
                     val = mapper.getConverters().encode(entryVal);
                 } else {
                     if (Map.class.isAssignableFrom(entryVal.getClass()) || Collection.class.isAssignableFrom(entryVal.getClass())) {

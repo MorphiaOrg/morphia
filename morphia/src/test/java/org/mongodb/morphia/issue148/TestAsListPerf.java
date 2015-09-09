@@ -119,7 +119,7 @@ public class TestAsListPerf extends TestBase {
         final EntityCache entityCache = new DefaultEntityCache();
         final List<Address> resultList = new LinkedList<Address>();
         for (final DBObject dbObject : list) {
-            final Address address = getMorphia().fromDBObject(Address.class, dbObject, entityCache);
+            final Address address = getMorphia().fromDBObject(getDs(), Address.class, dbObject, entityCache);
             resultList.add(address);
         }
         final long duration = (System.nanoTime() - start) / 1000000; //ns -> ms
