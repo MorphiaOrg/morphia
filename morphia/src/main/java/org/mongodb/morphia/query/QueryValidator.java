@@ -67,7 +67,7 @@ final class QueryValidator {
                     if (mf == null) {
                         throw new ValidationException(format("The field '%s' could not be found in '%s' while validating - %s; if "
                                                              + "you wish to continue please disable validation.", part,
-                                                             clazz.getName(), prop
+                                                             mc.getClazz().getName(), prop
                                                             ));
                     }
                     hasTranslations = true;
@@ -87,8 +87,8 @@ final class QueryValidator {
                 if (!fieldIsArrayOperator) {
                     //catch people trying to search/update into @Reference/@Serialized fields
                     if (!canQueryPast(mf)) {
-                        throw new ValidationException(format("Can not use dot-notation past '%s' could not be found in '%s' while"
-                                                             + " validating - %s", part, clazz.getName(), prop));
+                        throw new ValidationException(format("Cannot use dot-notation past '%s' in '%s'; found while"
+                                                             + " validating - %s", part, mc.getClazz().getName(), prop));
                     }
 
                     //get the next MappedClass for the next field validation
