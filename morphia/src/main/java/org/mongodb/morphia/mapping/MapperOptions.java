@@ -3,8 +3,11 @@ package org.mongodb.morphia.mapping;
 
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
+import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 
 
 /**
@@ -12,7 +15,9 @@ import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class MapperOptions {
+    private static final Logger LOG = MorphiaLoggerFactory.get(MapperOptions.class);
     private boolean actLikeSerializer;
     private boolean ignoreFinals; //ignore final fields.
     private boolean storeNulls;
@@ -25,6 +30,7 @@ public class MapperOptions {
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
+    private DatastoreProvider datastoreProvider = null;
 
     /**
      * Creates a default options instance.
@@ -66,6 +72,23 @@ public class MapperOptions {
      */
     public void setCacheFactory(final EntityCacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
+    }
+
+    /**
+     * @return the DatastoreProvider Morphia should use
+     */
+    public DatastoreProvider getDatastoreProvider() {
+        return datastoreProvider;
+    }
+
+    /**
+     * Sets the DatastoreProvider Morphia should use
+     *
+     * @param datastoreProvider the DatastoreProvider to use
+     */
+    public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
+        LOG.warning("DatastoreProviders are no longer needed or used.");
+        this.datastoreProvider = datastoreProvider;
     }
 
     /**
