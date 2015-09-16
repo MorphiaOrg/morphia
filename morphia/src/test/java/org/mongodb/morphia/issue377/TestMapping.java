@@ -37,7 +37,7 @@ public class TestMapping extends TestBase {
 
         // when
         DBObject dbObject = mapper.toDBObject(user);
-        User object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
+        User object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
 
         // then
         assertThat(object.userObject, is(user.userObject));
@@ -55,17 +55,17 @@ public class TestMapping extends TestBase {
 
         user.userObject = "just a String";
         DBObject dbObject = mapper.toDBObject(user);
-        Object object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
+        Object object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
         Assert.assertEquals(user.userObject, ((User) object).userObject);
 
         user.userObject = 33;
         dbObject = mapper.toDBObject(user);
-        object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
+        object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
         Assert.assertEquals(user.userObject, ((User) object).userObject);
 
         user.userObject = 33.3;
         dbObject = mapper.toDBObject(user);
-        object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
+        object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
         Assert.assertEquals(user.userObject, ((User) object).userObject);
     }
 
@@ -135,26 +135,14 @@ public class TestMapping extends TestBase {
         private final int someValue = 7;
 
         @Override
-        public int hashCode() {
-            return someValue;
+        public boolean equals(final Object o) {
+            return this == o || !(o == null || getClass() != o.getClass());
+
         }
 
         @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            SerializableObject that = (SerializableObject) o;
-
-            if (someValue != that.someValue) {
-                return false;
-            }
-
-            return true;
+        public int hashCode() {
+            return someValue;
         }
     }
 }

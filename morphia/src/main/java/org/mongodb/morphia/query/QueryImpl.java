@@ -179,7 +179,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
         }
 
-        return new MorphiaIterator<T, T>(cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
+        return new MorphiaIterator<T, T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         fields = oldFields;
         includeFields = oldInclude;
-        return new MorphiaKeyIterator<T>(cursor, ds.getMapper(), clazz, dbColl.getName());
+        return new MorphiaKeyIterator<T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName());
     }
 
     @Override

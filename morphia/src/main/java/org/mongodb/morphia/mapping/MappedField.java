@@ -64,7 +64,6 @@ public class MappedField {
         INTERESTING.add(Text.class);
     }
 
-    private final Mapper mapper;
     // Annotations that have been found relevant to mapping
     private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
     private final List<MappedField> typeParameters = new ArrayList<MappedField>();
@@ -85,13 +84,12 @@ public class MappedField {
     private Type genericType;
 
     MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
-        this.mapper = mapper;
         f.setAccessible(true);
         field = f;
         persistedClass = clazz;
         realType = field.getType();
         genericType = field.getGenericType();
-        discover();
+        discover(mapper);
     }
 
     /**
@@ -103,9 +101,8 @@ public class MappedField {
      */
     MappedField(final Field field, final Type type, final Mapper mapper) {
         this.field = field;
-        this.mapper = mapper;
         genericType = type;
-        discoverType();
+        discoverType(mapper);
     }
 
     /**
@@ -280,13 +277,6 @@ public class MappedField {
      */
     public Class getMapKeyClass() {
         return toClass(mapKeyType);
-    }
-
-    /**
-     * @return the Mapper used by this MappedField
-     */
-    public Mapper getMapper() {
-        return mapper;
     }
 
     /**
@@ -465,13 +455,13 @@ public class MappedField {
     /**
      * Discovers interesting (that we care about) things about the field.
      */
-    protected void discover() {
+    protected void discover(final Mapper mapper) {
         for (final Class<? extends Annotation> clazz : INTERESTING) {
             addAnnotation(clazz);
         }
 
         //type must be discovered before the constructor.
-        discoverType();
+        discoverType(mapper);
         constructor = discoverConstructor();
         discoverMultivalued();
 
@@ -494,7 +484,7 @@ public class MappedField {
     }
 
     @SuppressWarnings("unchecked")
-    protected void discoverType() {
+    protected void discoverType(final Mapper mapper) {
         if (genericType instanceof TypeVariable) {
             realType = extractTypeVariable((TypeVariable) genericType);
         } else if (genericType instanceof ParameterizedType) {
@@ -504,12 +494,12 @@ public class MappedField {
 
             for (Type type : types) {
                 if (type instanceof ParameterizedType) {
-                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, getMapper()));
+                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, mapper));
                 } else {
                     if (type instanceof WildcardType) {
                         type = ((WildcardType) type).getUpperBounds()[0];
                     }
-                    typeParameters.add(new EphemeralMappedField(type, this, getMapper()));
+                    typeParameters.add(new EphemeralMappedField(type, this, mapper));
                 }
             }
         } else if (genericType instanceof WildcardType) {
@@ -527,12 +517,12 @@ public class MappedField {
                 final Type[] types = pt.getActualTypeArguments();
                 for (Type type : types) {
                     if (type instanceof ParameterizedType) {
-                        typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, getMapper()));
+                        typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, mapper));
                     } else {
                         if (type instanceof WildcardType) {
                             type = ((WildcardType) type).getUpperBounds()[0];
                         }
-                        typeParameters.add(new EphemeralMappedField(type, this, getMapper()));
+                        typeParameters.add(new EphemeralMappedField(type, this, mapper));
                     }
                 }
             } else {

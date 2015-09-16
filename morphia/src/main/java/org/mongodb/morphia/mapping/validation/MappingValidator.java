@@ -8,6 +8,7 @@ import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
 import org.mongodb.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
 import org.mongodb.morphia.mapping.validation.classrules.EmbeddedAndId;
@@ -27,14 +28,14 @@ import org.mongodb.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiab
 import org.mongodb.morphia.mapping.validation.fieldrules.VersionMisuse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.sort;
 
 
 /**
@@ -58,18 +59,20 @@ public class MappingValidator {
      * Validates a MappedClass
      *
      * @param mappedClass the MappedClass to validate
+     * @param mapper the Mapper to use for validation
      */
     @Deprecated
-    public void validate(final MappedClass mappedClass) {
-        validate(Arrays.asList(mappedClass));
+    public void validate(final Mapper mapper, final MappedClass mappedClass) {
+        validate(mapper, singletonList(mappedClass));
     }
 
     /**
      * Validates a List of MappedClasses
      *
      * @param classes the MappedClasses to validate
+     * @param mapper the Mapper to use for validation
      */
-    public void validate(final List<MappedClass> classes) {
+    public void validate(final Mapper mapper, final List<MappedClass> classes) {
         final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
 
             @Override
@@ -81,7 +84,7 @@ public class MappingValidator {
         final List<ClassConstraint> rules = getConstraints();
         for (final MappedClass c : classes) {
             for (final ClassConstraint v : rules) {
-                v.check(c, ve);
+                v.check(mapper, c, ve);
             }
         }
 
@@ -97,7 +100,7 @@ public class MappingValidator {
             for (final ConstraintViolation v : ve) {
                 l.add(new LogLine(v));
             }
-            Collections.sort(l);
+            sort(l);
 
             for (final LogLine line : l) {
                 line.log(LOG);

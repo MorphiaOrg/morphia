@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping.validation.classrules;
 
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.validation.ClassConstraint;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class DuplicatedAttributeNames implements ClassConstraint {
 
     @Override
-    public void check(final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
         final Set<String> foundNames = new HashSet<String>();
         for (final MappedField mappedField : mc.getPersistenceFields()) {
             for (final String name : mappedField.getLoadNames()) {

@@ -3,6 +3,7 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
@@ -24,23 +25,25 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     private final EntityCache cache;
     private long driverTime;
     private long mapperTime;
+    private Datastore datastore;
 
     /**
      * Creates a MorphiaIterator
-     *
+     * @param datastore  the Datastore to use when fetching this reference
      * @param it         the Iterator to use
      * @param mapper     the Mapper to use
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      * @param cache      the EntityCache
      */
-    public MorphiaIterator(final Iterator<DBObject> it, final Mapper mapper, final Class<T> clazz, final String collection,
-                           final EntityCache cache) {
+    public MorphiaIterator(final Datastore datastore, final Iterator<DBObject> it, final Mapper mapper, final Class<T> clazz,
+                           final String collection, final EntityCache cache) {
         wrapped = it;
         this.mapper = mapper;
         this.clazz = clazz;
         this.collection = collection;
         this.cache = cache;
+        this.datastore = datastore;
     }
 
     /**
@@ -128,7 +131,7 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
 
     @SuppressWarnings("unchecked")
     protected V convertItem(final DBObject dbObj) {
-        return (V) mapper.fromDBObject(clazz, dbObj, cache);
+        return (V) mapper.fromDBObject(datastore, clazz, dbObj, cache);
     }
 
     protected DBObject getNext() {

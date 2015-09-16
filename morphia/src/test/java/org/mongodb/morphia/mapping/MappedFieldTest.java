@@ -91,7 +91,7 @@ public class MappedFieldTest extends TestBase {
         list.add(dbList("a", "b", "c"));
         list.add(dbList("d", "e", "f"));
         final TestEntity entity = getMorphia().getMapper()
-                                              .fromDb(new BasicDBObject("listOfListOfString", list),
+                                              .fromDb(getDs(), new BasicDBObject("listOfListOfString", list),
                                                       new TestEntity(),
                                                       new DefaultEntityCache());
         final List<String> strings = asList("a", "b", "c");

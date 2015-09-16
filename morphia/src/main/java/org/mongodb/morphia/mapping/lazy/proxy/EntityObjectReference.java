@@ -1,8 +1,8 @@
 package org.mongodb.morphia.mapping.lazy.proxy;
 
 
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 
 import static java.lang.String.format;
 
@@ -10,20 +10,19 @@ import static java.lang.String.format;
 /**
  * A serializable object reference
  */
-public class SerializableEntityObjectReference extends AbstractReference implements ProxiedEntityReference {
+public class EntityObjectReference extends AbstractReference implements ProxiedEntityReference {
     private static final long serialVersionUID = 1L;
     private final Key key;
 
     /**
-     * Creates a serializable object reference
+     * Creates an object reference
      *
+     * @param datastore   the Datastore to use when fetching this reference
      * @param targetClass the Class of the referenced item
-     * @param p           the DatastoreProvider to use
      * @param key         the Key value
      */
-    public SerializableEntityObjectReference(final Class targetClass, final DatastoreProvider p, final Key key) {
-
-        super(p, targetClass, false);
+    public EntityObjectReference(final Datastore datastore, final Class targetClass, final Key key) {
+        super(datastore, targetClass, false);
         this.key = key;
     }
 
@@ -42,10 +41,10 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
     @Override
     @SuppressWarnings("unchecked")
     protected Object fetch() {
-        final Object entity = p.get().getByKey(referenceObjClass, key);
+        final Object entity = getDatastore().getByKey(referenceObjClass, key);
         if (entity == null) {
             throw new LazyReferenceFetchingException(format("During the lifetime of the proxy, the Entity identified by '%s' "
-                                                            + "disappeared from the Datastore.", key));
+                                                                + "disappeared from the Datastore.", key));
         }
         return entity;
     }

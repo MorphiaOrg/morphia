@@ -17,7 +17,7 @@ import java.util.Set;
 public class EmbeddedAndValue implements ClassConstraint {
 
     @Override
-    public void check(final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
 
         if (mc.getEmbeddedAnnotation() != null && !mc.getEmbeddedAnnotation().value().equals(Mapper.IGNORED_FIELDNAME)) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(),

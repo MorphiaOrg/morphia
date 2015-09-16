@@ -124,7 +124,7 @@ public class CustomConvertersTest extends TestBase {
         final DBObject dbObject = getMorphia().toDBObject(entity);
 
         assertEquals(new BasicDBObject("_id", 1L).append("valueObject", 2L), dbObject);
-        assertEquals(entity, getMorphia().fromDBObject(MyEntity.class, dbObject));
+        assertEquals(entity, getMorphia().fromDBObject(getDs(), MyEntity.class, dbObject));
     }
 
     /**
@@ -138,7 +138,7 @@ public class CustomConvertersTest extends TestBase {
         final byte[] data = new DefaultDBEncoder().encode(dbObject);
 
         final DBObject decoded = new DefaultDBDecoder().decode(data, (DBCollection) null);
-        final MyEntity actual = getMorphia().fromDBObject(MyEntity.class, decoded);
+        final MyEntity actual = getMorphia().fromDBObject(getDs(), MyEntity.class, decoded);
         assertEquals(entity, actual);
     }
 

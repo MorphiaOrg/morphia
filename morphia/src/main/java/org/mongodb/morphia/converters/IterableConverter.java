@@ -5,7 +5,6 @@ import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.mapping.EphemeralMappedField;
 import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Array;
@@ -32,10 +31,11 @@ public class IterableConverter extends TypeConverter {
         final Class subtypeDest = mf.getSubClass();
         final Collection values = createNewCollection(mf);
 
+        final Converters converters = getMapper().getConverters();
         if (fromDBObject.getClass().isArray()) {
             //This should never happen. The driver always returns list/arrays as a List
             for (final Object o : (Object[]) fromDBObject) {
-                values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                values.add(converters.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
         } else if (fromDBObject instanceof Iterable) {
             // map back to the java data type
@@ -46,20 +46,20 @@ public class IterableConverter extends TypeConverter {
                     if (!typeParameters.isEmpty()) {
                         final MappedField mappedField = typeParameters.get(0);
                         if (mappedField instanceof EphemeralMappedField) {
-                            final EphemeralMappedField field = (EphemeralMappedField) getMapper().fromDb((DBObject) o, mappedField,
-                                                                                                         new DefaultEntityCache());
-                            values.add(field.getValue());
+                            values.add(converters.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mappedField));
+                        } else {
+                            throw new UnsupportedOperationException("mappedField isn't an EphemeralMappedField");
                         }
                     } else {
-                        values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                        values.add(converters.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
                     }
                 } else {
-                    values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                    values.add(converters.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
                 }
             }
         } else {
             //Single value case.
-            values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
+            values.add(converters.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
         }
 
         //convert to and array if that is the destination type (not a list/set)
