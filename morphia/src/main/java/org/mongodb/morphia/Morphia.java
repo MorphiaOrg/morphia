@@ -225,8 +225,19 @@ public class Morphia {
      * @return the Morphia instance
      */
     public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
+        return mapPackage(packageName, false, !mapper.getOptions().isMapSubPackages());
+    }
+    /**
+     * Tries to map all classes in the package specified.
+     *
+     * @param packageName          the name of the package to process
+     * @param ignoreInvalidClasses specifies whether to ignore classes in the package that cannot be mapped
+     * @param ignoreSubPackages    specifies whether to ignore sub-packages during mapping
+     * @return the Morphia instance
+     */
+    private synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses, final boolean ignoreSubPackages) {
         try {
-            for (final Class clazz : ReflectionUtils.getClasses(packageName)) {
+            for (final Class clazz : ReflectionUtils.getClasses(packageName, ignoreSubPackages)) {
                 try {
                     final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
                     final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);
@@ -255,7 +266,7 @@ public class Morphia {
      * @return this
      */
     public Morphia mapPackageFromClass(final Class clazz) {
-        return mapPackage(clazz.getPackage().getName(), false);
+        return mapPackage(clazz.getPackage().getName(), false, true);
     }
 
     /**
