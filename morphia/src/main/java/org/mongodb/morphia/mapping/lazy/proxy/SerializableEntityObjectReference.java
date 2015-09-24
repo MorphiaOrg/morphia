@@ -27,7 +27,7 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
     @SuppressWarnings("unchecked")
     protected Object fetch() {
         final Object entity = p.get().getByKey(referenceObjClass, key);
-        if (!ignoreMissing && entity == null) {
+        if (entity == null) {
             throw new LazyReferenceFetchingException(format("During the lifetime of the proxy, the Entity identified by '%s' "
                                                             + "disappeared from the Datastore.", key));
         }
