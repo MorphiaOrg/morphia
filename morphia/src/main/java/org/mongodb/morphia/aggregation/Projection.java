@@ -26,11 +26,10 @@ public final class Projection<T, U> {
         this.projectedField = "$" + projectedField;
     }
 
-    private Projection(final String field, final Projection projection, final Projection... subsequent) {
+    private Projection(final String field, final Projection... projections) {
         this(field);
         this.projections = new ArrayList<Projection>();
-        projections.add(projection);
-        projections.addAll(Arrays.asList(subsequent));
+        projections.addAll(Arrays.asList(projections));
     }
 
     private Projection(final String field) {
@@ -72,15 +71,14 @@ public final class Projection<T, U> {
     /**
      * Creates a projection on a field with subsequent projects applied.
      *
-     * @param field      the field
-     * @param projection the project to apply
-     * @param subsequent the other projections to apply
-     * @param <T>        the source type
-     * @param <U>        the target type
+     * @param field       the field
+     * @param projections the projections to apply
+     * @param <T>         the source type
+     * @param <U>         the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> projection(final String field, final Projection projection, final Projection... subsequent) {
-        return new Projection<T, U>(field, projection, subsequent);
+    public static <T, U> Projection<T, U> projection(final String field, final Projection... projections) {
+        return new Projection<T, U>(field, projections);
     }
 
     /**
