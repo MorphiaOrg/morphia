@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 
 
 /**
@@ -66,6 +67,42 @@ public class MapperOptionsTest extends TestBase {
         getMorphia().getMapper().getOptions().setStoreEmpties(true);
         shouldFindField(hm, new HashMap<String, String>());
 
+
+        //Test opposite from above
+        getMorphia().getMapper().getOptions().setStoreEmpties(false);
+        shouldNotFindField(hm);
+    }
+
+    @Test
+    public void emptyCollectionValuedMapStoredWithOptions() throws Exception {
+        final HasCollectionValuedMap hm = new HasCollectionValuedMap();
+        hm.properties = new HashMap<String, Collection<String>>();
+
+        //Test default behavior
+        getMorphia().getMapper().getOptions().setStoreEmpties(false);
+        shouldNotFindField(hm);
+
+        //Test default storing empty map with storeEmpties option
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        shouldFindField(hm, new HashMap<String, Collection<String>>());
+
+        //Test opposite from above
+        getMorphia().getMapper().getOptions().setStoreEmpties(false);
+        shouldNotFindField(hm);
+    }
+
+    @Test
+    public void emptyComplexObjectValuedMapStoredWithOptions() throws Exception {
+        final HasComplexObjectValuedMap hm = new HasComplexObjectValuedMap();
+        hm.properties = new HashMap<String, ComplexObject>();
+
+        //Test default behavior
+        getMorphia().getMapper().getOptions().setStoreEmpties(false);
+        shouldNotFindField(hm);
+
+        //Test default storing empty map with storeEmpties option
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        shouldFindField(hm, new HashMap<String, ComplexObject>());
 
         //Test opposite from above
         getMorphia().getMapper().getOptions().setStoreEmpties(false);
@@ -137,6 +174,22 @@ public class MapperOptionsTest extends TestBase {
         Assert.assertEquals(expected, getDs().createQuery(HasMap.class).get().properties);
     }
 
+    private void shouldFindField(final HasCollectionValuedMap hm, final Map<String, Collection<String>> expected) {
+        final DBObject dbObj;
+        getDs().save(hm);
+        dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
+        Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
+        Assert.assertEquals(expected, getDs().createQuery(HasCollectionValuedMap.class).get().properties);
+    }
+
+    private void shouldFindField(final HasComplexObjectValuedMap hm, final Map<String, ComplexObject> expected) {
+        final DBObject dbObj;
+        getDs().save(hm);
+        dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
+        Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
+        Assert.assertEquals(expected, getDs().createQuery(HasComplexObjectValuedMap.class).get().properties);
+    }
+
     private void shouldNotFindField(final HasMap hl) {
         getDs().save(hl);
         DBObject dbObj = getDs().getCollection(HasMap.class).findOne();
@@ -149,6 +202,20 @@ public class MapperOptionsTest extends TestBase {
         DBObject dbObj = getDs().getCollection(HasList.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("names"), dbObj.containsField("names"));
         Assert.assertNull(getDs().createQuery(HasList.class).get().names);
+    }
+
+    private void shouldNotFindField(final HasCollectionValuedMap hm) {
+        getDs().save(hm);
+        DBObject dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
+        Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
+        Assert.assertNull(getDs().createQuery(HasCollectionValuedMap.class).get().properties);
+    }
+
+    private void shouldNotFindField(final HasComplexObjectValuedMap hm) {
+        getDs().save(hm);
+        DBObject dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
+        Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
+        Assert.assertNull(getDs().createQuery(HasComplexObjectValuedMap.class).get().properties);
     }
 
     private static class HasList implements Serializable {
@@ -169,8 +236,30 @@ public class MapperOptionsTest extends TestBase {
         }
     }
 
+    private static class HasCollectionValuedMap implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        private Map<String, Collection<String>> properties;
+
+        HasCollectionValuedMap() {
+        }
+    }
+
+    private static class HasComplexObjectValuedMap implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        private Map<String, ComplexObject> properties;
+
+        HasComplexObjectValuedMap() {
+        }
+    }
+
     @Entity
     private static class DummyEntity {
     }
 
+    private static class ComplexObject {
+        private String stringVal;
+        private int intVal;
+    }
 }
