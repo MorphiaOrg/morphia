@@ -836,7 +836,9 @@ public class TestQuery extends TestBase {
         assertNotEquals(0, profileCollection.count());
         DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
                                                                .append("ns", getDs().getCollection(Pic.class).getFullName()));
-        assertEquals(expectedComment, ((DBObject) profileRecord.get("query")).get("$comment"));
+        final Object commentPre32 = ((DBObject) profileRecord.get("query")).get("$comment");
+        final Object commentPost32 = ((DBObject) profileRecord.get("query")).get("comment");
+        assertTrue(profileRecord.toString(), expectedComment.equals(commentPre32) || expectedComment.equals(commentPost32));
 
         // finally
         turnOffProfilingAndDropProfileCollection();
