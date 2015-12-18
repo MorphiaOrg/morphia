@@ -555,7 +555,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         Assert.parametersNotNull("map", baseCommand.getMap());
         Assert.parameterNotEmpty("map", baseCommand.getMap());
         Assert.parametersNotNull("reduce", baseCommand.getReduce());
-        Assert.parameterNotEmpty("reduce", baseCommand.getMap());
+        Assert.parameterNotEmpty("reduce", baseCommand.getReduce());
 
         if (query.getOffset() != 0 || query.getFieldsObject() != null) {
             throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
