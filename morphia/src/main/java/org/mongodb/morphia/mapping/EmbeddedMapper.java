@@ -188,7 +188,7 @@ class EmbeddedMapper implements CustomMapper {
             }
         });
 
-        if (!map.isEmpty()) {
+        if (!map.isEmpty() || mapper.getOptions().isStoreEmpties()) {
             mf.setFieldValue(entity, map);
         }
     }
