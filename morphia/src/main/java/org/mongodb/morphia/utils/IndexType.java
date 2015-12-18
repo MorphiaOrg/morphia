@@ -8,6 +8,7 @@ public enum IndexType {
     DESC(-1),
     GEO2D("2d"),
     GEO2DSPHERE("2dsphere"),
+    HASHED("hashed"),
     TEXT("text");
 
     private final Object direction;

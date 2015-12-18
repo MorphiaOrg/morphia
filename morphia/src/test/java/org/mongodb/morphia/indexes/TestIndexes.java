@@ -28,6 +28,7 @@ import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
@@ -47,6 +48,10 @@ public class TestIndexes extends TestBase {
         depIndexColl.drop();
         Assert.assertEquals(0, depIndexColl.getIndexInfo().size());
 
+        final DBCollection hashIndexColl = getDb().getCollection(TestWithHashedIndex.class.getSimpleName());
+        hashIndexColl.drop();
+        Assert.assertEquals(0, hashIndexColl.getIndexInfo().size());
+
         datastore.ensureIndexes(TestWithIndexOption.class, true);
         Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
         assertBackground(indexOptionColl.getIndexInfo());
@@ -54,6 +59,10 @@ public class TestIndexes extends TestBase {
         datastore.ensureIndexes(TestWithDeprecatedIndex.class, true);
         Assert.assertEquals(2, depIndexColl.getIndexInfo().size());
         assertBackground(depIndexColl.getIndexInfo());
+
+        datastore.ensureIndexes(TestWithHashedIndex.class);
+        Assert.assertEquals(2, hashIndexColl.getIndexInfo().size());
+        assertHashed(hashIndexColl.getIndexInfo());
     }
 
     private void assertBackground(final List<DBObject> indexInfo) {
@@ -61,6 +70,14 @@ public class TestIndexes extends TestBase {
             BasicDBObject index = (BasicDBObject) dbObject;
             if (!index.getString("name").equals("_id_")) {
                 Assert.assertTrue(index.getBoolean("background"));
+            }
+        }
+    }
+    private void assertHashed(final List<DBObject> indexInfo) {
+        for (final DBObject dbObject : indexInfo) {
+            BasicDBObject index = (BasicDBObject) dbObject;
+            if (!index.getString("name").equals("_id_")) {
+                Assert.assertEquals(((DBObject) index.get("key")).get("hashedValue"), "hashed");
             }
         }
     }
@@ -80,4 +97,11 @@ public class TestIndexes extends TestBase {
         private String name;
 
     }
+
+    @Entity(noClassnameStored = true)
+    @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "hashedValue", type = IndexType.HASHED)})})
+    public static class TestWithHashedIndex {
+        private String hashedValue;
+    }
+
 }
