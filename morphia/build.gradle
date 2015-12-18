@@ -15,7 +15,6 @@ dependencies {
         println "Building with the 3.x java driver"
     }
 
-    compile project(':util')
     compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
     compile 'cglib:cglib-nodep:2.2.2', optional
     testCompile 'org.zeroturnaround:zt-exec:1.5'
