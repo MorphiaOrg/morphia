@@ -730,7 +730,7 @@ public class TestQuery extends TestBase {
             getDs().find(ContainsPic.class, "pic.name", "foo").get();
             assertNull("um, query validation should have thrown");
         } catch (ValidationException e) {
-            assertTrue(e.getMessage().contains("Can not use dot-"));
+            assertTrue(e.getMessage().contains("Cannot use dot-"));
         }
     }
 

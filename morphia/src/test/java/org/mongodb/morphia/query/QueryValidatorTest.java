@@ -2,8 +2,12 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.entities.EntityWithListsAndArrays;
 import org.mongodb.morphia.entities.SimpleEntity;
 import org.mongodb.morphia.mapping.MappedClass;
@@ -11,6 +15,7 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.validation.ValidationFailure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +36,9 @@ import static org.mongodb.morphia.query.FilterOperator.SIZE;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 public class QueryValidatorTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
         // expect
@@ -459,10 +467,46 @@ public class QueryValidatorTest {
                                                           new ArrayList<ValidationFailure>()), is(false));
     }
 
+    @Test
+    public void shouldReferToMappedClassInExceptionWhenFieldNotFound() {
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("The field 'notAField' could not be found in 'org.bson.types.ObjectId'");
+        validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("id.notAField"), FilterOperator.EQUAL, 1, true, true);
+    }
+
+    @Test
+    public void shouldReferToMappedClassInExceptionWhenQueryingPastReferenceField() {
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("Cannot use dot-notation past 'reference' in 'org.mongodb.morphia.query.QueryValidatorTest$WithReference'");
+        validateQuery(WithReference.class, new Mapper(), new StringBuilder("reference.name"), FilterOperator.EQUAL, "", true, true);
+    }
+
+    @Test
+    public void shouldReferToMappedClassInExceptionWhenQueryingPastSerializedField() {
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("Cannot use dot-notation past 'serialized' in "
+                             + "'org.mongodb.morphia.query.QueryValidatorTest$WithSerializedField'");
+        validateQuery(WithSerializedField.class, new Mapper(), new StringBuilder("serialized.name"), FilterOperator.EQUAL, "", true, true);
+    }
+
     private static class GeoEntity {
         private final int[] array = {1};
     }
 
     private static class NullClass {
+    }
+
+    private static class WithReference {
+        @Reference
+        private SimpleEntity reference;
+    }
+
+    private static class SerializableClass implements Serializable {
+        private String name;
+    }
+
+    private static class WithSerializedField {
+        @Serialized
+        private SerializableClass serialized;
     }
 }

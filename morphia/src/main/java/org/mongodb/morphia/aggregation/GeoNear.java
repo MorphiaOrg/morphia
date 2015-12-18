@@ -268,7 +268,7 @@ public final class GeoNear {
          * @return this
          */
         public GeoNearBuilder setNear(final double latitude, final double longitude) {
-            this.near = new double[]{latitude, longitude};
+            this.near = new double[]{longitude, latitude};
             return this;
         }
 
