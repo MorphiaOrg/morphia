@@ -127,7 +127,7 @@ public class Morphia {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-            return (T) mapper.fromDBObject(entityClass, dbObject, cache);
+            return mapper.fromDBObject(entityClass, dbObject, cache);
         } catch (Exception e) {
             throw new MappingException("Could not map entity from DBObject", e);
         }
@@ -226,7 +226,7 @@ public class Morphia {
      */
     public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
         try {
-            for (final Class clazz : ReflectionUtils.getClasses(packageName)) {
+            for (final Class clazz : ReflectionUtils.getClasses(packageName, mapper.getOptions().isMapSubPackages())) {
                 try {
                     final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
                     final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);

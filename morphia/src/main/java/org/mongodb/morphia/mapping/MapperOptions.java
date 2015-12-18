@@ -21,6 +21,7 @@ public class MapperOptions {
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
     private boolean cacheClassLookups = false;
+    private boolean mapSubPackages = false;
     private ObjectFactory objectFactory = new DefaultCreator(this);
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
@@ -239,5 +240,20 @@ public class MapperOptions {
      */
     public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
         this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+    }
+
+    /**
+     * @return true if Morphia should map classes from the sub-packages as well
+     */
+    public boolean isMapSubPackages() {
+        return mapSubPackages;
+    }
+
+    /**
+     * Controls if classes from sub-packages should be mapped.
+     * @param mapSubPackages true if Morphia should map classes from the sub-packages as well
+     */
+    public void setMapSubPackages(final boolean mapSubPackages) {
+        this.mapSubPackages = mapSubPackages;
     }
 }
