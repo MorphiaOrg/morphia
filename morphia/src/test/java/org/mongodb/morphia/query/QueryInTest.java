@@ -1,27 +1,31 @@
 package org.mongodb.morphia.query;
 
 
+import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
+import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 /**
  * @author scotthernandez
  */
-public class QueryInForReferencedListTest extends TestBase {
-
-    private String classpath;
+public class QueryInTest extends TestBase {
+    private static final Logger LOG = getLogger(QueryInTest.class);
 
     @Test
     public void testIdOnly() {
@@ -42,6 +46,22 @@ public class QueryInForReferencedListTest extends TestBase {
         q = getDs().createQuery(HasIdOnly.class);
         q.criteria("entity").equal(b.getId());
         Assert.assertEquals(1, q.asList().size());
+    }
+
+    @Test
+    public void testInIdList() throws Exception {
+        final Doc doc = new Doc();
+        doc.id = 1;
+        getDs().save(doc);
+
+        // this works
+        getDs().find(Doc.class).field("_id").equal(1).asList();
+
+        final List<Long> idList = new ArrayList<Long>();
+        idList.add(1L);
+        // this causes an NPE
+        getDs().find(Doc.class).field("_id").in(idList).asList();
+
     }
 
     @Test
@@ -77,6 +97,31 @@ public class QueryInForReferencedListTest extends TestBase {
     }
 
     @Test
+    public void testInQueryByKey() throws Exception {
+        checkMinServerVersion(2.5);
+        final HasRef hr = new HasRef();
+        List<Key<ReferencedEntity>> refs = new ArrayList<Key<ReferencedEntity>>();
+        for (int x = 0; x < 10; x++) {
+            final ReferencedEntity re = new ReferencedEntity("" + x);
+            getDs().save(re);
+            refs.add(new Key<ReferencedEntity>(ReferencedEntity.class,
+                                               getMorphia().getMapper().getCollectionName(ReferencedEntity.class),
+                                               re.getId()));
+        }
+        hr.ref = refs.get(0);
+
+        getDs().save(hr);
+
+        Query<HasRef> query = getDs().createQuery(HasRef.class).field("ref").in(refs);
+        try {
+            Assert.assertEquals(1, query.asList().size());
+        } catch (MongoException e) {
+            LOG.debug("query = " + query);
+            throw e;
+        }
+    }
+
+    @Test
     public void testMapping() throws Exception {
         getMorphia().map(HasRefs.class);
         getMorphia().map(ReferencedEntity.class);
@@ -92,6 +137,14 @@ public class QueryInForReferencedListTest extends TestBase {
         final List<HasRefs> found = q.asList();
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
+    }
+
+    @Entity
+    private static class HasRef implements Serializable {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private Key<ReferencedEntity> ref;
     }
 
     @Entity
@@ -114,12 +167,6 @@ public class QueryInForReferencedListTest extends TestBase {
         }
     }
 
-    @Entity("docs")
-    private static class Doc {
-        @Id
-        private long id = 4;
-    }
-
     @Entity(value = "as", noClassnameStored = true)
     public static class HasIdOnly {
         @Id
@@ -129,5 +176,12 @@ public class QueryInForReferencedListTest extends TestBase {
         private List<ReferencedEntity> list;
         @Reference(idOnly = true)
         private ReferencedEntity entity;
+    }
+
+    @Entity("docs")
+    private static class Doc {
+        @Id
+        private long id = 4;
+
     }
 }
