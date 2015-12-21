@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -26,6 +28,21 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class QueryInTest extends TestBase {
     private static final Logger LOG = getLogger(QueryInTest.class);
+
+    @Test
+    public void testAddEmpty() {
+        Query<Data> query = getDs().createQuery(Data.class);
+        List<ObjectId> memberships = new ArrayList<ObjectId>();
+
+        query.or(
+            query.criteria("id").hasAnyOf(memberships),
+            query.criteria("otherIds").hasAnyOf(memberships)
+        );
+
+        List<Data> dataList = query.asList();
+
+        Assert.assertEquals(0, dataList.size());
+    }
 
     @Test
     public void testIdOnly() {
@@ -137,6 +154,16 @@ public class QueryInTest extends TestBase {
         final List<HasRefs> found = q.asList();
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
+    }
+
+    @Entity("data")
+    private static class Data {
+        private ObjectId id;
+        private Set<ObjectId> otherIds;
+
+        public Data() {
+            otherIds = new HashSet<ObjectId>();
+        }
     }
 
     @Entity

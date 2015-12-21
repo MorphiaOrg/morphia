@@ -72,6 +72,10 @@ public class FieldCriteria extends AbstractCriteria {
             && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
             mappedValue = Collections.singletonList(mappedValue);
         }
+        if (value != null && type == null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
+            && Iterable.class.isAssignableFrom(value.getClass())) {
+            mappedValue = Collections.emptyList();
+        }
 
         //TODO: investigate and/or add option to control this.
         if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
