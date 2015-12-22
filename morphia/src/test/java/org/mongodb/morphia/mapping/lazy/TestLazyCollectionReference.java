@@ -41,7 +41,7 @@ public class TestLazyCollectionReference extends ProxyTestBase {
         // read root entity from DB
         root = getDs().get(root);
         assertNotFetched(root.references);
-        
+ 
         // use the lazy collection
         Collection<ReferencedEntity> retrievedReferences = root.references;
         Assert.assertEquals(2, retrievedReferences.size());
@@ -53,7 +53,7 @@ public class TestLazyCollectionReference extends ProxyTestBase {
         // read root entity from DB again
         root = getDs().get(root);
         assertNotFetched(root.references);
-        
+
         // remove the first referenced entity from DB
         getDs().delete(referenced1);
 
