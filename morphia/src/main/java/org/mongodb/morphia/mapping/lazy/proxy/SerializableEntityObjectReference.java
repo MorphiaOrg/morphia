@@ -49,9 +49,4 @@ public class SerializableEntityObjectReference extends AbstractReference impleme
         }
         return entity;
     }
-
-    @Override
-    protected void beforeWriteObject() {
-        object = null;
-    }
 }
