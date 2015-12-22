@@ -21,110 +21,122 @@ import java.util.Set;
  */
 public class GuiceObjectFactory implements ObjectFactory {
 
-  // rather messy, i'd like ObjectFactory to be tackled to have a clean
-  // separation of concern (choose impl class vs. instantiate & inject)
+    // rather messy, i'd like ObjectFactory to be tackled to have a clean
+    // separation of concern (choose impl class vs. instantiate & inject)
 
-  private final ObjectFactory delegate;
-  private final Injector injector;
+    private final ObjectFactory delegate;
+    private final Injector injector;
 
-  public GuiceObjectFactory(final ObjectFactory delegate, final Injector injector) {
-    this.delegate = delegate;
-    this.injector = injector;
-  }
-
-  public <T> T createInstance(final Class<T> clazz) {
-    Assert.parameterNotNull(clazz, "clazz");
-
-    if (injectOnConstructor(clazz)) {
-      return injector.getInstance(clazz);
+    /**
+     * Create a GuiceObjectFactory wrapper around an ObjectFactory
+     *
+     * @param delegate the ObjectFactory to wrap
+     * @param injector the Guice Injector to use
+     */
+    public GuiceObjectFactory(final ObjectFactory delegate, final Injector injector) {
+        this.delegate = delegate;
+        this.injector = injector;
     }
 
-    return injectMembers(delegate.createInstance(clazz));
-  }
+    @Override
+    public <T> T createInstance(final Class<T> clazz) {
+        Assert.parameterNotNull("clazz", clazz);
 
-  @SuppressWarnings("unchecked")
-  private boolean injectOnConstructor(final Class clazz) {
-    final Constructor[] cs = clazz.getDeclaredConstructors();
-    for (final Constructor constructor : cs) {
-      if (constructor.getAnnotation(Inject.class) != null) {
-        return true;
-      }
-    }
-    return false;
-  }
+        if (injectOnConstructor(clazz)) {
+            return injector.getInstance(clazz);
+        }
 
-  public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
-    if (injectOnConstructor(clazz)) {
-      return injector.getInstance(clazz);
+        return injectMembers(delegate.createInstance(clazz));
     }
 
-    return injectMembers(delegate.createInstance(clazz, dbObj));
-  }
-
-  @SuppressWarnings("unchecked")
-  public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
-    final Class clazz = mf.getType();
-    if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
-      // there is no good way to find the clazz to use, yet, so delegate
-      return injectMembers(delegate.createInstance(mapper, mf, dbObj));
+    @SuppressWarnings("unchecked")
+    private boolean injectOnConstructor(final Class clazz) {
+        final Constructor[] cs = clazz.getDeclaredConstructors();
+        for (final Constructor constructor : cs) {
+            if (constructor.getAnnotation(Inject.class) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    if (injectOnConstructor(clazz)) {
-      return injector.getInstance(clazz);
+    private <T> T injectMembers(final T o) {
+        if (o != null) {
+            injector.injectMembers(o);
+        }
+        return o;
     }
 
-    return injectMembers(delegate.createInstance(mapper, mf, dbObj));
-  }
+    @Override
+    public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
+        if (injectOnConstructor(clazz)) {
+            return injector.getInstance(clazz);
+        }
 
-  @SuppressWarnings("unchecked")
-  public Map createMap(final MappedField mf) {
-    final Class clazz = mf.getType();
-    if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
-      // there is no good way to find the clazz to use, yet, so delegate
-      return injectMembers(delegate.createMap(mf));
+        return injectMembers(delegate.createInstance(clazz, dbObj));
     }
 
-    if (injectOnConstructor(clazz)) {
-      return (Map) injector.getInstance(clazz);
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
+        final Class clazz = mf.getType();
+        if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+            // there is no good way to find the clazz to use, yet, so delegate
+            return injectMembers(delegate.createInstance(mapper, mf, dbObj));
+        }
+
+        if (injectOnConstructor(clazz)) {
+            return injector.getInstance(clazz);
+        }
+
+        return injectMembers(delegate.createInstance(mapper, mf, dbObj));
     }
 
-    return injectMembers(delegate.createMap(mf));
-  }
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map createMap(final MappedField mf) {
+        final Class clazz = mf.getType();
+        if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+            // there is no good way to find the clazz to use, yet, so delegate
+            return injectMembers(delegate.createMap(mf));
+        }
 
-  @SuppressWarnings("unchecked")
-  public List createList(final MappedField mf) {
-    final Class clazz = mf.getType();
-    if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
-      // there is no good way to find the clazz to use, yet, so delegate
-      return injectMembers(delegate.createList(mf));
+        if (injectOnConstructor(clazz)) {
+            return (Map) injector.getInstance(clazz);
+        }
+
+        return injectMembers(delegate.createMap(mf));
     }
 
-    if (injectOnConstructor(clazz)) {
-      return (List) injector.getInstance(clazz);
+    @Override
+    @SuppressWarnings("unchecked")
+    public List createList(final MappedField mf) {
+        final Class clazz = mf.getType();
+        if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+            // there is no good way to find the clazz to use, yet, so delegate
+            return injectMembers(delegate.createList(mf));
+        }
+
+        if (injectOnConstructor(clazz)) {
+            return (List) injector.getInstance(clazz);
+        }
+
+        return injectMembers(delegate.createList(mf));
     }
 
-    return injectMembers(delegate.createList(mf));
-  }
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set createSet(final MappedField mf) {
+        final Class clazz = mf.getType();
+        if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+            // there is no good way to find the clazz to use, yet, so delegate
+            return injectMembers(delegate.createSet(mf));
+        }
 
-  @SuppressWarnings("unchecked")
-  public Set createSet(final MappedField mf) {
-    final Class clazz = mf.getType();
-    if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
-      // there is no good way to find the clazz to use, yet, so delegate
-      return injectMembers(delegate.createSet(mf));
+        if (injectOnConstructor(clazz)) {
+            return (Set) injector.getInstance(clazz);
+        }
+
+        return injectMembers(delegate.createSet(mf));
     }
-
-    if (injectOnConstructor(clazz)) {
-      return (Set) injector.getInstance(clazz);
-    }
-
-    return injectMembers(delegate.createSet(mf));
-  }
-
-  private <T> T injectMembers(final T o) {
-    if (o != null) {
-      injector.injectMembers(o);
-    }
-    return o;
-  }
 }

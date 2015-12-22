@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class BooleanConverter extends TypeConverter implements SimpleValueConverter {
 
+    /**
+     * Creates the Converter.
+     */
     public BooleanConverter() {
         super(boolean.class, Boolean.class, boolean[].class, Boolean[].class);
     }

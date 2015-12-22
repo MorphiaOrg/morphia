@@ -1,33 +1,8 @@
-apply plugin: 'release'
-apply plugin: 'console'
-apply plugin: 'github'
+apply from: 'gradle/publish.gradle'
 
-github {
-    wiki {
-        from(project(':morphia').javadoc.outputs.files)
-        into { "javadoc/$project.release.version" }
-    }
-}
+apply plugin: 'release'
 
 release {
-    version {
-        project('morphia').version
-    }
-
-/*
-    doFirst {
-        if (project.git.status().uncommitted) {
-            throw new GradleException('You have uncommitted changes.')
-        }
-    }
-*/
-
-    update {
-        file project.file('build.gradle')
-        projects allprojects
-    }
-    
-//    tagRelease false
-//    createRelease false
-//    pushChanges false
+    releaseVersion = project('morphia').version
+    javadocDir = project('morphia').javadoc.destinationDir
 }

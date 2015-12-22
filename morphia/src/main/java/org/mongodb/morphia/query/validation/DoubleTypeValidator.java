@@ -13,6 +13,20 @@ public final class DoubleTypeValidator extends TypeValidator {
     private DoubleTypeValidator() {
     }
 
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static DoubleTypeValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected boolean appliesTo(final Class<?> type) {
+        return type == double.class || type == Double.class;
+    }
+
     @Override
     protected void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures) {
         if (!(value instanceof Integer || value instanceof Long || value instanceof Double)) {
@@ -21,18 +35,5 @@ public final class DoubleTypeValidator extends TypeValidator {
                                                                 value.getClass().getCanonicalName()
                                                                )));
         }
-    }
-
-    protected boolean appliesTo(final Class<?> type) {
-        return type == double.class || type == Double.class;
-    }
-
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static DoubleTypeValidator getInstance() {
-        return INSTANCE;
     }
 }

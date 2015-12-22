@@ -18,6 +18,20 @@ public final class NotInOperationValidator extends OperationValidator {
     private NotInOperationValidator() {
     }
 
+    /**
+     * Get the instance
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static NotInOperationValidator getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected FilterOperator getOperator() {
+        return NOT_IN;
+    }
+
     @Override
     protected void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures) {
         if (value == null) {
@@ -28,19 +42,5 @@ public final class NotInOperationValidator extends OperationValidator {
                                                                 value, value.getClass()
                                                                )));
         }
-    }
-
-    @Override
-    protected FilterOperator getOperator() {
-        return NOT_IN;
-    }
-
-    /**
-     * Get the instance
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static NotInOperationValidator getInstance() {
-        return INSTANCE;
     }
 }

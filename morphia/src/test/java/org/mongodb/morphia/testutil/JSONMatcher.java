@@ -38,7 +38,29 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
     }
 
     /**
-     * Compares the item (which represents the actual result) against the expected value to see if they are the same JSON.  These two values
+     * Static helper to return a Matcher that compares the given String as a JSON value.
+     *
+     * @param expectedValue the expected JSON value as a String.  Things like quotation marks are optional on field names
+     * @return a JSONMatcher that will can be used to compare this expected value with an actual value.
+     */
+    public static Matcher<String> jsonEqual(final String expectedValue) {
+        return new JSONMatcher(expectedValue);
+    }
+
+    @Override
+    public void describeTo(final Description description) {
+        try {
+            Object expectedJsonAsPrettyJson = JSONParser.parseJSON(expectedJson);
+            description.appendValue(expectedJsonAsPrettyJson);
+        } catch (final JSONException e) {
+            throw new RuntimeException(String.format("Error parsing expected JSON string %s. Got Exception %s",
+                                                     expectedJson, e.toString()));
+        }
+    }
+
+    /**
+     * Compares the item (which represents the actual result) against the expected value to see if they are the same JSON.  These two
+     * values
      * may not be equal as Strings, but the JSON comparison should ignore unnecessary whitespace and the differences between " and '.
      *
      * @param item a String containing valid JSON to compare against the expected value
@@ -64,26 +86,5 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
             throw new RuntimeException(String.format("Error parsing expected JSON string %s. Got Exception %s",
                                                      item, e.toString()));
         }
-    }
-
-    @Override
-    public void describeTo(final Description description) {
-        try {
-            Object expectedJsonAsPrettyJson = JSONParser.parseJSON(expectedJson);
-            description.appendValue(expectedJsonAsPrettyJson);
-        } catch (final JSONException e) {
-            throw new RuntimeException(String.format("Error parsing expected JSON string %s. Got Exception %s",
-                                                     expectedJson, e.toString()));
-        }
-    }
-
-    /**
-     * Static helper to return a Matcher that compares the given String as a JSON value.
-     *
-     * @param expectedValue the expected JSON value as a String.  Things like quotation marks are optional on field names
-     * @return a JSONMatcher that will can be used to compare this expected value with an actual value.
-     */
-    public static final Matcher<String> jsonEqual(final String expectedValue) {
-        return new JSONMatcher(expectedValue);
     }
 }

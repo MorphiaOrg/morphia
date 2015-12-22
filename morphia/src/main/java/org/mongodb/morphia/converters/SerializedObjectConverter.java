@@ -17,11 +17,6 @@ import static java.lang.String.format;
  */
 public class SerializedObjectConverter extends TypeConverter {
     @Override
-    protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
-        return optionalExtraInfo != null && (optionalExtraInfo.hasAnnotation(Serialized.class));
-    }
-
-    @Override
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField f) {
         if (fromDBObject == null) {
             return null;
@@ -53,6 +48,11 @@ public class SerializedObjectConverter extends TypeConverter {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    protected boolean isSupported(final Class c, final MappedField optionalExtraInfo) {
+        return optionalExtraInfo != null && (optionalExtraInfo.hasAnnotation(Serialized.class));
     }
 
 }

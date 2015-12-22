@@ -6,7 +6,9 @@ import com.mongodb.DBObject;
 
 import java.util.Map;
 
-
+/**
+ * Geospatial specific FieldCriteria logic
+ */
 public class GeoFieldCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;

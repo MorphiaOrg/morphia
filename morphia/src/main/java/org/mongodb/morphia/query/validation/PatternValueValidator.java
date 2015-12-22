@@ -14,18 +14,6 @@ public final class PatternValueValidator extends ValueValidator {
     private PatternValueValidator() {
     }
 
-    @Override
-    protected void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures) {
-        if (!String.class.equals(type)) {
-            validationFailures.add(new ValidationFailure(format("Patterns can only be used as query values for Strings")));
-        }
-    }
-
-    @Override
-    protected Class getRequiredValueType() {
-        return Pattern.class;
-    }
-
     /**
      * Get the instance.
      *
@@ -33,5 +21,17 @@ public final class PatternValueValidator extends ValueValidator {
      */
     public static PatternValueValidator getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected Class getRequiredValueType() {
+        return Pattern.class;
+    }
+
+    @Override
+    protected void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures) {
+        if (!String.class.equals(type)) {
+            validationFailures.add(new ValidationFailure(format("Patterns can only be used as query values for Strings")));
+        }
     }
 }

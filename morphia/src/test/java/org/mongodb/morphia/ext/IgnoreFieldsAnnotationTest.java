@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 
@@ -43,6 +40,26 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
 
     private Transient transAnn;
 
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        MappedClass.addInterestingAnnotation(IgnoreFields.class);
+        getMorphia().map(User.class);
+        processIgnoreFieldsAnnotations();
+    }
+
+    @Test
+    public void testIt() {
+        final User u = new User();
+        u.email = "ScottHernandez@gmail.com";
+        u.ignored = "test";
+        getDs().save(u);
+
+        final User uLoaded = getDs().find(User.class).get();
+        Assert.assertEquals("never, never", uLoaded.ignored);
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.TYPE})
     @interface IgnoreFields {
@@ -58,15 +75,6 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
         private String ignored = "never, never";
     }
 
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
-        MappedClass.addInterestingAnnotation(IgnoreFields.class);
-        getMorphia().map(User.class);
-        processIgnoreFieldsAnnotations();
-    }
-
     //remove any MappedField specified in @IgnoreFields on the class.
     void processIgnoreFieldsAnnotations() {
         final DatastoreImpl dsi = (DatastoreImpl) getDs();
@@ -79,16 +87,5 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
                 }
             }
         }
-    }
-
-    @Test
-    public void testIt() {
-        final User u = new User();
-        u.email = "ScottHernandez@gmail.com";
-        u.ignored = "test";
-        getDs().save(u);
-
-        final User uLoaded = getDs().find(User.class).get();
-        Assert.assertEquals("never, never", uLoaded.ignored);
     }
 }

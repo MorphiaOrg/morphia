@@ -10,6 +10,10 @@ final class CollectionTypeValidator implements Validator {
     private CollectionTypeValidator() {
     }
 
+    static boolean typeIsIterableOrArrayOrMap(final Class<?> type) {
+        return typeIsAListOrArray(type) || typeIsIterable(type) || typeIsMap(type);
+    }
+
     static boolean typeIsAListOrArray(final Class<?> type) {
         return (List.class.isAssignableFrom(type) || type.isArray());
     }
@@ -20,9 +24,5 @@ final class CollectionTypeValidator implements Validator {
 
     static boolean typeIsMap(final Class<?> type) {
         return Map.class.isAssignableFrom(type);
-    }
-    
-    static boolean typeIsIterableOrArrayOrMap(final Class<?> type){
-        return typeIsAListOrArray(type) || typeIsIterable(type) || typeIsMap(type);
     }
 }

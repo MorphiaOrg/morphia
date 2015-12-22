@@ -8,18 +8,28 @@ import org.mongodb.morphia.mapping.Mapper;
 
 
 /**
+ * Defines an Iterator across the Key values for a given type.
+ *
+ * @param <T> the entity type
  * @author Scott Hernandez
  */
 public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
-    public MorphiaKeyIterator(final DBCursor cursor, final Mapper m, final Class<T> clazz, final String kind) {
-        super(cursor, m, clazz, kind, null);
+    /**
+     * Create
+     *
+     * @param cursor     the cursor to use
+     * @param mapper     the Mapper to use
+     * @param clazz      the original type being iterated
+     * @param collection the mongodb collection
+     */
+    public MorphiaKeyIterator(final DBCursor cursor, final Mapper mapper, final Class<T> clazz, final String collection) {
+        super(cursor, mapper, clazz, collection, null);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Key<T> convertItem(final DBObject dbObj) {
-        final Key<T> key = new Key<T>(getKind(), dbObj.get(Mapper.ID_KEY));
-        key.setKindClass(getClazz());
-        return key;
+        return new Key<T>(getClazz(), getCollection(), dbObj.get(Mapper.ID_KEY));
     }
 
 }

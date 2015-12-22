@@ -20,20 +20,13 @@ public final class GeoWithinOperationValidator extends OperationValidator {
     private GeoWithinOperationValidator() {
     }
 
-    @Override
-    protected void validate(final MappedField mappedField, final Object value,
-                            final List<ValidationFailure> validationFailures) {
-        if (!isArrayOfNumbers(mappedField) && !isIterableOfNumbers(mappedField)) {
-            validationFailures.add(new ValidationFailure(format("For a $geoWithin operation, if field '%s' is an array or iterable it "
-                                                                + "should have numeric values. Instead it had: %s",
-                                                                mappedField, mappedField.getSubClass()
-                                                               )));
-
-        }
-        if (!isValueAValidGeoQuery(value)) {
-            validationFailures.add(new ValidationFailure(format("For a $geoWithin operation, the value should be a valid geo query. "
-                                                                + "Instead it was: %s", value)));
-        }
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static GeoWithinOperationValidator getInstance() {
+        return INSTANCE;
     }
 
     // this could be a lot more rigorous
@@ -50,12 +43,19 @@ public final class GeoWithinOperationValidator extends OperationValidator {
         return GEO_WITHIN;
     }
 
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static GeoWithinOperationValidator getInstance() {
-        return INSTANCE;
+    @Override
+    protected void validate(final MappedField mappedField, final Object value,
+                            final List<ValidationFailure> validationFailures) {
+        if (!isArrayOfNumbers(mappedField) && !isIterableOfNumbers(mappedField)) {
+            validationFailures.add(new ValidationFailure(format("For a $geoWithin operation, if field '%s' is an array or iterable it "
+                                                                + "should have numeric values. Instead it had: %s",
+                                                                mappedField, mappedField.getSubClass()
+                                                               )));
+
+        }
+        if (!isValueAValidGeoQuery(value)) {
+            validationFailures.add(new ValidationFailure(format("For a $geoWithin operation, the value should be a valid geo query. "
+                                                                + "Instead it was: %s", value)));
+        }
     }
 }

@@ -11,6 +11,12 @@ import static org.junit.Assert.assertThat;
  */
 public class MorphiaLoggerFactoryTest extends TestBase {
 
+    @Override
+    public void tearDown() {
+        MorphiaLoggerFactory.reset();
+        super.tearDown();
+    }
+
     @Test
     public void testOverrideLoggerWithCustomOne() throws Exception {
         // given
@@ -24,13 +30,8 @@ public class MorphiaLoggerFactoryTest extends TestBase {
         assertThat((TestLogger) logger, isA(TestLogger.class));
     }
 
-    @Override
-    public void tearDown() {
-        MorphiaLoggerFactory.reset();
-        super.tearDown();
-    }
-
     static class TestLoggerFactory implements LoggerFactory {
+        @Override
         public Logger get(final Class<?> c) {
             return new TestLogger();
         }
@@ -38,69 +39,89 @@ public class MorphiaLoggerFactoryTest extends TestBase {
 
     private static class TestLogger implements Logger {
 
-        public void warning(final String msg, final Throwable t) {
+        @Override
+        public void debug(final String msg) {
         }
 
-        public void warning(final String format, final Object... arg) {
+        @Override
+        public void debug(final String format, final Object... arg) {
         }
 
-        public void warning(final String msg) {
+        @Override
+        public void debug(final String msg, final Throwable t) {
         }
 
-        public void trace(final String msg, final Throwable t) {
+        @Override
+        public void error(final String msg) {
         }
 
-        public void trace(final String format, final Object... arg) {
+        @Override
+        public void error(final String format, final Object... arg) {
         }
 
-        public void trace(final String msg) {
+        @Override
+        public void error(final String msg, final Throwable t) {
         }
 
-        public boolean isWarningEnabled() {
-            return false;
+        @Override
+        public void info(final String msg) {
         }
 
-        public boolean isTraceEnabled() {
-            return false;
+        @Override
+        public void info(final String format, final Object... arg) {
         }
 
-        public boolean isInfoEnabled() {
-            return false;
+        @Override
+        public void info(final String msg, final Throwable t) {
         }
 
-        public boolean isErrorEnabled() {
-            return false;
-        }
-
+        @Override
         public boolean isDebugEnabled() {
             return false;
         }
 
-        public void info(final String msg, final Throwable t) {
+        @Override
+        public boolean isErrorEnabled() {
+            return false;
         }
 
-        public void info(final String format, final Object... arg) {
+        @Override
+        public boolean isInfoEnabled() {
+            return false;
         }
 
-        public void info(final String msg) {
+        @Override
+        public boolean isTraceEnabled() {
+            return false;
         }
 
-        public void error(final String msg, final Throwable t) {
+        @Override
+        public boolean isWarningEnabled() {
+            return false;
         }
 
-        public void error(final String format, final Object... arg) {
+        @Override
+        public void trace(final String msg) {
         }
 
-        public void error(final String msg) {
+        @Override
+        public void trace(final String format, final Object... arg) {
         }
 
-        public void debug(final String msg, final Throwable t) {
+        @Override
+        public void trace(final String msg, final Throwable t) {
         }
 
-        public void debug(final String format, final Object... arg) {
+        @Override
+        public void warning(final String msg) {
         }
 
-        public void debug(final String msg) {
+        @Override
+        public void warning(final String format, final Object... arg) {
+        }
+
+        @Override
+        public void warning(final String msg, final Throwable t) {
         }
     }
 }

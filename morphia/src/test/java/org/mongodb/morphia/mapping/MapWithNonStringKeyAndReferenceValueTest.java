@@ -77,6 +77,13 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         private String value;
 
         @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            return result;
+        }
+
+        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
@@ -95,13 +102,6 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
             }
 
             return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (value != null ? value.hashCode() : 0);
-            return result;
         }
     }
 }

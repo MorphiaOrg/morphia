@@ -13,21 +13,6 @@ import java.util.List;
 
 
 public class BooleanMappingTest extends TestBase {
-    private static class Booleans {
-        @Id
-        private ObjectId id;
-        private final List<Boolean[]> booleans = new ArrayList<Boolean[]>();
-        private final List<boolean[]> booleanPrimitives = new ArrayList<boolean[]>();
-        private final List<Boolean> list = new ArrayList<Boolean>();
-        private boolean singlePrimitive;
-        private Boolean singleWrapper;
-        private boolean[] primitiveArray;
-        private Boolean[] wrapperArray;
-        private boolean[][] nestedPrimitiveArray;
-        private Boolean[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Booleans.class);
@@ -62,6 +47,13 @@ public class BooleanMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    private void compare(final String property, final boolean[] expected, final boolean[] received) {
+        Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
+        for (int i = 0; i < expected.length; i++) {
+            Assert.assertEquals(String.format("%s[%s] should match", property, i), expected[i], received[i]);
+        }
+    }
+
     private void compare(final String property, final boolean[][] expected, final boolean[][] received) {
         Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
         for (int i = 0; i < expected.length; i++) {
@@ -69,10 +61,17 @@ public class BooleanMappingTest extends TestBase {
         }
     }
 
-    private void compare(final String property, final boolean[] expected, final boolean[] received) {
-        Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals(String.format("%s[%s] should match", property, i), expected[i], received[i]);
-        }
+    private static class Booleans {
+        private final List<Boolean[]> booleans = new ArrayList<Boolean[]>();
+        private final List<boolean[]> booleanPrimitives = new ArrayList<boolean[]>();
+        private final List<Boolean> list = new ArrayList<Boolean>();
+        @Id
+        private ObjectId id;
+        private boolean singlePrimitive;
+        private Boolean singleWrapper;
+        private boolean[] primitiveArray;
+        private Boolean[] wrapperArray;
+        private boolean[][] nestedPrimitiveArray;
+        private Boolean[][] nestedWrapperArray;
     }
 }

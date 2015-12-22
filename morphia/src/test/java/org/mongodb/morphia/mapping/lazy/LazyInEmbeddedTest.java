@@ -20,53 +20,6 @@ import java.util.List;
  * @author josephpachod
  */
 public class LazyInEmbeddedTest extends TestBase {
-    public enum SomeEnum {
-        B,
-        A
-    }
-
-    @Entity
-    public static class ContainerWithRefInField extends TestEntity {
-        @Embedded
-        private EmbedWithRef embedWithRef;
-    }
-
-    @Entity
-    public static class ContainerWithRefList extends TestEntity {
-        @Embedded
-        private final List<EmbedWithRef> embedWithRef = new ArrayList<EmbedWithRef>();
-    }
-
-    @Entity
-    public static class OtherEntity extends TestEntity {
-        @Property(value = "some")
-        private SomeEnum someEnum;
-
-        protected OtherEntity() {
-        }
-
-        public OtherEntity(final SomeEnum someEnum) {
-            this.someEnum = someEnum;
-
-        }
-    }
-
-    @Entity
-    public static class OtherEntityChild extends OtherEntity {
-        public OtherEntityChild() {
-            super(SomeEnum.A);
-        }
-
-        @Property
-        private String name;
-    }
-
-    public static class EmbedWithRef implements Serializable {
-
-        @Reference(lazy = true)
-        private OtherEntity otherEntity;
-    }
-
     @Test
     public void testLoadingOfRefInField() throws Exception {
         // TODO us: exclusion does not work properly with maven + junit4
@@ -93,37 +46,6 @@ public class LazyInEmbeddedTest extends TestBase {
 
         getDs().save(containerWithRefInField);
 
-        containerWithRefInField = getDs().get(containerWithRefInField);
-        Assert.assertNotNull(containerWithRefInField);
-
-    }
-
-    @Test
-    public void testLoadingOfRefThroughInheritanceInField() throws Exception {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
-
-        getMorphia().map(ContainerWithRefInField.class);
-        getMorphia().map(OtherEntityChild.class);
-
-        OtherEntityChild otherEntity = new OtherEntityChild();
-        ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
-
-        getDs().save(otherEntity, containerWithRefInField);
-
-        otherEntity = getDs().get(otherEntity);
-        final ContainerWithRefInField reload = getDs().get(containerWithRefInField);
-        Assert.assertNotNull(otherEntity);
-        Assert.assertNotNull(reload);
-
-        final EmbedWithRef embedWithRef = new EmbedWithRef();
-        embedWithRef.otherEntity = otherEntity;
-        reload.embedWithRef = embedWithRef;
-
-        getDs().save(reload);
-        getDs().get(reload);
         containerWithRefInField = getDs().get(containerWithRefInField);
         Assert.assertNotNull(containerWithRefInField);
 
@@ -165,6 +87,37 @@ public class LazyInEmbeddedTest extends TestBase {
     }
 
     @Test
+    public void testLoadingOfRefThroughInheritanceInField() throws Exception {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        getMorphia().map(ContainerWithRefInField.class);
+        getMorphia().map(OtherEntityChild.class);
+
+        OtherEntityChild otherEntity = new OtherEntityChild();
+        ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
+
+        getDs().save(otherEntity, containerWithRefInField);
+
+        otherEntity = getDs().get(otherEntity);
+        final ContainerWithRefInField reload = getDs().get(containerWithRefInField);
+        Assert.assertNotNull(otherEntity);
+        Assert.assertNotNull(reload);
+
+        final EmbedWithRef embedWithRef = new EmbedWithRef();
+        embedWithRef.otherEntity = otherEntity;
+        reload.embedWithRef = embedWithRef;
+
+        getDs().save(reload);
+        getDs().get(reload);
+        containerWithRefInField = getDs().get(containerWithRefInField);
+        Assert.assertNotNull(containerWithRefInField);
+
+    }
+
+    @Test
     public void testLoadingOfRefThroughInheritanceInList() throws Exception {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
@@ -198,5 +151,52 @@ public class LazyInEmbeddedTest extends TestBase {
         containerWithRefInList = createQuery.get();
         Assert.assertNotNull(containerWithRefInList);
 
+    }
+
+    public enum SomeEnum {
+        B,
+        A
+    }
+
+    @Entity
+    public static class ContainerWithRefInField extends TestEntity {
+        @Embedded
+        private EmbedWithRef embedWithRef;
+    }
+
+    @Entity
+    public static class ContainerWithRefList extends TestEntity {
+        @Embedded
+        private final List<EmbedWithRef> embedWithRef = new ArrayList<EmbedWithRef>();
+    }
+
+    @Entity
+    public static class OtherEntity extends TestEntity {
+        @Property(value = "some")
+        private SomeEnum someEnum;
+
+        protected OtherEntity() {
+        }
+
+        public OtherEntity(final SomeEnum someEnum) {
+            this.someEnum = someEnum;
+
+        }
+    }
+
+    @Entity
+    public static class OtherEntityChild extends OtherEntity {
+        @Property
+        private String name;
+
+        public OtherEntityChild() {
+            super(SomeEnum.A);
+        }
+    }
+
+    public static class EmbedWithRef implements Serializable {
+
+        @Reference(lazy = true)
+        private OtherEntity otherEntity;
     }
 }

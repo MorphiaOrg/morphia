@@ -6,9 +6,12 @@ package org.mongodb.morphia.converters;
  */
 public class ConverterNotFoundException extends RuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
-  public ConverterNotFoundException(final String msg) {
-    super(msg);
-  }
+    /**
+     * Creates the ConverterNotFoundException.
+     *
+     * @param msg the exception message
+     */
+    public ConverterNotFoundException(final String msg) {
+        super(msg);
+    }
 }

@@ -1,0 +1,10 @@
+sourceSets {
+    main {
+        output.classesDir '../morphia/build/classes/test'
+    }
+}
+dependencies {
+    compile(project(':morphia')) {
+        exclude group: 'cglib', module: 'cglib-nodep'
+    }
+}

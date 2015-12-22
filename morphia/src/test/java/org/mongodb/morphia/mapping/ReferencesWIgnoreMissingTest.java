@@ -16,20 +16,6 @@ import java.util.List;
  * @author scotthernandez
  */
 public class ReferencesWIgnoreMissingTest extends TestBase {
-    @Entity
-    static class Container {
-        @Id
-        private ObjectId id;
-        @Reference(ignoreMissing = true)
-        private StringHolder[] refs;
-    }
-
-    @Entity
-    static class StringHolder {
-        @Id
-        private ObjectId id = new ObjectId();
-    }
-
     @Test
     public void testMissingReference() throws Exception {
         final Container c = new Container();
@@ -51,5 +37,19 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
         Assert.assertNotNull(cs);
         Assert.assertEquals(1, cs.size());
 
+    }
+
+    @Entity
+    static class Container {
+        @Id
+        private ObjectId id;
+        @Reference(ignoreMissing = true)
+        private StringHolder[] refs;
+    }
+
+    @Entity
+    static class StringHolder {
+        @Id
+        private ObjectId id = new ObjectId();
     }
 }

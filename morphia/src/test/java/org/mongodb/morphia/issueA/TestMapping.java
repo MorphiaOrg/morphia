@@ -38,6 +38,7 @@ public class TestMapping extends TestBase {
     private static class ClassLevelOne<K> implements InterfaceOne<K>, Serializable {
         private K k;
 
+        @Override
         public K getK() {
             return k;
         }

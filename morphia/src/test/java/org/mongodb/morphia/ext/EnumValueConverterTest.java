@@ -20,6 +20,20 @@ import org.mongodb.morphia.mapping.MappedField;
  */
 public class EnumValueConverterTest extends TestBase {
 
+    @Test
+    public void testEnum() {
+        final EnumEntity ee = new EnumEntity();
+        getDs().save(ee);
+        final DBObject dbObj = getDs().getCollection(EnumEntity.class).findOne();
+        Assert.assertEquals(1, dbObj.get("val"));
+    }
+
+    private enum AEnum {
+        One,
+        Two
+
+    }
+
     private static class AEnumConverter extends TypeConverter implements SimpleValueConverter {
 
         public AEnumConverter() {
@@ -44,25 +58,11 @@ public class EnumValueConverterTest extends TestBase {
         }
     }
 
-    private enum AEnum {
-        One,
-        Two
-
-    }
-
     @Converters(AEnumConverter.class)
     private static class EnumEntity {
         @Id
         private ObjectId id = new ObjectId();
         private AEnum val = AEnum.Two;
 
-    }
-
-    @Test
-    public void testEnum() {
-        final EnumEntity ee = new EnumEntity();
-        getDs().save(ee);
-        final DBObject dbObj = getDs().getCollection(EnumEntity.class).findOne();
-        Assert.assertEquals(1, dbObj.get("val"));
     }
 }

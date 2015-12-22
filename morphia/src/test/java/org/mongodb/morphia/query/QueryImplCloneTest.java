@@ -22,6 +22,23 @@ public class QueryImplCloneTest extends TestBase {
 
     private static final List<String> ALLOWED = Arrays.asList("cache", "query");
 
+    @Test
+    public void testQueryClone() throws Exception {
+        final Query q = getDs().createQuery(E1.class)
+                               .field("i")
+                               .equal(5)
+                               .limit(5)
+                               .filter("a", "value_a")
+                               .filter("b", "value_b")
+                               .offset(5)
+                               .batchSize(10)
+                               .disableCursorTimeout()
+                               .hintIndex("a")
+                               .order("a");
+        q.disableValidation().filter("foo", "bar");
+        Assert.assertTrue(sameState(q, q.cloneQuery()));
+    }
+
     private boolean sameState(final Query q1, final Query q2) throws IllegalAccessException {
         return sameState(q1.getClass(), q1, q2);
     }
@@ -66,22 +83,5 @@ public class QueryImplCloneTest extends TestBase {
 
     static class E2 {
         private String foo;
-    }
-
-    @Test
-    public void testQueryClone() throws Exception {
-        final Query q = getDs().createQuery(E1.class)
-                            .field("i")
-                            .equal(5)
-                            .limit(5)
-                            .filter("a", "value_a")
-                            .filter("b", "value_b")
-                            .offset(5)
-                            .batchSize(10)
-                            .disableCursorTimeout()
-                            .hintIndex("a")
-                            .order("a");
-        q.disableValidation().filter("foo", "bar");
-        Assert.assertTrue(sameState(q, q.cloneQuery()));
     }
 }

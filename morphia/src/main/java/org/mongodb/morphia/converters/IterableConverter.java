@@ -1,8 +1,11 @@
 package org.mongodb.morphia.converters;
 
 
+import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.mapping.EphemeralMappedField;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Array;
@@ -11,27 +14,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.String.format;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author scotthernandez
  */
 public class IterableConverter extends TypeConverter {
-    private final DefaultConverters chain;
-
-    public IterableConverter(final DefaultConverters chain) {
-        this.chain = chain;
-    }
-
-    @Override
-    protected boolean isSupported(final Class c, final MappedField mf) {
-        if (mf != null) {
-            return mf.isMultipleValues() && !mf.isMap(); //&& !mf.isTypeMongoCompatible();
-        } else {
-            return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
-        }
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
@@ -45,17 +35,31 @@ public class IterableConverter extends TypeConverter {
         if (fromDBObject.getClass().isArray()) {
             //This should never happen. The driver always returns list/arrays as a List
             for (final Object o : (Object[]) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
+                values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
         } else if (fromDBObject instanceof Iterable) {
             // map back to the java data type
             // (List/Set/Array[])
             for (final Object o : (Iterable) fromDBObject) {
-                values.add(chain.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o));
+                if (o instanceof DBObject) {
+                    final List<MappedField> typeParameters = mf.getTypeParameters();
+                    if (!typeParameters.isEmpty()) {
+                        final MappedField mappedField = typeParameters.get(0);
+                        if (mappedField instanceof EphemeralMappedField) {
+                            final EphemeralMappedField field = (EphemeralMappedField) getMapper().fromDb((DBObject) o, mappedField,
+                                                                                                         new DefaultEntityCache());
+                            values.add(field.getValue());
+                        }
+                    } else {
+                        values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                    }
+                } else {
+                    values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
+                }
             }
         } else {
             //Single value case.
-            values.add(chain.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject));
+            values.add(getMapper().getConverters().decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
         }
 
         //convert to and array if that is the destination type (not a list/set)
@@ -64,11 +68,6 @@ public class IterableConverter extends TypeConverter {
         } else {
             return values;
         }
-    }
-
-    private Collection<?> createNewCollection(final MappedField mf) {
-        final ObjectFactory of = getMapper().getOptions().getObjectFactory();
-        return mf.isSet() ? of.createSet(mf) : of.createList(mf);
     }
 
     @Override
@@ -82,19 +81,14 @@ public class IterableConverter extends TypeConverter {
         final Iterable<?> iterableValues;
 
         if (value.getClass().isArray()) {
-
-            if (Array.getLength(value) == 0) {
-                return value;
-            }
-
-            if (value.getClass().getComponentType().isPrimitive()) {
+            if (Array.getLength(value) == 0 || value.getClass().getComponentType().isPrimitive()) {
                 return value;
             }
 
             iterableValues = Arrays.asList((Object[]) value);
         } else {
             if (!(value instanceof Iterable)) {
-                throw new ConverterException("Cannot cast " + value.getClass() + " to Iterable for MappedField: " + mf);
+                throw new ConverterException(format("Cannot cast %s to Iterable for MappedField: %s", value.getClass(), mf));
             }
 
             // cast value to a common interface
@@ -104,17 +98,27 @@ public class IterableConverter extends TypeConverter {
         final List values = new ArrayList();
         if (mf != null && mf.getSubClass() != null) {
             for (final Object o : iterableValues) {
-                values.add(chain.encode(mf.getSubClass(), o));
+                values.add(getMapper().getConverters().encode(mf.getSubClass(), o));
             }
         } else {
             for (final Object o : iterableValues) {
-                values.add(chain.encode(o));
+                values.add(getMapper().getConverters().encode(o));
             }
         }
-        if (!values.isEmpty() || getMapper().getOptions().isStoreEmpties()) {
-            return values;
+        return !values.isEmpty() || getMapper().getOptions().isStoreEmpties() ? values : null;
+    }
+
+    @Override
+    protected boolean isSupported(final Class c, final MappedField mf) {
+        if (mf != null) {
+            return mf.isMultipleValues() && !mf.isMap(); //&& !mf.isTypeMongoCompatible();
         } else {
-            return null;
+            return c.isArray() || ReflectionUtils.implementsInterface(c, Iterable.class);
         }
+    }
+
+    private Collection<?> createNewCollection(final MappedField mf) {
+        final ObjectFactory of = getMapper().getOptions().getObjectFactory();
+        return mf.isSet() ? of.createSet(mf) : of.createList(mf);
     }
 }

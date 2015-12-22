@@ -17,7 +17,10 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 public @interface EntityListeners {
-  Class<?>[] value();
+    /**
+     * The listeners to use for this entity
+     */
+    Class<?>[] value();
 }

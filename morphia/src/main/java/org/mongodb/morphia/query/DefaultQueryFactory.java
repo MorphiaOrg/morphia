@@ -9,11 +9,7 @@ import org.mongodb.morphia.Datastore;
  */
 public class DefaultQueryFactory extends AbstractQueryFactory {
 
-    /**
-     * Creates and returns a {@link QueryImpl}.
-     *
-     * @see QueryImpl
-     */
+    @Override
     public <T> Query<T> createQuery(final Datastore datastore, final DBCollection collection, final Class<T> type, final DBObject query) {
 
         final QueryImpl<T> item = new QueryImpl<T>(type, collection, datastore);
@@ -24,5 +20,5 @@ public class DefaultQueryFactory extends AbstractQueryFactory {
 
         return item;
     }
-    
+
 }

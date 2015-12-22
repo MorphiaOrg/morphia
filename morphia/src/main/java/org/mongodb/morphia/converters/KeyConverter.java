@@ -10,28 +10,31 @@ import org.mongodb.morphia.mapping.MappedField;
  */
 public class KeyConverter extends TypeConverter {
 
-  public KeyConverter() {
-    super(Key.class);
-  }
-
-  @Override
-  public Object decode(final Class targetClass, final Object o, final MappedField optionalExtraInfo) {
-    if (o == null) {
-      return null;
-    }
-    if (!(o instanceof DBRef)) {
-      throw new ConverterException(String.format("cannot convert %s to Key because it isn't a DBRef", o.toString()));
+    /**
+     * Creates the Converter.
+     */
+    public KeyConverter() {
+        super(Key.class);
     }
 
-    return getMapper().refToKey((DBRef) o);
-  }
+    @Override
+    public Object decode(final Class targetClass, final Object o, final MappedField optionalExtraInfo) {
+        if (o == null) {
+            return null;
+        }
+        if (!(o instanceof DBRef)) {
+            throw new ConverterException(String.format("cannot convert %s to Key because it isn't a DBRef", o.toString()));
+        }
 
-  @Override
-  public Object encode(final Object t, final MappedField optionalExtraInfo) {
-    if (t == null) {
-      return null;
+        return getMapper().refToKey((DBRef) o);
     }
-    return getMapper().keyToRef((Key) t);
-  }
+
+    @Override
+    public Object encode(final Object t, final MappedField optionalExtraInfo) {
+        if (t == null) {
+            return null;
+        }
+        return getMapper().keyToDBRef((Key) t);
+    }
 
 }

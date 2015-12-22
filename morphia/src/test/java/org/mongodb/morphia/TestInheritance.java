@@ -9,6 +9,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TestInheritance extends TestBase {
+    @Test
+    public void testSavingAndLoadingAClassWithDeepInheritance() {
+        // given
+        final Child jimmy = new Child();
+        jimmy.setName("jimmy");
+        getDs().save(jimmy);
+
+        // when
+        final Child loaded = getDs().get(Child.class, jimmy.getId());
+
+        // then
+        assertNotNull(loaded);
+        assertEquals(jimmy.getName(), loaded.getName());
+    }
+
     @Entity
     public static class Child extends Father {
     }
@@ -38,20 +53,5 @@ public class TestInheritance extends TestBase {
         public void setName(final String name) {
             this.name = name;
         }
-    }
-
-    @Test
-    public void testSavingAndLoadingAClassWithDeepInheritance() {
-        // given
-        final Child jimmy = new Child();
-        jimmy.setName("jimmy");
-        getDs().save(jimmy);
-
-        // when 
-        final Child loaded = getDs().get(Child.class, jimmy.getId());
-        
-        // then
-        assertNotNull(loaded);
-        assertEquals(jimmy.getName(), loaded.getName());
     }
 }

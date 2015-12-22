@@ -20,8 +20,8 @@ public abstract class AbstractReference implements Serializable, ObjectReference
     //CHECKSTYLE:OFF
     protected final DatastoreProvider p;
     protected final boolean ignoreMissing;
-    protected Object object;
     protected final Class referenceObjClass;
+    protected Object object;
     //CHECKSTYLE:ON
     private boolean isFetched;
 
@@ -31,6 +31,28 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         this.ignoreMissing = ignoreMissing;
     }
 
+    //CHECKSTYLE:OFF
+    @Override
+    public final Class __getReferenceObjClass() {
+        //CHECKSTYLE:ON
+        return referenceObjClass;
+    }
+
+    //CHECKSTYLE:OFF
+    @Override
+    public final boolean __isFetched() {
+        //CHECKSTYLE:ON
+        return isFetched;
+    }
+
+    //CHECKSTYLE:OFF
+    @Override
+    public Object __unwrap() {
+        //CHECKSTYLE:ON
+        return get();
+    }
+
+    @Override
     public final synchronized Object get() {
         if (isFetched) {
             return object;
@@ -41,16 +63,12 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         return object;
     }
 
-    protected abstract Object fetch();
-
+    @Override
     public final void set(final Object arg0) {
         throw new UnsupportedOperationException();
     }
 
-    //CHECKSTYLE:OFF
-    public final boolean __isFetched() {
-    //CHECKSTYLE:ON
-        return isFetched;
+    protected void beforeWriteObject() {
     }
 
     @SuppressWarnings("unchecked")
@@ -58,6 +76,7 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         return p.get().getByKey(referenceObjClass, id);
     }
 
+    protected abstract Object fetch();
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
         // excessive hoop-jumping in order not to have to recreate the
@@ -66,20 +85,5 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         beforeWriteObject();
         isFetched = false;
         out.defaultWriteObject();
-    }
-
-    protected void beforeWriteObject() {
-    }
-
-    //CHECKSTYLE:OFF
-    public final Class __getReferenceObjClass() {
-    //CHECKSTYLE:ON
-        return referenceObjClass;
-    }
-
-    //CHECKSTYLE:OFF
-    public Object __unwrap() {
-    //CHECKSTYLE:ON
-        return get();
     }
 }

@@ -19,17 +19,6 @@ import java.util.Locale;
  */
 public class LocaleMappingTest extends TestBase {
 
-    public static class E {
-        @Id
-        private ObjectId id;
-        private Locale l1;
-
-        @Embedded
-        private List<Locale> l2 = new ArrayList<Locale>();
-
-        private Locale[] l3;
-    }
-
     @Test
     public void testLocaleMapping() throws Exception {
         E e = new E();
@@ -50,5 +39,16 @@ public class LocaleMappingTest extends TestBase {
         Assert.assertEquals(Locale.TRADITIONAL_CHINESE, e.l3[0]);
         Assert.assertEquals(Locale.FRENCH, e.l3[1]);
 
+    }
+
+    public static class E {
+        @Id
+        private ObjectId id;
+        private Locale l1;
+
+        @Embedded
+        private List<Locale> l2 = new ArrayList<Locale>();
+
+        private Locale[] l3;
     }
 }

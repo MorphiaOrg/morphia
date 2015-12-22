@@ -1,6 +1,7 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
@@ -15,25 +16,181 @@ import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> {
+/**
+ * Implementation of an AggregationPipeline.
+ */
+public class AggregationPipelineImpl implements AggregationPipeline {
     private static final Logger LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
 
     private final DBCollection collection;
-    private final Class<T> source;
+    private final Class source;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
     private final DatastoreImpl datastore;
     private boolean firstStage = false;
 
-    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class<T> source) {
+    /**
+     * Creates an AggregationPipeline
+     *
+     * @param datastore the datastore to use
+     * @param source    the source type to aggregate
+     */
+    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class source) {
         this.datastore = datastore;
         this.collection = datastore.getCollection(source);
         mapper = datastore.getMapper();
         this.source = source;
     }
 
+    @Override
+    public <U> Iterator<U> aggregate(final Class<U> target) {
+        return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
+    }
+
+    @Override
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options) {
+        return aggregate(target, options, collection.getReadPreference());
+    }
+
+    @Override
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
+        return aggregate(datastore.getCollection(target).getName(), target, options, readPreference);
+    }
+
+    @Override
+    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options,
+                                     final ReadPreference readPreference) {
+        LOG.debug("stages = " + stages);
+
+        Cursor cursor = collection.aggregate(stages, options, readPreference);
+        return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public AggregationPipeline geoNear(final GeoNear geoNear) {
+        DBObject geo = new BasicDBObject();
+        putIfNull(geo, "near", geoNear.getNear());
+        putIfNull(geo, "distanceField", geoNear.getDistanceField());
+        putIfNull(geo, "limit", geoNear.getLimit());
+        putIfNull(geo, "num", geoNear.getMaxDocuments());
+        putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
+        if (geoNear.getQuery() != null) {
+            geo.put("query", geoNear.getQuery().getQueryObject());
+        }
+        putIfNull(geo, "spherical", geoNear.getSpherical());
+        putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
+        putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
+        putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
+        stages.add(new BasicDBObject("$geoNear", geo));
+
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline group(final String id, final Group... groupings) {
+        DBObject group = new BasicDBObject("_id", "$" + id);
+        for (Group grouping : groupings) {
+            Accumulator accumulator = grouping.getAccumulator();
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+        }
+
+        stages.add(new BasicDBObject("$group", group));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline group(final List<Group> id, final Group... groupings) {
+        DBObject idGroup = new BasicDBObject();
+        for (Group group : id) {
+            idGroup.put(group.getName(), group.getSourceField());
+        }
+        DBObject group = new BasicDBObject("_id", idGroup);
+        for (Group grouping : groupings) {
+            Accumulator accumulator = grouping.getAccumulator();
+            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+        }
+
+        stages.add(new BasicDBObject("$group", group));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline limit(final int count) {
+        stages.add(new BasicDBObject("$limit", count));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline match(final Query query) {
+        stages.add(new BasicDBObject("$match", query.getQueryObject()));
+        return this;
+    }
+
+    @Override
+    public <U> Iterator<U> out(final Class<U> target) {
+        return out(datastore.getCollection(target).getName(), target);
+    }
+
+    @Override
+    public <U> Iterator<U> out(final Class<U> target, final AggregationOptions options) {
+        return out(datastore.getCollection(target).getName(), target, options);
+    }
+
+    @Override
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target) {
+        return out(collectionName, target, AggregationOptions.builder().build());
+    }
+
+    @Override
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
+        stages.add(new BasicDBObject("$out", collectionName));
+        return aggregate(target, options);
+    }
+
+    @Override
+    public AggregationPipeline project(final Projection... projections) {
+        firstStage = stages.isEmpty();
+        DBObject dbObject = new BasicDBObject();
+        for (Projection projection : projections) {
+            dbObject.putAll(toDBObject(projection));
+        }
+        stages.add(new BasicDBObject("$project", dbObject));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline skip(final int count) {
+        stages.add(new BasicDBObject("$skip", count));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline sort(final Sort... sorts) {
+        DBObject sortList = new BasicDBObject();
+        for (Sort sort : sorts) {
+            sortList.put(sort.getField(), sort.getDirection());
+        }
+
+        stages.add(new BasicDBObject("$sort", sortList));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline unwind(final String field) {
+        stages.add(new BasicDBObject("$unwind", "$" + field));
+        return this;
+    }
+
+    /**
+     * Converts a Projection to a DBObject for use by the Java driver.
+     *
+     * @param projection the project to apply
+     * @return the DBObject
+     */
     @SuppressWarnings("unchecked")
     public DBObject toDBObject(final Projection projection) {
         String sourceFieldName;
@@ -53,94 +210,15 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
             return new BasicDBObject(sourceFieldName, projections);
         } else if (projection.getProjectedField() != null) {
             return new BasicDBObject(sourceFieldName, projection.getProjectedField());
+        } else if (projection.getArguments() != null) {
+            if (sourceFieldName == null) {
+                return toExpressionArgs(projection.getArguments());
+            } else {
+                return new BasicDBObject(sourceFieldName, toExpressionArgs(projection.getArguments()));
+            }
         } else {
             return new BasicDBObject(sourceFieldName, projection.isSuppressed() ? 0 : 1);
         }
-    }
-
-    public AggregationPipeline<T, U> project(final Projection... projections) {
-        firstStage = stages.isEmpty();
-        DBObject dbObject = new BasicDBObject();
-        for (Projection projection : projections) {
-            dbObject.putAll(toDBObject(projection));
-        }
-        stages.add(new BasicDBObject("$project", dbObject));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> group(final String id, final Group... groupings) {
-        DBObject group = new BasicDBObject("_id", "$" + id);
-        for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
-        }
-
-        stages.add(new BasicDBObject("$group", group));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> group(final List<Group> id, final Group... groupings) {
-        DBObject idGroup = new BasicDBObject();
-        for (Group group : id) {
-            idGroup.put(group.getName(), group.getSourceField());
-        }
-        DBObject group = new BasicDBObject("_id", idGroup);
-        for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
-        }
-
-        stages.add(new BasicDBObject("$group", group));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> match(final Query query) {
-        stages.add(new BasicDBObject("$match", query.getQueryObject()));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> sort(final Sort... sorts) {
-        DBObject sortList = new BasicDBObject();
-        for (Sort sort : sorts) {
-            sortList.put(sort.getField(), sort.getDirection());
-        }
-
-        stages.add(new BasicDBObject("$sort", sortList));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> limit(final int count) {
-        stages.add(new BasicDBObject("$limit", count));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> skip(final int count) {
-        stages.add(new BasicDBObject("$skip", count));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> unwind(final String field) {
-        stages.add(new BasicDBObject("$unwind", "$" + field));
-        return this;
-    }
-
-    public AggregationPipeline<T, U> geoNear(final GeoNear geoNear) {
-        DBObject geo = new BasicDBObject();
-        putIfNull(geo, "near", geoNear.getNear());
-        putIfNull(geo, "distanceField", geoNear.getDistanceField());
-        putIfNull(geo, "limit", geoNear.getLimit());
-        putIfNull(geo, "num", geoNear.getMaxDocuments());
-        putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
-        if (geoNear.getQuery() != null) {
-            geo.put("query", geoNear.getQuery().getQueryObject());
-        }
-        putIfNull(geo, "spherical", geoNear.getSpherical());
-        putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
-        putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
-        putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
-        stages.add(new BasicDBObject("$geoNear", geo));
-
-        return this;
     }
 
     private void putIfNull(final DBObject dbObject, final String name, final Object value) {
@@ -149,48 +227,22 @@ public class AggregationPipelineImpl<T, U> implements AggregationPipeline<T, U> 
         }
     }
 
-    @Override
-    public MorphiaIterator<U, U> out(final Class<U> target) {
-        return out(datastore.getCollection(target).getName(), target);
-    }
-
-    @Override
-    public MorphiaIterator<U, U> out(final Class<U> target, final AggregationOptions options) {
-        return out(datastore.getCollection(target).getName(), target, options);
-    }
-
-    @Override
-    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target) {
-        return out(collectionName, target, AggregationOptions.builder().build());
-    }
-
-    @Override
-    public MorphiaIterator<U, U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
-        stages.add(new BasicDBObject("$out", collectionName));
-        return aggregate(target, options);
-    }
-
-    @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target) {
-        return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
-    }
-
-    @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options) {
-       return aggregate(target, options, collection.getReadPreference());
-    }
-    
-    @Override
-    public MorphiaIterator<U, U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
-        return aggregate(datastore.getCollection(target).getName(), target, options, readPreference);
-    }
-    
-    @Override
-    public MorphiaIterator<U, U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options, 
-                                           final ReadPreference readPreference) {
-        LOG.debug("stages = " + stages);
-
-        Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(cursor, mapper, target, collection.getName(), mapper.createEntityCache());
+    private BasicDBList toExpressionArgs(final List<Object> args) {
+        BasicDBList result = new BasicDBList();
+        for (Object arg : args) {
+            if (arg instanceof Projection) {
+                Projection projection = (Projection) arg;
+                if (projection.getArguments() != null || projection.getProjections() != null || projection.getProjectedField() != null) {
+                    result.add(toDBObject(projection));
+                } else {
+                    result.add("$" + projection.getSourceField());
+                }
+            } else if (arg instanceof Number) {
+                result.add(arg);
+            } else if (arg instanceof String) {
+                result.add(arg);
+            }
+        }
+        return result;
     }
 }

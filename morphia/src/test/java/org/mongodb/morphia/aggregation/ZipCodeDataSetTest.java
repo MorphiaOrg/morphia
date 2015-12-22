@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -40,11 +41,11 @@ import static org.mongodb.morphia.aggregation.Sort.ascending;
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
  *
- * @see <a href="http://docs.mongodb.org/manual/tutorial/aggregation-zip-code-data-set/">Aggregation with the Zip Code Data Set</a>
+ * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
 public class ZipCodeDataSetTest extends TestBase {
-    private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
     public static final String MONGO_IMPORT;
+    private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
 
     static {
         String property = System.getProperty("mongodb_server");
@@ -55,6 +56,16 @@ public class ZipCodeDataSetTest extends TestBase {
         } else {
             MONGO_IMPORT = "/usr/local/bin/mongoimport";
         }
+    }
+
+    @Test
+    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        installSampleData();
+        AggregationPipeline pipeline = getDs().createAggregation(City.class)
+                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+                                              .group("_id.state", grouping("avgCityPop", average("pop")));
+        validate(pipeline.aggregate(Population.class), "MN", 5372);
     }
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
@@ -76,6 +87,69 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
+    @Test
+    public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        installSampleData();
+        Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
+
+        AggregationPipeline pipeline
+            = getDs().createAggregation(City.class)
+                     .group("state", grouping("totalPop", sum("pop")))
+                     .match(query.field("totalPop").greaterThanOrEq(10000000));
+
+
+        validate(pipeline.aggregate(Population.class), "CA", 29754890);
+        validate(pipeline.aggregate(Population.class), "OH", 10846517);
+    }
+
+    @Test
+    public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
+        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        installSampleData();
+        getMorphia().mapPackage(getClass().getPackage().getName());
+        AggregationPipeline pipeline = getDs().createAggregation(City.class)
+
+                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+
+                                              .sort(ascending("pop"))
+
+                                              .group("_id.state",
+                                                     grouping("biggestCity", last("_id.city")),
+                                                     grouping("biggestPop", last("pop")),
+                                                     grouping("smallestCity", first("_id.city")),
+                                                     grouping("smallestPop", first("pop")))
+
+                                              .project(projection("_id").suppress(),
+                                                       projection("state", "_id"),
+                                                       projection("biggestCity",
+                                                                  projection("name", "biggestCity"),
+                                                                  projection("pop", "biggestPop")),
+                                                       projection("smallestCity",
+                                                                  projection("name", "smallestCity"),
+                                                                  projection("pop", "smallestPop")));
+
+        Iterator<State> iterator = pipeline.aggregate(State.class);
+        try {
+            Map<String, State> states = new HashMap<String, State>();
+            while (iterator.hasNext()) {
+                State state = iterator.next();
+                states.put(state.getState(), state);
+            }
+
+            State state = states.get("SD");
+
+            Assert.assertEquals("SIOUX FALLS", state.getBiggest().name);
+            Assert.assertEquals(102046, state.getBiggest().population.longValue());
+
+            Assert.assertEquals("ZEONA", state.getSmallest().name);
+            Assert.assertEquals(8, state.getSmallest().population.longValue());
+        } finally {
+
+            ((MorphiaIterator) iterator).close();
+        }
+    }
+
     private void download(final URL url, final File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         InputStream inputStream = url.openStream();
@@ -92,90 +166,22 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    @Test
-    public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
-        installSampleData();
-        Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
-
-        AggregationPipeline<City, Population> pipeline
-            = getDs().<City, Population>createAggregation(City.class)
-                     .group("state", grouping("totalPop", sum("pop")))
-                     .match(query.field("totalPop").greaterThanOrEq(10000000));
-
-
-        validate(pipeline.aggregate(Population.class), "CA", 29760021);
-        validate(pipeline.aggregate(Population.class), "OH", 10847115);
-    }
-
-    @Test
-    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
-        installSampleData();
-        AggregationPipeline<City, Population> pipeline = getDs().<City, Population>createAggregation(City.class)
-                                                                .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-                                                                .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate(pipeline.aggregate(Population.class), "MN", 5335);
-    }
-
-    @Test
-    public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
-        installSampleData();
-        getMorphia().mapPackage(getClass().getPackage().getName());
-        AggregationPipeline<City, State> pipeline = getDs().<City, State>createAggregation(City.class)
-
-                                                           .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-
-                                                           .sort(ascending("pop"))
-
-                                                           .group("_id.state",
-                                                                  grouping("biggestCity", last("_id.city")),
-                                                                  grouping("biggestPop", last("pop")),
-                                                                  grouping("smallestCity", first("_id.city")),
-                                                                  grouping("smallestPop", first("pop"))
-                                                                 )
-
-                                                           .project(projection("_id").suppress(),
-                                                                    projection("state", "_id"),
-                                                                    projection("biggestCity",
-                                                                               projection("name", "biggestCity"),
-                                                                               projection("pop", "biggestPop")
-                                                                              ),
-                                                                    projection("smallestCity",
-                                                                               projection("name", "smallestCity"),
-                                                                               projection("pop", "smallestPop")
-                                                                              )
-                                                                   );
-
-        MorphiaIterator<State, State> iterator = pipeline.aggregate(State.class);
-        Map<String, State> states = new HashMap<String, State>();
-        while (iterator.hasNext()) {
-            State state = iterator.next();
-            states.put(state.getState(), state);
-        }
-
-        State state = states.get("SD");
-
-        Assert.assertEquals("SIOUX FALLS", state.getBiggest().name);
-        Assert.assertEquals(102046, state.getBiggest().population.longValue());
-
-        Assert.assertEquals("ZEONA", state.getSmallest().name);
-        Assert.assertEquals(8, state.getSmallest().population.longValue());
-        iterator.close();
-    }
-
-    private void validate(final MorphiaIterator<Population, Population> pipeline, final String state, final long value) {
+    private void validate(final Iterator<Population> iterator, final String state, final long value) {
         boolean found = false;
-        for (Population population : pipeline) {
-            if (population.state.equals(state)) {
-                found = true;
-                Assert.assertEquals(new Long(value), population.population);
+        try {
+            while (iterator.hasNext()) {
+                Population population = iterator.next();
+
+                if (population.state.equals(state)) {
+                    found = true;
+                    Assert.assertEquals(new Long(value), population.population);
+                }
+                LOG.debug("population = " + population);
             }
-            LOG.debug("population = " + population);
+            Assert.assertTrue("Should have found " + state, found);
+        } finally {
+            ((MorphiaIterator) iterator).close();
         }
-        Assert.assertTrue("Should have found " + state, found);
-        pipeline.close();
     }
 
     @Entity(value = "zipcodes", noClassnameStored = true)

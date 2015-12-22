@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 
@@ -40,6 +37,26 @@ import static org.junit.Assert.assertNotNull;
  * @author Scott Hernandez
  */
 public class ExternalMapperExtTest extends TestBase {
+
+    @Test
+    public void testExternalMapping() throws Exception {
+        final Mapper mapper = getMorphia().getMapper();
+        final CloneMapper helper = new CloneMapper(mapper);
+        helper.map(Skeleton.class, EntityWithNoAnnotations.class);
+        final MappedClass mc = mapper.getMappedClass(EntityWithNoAnnotations.class);
+        mc.update();
+        assertNotNull(mc.getIdField());
+        assertNotNull(mc.getEntityAnnotation());
+        assertEquals("special", mc.getEntityAnnotation().value());
+
+        EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
+        ent.id = "test";
+        final Key<EntityWithNoAnnotations> k = getDs().save(ent);
+        assertNotNull(k);
+        ent = getDs().get(EntityWithNoAnnotations.class, "test");
+        assertNotNull(ent);
+        assertEquals("test", ent.id);
+    }
 
     /**
      * The skeleton to apply from.
@@ -86,26 +103,6 @@ public class ExternalMapperExtTest extends TestBase {
             }
 
         }
-    }
-
-    @Test
-    public void testExternalMapping() throws Exception {
-        final Mapper mapper = getMorphia().getMapper();
-        final CloneMapper helper = new CloneMapper(mapper);
-        helper.map(Skeleton.class, EntityWithNoAnnotations.class);
-        final MappedClass mc = mapper.getMappedClass(EntityWithNoAnnotations.class);
-        mc.update();
-        assertNotNull(mc.getIdField());
-        assertNotNull(mc.getEntityAnnotation());
-        assertEquals("special", mc.getEntityAnnotation().value());
-
-        EntityWithNoAnnotations ent = new EntityWithNoAnnotations();
-        ent.id = "test";
-        final Key<EntityWithNoAnnotations> k = getDs().save(ent);
-        assertNotNull(k);
-        ent = getDs().get(EntityWithNoAnnotations.class, "test");
-        assertNotNull(ent);
-        assertEquals("test", ent.id);
     }
 }
 

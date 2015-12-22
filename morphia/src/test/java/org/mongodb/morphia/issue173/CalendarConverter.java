@@ -19,24 +19,6 @@ public class CalendarConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object encode(final Object val, final MappedField optionalExtraInfo) {
-        if (val == null) {
-            return null;
-        }
-        final Calendar calendar = (Calendar) val;
-        final long millis = calendar.getTimeInMillis();
-        // . a date so that we can see it clearly in MongoVue
-        // . the date is UTC because
-        //   . timeZone.getOffset(millis) - timeZone.getOffset(newMillis)  may not be 0 (if we're close to DST limits)
-        //   . and it's like that inside GregorianCalendar => more natural
-        final Date utcDate = new Date(millis);
-        final List<Object> values = new ArrayList<Object>();
-        values.add(utcDate);
-        values.add(calendar.getTimeZone().getID());
-        return values;
-    }
-
-    @Override
     public Object decode(final Class type, final Object o, final MappedField mf) {
         if (o == null) {
             return null;
@@ -56,5 +38,23 @@ public class CalendarConverter extends TypeConverter implements SimpleValueConve
         final GregorianCalendar calendar = new GregorianCalendar(timeZone);
         calendar.setTimeInMillis(millis);
         return calendar;
+    }
+
+    @Override
+    public Object encode(final Object val, final MappedField optionalExtraInfo) {
+        if (val == null) {
+            return null;
+        }
+        final Calendar calendar = (Calendar) val;
+        final long millis = calendar.getTimeInMillis();
+        // . a date so that we can see it clearly in MongoVue
+        // . the date is UTC because
+        //   . timeZone.getOffset(millis) - timeZone.getOffset(newMillis)  may not be 0 (if we're close to DST limits)
+        //   . and it's like that inside GregorianCalendar => more natural
+        final Date utcDate = new Date(millis);
+        final List<Object> values = new ArrayList<Object>();
+        values.add(utcDate);
+        values.add(calendar.getTimeZone().getID());
+        return values;
     }
 }

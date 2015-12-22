@@ -10,6 +10,28 @@ import static org.junit.Assert.assertThat;
 
 public class LongTypeValidatorTest {
     @Test
+    public void shouldAllowIntValueWhenTypeIsLong() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = LongTypeValidator.getInstance().apply(Long.class, 1, validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldAllowIntValueWhenTypeIsPrimitiveLong() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = LongTypeValidator.getInstance().apply(long.class, 1, validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
     public void shouldAllowIntegerValueWhenTypeIsLong() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -32,24 +54,13 @@ public class LongTypeValidatorTest {
     }
 
     @Test
-    public void shouldAllowIntValueWhenTypeIsLong() {
+    public void shouldNotApplyValidationIfTypeIsNotIntegerOrLong() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
-        boolean validationApplied = LongTypeValidator.getInstance().apply(Long.class, 1, validationFailures);
+        boolean validationApplied = LongTypeValidator.getInstance().apply(String.class, new Integer(1), validationFailures);
         // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowIntValueWhenTypeIsPrimitiveLong() {
-        // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = LongTypeValidator.getInstance().apply(long.class, 1, validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
+        assertThat(validationApplied, is(false));
         assertThat(validationFailures.size(), is(0));
     }
 
@@ -73,17 +84,6 @@ public class LongTypeValidatorTest {
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(1));
-    }
-
-    @Test
-    public void shouldNotApplyValidationIfTypeIsNotIntegerOrLong() {
-        // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = LongTypeValidator.getInstance().apply(String.class, new Integer(1), validationFailures);
-        // then
-        assertThat(validationApplied, is(false));
-        assertThat(validationFailures.size(), is(0));
     }
 
 }

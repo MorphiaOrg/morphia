@@ -2,6 +2,11 @@ package org.mongodb.morphia.mapping;
 
 
 import org.mongodb.morphia.ObjectFactory;
+import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
+import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
+import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
+import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 
 
 /**
@@ -10,104 +15,245 @@ import org.mongodb.morphia.ObjectFactory;
  * @author Scott Hernandez
  */
 public class MapperOptions {
-    //CHECKSTYLE:OFF
-    /**
-     * <p>Treat java transient fields as if they have {@code @Transient} on them</p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean actLikeSerializer;
-    /**
-     * <p>Controls if null are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean storeNulls;
-    /**
-     * <p>Controls if empty collection/arrays are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean storeEmpties;
-    /**
-     * <p>Controls if final fields are stored. </p>
-     *
-     * @deprecated use the getter/setter instead
-     */
-    public boolean ignoreFinals; //ignore final fields.
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper referenceMapper = new ReferenceMapper();
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper embeddedMapper = new EmbeddedMapper();
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper valueMapper = new ValueMapper();
-    /**
-     * @deprecated use the getter/setter instead
-     */
-    public final CustomMapper defaultMapper = embeddedMapper;
+    private boolean actLikeSerializer;
+    private boolean ignoreFinals; //ignore final fields.
+    private boolean storeNulls;
+    private boolean storeEmpties;
+    private boolean useLowerCaseCollectionNames;
+    private boolean cacheClassLookups = false;
+    private boolean mapSubPackages = false;
+    private ObjectFactory objectFactory = new DefaultCreator(this);
+    private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
+    private CustomMapper embeddedMapper = new EmbeddedMapper();
+    private CustomMapper defaultMapper = embeddedMapper;
+    private CustomMapper referenceMapper = new ReferenceMapper();
+    private CustomMapper valueMapper = new ValueMapper();
+    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
 
-    public ObjectFactory objectFactory = new DefaultCreator();
-    //CHECKSTYLE:ON
-
-    public boolean isActLikeSerializer() {
-        return actLikeSerializer;
+    /**
+     * @return the factory to create an EntityCache
+     */
+    public EntityCacheFactory getCacheFactory() {
+        return cacheFactory;
     }
 
-    public void setActLikeSerializer(final boolean actLikeSerializer) {
-        this.actLikeSerializer = actLikeSerializer;
+    /**
+     * Sets the factory to create an EntityCache
+     *
+     * @param cacheFactory the factory
+     */
+    public void setCacheFactory(final EntityCacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 
+    /**
+     * @return the DatastoreProvider Morphia should use
+     */
+    public DatastoreProvider getDatastoreProvider() {
+        return datastoreProvider;
+    }
+
+    /**
+     * Sets the DatastoreProvider Morphia should use
+     *
+     * @param datastoreProvider the DatastoreProvider to use
+     */
+    public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
+        datastoreProvider.register(this.getDatastoreProvider().get());
+        this.datastoreProvider = datastoreProvider;
+    }
+
+    /**
+     * @return the mapper to use for top level entities
+     */
     public CustomMapper getDefaultMapper() {
         return defaultMapper;
     }
 
+    /**
+     * Sets the mapper to use for top level entities
+     *
+     * @param pDefaultMapper the mapper to use
+     */
+    public void setDefaultMapper(final CustomMapper pDefaultMapper) {
+        defaultMapper = pDefaultMapper;
+    }
+
+    /**
+     * @return the mapper to use for embedded entities
+     */
     public CustomMapper getEmbeddedMapper() {
         return embeddedMapper;
     }
 
-    public boolean isIgnoreFinals() {
-        return ignoreFinals;
+    /**
+     * Sets the mapper to use for embedded entities
+     *
+     * @param pEmbeddedMapper the mapper to use
+     */
+    public void setEmbeddedMapper(final CustomMapper pEmbeddedMapper) {
+        embeddedMapper = pEmbeddedMapper;
     }
 
-    public void setIgnoreFinals(final boolean ignoreFinals) {
-        this.ignoreFinals = ignoreFinals;
-    }
-
+    /**
+     * @return the factory to use when creating new instances
+     */
     public ObjectFactory getObjectFactory() {
         return objectFactory;
     }
 
+    /**
+     * Sets the ObjectFactory to use when instantiating entity classes.  The default factory is a simple reflection based factory but this
+     * could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
+     *
+     * @param objectFactory the factory to use
+     */
     public void setObjectFactory(final ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
 
+    /**
+     * @return the mapper to use for references
+     * @see Reference
+     */
     public CustomMapper getReferenceMapper() {
         return referenceMapper;
     }
 
+    /**
+     * Sets the mapper to use for references
+     *
+     * @param pReferenceMapper the mapper to use
+     * @see Reference
+     */
+    public void setReferenceMapper(final CustomMapper pReferenceMapper) {
+        referenceMapper = pReferenceMapper;
+    }
+
+    /**
+     * @return the mapper to use when processing values
+     */
+    public CustomMapper getValueMapper() {
+        return valueMapper;
+    }
+
+    /**
+     * Sets the mapper to use when processing values
+     *
+     * @param pValueMapper the mapper to use
+     */
+    public void setValueMapper(final CustomMapper pValueMapper) {
+        valueMapper = pValueMapper;
+    }
+
+    /**
+     * @return true if Morphia should ignore transient fields
+     */
+    public boolean isActLikeSerializer() {
+        return actLikeSerializer;
+    }
+
+    /**
+     * Instructs Morphia to follow JDK serialization semantics and ignore values marked up with the transient keyword
+     *
+     * @param actLikeSerializer true if Morphia should ignore transient fields
+     */
+    public void setActLikeSerializer(final boolean actLikeSerializer) {
+        this.actLikeSerializer = actLikeSerializer;
+    }
+
+    /**
+     * @return true if Morphia should cache name -> Class lookups
+     */
+    public boolean isCacheClassLookups() {
+        return cacheClassLookups;
+    }
+
+    /**
+     * Sets whether Morphia should cache name -> Class lookups
+     *
+     * @param cacheClassLookups true if the lookup results should be cached
+     */
+    public void setCacheClassLookups(final boolean cacheClassLookups) {
+        this.cacheClassLookups = cacheClassLookups;
+    }
+
+    /**
+     * @return true if Morphia should ignore final fields
+     */
+    public boolean isIgnoreFinals() {
+        return ignoreFinals;
+    }
+
+    /**
+     * Controls if final fields are stored.
+     *
+     * @param ignoreFinals true if Morphia should ignore final fields
+     */
+    public void setIgnoreFinals(final boolean ignoreFinals) {
+        this.ignoreFinals = ignoreFinals;
+    }
+
+    /**
+     * @return true if Morphia should store empty values for lists/maps/sets/arrays
+     */
     public boolean isStoreEmpties() {
         return storeEmpties;
     }
 
+    /**
+     * Controls if Morphia should store empty values for lists/maps/sets/arrays
+     *
+     * @param storeEmpties true if Morphia should store empty values for lists/maps/sets/arrays
+     */
     public void setStoreEmpties(final boolean storeEmpties) {
         this.storeEmpties = storeEmpties;
     }
 
+    /**
+     * @return true if Morphia should store null values
+     */
     public boolean isStoreNulls() {
         return storeNulls;
     }
 
+    /**
+     * Controls if null are stored.
+     *
+     * @param storeNulls true if Morphia should store null values
+     */
     public void setStoreNulls(final boolean storeNulls) {
         this.storeNulls = storeNulls;
     }
 
-    public CustomMapper getValueMapper() {
-        return valueMapper;
+    /**
+     * @return true if Morphia should use lower case values when calculating collection names
+     */
+    public boolean isUseLowerCaseCollectionNames() {
+        return useLowerCaseCollectionNames;
+    }
+
+    /**
+     * Controls if default entity collection name should be lowercase.
+     *
+     * @param useLowerCaseCollectionNames true if Morphia should use lower case values when calculating collection names
+     */
+    public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
+        this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+    }
+
+    /**
+     * @return true if Morphia should map classes from the sub-packages as well
+     */
+    public boolean isMapSubPackages() {
+        return mapSubPackages;
+    }
+
+    /**
+     * Controls if classes from sub-packages should be mapped.
+     * @param mapSubPackages true if Morphia should map classes from the sub-packages as well
+     */
+    public void setMapSubPackages(final boolean mapSubPackages) {
+        this.mapSubPackages = mapSubPackages;
     }
 }

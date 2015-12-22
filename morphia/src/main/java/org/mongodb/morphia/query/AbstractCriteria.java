@@ -1,10 +1,13 @@
 package org.mongodb.morphia.query;
 
-
+/**
+ * Defines the base Criteria implementation.
+ */
 public abstract class AbstractCriteria implements Criteria {
-    private CriteriaContainerImpl attachedTo;
+    private CriteriaContainer attachedTo;
 
-    public void attach(final CriteriaContainerImpl container) {
+    @Override
+    public void attach(final CriteriaContainer container) {
         if (attachedTo != null) {
             attachedTo.remove(this);
         }
@@ -12,11 +15,19 @@ public abstract class AbstractCriteria implements Criteria {
         attachedTo = container;
     }
 
-    public CriteriaContainerImpl getAttachedTo() {
+    /**
+     * @return the CriteriaContainer this Criteria is attached to
+     */
+    public CriteriaContainer getAttachedTo() {
         return attachedTo;
     }
 
-    public void setAttachedTo(final CriteriaContainerImpl attachedTo) {
+    /**
+     * Sets the parents CriteriaContainer for this Criteria
+     *
+     * @param attachedTo the CriteriaContainer
+     */
+    public void setAttachedTo(final CriteriaContainer attachedTo) {
         this.attachedTo = attachedTo;
     }
 }

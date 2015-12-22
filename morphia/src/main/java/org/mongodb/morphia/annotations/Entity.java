@@ -18,6 +18,7 @@
 
 package org.mongodb.morphia.annotations;
 
+import org.mongodb.morphia.mapping.Mapper;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,9 +26,6 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.mongodb.morphia.mapping.Mapper;
-
 
 /**
  * Allows marking and naming the collectionName
@@ -38,20 +36,34 @@ import org.mongodb.morphia.mapping.Mapper;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 public @interface Entity {
-  String value() default Mapper.IGNORED_FIELDNAME;
+    /**
+     * The capped collection configuration options
+     */
+    CappedAt cap() default @CappedAt(0);
 
-  CappedAt cap() default @CappedAt(0);
+    /**
+     * The default write concern to use when dealing with this entity
+     */
+    String concern() default "";
 
-  //@Deprecated //to be replaced. This is a temp hack until polymorphism and discriminators are implemented
-  boolean noClassnameStored() default false;
+    /**
+     * When true, instructs Morphia to not include when serializing an entity to mongodb.
+     */
+    //@Deprecated //to be replaced. This is a temp hack until polymorphism and discriminators are implemented
+    boolean noClassnameStored() default false;
 
-  //set slaveOk for queries for this Entity.
-  boolean queryNonPrimary() default false;
+    /**
+     * set slaveOk for queries for this Entity.
+     */
+    boolean queryNonPrimary() default false;
 
-
-  //any WriteConcern static string. Case insensitive. STRICT/SAFE, NORMAL, etc...
-  String concern() default "";
-
+    /**
+     * Sets the collection name to for this entity.  Defaults to the class's simple name
+     *
+     * @see Class#getSimpleName()
+     */
+    String value() default Mapper.IGNORED_FIELDNAME;
 }
+

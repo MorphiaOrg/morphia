@@ -18,135 +18,18 @@ import java.util.Map;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class EnumMappingTest extends TestBase {
-    public static class ContainsEnum {
-        @Id
-        private ObjectId id;
-        private Foo foo = Foo.BAR;
-
-        @PreSave
-        void testMapping() {
-
-        }
-    }
-
-    enum Foo {
-        BAR() {
-        },
-        BAZ
-    }
-
-    public enum WebTemplateType {
-        CrewContract("Contract"),
-        CrewContractHeader("Contract Header");
-
-        private String text;
-
-        private WebTemplateType(final String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-    }
-
-    @Embedded
-    public static class WebTemplate {
-        private ObjectId id = new ObjectId();
-        private String templateName;
-        private String content;
-
-        public WebTemplate() {
-        }
-
-        public WebTemplate(final String content) {
-            this.content = content;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final WebTemplate that = (WebTemplate) o;
-
-            if (content != null ? !content.equals(that.content) : that.content != null) {
-                return false;
-            }
-            if (id != null ? !id.equals(that.id) : that.id != null) {
-                return false;
-            }
-            if (templateName != null ? !templateName.equals(that.templateName)
-                                     : that.templateName != null) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (templateName != null ? templateName.hashCode() : 0);
-            result = 31 * result + (content != null ? content.hashCode() : 0);
-            return result;
-        }
-    }
-
-    @Entity(noClassnameStored = true)
-    public static class Customer {
-        @Id
-        private ObjectId id;
-        private final Map<WebTemplateType, WebTemplate> map = new HashMap<WebTemplateType, WebTemplate>();
-
-        public void add(final WebTemplateType type, final WebTemplate template) {
-            map.put(type, template);
-        }
-
-    }
-
-    @Entity(noClassnameStored = true)
-    public static class CustomerWithList {
-        @Id
-        private ObjectId id;
-
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<WebTemplateType, List<WebTemplate>>();
-
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
-            mapWithList.put(type, templates);
-        }
-    }
-
-    @Entity(noClassnameStored = true)
-    public static class CustomerWithArrayList {
-        @Id
-        private ObjectId id;
-
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
-            = new HashMap<WebTemplateType, List<WebTemplate>>();
-
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
-            mapWithArrayList.put(type, templates);
-        }
-    }
-
     @Test
-    public void testEnumMapping() throws Exception {
-        getMorphia().map(ContainsEnum.class);
+    public void getMapOfEnum() throws Exception {
+        Class1 entity = new Class1();
+        entity.getMap().put("key", Foo.BAR);
+        getDs().save(entity);
 
-        getDs().save(new ContainsEnum());
-        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).field("foo").equal(Foo.BAR)
-                                   .countAll());
-        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).filter("foo", Foo.BAR)
-                                   .countAll());
-        Assert.assertEquals(1,
-                            getDs().createQuery(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
-                                .countAll());
+        getMorphia().map(Class1.class);
+
+        entity = getDs().find(Class1.class).get();
+        final Map<String, Foo> map = entity.getMap();
+        Foo b = map.get("key");
+        Assert.assertNotNull(b);
     }
 
     @Test
@@ -158,6 +41,30 @@ public class EnumMappingTest extends TestBase {
         getDs().save(customer);
         Customer loaded = getDs().get(customer);
         Assert.assertEquals(customer.map, loaded.map);
+    }
+
+    @Test
+    public void testCustomerWithArrayList() {
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        getMorphia().getMapper().getOptions().setStoreNulls(true);
+        getMorphia().map(CustomerWithArrayList.class);
+
+        CustomerWithArrayList customer = new CustomerWithArrayList();
+
+        List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
+        templates1.add(new WebTemplate("template #1.1"));
+        templates1.add(new WebTemplate("template #1.2"));
+        customer.add(WebTemplateType.CrewContract, templates1);
+
+        List<WebTemplate> templates2 = new ArrayList<WebTemplate>();
+        templates1.add(new WebTemplate("template #2.1"));
+        templates1.add(new WebTemplate("template #2.2"));
+        customer.add(WebTemplateType.CrewContractHeader, templates2);
+
+        getDs().save(customer);
+        CustomerWithArrayList loaded = getDs().get(customer);
+
+        Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
     }
 
     @Test
@@ -184,27 +91,144 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Test
-    public void testCustomerWithArrayList() {
-        getMorphia().getMapper().getOptions().setStoreEmpties(true);
-        getMorphia().getMapper().getOptions().setStoreNulls(true);
-        getMorphia().map(CustomerWithArrayList.class);
+    public void testEnumMapping() throws Exception {
+        getDs().getDB().dropDatabase();
 
-        CustomerWithArrayList customer = new CustomerWithArrayList();
+        getMorphia().map(ContainsEnum.class);
 
-        List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
-        templates1.add(new WebTemplate("template #1.1"));
-        templates1.add(new WebTemplate("template #1.2"));
-        customer.add(WebTemplateType.CrewContract, templates1);
+        getDs().save(new ContainsEnum());
+        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).field("foo").equal(Foo.BAR)
+                                      .countAll());
+        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).filter("foo", Foo.BAR)
+                                      .countAll());
+        Assert.assertEquals(1,
+                            getDs().createQuery(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
+                                   .countAll());
+    }
 
-        List<WebTemplate> templates2 = new ArrayList<WebTemplate>();
-        templates1.add(new WebTemplate("template #2.1"));
-        templates1.add(new WebTemplate("template #2.2"));
-        customer.add(WebTemplateType.CrewContractHeader, templates2);
+    enum Foo {
+        BAR,
+        BAZ
+    }
 
-        getDs().save(customer);
-        CustomerWithArrayList loaded = getDs().get(customer);
+    public enum WebTemplateType {
+        CrewContract("Contract"),
+        CrewContractHeader("Contract Header");
 
-        Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
+        private String text;
+
+        WebTemplateType(final String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+    }
+
+    @Entity("user")
+    public static class Class1 {
+        @Id
+        private ObjectId id;
+        private Map<String, Foo> map = new HashMap<String, Foo>();
+
+        public Map<String, Foo> getMap() {
+            return map;
+        }
+    }
+
+    public static class ContainsEnum {
+        @Id
+        private ObjectId id;
+        private Foo foo = Foo.BAR;
+
+        @PreSave
+        void testMapping() {
+
+        }
+    }
+
+    @Embedded
+    public static class WebTemplate {
+        private ObjectId id = new ObjectId();
+        private String templateName;
+        private String content;
+
+        public WebTemplate() {
+        }
+
+        public WebTemplate(final String content) {
+            this.content = content;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (templateName != null ? templateName.hashCode() : 0);
+            result = 31 * result + (content != null ? content.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final WebTemplate that = (WebTemplate) o;
+
+            if (content != null ? !content.equals(that.content) : that.content != null) {
+                return false;
+            }
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            if (templateName != null ? !templateName.equals(that.templateName)
+                                     : that.templateName != null) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class Customer {
+        private final Map<WebTemplateType, WebTemplate> map = new HashMap<WebTemplateType, WebTemplate>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final WebTemplate template) {
+            map.put(type, template);
+        }
+
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class CustomerWithList {
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<WebTemplateType, List<WebTemplate>>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+            mapWithList.put(type, templates);
+        }
+    }
+
+    @Entity(noClassnameStored = true)
+    public static class CustomerWithArrayList {
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
+            = new HashMap<WebTemplateType, List<WebTemplate>>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+            mapWithArrayList.put(type, templates);
+        }
     }
 
 }

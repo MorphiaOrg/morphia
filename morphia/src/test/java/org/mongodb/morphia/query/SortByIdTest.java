@@ -11,20 +11,6 @@ import org.mongodb.morphia.annotations.Id;
 
 public class SortByIdTest extends TestBase {
 
-    @Entity("A")
-    static class A {
-        @Id
-        private ObjectId id;
-        private String name;
-
-        public A(final String name) {
-            this.name = name;
-        }
-
-        public A() {
-        }
-    }
-
     @Test
     public void getLastByIdTest() {
         final A a1 = new A("a1");
@@ -37,6 +23,20 @@ public class SortByIdTest extends TestBase {
 
         Assert.assertEquals("last id", a3.id, getDs().createQuery(A.class).order("-id").get().id);
         Assert.assertEquals("last id", a3.id, getDs().createQuery(A.class).disableValidation().order("-_id").get().id);
+    }
+
+    @Entity("A")
+    static class A {
+        @Id
+        private ObjectId id;
+        private String name;
+
+        public A(final String name) {
+            this.name = name;
+        }
+
+        public A() {
+        }
     }
 
 }

@@ -14,6 +14,9 @@ public class EnumSetConverter extends TypeConverter implements SimpleValueConver
 
     private final EnumConverter ec = new EnumConverter();
 
+    /**
+     * Creates the Converter.
+     */
     public EnumSetConverter() {
         super(EnumSet.class);
     }

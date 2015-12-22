@@ -16,61 +16,8 @@ import static org.mongodb.morphia.query.FilterOperator.NOT_IN;
 
 public class NotInOperationValidatorTest {
     @Test
-    public void shouldAllowNotInOperatorForIterableValues() {
-        // given 
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, Collections.emptySet(), validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowNotInOperatorForMapValues() {
-        // given 
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = NotInOperationValidator.getInstance()
-                                                           .apply(null, NOT_IN, new HashMap<String, String>(), validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowNotInOperatorForArrayValues() {
-        // given 
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, new int[0], validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowNotInOperatorForListValues() {
-        // given 
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, asList(1, 2), validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
     public void shouldAllowNotInOperatorForArrayListValues() {
-        // given 
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
@@ -83,21 +30,74 @@ public class NotInOperationValidatorTest {
     }
 
     @Test
-    public void shouldRejectValuesThatAreNotTheCorrectType() {
-        // given 
+    public void shouldAllowNotInOperatorForArrayValues() {
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
-        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, "value", validationFailures);
+        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, new int[0], validationFailures);
 
         // then
         assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(1));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldAllowNotInOperatorForIterableValues() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, Collections.emptySet(), validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldAllowNotInOperatorForListValues() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, asList(1, 2), validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldAllowNotInOperatorForMapValues() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = NotInOperationValidator.getInstance()
+                                                           .apply(null, NOT_IN, new HashMap<String, String>(), validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldNotApplyForOperatorThatIsNotANotInOperator() {
+        // given
+        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, EQUAL, "value", validationFailures);
+
+        // then
+        assertThat(validationApplied, is(false));
+        assertThat(validationFailures.size(), is(0));
     }
 
     @Test
     public void shouldRejectNullValues() {
-        // given 
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
@@ -110,15 +110,15 @@ public class NotInOperationValidatorTest {
     }
 
     @Test
-    public void shouldNotApplyForOperatorThatIsNotANotInOperator() {
-        // given 
+    public void shouldRejectValuesThatAreNotTheCorrectType() {
+        // given
         List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
-        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, EQUAL, "value", validationFailures);
+        boolean validationApplied = NotInOperationValidator.getInstance().apply(null, NOT_IN, "value", validationFailures);
 
         // then
-        assertThat(validationApplied, is(false));
-        assertThat(validationFailures.size(), is(0));
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(1));
     }
 }

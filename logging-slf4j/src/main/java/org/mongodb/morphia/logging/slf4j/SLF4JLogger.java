@@ -4,92 +4,119 @@ package org.mongodb.morphia.logging.slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * This class hands off log messages to the underlying slf4j logging system.
+ */
 public class SLF4JLogger implements org.mongodb.morphia.logging.Logger {
-  private final Logger logger;
+    private final Logger logger;
 
-  public SLF4JLogger(final Class<?> c) {
-    this.logger = LoggerFactory.getLogger(c);
-  }
+    /**
+     * Create an SLF4JLogger with the given class name as its namespace.
+     *
+     * @param c the Class to use
+     */
+    public SLF4JLogger(final Class<?> c) {
+        this.logger = LoggerFactory.getLogger(c);
+    }
 
-  public boolean isTraceEnabled() {
-    return this.logger.isTraceEnabled();
-  }
+    @Override
+    public boolean isTraceEnabled() {
+        return this.logger.isTraceEnabled();
+    }
 
-  public void trace(final String msg) {
-    this.logger.trace(msg);
-  }
+    @Override
+    public void trace(final String msg) {
+        this.logger.trace(msg);
+    }
 
-  public void trace(final String format, final Object... argArray) {
-    this.logger.trace(format, argArray);
-  }
+    @Override
+    public void trace(final String format, final Object... argArray) {
+        this.logger.trace(format, argArray);
+    }
 
-  public void trace(final String msg, final Throwable t) {
-    this.logger.trace(msg, t);
-  }
+    @Override
+    public void trace(final String msg, final Throwable t) {
+        this.logger.trace(msg, t);
+    }
 
-  public boolean isDebugEnabled() {
-    return this.logger.isDebugEnabled();
-  }
+    @Override
+    public boolean isDebugEnabled() {
+        return this.logger.isDebugEnabled();
+    }
 
-  public void debug(final String msg) {
-    this.logger.debug(msg);
-  }
+    @Override
+    public void debug(final String msg) {
+        this.logger.debug(msg);
+    }
 
-  public void debug(final String format, final Object... argArray) {
-    this.logger.debug(format, argArray);
-  }
+    @Override
+    public void debug(final String format, final Object... argArray) {
+        this.logger.debug(format, argArray);
+    }
 
-  public void debug(final String msg, final Throwable t) {
-    this.logger.debug(msg, t);
-  }
+    @Override
+    public void debug(final String msg, final Throwable t) {
+        this.logger.debug(msg, t);
+    }
 
-  public boolean isInfoEnabled() {
-    return this.logger.isInfoEnabled();
-  }
+    @Override
+    public boolean isInfoEnabled() {
+        return this.logger.isInfoEnabled();
+    }
 
-  public void info(final String msg) {
-    this.logger.info(msg);
-  }
+    @Override
+    public void info(final String msg) {
+        this.logger.info(msg);
+    }
 
-  public void info(final String format, final Object... argArray) {
-    this.logger.info(format, argArray);
-  }
+    @Override
+    public void info(final String format, final Object... argArray) {
+        this.logger.info(format, argArray);
+    }
 
-  public void info(final String msg, final Throwable t) {
-    this.logger.info(msg, t);
-  }
+    @Override
+    public void info(final String msg, final Throwable t) {
+        this.logger.info(msg, t);
+    }
 
-  public boolean isWarningEnabled() {
-    return this.logger.isWarnEnabled();
-  }
+    @Override
+    public boolean isWarningEnabled() {
+        return this.logger.isWarnEnabled();
+    }
 
-  public void warning(final String msg) {
-    this.logger.warn(msg);
-  }
+    @Override
+    public void warning(final String msg) {
+        this.logger.warn(msg);
+    }
 
-  public void warning(final String format, final Object... argArray) {
-    this.logger.warn(format, argArray);
-  }
+    @Override
+    public void warning(final String format, final Object... argArray) {
+        this.logger.warn(format, argArray);
+    }
 
-  public void warning(final String msg, final Throwable t) {
-    this.logger.warn(msg, t);
-  }
+    @Override
+    public void warning(final String msg, final Throwable t) {
+        this.logger.warn(msg, t);
+    }
 
-  public boolean isErrorEnabled() {
-    return this.logger.isErrorEnabled();
-  }
+    @Override
+    public boolean isErrorEnabled() {
+        return this.logger.isErrorEnabled();
+    }
 
-  public void error(final String msg) {
-    this.logger.error(msg);
-  }
+    @Override
+    public void error(final String msg) {
+        this.logger.error(msg);
+    }
 
-  public void error(final String format, final Object... argArray) {
-    this.logger.error(format, argArray);
-  }
+    @Override
+    public void error(final String format, final Object... argArray) {
+        this.logger.error(format, argArray);
+    }
 
-  public void error(final String msg, final Throwable t) {
-    this.logger.error(msg, t);
-  }
+    @Override
+    public void error(final String msg, final Throwable t) {
+        this.logger.error(msg, t);
+    }
 
 }

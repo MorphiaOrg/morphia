@@ -14,14 +14,13 @@ public final class DefaultTypeValidator extends TypeValidator {
     private DefaultTypeValidator() {
     }
 
-    @Override
-    protected void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures) {
-        if (!type.isAssignableFrom(value.getClass())
-            && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
-            validationFailures.add(new ValidationFailure(format("Type %s may not be queryable with value '%s' with class %s",
-                                                                type.getCanonicalName(),
-                                                                value, value.getClass().getCanonicalName())));
-        }
+    /**
+     * Get the instance.
+     *
+     * @return the Singleton instance of this validator
+     */
+    public static DefaultTypeValidator getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -30,16 +29,18 @@ public final class DefaultTypeValidator extends TypeValidator {
      * @param type the type to be validated
      * @return true.  Always.
      */
+    @Override
     protected boolean appliesTo(final Class<?> type) {
         return true;
     }
 
-    /**
-     * Get the instance.
-     *
-     * @return the Singleton instance of this validator
-     */
-    public static DefaultTypeValidator getInstance() {
-        return INSTANCE;
+    @Override
+    protected void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures) {
+        if (!type.isAssignableFrom(value.getClass())
+            && !value.getClass().getSimpleName().equalsIgnoreCase(type.getSimpleName())) {
+            validationFailures.add(new ValidationFailure(format("Type %s may not be queryable with value '%s' with class %s",
+                                                                type.getCanonicalName(),
+                                                                value, value.getClass().getCanonicalName())));
+        }
     }
 }

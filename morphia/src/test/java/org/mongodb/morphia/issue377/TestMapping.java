@@ -1,4 +1,4 @@
-package org.mongodb.morphia.issue377.TestMapping;
+package org.mongodb.morphia.issue377;
 
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
@@ -28,10 +28,26 @@ import static org.junit.Assert.assertThat;
 public class TestMapping extends TestBase {
 
     @Test
+    public void testCanMapSerializableObject() {
+        // given
+        Mapper mapper = new Mapper();
+        User user = new User();
+        user.id = 1;
+        user.userObject = new SerializableObject();
+
+        // when
+        DBObject dbObject = mapper.toDBObject(user);
+        User object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
+
+        // then
+        assertThat(object.userObject, is(user.userObject));
+    }
+
+    @Test
     public void testMapping() {
         final BasicDAO<User, ObjectId> messageDAO = new BasicDAO<User, ObjectId>(User.class, getDs());
         Assert.assertNotNull(messageDAO);
-        
+
         Mapper mapper = new Mapper();
 
         User user = new User();
@@ -41,7 +57,7 @@ public class TestMapping extends TestBase {
         DBObject dbObject = mapper.toDBObject(user);
         Object object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
         Assert.assertEquals(user.userObject, ((User) object).userObject);
-        
+
         user.userObject = 33;
         dbObject = mapper.toDBObject(user);
         object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
@@ -95,44 +111,33 @@ public class TestMapping extends TestBase {
         assertThat(dbValue, is(instanceOf(byteArrayClass)));
     }
 
-    @Test
-    public void testCanMapSerializableObject() {
-        // given
-        Mapper mapper = new Mapper();
-        User user = new User();
-        user.id = 1;
-        user.userObject = new SerializableObject();
-
-        // when
-        DBObject dbObject = mapper.toDBObject(user);
-        User object = mapper.fromDBObject(User.class, dbObject, new DefaultEntityCache());
-
-        // then
-        assertThat(object.userObject, is(user.userObject));
-    }
-
     @Entity
     @SuppressWarnings("unused")
     private static class User {
         @Id
         private Integer id;
-        
+
         @Serialized
         private Object userObject;
     }
-    
+
     @Entity
     @SuppressWarnings("unused")
     private static class ListEntity {
         @Id
         private Integer id;
-        
+
         @Serialized
         private List<Object> list;
     }
-    
+
     private static class SerializableObject implements Serializable {
         private final int someValue = 7;
+
+        @Override
+        public int hashCode() {
+            return someValue;
+        }
 
         @Override
         public boolean equals(final Object o) {
@@ -150,11 +155,6 @@ public class TestMapping extends TestBase {
             }
 
             return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return someValue;
         }
     }
 }

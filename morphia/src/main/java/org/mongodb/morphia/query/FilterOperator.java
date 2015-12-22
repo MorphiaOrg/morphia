@@ -1,6 +1,5 @@
 package org.mongodb.morphia.query;
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public enum FilterOperator {
 
     EXISTS("$exists", "exists"),
 
-    TYPE("$type"),
+    TYPE("$type", "type"),
 
     NOT("$not"),
 
@@ -54,20 +53,17 @@ public enum FilterOperator {
 
     NEAR_SPHERE("$nearSphere"),
 
+    /**
+     * @deprecated New in server version 2.4: $geoWithin replaces $within which is deprecated.
+     */
+    @Deprecated
     WITHIN("$within", "within"),
-    
-    GEO_WITHIN("$geoWithin", "geoWithin") {
-/*
-        @Override
-        public boolean matches(final String filter) {
-            boolean match = "within".equals(filter);
-            if (match) {
-                LOG.warning("'within' is a deprecated operator.  Please use geoWithin instead.");
-            }
-            return match || "geoWithin".equals(filter);
-        }
-*/
-    };
+
+    GEO_NEAR("$geoNear", "geoNear"),
+
+    GEO_WITHIN("$geoWithin", "geoWithin"),
+
+    INTERSECTS("$geoIntersects", "geoIntersects");
 
     private final String value;
     private final List<String> filters;
@@ -77,14 +73,12 @@ public enum FilterOperator {
         filters = Arrays.asList(filterValues);
     }
 
-    public String val() {
-        return value;
-    }
-
-    public boolean matches(final String filter) {
-        return filter != null && filters.contains(filter.trim().toLowerCase());
-    }
-
+    /**
+     * Creates a FilterOperator from a String
+     *
+     * @param operator the String to convert
+     * @return the FilterOperator
+     */
     public static FilterOperator fromString(final String operator) {
         final String filter = operator.trim().toLowerCase();
         for (FilterOperator filterOperator : FilterOperator.values()) {
@@ -93,5 +87,21 @@ public enum FilterOperator {
             }
         }
         throw new IllegalArgumentException(format("Unknown operator '%s'", operator));
+    }
+
+    /**
+     * Returns true if the given filter matches the filters on this FilterOperator
+     * @param filter the filter to check
+     * @return true if the given filter matches the filters on this FilterOperator
+     */
+    public boolean matches(final String filter) {
+        return filter != null && filters.contains(filter.trim().toLowerCase());
+    }
+
+    /**
+     * @return the value of this FilterOperator
+     */
+    public String val() {
+        return value;
     }
 }

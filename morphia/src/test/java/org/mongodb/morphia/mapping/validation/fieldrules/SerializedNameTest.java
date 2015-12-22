@@ -15,19 +15,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class SerializedNameTest extends TestBase {
-    public static class E extends TestEntity {
-        @Serialized("changedName")
-        private final byte[] b = "foo".getBytes();
-
-        @PreSave
-        public void preSave(final DBObject o) {
-            document = o.toString();
-        }
-
-        @Transient
-        private String document;
-    }
-
     @Test
     public void testCheck() {
 
@@ -35,5 +22,17 @@ public class SerializedNameTest extends TestBase {
         getDs().save(e);
 
         Assert.assertTrue(e.document.contains("changedName"));
+    }
+
+    public static class E extends TestEntity {
+        @Serialized("changedName")
+        private final byte[] b = "foo".getBytes();
+        @Transient
+        private String document;
+
+        @PreSave
+        public void preSave(final DBObject o) {
+            document = o.toString();
+        }
     }
 }

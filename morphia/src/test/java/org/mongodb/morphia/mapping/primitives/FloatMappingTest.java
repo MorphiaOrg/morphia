@@ -12,21 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FloatMappingTest extends TestBase {
-    private static class Floats {
-        @Id
-        private ObjectId id;
-        private final List<Float[]> listWrapperArray = new ArrayList<Float[]>();
-        private final List<float[]> listPrimitiveArray = new ArrayList<float[]>();
-        private final List<Float> listWrapper = new ArrayList<Float>();
-        private float singlePrimitive;
-        private Float singleWrapper;
-        private float[] primitiveArray;
-        private Float[] wrapperArray;
-        private float[][] nestedPrimitiveArray;
-        private Float[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Floats.class);
@@ -57,5 +42,19 @@ public class FloatMappingTest extends TestBase {
 
         Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+    }
+
+    private static class Floats {
+        private final List<Float[]> listWrapperArray = new ArrayList<Float[]>();
+        private final List<float[]> listPrimitiveArray = new ArrayList<float[]>();
+        private final List<Float> listWrapper = new ArrayList<Float>();
+        @Id
+        private ObjectId id;
+        private float singlePrimitive;
+        private Float singleWrapper;
+        private float[] primitiveArray;
+        private Float[] wrapperArray;
+        private float[][] nestedPrimitiveArray;
+        private Float[][] nestedWrapperArray;
     }
 }

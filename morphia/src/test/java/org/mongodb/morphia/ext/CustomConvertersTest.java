@@ -1,23 +1,21 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 
 package org.mongodb.morphia.ext;
 
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -35,19 +33,114 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.converters.IntegerConverter;
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.converters.TypeConverter;
+import org.mongodb.morphia.entities.EntityWithListsAndArrays;
 import org.mongodb.morphia.mapping.MappedField;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 
 /**
  * @author Scott Hernandez
  */
 public class CustomConvertersTest extends TestBase {
+
+    @Test
+    public void customerIteratorConverter() {
+        getMorphia().getMapper().getConverters().addConverter(ListToMapConvert.class);
+        getMorphia().getMapper().getOptions().setStoreEmpties(false);
+        getMorphia().getMapper().getOptions().setStoreNulls(false);
+        getMorphia().map(EntityWithListsAndArrays.class);
+        final EntityWithListsAndArrays entity = new EntityWithListsAndArrays();
+        entity.setListOfStrings(Arrays.asList("string 1", "string 2", "string 3"));
+        getDs().save(entity);
+
+        final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
+        Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
+
+        final EntityWithListsAndArrays loaded = getDs().createQuery(EntityWithListsAndArrays.class).get();
+        Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
+    }
+
+    @Test
+    public void mimeType() throws UnknownHostException, MimeTypeParseException {
+        getMorphia().map(MimeTyped.class);
+        getDs().ensureIndexes();
+        MimeTyped entity = new MimeTyped();
+        entity.name = "test name";
+        entity.mimeType = new MimeType("text/plain"); //MimeTypeParseException
+        final DBObject dbObject = getMorphia().toDBObject(entity);
+        assertEquals("text/plain", dbObject.get("mimeType"));
+
+        getDs().save(entity); // FAILS WITH ERROR HERE
+    }
+
+    @Before
+    public void setup() {
+        getMorphia().map(MyEntity.class, ValueObject.class);
+    }
+
+    @Test
+    public void shouldUseSuppliedConverterToEncodeAndDecodeObject() {
+        // given
+        getMorphia().map(CharEntity.class);
+
+        // when
+        getDs().save(new CharEntity());
+
+        // then check the representation in the database is a number
+        final BasicDBObject dbObj = (BasicDBObject) getDs().getCollection(CharEntity.class).findOne();
+        assertThat(dbObj.get("c"), is(instanceOf(int.class)));
+        assertThat(dbObj.getInt("c"), is((int) 'a'));
+
+        // then check CharEntity can be decoded from the database
+        final CharEntity ce = getDs().find(CharEntity.class).get();
+        assertThat(ce.c, is(notNullValue()));
+        assertThat(ce.c.charValue(), is('a'));
+    }
+
+    /**
+     * This test is green when {@link MyEntity#valueObject} is annotated with {@code @Property}, as in this case the field is not
+     * serialized
+     * at all. However, the bson encoder would fail to encode the object of type ValueObject (as shown by {@link
+     * #testFullBSONSerialization()}).
+     */
+    @Test
+    public void testDBObjectSerialization() {
+        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
+        final DBObject dbObject = getMorphia().toDBObject(entity);
+
+        assertEquals(new BasicDBObject("_id", 1L).append("valueObject", 2L), dbObject);
+        assertEquals(entity, getMorphia().fromDBObject(MyEntity.class, dbObject));
+    }
+
+    /**
+     * This test shows the full serialization, including bson encoding/decoding.
+     */
+    @Test
+    public void testFullBSONSerialization() {
+        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
+        final DBObject dbObject = getMorphia().toDBObject(entity);
+
+        final byte[] data = new DefaultDBEncoder().encode(dbObject);
+
+        final DBObject decoded = new DefaultDBDecoder().decode(data, (DBCollection) null);
+        final MyEntity actual = getMorphia().fromDBObject(MyEntity.class, decoded);
+        assertEquals(entity, actual);
+    }
 
     static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
         public CharacterToByteConverter() {
@@ -73,27 +166,15 @@ public class CustomConvertersTest extends TestBase {
 
     @Converters(CharacterToByteConverter.class)
     static class CharEntity {
+        private final Character c = 'a';
         @Id
         private ObjectId id = new ObjectId();
-        private final Character c = 'a';
-    }
-
-    @Test
-    public void testIt() {
-        getMorphia().map(CharEntity.class);
-
-        getDs().save(new CharEntity());
-        final CharEntity ce = getDs().find(CharEntity.class).get();
-        Assert.assertNotNull(ce.c);
-        assertEquals('a', ce.c.charValue());
-
-        final BasicDBObject dbObj = (BasicDBObject) getDs().getCollection(CharEntity.class).findOne();
-        Assert.assertTrue(dbObj.getInt("c") == (int) 'a');
     }
 
     /**
      * This test shows an issue with an {@code @Embedded} class A inheriting from an {@code @Embedded} class B that both have a Converter
-     * assigned (A has AConverter, B has BConverter). <p> When an object (here MyEntity) has a property/field of type A and is deserialized,
+     * assigned (A has AConverter, B has BConverter). <p> When an object (here MyEntity) has a property/field of type A and is
+     * deserialized,
      * the deserialization fails with a "org.mongodb.morphia.mapping.MappingException: No usable constructor for A" . </p>
      */
     @Entity(noClassnameStored = true)
@@ -156,6 +237,15 @@ public class CustomConvertersTest extends TestBase {
     @Converters(ValueObject.BConverter.class)
     private static class ValueObject {
 
+        private long value;
+
+        public ValueObject() {
+        }
+
+        public ValueObject(final long value) {
+            this.value = value;
+        }
+
         static class BConverter extends TypeConverter implements SimpleValueConverter {
 
             public BConverter() {
@@ -166,6 +256,13 @@ public class CustomConvertersTest extends TestBase {
                 super(clazz);
             }
 
+            protected ValueObject create(final Long source) {
+                return new ValueObject(source);
+            }            @Override
+            protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
+                return c.isAssignableFrom(ValueObject.class);
+            }
+
             @Override
             public ValueObject decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
                 if (fromDBObject == null) {
@@ -174,9 +271,7 @@ public class CustomConvertersTest extends TestBase {
                 return create((Long) fromDBObject);
             }
 
-            protected ValueObject create(final Long source) {
-                return new ValueObject(source);
-            }
+
 
             @Override
             public Long encode(final Object value, final MappedField optionalExtraInfo) {
@@ -187,19 +282,6 @@ public class CustomConvertersTest extends TestBase {
                 return source.value;
             }
 
-            @Override
-            protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
-                return c.isAssignableFrom(ValueObject.class);
-            }
-        }
-
-        private long value;
-
-        public ValueObject() {
-        }
-
-        public ValueObject(final long value) {
-            this.value = value;
         }
 
         @Override
@@ -232,40 +314,6 @@ public class CustomConvertersTest extends TestBase {
 
     }
 
-    @Before
-    public void setup() {
-        getMorphia().map(MyEntity.class, ValueObject.class);
-    }
-
-    /**
-     * This test is green when {@link MyEntity#valueObject} is annotated with {@code @Property}, as in this case the field is not serialized
-     * at all. However, the bson encoder would fail to encode the object of type ValueObject (as shown by {@link
-     * #testFullBSONSerialization()}).
-     */
-    @Test
-    public void testDBObjectSerialization() {
-        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-
-        assertEquals(new BasicDBObject("_id", 1L).append("valueObject", 2L), dbObject);
-        assertEquals(entity, getMorphia().fromDBObject(MyEntity.class, dbObject));
-    }
-
-    /**
-     * This test shows the full serialization, including bson encoding/decoding.
-     */
-    @Test
-    public void testFullBSONSerialization() {
-        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-
-        final byte[] data = new DefaultDBEncoder().encode(dbObject);
-
-        final DBObject decoded = new DefaultDBDecoder().decode(data, (DBCollection) null);
-        final MyEntity actual = getMorphia().fromDBObject(MyEntity.class, decoded);
-        assertEquals(entity, actual);
-    }
-
     @Entity
     @Converters(MimeTypeConverter.class)
     public static class MimeTyped {
@@ -295,17 +343,40 @@ public class CustomConvertersTest extends TestBase {
         }
     }
 
-    @Test
-    public void mimeType() throws UnknownHostException, MimeTypeParseException {
-        getMorphia().map(MimeTyped.class);
-        getDs().ensureIndexes();
-        MimeTyped entity = new MimeTyped();
-        entity.name = "test name";
-        entity.mimeType = new MimeType("text/plain"); //MimeTypeParseException
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-        assertEquals("text/plain", dbObject.get("mimeType"));
+    @SuppressWarnings("unchecked")
+    private static class ListToMapConvert extends TypeConverter {
+        @Override
+        protected boolean isSupported(final Class c, final MappedField mf) {
+            return (mf != null) && mf.isMultipleValues() && !mf.isMap();
+        }
 
-        getDs().save(entity); // FAILS WITH ERROR HERE
+        @Override
+        public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+            if (fromDBObject != null) {
+                Map<String, Object> map = (Map<String, Object>) fromDBObject;
+                List<Object> list = new ArrayList<Object>(map.size());
+                for (Entry<String, Object> entry : map.entrySet()) {
+                    list.add(Integer.parseInt(entry.getKey()), entry.getValue());
+                }
+
+                return list;
+            }
+            return null;
+        }
+
+        @Override
+        public Object encode(final Object value, final MappedField optionalExtraInfo) {
+            if (value != null) {
+                Map<String, Object> map = new LinkedHashMap<String, Object>();
+                List<Object> list = (List<Object>) value;
+                for (int i = 0; i < list.size(); i++) {
+                    map.put(i + "", list.get(i));
+                }
+                return map;
+            }
+
+            return null;
+        }
     }
 }
 

@@ -17,17 +17,27 @@ import org.mongodb.morphia.testutil.TestEntity;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class PropertyAndEmbeddedTest extends TestBase {
+    @Test(expected = ConstraintViolationException.class)
+    public void testCheck() {
+
+        final E e = new E();
+        getDs().save(e);
+
+        Assert.assertTrue(e.document.contains("myFunkyR"));
+
+        getMorphia().map(E2.class);
+    }
+
     public static class E extends TestEntity {
         @Embedded("myFunkyR")
         private R r = new R();
+        @Transient
+        private String document;
 
         @PreSave
         public void preSave(final DBObject o) {
             document = o.toString();
         }
-
-        @Transient
-        private String document;
     }
 
     public static class E2 extends TestEntity {
@@ -38,16 +48,5 @@ public class PropertyAndEmbeddedTest extends TestBase {
 
     public static class R {
         private String foo = "bar";
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testCheck() {
-
-        final E e = new E();
-        getDs().save(e);
-
-        Assert.assertTrue(e.document.contains("myFunkyR"));
-
-        getMorphia().map(E2.class);
     }
 }

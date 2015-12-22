@@ -14,58 +14,6 @@ import java.util.Set;
 
 
 public class TestSingleToMultipleConversion extends TestBase {
-    @Embedded
-    private static class HasString {
-        private String s = "foo";
-    }
-
-    @Entity(value = "B", noClassnameStored = true)
-    private static class HasEmbeddedStringy {
-        @Id
-        private ObjectId id;
-        private HasString hs = new HasString();
-    }
-
-    @Entity(value = "B", noClassnameStored = true)
-    private static class HasEmbeddedStringyArray {
-        @Id
-        private ObjectId id;
-        @AlsoLoad("hs")
-        private HasString[] hss;
-    }
-
-    @Entity(value = "B", noClassnameStored = true)
-    private static class HasEmbeddedStringySet {
-        @Id
-        private ObjectId id;
-        @AlsoLoad("hs")
-        private Set<HasString> hss;
-    }
-
-
-    @Entity(value = "A", noClassnameStored = true)
-    private static class HasSingleString {
-        @Id
-        private ObjectId id;
-        private String s = "foo";
-    }
-
-    @Entity(value = "A", noClassnameStored = true)
-    private static class HasManyStringsArray {
-        @Id
-        private ObjectId id;
-        @AlsoLoad("s")
-        private String[] strings;
-    }
-
-    @Entity(value = "A", noClassnameStored = true)
-    private static class HasManyStringsList {
-        @Id
-        private ObjectId id;
-        @AlsoLoad("s")
-        private List<String> strings;
-    }
-
     @Test
     public void testBasicType() throws Exception {
         getDs().delete(getDs().createQuery(HasSingleString.class));
@@ -97,5 +45,56 @@ public class TestSingleToMultipleConversion extends TestBase {
         Assert.assertNotNull(has2);
         Assert.assertNotNull(has2.hss);
         Assert.assertEquals(1, has2.hss.size());
+    }
+
+    @Embedded
+    private static class HasString {
+        private String s = "foo";
+    }
+
+    @Entity(value = "B", noClassnameStored = true)
+    private static class HasEmbeddedStringy {
+        @Id
+        private ObjectId id;
+        private HasString hs = new HasString();
+    }
+
+    @Entity(value = "B", noClassnameStored = true)
+    private static class HasEmbeddedStringyArray {
+        @Id
+        private ObjectId id;
+        @AlsoLoad("hs")
+        private HasString[] hss;
+    }
+
+    @Entity(value = "B", noClassnameStored = true)
+    private static class HasEmbeddedStringySet {
+        @Id
+        private ObjectId id;
+        @AlsoLoad("hs")
+        private Set<HasString> hss;
+    }
+
+    @Entity(value = "A", noClassnameStored = true)
+    private static class HasSingleString {
+        @Id
+        private ObjectId id;
+        private String s = "foo";
+    }
+
+    @Entity(value = "A", noClassnameStored = true)
+    private static class HasManyStringsArray {
+        @Id
+        private ObjectId id;
+        @AlsoLoad("s")
+        private String[] strings;
+    }
+
+    @Entity(value = "A", noClassnameStored = true)
+    private static class HasManyStringsList {
+        @Id
+        private ObjectId id;
+        @AlsoLoad("s")
+        private List<String> strings;
     }
 }

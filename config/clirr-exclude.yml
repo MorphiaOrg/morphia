@@ -1,0 +1,18 @@
+---
+differenceTypes: []
+
+packages:
+- net.sf.cglib.asm  
+- net.sf.cglib.asm.signature
+- net.sf.cglib.beans
+- net.sf.cglib.core
+- net.sf.cglib.proxy
+- net.sf.cglib.reflect
+- net.sf.cglib.transform
+- net.sf.cglib.transform.impl
+- net.sf.cglib.util
+
+
+members:
+ org.mongodb.morphia.annotations.IndexOptions:
+  - userDefined()

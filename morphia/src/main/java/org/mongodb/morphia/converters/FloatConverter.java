@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class FloatConverter extends TypeConverter implements SimpleValueConverter {
 
+    /**
+     * Creates the Converter.
+     */
     public FloatConverter() {
         super(float.class, Float.class, float[].class, Float[].class);
     }

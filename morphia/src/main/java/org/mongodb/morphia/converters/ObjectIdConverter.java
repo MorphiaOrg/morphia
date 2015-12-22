@@ -12,6 +12,9 @@ import org.mongodb.morphia.mapping.MappedField;
  */
 public class ObjectIdConverter extends TypeConverter implements SimpleValueConverter {
 
+    /**
+     * Creates the Converter.
+     */
     public ObjectIdConverter() {
         super(ObjectId.class);
     }
@@ -26,6 +29,6 @@ public class ObjectIdConverter extends TypeConverter implements SimpleValueConve
             return val;
         }
 
-        return new ObjectId(val.toString()); 
+        return new ObjectId(val.toString());
     }
 }

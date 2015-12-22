@@ -4,115 +4,128 @@ package org.mongodb.morphia.logging.jdk;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * Provides a logger using the JDK logging facilities.
+ */
 public class JDKLogger implements org.mongodb.morphia.logging.Logger {
     private final transient Logger logger;
 
+    /**
+     * Creates a logger.
+     *
+     * @param c the class to use for naming this logger.
+     */
     public JDKLogger(final Class c) {
         logger = Logger.getLogger(c.getName());
     }
 
-    public boolean isTraceEnabled() {
-        return logger.isLoggable(Level.FINER);
-    }
-
-    public void trace(final String msg) {
-        log(Level.FINER, msg);
-    }
-
-    public void trace(final String format, final Object... arg) {
-        log(Level.FINER, format, arg);
-    }
-
-    public void trace(final String msg, final Throwable t) {
-        log(Level.FINER, msg, t);
-    }
-
-    public boolean isDebugEnabled() {
-        return logger.isLoggable(Level.FINE);
-    }
-
+    @Override
     public void debug(final String msg) {
         log(Level.FINE, msg);
     }
 
+    @Override
     public void debug(final String format, final Object... arg) {
         log(Level.FINE, format, arg);
     }
 
+    @Override
     public void debug(final String msg, final Throwable t) {
         log(Level.FINE, msg, t);
 
     }
 
-    public boolean isInfoEnabled() {
-        return logger.isLoggable(Level.INFO);
-    }
-
-    public void info(final String msg) {
-        log(Level.INFO, msg);
-    }
-
-    public void info(final String format, final Object... arg) {
-        log(Level.INFO, format, arg);
-    }
-
-    public void info(final String msg, final Throwable t) {
-        log(Level.INFO, msg, t);
-    }
-
-    public boolean isWarningEnabled() {
-        return logger.isLoggable(Level.WARNING);
-    }
-
-    public void warning(final String msg) {
-        log(Level.WARNING, msg);
-    }
-
-    public void warning(final String format, final Object... arg) {
-        log(Level.WARNING, format, arg);
-    }
-
-    public void warning(final String msg, final Throwable t) {
-        log(Level.WARNING, msg, t);
-    }
-
-    public boolean isErrorEnabled() {
-        return logger.isLoggable(Level.SEVERE);
-    }
-
+    @Override
     public void error(final String msg) {
         log(Level.SEVERE, msg);
 
     }
 
+    @Override
     public void error(final String format, final Object... arg) {
         log(Level.SEVERE, format, arg);
 
     }
 
+    @Override
     public void error(final String msg, final Throwable t) {
         log(Level.SEVERE, msg, t);
     }
 
-    protected void log(final Level l, final String m, final Throwable t) {
-        if (logger.isLoggable(l)) {
-            final String[] callerInfo = getCaller(new Throwable());
-            logger.logp(l, callerInfo[0], callerInfo[1], m, t);
-        }
+    @Override
+    public void info(final String msg) {
+        log(Level.INFO, msg);
     }
 
-    protected void log(final Level l, final String f, final Object... a) {
-        if (logger.isLoggable(l)) {
-            final String[] callerInfo = getCaller(new Throwable());
-            logger.logp(l, callerInfo[0], callerInfo[1], f, a);
-        }
+    @Override
+    public void info(final String format, final Object... arg) {
+        log(Level.INFO, format, arg);
+    }
+
+    @Override
+    public void info(final String msg, final Throwable t) {
+        log(Level.INFO, msg, t);
+    }
+
+    @Override
+    public boolean isDebugEnabled() {
+        return logger.isLoggable(Level.FINE);
+    }
+
+    @Override
+    public boolean isErrorEnabled() {
+        return logger.isLoggable(Level.SEVERE);
+    }
+
+    @Override
+    public boolean isInfoEnabled() {
+        return logger.isLoggable(Level.INFO);
+    }
+
+    @Override
+    public boolean isTraceEnabled() {
+        return logger.isLoggable(Level.FINER);
+    }
+
+    @Override
+    public boolean isWarningEnabled() {
+        return logger.isLoggable(Level.WARNING);
+    }
+
+    @Override
+    public void trace(final String msg) {
+        log(Level.FINER, msg);
+    }
+
+    @Override
+    public void trace(final String format, final Object... arg) {
+        log(Level.FINER, format, arg);
+    }
+
+    @Override
+    public void trace(final String msg, final Throwable t) {
+        log(Level.FINER, msg, t);
+    }
+
+    @Override
+    public void warning(final String msg) {
+        log(Level.WARNING, msg);
+    }
+
+    @Override
+    public void warning(final String format, final Object... arg) {
+        log(Level.WARNING, format, arg);
+    }
+
+    @Override
+    public void warning(final String msg, final Throwable t) {
+        log(Level.WARNING, msg, t);
     }
 
     /**
      * returns an array (class, method) of the caller before our logger class in the stack
      */
-    protected String[] getCaller(final Throwable t) {
+    protected String[] getCaller() {
         final StackTraceElement[] stack = (new Throwable()).getStackTrace();
         final String loggerClassname = getClass().getName();
 
@@ -144,5 +157,19 @@ public class JDKLogger implements org.mongodb.morphia.logging.Logger {
             i++;
         }
         return new String[]{"", ""};
+    }
+
+    protected void log(final Level l, final String f, final Object... a) {
+        if (logger.isLoggable(l)) {
+            final String[] callerInfo = getCaller();
+            logger.logp(l, callerInfo[0], callerInfo[1], f, a);
+        }
+    }
+
+    protected void log(final Level l, final String m, final Throwable t) {
+        if (logger.isLoggable(l)) {
+            final String[] callerInfo = getCaller();
+            logger.logp(l, callerInfo[0], callerInfo[1], m, t);
+        }
     }
 }

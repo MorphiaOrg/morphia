@@ -14,25 +14,20 @@ import org.mongodb.morphia.testutil.TestEntity;
  * @author josephpachod
  */
 public class ReferencesInEmbeddedTest extends TestBase {
-    @Entity
-    private static class Container extends TestEntity {
-        private String name;
-        @Embedded
-        private EmbedContainingReference embed;
-    }
+    @Test
+    public void testLazyReferencesInEmbedded() throws Exception {
+        final Container container = new Container();
+        container.name = "lazy";
+        getDs().save(container);
+        final ReferencedEntity referencedEntity = new ReferencedEntity();
+        getDs().save(referencedEntity);
 
-    private static class EmbedContainingReference {
-        private String name;
-        @Reference
-        private ReferencedEntity ref;
+        container.embed = new EmbedContainingReference();
+        container.embed.lazyRef = referencedEntity;
+        getDs().save(container);
 
-        @Reference(lazy = true)
-        private ReferencedEntity lazyRef;
-    }
-
-    @Entity
-    public static class ReferencedEntity extends TestEntity {
-        private String foo;
+        final Container reloadedContainer = getDs().get(container);
+        Assert.assertNotNull(reloadedContainer);
     }
 
     @Test
@@ -57,19 +52,24 @@ public class ReferencesInEmbeddedTest extends TestBase {
         Assert.assertNotNull(reloadedContainer);
     }
 
-    @Test
-    public void testLazyReferencesInEmbedded() throws Exception {
-        final Container container = new Container();
-        container.name = "lazy";
-        getDs().save(container);
-        final ReferencedEntity referencedEntity = new ReferencedEntity();
-        getDs().save(referencedEntity);
+    @Entity
+    private static class Container extends TestEntity {
+        private String name;
+        @Embedded
+        private EmbedContainingReference embed;
+    }
 
-        container.embed = new EmbedContainingReference();
-        container.embed.lazyRef = referencedEntity;
-        getDs().save(container);
+    private static class EmbedContainingReference {
+        private String name;
+        @Reference
+        private ReferencedEntity ref;
 
-        final Container reloadedContainer = getDs().get(container);
-        Assert.assertNotNull(reloadedContainer);
+        @Reference(lazy = true)
+        private ReferencedEntity lazyRef;
+    }
+
+    @Entity
+    public static class ReferencedEntity extends TestEntity {
+        private String foo;
     }
 }

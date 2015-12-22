@@ -1,31 +1,47 @@
-def configDir = new File(rootDir, 'config')
+ext.configDir = new File(rootDir, 'config')
+ext.slf4jVersion = '1.7.5'
+ext.simpleVersion = version.split('\\.')[0..1].join('.')
+ext.docVersion = version.split('\\.')[0..1].join('.') + '-SNAPSHOT'
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
 
 buildscript {
     repositories {
-        mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        jcenter()
         mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
-        classpath 'com.antwerkz.github:github-release-gradle-plugin:1.1.0'
+        classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.2'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:1.12.+'
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.4'
 }
 
-def slf4jVersion = '1.7.5'
 
-allprojects {
+configure(subprojects.findAll { it.name != 'util' }) {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'checkstyle'
     apply plugin: 'findbugs'
     apply plugin: 'jacoco'
+    apply plugin: 'optional-base'
+
+    group = 'org.mongodb.morphia'
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
 
     repositories {
         mavenCentral()
@@ -34,23 +50,9 @@ allprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.11'
+        testCompile 'junit:junit:4.12'
+        testCompile project(':util')
     }
-
-    configurations {
-        provided
-        provided.extendsFrom(compile)
-    }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
-
-    group = 'org.mongodb.morphia'
-    version = '0.109-SNAPSHOT'
-
-    sourceCompatibility = JavaVersion.VERSION_1_6
-    targetCompatibility = JavaVersion.VERSION_1_6
 
     project.archivesBaseName = "morphia-${project.name}"
 
@@ -58,40 +60,26 @@ allprojects {
         configurations.compile.each { File file -> println file }
     }
 
-
-    sourceSets.main.compileClasspath += configurations.provided
-    sourceSets.test.compileClasspath += configurations.provided
-    sourceSets.test.runtimeClasspath += configurations.provided
-
-    if (properties['xlint']) {
-        tasks.withType(Compile) {
-            options.compilerArgs << "-Xlint:unchecked"
-        }
-    }
-
-    project.ext.buildingWith = {
-        n -> project.hasProperty(n) && project.property(n).toBoolean()
-    }
-
-    javadoc {
-        classpath += configurations.provided
-    }
+    task testCoverage(dependsOn: check)
 
     checkstyle {
+        toolVersion = "6.7"
         configFile = new File("$configDir/checkstyle.xml")
-    }
-
-    checkstyleMain {
-        classpath += configurations.compile
-    }
-
-    checkstyleTest {
-        classpath += configurations.compile
     }
 
     findbugs {
         excludeFilter = new File("$configDir/findbugs-exclude.xml")
+        toolVersion = '3.0.0'
+        sourceSets = [sourceSets.main]
     }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled = project.buildingWith('xmlReports.enabled')
+            html.enabled = !project.buildingWith('xmlReports.enabled')
+        }
+    }
+
 
     tasks.withType(AbstractCompile) {
         options.encoding = 'ISO-8859-1'
@@ -105,6 +93,9 @@ allprojects {
             systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
         }
 
+        useJUnit {
+        }
+
         jacoco { enabled = false }
 
         beforeTest { descr ->
@@ -112,126 +103,40 @@ allprojects {
         }
     }
 
-    gradle.taskGraph.whenReady { taskGraph ->
-        if (taskGraph.hasTask(testCoverage)) {
-            tasks.withType(Test) { jacoco { enabled = true } }
-        }
-    }
-
-    task testCoverage(dependsOn: check)
-
-    tasks.withType(FindBugs) {
-        reports {
-            xml.enabled = project.buildingWith('xmlReports.enabled')
-            html.enabled = !project.buildingWith('xmlReports.enabled')
-        }
-    }
-
-    javadoc {
-        options.author = true
-        options.version = true
-        options.links 'http://docs.oracle.com/javase/6/docs/api/'
-        options.links 'http://api.mongodb.org/java/2.12/'
-    }
 
     test {
         // set heap size for the test JVM(s)
         minHeapSize = "256m"
         maxHeapSize = "512m"
-
-        // set JVM arguments for the test JVM(s)
-        jvmArgs '-XX:MaxPermSize=256m'
     }
 
-}
+    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest']) {}
 
-project(':morphia') {
-    archivesBaseName = 'morphia'
-
-    dependencies {
-        if (project.hasProperty('3.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "3.0.0-SNAPSHOT", changing: true
-            println "Building with the 3.x java driver"
-        } else if (project.hasProperty('2.x')) {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.3-SNAPSHOT", changing: true
-            println "Building with the 2.12.3 SNAPSHOT java driver"
-        } else {
-            compile group: "org.mongodb", name: "mongo-java-driver", version: "2.12.2"
-            println "Building with the 2.12 java driver"
-        }
-
-        provided 'cglib:cglib-nodep:[2.1_3,3.0)'
-        provided 'com.thoughtworks.proxytoys:proxytoys:1.0'
-        testCompile 'org.zeroturnaround:zt-exec:1.5'
-        testCompile 'com.jayway.awaitility:awaitility:1.5.0'
-        testCompile 'org.skyscreamer:jsonassert:1.2.3'
-    }
-}
-
-project(':logging-slf4j') {
-    dependencies {
-        compile project(':morphia')
-
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-    }
-}
-
-project(':validation') {
-    dependencies {
-        compile 'javax.validation:validation-api:1.0.0.GA'
-        compile project(':morphia')
-        compile project(':logging-slf4j')
-        testCompile 'org.hibernate:hibernate-validator:4.1.0.Final'
-        testCompile "org.slf4j:slf4j-jdk14:${slf4jVersion}"
-
-        if (System.getProperty('java.version').startsWith("1.5")) {
-            println "Including extra dependencies for the older JVM"
-
-            testCompile 'com.sun.xml.bind:jaxb-impl:2.2.4-1'
-            testCompile 'javax.xml.bind:jaxb-api:2.2.4'
-            testCompile 'javax.xml.soap:saaj-api:1.3.3'
+    gradle.taskGraph.whenReady { taskGraph ->
+        taskGraph.getAllTasks().each { task ->
+            javadoc {
+                options.encoding = "UTF-8"
+                options.tagletPath project(':util').sourceSets.main.output.classesDir
+                options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
+                options.author = true
+                options.version = true
+                options.links 'http://docs.oracle.com/javase/6/docs/api/'
+                options.links 'http://api.mongodb.org/java/3.0/'
+                title "Morphia ${simpleVersion} API"
+            }
         }
     }
 }
 
-project(':entityscanner-plug') {
-    dependencies {
-        compile('org.reflections:reflections:0.9.8') {
-            'servlet-api:javax.servlet'
-            'com.google.code.gson:gson'
-            'logback-classic:ch.qos.logback'
-            'xml-apis:xml-apis'
-            'com.google.guava:guava'
-        }
-        compile 'com.google.guava:guava:14.0.1'
-        compile('org.scannotation:scannotation:1.0.3') {
-            'javassist:javassist'
-        }
-        compile project(':morphia')
-        testCompile "org.slf4j:slf4j-simple:${slf4jVersion}"
-    }
+task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {
+    dependsOn = subprojects.tasks.clirr
+    reports = files((subprojects.findAll { it.clirr.enabled == true }).tasks.clirr.xmlReport)
 }
 
-project(':guice-plug') {
-    dependencies {
-        compile 'com.google.inject:guice:3.0'
-        compile project(':morphia')
-    }
+def buildingWith(n) {
+    project.hasProperty(n)
 }
 
-project(':no-proxy-deps-tests') {
-    sourceSets {
-        main {
-            output.classesDir '../morphia/build/classes/test'
-        }
-    }
-    dependencies {
-        compile project(':morphia')
-    }
-}
-
-apply from: 'gradle/ide-settings.gradle'
-apply from: 'gradle/maven-deployment.gradle'
 apply from: 'gradle/osgi-compatibility.gradle'
 apply from: 'gradle/release-process.gradle'
+apply from: 'gradle/docs.gradle'

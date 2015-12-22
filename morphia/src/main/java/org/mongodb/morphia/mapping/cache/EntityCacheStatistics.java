@@ -1,23 +1,19 @@
 package org.mongodb.morphia.mapping.cache;
 
 
-// note that it is not thread safe, currently it does not need to be.
+/**
+ * This class stores various statistics on an EntityCache
+ */
 public class EntityCacheStatistics {
     private int entities;
     private int hits;
     private int misses;
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + ": " + entities + " entities, " + hits + " hits, " + misses + " misses.";
-    }
-
-    public void reset() {
-        entities = 0;
-        hits = 0;
-        misses = 0;
-    }
-
+    /**
+     * Copies the statistics
+     *
+     * @return the copy
+     */
     public EntityCacheStatistics copy() {
         final EntityCacheStatistics copy = new EntityCacheStatistics();
         copy.entities = entities;
@@ -26,15 +22,38 @@ public class EntityCacheStatistics {
         return copy;
     }
 
+    /**
+     * Increments the entity count
+     */
+    public void incEntities() {
+        entities++;
+    }
+
+    /**
+     * Increments the hit count
+     */
     public void incHits() {
         hits++;
     }
 
+    /**
+     * Increments the miss count
+     */
     public void incMisses() {
         misses++;
     }
 
-    public void incEntities() {
-        entities++;
+    /**
+     * Clears the statistics
+     */
+    public void reset() {
+        entities = 0;
+        hits = 0;
+        misses = 0;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + entities + " entities, " + hits + " hits, " + misses + " misses.";
     }
 }

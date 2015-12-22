@@ -15,12 +15,12 @@ import static org.mongodb.morphia.query.FilterOperator.EQUAL;
 
 public class AllOperationValidatorTest {
     @Test
-    public void shouldAllowAllOperatorForListValues() {
+    public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
 
         // when
-        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, asList(1, 2), validationFailures);
+        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, new int[0], validationFailures);
 
         // then
         assertThat(validationApplied, is(true));
@@ -41,6 +41,19 @@ public class AllOperationValidatorTest {
     }
 
     @Test
+    public void shouldAllowAllOperatorForListValues() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, asList(1, 2), validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
     public void shouldAllowAllOperatorForMapValues() {
         // given
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
@@ -51,33 +64,6 @@ public class AllOperationValidatorTest {
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldAllowAllOperatorForIterableMapAndArrayValues() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, new int[0], validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldGiveAValidationErrorForAValueThatIsNotAnArrayIterableOrMap() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-
-        // when
-        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, "invalid value", validationFailures);
-
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).toString(), containsString("should be an array, an Iterable, or a Map"));
     }
 
     @Test
@@ -92,6 +78,20 @@ public class AllOperationValidatorTest {
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(1));
         assertThat(validationFailures.get(0).toString(), containsString("value cannot be null"));
+    }
+
+    @Test
+    public void shouldGiveAValidationErrorForAValueThatIsNotAnArrayIterableOrMap() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+
+        // when
+        boolean validationApplied = AllOperationValidator.getInstance().apply(null, ALL, "invalid value", validationFailures);
+
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(1));
+        assertThat(validationFailures.get(0).toString(), containsString("should be an array, an Iterable, or a Map"));
     }
 
     @Test

@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping.validation.fieldrules;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
@@ -23,42 +22,7 @@ import java.util.List;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class EmbeddedAndSerializableTest extends TestBase {
-    public static class E extends TestEntity {
-        @Embedded
-        @Serialized
-        private R r;
-    }
-
-    public static class R {
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testCheck() {
-        getMorphia().map(E.class);
-    }
-
-    @Entity
-    public static class Project {
-        @Id
-        private ObjectId id;
-        @Embedded
-        private Period period;
-
-        private List<Period> periods = new ArrayList<Period>();
-    }
-
-    @Embedded
-    public static class Period implements Iterable<Date> {
-        private Date from = new Date();
-        private Date until = new Date();
-
-        public Iterator<Date> iterator() {
-            return null;
-        }
-    }
-
     @Test
-    @Ignore("https://github.com/mongodb/morphia/issues/580")
     public void embedded() {
         getMorphia().map(Project.class, Period.class);
 
@@ -79,8 +43,44 @@ public class EmbeddedAndSerializableTest extends TestBase {
         compare(project.period, project1.period);
     }
 
+    @Test(expected = ConstraintViolationException.class)
+    public void testCheck() {
+        getMorphia().map(E.class);
+    }
+
     private void compare(final Period original, final Period loaded) {
         Assert.assertEquals(original.from, loaded.from);
         Assert.assertEquals(original.until, loaded.until);
+    }
+
+    public static class E extends TestEntity {
+        @Embedded
+        @Serialized
+        private R r;
+    }
+
+    public static class R {
+    }
+
+    @Entity
+    public static class Project {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private Period period;
+
+        @Embedded
+        private List<Period> periods = new ArrayList<Period>();
+    }
+
+    @Embedded
+    public static class Period implements Iterable<Date> {
+        private Date from = new Date();
+        private Date until = new Date();
+
+        @Override
+        public Iterator<Date> iterator() {
+            return null;
+        }
     }
 }

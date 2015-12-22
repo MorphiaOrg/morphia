@@ -20,14 +20,62 @@ import java.io.Serializable;
  * @author scotthernandez
  */
 public class TestMapper extends TestBase {
+    @Test
+    public void serializableId() throws Exception {
+        final CustomId cId = new CustomId();
+        cId.id = new ObjectId();
+        cId.type = "banker";
+
+        final UsesCustomIdObject object = new UsesCustomIdObject();
+        object.id = cId;
+        object.text = "hllo";
+        getDs().save(object);
+    }
+
+    @Test
+    public void singleLookup() throws Exception {
+        A.loadCount = 0;
+        final A a = new A();
+        HoldsMultipleA holder = new HoldsMultipleA();
+        holder.a1 = a;
+        holder.a2 = a;
+        getDs().save(a, holder);
+        holder = getDs().get(HoldsMultipleA.class, holder.id);
+        Assert.assertEquals(1, A.loadCount);
+        Assert.assertTrue(holder.a1 == holder.a2);
+    }
+
+    @Test
+    public void singleProxy() throws Exception {
+        // TODO us: exclusion does not work properly with maven + junit4
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        A.loadCount = 0;
+        final A a = new A();
+        HoldsMultipleALazily holder = new HoldsMultipleALazily();
+        holder.a1 = a;
+        holder.a2 = a;
+        holder.a3 = a;
+        getDs().save(a, holder);
+        Assert.assertEquals(0, A.loadCount);
+        holder = getDs().get(HoldsMultipleALazily.class, holder.id);
+        Assert.assertNotNull(holder.a2);
+        Assert.assertEquals(1, A.loadCount);
+        Assert.assertFalse(holder.a1 == holder.a2);
+        // FIXME currently not guaranteed:
+        // Assert.assertTrue(holder.a1 == holder.a3);
+
+        // A.loadCount=0;
+        // Assert.assertEquals(holder.a1.getId(), holder.a2.getId());
+
+    }
+
     public static class A {
         private static int loadCount;
         @Id
         private ObjectId id;
-
-        String getId() {
-            return id.toString();
-        }
 
         @PostLoad
         protected void postConstruct() {
@@ -36,6 +84,10 @@ public class TestMapper extends TestBase {
             }
 
             loadCount++;
+        }
+
+        String getId() {
+            return id.toString();
         }
     }
 
@@ -157,58 +209,6 @@ public class TestMapper extends TestBase {
         public void setText(final String text) {
             this.text = text;
         }
-    }
-
-    @Test
-    public void singleLookup() throws Exception {
-        A.loadCount = 0;
-        final A a = new A();
-        HoldsMultipleA holder = new HoldsMultipleA();
-        holder.a1 = a;
-        holder.a2 = a;
-        getDs().save(a, holder);
-        holder = getDs().get(HoldsMultipleA.class, holder.id);
-        Assert.assertEquals(1, A.loadCount);
-        Assert.assertTrue(holder.a1 == holder.a2);
-    }
-
-    @Test
-    public void singleProxy() throws Exception {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
-
-        A.loadCount = 0;
-        final A a = new A();
-        HoldsMultipleALazily holder = new HoldsMultipleALazily();
-        holder.a1 = a;
-        holder.a2 = a;
-        holder.a3 = a;
-        getDs().save(a, holder);
-        Assert.assertEquals(0, A.loadCount);
-        holder = getDs().get(HoldsMultipleALazily.class, holder.id);
-        Assert.assertNotNull(holder.a2);
-        Assert.assertEquals(1, A.loadCount);
-        Assert.assertFalse(holder.a1 == holder.a2);
-        // FIXME currently not guaranteed:
-        // Assert.assertTrue(holder.a1 == holder.a3);
-
-        // A.loadCount=0;
-        // Assert.assertEquals(holder.a1.getId(), holder.a2.getId());
-
-    }
-
-    @Test
-    public void serializableId() throws Exception {
-        final CustomId cId = new CustomId();
-        cId.id = new ObjectId();
-        cId.type = "banker";
-
-        final UsesCustomIdObject object = new UsesCustomIdObject();
-        object.id = cId;
-        object.text = "hllo";
-        getDs().save(object);
     }
 
 }

@@ -16,6 +16,21 @@ import java.util.Map;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class DuplicatePropertyNameTest extends TestBase {
+    @Test(expected = ConstraintViolationException.class)
+    public void testDuplicatedPropertyNameDifferentType() throws Exception {
+        getMorphia().map(DuplicatedPropertyName2.class);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testDuplicatedPropertyNameSameType() throws Exception {
+        getMorphia().map(DuplicatedPropertyName.class);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testDuplicatedPropertyNameShadowedFields() throws Exception {
+        getMorphia().map(Extends.class);
+    }
+
     @Entity
     public static class DuplicatedPropertyName {
         @Id
@@ -45,21 +60,6 @@ public class DuplicatePropertyNameTest extends TestBase {
 
     public static class Extends extends Super {
         private String foo;
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testDuplicatedPropertyNameSameType() throws Exception {
-        getMorphia().map(DuplicatedPropertyName.class);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testDuplicatedPropertyNameDifferentType() throws Exception {
-        getMorphia().map(DuplicatedPropertyName2.class);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testDuplicatedPropertyNameShadowedFields() throws Exception {
-        getMorphia().map(Extends.class);
     }
 
 }

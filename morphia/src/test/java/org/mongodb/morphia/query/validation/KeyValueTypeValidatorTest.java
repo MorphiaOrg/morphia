@@ -17,24 +17,11 @@ public class KeyValueTypeValidatorTest {
         ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
         // when
         boolean validationApplied = KeyValueTypeValidator.getInstance().apply(Integer.class,
-                                                                              new Key<Number>(Integer.class, new ObjectId()),
+                                                                              new Key<Number>(Integer.class, "Integer", new ObjectId()),
                                                                               validationFailures);
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(0));
-    }
-
-    @Test
-    public void shouldRejectTypeThatDoesNotMatchKeyKindWhenValueIsAKey() {
-        // given
-        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
-        // when
-        boolean validationApplied = KeyValueTypeValidator.getInstance().apply(String.class,
-                                                                              new Key<Number>(Integer.class, new ObjectId()),
-                                                                              validationFailures);
-        // then
-        assertThat(validationApplied, is(true));
-        assertThat(validationFailures.size(), is(1));
     }
 
     @Test
@@ -46,6 +33,19 @@ public class KeyValueTypeValidatorTest {
         // then
         assertThat(validationApplied, is(false));
         assertThat(validationFailures.size(), is(0));
+    }
+
+    @Test
+    public void shouldRejectTypeThatDoesNotMatchKeyKindWhenValueIsAKey() {
+        // given
+        ArrayList<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        // when
+        boolean validationApplied = KeyValueTypeValidator.getInstance().apply(String.class,
+                                                                              new Key<Number>(Integer.class, "Integer", new ObjectId()),
+                                                                              validationFailures);
+        // then
+        assertThat(validationApplied, is(true));
+        assertThat(validationFailures.size(), is(1));
     }
 
 }

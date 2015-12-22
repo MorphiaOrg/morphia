@@ -13,26 +13,6 @@ import org.mongodb.morphia.testutil.TestEntity;
  */
 public class VersionMisuseTest extends TestBase {
 
-    public static class Fail1 extends TestEntity {
-        @Version
-        private long hubba = 1;
-    }
-
-    public static class Fail2 extends TestEntity {
-        @Version
-        private Long hubba = 1L;
-    }
-
-    public static class OK1 extends TestEntity {
-        @Version
-        private long hubba;
-    }
-
-    public static class OK2 extends TestEntity {
-        @Version
-        private Long hubba;
-    }
-
     @Test(expected = ConstraintViolationException.class)
     public void testInitedPrimitive() {
         getMorphia().map(Fail1.class);
@@ -51,5 +31,25 @@ public class VersionMisuseTest extends TestBase {
     @Test
     public void testWrapper() {
         getMorphia().map(OK2.class);
+    }
+
+    public static class Fail1 extends TestEntity {
+        @Version
+        private long hubba = 1;
+    }
+
+    public static class Fail2 extends TestEntity {
+        @Version
+        private Long hubba = 1L;
+    }
+
+    public static class OK1 extends TestEntity {
+        @Version
+        private long hubba;
+    }
+
+    public static class OK2 extends TestEntity {
+        @Version
+        private Long hubba;
     }
 }

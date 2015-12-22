@@ -12,23 +12,6 @@ import org.mongodb.morphia.testutil.TestEntity;
 
 public class TestEmbedLoop extends TestBase {
 
-    @Entity
-    static class A extends TestEntity {
-        @Embedded
-        private B b;
-    }
-
-    @Embedded
-    static class B extends TestEntity {
-        private String someProperty = "someThing";
-
-        // produces stack overflow, might be detectable?
-        // @Reference this would be right way to do it.
-
-        @Embedded
-        private A a;
-    }
-
     @Test
     @Ignore
     public void testCircularRefs() throws Exception {
@@ -44,5 +27,22 @@ public class TestEmbedLoop extends TestBase {
         getDs().save(a);
         a = getDs().find(A.class, "_id", a.getId()).get();
         Assert.assertSame(a, a.b.a);
+    }
+
+    @Entity
+    static class A extends TestEntity {
+        @Embedded
+        private B b;
+    }
+
+    @Embedded
+    static class B extends TestEntity {
+        private String someProperty = "someThing";
+
+        // produces stack overflow, might be detectable?
+        // @Reference this would be right way to do it.
+
+        @Embedded
+        private A a;
     }
 }

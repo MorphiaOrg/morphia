@@ -12,21 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DoubleMappingTest extends TestBase {
-    private static class Doubles {
-        @Id
-        private ObjectId id;
-        private final List<Double[]> listWrapperArray = new ArrayList<Double[]>();
-        private final List<double[]> listPrimitiveArray = new ArrayList<double[]>();
-        private final List<Double> listWrapper = new ArrayList<Double>();
-        private double singlePrimitive;
-        private Double singleWrapper;
-        private double[] primitiveArray;
-        private Double[] wrapperArray;
-        private double[][] nestedPrimitiveArray;
-        private Double[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Doubles.class);
@@ -56,5 +41,19 @@ public class DoubleMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
         Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+    }
+
+    private static class Doubles {
+        private final List<Double[]> listWrapperArray = new ArrayList<Double[]>();
+        private final List<double[]> listPrimitiveArray = new ArrayList<double[]>();
+        private final List<Double> listWrapper = new ArrayList<Double>();
+        @Id
+        private ObjectId id;
+        private double singlePrimitive;
+        private Double singleWrapper;
+        private double[] primitiveArray;
+        private Double[] wrapperArray;
+        private double[][] nestedPrimitiveArray;
+        private Double[][] nestedWrapperArray;
     }
 }

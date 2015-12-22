@@ -24,20 +24,126 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.geo.City;
+import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
+import static org.mongodb.morphia.aggregation.Projection.divide;
 import static org.mongodb.morphia.aggregation.Projection.projection;
+import static org.mongodb.morphia.geo.GeoJson.point;
 
 public class AggregationTest extends TestBase {
+    @Test
+    public void testGenericAccumulatorUsage() {
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
+
+        Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
+                                                   .group("author", grouping("count", new Accumulator("$sum", 1)))
+                                                   .sort(Sort.ascending("_id"))
+                                                   .aggregate(CountResult.class);
+
+        CountResult result1 = aggregation.next();
+        CountResult result2 = aggregation.next();
+        Assert.assertFalse("Expecting two results", aggregation.hasNext());
+        Assert.assertEquals("Dante", result1.getAuthor());
+        Assert.assertEquals(3, result1.getCount());
+        Assert.assertEquals("Homer", result2.getAuthor());
+        Assert.assertEquals(2, result2.getCount());
+    }
+
+    @Test
+    public void testGeoNearWithSphericalGeometry() {
+        // given
+        double latitude = 51.5286416;
+        double longitude = -0.1015987;
+        City london = new City("London", point(latitude, longitude));
+        getDs().save(london);
+        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        getDs().save(manchester);
+        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
+                                                                  .geoNear(GeoNear.builder("distance")
+                                                                                    .setNear(latitude, longitude)
+                                                                                    .setSpherical(true)
+                                                                                    .build())
+                                                                  .aggregate(City.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
+    public void testGeoNearWithLegacyCoords() {
+        // given
+        double latitude = 51.5286416;
+        double longitude = -0.1015987;
+        PlaceWithLegacyCoords london = new PlaceWithLegacyCoords(new double[]{longitude, latitude}, "London");
+        getDs().save(london);
+        PlaceWithLegacyCoords manchester = new PlaceWithLegacyCoords(new double[]{-2.2235922, 53.4722454}, "Manchester");
+        getDs().save(manchester);
+        PlaceWithLegacyCoords sevilla = new PlaceWithLegacyCoords(new double[]{-5.9550582, 37.3753708}, "Sevilla");
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<PlaceWithLegacyCoords> citiesOrderedByDistanceFromLondon = getDs()
+                .createAggregation(PlaceWithLegacyCoords.class)
+                .geoNear(GeoNear.builder("distance")
+                                .setNear(latitude, longitude)
+                                .setSpherical(false)
+                                .build())
+                .aggregate(PlaceWithLegacyCoords.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
+    public void testLimit() {
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
+
+        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
+                                          .limit(2)
+                                          .aggregate(Book.class);
+        int count = 0;
+        while (aggregate.hasNext()) {
+            aggregate.next();
+            count++;
+        }
+        Assert.assertEquals(2, count);
+    }
+
     @Test
     public void testOut() {
         checkMinServerVersion(2.6);
@@ -48,17 +154,17 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         AggregationOptions options = AggregationOptions.builder()
-                                                     .outputMode(AggregationOptions.OutputMode.CURSOR)
-                                                     .build();
-        MorphiaIterator<Author, Author> aggregate = getDs().<Book, Author>createAggregation(Book.class)
-                                                           .group("author", grouping("books", push("title")))
-                                                           .out(Author.class, options);
+                                                       .outputMode(AggregationOptions.OutputMode.CURSOR)
+                                                       .build();
+        Iterator<Author> aggregate = getDs().createAggregation(Book.class)
+                                            .group("author", grouping("books", push("title")))
+                                            .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.books);
 
-        getDs().<Book, Author>createAggregation(Book.class)
+        getDs().createAggregation(Book.class)
                .group("author", grouping("books", push("title")))
                .out("different", Author.class);
 
@@ -74,10 +180,10 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
                      new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel"));
 
-        getDs().<Book, Author>createAggregation(Book.class)
+        getDs().createAggregation(Book.class)
                .match(getDs().getQueryFactory().createQuery(getDs())
                              .field("author").equal("Homer"))
-               .group("author", Group.grouping("copies", sum("copies")))
+               .group("author", grouping("copies", sum("copies")))
                .out("testAverage", Author.class);
         DBCursor testAverage = getDb().getCollection("testAverage").find();
         Assert.assertNotNull(testAverage);
@@ -89,22 +195,23 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testLimit() {
+    public void testProjection() {
         getDs().save(new Book("The Banquet", "Dante", 2),
                      new Book("Divine Comedy", "Dante", 1),
                      new Book("Eclogues", "Dante", 2),
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
-                                                       .limit(2)
-                                                       .aggregate(Book.class);
-        int count = 0;
-        while (aggregate.hasNext()) {
-            aggregate.next();
-            count++;
-        }
-        Assert.assertEquals(2, count);
+        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
+                                          .group("author", grouping("copies", sum("copies")))
+                                          .project(projection("_id").suppress(),
+                                                   projection("author", "_id"),
+                                                   projection("copies", divide(projection("copies"), 5)))
+                                          .sort(Sort.ascending("author"))
+                                          .aggregate(Book.class);
+        Book book = aggregate.next();
+        Assert.assertEquals("Dante", book.author);
+        Assert.assertEquals(1, book.copies.intValue());
     }
 
     @Test
@@ -115,10 +222,9 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        MorphiaIterator<Book, Book> aggregate = getDs().<Book, Book>createAggregation(Book.class)
-                                                       .skip(2)
-                                                       .aggregate(Book.class);
-        Book book = aggregate.next();
+        Book book = getDs().createAggregation(Book.class)
+                           .skip(2)
+                           .aggregate(Book.class).next();
         Assert.assertEquals("Eclogues", book.title);
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(2, book.copies.intValue());
@@ -130,11 +236,11 @@ public class AggregationTest extends TestBase {
         getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
                      new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
 
-        MorphiaIterator<User, User> aggregate = getDs().<User, User>createAggregation(User.class)
-                                                       .project(projection("_id").suppress(), projection("name"), projection("joined"),
-                                                                projection("likes"))
-                                                       .unwind("likes")
-                                                       .aggregate(User.class);
+        Iterator<User> aggregate = getDs().createAggregation(User.class)
+                                          .project(projection("_id").suppress(), projection("name"), projection("joined"),
+                                                   projection("likes"))
+                                          .unwind("likes")
+                                          .aggregate(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -165,17 +271,6 @@ public class AggregationTest extends TestBase {
             count++;
         }
     }
-
-    @Test
-    public void testGeoNear() {
-        // Given
-
-
-        // When
-
-        // Then
-    }
-
 
     @Entity(value = "books", noClassnameStored = true)
     private static final class Book {
@@ -229,6 +324,22 @@ public class AggregationTest extends TestBase {
         @Override
         public String toString() {
             return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+        }
+    }
+
+    @Entity
+    private static class CountResult {
+
+        @Id
+        private String author;
+        private int count;
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public int getCount() {
+            return count;
         }
     }
 }

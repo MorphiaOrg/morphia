@@ -1,74 +1,131 @@
 package org.mongodb.morphia.utils;
 
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.mapping.Mapper;
 
+import java.io.Serializable;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mongodb.morphia.testutil.ExactClassMatcher.exactClass;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  * @author Scott Hernandez
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ReflectionUtilsTest extends TestBase {
+
+    @Test
+    public void shouldAcceptMapWithoutItsOwnGenericParameters() {
+        Class parameterizedClass = ReflectionUtils.getParameterizedClass(MapWithoutGenericTypes.class);
+
+        assertThat(parameterizedClass, is(exactClass(Integer.class)));
+    }
+
+    @Test
+    public void shouldSupportGenericArrays() {
+        getMorphia().map(MyEntity.class);
+    }
+
+    /**
+     * Tests that in a class hierarchy of arbitrary depth, we can get the correct declared field type
+     *
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGenericFieldTypeResolution() throws Exception {
+        Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class,
+                                                                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
+        assertThat(typeArgument, is(exactClass(Integer.class)));
+    }
+
+    @Test
+    public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
+        //we need a jar to test with so use JUnit since it will always be there
+        String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
+
+        for (Class clazz : result) {
+            assertThat(clazz.getPackage().getName(), is("org.junit"));
+        }
+    }
+
+    @Test
+    public void testGetParameterizedClassInheritance() throws Exception {
+        // Work before fix...
+        assertThat(ReflectionUtils.getParameterizedClass(Set.class), isA(Object.class));
+        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")), is(exactClass(Author.class)));
+
+        // Works now...
+        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")), is(exactClass(Author.class)));
+
+        assertThat(ReflectionUtils.getParameterizedClass(Authors.class), is(exactClass(Author.class)));
+
+        assertThat(ReflectionUtils.getParameterizedClass(WritingTeam.class), is(is(exactClass(Author.class))));
+    }
 
     /**
      * Test method for {@link ReflectionUtils#implementsInterface(Class, Class)} .
      */
     @Test
     public void testImplementsInterface() {
-        Assert.assertTrue(ReflectionUtils.implementsInterface(ArrayList.class, List.class));
-        Assert.assertTrue(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class));
-        Assert.assertFalse(ReflectionUtils.implementsInterface(Set.class, List.class));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, List.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
+
+        assertThat(ReflectionUtils.implementsInterface(Set.class, List.class), is(false));
+        assertThat(ReflectionUtils.implementsInterface(List.class, ArrayList.class), is(false));
     }
 
     @Test
     public void testInheritedClassAnnotations() {
         final List<Indexes> annotations = ReflectionUtils.getAnnotations(Foobie.class, Indexes.class);
-        Assert.assertEquals(2, annotations.size());
-        Assert.assertTrue(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null);
+        assertThat(annotations.size(), is(2));
+        assertThat(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null, is(true));
 
-        Assert.assertTrue("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()));
+        assertThat("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()), is(true));
 
-        Assert.assertTrue("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()));
+        assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
 
-        Assert.assertEquals(Mapper.IGNORED_FIELDNAME, ReflectionUtils.getClassEntityAnnotation(Fooble.class).value());
+        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
     }
 
-    @Test
-    public void testGetParameterizedClassInheritance() throws Exception {
-        // Work before fix...
-        Assert.assertEquals(Object.class, ReflectionUtils.getParameterizedClass(Set.class));
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")));
+    private interface MapWithoutGenericTypes extends Map<Integer, String> {
+    }
 
-        // Works now...
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")));
-
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(Authors.class));
-
-        Assert.assertEquals(Author.class, ReflectionUtils.getParameterizedClass(WritingTeam.class));
+    @Entity("generic_arrays")
+    static class MyEntity {
+        @Id
+        private String id;
+        private Integer[] integers;
+        private Super3<Integer>[] super3s;
     }
 
     @Entity("Base")
-    @Indexes(@Index("id"))
+    @Indexes(@Index(fields = @Field("id")))
     private static class Foo {
         @Id
         private int id;
     }
 
     @Entity("Sub")
-    @Indexes(@Index("test"))
+    @Indexes(@Index(fields = @Field("test")))
     private static class Foobie extends Foo {
         private String test;
     }
@@ -91,5 +148,18 @@ public class ReflectionUtilsTest extends TestBase {
         private Authors authors;
 
         private Set<Author> authorsSet;
+    }
+
+    private static class Super1<T extends Object> {
+        private T field;
+    }
+
+    private static class Super2<T extends Serializable> extends Super1<T> {
+    }
+
+    private static class Super3<T extends Number> extends Super2<T> {
+    }
+
+    private static class Sub extends Super3<Integer> {
     }
 }

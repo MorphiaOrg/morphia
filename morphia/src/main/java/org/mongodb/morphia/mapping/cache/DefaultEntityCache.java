@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * This is the default EntityCache for Morphia
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class DefaultEntityCache implements EntityCache {
 
@@ -19,6 +22,7 @@ public class DefaultEntityCache implements EntityCache {
     private final Map<Key, Boolean> existenceMap = new HashMap<Key, Boolean>();
     private final EntityCacheStatistics stats = new EntityCacheStatistics();
 
+    @Override
     public Boolean exists(final Key<?> k) {
         if (entityMap.containsKey(k)) {
             stats.incHits();
@@ -34,13 +38,15 @@ public class DefaultEntityCache implements EntityCache {
         return b;
     }
 
-    public void notifyExists(final Key<?> k, final boolean exists) {
-        final Boolean put = existenceMap.put(k, exists);
-        if (put == null || !put) {
-            stats.incEntities();
-        }
+    @Override
+    public void flush() {
+        entityMap.clear();
+        existenceMap.clear();
+        proxyMap.clear();
+        stats.reset();
     }
 
+    @Override
     public <T> T getEntity(final Key<T> k) {
         final Object o = entityMap.get(k);
         if (o == null) {
@@ -60,10 +66,10 @@ public class DefaultEntityCache implements EntityCache {
         return (T) o;
     }
 
+    @Override
     public <T> T getProxy(final Key<T> k) {
         final Object o = proxyMap.get(k);
         if (o == null) {
-            // System.out.println("miss proxy " + k);
             stats.incMisses();
         } else {
             stats.incHits();
@@ -71,24 +77,28 @@ public class DefaultEntityCache implements EntityCache {
         return (T) o;
     }
 
+    @Override
+    public void notifyExists(final Key<?> k, final boolean exists) {
+        final Boolean put = existenceMap.put(k, exists);
+        if (put == null || !put) {
+            stats.incEntities();
+        }
+    }
+
+    @Override
+    public <T> void putEntity(final Key<T> k, final T t) {
+        notifyExists(k, true); // already registers a write
+        entityMap.put(k, t);
+    }
+
+    @Override
     public <T> void putProxy(final Key<T> k, final T t) {
         proxyMap.put(k, t);
         stats.incEntities();
 
     }
 
-    public <T> void putEntity(final Key<T> k, final T t) {
-        notifyExists(k, true); // already registers a write
-        entityMap.put(k, t);
-    }
-
-    public void flush() {
-        entityMap.clear();
-        existenceMap.clear();
-        proxyMap.clear();
-        stats.reset();
-    }
-
+    @Override
     public EntityCacheStatistics stats() {
         return stats.copy();
     }

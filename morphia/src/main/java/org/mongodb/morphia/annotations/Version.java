@@ -1,12 +1,12 @@
 package org.mongodb.morphia.annotations;
 
 
+import org.mongodb.morphia.mapping.Mapper;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.mongodb.morphia.mapping.Mapper;
 
 
 /**
@@ -17,5 +17,8 @@ import org.mongodb.morphia.mapping.Mapper;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Version {
-  String value() default Mapper.IGNORED_FIELDNAME;
+    /**
+     * Sets the field name to use in the document.  Defaults to the java field name.
+     */
+    String value() default Mapper.IGNORED_FIELDNAME;
 }

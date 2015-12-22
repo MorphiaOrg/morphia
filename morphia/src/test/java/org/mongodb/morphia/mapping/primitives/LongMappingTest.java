@@ -13,21 +13,6 @@ import java.util.List;
 
 
 public class LongMappingTest extends TestBase {
-    private static class Longs {
-        @Id
-        private ObjectId id;
-        private final List<Long[]> listWrapperArray = new ArrayList<Long[]>();
-        private final List<long[]> listPrimitiveArray = new ArrayList<long[]>();
-        private final List<Long> listWrapper = new ArrayList<Long>();
-        private long singlePrimitive;
-        private Long singleWrapper;
-        private long[] primitiveArray;
-        private Long[] wrapperArray;
-        private long[][] nestedPrimitiveArray;
-        private Long[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Longs.class);
@@ -56,5 +41,19 @@ public class LongMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
         Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+    }
+
+    private static class Longs {
+        private final List<Long[]> listWrapperArray = new ArrayList<Long[]>();
+        private final List<long[]> listPrimitiveArray = new ArrayList<long[]>();
+        private final List<Long> listWrapper = new ArrayList<Long>();
+        @Id
+        private ObjectId id;
+        private long singlePrimitive;
+        private Long singleWrapper;
+        private long[] primitiveArray;
+        private Long[] wrapperArray;
+        private long[][] nestedPrimitiveArray;
+        private Long[][] nestedWrapperArray;
     }
 }

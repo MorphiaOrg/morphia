@@ -13,21 +13,6 @@ import java.util.List;
 
 
 public class IntegerMappingTest extends TestBase {
-    private static class Integers {
-        @Id
-        private ObjectId id;
-        private final List<Integer[]> listWrapperArray = new ArrayList<Integer[]>();
-        private final List<int[]> listPrimitiveArray = new ArrayList<int[]>();
-        private final List<Integer> listWrapper = new ArrayList<Integer>();
-        private int singlePrimitive;
-        private Integer singleWrapper;
-        private int[] primitiveArray;
-        private Integer[] wrapperArray;
-        private int[][] nestedPrimitiveArray;
-        private Integer[][] nestedWrapperArray;
-    }
-
-
     @Test
     public void testMapping() throws Exception {
         getMorphia().map(Integers.class);
@@ -59,5 +44,19 @@ public class IntegerMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
         Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+    }
+
+    private static class Integers {
+        private final List<Integer[]> listWrapperArray = new ArrayList<Integer[]>();
+        private final List<int[]> listPrimitiveArray = new ArrayList<int[]>();
+        private final List<Integer> listWrapper = new ArrayList<Integer>();
+        @Id
+        private ObjectId id;
+        private int singlePrimitive;
+        private Integer singleWrapper;
+        private int[] primitiveArray;
+        private Integer[] wrapperArray;
+        private int[][] nestedPrimitiveArray;
+        private Integer[][] nestedWrapperArray;
     }
 }
