@@ -83,7 +83,10 @@ public class SerializableCollectionObjectReference<T> extends AbstractReference 
         final List<T> retrievedEntities = new ArrayList<T>(listOfKeys.size());
         final Datastore ds = p.get();
         for (final Key<?> k : listOfKeys) {
-            retrievedEntities.add((T) ds.getByKey(referenceObjClass, k));
+            T entity = (T) ds.getByKey(referenceObjClass, k);
+            if (entity != null) {
+                retrievedEntities.add(entity);
+            }
         }
 
         if (!ignoreMissing && (numberOfEntitiesExpected != retrievedEntities.size())) {
