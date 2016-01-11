@@ -5,6 +5,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.validation.ClassConstraint;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class ContainsEmbeddedWithId implements ClassConstraint {
 
     @Override
-    public void check(final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
         final Set<Class<?>> classesToInspect = new HashSet<Class<?>>();
         for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(mc.getClazz(), true)) {
             if (isFieldToInspect(field) && !field.isAnnotationPresent(Id.class)) {

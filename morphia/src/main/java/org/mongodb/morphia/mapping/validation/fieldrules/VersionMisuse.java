@@ -5,6 +5,7 @@ import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -30,7 +31,7 @@ public class VersionMisuse extends FieldConstraint {
     }
 
     @Override
-    protected void check(final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Version.class)) {
             final Class<?> type = mf.getType();
             if (Long.class.equals(type) || long.class.equals(type)) {

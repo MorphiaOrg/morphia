@@ -43,6 +43,8 @@ configure(subprojects.findAll { it.name != 'util' }) {
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
 
+    evaluationDependsOn(':util')
+
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -51,7 +53,6 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
     dependencies {
         testCompile 'junit:junit:4.12'
-        testCompile project(':util')
     }
 
     project.archivesBaseName = "morphia-${project.name}"
@@ -112,19 +113,19 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
     task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest']) {}
 
-    gradle.taskGraph.whenReady { taskGraph ->
-        taskGraph.getAllTasks().each { task ->
-            javadoc {
-                options.encoding = "UTF-8"
-                options.tagletPath project(':util').sourceSets.main.output.classesDir
-                options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
-                options.author = true
-                options.version = true
-                options.links 'http://docs.oracle.com/javase/6/docs/api/'
-                options.links 'http://api.mongodb.org/java/3.0/'
-                title "Morphia ${simpleVersion} API"
-            }
-        }
+    javadoc {
+        dependsOn project(':util').compileJava //We need taglets to be compiled
+
+        options.author = true
+        options.version = true
+        options.tagletPath project(':util').sourceSets.main.output.classesDir
+        options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
+        options.links 'http://docs.oracle.com/javase/6/docs/api/'
+        options.links 'http://api.mongodb.org/java/3.0/'
+        title "Morphia ${simpleVersion} API"
+        options.encoding = 'UTF-8'
+        options.charSet 'UTF-8'
+        options.docEncoding 'UTF-8'
     }
 }
 

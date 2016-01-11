@@ -3,10 +3,11 @@ package org.mongodb.morphia.mapping;
 
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
 import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
 
 
 /**
@@ -14,7 +15,9 @@ import org.mongodb.morphia.mapping.lazy.DefaultDatastoreProvider;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class MapperOptions {
+    private static final Logger LOG = MorphiaLoggerFactory.get(MapperOptions.class);
     private boolean actLikeSerializer;
     private boolean ignoreFinals; //ignore final fields.
     private boolean storeNulls;
@@ -28,7 +31,33 @@ public class MapperOptions {
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
-    private DatastoreProvider datastoreProvider = new DefaultDatastoreProvider();
+    private DatastoreProvider datastoreProvider = null;
+
+    /**
+     * Creates a default options instance.
+     */
+    public MapperOptions() {
+    }
+
+    /**
+     * Copy Constructor
+     *
+     * @param options the MapperOptions to copy
+     */
+    public MapperOptions(final MapperOptions options) {
+        setActLikeSerializer(options.isActLikeSerializer());
+        setIgnoreFinals(options.isIgnoreFinals());
+        setStoreNulls(options.isStoreNulls());
+        setStoreEmpties(options.isStoreEmpties());
+        setUseLowerCaseCollectionNames(options.isUseLowerCaseCollectionNames());
+        setCacheClassLookups(options.isCacheClassLookups());
+        setObjectFactory(options.getObjectFactory());
+        setCacheFactory(options.getCacheFactory());
+        setEmbeddedMapper(options.getEmbeddedMapper());
+        setDefaultMapper(options.getDefaultMapper());
+        setReferenceMapper(options.getReferenceMapper());
+        setValueMapper(options.getValueMapper());
+    }
 
     /**
      * @return the factory to create an EntityCache
@@ -59,7 +88,7 @@ public class MapperOptions {
      * @param datastoreProvider the DatastoreProvider to use
      */
     public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
-        datastoreProvider.register(this.getDatastoreProvider().get());
+        LOG.warning("DatastoreProviders are no longer needed or used.");
         this.datastoreProvider = datastoreProvider;
     }
 

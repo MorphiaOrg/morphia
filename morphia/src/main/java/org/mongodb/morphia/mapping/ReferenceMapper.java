@@ -30,17 +30,17 @@ class ReferenceMapper implements CustomMapper {
     public static final Logger LOG = MorphiaLoggerFactory.get(ReferenceMapper.class);
 
     @Override
-    public void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final EntityCache cache,
-                             final Mapper mapper) {
+    public void fromDBObject(final Datastore datastore, final DBObject dbObject, final MappedField mf, final Object entity,
+                             final EntityCache cache, final Mapper mapper) {
         final Class fieldType = mf.getType();
 
         final Reference refAnn = mf.getAnnotation(Reference.class);
         if (mf.isMap()) {
-            readMap(dbObject, mf, entity, refAnn, cache, mapper);
+            readMap(datastore, mapper, entity, refAnn, cache, mf, dbObject);
         } else if (mf.isMultipleValues()) {
-            readCollection(dbObject, mf, entity, refAnn, cache, mapper);
+            readCollection(datastore, mapper, dbObject, mf, entity, refAnn, cache);
         } else {
-            readSingle(dbObject, mf, entity, fieldType, refAnn, cache, mapper);
+            readSingle(datastore, mapper, entity, fieldType, refAnn, cache, mf, dbObject);
         }
 
     }
@@ -81,14 +81,14 @@ class ReferenceMapper implements CustomMapper {
                    : mapper.keyToDBRef(key));
     }
 
-    private Object createOrReuseProxy(final Class referenceObjClass, final Object ref, final EntityCache cache, final Mapper mapper,
-                                      final boolean idOnly) {
+    private Object createOrReuseProxy(final Datastore datastore, final Mapper mapper, final Class referenceObjClass, final Object ref,
+                                      final EntityCache cache, final boolean idOnly) {
         final Key key = idOnly ? mapper.manualRefToKey(referenceObjClass, ref) : mapper.refToKey((DBRef) ref);
         final Object proxyAlreadyCreated = cache.getProxy(key);
         if (proxyAlreadyCreated != null) {
             return proxyAlreadyCreated;
         }
-        final Object newProxy = mapper.getProxyFactory().createProxy(referenceObjClass, key, mapper.getDatastoreProvider());
+        final Object newProxy = mapper.getProxyFactory().createProxy(datastore, referenceObjClass, key);
         cache.putProxy(key, newProxy);
         return newProxy;
     }
@@ -110,8 +110,10 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    private void readCollection(final DBObject dbObject, final MappedField mf, final Object entity, final Reference refAnn,
-                                final EntityCache cache, final Mapper mapper) {
+    private void readCollection(final Datastore datastore, final Mapper mapper, final DBObject dbObject, final MappedField mf,
+                                final Object entity,
+                                final Reference refAnn,
+                                final EntityCache cache) {
         // multiple references in a List
         final Class referenceObjClass = mf.getSubClass();
         // load reference class.  this "fixes" #816
@@ -123,7 +125,7 @@ class ReferenceMapper implements CustomMapper {
             final Object dbVal = mf.getDbObjectValue(dbObject);
             if (dbVal != null) {
                 references = mapper.getProxyFactory()
-                                   .createListProxy(references, referenceObjClass, refAnn.ignoreMissing(), mapper.getDatastoreProvider());
+                                   .createListProxy(datastore, references, referenceObjClass, refAnn.ignoreMissing());
                 final ProxiedEntityReferenceList referencesAsProxy = (ProxiedEntityReferenceList) references;
 
                 if (dbVal instanceof List) {
@@ -142,7 +144,7 @@ class ReferenceMapper implements CustomMapper {
             new IterHelper<String, Object>().loopOrSingle(dbVal, new IterCallback<Object>() {
                 @Override
                 public void eval(final Object val) {
-                    final Object ent = resolveObject(val, mf, cache, mapper, refAnn.idOnly());
+                    final Object ent = resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), val);
                     if (ent == null) {
                         LOG.warning("Null reference found when retrieving value for " + mf.getFullName());
                     } else {
@@ -159,9 +161,8 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    private void readMap(final DBObject dbObject, final MappedField mf, final Object entity, final Reference refAnn,
-                         final EntityCache cache,
-                         final Mapper mapper) {
+    private void readMap(final Datastore datastore, final Mapper mapper, final Object entity, final Reference refAnn,
+                         final EntityCache cache, final MappedField mf, final DBObject dbObject) {
         final Class referenceObjClass = mf.getSubClass();
         Map m = mapper.getOptions().getObjectFactory().createMap(mf);
 
@@ -169,7 +170,7 @@ class ReferenceMapper implements CustomMapper {
         if (dbVal != null) {
             if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
                 // replace map by proxy to it.
-                m = mapper.getProxyFactory().createMapProxy(m, referenceObjClass, refAnn.ignoreMissing(), mapper.getDatastoreProvider());
+                m = mapper.getProxyFactory().createMapProxy(datastore, m, referenceObjClass, refAnn.ignoreMissing());
             }
 
             final Map map = m;
@@ -185,8 +186,7 @@ class ReferenceMapper implements CustomMapper {
                                                  ? mapper.manualRefToKey(referenceObjClass, val)
                                                  : mapper.refToKey((DBRef) val));
                     } else {
-                        final Object resolvedObject = resolveObject(val, mf, cache, mapper, refAnn.idOnly());
-                        map.put(objKey, resolvedObject);
+                        map.put(objKey, resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), val));
                     }
                 }
             });
@@ -194,16 +194,16 @@ class ReferenceMapper implements CustomMapper {
         mf.setFieldValue(entity, m);
     }
 
-    private void readSingle(final DBObject dbObject, final MappedField mf, final Object entity, final Class fieldType,
-                            final Reference refAnn, final EntityCache cache, final Mapper mapper) {
+    private void readSingle(final Datastore datastore, final Mapper mapper, final Object entity, final Class fieldType,
+                            final Reference refAnn, final EntityCache cache, final MappedField mf, final DBObject dbObject) {
 
         final Object ref = mf.getDbObjectValue(dbObject);
         if (ref != null) {
             Object resolvedObject;
             if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                resolvedObject = createOrReuseProxy(fieldType, ref, cache, mapper, refAnn.idOnly());
+                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, refAnn.idOnly());
             } else {
-                resolvedObject = resolveObject(ref, mf, cache, mapper, refAnn.idOnly());
+                resolvedObject = resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), ref);
             }
 
             if (resolvedObject != null) {
@@ -285,16 +285,8 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    /**
-     * @deprecated use {@link #fromDBObject(DBObject, MappedField, Object, EntityCache, Mapper)} instead.
-     */
-    @Deprecated
-    void fromDBObject(final DBObject dbObject, final MappedField mf, final Object entity, final Mapper mapper) {
-        fromDBObject(dbObject, mf, entity, mapper.createEntityCache(), mapper);
-    }
-
-    Object resolveObject(final Object ref, final MappedField mf, final EntityCache cache, final Mapper mapper,
-                         final boolean idOnly) {
+    Object resolveObject(final Datastore datastore, final Mapper mapper, final EntityCache cache, final MappedField mf,
+                         final boolean idOnly, final Object ref) {
         if (ref == null) {
             return null;
         }
@@ -308,14 +300,12 @@ class ReferenceMapper implements CustomMapper {
             return cached;
         }
 
-        final Datastore ds = mapper.getDatastoreProvider().get();
-
-        final DBObject refDbObject = idOnly ? ds.getCollection(key.getType()).findOne(ref)
-                                            : ds.getDB().getCollection(dbRef.getCollectionName()).findOne(dbRef.getId());
+        final DBObject refDbObject = idOnly ? datastore.getCollection(key.getType()).findOne(ref)
+                                            : datastore.getDB().getCollection(dbRef.getCollectionName()).findOne(dbRef.getId());
 
         if (refDbObject != null) {
             Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDbObject);
-            refObj = mapper.fromDb(refDbObject, refObj, cache);
+            refObj = mapper.fromDb(datastore, refDbObject, refObj, cache);
             cache.putEntity(key, refObj);
             return refObj;
         }

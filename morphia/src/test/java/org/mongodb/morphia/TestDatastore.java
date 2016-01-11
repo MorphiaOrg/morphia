@@ -13,14 +13,10 @@
 
 package org.mongodb.morphia;
 
-import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
@@ -34,8 +30,6 @@ import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.generics.model.ChildEmbedded;
 import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-import org.mongodb.morphia.mapping.lazy.ThreadLocalDatastoreProvider;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.testmodel.Address;
 import org.mongodb.morphia.testmodel.Hotel;
@@ -44,12 +38,7 @@ import org.mongodb.morphia.testmodel.Rectangle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
@@ -66,18 +55,14 @@ import static org.junit.Assume.assumeTrue;
 /**
  * @author Scott Hernandez
  */
+//@RunWith(Parameterized.class)
 public class TestDatastore extends TestBase {
-    @Test
-    @Ignore
-    public void massiveBulkInsert() {
-        doInserts(false);
-        doInserts(true);
-    }
 
     @Test(expected = UpdateException.class)
     public void saveNull() {
         getDs().save((Hotel) null);
     }
+
 
     @Test
     public void shouldSaveGenericTypeVariables() throws Exception {
@@ -233,85 +218,37 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testMultipleDatabases() throws InterruptedException, TimeoutException, ExecutionException {
-        final Datastore db1 = getMorphia().createDatastore(getMongoClient(), "db1");
-        final Datastore db2 = getMorphia().createDatastore(getMongoClient(), "db2");
-        final Datastore standard = getDs();
-        final DatastoreProvider provider = getMorphia().getMapper().getDatastoreProvider();
-        final ExecutorService pool = Executors.newFixedThreadPool(3);
+    public void testMultipleDatabasesSingleThreaded() throws InterruptedException, TimeoutException, ExecutionException {
+        getMorphia().map(FacebookUser.class);
 
-        try {
-            final ThreadLocalDatastoreProvider datastoreProvider = new ThreadLocalDatastoreProvider();
-            getMorphia().getMapper().getOptions().setDatastoreProvider(datastoreProvider);
+        final Datastore ds1 = getMorphia().createDatastore(getMongoClient(), "db1");
+        final Datastore ds2 = getMorphia().createDatastore(getMongoClient(), "db2");
 
-            final FacebookUser db1Friend = new FacebookUser(3, "DB1 FaceBook Friend");
-            db1.save(db1Friend);
-            final FacebookUser db1User = new FacebookUser(1, "DB1 FaceBook User");
-            db1User.friends.add(db1Friend);
-            db1.save(db1User);
+        final FacebookUser db1Friend = new FacebookUser(3, "DB1 FaceBook Friend");
+        ds1.save(db1Friend);
+        final FacebookUser db1User = new FacebookUser(1, "DB1 FaceBook User");
+        db1User.friends.add(db1Friend);
+        ds1.save(db1User);
 
-            final FacebookUser db2Friend = new FacebookUser(4, "DB2 FaceBook Friend");
-            db2.save(db2Friend);
-            final FacebookUser db2User = new FacebookUser(2, "DB2 FaceBook User");
-            db2User.friends.add(db2Friend);
-            db2.save(db2User);
+        final FacebookUser db2Friend = new FacebookUser(4, "DB2 FaceBook Friend");
+        ds2.save(db2Friend);
+        final FacebookUser db2User = new FacebookUser(2, "DB2 FaceBook User");
+        db2User.friends.add(db2Friend);
+        ds2.save(db2User);
 
-            final Runnable db1Runnable = new Runnable() {
-                @Override
-                public void run() {
-                    datastoreProvider.register(db1);
-                    final FacebookUser user = db1.find(FacebookUser.class, "id", 1).get();
-                    Assert.assertNotNull(user);
-                    Assert.assertNotNull(db1.find(FacebookUser.class, "id", 3).get());
+        testFirstDatastore(ds1);
+        testSecondDatastore(ds2);
 
-                    final FacebookUser db1FoundUser = user;
-                    Assert.assertEquals("Should find 1 friend", 1, db1FoundUser.friends.size());
-                    Assert.assertEquals("Should find the right friend", 3, db1FoundUser.friends.get(0).id);
+        testFirstDatastore(ds1);
+        testSecondDatastore(ds2);
 
-                    Assert.assertNull(db1.find(FacebookUser.class, "id", 2).get());
-                    Assert.assertNull(db1.find(FacebookUser.class, "id", 4).get());
-                }
-            };
-            final Runnable db2Runnable = new Runnable() {
-                @Override
-                public void run() {
-                    datastoreProvider.register(db2);
-                    Assert.assertNull(db2.find(FacebookUser.class, "id", 1).get());
-                    Assert.assertNull(db2.find(FacebookUser.class, "id", 3).get());
+        testFirstDatastore(ds1);
+        testSecondDatastore(ds2);
 
-                    final FacebookUser db2FoundUser = db2.find(FacebookUser.class, "id", 2).get();
-                    Assert.assertNotNull(db2FoundUser);
-                    Assert.assertNotNull(db2.find(FacebookUser.class, "id", 4).get());
-                    Assert.assertEquals("Should find 1 friend", 1, db2FoundUser.friends.size());
-                    Assert.assertEquals("Should find the right friend", 4, db2FoundUser.friends.get(0).id);
+        testFirstDatastore(ds1);
+        testSecondDatastore(ds2);
 
-                }
-            };
-
-            final Callable<Boolean> standardRunnable = new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    datastoreProvider.register(standard);
-                    Assert.assertNull(getDs().find(FacebookUser.class, "id", 1).get());
-                    Assert.assertNull(getDs().find(FacebookUser.class, "id", 2).get());
-                    Assert.assertNull(getDs().find(FacebookUser.class, "id", 3).get());
-                    Assert.assertNull(getDs().find(FacebookUser.class, "id", 4).get());
-
-                    return true;
-                }
-            };
-
-            final Future<?> submit = pool.submit(db1Runnable);
-            final Future<?> submit1 = pool.submit(db2Runnable);
-            final Future<?> submit2 = pool.submit(standardRunnable);
-
-            submit.get(10, TimeUnit.SECONDS);
-            submit1.get(10, TimeUnit.SECONDS);
-            submit2.get(10, TimeUnit.SECONDS);
-        } finally {
-            pool.shutdownNow();
-            getMorphia().getMapper().getOptions().setDatastoreProvider(provider);
-        }
+        testStandardDatastore();
     }
 
     @Test
@@ -339,7 +276,7 @@ public class TestDatastore extends TestBase {
         //test delete(entity, {id})
         getDs().save(rect);
         assertEquals(1, getDs().getCount(rect));
-        getDs().delete(rect.getClass(), asList(rect.getId()));
+        getDs().delete(rect.getClass(), singletonList(rect.getId()));
         assertEquals(0, getDs().getCount(rect));
 
         //test delete(entity, {id,id})
@@ -358,47 +295,48 @@ public class TestDatastore extends TestBase {
 
         //test delete(entity, {id}) with one left
         id1 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
-        id2 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
+        getDs().save(new Rectangle(20, 20));
         assertEquals(2, getDs().getCount(rect));
-        getDs().delete(rect.getClass(), asList(id1));
+        getDs().delete(rect.getClass(), singletonList(id1));
         assertEquals(1, getDs().getCount(rect));
         getDs().getCollection(Rectangle.class).drop();
 
         //test delete(Class, {id}) with one left
         id1 = (ObjectId) getDs().save(new Rectangle(20, 20)).getId();
-        Key<Rectangle> save = getDs().save(new Rectangle(20, 20));
-        id2 = (ObjectId) save.getId();
+        getDs().save(new Rectangle(20, 20));
         assertEquals(2, getDs().getCount(rect));
-        getDs().delete(Rectangle.class, asList(id1));
+        getDs().delete(Rectangle.class, singletonList(id1));
         assertEquals(1, getDs().getCount(rect));
     }
 
-    private void doInserts(final boolean useBulkWriteOperations) {
-        getMorphia().setUseBulkWriteOperations(useBulkWriteOperations);
-        final DBCollection collection = getDs().getCollection(FacebookUser.class);
-        collection.remove(new BasicDBObject());
-        final int count = 250000;
-        List<FacebookUser> list = new ArrayList<FacebookUser>(count);
-        for (int i = 0; i < count; i++) {
-            list.add(new FacebookUser(i, "User " + i));
-        }
+    private void testFirstDatastore(final Datastore ds1) {
+        final FacebookUser user = ds1.find(FacebookUser.class, "id", 1).get();
+        Assert.assertNotNull(user);
+        Assert.assertNotNull(ds1.find(FacebookUser.class, "id", 3).get());
 
-        getAds().insert(list, WriteConcern.UNACKNOWLEDGED);
+        Assert.assertEquals("Should find 1 friend", 1, user.friends.size());
+        Assert.assertEquals("Should find the right friend", 3, user.friends.get(0).id);
 
-        Awaitility
-            .await()
-            .atMost(30, TimeUnit.SECONDS)
-            .until(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    return collection.count() == count;
-                }
-            });
-        assertEquals(count, collection.count());
+        Assert.assertNull(ds1.find(FacebookUser.class, "id", 2).get());
+        Assert.assertNull(ds1.find(FacebookUser.class, "id", 4).get());
+    }
 
-        for (FacebookUser user : list) {
-            Assert.assertNotNull(user.getId());
-        }
+    private void testSecondDatastore(final Datastore ds2) {
+        Assert.assertNull(ds2.find(FacebookUser.class, "id", 1).get());
+        Assert.assertNull(ds2.find(FacebookUser.class, "id", 3).get());
+
+        final FacebookUser db2FoundUser = ds2.find(FacebookUser.class, "id", 2).get();
+        Assert.assertNotNull(db2FoundUser);
+        Assert.assertNotNull(ds2.find(FacebookUser.class, "id", 4).get());
+        Assert.assertEquals("Should find 1 friend", 1, db2FoundUser.friends.size());
+        Assert.assertEquals("Should find the right friend", 4, db2FoundUser.friends.get(0).id);
+    }
+
+    private void testStandardDatastore() {
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 1).get());
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 2).get());
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 3).get());
+        Assert.assertNull(getDs().find(FacebookUser.class, "id", 4).get());
     }
 
     @Entity("facebook_users")
@@ -416,10 +354,6 @@ public class TestDatastore extends TestBase {
         }
 
         public FacebookUser() {
-        }
-
-        public List<FacebookUser> getFriends() {
-            return friends;
         }
 
         public long getId() {

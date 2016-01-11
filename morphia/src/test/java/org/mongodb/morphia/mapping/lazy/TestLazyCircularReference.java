@@ -2,6 +2,7 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
@@ -10,6 +11,7 @@ import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import org.mongodb.morphia.testutil.TestEntity;
 
 
+@Ignore
 public class TestLazyCircularReference extends ProxyTestBase {
     @Test
     public final void testCreateProxy() {

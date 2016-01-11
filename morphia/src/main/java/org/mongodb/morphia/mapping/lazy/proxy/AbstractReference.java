@@ -2,8 +2,8 @@ package org.mongodb.morphia.mapping.lazy.proxy;
 
 
 import com.thoughtworks.proxy.kit.ObjectReference;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -18,15 +18,15 @@ public abstract class AbstractReference implements Serializable, ObjectReference
 
     private static final long serialVersionUID = 1L;
     //CHECKSTYLE:OFF
-    protected final DatastoreProvider p;
+    private final Datastore datastore;
     protected final boolean ignoreMissing;
     protected final Class referenceObjClass;
     protected Object object;
     //CHECKSTYLE:ON
     private boolean isFetched;
 
-    protected AbstractReference(final DatastoreProvider p, final Class referenceObjClass, final boolean ignoreMissing) {
-        this.p = p;
+    protected AbstractReference(final Datastore datastore, final Class referenceObjClass, final boolean ignoreMissing) {
+        this.datastore = datastore;
         this.referenceObjClass = referenceObjClass;
         this.ignoreMissing = ignoreMissing;
     }
@@ -73,7 +73,7 @@ public abstract class AbstractReference implements Serializable, ObjectReference
 
     @SuppressWarnings("unchecked")
     protected final Object fetch(final Key<?> id) {
-        return p.get().getByKey(referenceObjClass, id);
+        return getDatastore().getByKey(referenceObjClass, id);
     }
 
     protected abstract Object fetch();
@@ -85,5 +85,12 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         beforeWriteObject();
         isFetched = false;
         out.defaultWriteObject();
+    }
+
+    /**
+     * @return the Datastore to use when fetching this reference
+     */
+    public Datastore getDatastore() {
+        return datastore;
     }
 }

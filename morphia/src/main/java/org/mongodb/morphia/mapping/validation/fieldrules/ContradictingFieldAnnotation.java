@@ -3,6 +3,7 @@ package org.mongodb.morphia.mapping.validation.fieldrules;
 
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation;
 import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -30,7 +31,7 @@ public class ContradictingFieldAnnotation extends FieldConstraint {
     }
 
     @Override
-    protected final void check(final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected final void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(a1) && mf.hasAnnotation(a2)) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                            String.format("A field can be either annotated with @%s OR @%s, but not both.",

@@ -103,31 +103,33 @@ public class Morphia {
      * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
      * this method may break your application in future releases.
      *
+     * @param <T>         type of the entity
+     * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass type to create
      * @param dbObject    the object state to use
-     * @param <T>         type of the entity
      * @return the newly created and populated entity
      */
-    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject) {
-        return fromDBObject(entityClass, dbObject, mapper.createEntityCache());
+    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject) {
+        return fromDBObject(datastore, entityClass, dbObject, mapper.createEntityCache());
     }
 
     /**
      * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
      * this method may break your application in future releases.
      *
+     * @param <T>         type of the entity
+     * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass type to create
      * @param dbObject    the object state to use
      * @param cache       the EntityCache to use to prevent multiple loads of the same entities over and over
-     * @param <T>         type of the entity
      * @return the newly created and populated entity
      */
-    public <T> T fromDBObject(final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
+    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-            return mapper.fromDBObject(entityClass, dbObject, cache);
+            return mapper.fromDBObject(datastore, entityClass, dbObject, cache);
         } catch (Exception e) {
             throw new MappingException("Could not map entity from DBObject", e);
         }

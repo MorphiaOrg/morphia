@@ -2,6 +2,7 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unchecked")
+@Ignore
 public class TestReferenceCollection extends ProxyTestBase {
     @Test
     public final void testCreateProxy() {

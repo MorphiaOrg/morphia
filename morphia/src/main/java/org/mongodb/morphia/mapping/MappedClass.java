@@ -32,7 +32,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +95,6 @@ public class MappedClass {
      * the type we are mapping to/from
      */
     private final Class<?> clazz;
-    private final Mapper mapper;
     /**
      * special fields representing the Key of the object
      */
@@ -106,6 +104,7 @@ public class MappedClass {
      */
     private Entity entityAn;
     private Embedded embeddedAn;
+    private MapperOptions mapperOptions;
 
     /**
      * Creates a MappedClass instance
@@ -114,15 +113,15 @@ public class MappedClass {
      * @param mapper the Mapper to use
      */
     public MappedClass(final Class<?> clazz, final Mapper mapper) {
-        this.mapper = mapper;
         this.clazz = clazz;
+        mapperOptions = mapper.getOptions();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Creating MappedClass for " + clazz);
         }
 
         basicValidate();
-        discover();
+        discover(mapper);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("MappedClass done: " + toString());
@@ -191,10 +190,12 @@ public class MappedClass {
      * @param event  the lifecycle annotation
      * @param entity the entity to process
      * @param dbObj  the dbObject to use
+     * @param mapper  the Mapper to use
      * @return dbObj
      */
     @SuppressWarnings({"WMI", "unchecked"})
-    public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj) {
+    public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
+                                         final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
         DBObject retDbObj = dbObj;
         try {
@@ -206,7 +207,7 @@ public class MappedClass {
                 }
                 for (final Class<?> c : toCall.keySet()) {
                     if (c != null) {
-                        toCall.put(c, getOrCreateInstance(c));
+                        toCall.put(c, getOrCreateInstance(c, mapper));
                     }
                 }
 
@@ -239,7 +240,7 @@ public class MappedClass {
                 }
             }
 
-            callGlobalInterceptors(event, entity, dbObj, mapper.getInterceptors());
+            callGlobalInterceptors(event, entity, dbObj, mapper);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
@@ -294,7 +295,7 @@ public class MappedClass {
      */
     public String getCollectionName() {
         if (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            return mapper.getOptions().isUseLowerCaseCollectionNames() ? clazz.getSimpleName().toLowerCase() : clazz.getSimpleName();
+            return mapperOptions.isUseLowerCaseCollectionNames() ? clazz.getSimpleName().toLowerCase() : clazz.getSimpleName();
         }
         return entityAn.value();
     }
@@ -407,12 +408,16 @@ public class MappedClass {
         return fields.isEmpty() ? null : fields.get(0);
     }
 
-    /**
+/*
+    */
+/**
      * @return the Mapper this class is bound to
-     */
+     *//*
+
     public Mapper getMapper() {
         return mapper;
     }
+*/
 
     /**
      * @return the persistenceFields
@@ -469,10 +474,11 @@ public class MappedClass {
 
     /**
      * Validates this MappedClass
+     * @param mapper the Mapper to use for validation
      */
     @SuppressWarnings("deprecation")
-    public void validate() {
-        new MappingValidator(mapper.getOptions().getObjectFactory()).validate(this);
+    public void validate(final Mapper mapper) {
+        new MappingValidator(mapper.getOptions().getObjectFactory()).validate(mapper, this);
     }
 
     protected void basicValidate() {
@@ -485,7 +491,7 @@ public class MappedClass {
     /**
      * Discovers interesting (that we care about) things about the class.
      */
-    protected void discover() {
+    protected void discover(final Mapper mapper) {
         for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
             addAnnotation(c);
         }
@@ -513,9 +519,9 @@ public class MappedClass {
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
             field.setAccessible(true);
             final int fieldMods = field.getModifiers();
-            if (!isIgnorable(field, fieldMods)) {
+            if (!isIgnorable(field, fieldMods, mapper)) {
                 if (field.isAnnotationPresent(Id.class)) {
-                    persistenceFields.add(new MappedField(field, clazz, getMapper()));
+                    persistenceFields.add(new MappedField(field, clazz, mapper));
                     update();
                 } else if (field.isAnnotationPresent(Property.class)
                            || field.isAnnotationPresent(Reference.class)
@@ -523,10 +529,10 @@ public class MappedClass {
                            || field.isAnnotationPresent(Serialized.class)
                            || isSupportedType(field.getType())
                            || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
-                    persistenceFields.add(new MappedField(field, clazz, getMapper()));
+                    persistenceFields.add(new MappedField(field, clazz, mapper));
                 } else {
                     if (mapper.getOptions().getDefaultMapper() != null) {
-                        persistenceFields.add(new MappedField(field, clazz, getMapper()));
+                        persistenceFields.add(new MappedField(field, clazz, mapper));
                     } else if (LOG.isWarningEnabled()) {
                         LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
                                            field.getType().getName()));
@@ -558,8 +564,8 @@ public class MappedClass {
     }
 
     private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
-                                        final Collection<EntityInterceptor> interceptors) {
-        for (final EntityInterceptor ei : interceptors) {
+                                        final Mapper mapper) {
+        for (final EntityInterceptor ei : mapper.getInterceptors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Calling interceptor method " + event.getSimpleName() + " on " + ei);
             }
@@ -578,7 +584,7 @@ public class MappedClass {
         }
     }
 
-    private Object getOrCreateInstance(final Class<?> clazz) {
+    private Object getOrCreateInstance(final Class<?> clazz, final Mapper mapper) {
         if (mapper.getInstanceCache().containsKey(clazz)) {
             return mapper.getInstanceCache().get(clazz);
         }
@@ -595,7 +601,7 @@ public class MappedClass {
 
     }
 
-    private boolean isIgnorable(final java.lang.reflect.Field field, final int fieldMods) {
+    private boolean isIgnorable(final java.lang.reflect.Field field, final int fieldMods, final Mapper mapper) {
         return field.isAnnotationPresent(Transient.class)
                || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
                || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
