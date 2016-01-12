@@ -547,8 +547,11 @@ public class Mapper {
     public Object toMongoObject(final MappedField mf, final MappedClass mc, final Object value) {
         Object mappedValue = value;
 
-        //convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
+       /* if (mf == null && mc != null && value != null) {
+            mappedValue = toMongoObject(mappedValue, false);
+        } else*/
         if (isAssignable(mf, value) || isEntity(mc)) {
+            //convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
             try {
                 if (value instanceof Iterable) {
                     MappedClass mapped = getMappedClass(mf.getSubClass());
@@ -566,12 +569,14 @@ public class Mapper {
                     if (key == null) {
                         mappedValue = toMongoObject(value, false);
                     } else {
-                        final Reference refAnn = mf.getAnnotation(Reference.class);
-                        mappedValue = refAnn != null && refAnn.idOnly()
-                                      ? keyToId(key)
-                                      : keyToDBRef(key);
-                        if (mappedValue == value) {
-                            throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
+                        if (mf != null) {
+                            final Reference refAnn = mf.getAnnotation(Reference.class);
+                            mappedValue = refAnn != null && refAnn.idOnly()
+                                          ? keyToId(key)
+                                          : keyToDBRef(key);
+                            if (mappedValue == value) {
+                                throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
+                            }
                         }
                     }
                 }
@@ -738,8 +743,8 @@ public class Mapper {
 
     private boolean isAssignable(final MappedField mf, final Object value) {
         return mf != null
-                   && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
-                           || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
+            && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
+            || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
     }
 
@@ -750,14 +755,14 @@ public class Mapper {
     private boolean isMultiValued(final MappedField mf, final Object value) {
         final Class subClass = mf.getSubClass();
         return value instanceof Iterable
-                   && mf.isMultipleValues()
-                   && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
+            && mf.isMultipleValues()
+            && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
     private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
                                  final DBObject dbObject) {
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
-                || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
+            || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
             opts.getValueMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
         } else if (mf.hasAnnotation(Embedded.class)) {
             opts.getEmbeddedMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
@@ -780,7 +785,7 @@ public class Mapper {
         Class<? extends Annotation> annType = getFieldAnnotation(mf);
 
         if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
-                || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
+            || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
             opts.getValueMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         } else if (Reference.class.equals(annType)) {
             opts.getReferenceMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);

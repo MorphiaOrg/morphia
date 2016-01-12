@@ -46,7 +46,7 @@ final class QueryValidator {
         final String prop = origProp.toString();
         boolean hasTranslations = false;
 
-        if (validateNames) {
+        if (!origProp.substring(0, 1).equals("$")) {
             final String[] parts = prop.split("\\.");
             if (clazz == null) {
                 return null;
@@ -64,14 +64,16 @@ final class QueryValidator {
                 //translate from java field name to stored field name
                 if (mf == null && !fieldIsArrayOperator) {
                     mf = mc.getMappedFieldByJavaField(part);
-                    if (mf == null) {
+                    if (validateNames && mf == null) {
                         throw new ValidationException(format("The field '%s' could not be found in '%s' while validating - %s; if "
                                                              + "you wish to continue please disable validation.", part,
                                                              mc.getClazz().getName(), prop
                                                             ));
                     }
                     hasTranslations = true;
-                    parts[i] = mf.getNameToStore();
+                    if (mf != null) {
+                        parts[i] = mf.getNameToStore();
+                    }
                 }
 
                 i++;

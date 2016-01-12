@@ -13,6 +13,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.lazy.ProxyTestBase;
+import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,19 +115,31 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Test
+    public void testReferenceQueryWithoutValidation() {
+        Ref ref = new Ref("no validation");
+        getDs().save(ref);
+        final Container container = new Container(ref);
+        getDs().save(container);
+        final Query<Container> query = getDs().createQuery(Container.class)
+//                                             .disableValidation()
+                                             .field("singleRef").equal(ref);
+        Assert.assertNotNull(query.get());
+    }
+
+    @Test
     public void testReferencesWithoutMapping() throws Exception {
         Child child1 = new Child();
         getDs().save(child1);
 
         Parent parent1 = new Parent();
-        parent1.getChilds().add(child1);
+        parent1.children.add(child1);
         getDs().save(parent1);
 
         List<Parent> parentList = getDs().find(Parent.class).asList();
         Assert.assertEquals(1, parentList.size());
 
         // reset Datastore to reset internal Mapper cache, so Child class
-        // already cached by previou save is cleared
+        // already cached by previous save is cleared
         Datastore localDs = getMorphia().createDatastore(getMongoClient(), new Mapper(), getDb().getName());
 
         parentList = localDs.find(Parent.class).asList();
@@ -223,13 +236,9 @@ public class ReferenceTest extends ProxyTestBase {
             this.id = id;
         }
 
-        public String getId() {
-            return id;
-        }
-
         @Override
         public int hashCode() {
-            return id != null ? id.hashCode() : 0;
+            return id.hashCode();
         }
 
         @Override
@@ -252,10 +261,7 @@ public class ReferenceTest extends ProxyTestBase {
 
         @Override
         public String toString() {
-            return "Ref{"
-                   + "id='"
-                   + id + '\''
-                   + '}';
+            return String.format("Ref{id='%s'}", id);
         }
     }
 
@@ -271,10 +277,6 @@ public class ReferenceTest extends ProxyTestBase {
         private ObjectId id;
 
         @Reference(lazy = true)
-        private List<Child> childs = new ArrayList<Child>();
-
-        public List<Child> getChilds() {
-            return childs;
-        }
+        private List<Child> children = new ArrayList<Child>();
     }
 }
