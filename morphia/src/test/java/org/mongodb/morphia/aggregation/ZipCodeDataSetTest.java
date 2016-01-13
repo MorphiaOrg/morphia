@@ -1,16 +1,13 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.DBCollection;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.annotations.AlsoLoad;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.aggregation.zipcode.City;
+import org.mongodb.morphia.aggregation.zipcode.Population;
+import org.mongodb.morphia.aggregation.zipcode.State;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.query.MorphiaIterator;
@@ -22,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -139,11 +135,11 @@ public class ZipCodeDataSetTest extends TestBase {
 
             State state = states.get("SD");
 
-            Assert.assertEquals("SIOUX FALLS", state.getBiggest().name);
-            Assert.assertEquals(102046, state.getBiggest().population.longValue());
+            Assert.assertEquals("SIOUX FALLS", state.getBiggest().getName());
+            Assert.assertEquals(102046, state.getBiggest().getPopulation().longValue());
 
-            Assert.assertEquals("ZEONA", state.getSmallest().name);
-            Assert.assertEquals(8, state.getSmallest().population.longValue());
+            Assert.assertEquals("ZEONA", state.getSmallest().getName());
+            Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
         } finally {
 
             ((MorphiaIterator) iterator).close();
@@ -172,9 +168,9 @@ public class ZipCodeDataSetTest extends TestBase {
             while (iterator.hasNext()) {
                 Population population = iterator.next();
 
-                if (population.state.equals(state)) {
+                if (population.getState().equals(state)) {
                     found = true;
-                    Assert.assertEquals(new Long(value), population.population);
+                    Assert.assertEquals(new Long(value), population.getPopulation());
                 }
                 LOG.debug("population = " + population);
             }
@@ -184,82 +180,4 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    @Entity(value = "zipcodes", noClassnameStored = true)
-    public static final class City {
-        @Id
-        private String id;
-        @Property("city")
-        private String name;
-        @Property("loc")
-        private double[] location;
-        @Property("pop")
-        private Double population;
-        @Property("state")
-        private String state;
-
-        private City() {
-        }
-
-        @Override
-        public String toString() {
-            return format("City{id='%s', name='%s', location=%s, population=%s, state='%s'}", id, name, Arrays.toString(location),
-                          population, state);
-        }
-    }
-
-    @Entity
-    public static class Population {
-        @Id
-        private String state;
-        @Property("totalPop")
-        @AlsoLoad("avgCityPop")
-        private Long population;
-
-        @Override
-        public String toString() {
-            return String.format("Population{population=%d, state='%s'}", population, state);
-        }
-    }
-
-    @Embedded
-    public static class CityPopulation {
-        @Property("name")
-        private String name;
-        @Property("pop")
-        private Long population;
-
-        @Override
-        public String toString() {
-            return String.format("CityPopulation{name='%s', population=%d}", name, population);
-        }
-    }
-
-    @Entity
-    public static class State {
-        @Id
-        private ObjectId id;
-        @Property("state")
-        private String state;
-        @Embedded("biggestCity")
-        private CityPopulation biggest;
-        @Embedded("smallestCity")
-        private CityPopulation smallest;
-
-        public CityPopulation getBiggest() {
-            return biggest;
-        }
-
-        public CityPopulation getSmallest() {
-            return smallest;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("State{state='%s', biggest=%s, smallest=%s}", state, biggest, smallest);
-        }
-    }
 }

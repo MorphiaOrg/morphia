@@ -113,4 +113,7 @@ public abstract class TestBase {
         return mongoClient.getDB("admin").command(new BasicDBObject("ismaster", 1));
     }
 
+    public BasicDBObject obj(final String key, final Object value) {
+        return new BasicDBObject(key, value);
+    }
 }

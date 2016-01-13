@@ -6,11 +6,9 @@ import java.util.List;
 /**
  * Defines a group pipeline stage.
  *
- * @param <T>
- * @param <U>
  * @mongodb.driver.manual reference/operator/aggregation/group/ $group
  */
-public class Group<T, U> {
+public class Group {
     private final String name;
     private Accumulator accumulator;
     private String sourceField;

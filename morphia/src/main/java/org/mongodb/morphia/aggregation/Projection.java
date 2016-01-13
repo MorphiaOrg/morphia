@@ -8,22 +8,19 @@ import java.util.List;
 /**
  * Defines a projection for use in aggregation
  *
- * @param <T> the source type
- * @param <U> the target type
  * @mongodb.driver.manual reference/operator/aggregation/project/ $project
  */
-public final class Projection<T, U> {
+public final class Projection {
 
-    private final String sourceField;
-    private final String projectedField;
+    private final String target;
+    private final String source;
     private List<Projection> projections;
     private List<Object> arguments;
     private boolean suppressed = false;
-    private boolean expression = false;
 
-    private Projection(final String field, final String projectedField) {
-        this.sourceField = field;
-        this.projectedField = "$" + projectedField;
+    private Projection(final String field, final String source) {
+        this.target = field;
+        this.source = "$" + source;
     }
 
     private Projection(final String field, final Projection projection, final Projection... subsequent) {
@@ -34,26 +31,23 @@ public final class Projection<T, U> {
     }
 
     private Projection(final String field) {
-        this.sourceField = field;
-        projectedField = null;
+        this.target = field;
+        source = null;
     }
 
     private Projection(final String expression, final Object... args) {
         this(expression);
         this.arguments = Arrays.asList(args);
-        this.expression = true;
     }
 
     /**
      * Creates a projection on a field
      *
      * @param field the field
-     * @param <T>   the source type
-     * @param <U>   the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> projection(final String field) {
-        return new Projection<T, U>(field);
+    public static  Projection projection(final String field) {
+        return new Projection(field);
     }
 
     /**
@@ -61,12 +55,10 @@ public final class Projection<T, U> {
      *
      * @param field          the field
      * @param projectedField the new field name
-     * @param <T>            the source type
-     * @param <U>            the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> projection(final String field, final String projectedField) {
-        return new Projection<T, U>(field, projectedField);
+    public static  Projection projection(final String field, final String projectedField) {
+        return new Projection(field, projectedField);
     }
 
     /**
@@ -75,12 +67,10 @@ public final class Projection<T, U> {
      * @param field      the field
      * @param projection the project to apply
      * @param subsequent the other projections to apply
-     * @param <T>        the source type
-     * @param <U>        the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> projection(final String field, final Projection projection, final Projection... subsequent) {
-        return new Projection<T, U>(field, projection, subsequent);
+    public static  Projection projection(final String field, final Projection projection, final Projection... subsequent) {
+        return new Projection(field, projection, subsequent);
     }
 
     /**
@@ -88,37 +78,31 @@ public final class Projection<T, U> {
      *
      * @param operator the operator for the projection
      * @param args     the projection arguments
-     * @param <T>      the source type
-     * @param <U>      the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> expression(final String operator, final Object... args) {
-        return new Projection<T, U>(operator, args);
+    public static  Projection expression(final String operator, final Object... args) {
+        return new Projection(operator, args);
     }
 
     /**
      * Creates a list projection
      *
      * @param args the projection arguments
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      */
-    public static <T, U> Projection<T, U> list(final Object... args) {
-        return new Projection<T, U>(null, args);
+    public static  Projection list(final Object... args) {
+        return new Projection(null, args);
     }
 
     /**
      * Creates an addition projection
      *
      * @param args the projection arguments
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/add $add
      */
-    public static <T, U> Projection<T, U> add(final Object... args) {
-        return new Projection<T, U>("$add", args);
+    public static  Projection add(final Object... args) {
+        return expression("$add", args);
     }
 
     /**
@@ -126,26 +110,22 @@ public final class Projection<T, U> {
      *
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/subtract $subtract
      */
-    public static <T, U> Projection<T, U> subtract(final Object arg1, final Object arg2) {
-        return new Projection<T, U>("$subtract", arg1, arg2);
+    public static  Projection subtract(final Object arg1, final Object arg2) {
+        return expression("$subtract", arg1, arg2);
     }
 
     /**
      * Creates a multiplication projection
      *
      * @param args the projection arguments
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/multiply $multiply
      */
-    public static <T, U> Projection<T, U> multiply(final Object... args) {
-        return new Projection<T, U>("$multiply", args);
+    public static  Projection multiply(final Object... args) {
+        return expression("$multiply", args);
     }
 
     /**
@@ -153,13 +133,11 @@ public final class Projection<T, U> {
      *
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/divide $divide
      */
-    public static <T, U> Projection<T, U> divide(final Object arg1, final Object arg2) {
-        return new Projection<T, U>("$divide", arg1, arg2);
+    public static  Projection divide(final Object arg1, final Object arg2) {
+        return expression("$divide", arg1, arg2);
     }
 
     /**
@@ -167,13 +145,11 @@ public final class Projection<T, U> {
      *
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
-     * @param <T>  the source type
-     * @param <U>  the target type
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/mod $mod
      */
-    public static <T, U> Projection<T, U> mod(final Object arg1, final Object arg2) {
-        return new Projection<T, U>("$mod", arg1, arg2);
+    public static  Projection mod(final Object arg1, final Object arg2) {
+        return expression("$mod", arg1, arg2);
     }
 
     /**
@@ -186,8 +162,8 @@ public final class Projection<T, U> {
     /**
      * @return the projected field name
      */
-    public String getProjectedField() {
-        return projectedField;
+    public String getSource() {
+        return source;
     }
 
     /**
@@ -200,8 +176,8 @@ public final class Projection<T, U> {
     /**
      * @return the source field of the projection
      */
-    public String getSourceField() {
-        return sourceField;
+    public String getTarget() {
+        return target;
     }
 
     /**
@@ -216,14 +192,14 @@ public final class Projection<T, U> {
      *
      * @return this
      */
-    public Projection<T, U> suppress() {
+    public Projection suppress() {
         suppressed = true;
         return this;
     }
 
     @Override
     public String toString() {
-        return String.format("Projection{projectedField='%s', sourceField='%s', projections=%s, suppressed=%s}", projectedField,
-                             sourceField, projections, suppressed);
+        return String.format("Projection{projectedField='%s', sourceField='%s', projections=%s, suppressed=%s}",
+                             source, target, projections, suppressed);
     }
 }

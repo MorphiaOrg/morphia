@@ -77,6 +77,7 @@ public class MapperOptions {
 
     /**
      * @return the DatastoreProvider Morphia should use
+     * @deprecated unused
      */
     public DatastoreProvider getDatastoreProvider() {
         return datastoreProvider;
@@ -86,6 +87,7 @@ public class MapperOptions {
      * Sets the DatastoreProvider Morphia should use
      *
      * @param datastoreProvider the DatastoreProvider to use
+     * @deprecated unused
      */
     public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
         LOG.warning("DatastoreProviders are no longer needed or used.");

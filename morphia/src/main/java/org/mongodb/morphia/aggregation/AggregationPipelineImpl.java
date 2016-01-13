@@ -45,6 +45,16 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         this.source = source;
     }
 
+    /**
+     * Returns the internal list of stages for this pipeline.  This is an internal method intended only for testing and validation.  Use
+     * at your own risk.
+     *
+     * @return the list of stages
+     */
+    public List<DBObject> getStages() {
+        return stages;
+    }
+
     @Override
     public <U> Iterator<U> aggregate(final Class<U> target) {
         return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
@@ -193,12 +203,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      */
     @SuppressWarnings("unchecked")
     public DBObject toDBObject(final Projection projection) {
-        String sourceFieldName;
+        String target;
         if (firstStage) {
-            MappedField field = mapper.getMappedClass(source).getMappedField(projection.getSourceField());
-            sourceFieldName = field.getNameToStore();
+            MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
+            target = field.getNameToStore();
         } else {
-            sourceFieldName = projection.getSourceField();
+            target = projection.getTarget();
         }
 
         if (projection.getProjections() != null) {
@@ -207,17 +217,17 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             for (Projection subProjection : list) {
                 projections.putAll(toDBObject(subProjection));
             }
-            return new BasicDBObject(sourceFieldName, projections);
-        } else if (projection.getProjectedField() != null) {
-            return new BasicDBObject(sourceFieldName, projection.getProjectedField());
+            return new BasicDBObject(target, projections);
+        } else if (projection.getSource() != null) {
+            return new BasicDBObject(target, projection.getSource());
         } else if (projection.getArguments() != null) {
-            if (sourceFieldName == null) {
+            if (target == null) {
                 return toExpressionArgs(projection.getArguments());
             } else {
-                return new BasicDBObject(sourceFieldName, toExpressionArgs(projection.getArguments()));
+                return new BasicDBObject(target, toExpressionArgs(projection.getArguments()));
             }
         } else {
-            return new BasicDBObject(sourceFieldName, projection.isSuppressed() ? 0 : 1);
+            return new BasicDBObject(target, projection.isSuppressed() ? 0 : 1);
         }
     }
 
@@ -232,10 +242,10 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         for (Object arg : args) {
             if (arg instanceof Projection) {
                 Projection projection = (Projection) arg;
-                if (projection.getArguments() != null || projection.getProjections() != null || projection.getProjectedField() != null) {
+                if (projection.getArguments() != null || projection.getProjections() != null || projection.getSource() != null) {
                     result.add(toDBObject(projection));
                 } else {
-                    result.add("$" + projection.getSourceField());
+                    result.add("$" + projection.getTarget());
                 }
             } else if (arg instanceof Number) {
                 result.add(arg);
@@ -244,5 +254,10 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return stages.toString();
     }
 }

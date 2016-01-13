@@ -18,6 +18,7 @@ package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,11 +30,11 @@ import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
@@ -162,7 +163,7 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
-        Assert.assertEquals(Arrays.asList("The Odyssey", "Iliad"), author.books);
+        Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
 
         getDs().createAggregation(Book.class)
                .group("author", grouping("books", push("title")))
@@ -195,6 +196,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testProjection() {
         getDs().save(new Book("The Banquet", "Dante", 2),
                      new Book("Divine Comedy", "Dante", 1),
@@ -202,16 +204,40 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
-                                          .group("author", grouping("copies", sum("copies")))
-                                          .project(projection("_id").suppress(),
-                                                   projection("author", "_id"),
-                                                   projection("copies", divide(projection("copies"), 5)))
-                                          .sort(Sort.ascending("author"))
-                                          .aggregate(Book.class);
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
+                                                .group("author", grouping("copies", sum("copies")))
+                                                .project(projection("_id").suppress(),
+                                                         projection("author", "_id"),
+                                                         projection("copies", divide(projection("copies"), 5)))
+                                                .sort(Sort.ascending("author"));
+        Iterator<Book> aggregate = pipeline.aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
+
+        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Assert.assertEquals(stages.get(0), obj("$group", obj("_id", "$author").append("copies", obj("$sum", "$copies"))));
+        Assert.assertEquals(stages.get(1), obj("$project", obj("_id", 0)
+            .append("author", "$_id")
+            .append("copies", obj("$divide", asList("$copies", 5)))));
+
+    }
+
+    @Test
+    public void testUserPreferencesPipeline() {
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)  /* the class is irrelevant for this test */
+                                                 .group("state", Group.grouping("total_pop", sum("pop")))
+                                                 .match(getDs().createQuery(Book.class)
+                                                               .disableValidation()
+                                                               .field("total_pop").greaterThanOrEq(10000000));
+        DBObject group = obj("$group", obj("_id", "$state")
+            .append("total_pop", obj("$sum", "$pop")));
+
+        DBObject match = obj("$match" , obj("total_pop", obj("$gte", 10000000)));
+
+        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Assert.assertEquals(stages.get(0), group);
+        Assert.assertEquals(stages.get(1), match);
     }
 
     @Test
@@ -288,7 +314,7 @@ public class AggregationTest extends TestBase {
             this.title = title;
             this.author = author;
             this.copies = copies;
-            this.tags = Arrays.asList(tags);
+            this.tags = asList(tags);
         }
 
         @Override
@@ -318,7 +344,7 @@ public class AggregationTest extends TestBase {
         private User(final String name, final Date joined, final String... likes) {
             this.name = name;
             this.joined = joined;
-            this.likes = Arrays.asList(likes);
+            this.likes = asList(likes);
         }
 
         @Override

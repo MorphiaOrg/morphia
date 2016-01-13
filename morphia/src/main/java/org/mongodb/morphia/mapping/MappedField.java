@@ -45,6 +45,7 @@ import static java.util.Arrays.asList;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("unchecked")
 public class MappedField {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
