@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Getting-Starteds on Morphia</title>
+    <title>Getting-starteds on Morphia</title>
     <link>/morphia/1.1/getting-started/</link>
-    <description>Recent content in Getting-Starteds on Morphia</description>
+    <description>Recent content in Getting-starteds on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <guid>/morphia/1.1/getting-started/</guid>
       <description>
 
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+&lt;h2 id=&#34;getting-started:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Getting Started&lt;/h2&gt;
 
 &lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
 
@@ -36,14 +36,14 @@
       <guid>/morphia/1.1/getting-started/installation-guide/</guid>
       <description>
 
-&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+&lt;h1 id=&#34;installation:9d4f5debee078ff2736b8039cc26277c&#34;&gt;Installation&lt;/h1&gt;
 
 &lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
 
-&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
+&lt;div class=&#34;pull-right&#34;&gt;
   &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Maven&#34; data-off=&#34;Gradle&#34; data-offstyle=&#34;success&#34;&gt;
 &lt;/div&gt;
-&lt;/p&gt;
+
 
 &lt;p&gt;
 &lt;section class=&#34;maven&#34;&gt;
@@ -161,7 +161,7 @@ name as the collection name.  If you pass a String instead, it will use that val
 &lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the
 &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#entity&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which annotations Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
+&lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which indexes Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
   &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
