@@ -88,11 +88,16 @@ final class QueryValidator {
 
                 if (!fieldIsArrayOperator) {
                     //catch people trying to search/update into @Reference/@Serialized fields
-                    if (!canQueryPast(mf)) {
+                    if (validateNames && !canQueryPast(mf)) {
                         throw new ValidationException(format("Cannot use dot-notation past '%s' in '%s'; found while"
                                                              + " validating - %s", part, mc.getClazz().getName(), prop));
                     }
 
+                    if (mf == null && mc.isInterface()) {
+                        break;
+                    } else if (mf == null) {
+                        throw new ValidationException(format("The field '%s' could not be found in '%s'", prop, mc.getClazz().getName()));
+                    }
                     //get the next MappedClass for the next field validation
                     mc = mapper.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
                 }

@@ -23,6 +23,7 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.query.ValidationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,39 @@ public class EmbeddedMappingTest extends TestBase {
         Assert.assertEquals(entry, fetched);
     }
 
+    @Test
+    public void testNestedInterfaces() {
+        getMorphia().map(WithNested.class);
+        WithNested nested = new WithNested();
+        nested.nested = new NestedImpl("nested value");
+        getDs().save(nested);
+
+        WithNested found;
+        try {
+            getDs().createQuery(WithNested.class)
+                   .field("nested.field").equal("nested value")
+                   .get();
+            Assert.fail("Querying against an interface should fail validation");
+        } catch (ValidationException ignore) {
+            // all good
+        }
+        found = getDs().createQuery(WithNested.class)
+                       .disableValidation()
+                       .field("nested.field").equal("nested value")
+                       .get();
+        Assert.assertNotNull(found);
+        Assert.assertEquals(nested, found);
+
+        found = getDs().createQuery(WithNested.class)
+                       .disableValidation()
+                       .field("nested.field.fails").equal("nested value")
+                       .get();
+        Assert.assertNull(found);
+    }
+
+    public interface Nested {
+    }
+
     @Entity(value = "audit", noClassnameStored = true)
     public static class AuditEntry<T> {
         @Id
@@ -62,7 +96,9 @@ public class EmbeddedMappingTest extends TestBase {
             int result = id != null ? id.hashCode() : 0;
             result = 31 * result + delta.hashCode();
             return result;
-        }        @Override
+        }
+
+        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
@@ -79,7 +115,6 @@ public class EmbeddedMappingTest extends TestBase {
             return delta.equals(that.delta);
 
         }
-
 
     }
 
@@ -118,6 +153,68 @@ public class EmbeddedMappingTest extends TestBase {
         public int hashCode() {
             int result = before.hashCode();
             result = 31 * result + after.hashCode();
+            return result;
+        }
+    }
+
+    public static class NestedImpl implements Nested {
+        private String field;
+
+        public NestedImpl() {
+        }
+
+        public NestedImpl(final String field) {
+            this.field = field;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final NestedImpl nested = (NestedImpl) o;
+
+            return field != null ? field.equals(nested.field) : nested.field == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return field != null ? field.hashCode() : 0;
+        }
+    }
+
+    public static class WithNested {
+        @Id
+        private ObjectId id;
+        private Nested nested;
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final WithNested that = (WithNested) o;
+
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            return nested != null ? nested.equals(that.nested) : that.nested == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (nested != null ? nested.hashCode() : 0);
             return result;
         }
     }

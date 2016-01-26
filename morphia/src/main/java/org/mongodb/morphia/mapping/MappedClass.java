@@ -128,6 +128,14 @@ public class MappedClass {
         }
     }
 
+
+    /**
+     * @return true if the MappedClass is an interface
+     */
+    public boolean isInterface() {
+        return clazz.isInterface();
+    }
+
     /**
      * Checks to see if it a Map/Set/List or a property supported by the MongoDB java driver
      *
@@ -612,7 +620,7 @@ public class MappedClass {
         private final Class<?> clazz;
         private final Method method;
 
-        public ClassMethodPair(final Class<?> c, final Method m) {
+        ClassMethodPair(final Class<?> c, final Method m) {
             clazz = c;
             method = m;
         }
