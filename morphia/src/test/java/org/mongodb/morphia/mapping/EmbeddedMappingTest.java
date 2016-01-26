@@ -16,16 +16,22 @@
 
 package org.mongodb.morphia.mapping;
 
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.query.ValidationException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EmbeddedMappingTest extends TestBase {
@@ -53,6 +59,14 @@ public class EmbeddedMappingTest extends TestBase {
     @Test
     public void testNestedInterfaces() {
         getMorphia().map(WithNested.class);
+        getDs().ensureIndexes();
+
+        final List<DBObject> indexInfo = getDs().getCollection(WithNested.class).getIndexInfo();
+        boolean indexFound = false;
+        for (DBObject dbObject : indexInfo) {
+            indexFound |= "nested.field.fail".equals(((DBObject) dbObject.get("key")).keySet().iterator().next());
+        }
+        Assert.assertTrue("Should find the nested field index", indexFound);
         WithNested nested = new WithNested();
         nested.nested = new NestedImpl("nested value");
         getDs().save(nested);
@@ -188,6 +202,10 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    @Indexes({
+        @Index(fields = {@Field("nested.field.fail")},
+            options = @IndexOptions(disableValidation = true, sparse = true))
+        })
     public static class WithNested {
         @Id
         private ObjectId id;

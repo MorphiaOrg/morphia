@@ -1336,8 +1336,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (value.contains(".")) {
             String segment = value.substring(0, value.indexOf("."));
             MappedField field = findField(namePath, mc, segment);
-            MappedClass mappedClass = getMapper().getMappedClass(field.getSubType() != null ? field.getSubType() : field.getConcreteType());
-            return findField(namePath, mappedClass, value.substring(value.indexOf(".") + 1));
+            if (field != null) {
+                MappedClass mappedClass =
+                    getMapper().getMappedClass(field.getSubType() != null ? field.getSubType() : field.getConcreteType());
+                return findField(namePath, mappedClass, value.substring(value.indexOf(".") + 1));
+            } else {
+                namePath.addAll(Arrays.asList(value.split("\\.")));
+                return null;
+            }
         } else {
             MappedField mf = mc.getMappedField(value);
             if (mf == null) {
