@@ -162,6 +162,10 @@ public class AggregationTest extends TestBase {
                                             .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
+        Assert.assertEquals("Dante", author.name);
+        Assert.assertEquals(asList("The Banquet", "Divine Comedy", "Eclogues"), author.books);
+
+        author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
 
