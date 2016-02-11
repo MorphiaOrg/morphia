@@ -15,7 +15,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/) as well.
 
 The following code snippets come from the `QuickTour.java` example code
-that can be found with the [Morphia source]({{< srcref "morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java">}}).
+that can be found with the [Morphia source]({{< srcref "morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java">}}).
 
 ## Setting up Morphia
 
