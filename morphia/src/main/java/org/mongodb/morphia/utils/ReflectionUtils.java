@@ -681,7 +681,7 @@ public final class ReflectionUtils {
     }
 
     private static boolean isSubPackage(final String fullPackageName, final String parentPackageName) {
-        return fullPackageName.startsWith(parentPackageName + ".");
+        return fullPackageName.startsWith(parentPackageName);
     }
 
     /**
