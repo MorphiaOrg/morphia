@@ -62,8 +62,10 @@ public class ReflectionUtilsTest extends TestBase {
         Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
 
         for (Class clazz : result) {
-            assertThat(clazz.getPackage().getName(), is("org.junit"));
+            assertThat(clazz.getPackage().getName().startsWith("org.junit"), is(true));
         }
+        assertThat(result.contains(org.junit.Assert.class), is(true));
+        assertThat(result.contains(org.junit.rules.RuleChain.class), is(true));
     }
 
     @Test
