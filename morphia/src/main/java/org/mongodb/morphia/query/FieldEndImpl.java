@@ -10,8 +10,7 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.utils.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
@@ -136,8 +135,26 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
     @Override
     public T hasThisElement(final Object val) {
+        return hasThisElement(val, false);
+    }
+
+    @Override
+    public T hasThisElement(final Object val, boolean not) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, not, null);
+    }
+
+    @Override
+    public T hasThisElement(final Object val, String... fieldsToCompare) {
+        Assert.parametersNotNull("fieldsToCompare", (Object[])fieldsToCompare);
+        return hasThisElement(val, false, fieldsToCompare);
+    }
+
+    @Override
+    public T hasThisElement(final Object val, boolean not, String... fieldsToCompare) {
+        Assert.parametersNotNull("val", val);
+        Assert.parametersNotNull("fieldsToCompare", (Object[])fieldsToCompare);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, not, new HashSet<String>(Arrays.asList(fieldsToCompare)));
     }
 
     @Override
@@ -281,11 +298,12 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
         return target;
     }
 
-    /**
-     * Add a criteria
-     */
     private T addCriteria(final FilterOperator op, final Object val) {
-        target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not));
+        return addCriteria(op, val, false, new HashSet<String>());
+    }
+
+    private T addCriteria(final FilterOperator op, final Object val, Boolean not, Set<String> fieldsToCompare) {
+        target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not, fieldsToCompare));
         return target;
     }
 

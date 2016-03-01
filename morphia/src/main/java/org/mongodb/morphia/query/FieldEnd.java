@@ -7,6 +7,9 @@ import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
  *
@@ -137,6 +140,37 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
      */
     T hasThisElement(Object val);
+
+    /**
+     * Checks that a field has the value listed.
+     *
+     * @param val the value to check against
+     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T hasThisElement(Object val, String... fieldsToCompare);
+
+    /**
+     * Checks that a field has the value listed.
+     *
+     * @param val the value to check against
+     * @param not set to true if the check should be negative
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T hasThisElement(Object val, boolean not);
+
+    /**
+     * Checks that a field has the value listed.
+     *
+     * @param val the value to check against
+     * @param not set to true if the check should be negative
+     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T hasThisElement(Object val, boolean not, String... fieldsToCompare);
 
     /**
      * Checks that a field has the value listed.
