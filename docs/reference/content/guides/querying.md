@@ -27,8 +27,7 @@ Query<Product> query = datastore.createQuery(Product.class);
 
 The first method of interest is `filter()`.  This method takes two values: a condition string and a value.  The `value` parameter is, of 
 course, the value to use when applying the `condition` clause.  The `condition` parameter is a bit more complicated.  At its simplest, 
-the condition is just a field name.  In this case, the condition is assumed to be an [equality]({{< docsref "reference/operator/query/eq/"
- >}}) check.  There is a slightly more complicated variant, however.
+the condition is just a field name.  In this case, the condition is assumed to be an [equality]({{< docsref "reference/operator/query/eq/" >}}) check.  There is a slightly more complicated variant, however.
  
 The `condition` value can also contain an operator.  For example, to compare a numeric field against a value, you might write something 
 like this:
@@ -265,3 +264,24 @@ created correctly.  If the collection already exists and is not capped, you will
 1.  Since this `Iterator` is backed by a tailable cursor, `hasNext()` and `next()` will block until a new item is found.  In this 
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the 
 application.
+
+### Raw Querying
+
+You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.
+
+For example:
+
+```
+DBObject query = BasicDBObjectBuilder.start()
+        .add("albums",
+                        new BasicDBObject("$elemMatch",
+                                new BasicDBObject("$and", new BasicDBObject[] {
+                                    new BasicDBObject("albumId", albumDto.getAlbumId()),
+                                    new BasicDBObject("album",
+                                        new BasicDBObject("$exists", false))
+                })))
+        .get();
+
+Query<Artist> findQuery = datastore.createQuery(Artist.class, query);
+Artist result = findQuery.get();
+```
