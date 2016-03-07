@@ -11,7 +11,11 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
@@ -76,47 +80,46 @@ public class FieldCriteria extends AbstractCriteria {
             && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
             mappedValue = Collections.singletonList(mappedValue);
         }
+
         if (value != null && type == null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
             && Iterable.class.isAssignableFrom(value.getClass())) {
             mappedValue = Collections.emptyList();
         }
 
         if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
-            if(fieldsToCompare == null || fieldsToCompare.size() == 0) {
+            if (fieldsToCompare == null || fieldsToCompare.size() == 0) {
                 removeIdFieldFromComparison((DBObject) mappedValue, Mapper.ID_KEY);
-            }
-            else {
+            } else {
                 limitComparisonToSelectedFields(fieldsToCompare, (DBObject) mappedValue);
             }
         }
 
         this.field = sb.toString();
-        operator = op;
+        this.operator = op;
         this.value = mappedValue;
         this.not = not;
     }
 
-    private void removeIdFieldFromComparison(DBObject mappedValue, String idKey) {
+    private void removeIdFieldFromComparison(final DBObject mappedValue, final String idKey) {
         mappedValue.removeField(idKey);
     }
 
-    private void limitComparisonToSelectedFields(Set<String> fieldsToCompare, DBObject mappedValue) {
+    private void limitComparisonToSelectedFields(final Set<String> fieldsToCompare, final DBObject mappedValue) {
         HashSet<String> fields = extractFieldsAsHashSet(mappedValue);
         removeFields(mappedValue, fields, fieldsToCompare);
     }
 
-    private void removeFields(DBObject mappedValue, Set<String> allFields, Set<String> fieldsToCompare) {
-        for(String field : allFields)
-        {
-            if(!fieldsToCompare.contains(field)) {
+    private void removeFields(final DBObject mappedValue, final Set<String> allFields, final Set<String> fieldsToCompare) {
+        for (String field : allFields) {
+            if (!fieldsToCompare.contains(field)) {
                 mappedValue.removeField(field);
             }
         }
     }
 
-    private HashSet<String> extractFieldsAsHashSet(DBObject mappedValue) {
+    private HashSet<String> extractFieldsAsHashSet(final DBObject mappedValue) {
         HashSet<String> fields = new HashSet<String>();
-        for(String field : mappedValue.keySet()) {
+        for (String field : mappedValue.keySet()) {
             fields.add(field);
         }
         return fields;

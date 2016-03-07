@@ -368,7 +368,7 @@ public class TestQuery extends TestBase {
         assertNull(pwkBad);
     }
 
-    public static <E> List<E> makeArrayList(Iterable<E> iter) {
+    public static <E> List<E> makeArrayList(final Iterable<E> iter) {
         ArrayList<E> list = new ArrayList<E>();
         for (E item : iter) {
             list.add(item);
@@ -385,9 +385,9 @@ public class TestQuery extends TestBase {
         Iterable<Key<PhotoWithKeywords>> savedKeysResult = getDs().save(pwk1, pwk2, pwk3);
 
         List<Key<PhotoWithKeywords>> savedKeys = makeArrayList(savedKeysResult);
-        pwk1.id = (ObjectId)savedKeys.get(0).getId();
-        pwk2.id = (ObjectId)savedKeys.get(1).getId();
-        pwk3.id = (ObjectId)savedKeys.get(2).getId();
+        pwk1.id = (ObjectId) savedKeys.get(0).getId();
+        pwk2.id = (ObjectId) savedKeys.get(1).getId();
+        pwk3.id = (ObjectId) savedKeys.get(2).getId();
 
         Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
                 .field("keywords")
@@ -401,7 +401,7 @@ public class TestQuery extends TestBase {
         boolean pwk2Found = false;
         boolean pwk3Found = false;
 
-        for(PhotoWithKeywords p : results) {
+        for (PhotoWithKeywords p : results) {
             if (p.id.equals(pwk1.id)) {
                 pwk1Found = true;
             }

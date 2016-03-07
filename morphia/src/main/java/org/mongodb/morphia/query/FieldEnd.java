@@ -7,9 +7,6 @@ import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
  *
