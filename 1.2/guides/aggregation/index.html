@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="/morphia/1.1/img/favicon.png">
+
+    <title>Aggregation</title>
+
+    <link rel="stylesheet" href="/morphia/1.1/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/highlight/styles/idea.css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/java.css" type="text/css" />
+
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="/morphia/1.1/../">
+        <img src="/morphia/1.1/img/logo-mongodb-header.png", alt="MongoDB.org" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
+              University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="/morphia/1.1">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="/morphia/1.1/../">Morphia</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1.0</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/morphia/1.1/getting-started/" class="">
+      <i class='fa fa-road'></i>
+      <span>Getting Started</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/getting-started/installation-guide/">
+        <i class='fa'></i>
+        Installation Guide
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/getting-started/quick-tour/">
+        <i class='fa'></i>
+        Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/morphia/1.1/guides/" class="">
+      <i class='fa fa-book'></i>
+      <span>Reference Guides</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/annotations/">
+        <i class='fa fa-file-text-o'></i>
+        Annotations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/querying/">
+        <i class='fa fa-file-text-o'></i>
+        Querying
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/indexing/">
+        <i class='fa fa-file-text-o'></i>
+        Indexing
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.1/javadoc/">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.1/issues-help/">
+        <i class='fa fa-life-ring'></i>
+        Issues &amp; Help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/morphia">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+<div class="option-popup closed hidden" id="optionsVersionsPopup">
+<div class="option-header">
+  <i class="fa fa-gear"></i>
+  <span>OPTIONS</span>
+  <i class="fa fa-angle-up pull-right"></i>
+</div>
+<div class="option-body">
+  <ul>
+      
+      <li>
+        <label>Version</label>
+        <div class="btn-group btn-group-xs pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Select Version <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
+          </ul>
+        </div>
+      </li>
+
+   
+
+
+    
+
+  </ul>
+</div>
+</div>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/guides/aggregation.md" target="_blank" title="Edit guides/aggregation.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/morphia/1.1/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
+  <li>Aggregation</li>
+</ul>
+</div>
+
+
+
+
+<h1 id="aggregation:f74d38643fe7ae9d1c437e4fb3096e53">Aggregation</h1>
+
+<p>The <a href="http://docs.mongodb.org/manual/aggregation
+">aggregation framework</a> in MongoDB allows you to define a series (called a pipeline) of
+operations (called stages) against the data in a collection.  These pipelines can be used for analytics or they can be used to
+convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official
+ MongoDB <a href="http://docs.mongodb.org/manual/aggregation
+">documentation</a> has extensive tutorials on such details.  Rather, this
+ guide will
+ focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+">tests</a> in Morphia itself.</p>
+
+<p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <code>Datastore</code>:</p>
+
+<pre><code class="language-java">Iterator&lt;Author&gt; aggregate = datastore.createAggregation(Book.class)
+      .group(&quot;author&quot;, grouping(&quot;books&quot;, push(&quot;title&quot;)))
+      .out(Author.class, options);
+</code></pre>
+
+<p><code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
+against.  Because of the transformational operations available in the aggregation <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline
+">pipeline</a>,
+ Morphia can not validate as much as it can with querying so care will need to be taken to ensure
+ document fields actually exist when referencing them in your pipeline.</p>
+
+<h2 id="the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53">The Pipeline</h2>
+
+<p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <code>group()</code>.  This method is the Morphia
+equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/
+"><code>$group</code></a> operator.  This stage, as the name
+suggests, groups together documents based on the given field&rsquo;s values.  In this example, we are collecting together all the books by
+author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting documents.  Within this grouping, this pipeline takes the
+<code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping of data, we&rsquo;re then <code>push()</code>ing the titles in to an array
+in the final document.  This example is the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author
+">example</a> found in the aggregation tutorials.  This results in a series of
+ documents that look like this:</p>
+
+<pre><code class="language-json"> { &quot;_id&quot; : &quot;Homer&quot;, &quot;books&quot; : [ &quot;The Odyssey&quot;, &quot;Iliad&quot; ] }
+ { &quot;_id&quot; : &quot;Dante&quot;, &quot;books&quot; : [ &quot;The Banquet&quot;, &quot;Divine Comedy&quot;, &quot;Eclogues&quot; ] }
+</code></pre>
+
+<h2 id="executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53">Executing the Pipeline</h2>
+
+<p>There are two basic ways to execute an aggregation pipeline:  <code>aggregate()</code> and <code>out()</code>.  These methods are Morphia&rsquo;s cues to send the
+ pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
+  The differences, however, can have huge implications on the performance of your application.  <code>aggregate()</code> by default will use the
+ &lsquo;inline&rsquo; method for returning the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.
+  We can changes this behavior using the <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><code>AggregationOptions</code></a>
+  class.  The <code>options</code> reference we passed to <code>out()</code> also applies to <code>aggregate()</code>.</p>
+
+<h3 id="aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53">Aggregation Options</h3>
+
+<p>There are a handful options here but there&rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
+ returns everything &ldquo;inline&rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
+ value of <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a>
+ determines.  By setting the output mode to <code>CURSOR</code>, MongoDB can return a result size much larger than 16MB.  The options can also be
+ configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
+  the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
+  on the server.</p>
+
+<h3 id="out:f74d38643fe7ae9d1c437e4fb3096e53">$out</h3>
+
+<p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+"><code>$out</code></a> is a new operator in MongoDB 2.6 that allows the results of a
+pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
+if it does not exist, will be created upon execution of the pipeline.</p>
+
+<div class="admonition important">
+<h5 class="admonition-title">important</h5>
+<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
+
+</div>
+
+
+<p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
+framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
+collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
+output mode to <code>CURSOR</code> with <code>aggregate()</code> and your application need not know the difference.  It does, of course, have an impact on your
+database and any existing data.  The use of <code>$out</code> and <code>out()</code> can be greatly beneficial in scenarios such as precomputed aggregated
+results for later retrieval.</p>
+
+<h3 id="typed-results:f74d38643fe7ae9d1c437e4fb3096e53">Typed Results</h3>
+
+<p><code>out()</code> has several variants.  In this example, we&rsquo;re passing in <code>Author.class</code> which tells Morphia that we want to map each document
+returned to an instance of <code>Author</code>.  Because we&rsquo;re using <code>out()</code> instead of <code>aggregate()</code>, Morphia will use the mapped collection for
+<code>Author</code> as the output collection for the pipeline.  If you&rsquo;d like to use an alternate collection but still return a cursor of <code>Author</code>
+instances, you can use <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
+.lang.String-java.lang.Class-com.mongodb.AggregationOptions-"><code>out(String,Class,AggregationOptions)</code></a> instead.</p>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.1/guides/querying/">
+      <i class="fa fa-long-arrow-left"> </i> Querying
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/morphia/1.1/guides/indexing/">
+    Indexing <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#aggregation:f74d38643fe7ae9d1c437e4fb3096e53">Aggregation</a>
+<ul>
+<li><a href="#the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53">The Pipeline</a></li>
+<li><a href="#executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53">Executing the Pipeline</a>
+<ul>
+<li><a href="#aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53">Aggregation Options</a></li>
+<li><a href="#out:f74d38643fe7ae9d1c437e4fb3096e53">$out</a></li>
+<li><a href="#typed-results:f74d38643fe7ae9d1c437e4fb3096e53">Typed Results</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "/morphia/1.1",
+   VERSION:     "1.1.0",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="/morphia/1.1/js/jquery.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/bootstrap.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/navbar.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/scripts.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/java.js"></script>
+
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+
