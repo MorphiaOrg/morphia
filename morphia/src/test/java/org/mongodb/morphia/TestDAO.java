@@ -15,7 +15,9 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.dao.DAO;
@@ -31,6 +33,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -52,6 +55,7 @@ public class TestDAO extends TestBase {
         final Address address = new Address();
         address.setStreet("Posthusstraeti 11");
         address.setPostCode("101");
+        address.setSecretWord("philodendron");
         borg.setAddress(address);
 
         final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
@@ -62,6 +66,10 @@ public class TestDAO extends TestBase {
         final Hotel hotelLoaded = hotelDAO.get(borg.getId());
         assertEquals(borg.getName(), hotelLoaded.getName());
         assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
+
+        final DBObject dbObject = getMorphia().toDBObject(borg);
+        assertNull(((DBObject) dbObject.get("address")).get("secretWord"));
+        Assert.assertNull(hotelLoaded.getAddress().getSecretWord());
 
         final Hotel hotelByValue = hotelDAO.findOne("name", "Hotel Borg");
         assertNotNull(hotelByValue);

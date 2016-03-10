@@ -17,6 +17,7 @@ package org.mongodb.morphia.testmodel;
 
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Transient;
 
 import java.io.Serializable;
 
@@ -33,6 +34,9 @@ public class Address implements Serializable {
     @Property
     private String postCode;
 
+    @Transient
+    private String secretWord;
+
     public String getPostCode() {
         return postCode;
     }
@@ -47,5 +51,13 @@ public class Address implements Serializable {
 
     public void setStreet(final String street) {
         this.street = street;
+    }
+
+    public String getSecretWord() {
+        return secretWord;
+    }
+
+    public void setSecretWord(final String secretWord) {
+        this.secretWord = secretWord;
     }
 }
