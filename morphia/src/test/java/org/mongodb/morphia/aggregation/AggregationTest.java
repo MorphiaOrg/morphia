@@ -17,6 +17,7 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
@@ -44,6 +45,22 @@ import static org.mongodb.morphia.geo.GeoJson.point;
 
 public class AggregationTest extends TestBase {
     @Test
+    public void testDateAggregation() {
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .group(
+                Group.id(grouping("month", new Accumulator("$month", "date")),
+                         grouping("year", new Accumulator("$year", "date"))),
+                grouping("count", new Accumulator("$sum", 1)));
+        final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
+        final DBObject id = (DBObject) ((DBObject) group.get("$group")).get("_id");
+        Assert.assertEquals(new BasicDBObject("$month", "$date"), id.get("month"));
+        Assert.assertEquals(new BasicDBObject("$year", "$date"), id.get("year"));
+
+        pipeline.aggregate(User.class);
+    }
+
+    @Test
     public void testGenericAccumulatorUsage() {
         getDs().save(new Book("The Banquet", "Dante", 2),
                      new Book("Divine Comedy", "Dante", 1),
@@ -66,6 +83,37 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testGeoNearWithLegacyCoords() {
+        // given
+        double latitude = 51.5286416;
+        double longitude = -0.1015987;
+        PlaceWithLegacyCoords london = new PlaceWithLegacyCoords(new double[]{longitude, latitude}, "London");
+        getDs().save(london);
+        PlaceWithLegacyCoords manchester = new PlaceWithLegacyCoords(new double[]{-2.2235922, 53.4722454}, "Manchester");
+        getDs().save(manchester);
+        PlaceWithLegacyCoords sevilla = new PlaceWithLegacyCoords(new double[]{-5.9550582, 37.3753708}, "Sevilla");
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<PlaceWithLegacyCoords> citiesOrderedByDistanceFromLondon = getDs()
+            .createAggregation(PlaceWithLegacyCoords.class)
+            .geoNear(GeoNear.builder("distance")
+                            .setNear(latitude, longitude)
+                            .setSpherical(false)
+                            .build())
+            .aggregate(PlaceWithLegacyCoords.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
     public void testGeoNearWithSphericalGeometry() {
         // given
         double latitude = 51.5286416;
@@ -82,41 +130,10 @@ public class AggregationTest extends TestBase {
         // when
         Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
                                                                   .geoNear(GeoNear.builder("distance")
-                                                                                    .setNear(latitude, longitude)
-                                                                                    .setSpherical(true)
-                                                                                    .build())
+                                                                                  .setNear(latitude, longitude)
+                                                                                  .setSpherical(true)
+                                                                                  .build())
                                                                   .aggregate(City.class);
-
-        // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
-        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
-    }
-
-    @Test
-    public void testGeoNearWithLegacyCoords() {
-        // given
-        double latitude = 51.5286416;
-        double longitude = -0.1015987;
-        PlaceWithLegacyCoords london = new PlaceWithLegacyCoords(new double[]{longitude, latitude}, "London");
-        getDs().save(london);
-        PlaceWithLegacyCoords manchester = new PlaceWithLegacyCoords(new double[]{-2.2235922, 53.4722454}, "Manchester");
-        getDs().save(manchester);
-        PlaceWithLegacyCoords sevilla = new PlaceWithLegacyCoords(new double[]{-5.9550582, 37.3753708}, "Sevilla");
-        getDs().save(sevilla);
-
-        getDs().ensureIndexes();
-
-        // when
-        Iterator<PlaceWithLegacyCoords> citiesOrderedByDistanceFromLondon = getDs()
-                .createAggregation(PlaceWithLegacyCoords.class)
-                .geoNear(GeoNear.builder("distance")
-                                .setNear(latitude, longitude)
-                                .setSpherical(false)
-                                .build())
-                .aggregate(PlaceWithLegacyCoords.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -205,11 +222,11 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
-                                                .group("author", grouping("copies", sum("copies")))
-                                                .project(projection("_id").suppress(),
-                                                         projection("author", "_id"),
-                                                         projection("copies", divide(projection("copies"), 5)))
-                                                .sort(Sort.ascending("author"));
+                                                    .group("author", grouping("copies", sum("copies")))
+                                                    .project(projection("_id").suppress(),
+                                                             projection("author", "_id"),
+                                                             projection("copies", divide(projection("copies"), 5)))
+                                                    .sort(Sort.ascending("author"));
         Iterator<Book> aggregate = pipeline.aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
@@ -221,23 +238,6 @@ public class AggregationTest extends TestBase {
             .append("author", "$_id")
             .append("copies", obj("$divide", asList("$copies", 5)))));
 
-    }
-
-    @Test
-    public void testUserPreferencesPipeline() {
-        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)  /* the class is irrelevant for this test */
-                                                 .group("state", Group.grouping("total_pop", sum("pop")))
-                                                 .match(getDs().createQuery(Book.class)
-                                                               .disableValidation()
-                                                               .field("total_pop").greaterThanOrEq(10000000));
-        DBObject group = obj("$group", obj("_id", "$state")
-            .append("total_pop", obj("$sum", "$pop")));
-
-        DBObject match = obj("$match" , obj("total_pop", obj("$gte", 10000000)));
-
-        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
-        Assert.assertEquals(stages.get(0), group);
-        Assert.assertEquals(stages.get(1), match);
     }
 
     @Test
@@ -296,6 +296,23 @@ public class AggregationTest extends TestBase {
             }
             count++;
         }
+    }
+
+    @Test
+    public void testUserPreferencesPipeline() {
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)  /* the class is irrelevant for this test */
+                                                    .group("state", Group.grouping("total_pop", sum("pop")))
+                                                    .match(getDs().createQuery(Book.class)
+                                                                  .disableValidation()
+                                                                  .field("total_pop").greaterThanOrEq(10000000));
+        DBObject group = obj("$group", obj("_id", "$state")
+            .append("total_pop", obj("$sum", "$pop")));
+
+        DBObject match = obj("$match", obj("total_pop", obj("$gte", 10000000)));
+
+        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Assert.assertEquals(stages.get(0), group);
+        Assert.assertEquals(stages.get(1), match);
     }
 
     @Entity(value = "books", noClassnameStored = true)

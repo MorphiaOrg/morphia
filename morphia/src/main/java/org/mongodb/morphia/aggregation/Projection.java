@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @mongodb.driver.manual reference/operator/aggregation/project/ $project
  */
-public final class Projection {
+public final class  Projection {
 
     private final String target;
     private final String source;
