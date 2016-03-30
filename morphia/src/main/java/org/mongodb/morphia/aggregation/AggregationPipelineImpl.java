@@ -8,6 +8,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.geo.GeometryShapeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
@@ -83,7 +84,10 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @SuppressWarnings("deprecation")
     public AggregationPipeline geoNear(final GeoNear geoNear) {
         DBObject geo = new BasicDBObject();
-        putIfNull(geo, "near", geoNear.getNear());
+        GeometryShapeConverter.PointConverter pointConverter = new GeometryShapeConverter.PointConverter();
+        pointConverter.setMapper(mapper);
+
+        putIfNull(geo, "near", geoNear.getNearAsDBObject(pointConverter));
         putIfNull(geo, "distanceField", geoNear.getDistanceField());
         putIfNull(geo, "limit", geoNear.getLimit());
         putIfNull(geo, "num", geoNear.getMaxDocuments());

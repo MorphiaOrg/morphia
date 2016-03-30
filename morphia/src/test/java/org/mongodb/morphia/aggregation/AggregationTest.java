@@ -28,6 +28,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
+import org.mongodb.morphia.geo.Point;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,6 +105,35 @@ public class AggregationTest extends TestBase {
                             .setSpherical(false)
                             .build())
             .aggregate(PlaceWithLegacyCoords.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
+    public void testGeoNearWithGeoJson() {
+        // given
+        Point londonPoint = point(51.5286416, -0.1015987);
+        City london = new City("London", londonPoint);
+        getDs().save(london);
+        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        getDs().save(manchester);
+        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
+                                                                  .geoNear(GeoNear.builder("distance")
+                                                                                  .setNear(londonPoint)
+                                                                                  .setSpherical(true)
+                                                                                  .build())
+                                                                  .aggregate(City.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
