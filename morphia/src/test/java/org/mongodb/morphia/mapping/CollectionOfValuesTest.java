@@ -13,8 +13,11 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.dao.BasicDAO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 
 /**
@@ -68,25 +71,23 @@ public class CollectionOfValuesTest extends TestBase {
         getMorphia().map(ContainsListOfList.class);
         getDs().delete(getDs().find(ContainsListOfList.class));
         final ContainsListOfList entity = new ContainsListOfList();
-        final List<List<String>> testList = new ArrayList<List<String>>();
-        final List<String> element1 = new ArrayList<String>();
-        element1.add("element1");
-        testList.add(element1);
 
-        final List<String> element2 = new ArrayList<String>();
-        element2.add("element2");
-        testList.add(element2);
-
-        entity.listOfList = testList;
+        entity.strings = asList(Arrays.asList("element1", "element2"), Arrays.asList("element3"));
+        entity.integers = asList(Arrays.asList(1, 2), Arrays.asList(3));
         getDs().save(entity);
+
         final ContainsListOfList loaded = getDs().get(entity);
 
-        Assert.assertNotNull(loaded.listOfList);
+        Assert.assertNotNull(loaded.strings);
+        Assert.assertEquals(entity.strings, loaded.strings);
+        Assert.assertEquals(entity.strings.get(0), loaded.strings.get(0));
+        Assert.assertEquals(entity.strings.get(0).get(0), loaded.strings.get(0).get(0));
 
-        Assert.assertEquals(testList, loaded.listOfList);
-        final List<String> loadedElement1 = loaded.listOfList.get(0);
-        Assert.assertEquals(element1, loadedElement1);
-        Assert.assertEquals(element1.get(0), loadedElement1.get(0));
+        Assert.assertNotNull(loaded.integers);
+        Assert.assertEquals(entity.integers, loaded.integers);
+        Assert.assertEquals(entity.integers.get(0), loaded.integers.get(0));
+        Assert.assertEquals(entity.integers.get(0).get(0), loaded.integers.get(0).get(0));
+
         Assert.assertNotNull(loaded.id);
     }
 
@@ -165,8 +166,8 @@ public class CollectionOfValuesTest extends TestBase {
     public static class ContainsListOfList {
         @Id
         private ObjectId id;
-        @Embedded
-        private List<List<String>> listOfList;
+        private List<List<String>> strings;
+        private List<List<Integer>> integers;
     }
 
     public static class ContainsTwoDimensionalArray {
