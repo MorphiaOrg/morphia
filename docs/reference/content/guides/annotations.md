@@ -255,12 +255,12 @@ public @interface Embedded {
 
 ## Lifecycle Annotations
 
-There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist (Save), and Pre/Post-Load.
+There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.
 
 - `@PreLoad` - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)
 - `@PostLoad` - Called after mapping to the entity
 - `@PrePersist` - Called before save, it can return a DBObject in place of an empty one.
-- `@PostSave` - Called before the save call to the datastore
+- `@PreSave` - Called before the save call to the datastore
 - `@PostPersist` - Called after the save call to the datastore
 
 ### Examples
