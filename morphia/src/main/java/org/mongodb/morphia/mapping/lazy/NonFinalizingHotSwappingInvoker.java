@@ -36,7 +36,7 @@ class NonFinalizingHotSwappingInvoker<T> extends HotSwappingInvoker<T> {
         if (method.getAnnotation(IdGetter.class) != null) {
             ObjectReference<Object> delegateReference = getDelegateReference();
             if (delegateReference instanceof EntityObjectReference) {
-                EntityObjectReference entityObjectReference = (EntityObjectReference)delegateReference;
+                EntityObjectReference entityObjectReference = (EntityObjectReference) delegateReference;
                 return entityObjectReference.__getKey().getId();
             }
         }
