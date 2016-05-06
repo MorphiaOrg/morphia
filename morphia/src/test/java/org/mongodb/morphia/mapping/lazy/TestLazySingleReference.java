@@ -4,15 +4,17 @@ package org.mongodb.morphia.mapping.lazy;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.IdGetter;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import org.mongodb.morphia.testutil.TestEntity;
 
 
-@Ignore
 public class TestLazySingleReference extends ProxyTestBase {
+    @Ignore
     @Test
     public final void testCreateProxy() {
 
@@ -84,6 +86,42 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     @Test
+    public final void testCallIdGetterWithoutFetching() {
+        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+            return;
+        }
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+        ObjectId id = reference.getId();
+        getDs().save(reference);
+
+        root.r = reference;
+        reference.setFoo("bar");
+        getDs().save(root);
+
+        root = getDs().get(root);
+
+        final ReferencedEntity p = root.r;
+
+        assertIsProxy(p);
+        assertNotFetched(p);
+
+        ObjectId idFromProxy = p.getId();
+        Assert.assertEquals(id, idFromProxy);
+
+        // Since getId() is annotated with @IdGetter, it should not cause the
+        // referenced entity to be fetched
+        assertNotFetched(p);
+
+        p.getFoo();
+
+        // Calling getFoo() should have caused the referenced entity to be fetched
+        assertFetched(p);
+
+    }
+
+    @Test
     public final void testSameProxy() {
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -103,6 +141,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         Assert.assertSame(root.r, root.secondReference);
     }
 
+    @Ignore
     @Test
     public final void testSerialization() {
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
@@ -131,6 +170,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     }
 
+    @Ignore
     @Test
     public final void testShortcutInterface() {
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
@@ -184,6 +224,11 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     public static class ReferencedEntity extends TestEntity {
         private String foo;
+
+        @IdGetter
+        public ObjectId getId() {
+            return super.getId();
+        }
 
         public String getFoo() {
             return foo;
