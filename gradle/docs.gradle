@@ -1,8 +1,9 @@
+def urlVersion = version.split('\\.')[0..1].join('.')
+def formalVersion = version.split('\\.').dropRight(1).join('.') + '-SNAPSHOT'
+
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 
-//    def simpleVersion = version.split('\\.')[0..1].join('.')
-
-    def dest = file("build/gh-pages/${simpleVersion}")
+    def dest = file("build/gh-pages/${urlVersion}")
     dest.mkdirs()
     copy {
         from 'docs/reference/public'
@@ -56,7 +57,8 @@ task landing << {
 }
 
 task reference(dependsOn: ':morphia:javadoc') << {
-    println "********** simpleVersion = ${simpleVersion}"
+    println "********** urlVersion = ${urlVersion}"
+    println "********** formalVersion = ${formalVersion}"
     exec {
         workingDir 'docs/reference'
         environment System.getenv()
@@ -66,6 +68,40 @@ task reference(dependsOn: ':morphia:javadoc') << {
         from 'morphia/build/docs'
         into 'docs/reference/public'
     }
+
+    def input = 'docs/reference/config.toml'
+    def temp = input + '.temp'
+    file( temp ).withWriter { w ->
+      file( input ).eachLine { line ->
+        w << (line.startsWith('baseurl = "') ? "baseurl = \"/morphia/${urlVersion}\"" : line) + '\n'
+        w << '\n'
+      }
+    }
+    file(temp).renameTo(file(input))
+
+    input = 'docs/reference/data/mongodb.toml'
+    temp = input + '.temp'
+    new File( temp ).withWriter { w ->
+      new File( input ).eachLine { line ->
+        w << (line.startsWith('currentVersion = "') ? "currentVersion = \"${formalVersion}\"" : line) + '\n'
+      }
+    }
+    file(temp).renameTo(file(input))
+/*
+    copy {
+        from 'docs/reference/config.toml'
+        into 'docs/reference/config.toml.backup'
+
+        filter { String line ->
+            line.startsWith('baseurl = "') ? "baseurl = /morphia/${shortVersion}" : line
+        }
+    }
+
+    move {
+        from 'docs/reference/config.toml.backup'
+        into 'docs/reference/config.toml'
+    }
+*/
 }
 
 task clonePages << {
