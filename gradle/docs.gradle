@@ -57,8 +57,6 @@ task landing << {
 }
 
 task reference(dependsOn: ':morphia:javadoc') << {
-    println "********** urlVersion = ${urlVersion}"
-    println "********** formalVersion = ${formalVersion}"
     exec {
         workingDir 'docs/reference'
         environment System.getenv()
@@ -74,7 +72,6 @@ task reference(dependsOn: ':morphia:javadoc') << {
     file( temp ).withWriter { w ->
       file( input ).eachLine { line ->
         w << (line.startsWith('baseurl = "') ? "baseurl = \"/morphia/${urlVersion}\"" : line) + '\n'
-        w << '\n'
       }
     }
     file(temp).renameTo(file(input))
