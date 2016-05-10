@@ -105,10 +105,22 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param dbName      the name of the database for this data store.
      */
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
+        this(morphia, mapper, mongoClient, mongoClient.getDB(dbName));
+    }
+
+    /**
+     * Create a new DatastoreImpl
+     *
+     * @param morphia     the Morphia instance
+     * @param mapper      an initialised Mapper
+     * @param mongoClient the connection to the MongoDB instance
+     * @param db      the database for this data store.
+     */
+    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final DB db) {
         this.morphia = morphia;
         this.mapper = mapper;
         this.mongoClient = mongoClient;
-        db = mongoClient.getDB(dbName);
+        this.db = db;
     }
 
     /**
