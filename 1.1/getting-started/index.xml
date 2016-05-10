@@ -92,7 +92,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/&#34;&gt;documentation&lt;/a&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.java&lt;/code&gt; example code
-that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java
+that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Setting up Morphia&lt;/h2&gt;
@@ -159,11 +159,11 @@ class Employee {
 so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
 &lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the
-&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#entity:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
+&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#entity:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which indexes Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+  &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ve marked the &lt;code&gt;id&lt;/code&gt; field to be used as our primary key (the &lt;code&gt;_id&lt;/code&gt; field in the document).  In this instance we&amp;rsquo;re using the Java driver
 type of &lt;code&gt;ObjectId&lt;/code&gt; as the ID type.  The ID can be any type you&amp;rsquo;d like but is generally something like &lt;code&gt;ObjectId&lt;/code&gt; or &lt;code&gt;Long&lt;/code&gt;.  There are

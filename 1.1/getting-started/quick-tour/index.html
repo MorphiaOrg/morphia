@@ -70,7 +70,7 @@
       <div class="ssidebarwrapper">
         <h3>
           <a class="index-link" href="/morphia/1.1/../">Morphia</a>
-          <a class="version pull-right" href="/morphia/1.1">1.1.0-SNAPSHOT</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1</a>
         </h3>
 
         
@@ -657,7 +657,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/">documentation</a> as well.</p>
 
 <p>The following code snippets come from the <code>QuickTour.java</code> example code
-that can be found with the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/examples/java/org/mongodb/morphia/examples/QuickTour.java
+that can be found with the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 ">Morphia source</a>.</p>
 
 <h2 id="setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461">Setting up Morphia</h2>
@@ -724,11 +724,11 @@ class Employee {
 so we know that it will be a top level document.  In the annotation, you&rsquo;ll see <code>&quot;employees&quot;</code>.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
 <code>Employee</code> instances will be saved in to the <code>employees</code> collection instead.  There is a little more to this annotation but the
-<a href="/morphia/1.1/guides/annotations/#entity:b8bcd3c4cba9ac16433f82561ee44461">annotations guide</a> covers those details.</p>
+<a href="/morphia/1.1/guides/annotations/#entity:338aacf6337d00fc0cde843c3182c3f8">annotations guide</a> covers those details.</p>
 
 <p>The <code>@Indexes</code> annotation lists which indexes Morphia should create.  In this instance, we&rsquo;re defining an index named <code>salary</code> on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  <a href="/morphia/1.1/guides/annotations/#indexes:b8bcd3c4cba9ac16433f82561ee44461">here</a>.</p>
+  <a href="/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8">here</a>.</p>
 
 <p>We&rsquo;ve marked the <code>id</code> field to be used as our primary key (the <code>_id</code> field in the document).  In this instance we&rsquo;re using the Java driver
 type of <code>ObjectId</code> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <code>ObjectId</code> or <code>Long</code>.  There are
@@ -908,7 +908,7 @@ is a <code>delete</code> that can take that reference and delete it.  There is m
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "/morphia/1.1",
-   VERSION:     "1.1.0-SNAPSHOT",
+   VERSION:     "1.1",
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

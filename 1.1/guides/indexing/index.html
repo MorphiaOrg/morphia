@@ -70,7 +70,7 @@
       <div class="ssidebarwrapper">
         <h3>
           <a class="index-link" href="/morphia/1.1/../">Morphia</a>
-          <a class="version pull-right" href="/morphia/1.1">1.1.0-SNAPSHOT</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1</a>
         </h3>
 
         
@@ -750,23 +750,23 @@
 
 
 
-<h1 id="indexing">Indexing</h1>
+<h1 id="indexing:b3040529c742e665af59b7e3b005e4ad">Indexing</h1>
 
 <p>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
 an entity&rsquo;s source.  In addition to the familiar ascending/descending index types, Morphia and MongoDB support <a href="http://docs.mongodb.org/manual/core/index-ttl/
 ">TTL</a>, <a href="http://docs.mongodb.org/manual/core/index-text/
 ">text</a>, and <a href="http://docs.mongodb.org/manual/applications/geospatial-indexes/
 ">geospatial</a>
- indexes.   When defining <a href="#text-indexing">text</a> indexes there are certain restrictions which will be covered below.  Full
+ indexes.   When defining <a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">text</a> indexes there are certain restrictions which will be covered below.  Full
   details for all these types are available in the <a href="http://docs.mongodb.org/manual/indexes
 ">manual</a>.</p>
 
 <p>There are two ways to define indexes:  at the class level and at the field level.</p>
 
-<h2 id="class-level-indexes">Class Level Indexes</h2>
+<h2 id="class-level-indexes:b3040529c742e665af59b7e3b005e4ad">Class Level Indexes</h2>
 
-<p>Class level indexing begins with the <a href="/morphia/1.1/guides/annotations/#indexes"><code>@Indexes</code></a> annotation.  This is a container
-annotation whose sole purpose is to hold a number of <a href="/morphia/1.1/guides/annotations/#index"><code>@Index</code></a> annotations.  This annotation
+<p>Class level indexing begins with the <a href="/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8"><code>@Indexes</code></a> annotation.  This is a container
+annotation whose sole purpose is to hold a number of <a href="/morphia/1.1/guides/annotations/#index:338aacf6337d00fc0cde843c3182c3f8"><code>@Index</code></a> annotations.  This annotation
 has two primary components to cover here:  <code>fields</code> and <code>options</code>.  An index definition would take the following form:</p>
 
 <pre><code class="language-java">@Entity
@@ -785,19 +785,19 @@ public class IndexExample {
 }
 </code></pre>
 
-<h3 id="fields">Fields</h3>
+<h3 id="fields:b3040529c742e665af59b7e3b005e4ad">Fields</h3>
 
-<p>The fields to use in an index definition are defined with the <a href="/morphia/1.1/guides/annotations/#field"><code>@Field</code></a> annotation. An
+<p>The fields to use in an index definition are defined with the <a href="/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8"><code>@Field</code></a> annotation. An
 arbitrary number of <code>@Field</code>s can be given but at least one must be present.</p>
 
-<h4 id="value">value()</h4>
+<h4 id="value:b3040529c742e665af59b7e3b005e4ad">value()</h4>
 
 <p>Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.1/guides/annotations/#property"><code>@Property</code></a> or
- <a href="/morphia/1.1/guides/annotations/#embedded"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
-  exception is made for <a href="#text-indexing">text indexes</a> as discussed below.</p>
+name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.1/guides/annotations/#property:338aacf6337d00fc0cde843c3182c3f8"><code>@Property</code></a> or
+ <a href="/morphia/1.1/guides/annotations/#embedded:338aacf6337d00fc0cde843c3182c3f8"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
+  exception is made for <a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">text indexes</a> as discussed below.</p>
 
-<h4 id="type">type()</h4>
+<h4 id="type:b3040529c742e665af59b7e3b005e4ad">type()</h4>
 
 <p><em>Default: IndexType.ASC</em></p>
 
@@ -805,20 +805,20 @@ name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1
 
 <p><em>See <a href="/javadoc/org/mongodb/morphia/utils/IndexType.html">IndexType</a></em></p>
 
-<h4 id="weight">weight()</h4>
+<h4 id="weight:b3040529c742e665af59b7e3b005e4ad">weight()</h4>
 
 <p><em>Optional</em></p>
 
 <p>Specifies the weight to use when creating a text index.  This value only makes sense when direction is <code>IndexType.TEXT</code>.</p>
 
-<h3 id="index-options">Index Options</h3>
+<h3 id="index-options:b3040529c742e665af59b7e3b005e4ad">Index Options</h3>
 
-<p>Options for an index are defined on the <a href="/morphia/1.1/guides/annotations/#indexoptions"><code>@IndexOptions</code></a>.  More complete coverage can
+<p>Options for an index are defined on the <a href="/morphia/1.1/guides/annotations/#indexoptions:338aacf6337d00fc0cde843c3182c3f8"><code>@IndexOptions</code></a>.  More complete coverage can
 be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 ">manual</a> but we&rsquo;ll provide some basic coverage
 here as well.</p>
 
-<h4 id="background">background()</h4>
+<h4 id="background:b3040529c742e665af59b7e3b005e4ad">background()</h4>
 
 <p><em>Default: false</em></p>
 
@@ -828,18 +828,18 @@ until the index build completes. For potentially long running index building ope
 MongoDB database remains available during the index building operation.  The MongoDB <a href="http://docs.mongodb.org/manual/core/index-creation/#background-construction
 ">manual</a> has more detail.</p>
 
-<h4 id="disablevalidation">disableValidation()</h4>
+<h4 id="disablevalidation:b3040529c742e665af59b7e3b005e4ad">disableValidation()</h4>
 
 <p><em>Default: false</em></p>
 
 <p>When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
 mapped document names.  Setting this to <code>true</code> disables this validation.</p>
 
-<h4 id="dropdups">dropDups()</h4>
+<h4 id="dropdups:b3040529c742e665af59b7e3b005e4ad">dropDups()</h4>
 
 <p><em>Default: false</em></p>
 
-<p>When defining a <a href="#unique">unique</a> index, if there are duplicate values found, the index creation will.  Setting this value to
+<p>When defining a <a href="#unique:b3040529c742e665af59b7e3b005e4ad">unique</a> index, if there are duplicate values found, the index creation will.  Setting this value to
 true will instruct MongoDB to drop the documents with duplicate values.</p>
 
 <div class="admonition important">
@@ -849,7 +849,7 @@ true will instruct MongoDB to drop the documents with duplicate values.</p>
 </div>
 
 
-<h4 id="expireafterseconds">expireAfterSeconds()</h4>
+<h4 id="expireafterseconds:b3040529c742e665af59b7e3b005e4ad">expireAfterSeconds()</h4>
 
 <p><em>Optional</em></p>
 
@@ -857,26 +857,26 @@ true will instruct MongoDB to drop the documents with duplicate values.</p>
 ">TTL</a> to control how long MongoDB retains documents in
 this collection.  The field listed must contain values that are dates.</p>
 
-<h4 id="language">language()</h4>
+<h4 id="language:b3040529c742e665af59b7e3b005e4ad">language()</h4>
 
 <p><em>Optional</em></p>
 
-<p>For <a href="#text-indexing">text indexes</a>, the language that determines the list of stop words and the rules for the stemmer and
+<p>For <a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">text indexes</a>, the language that determines the list of stop words and the rules for the stemmer and
 tokenizer. See <a href="http://docs.mongodb.org/manual/reference/text-search-languages/
 ">Text Search Languages</a> for the available languages and <a href="http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index
 ">Specify a
 Language for Text Index</a> for more information and examples. The default value
  is <strong>english</strong>.</p>
 
-<h4 id="languageoverride">languageOverride()</h4>
+<h4 id="languageoverride:b3040529c742e665af59b7e3b005e4ad">languageOverride()</h4>
 
 <p><em>Optional</em></p>
 
-<p>For <a href="#text-indexing">text indexes</a>, the name of the field in the collection’s documents that contains the
+<p>For <a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">text indexes</a>, the name of the field in the collection’s documents that contains the
 override language for the document. The default value is <strong>language</strong>. See <a href="http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/#specify-language-field-text-index-example
 ">Use any Field to Specify the Language for a Document</a> for an example.</p>
 
-<h4 id="name">name()</h4>
+<h4 id="name:b3040529c742e665af59b7e3b005e4ad">name()</h4>
 
 <p><em>Optional</em></p>
 
@@ -887,7 +887,7 @@ the sort order.</p>
  the <a href="http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length
 ">Index Name Limit</a>.</p>
 
-<h4 id="sparse">sparse()</h4>
+<h4 id="sparse:b3040529c742e665af59b7e3b005e4ad">sparse()</h4>
 
 <p><em>Default: false</em></p>
 
@@ -896,19 +896,19 @@ some situations (particularly sorts).  See <a href="http://docs.mongodb.org/manu
 ">Sparse Indexes</a> for more
 information.</p>
 
-<h4 id="unique">unique()</h4>
+<h4 id="unique:b3040529c742e665af59b7e3b005e4ad">unique()</h4>
 
 <p><em>Default: false</em></p>
 
 <p>Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify <code>true</code> to create a unique index.</p>
 
-<h2 id="field-level-indexes">Field Level Indexes</h2>
+<h2 id="field-level-indexes:b3040529c742e665af59b7e3b005e4ad">Field Level Indexes</h2>
 
 <p>Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-<a href="/morphia/1.1/guides/annotations/#indexed"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the <a href="/morphia/1.1/guides/annotations/#field"><code>@Field</code></a>
-annotations are unnecessary.  The options for the index are the same as defined <a href="#options">above</a>.  A field level index
+<a href="/morphia/1.1/guides/annotations/#indexed:338aacf6337d00fc0cde843c3182c3f8"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the <a href="/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8"><code>@Field</code></a>
+annotations are unnecessary.  The options for the index are the same as defined <a href="#options:b3040529c742e665af59b7e3b005e4ad">above</a>.  A field level index
 definition would look like this:</p>
 
 <pre><code class="language-java">@Entity
@@ -921,7 +921,7 @@ private class FieldIndex {
 }
 </code></pre>
 
-<h2 id="text-indexing">Text Indexing</h2>
+<h2 id="text-indexing:b3040529c742e665af59b7e3b005e4ad">Text Indexing</h2>
 
 <p>Morphia&rsquo;s indexing supports MongoDB&rsquo;s text indexing and search functionality as we&rsquo;ve briefly seen above.  Full details can be found in
 the <a href="http://docs.mongodb.org/manual/core/index-text/
@@ -971,31 +971,31 @@ incorporating a text index but it&rsquo;s important to note there can only be on
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#indexing">Indexing</a>
+<li><a href="#indexing:b3040529c742e665af59b7e3b005e4ad">Indexing</a>
 <ul>
-<li><a href="#class-level-indexes">Class Level Indexes</a>
+<li><a href="#class-level-indexes:b3040529c742e665af59b7e3b005e4ad">Class Level Indexes</a>
 <ul>
-<li><a href="#fields">Fields</a>
+<li><a href="#fields:b3040529c742e665af59b7e3b005e4ad">Fields</a>
 <ul>
-<li><a href="#value">value()</a></li>
-<li><a href="#type">type()</a></li>
-<li><a href="#weight">weight()</a></li>
+<li><a href="#value:b3040529c742e665af59b7e3b005e4ad">value()</a></li>
+<li><a href="#type:b3040529c742e665af59b7e3b005e4ad">type()</a></li>
+<li><a href="#weight:b3040529c742e665af59b7e3b005e4ad">weight()</a></li>
 </ul></li>
-<li><a href="#index-options">Index Options</a>
+<li><a href="#index-options:b3040529c742e665af59b7e3b005e4ad">Index Options</a>
 <ul>
-<li><a href="#background">background()</a></li>
-<li><a href="#disablevalidation">disableValidation()</a></li>
-<li><a href="#dropdups">dropDups()</a></li>
-<li><a href="#expireafterseconds">expireAfterSeconds()</a></li>
-<li><a href="#language">language()</a></li>
-<li><a href="#languageoverride">languageOverride()</a></li>
-<li><a href="#name">name()</a></li>
-<li><a href="#sparse">sparse()</a></li>
-<li><a href="#unique">unique()</a></li>
+<li><a href="#background:b3040529c742e665af59b7e3b005e4ad">background()</a></li>
+<li><a href="#disablevalidation:b3040529c742e665af59b7e3b005e4ad">disableValidation()</a></li>
+<li><a href="#dropdups:b3040529c742e665af59b7e3b005e4ad">dropDups()</a></li>
+<li><a href="#expireafterseconds:b3040529c742e665af59b7e3b005e4ad">expireAfterSeconds()</a></li>
+<li><a href="#language:b3040529c742e665af59b7e3b005e4ad">language()</a></li>
+<li><a href="#languageoverride:b3040529c742e665af59b7e3b005e4ad">languageOverride()</a></li>
+<li><a href="#name:b3040529c742e665af59b7e3b005e4ad">name()</a></li>
+<li><a href="#sparse:b3040529c742e665af59b7e3b005e4ad">sparse()</a></li>
+<li><a href="#unique:b3040529c742e665af59b7e3b005e4ad">unique()</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#field-level-indexes">Field Level Indexes</a></li>
-<li><a href="#text-indexing">Text Indexing</a></li>
+<li><a href="#field-level-indexes:b3040529c742e665af59b7e3b005e4ad">Field Level Indexes</a></li>
+<li><a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">Text Indexing</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -1016,7 +1016,7 @@ incorporating a text index but it&rsquo;s important to note there can only be on
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "/morphia/1.1",
-   VERSION:     "1.1.0-SNAPSHOT",
+   VERSION:     "1.1",
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

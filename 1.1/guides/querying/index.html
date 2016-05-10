@@ -70,7 +70,7 @@
       <div class="ssidebarwrapper">
         <h3>
           <a class="index-link" href="/morphia/1.1/../">Morphia</a>
-          <a class="version pull-right" href="/morphia/1.1">1.1.0-SNAPSHOT</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1</a>
         </h3>
 
         
@@ -1075,6 +1075,26 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.</li>
 </ol>
 
+<h3 id="raw-querying:50d269286defa89dcc6793dab2a5c4d0">Raw Querying</h3>
+
+<p>You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.</p>
+
+<p>For example:</p>
+
+<pre><code>DBObject query = BasicDBObjectBuilder.start()
+        .add(&quot;albums&quot;,
+                        new BasicDBObject(&quot;$elemMatch&quot;,
+                                new BasicDBObject(&quot;$and&quot;, new BasicDBObject[] {
+                                    new BasicDBObject(&quot;albumId&quot;, albumDto.getAlbumId()),
+                                    new BasicDBObject(&quot;album&quot;,
+                                        new BasicDBObject(&quot;$exists&quot;, false))
+                })))
+        .get();
+
+Query&lt;Artist&gt; findQuery = datastore.createQuery(Artist.class, query);
+Artist result = findQuery.get();
+</code></pre>
+
 
 
 
@@ -1121,6 +1141,7 @@ application.</li>
 <li><a href="#limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0">Limiting and Skipping</a></li>
 <li><a href="#ordering:50d269286defa89dcc6793dab2a5c4d0">Ordering</a></li>
 <li><a href="#tailable-cursors:50d269286defa89dcc6793dab2a5c4d0">Tailable Cursors</a></li>
+<li><a href="#raw-querying:50d269286defa89dcc6793dab2a5c4d0">Raw Querying</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1142,7 +1163,7 @@ application.</li>
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "/morphia/1.1",
-   VERSION:     "1.1.0-SNAPSHOT",
+   VERSION:     "1.1",
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true

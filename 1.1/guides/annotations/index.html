@@ -70,7 +70,7 @@
       <div class="ssidebarwrapper">
         <h3>
           <a class="index-link" href="/morphia/1.1/../">Morphia</a>
-          <a class="version pull-right" href="/morphia/1.1">1.1.0-SNAPSHOT</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1</a>
         </h3>
 
         
@@ -680,11 +680,11 @@
 
 
 
-<h1 id="annotations">Annotations</h1>
+<h1 id="annotations:338aacf6337d00fc0cde843c3182c3f8">Annotations</h1>
 
 <p>Below is a list of all the annotations and a brief description of how to use them.</p>
 
-<h2 id="entity">Entity</h2>
+<h2 id="entity:338aacf6337d00fc0cde843c3182c3f8">Entity</h2>
 
 <p>Marks entities to be stored directly in a collection. This annotations is optional in most cases (though this is likely to change in
 future versions). There is no harm in including it to be more verbose, and make clear the intention for the class.  The definition of
@@ -715,7 +715,7 @@ this annotation looks like this:</p>
 
 <tr>
 <td>cap()</td>
-<td>Marks this collection as capped and sets the size to use.  See the <a href="#capped"><code>@Capped</code></a> below</td>
+<td>Marks this collection as capped and sets the size to use.  See the <a href="#capped:338aacf6337d00fc0cde843c3182c3f8"><code>@Capped</code></a> below</td>
 </tr>
 
 <tr>
@@ -735,7 +735,7 @@ this annotation looks like this:</p>
 </tbody>
 </table>
 
-<h2 id="indexes">Indexes</h2>
+<h2 id="indexes:338aacf6337d00fc0cde843c3182c3f8">Indexes</h2>
 
 <p>In addition to being able to declare an index on a single field you can also declare the indexes at the class level. This allows you to
  create more than just a single field index; it allows you to create compound indexes with multiple fields.</p>
@@ -749,7 +749,7 @@ this annotation looks like this:</p>
 ">TestIndexCollections.java</a> or <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
 ">TestIndexed.java</a> in the Morphia source.</p>
 
-<h3 id="index">Index</h3>
+<h3 id="index:338aacf6337d00fc0cde843c3182c3f8">Index</h3>
 
 <pre><code class="language-java">public @interface Index {
     String value() default &quot;&quot;;
@@ -824,17 +824,17 @@ this annotation looks like this:</p>
 
 <tr>
 <td>fields()</td>
-<td>This is the new way to define which fields to index. <a href="#Field">Details</a> can be found below.</td>
+<td>This is the new way to define which fields to index. <a href="#Field:338aacf6337d00fc0cde843c3182c3f8">Details</a> can be found below.</td>
 </tr>
 
 <tr>
 <td>options()</td>
-<td>This is the new way to define index options. <a href="#IndexOptions">Details</a> can be found below.</td>
+<td>This is the new way to define index options. <a href="#IndexOptions:338aacf6337d00fc0cde843c3182c3f8">Details</a> can be found below.</td>
 </tr>
 </tbody>
 </table>
 
-<h4 id="field">Field</h4>
+<h4 id="field:338aacf6337d00fc0cde843c3182c3f8">Field</h4>
 
 <pre><code class="language-java"> public @interface Field {
      String value();
@@ -869,7 +869,7 @@ this annotation looks like this:</p>
 </tbody>
 </table>
 
-<h4 id="indexoptions">IndexOptions</h4>
+<h4 id="indexoptions:338aacf6337d00fc0cde843c3182c3f8">IndexOptions</h4>
 
 <pre><code class="language-java">public @interface IndexOptions {
     String name() default &quot;&quot;;
@@ -943,7 +943,7 @@ this annotation looks like this:</p>
 </tbody>
 </table>
 
-<h4 id="indexed">Indexed</h4>
+<h4 id="indexed:338aacf6337d00fc0cde843c3182c3f8">Indexed</h4>
 
 <p>Applied to a Java field, marks the field to be indexed by MongoDB.</p>
 
@@ -1007,20 +1007,20 @@ this annotation looks like this:</p>
 </tbody>
 </table>
 
-<h2 id="id">Id</h2>
+<h2 id="id:338aacf6337d00fc0cde843c3182c3f8">Id</h2>
 
 <p>Marks a field in an <code>@Entity</code> to be the &ldquo;_id&rdquo; field in MongoDB.</p>
 
-<h2 id="property">Property</h2>
+<h2 id="property:338aacf6337d00fc0cde843c3182c3f8">Property</h2>
 
 <p>An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
  as the property name.  This can be overridden by passing a String with the new name to the annotation.</p>
 
-<h2 id="transient">Transient</h2>
+<h2 id="transient:338aacf6337d00fc0cde843c3182c3f8">Transient</h2>
 
 <p>Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
 
-<h2 id="serialized">Serialized</h2>
+<h2 id="serialized:338aacf6337d00fc0cde843c3182c3f8">Serialized</h2>
 
 <p>Instructs Morphia to serialize this field using JDK serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed
  off to MongoDB.</p>
@@ -1052,13 +1052,13 @@ this annotation looks like this:</p>
 </tbody>
 </table>
 
-<h2 id="notsaved">NotSaved</h2>
+<h2 id="notsaved:338aacf6337d00fc0cde843c3182c3f8">NotSaved</h2>
 
 <p>Instructs Morphia to ignore this field when saving but will still be loaded.</p>
 
 <p><em>Good for data migration.</em></p>
 
-<h2 id="alsoload">AlsoLoad</h2>
+<h2 id="alsoload:338aacf6337d00fc0cde843c3182c3f8">AlsoLoad</h2>
 
 <p>When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation
 to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names
@@ -1087,7 +1087,7 @@ when loading a document.</p>
 </tbody>
 </table>
 
-<h2 id="version">Version</h2>
+<h2 id="version:338aacf6337d00fc0cde843c3182c3f8">Version</h2>
 
 <p>Marks a field in an <code>@Entity</code> to control optimistic locking for that entity. If the versions change while modifying an entity (including
 deletes) a <code>ConcurrentModificationException</code> will be thrown. This field will be automatically managed for you &ndash; there is no need to set
@@ -1101,7 +1101,7 @@ class MyClass {
 }
 </code></pre>
 
-<h2 id="reference">Reference</h2>
+<h2 id="reference:338aacf6337d00fc0cde843c3182c3f8">Reference</h2>
 
 <p>Marks fields as stored in another collection and which are linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced Entity
  can also be loaded.  Any document referenced via an <code>@Reference</code> field must have already been saved in MongoDB or have the Java object&rsquo;s
@@ -1149,7 +1149,7 @@ class MyClass {
 </tbody>
 </table>
 
-<h2 id="embedded">Embedded</h2>
+<h2 id="embedded:338aacf6337d00fc0cde843c3182c3f8">Embedded</h2>
 
 <p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection, <code>@Embedded</code> tells Morphia
 to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of
@@ -1182,26 +1182,26 @@ the embedded type or on the field holding the embedded instance.</p>
 </tbody>
 </table>
 
-<h2 id="lifecycle-annotations">Lifecycle Annotations</h2>
+<h2 id="lifecycle-annotations:338aacf6337d00fc0cde843c3182c3f8">Lifecycle Annotations</h2>
 
-<p>There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
+<p>There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.</p>
 
 <ul>
 <li><code>@PreLoad</code> - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after mapping to the entity</li>
 <li><code>@PrePersist</code> - Called before save, it can return a DBObject in place of an empty one.</li>
-<li><code>@PostSave</code> - Called before the save call to the datastore</li>
+<li><code>@PreSave</code> - Called before the save call to the datastore</li>
 <li><code>@PostPersist</code> - Called after the save call to the datastore</li>
 </ul>
 
-<h3 id="examples">Examples</h3>
+<h3 id="examples:338aacf6337d00fc0cde843c3182c3f8">Examples</h3>
 
 <p><a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63">This</a> is one of the test
 classes.</p>
 
 <p>All parameters and return values are optional in your implemented methods.</p>
 
-<h4 id="prepersist"><code>@PrePersist</code></h4>
+<h4 id="prepersist:338aacf6337d00fc0cde843c3182c3f8"><code>@PrePersist</code></h4>
 
 <p>Here is a simple example of an entity that always saves the Date it was last updated at.</p>
 
@@ -1213,7 +1213,7 @@ classes.</p>
 }
 </code></pre>
 
-<h4 id="entitylisteners"><code>@EntityListeners</code></h4>
+<h4 id="entitylisteners:338aacf6337d00fc0cde843c3182c3f8"><code>@EntityListeners</code></h4>
 
 <p>In addition, you can separate the lifecycle event implementation in an external class, or many.</p>
 
@@ -1255,33 +1255,33 @@ class BankAccountWatcher{
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#annotations">Annotations</a>
+<li><a href="#annotations:338aacf6337d00fc0cde843c3182c3f8">Annotations</a>
 <ul>
-<li><a href="#entity">Entity</a></li>
-<li><a href="#indexes">Indexes</a>
+<li><a href="#entity:338aacf6337d00fc0cde843c3182c3f8">Entity</a></li>
+<li><a href="#indexes:338aacf6337d00fc0cde843c3182c3f8">Indexes</a>
 <ul>
-<li><a href="#index">Index</a>
+<li><a href="#index:338aacf6337d00fc0cde843c3182c3f8">Index</a>
 <ul>
-<li><a href="#field">Field</a></li>
-<li><a href="#indexoptions">IndexOptions</a></li>
-<li><a href="#indexed">Indexed</a></li>
+<li><a href="#field:338aacf6337d00fc0cde843c3182c3f8">Field</a></li>
+<li><a href="#indexoptions:338aacf6337d00fc0cde843c3182c3f8">IndexOptions</a></li>
+<li><a href="#indexed:338aacf6337d00fc0cde843c3182c3f8">Indexed</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#id">Id</a></li>
-<li><a href="#property">Property</a></li>
-<li><a href="#transient">Transient</a></li>
-<li><a href="#serialized">Serialized</a></li>
-<li><a href="#notsaved">NotSaved</a></li>
-<li><a href="#alsoload">AlsoLoad</a></li>
-<li><a href="#version">Version</a></li>
-<li><a href="#reference">Reference</a></li>
-<li><a href="#embedded">Embedded</a></li>
-<li><a href="#lifecycle-annotations">Lifecycle Annotations</a>
+<li><a href="#id:338aacf6337d00fc0cde843c3182c3f8">Id</a></li>
+<li><a href="#property:338aacf6337d00fc0cde843c3182c3f8">Property</a></li>
+<li><a href="#transient:338aacf6337d00fc0cde843c3182c3f8">Transient</a></li>
+<li><a href="#serialized:338aacf6337d00fc0cde843c3182c3f8">Serialized</a></li>
+<li><a href="#notsaved:338aacf6337d00fc0cde843c3182c3f8">NotSaved</a></li>
+<li><a href="#alsoload:338aacf6337d00fc0cde843c3182c3f8">AlsoLoad</a></li>
+<li><a href="#version:338aacf6337d00fc0cde843c3182c3f8">Version</a></li>
+<li><a href="#reference:338aacf6337d00fc0cde843c3182c3f8">Reference</a></li>
+<li><a href="#embedded:338aacf6337d00fc0cde843c3182c3f8">Embedded</a></li>
+<li><a href="#lifecycle-annotations:338aacf6337d00fc0cde843c3182c3f8">Lifecycle Annotations</a>
 <ul>
-<li><a href="#examples">Examples</a>
+<li><a href="#examples:338aacf6337d00fc0cde843c3182c3f8">Examples</a>
 <ul>
-<li><a href="#prepersist"><code>@PrePersist</code></a></li>
-<li><a href="#entitylisteners"><code>@EntityListeners</code></a></li>
+<li><a href="#prepersist:338aacf6337d00fc0cde843c3182c3f8"><code>@PrePersist</code></a></li>
+<li><a href="#entitylisteners:338aacf6337d00fc0cde843c3182c3f8"><code>@EntityListeners</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -1304,7 +1304,7 @@ class BankAccountWatcher{
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
    URL_ROOT:    "/morphia/1.1",
-   VERSION:     "1.1.0-SNAPSHOT",
+   VERSION:     "1.1",
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true
