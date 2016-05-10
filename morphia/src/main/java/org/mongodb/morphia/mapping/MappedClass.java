@@ -508,7 +508,7 @@ public class MappedClass {
         lifecycleClasses.add(clazz);
 
         final EntityListeners entityLisAnn = (EntityListeners) getAnnotation(EntityListeners.class);
-        if (entityLisAnn != null && entityLisAnn.value() != null && entityLisAnn.value().length != 0) {
+        if (entityLisAnn != null && entityLisAnn.value().length != 0) {
             Collections.addAll(lifecycleClasses, entityLisAnn.value());
         }
 

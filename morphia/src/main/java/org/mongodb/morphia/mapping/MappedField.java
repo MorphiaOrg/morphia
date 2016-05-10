@@ -212,7 +212,6 @@ public class MappedField {
      */
     public Object getFieldValue(final Object instance) {
         try {
-            field.setAccessible(true);
             return field.get(instance);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -406,7 +405,6 @@ public class MappedField {
      */
     public void setFieldValue(final Object instance, final Object value) {
         try {
-            field.setAccessible(true);
             field.set(instance, value);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -618,7 +616,6 @@ public class MappedField {
     }
 
     private Constructor discoverConstructor() {
-        Constructor<?> constructor = null;
         Class<?> type = null;
         // get the first annotation with a concreteClass that isn't Object.class
         for (final Annotation an : foundAnnotations.values()) {
