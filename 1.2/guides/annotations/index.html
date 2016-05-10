@@ -1184,13 +1184,13 @@ the embedded type or on the field holding the embedded instance.</p>
 
 <h2 id="lifecycle-annotations:338aacf6337d00fc0cde843c3182c3f8">Lifecycle Annotations</h2>
 
-<p>There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
+<p>There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.</p>
 
 <ul>
 <li><code>@PreLoad</code> - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after mapping to the entity</li>
 <li><code>@PrePersist</code> - Called before save, it can return a DBObject in place of an empty one.</li>
-<li><code>@PostSave</code> - Called before the save call to the datastore</li>
+<li><code>@PreSave</code> - Called before the save call to the datastore</li>
 <li><code>@PostPersist</code> - Called after the save call to the datastore</li>
 </ul>
 
