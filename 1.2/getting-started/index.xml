@@ -85,7 +85,7 @@
       <guid>/morphia/1.2/getting-started/quick-tour/</guid>
       <description>
 
-&lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
+&lt;h1 id=&#34;quick-tour:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Quick Tour&lt;/h1&gt;
 
 &lt;p&gt;Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
 abstract much of that away but if something is confusing, please consult the Java driver &lt;a href=&#34;http://mongodb.github
@@ -95,7 +95,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Setting up Morphia&lt;/h2&gt;
 
 &lt;p&gt;The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
 Morphia maps your entities and validates your queries.&lt;/p&gt;
@@ -122,7 +122,7 @@ package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@E
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.&lt;/p&gt;
 
-&lt;h3 id=&#34;mapping-options&#34;&gt;Mapping Options&lt;/h3&gt;
+&lt;h3 id=&#34;mapping-options:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Options&lt;/h3&gt;
 
 &lt;p&gt;Once you have an instance of Morphia, you can configure various mapping options via the &lt;code&gt;MappingOptions&lt;/code&gt; class.  While it&amp;rsquo;s possible to
 specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia, most users will use the default mapper.  In either case, the &lt;code&gt;Mapper&lt;/code&gt; can
@@ -131,7 +131,7 @@ specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia
  application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
  for you.  There are a few other options to configure on &lt;code&gt;MappingOptions&lt;/code&gt;, but we&amp;rsquo;ll not be covering them here.&lt;/p&gt;
 
-&lt;h2 id=&#34;mapping-classes&#34;&gt;Mapping Classes&lt;/h2&gt;
+&lt;h2 id=&#34;mapping-classes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Classes&lt;/h2&gt;
 
 &lt;p&gt;There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt;
  is treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
@@ -159,11 +159,11 @@ class Employee {
 so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
 &lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the
-&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#entity:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
+&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#entity:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which indexes Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+  &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#indexes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ve marked the &lt;code&gt;id&lt;/code&gt; field to be used as our primary key (the &lt;code&gt;_id&lt;/code&gt; field in the document).  In this instance we&amp;rsquo;re using the Java driver
 type of &lt;code&gt;ObjectId&lt;/code&gt; as the ID type.  The ID can be any type you&amp;rsquo;d like but is generally something like &lt;code&gt;ObjectId&lt;/code&gt; or &lt;code&gt;Long&lt;/code&gt;.  There are
@@ -181,7 +181,7 @@ Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.&lt;/p&gt;
 
-&lt;h2 id=&#34;saving-data&#34;&gt;Saving Data&lt;/h2&gt;
+&lt;h2 id=&#34;saving-data:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Saving Data&lt;/h2&gt;
 
 &lt;p&gt;For the most part, you treat your Java objects just like you normally would.  When you&amp;rsquo;re ready to write an object to the database, it&amp;rsquo;s
 as simple as this:&lt;/p&gt;
@@ -211,7 +211,7 @@ efficient way of doing updates.  It is possible to update directly in the databa
 Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
 how to query.&lt;/p&gt;
 
-&lt;h2 id=&#34;querying&#34;&gt;Querying&lt;/h2&gt;
+&lt;h2 id=&#34;querying:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Querying&lt;/h2&gt;
 
 &lt;p&gt;Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
 directly and only rarely do you need to take additional action.  As with everything else, &lt;code&gt;Datastore&lt;/code&gt; is where we start:&lt;/p&gt;
@@ -247,7 +247,7 @@ validate and potentially get wrong:&lt;/p&gt;
 field called &lt;code&gt;salary&lt;/code&gt; on the &lt;code&gt;Employee&lt;/code&gt; class.  If you happen to have mapped that field such that the name in the database doesn&amp;rsquo;t match
 the Java field, Morphia can use either form and will validate against either name.&lt;/p&gt;
 
-&lt;h2 id=&#34;updates&#34;&gt;Updates&lt;/h2&gt;
+&lt;h2 id=&#34;updates:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Updates&lt;/h2&gt;
 
 &lt;p&gt;Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
 of update operations.  In this example, we&amp;rsquo;ll find all the underpaid employees and give them raise of 10000.  The first step is to create
@@ -273,7 +273,7 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
 &lt;p&gt;This line executes the update in the database without having to pull in however many documents are matched by the query.  The
 &lt;code&gt;UpdateResults&lt;/code&gt; instance returned will contain various statistics about the update operation.&lt;/p&gt;
 
-&lt;h2 id=&#34;removes&#34;&gt;Removes&lt;/h2&gt;
+&lt;h2 id=&#34;removes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Removes&lt;/h2&gt;
 
 &lt;p&gt;After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
 then tell the &lt;code&gt;Datastore&lt;/code&gt; to delete them:&lt;/p&gt;
