@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Guides on Morphia</title>
-    <link>/morphia/1.1/guides/</link>
+    <link>/morphia/1.2/guides/</link>
     <description>Recent content in Guides on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
-    <atom:link href="/morphia/1.1/guides/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/morphia/1.2/guides/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Annotations</title>
-      <link>/morphia/1.1/guides/annotations/</link>
+      <link>/morphia/1.2/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.1/guides/annotations/</guid>
+      <guid>/morphia/1.2/guides/annotations/</guid>
       <description>
 
 &lt;h1 id=&#34;annotations:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Annotations&lt;/h1&gt;
@@ -571,32 +571,32 @@ class BankAccountWatcher{
     
     <item>
       <title>Reference Guides</title>
-      <link>/morphia/1.1/guides/</link>
+      <link>/morphia/1.2/guides/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.1/guides/</guid>
+      <guid>/morphia/1.2/guides/</guid>
       <description>
 
 &lt;h2 id=&#34;reference-guides:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Reference Guides&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
       <title>Aggregation</title>
-      <link>/morphia/1.1/guides/aggregation/</link>
+      <link>/morphia/1.2/guides/aggregation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.1/guides/aggregation/</guid>
+      <guid>/morphia/1.2/guides/aggregation/</guid>
       <description>
 
-&lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
+&lt;h1 id=&#34;aggregation:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation&lt;/h1&gt;
 
 &lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
@@ -621,7 +621,7 @@ against.  Because of the transformational operations available in the aggregatio
  Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
 equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
@@ -637,7 +637,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
  { &amp;quot;_id&amp;quot; : &amp;quot;Dante&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Banquet&amp;quot;, &amp;quot;Divine Comedy&amp;quot;, &amp;quot;Eclogues&amp;quot; ] }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;executing-the-pipeline&#34;&gt;Executing the Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Executing the Pipeline&lt;/h2&gt;
 
 &lt;p&gt;There are two basic ways to execute an aggregation pipeline:  &lt;code&gt;aggregate()&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt;.  These methods are Morphia&amp;rsquo;s cues to send the
  pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
@@ -646,7 +646,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   We can changes this behavior using the &lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html&#34;&gt;&lt;code&gt;AggregationOptions&lt;/code&gt;&lt;/a&gt;
   class.  The &lt;code&gt;options&lt;/code&gt; reference we passed to &lt;code&gt;out()&lt;/code&gt; also applies to &lt;code&gt;aggregate()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;aggregation-options&#34;&gt;Aggregation Options&lt;/h3&gt;
+&lt;h3 id=&#34;aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation Options&lt;/h3&gt;
 
 &lt;p&gt;There are a handful options here but there&amp;rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
  returns everything &amp;ldquo;inline&amp;rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
@@ -656,7 +656,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.&lt;/p&gt;
 
-&lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
+&lt;h3 id=&#34;out:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;$out&lt;/h3&gt;
 
 &lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
 &#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
@@ -677,22 +677,22 @@ output mode to &lt;code&gt;CURSOR&lt;/code&gt; with &lt;code&gt;aggregate()&lt;/
 database and any existing data.  The use of &lt;code&gt;$out&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt; can be greatly beneficial in scenarios such as precomputed aggregated
 results for later retrieval.&lt;/p&gt;
 
-&lt;h3 id=&#34;typed-results&#34;&gt;Typed Results&lt;/h3&gt;
+&lt;h3 id=&#34;typed-results:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Typed Results&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;out()&lt;/code&gt; has several variants.  In this example, we&amp;rsquo;re passing in &lt;code&gt;Author.class&lt;/code&gt; which tells Morphia that we want to map each document
 returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsquo;re using &lt;code&gt;out()&lt;/code&gt; instead of &lt;code&gt;aggregate()&lt;/code&gt;, Morphia will use the mapped collection for
 &lt;code&gt;Author&lt;/code&gt; as the output collection for the pipeline.  If you&amp;rsquo;d like to use an alternate collection but still return a cursor of &lt;code&gt;Author&lt;/code&gt;
-instances, you can use &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
+instances, you can use &lt;a href=&#34;/morphia/1.2/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
 .lang.String-java.lang.Class-com.mongodb.AggregationOptions-&#34;&gt;&lt;code&gt;out(String,Class,AggregationOptions)&lt;/code&gt;&lt;/a&gt; instead.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Indexing</title>
-      <link>/morphia/1.1/guides/indexing/</link>
+      <link>/morphia/1.2/guides/indexing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.1/guides/indexing/</guid>
+      <guid>/morphia/1.2/guides/indexing/</guid>
       <description>
 
 &lt;h1 id=&#34;indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Indexing&lt;/h1&gt;
@@ -710,8 +710,8 @@ an entity&amp;rsquo;s source.  In addition to the familiar ascending/descending 
 
 &lt;h2 id=&#34;class-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Class Level Indexes&lt;/h2&gt;
 
-&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
-annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#index:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
+&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
+annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#index:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
 has two primary components to cover here:  &lt;code&gt;fields&lt;/code&gt; and &lt;code&gt;options&lt;/code&gt;.  An index definition would take the following form:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -732,14 +732,14 @@ public class IndexExample {
 
 &lt;h3 id=&#34;fields:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Fields&lt;/h3&gt;
 
-&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
+&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
 arbitrary number of &lt;code&gt;@Field&lt;/code&gt;s can be given but at least one must be present.&lt;/p&gt;
 
 &lt;h4 id=&#34;value:b3040529c742e665af59b7e3b005e4ad&#34;&gt;value()&lt;/h4&gt;
 
 &lt;p&gt;Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#property:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
- &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#embedded:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
+name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#property:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
+ &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#embedded:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
   exception is made for &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
 
 &lt;h4 id=&#34;type:b3040529c742e665af59b7e3b005e4ad&#34;&gt;type()&lt;/h4&gt;
@@ -748,7 +748,7 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;p&gt;Indicates the &amp;ldquo;type&amp;rdquo; of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.2/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;weight:b3040529c742e665af59b7e3b005e4ad&#34;&gt;weight()&lt;/h4&gt;
 
@@ -758,7 +758,7 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;h3 id=&#34;index-options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Index Options&lt;/h3&gt;
 
-&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexoptions:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
+&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#indexoptions:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
 be found in the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 &#34;&gt;manual&lt;/a&gt; but we&amp;rsquo;ll provide some basic coverage
 here as well.&lt;/p&gt;
@@ -851,8 +851,8 @@ existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a 
 &lt;h2 id=&#34;field-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Field Level Indexes&lt;/h2&gt;
 
 &lt;p&gt;Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexed:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
+&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#indexed:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
 annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;above&lt;/a&gt;.  A field level index
 definition would look like this:&lt;/p&gt;
 
@@ -894,10 +894,10 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
     
     <item>
       <title>Querying</title>
-      <link>/morphia/1.1/guides/querying/</link>
+      <link>/morphia/1.2/guides/querying/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.1/guides/querying/</guid>
+      <guid>/morphia/1.2/guides/querying/</guid>
       <description>
 
 &lt;h1 id=&#34;querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Querying&lt;/h1&gt;
@@ -1233,7 +1233,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 
 &lt;h3 id=&#34;ordering:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Ordering&lt;/h3&gt;
 
-&lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
+&lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.2/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
  for a particular field simply prefix that field with a &lt;code&gt;-&lt;/code&gt;.  For example, to sort by age (youngest to oldest) and then income (highest
  to lowest), you would use this:&lt;/p&gt;
@@ -1263,7 +1263,7 @@ while(found.size() &amp;lt; 10) {
 &lt;p&gt;There are two things to note about this code sample:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.1/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
+&lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.2/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
 created correctly.  If the collection already exists and is not capped, you will have to manually &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 &#34;&gt;update&lt;/a&gt; your collection to be a capped collection.&lt;/li&gt;
 &lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;hasNext()&lt;/code&gt; and &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  In this
