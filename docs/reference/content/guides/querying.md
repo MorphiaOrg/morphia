@@ -265,3 +265,24 @@ created correctly.  If the collection already exists and is not capped, you will
 1.  Since this `Iterator` is backed by a tailable cursor, `hasNext()` and `next()` will block until a new item is found.  In this 
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the 
 application.
+
+### Raw Querying
+
+You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.
+
+For example:
+
+```
+DBObject query = BasicDBObjectBuilder.start()
+        .add("albums",
+                        new BasicDBObject("$elemMatch",
+                                new BasicDBObject("$and", new BasicDBObject[] {
+                                    new BasicDBObject("albumId", albumDto.getAlbumId()),
+                                    new BasicDBObject("album",
+                                        new BasicDBObject("$exists", false))
+                })))
+        .get();
+
+Query<Artist> findQuery = datastore.createQuery(Artist.class, query);
+Artist result = findQuery.get();
+```

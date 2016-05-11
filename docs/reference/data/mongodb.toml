@@ -1,9 +1,8 @@
 githubUser = "mongodb"
 githubRepo = "morphia"
 githubBranch = "master"
-currentVersion = "1.1.0-SNAPSHOT"
+currentVersion = "1.1"
 highlightTheme = "idea.css"
 apiUrl = "/javadoc"
 coreApiUrl = "http://api.mongodb.org/java/3.0/"
 mongoDriverVersion = "3.0.1"                # Update in installation-guide.md
-morphiaVersion = "1.1.0-SNAPSHOT"                 # Update in installation-guide.md
