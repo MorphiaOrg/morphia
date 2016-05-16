@@ -35,8 +35,8 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        return decodeObject(((DBObject) fromDBObject).get("coordinates"), factories);
+    public Geometry decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        return decodeObject((List) ((DBObject) fromDBObject).get("coordinates"), factories);
     }
 
     @Override
@@ -50,20 +50,24 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
         }
     }
 
+    /*
+     * We're expecting a List that can be turned into a geometry using a series of factories
+      */
     @SuppressWarnings("unchecked") // always have unchecked casts when dealing with raw classes
-    private Object decodeObject(final Object fromDBObject, final List<GeometryFactory> geometryFactories) {
-        if (!geometryFactories.isEmpty()) {
-            // we're expecting a list that can be turned into a geometry using one of these factories
-            GeometryFactory factory = geometryFactories.get(0);
-            if (fromDBObject instanceof List) {
-                List<Object> decodedObjects = new ArrayList<Object>();
-                for (final Object objectThatNeedsDecoding : (List) fromDBObject) {
-                    decodedObjects.add(decodeObject(objectThatNeedsDecoding, geometryFactories.subList(1, geometryFactories.size())));
-                }
-                return factory.createGeometry(decodedObjects);
+    private Geometry decodeObject(final List mongoDBGeometry, final List<GeometryFactory> geometryFactories) {
+        GeometryFactory factory = geometryFactories.get(0);
+        if (geometryFactories.size() == 1) {
+            // This should be the last list, so no need to decode further
+            return factory.createGeometry(mongoDBGeometry);
+        } else {
+            List<Geometry> decodedObjects = new ArrayList<Geometry>();
+            for (final Object objectThatNeedsDecoding : mongoDBGeometry) {
+                // MongoDB geometries are lists of lists of lists...
+                decodedObjects.add(decodeObject((List) objectThatNeedsDecoding,
+                                                geometryFactories.subList(1, geometryFactories.size())));
             }
+            return factory.createGeometry(decodedObjects);
         }
-        return getMapper().getConverters().encode(fromDBObject);
     }
 
     private Object encodeObjects(final List value) {
