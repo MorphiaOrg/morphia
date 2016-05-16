@@ -16,6 +16,9 @@
 
 package org.mongodb.morphia.aggregation;
 
+import org.mongodb.morphia.geo.Geometry;
+import org.mongodb.morphia.geo.GeometryShapeConverter;
+import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.query.Query;
 
 /**
@@ -24,7 +27,8 @@ import org.mongodb.morphia.query.Query;
  * @mongodb.driver.manual reference/operator/aggregation/geoNear/ geoNear
  */
 public final class GeoNear {
-    private final double[] near;
+    private final double[] nearLegacy;
+    private final Geometry nearGeoJson;
     private final String distanceField;
     private final Long limit;
     private final Long maxDocuments;
@@ -36,7 +40,8 @@ public final class GeoNear {
     private final Boolean uniqueDocuments;
 
     private GeoNear(final GeoNearBuilder builder) {
-        near = builder.near;
+        nearLegacy = builder.nearLegacy;
+        nearGeoJson = builder.nearGeoJson;
         distanceField = builder.distanceField;
         limit = builder.limit;
         maxDocuments = builder.maxDocuments;
@@ -121,11 +126,19 @@ public final class GeoNear {
      */
     public double[] getNear() {
         double[] copy = new double[0];
-        if (near != null) {
-            copy = new double[near.length];
-            System.arraycopy(near, 0, copy, 0, near.length);
+        if (nearLegacy != null) {
+            copy = new double[nearLegacy.length];
+            System.arraycopy(nearLegacy, 0, copy, 0, nearLegacy.length);
         }
         return copy;
+    }
+
+    Object getNearAsDBObject(final GeometryShapeConverter.PointConverter pointConverter) {
+        if (nearGeoJson != null) {
+            return pointConverter.encode(nearGeoJson);
+        } else {
+            return getNear();
+        }
     }
 
     /**
@@ -179,7 +192,8 @@ public final class GeoNear {
         private Double distanceMultiplier;
         private String includeLocations;
         private Boolean uniqueDocuments;
-        private double[] near;
+        private double[] nearLegacy;
+        private Geometry nearGeoJson;
 
         /**
          * @param distanceField The output field that contains the calculated distance. To specify a field within a subdocument, use dot
@@ -268,7 +282,18 @@ public final class GeoNear {
          * @return this
          */
         public GeoNearBuilder setNear(final double latitude, final double longitude) {
-            this.near = new double[]{longitude, latitude};
+            this.nearLegacy = new double[]{longitude, latitude};
+            return this;
+        }
+
+        /**
+         * Sets the point for which to find the closest documents.
+         *
+         * @param point a GeoJSON single point location.
+         * @return this
+         */
+        public GeoNearBuilder setNear(final Point point) {
+            this.nearGeoJson = point;
             return this;
         }
 
