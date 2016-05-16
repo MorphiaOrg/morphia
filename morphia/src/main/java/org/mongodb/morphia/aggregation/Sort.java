@@ -35,6 +35,16 @@ public class Sort {
     }
 
     /**
+     * Creates a descending sort on a field
+     *
+     * @param field the field
+     * @return the Sort instance
+     */
+    public static Sort descending(final String field) {
+        return new Sort(field, -1);
+    }
+
+    /**
      * @return the sort direction
      */
     public int getDirection() {

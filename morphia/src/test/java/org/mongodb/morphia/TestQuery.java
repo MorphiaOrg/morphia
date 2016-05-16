@@ -366,7 +366,84 @@ public class TestQuery extends TestBase {
         //        assertNotNull(pwkScottSarah);
         final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
         assertNull(pwkBad);
+    }
 
+    public static <E> List<E> makeArrayList(final Iterable<E> iter) {
+        ArrayList<E> list = new ArrayList<E>();
+        for (E item : iter) {
+            list.add(item);
+        }
+        return list;
+    }
+
+    @Test
+    public void testElemMatchQueryCanBeNegated() throws Exception {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
+        final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
+
+        Iterable<Key<PhotoWithKeywords>> savedKeysResult = getDs().save(pwk1, pwk2, pwk3);
+
+        List<Key<PhotoWithKeywords>> savedKeys = makeArrayList(savedKeysResult);
+        pwk1.id = (ObjectId) savedKeys.get(0).getId();
+        pwk2.id = (ObjectId) savedKeys.get(1).getId();
+        pwk3.id = (ObjectId) savedKeys.get(2).getId();
+
+        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                .field("keywords")
+                .hasThisElement(new Keyword("Scott"), true);
+        List<PhotoWithKeywords> results = query.asList();
+
+        assertThat("2 results should be returned because pwk1 doesn't have any keywords, and pwk2 doesn't have a keyword with Scott in it.",
+                results.size(), is(2));
+
+        boolean pwk1Found = false;
+        boolean pwk2Found = false;
+        boolean pwk3Found = false;
+
+        for (PhotoWithKeywords p : results) {
+            if (p.id.equals(pwk1.id)) {
+                pwk1Found = true;
+            }
+
+            if (p.id.equals(pwk2.id)) {
+                pwk2Found = true;
+            }
+
+            if (p.id.equals(pwk3.id)) {
+                pwk3Found = true;
+            }
+        }
+
+        assertThat("The first record was found, because it doesn't have any keywords.", pwk1Found, is(true));
+        assertThat("The second record was found, because it doesn't have a matching keyword.", pwk2Found, is(true));
+        assertThat("The third record was not found, because it has matching keyword.", pwk3Found, is(false));
+    }
+
+    @Test
+    public void testThatElemMatchQueriesOnlyChecksRequiredFields() throws Exception {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        pwk2.keywords.add(new Keyword("Scott", 14));
+
+        getDs().save(pwk1, pwk2);
+
+        // In this case, we only want to match on the keyword field, not the
+        // score field, which shouldn't be included in the elemMatch query.
+
+        // As a result, the query in MongoDB should look like:
+        // find({ keywords: { $elemMatch: { keyword: "Scott" } } })
+
+        // NOT:
+        // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
+        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                .field("keywords")
+                .hasThisElement(new Keyword("Scott"), "keyword");
+        final PhotoWithKeywords pwkScott = query.get();
+        assertNotNull(pwkScott);
+
+        final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
+        assertNull(pwkBad);
     }
 
     @Test
@@ -1029,7 +1106,12 @@ public class TestQuery extends TestBase {
         }
 
         public Keyword(final String k) {
-            keyword = k;
+            this.keyword = k;
+        }
+
+        public Keyword(final String k, final int score) {
+            this.keyword = k;
+            this.score = score;
         }
     }
 

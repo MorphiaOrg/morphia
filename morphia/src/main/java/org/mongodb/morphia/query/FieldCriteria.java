@@ -13,7 +13,9 @@ import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
@@ -33,8 +35,14 @@ public class FieldCriteria extends AbstractCriteria {
         this(query, field, op, value, validateNames, validateTypes, false);
     }
 
-    protected FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
+    protected FieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
                             final boolean validateNames, final boolean validateTypes, final boolean not) {
+        this(query, field, op, value, validateNames, validateTypes, not, new HashSet<String>());
+    }
+
+    protected FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
+                            final boolean validateNames, final boolean validateTypes, final boolean not,
+                            final Set<String> fieldsToCompare) {
         //validate might modify prop string to translate java field name to db field name
         final StringBuilder sb = new StringBuilder(fieldName);
         final MappedField mf = validateQuery(query.getEntityClass(),
@@ -72,20 +80,49 @@ public class FieldCriteria extends AbstractCriteria {
             && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
             mappedValue = Collections.singletonList(mappedValue);
         }
+
         if (value != null && type == null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
             && Iterable.class.isAssignableFrom(value.getClass())) {
             mappedValue = Collections.emptyList();
         }
 
-        //TODO: investigate and/or add option to control this.
         if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
-            ((DBObject) mappedValue).removeField(Mapper.ID_KEY);
+            if (fieldsToCompare == null || fieldsToCompare.size() == 0) {
+                removeIdFieldFromComparison((DBObject) mappedValue, Mapper.ID_KEY);
+            } else {
+                limitComparisonToSelectedFields(fieldsToCompare, (DBObject) mappedValue);
+            }
         }
 
         this.field = sb.toString();
-        operator = op;
+        this.operator = op;
         this.value = mappedValue;
         this.not = not;
+    }
+
+    private void removeIdFieldFromComparison(final DBObject mappedValue, final String idKey) {
+        mappedValue.removeField(idKey);
+    }
+
+    private void limitComparisonToSelectedFields(final Set<String> fieldsToCompare, final DBObject mappedValue) {
+        HashSet<String> fields = extractFieldsAsHashSet(mappedValue);
+        removeFields(mappedValue, fields, fieldsToCompare);
+    }
+
+    private void removeFields(final DBObject mappedValue, final Set<String> allFields, final Set<String> fieldsToCompare) {
+        for (String field : allFields) {
+            if (!fieldsToCompare.contains(field)) {
+                mappedValue.removeField(field);
+            }
+        }
+    }
+
+    private HashSet<String> extractFieldsAsHashSet(final DBObject mappedValue) {
+        HashSet<String> fields = new HashSet<String>();
+        for (String field : mappedValue.keySet()) {
+            fields.add(field);
+        }
+        return fields;
     }
 
     @Override
