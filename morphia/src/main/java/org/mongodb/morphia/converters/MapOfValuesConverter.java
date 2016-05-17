@@ -1,12 +1,11 @@
 package org.mongodb.morphia.converters;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.utils.IterHelper;
 import org.mongodb.morphia.utils.IterHelper.MapIterCallback;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,16 +33,15 @@ public class MapOfValuesConverter extends TypeConverter {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object encode(final Object value, final MappedField mf) {
         if (value == null) {
             return null;
         }
 
-        final Map<Object, Object> map = (Map<Object, Object>) value;
+        final Map<?, ?> map = (Map<?, ?>) value;
         if (!map.isEmpty() || getMapper().getOptions().isStoreEmpties()) {
-            final DBObject mapForDb = new BasicDBObject();
-            for (final Map.Entry<Object, Object> entry : map.entrySet()) {
+            final Map<Object, Object> mapForDb = new LinkedHashMap<Object, Object>();
+            for (final Map.Entry<?, ?> entry : map.entrySet()) {
                 final String strKey = getMapper().getConverters().encode(entry.getKey()).toString();
                 mapForDb.put(strKey, getMapper().getConverters().encode(entry.getValue()));
             }
