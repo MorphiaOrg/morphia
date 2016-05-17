@@ -27,7 +27,7 @@ import java.io.Serializable;
  * @author Olafur Gauti Gudmundsson
  */
 
-public abstract class TestEntity implements Serializable {
+public class TestEntity implements Serializable {
     @Id
     private ObjectId id = new ObjectId();
 
