@@ -10,7 +10,7 @@ import org.mongodb.morphia.geo.NamedCoordinateReferenceSystemConverter;
 import static org.mongodb.morphia.query.FilterOperator.NEAR;
 
 /**
- * Creates queries for GeoJson geo queries on MongoDB. These queries generally require MongoDB 2.4 and above, and usually work on 2dsphere
+ * Creates queries for GeoJson geo queries on MongoDB. These queries generally require MongoDB 2.4 and above, and usually work on 2d sphere
  * indexes.
  */
 class StandardGeoFieldCriteria extends FieldCriteria {
@@ -18,16 +18,15 @@ class StandardGeoFieldCriteria extends FieldCriteria {
     private final DBObject geometryAsDBObject;
     private CoordinateReferenceSystem crs;
 
-    protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
-                                       final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes,
-                                       final CoordinateReferenceSystem crs) {
-        this(query, field, operator, value, maxDistanceMeters, validateNames, validateTypes);
+    StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
+                             final Integer maxDistanceMeters, final CoordinateReferenceSystem crs) {
+        this(query, field, operator, value, maxDistanceMeters);
         this.crs = crs;
     }
 
-    protected StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
-                                       final Integer maxDistanceMeters, final boolean validateNames, final boolean validateTypes) {
-        super(query, field, operator, value, validateNames, validateTypes);
+    StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
+                             final Integer maxDistanceMeters) {
+        super(query, field, operator, value);
         this.maxDistanceMeters = maxDistanceMeters;
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(query.getDatastore().getMapper());
         geometryAsDBObject = (DBObject) geometryQueryConverter.encode(value, null);

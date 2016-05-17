@@ -13,14 +13,16 @@ import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 /**
  * Defines a Criteria against a field
  */
-public class FieldCriteria extends AbstractCriteria {
+class FieldCriteria extends AbstractCriteria {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
 
     private final String field;
@@ -28,13 +30,12 @@ public class FieldCriteria extends AbstractCriteria {
     private final Object value;
     private final boolean not;
 
-    protected FieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
-                            final boolean validateNames, final boolean validateTypes) {
-        this(query, field, op, value, validateNames, validateTypes, false);
+    FieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
+        this(query, field, op, value, false);
     }
 
-    protected FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
-                            final boolean validateNames, final boolean validateTypes, final boolean not) {
+    FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
+                  final boolean not, final String... fieldsToCompare) {
         //validate might modify prop string to translate java field name to db field name
         final StringBuilder sb = new StringBuilder(fieldName);
         final MappedField mf = validateQuery(query.getEntityClass(),
@@ -42,8 +43,8 @@ public class FieldCriteria extends AbstractCriteria {
                                              sb,
                                              op,
                                              value,
-                                             validateNames,
-                                             validateTypes);
+                                             query.isValidatingNames(),
+                                             query.isValidatingTypes());
 
         final Mapper mapper = query.getDatastore().getMapper();
 
@@ -72,20 +73,46 @@ public class FieldCriteria extends AbstractCriteria {
             && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
             mappedValue = Collections.singletonList(mappedValue);
         }
+
         if (value != null && type == null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
             && Iterable.class.isAssignableFrom(value.getClass())) {
             mappedValue = Collections.emptyList();
         }
 
-        //TODO: investigate and/or add option to control this.
         if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
-            ((DBObject) mappedValue).removeField(Mapper.ID_KEY);
+            if (fieldsToCompare.length == 0) {
+                removeIdFieldFromComparison((DBObject) mappedValue, Mapper.ID_KEY);
+            } else {
+                limitComparisonToSelectedFields((DBObject) mappedValue, fieldsToCompare);
+            }
         }
 
         this.field = sb.toString();
-        operator = op;
+        this.operator = op;
         this.value = mappedValue;
         this.not = not;
+    }
+
+    private void removeIdFieldFromComparison(final DBObject mappedValue, final String idKey) {
+        mappedValue.removeField(idKey);
+    }
+
+    private void limitComparisonToSelectedFields(final DBObject mappedValue, final String... fieldsToCompare) {
+        HashSet<String> fields = extractFieldsAsHashSet(mappedValue);
+        HashSet<String> set = new HashSet<String>(asList(fieldsToCompare));
+        for (String field : fields) {
+            if (!set.contains(field)) {
+                mappedValue.removeField(field);
+            }
+        }
+    }
+
+    private HashSet<String> extractFieldsAsHashSet(final DBObject mappedValue) {
+        HashSet<String> fields = new HashSet<String>();
+        for (String field : mappedValue.keySet()) {
+            fields.add(field);
+        }
+        return fields;
     }
 
     @Override

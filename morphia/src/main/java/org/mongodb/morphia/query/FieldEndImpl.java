@@ -22,7 +22,7 @@ import static org.mongodb.morphia.query.FilterOperator.INTERSECTS;
  *
  * @param <T> the type of the CriteriaContainer
  */
-public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
+class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
     private final QueryImpl<?> query;
@@ -39,8 +39,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
      * @param target       the CriteriaContainer
      * @param validateName true if the field name should be validated
      */
-    public FieldEndImpl(final QueryImpl<?> query, final String field, final T target, final boolean validateName) {
-
+    FieldEndImpl(final QueryImpl<?> query, final String field, final T target, final boolean validateName) {
         this(query, field, target, validateName, false);
     }
 
@@ -135,9 +134,28 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
+    public T doesNotHaveThisElement(final Object val) {
+        Assert.parametersNotNull("val", val);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, true);
+    }
+
+    @Override
+    public T doesNotHaveThisElement(final Object val, final String... fieldsToCompare) {
+        Assert.parametersNotNull("val", val);
+        Assert.parametersNotNull("fieldsToCompare", (Object[]) fieldsToCompare);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, true, fieldsToCompare);
+    }
+
+    @Override
     public T hasThisElement(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, false);
+    }
+
+    @Override
+    public T hasThisElement(final Object val, final String... fieldsToCompare) {
+        Assert.parametersNotNull("fieldsToCompare", (Object[]) fieldsToCompare);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, val, false, fieldsToCompare);
     }
 
     @Override
@@ -152,13 +170,13 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
     @Override
     public T intersects(final Geometry geometry) {
-        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false));
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null));
         return target;
     }
 
     @Override
     public T intersects(final Geometry geometry, final CoordinateReferenceSystem crs) {
-        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, validateName, false, crs));
+        target.add(new StandardGeoFieldCriteria(query, field, INTERSECTS, geometry, null, crs));
         return target;
     }
 
@@ -203,13 +221,13 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
     @Override
     public T near(final Point point, final int maxDistance) {
-        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, maxDistance, validateName, false));
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, maxDistance));
         return target;
     }
 
     @Override
     public T near(final Point point) {
-        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, null, validateName, false));
+        target.add(new StandardGeoFieldCriteria(query, field, FilterOperator.NEAR, point, null));
         return target;
     }
 
@@ -259,33 +277,34 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
 
     @Override
     public T within(final Polygon boundary) {
-        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null, validateName, false));
+        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries) {
-        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null, validateName, false));
+        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null));
         return target;
     }
 
     @Override
     public T within(final Polygon boundary, final CoordinateReferenceSystem crs) {
-        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null, validateName, false, crs));
+        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundary, null, crs));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries, final CoordinateReferenceSystem crs) {
-        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null, validateName, false, crs));
+        target.add(new StandardGeoFieldCriteria(query, field, GEO_WITHIN, boundaries, null, crs));
         return target;
     }
 
-    /**
-     * Add a criteria
-     */
     private T addCriteria(final FilterOperator op, final Object val) {
-        target.add(new FieldCriteria(query, field, op, val, validateName, query.isValidatingTypes(), not));
+        return addCriteria(op, val, not);
+    }
+
+    private T addCriteria(final FilterOperator op, final Object val, final boolean not, final String... fieldsToCompare) {
+        target.add(new FieldCriteria(query, field, op, val, not, fieldsToCompare));
         return target;
     }
 
@@ -294,7 +313,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
             throw new QueryException("Geospatial queries cannot be negated with 'not'.");
         }
 
-        target.add(new GeoFieldCriteria(query, field, op, val, validateName, false, opts));
+        target.add(new GeoFieldCriteria(query, field, op, val, opts));
         return target;
     }
 

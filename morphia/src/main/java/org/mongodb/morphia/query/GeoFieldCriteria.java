@@ -9,13 +9,13 @@ import java.util.Map;
 /**
  * Geospatial specific FieldCriteria logic
  */
-public class GeoFieldCriteria extends FieldCriteria {
+class GeoFieldCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
 
-    protected GeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
-                               final boolean validateNames, final boolean validateTypes, final Map<String, Object> opts) {
-        super(query, field, op, value, validateNames, validateTypes);
+    GeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
+                     final Map<String, Object> opts) {
+        super(query, field, op, value);
         this.opts = opts;
     }
 

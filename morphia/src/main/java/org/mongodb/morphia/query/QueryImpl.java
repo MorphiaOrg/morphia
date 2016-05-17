@@ -343,7 +343,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final String prop = parts[0].trim();
         final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
 
-        add(new FieldCriteria(this, prop, op, value, validateName, validateType));
+        add(new FieldCriteria(this, prop, op, value));
 
         return this;
     }

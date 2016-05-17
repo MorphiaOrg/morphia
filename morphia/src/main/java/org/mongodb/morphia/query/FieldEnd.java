@@ -142,6 +142,35 @@ public interface FieldEnd<T> {
      * Checks that a field has the value listed.
      *
      * @param val the value to check against
+     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T hasThisElement(Object val, String... fieldsToCompare);
+
+    /**
+     * Checks that a field does not have the value listed.
+     *
+     * @param val the value to check against
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T doesNotHaveThisElement(Object val);
+
+    /**
+     * Checks that a field does not have the value listed.
+     *
+     * @param val the value to check against
+     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T doesNotHaveThisElement(Object val, String... fieldsToCompare);
+
+    /**
+     * Checks that a field has the value listed.
+     *
+     * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/eq/ $eq
      */

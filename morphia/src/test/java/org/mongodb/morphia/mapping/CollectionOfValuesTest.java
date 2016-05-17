@@ -14,10 +14,9 @@ import org.mongodb.morphia.dao.BasicDAO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Arrays.asList;
 
 
 /**
@@ -72,8 +71,12 @@ public class CollectionOfValuesTest extends TestBase {
         getDs().delete(getDs().find(ContainsListOfList.class));
         final ContainsListOfList entity = new ContainsListOfList();
 
-        entity.strings = asList(Arrays.asList("element1", "element2"), Arrays.asList("element3"));
-        entity.integers = asList(Arrays.asList(1, 2), Arrays.asList(3));
+        entity.strings = new ArrayList<List<String>>();
+        entity.strings.add(Arrays.asList("element1", "element2"));
+        entity.strings.add(Collections.singletonList("element3"));
+        entity.integers = new ArrayList<List<Integer>>();
+        entity.integers.add(Arrays.asList(1, 2));
+        entity.integers.add(Collections.singletonList(3));
         getDs().save(entity);
 
         final ContainsListOfList loaded = getDs().get(entity);
@@ -155,10 +158,7 @@ public class CollectionOfValuesTest extends TestBase {
 
             final TestEntity that = (TestEntity) o;
 
-            if (id != null ? !id.equals(that.id) : that.id != null) {
-                return false;
-            }
-            return !(data != null ? !data.equals(that.data) : that.data != null);
+            return id != null ? id.equals(that.id) : that.id == null && !(data != null ? !data.equals(that.data) : that.data != null);
 
         }
     }

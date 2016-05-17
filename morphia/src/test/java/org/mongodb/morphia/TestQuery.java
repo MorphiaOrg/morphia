@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -162,8 +163,8 @@ public class TestQuery extends TestBase {
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
 
         assertEquals(0, getDs().createQuery(Pic.class)
-                            .field("name").contains("PIC")
-                            .asList().size());
+                               .field("name").contains("PIC")
+                               .asList().size());
         assertEquals(4, getDs().createQuery(Pic.class)
                                .field("name").containsIgnoreCase("PIC")
                                .asList().size());
@@ -366,7 +367,37 @@ public class TestQuery extends TestBase {
         //        assertNotNull(pwkScottSarah);
         final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
         assertNull(pwkBad);
+    }
 
+    @Test
+    public void testElemMatchQueryCanBeNegated() throws Exception {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
+        final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
+
+        getDs().save(pwk1, pwk2, pwk3);
+
+        Mapper mapper = getMorphia().getMapper();
+
+        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords")
+                                                .hasThisElement(new Keyword("Scott"), "keyword");
+        List<Key<PhotoWithKeywords>> keys = query.asKeyList();
+
+        assertEquals(1, query.asList().size());
+        assertFalse("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
+        assertFalse("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
+        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
+
+        query = getDs().find(PhotoWithKeywords.class)
+                       .field("keywords")
+                       .doesNotHaveThisElement(new Keyword("Scott"), "keyword");
+        keys = query.asKeyList();
+
+        assertEquals(2, query.asList().size());
+        assertTrue("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
+        assertTrue("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
+        assertFalse("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
     }
 
     @Test
@@ -960,6 +991,32 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testThatElemMatchQueriesOnlyChecksRequiredFields() throws Exception {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        pwk2.keywords.add(new Keyword("Scott", 14));
+
+        getDs().save(pwk1, pwk2);
+
+        // In this case, we only want to match on the keyword field, not the
+        // score field, which shouldn't be included in the elemMatch query.
+
+        // As a result, the query in MongoDB should look like:
+        // find({ keywords: { $elemMatch: { keyword: "Scott" } } })
+
+        // NOT:
+        // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
+        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords")
+                                                .hasThisElement(new Keyword("Scott"), "keyword");
+        final PhotoWithKeywords pwkScott = query.get();
+        assertNotNull(pwkScott);
+
+        final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
+        assertNull(pwkBad);
+    }
+
+    @Test
     public void testWhereCodeWScopeQuery() throws Exception {
         getDs().save(new PhotoWithKeywords());
         //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;
@@ -1029,7 +1086,12 @@ public class TestQuery extends TestBase {
         }
 
         public Keyword(final String k) {
-            keyword = k;
+            this.keyword = k;
+        }
+
+        public Keyword(final String k, final int score) {
+            this.keyword = k;
+            this.score = score;
         }
     }
 

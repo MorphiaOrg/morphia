@@ -17,11 +17,12 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         double latitude = 3.2;
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
+        stubQuery.disableValidation();
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build(),
-                                                                         maxDistanceMeters, false, false);
+                                                                         maxDistanceMeters);
 
         // when
         BasicDBObject queryDocument = new BasicDBObject();
@@ -46,12 +47,13 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         double latitude = 3.2;
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
+        stubQuery.disableValidation();
 
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build(),
-                                                                         null, false, false);
+                                                                         null);
 
         // when
         BasicDBObject queryDocument = new BasicDBObject();
