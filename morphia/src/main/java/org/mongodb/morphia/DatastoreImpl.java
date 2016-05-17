@@ -929,12 +929,20 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Iterable<Key<T>> insert(final T... entities) {
-        return insert(asList(entities), getWriteConcern(entities[0]));
+        if (entities.length <= 0) {
+            return new ArrayList<Key<T>>();
+        } else {
+            return insert(asList(entities), getWriteConcern(entities[0]));
+        }
     }
 
     @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        return insert(getCollection(entities.iterator().next()), entities, wc);
+        if (!entities.iterator().hasNext()) {
+            return new ArrayList<Key<T>>();
+        } else {
+            return insert(getCollection(entities.iterator().next()), entities, wc);
+        }
     }
 
     @Override
@@ -1370,6 +1378,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @SuppressWarnings("unchecked")
     private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
+        if (!entities.iterator().hasNext()) {
+            return new ArrayList<Key<T>>();
+        }
+
         WriteConcern writeConcern = wc;
         if (writeConcern == null) {
             writeConcern = getWriteConcern(entities.iterator().next());
