@@ -6,6 +6,7 @@ import org.mongodb.morphia.geo.Geometry;
 import org.mongodb.morphia.geo.MultiPolygon;
 import org.mongodb.morphia.geo.Point;
 import org.mongodb.morphia.geo.Polygon;
+import org.mongodb.morphia.mapping.MapperOptions;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
@@ -130,42 +131,26 @@ public interface FieldEnd<T> {
     T hasNoneOf(Iterable<?> values);
 
     /**
-     * Checks that a field has the value listed.
+     * Checks that a field has the value listed.  The options to store null/empty values apply here so to do partial matches on embedded
+     * objects, pass a reference to a partially populated instance with only the values of interest set to the values to check.
      *
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @see MapperOptions
      */
     T hasThisElement(Object val);
 
     /**
-     * Checks that a field has the value listed.
-     *
-     * @param val the value to check against
-     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
-     * @return T
-     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     */
-    T hasThisElement(Object val, String... fieldsToCompare);
-
-    /**
-     * Checks that a field does not have the value listed.
+     * Checks that a field does not have the value listed.  The options to store null/empty values apply here so to do partial matches on
+     * embedded objects, pass a reference to a partially populated instance with only the values of interest set to the values to check.
      *
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @see MapperOptions
      */
     T doesNotHaveThisElement(Object val);
-
-    /**
-     * Checks that a field does not have the value listed.
-     *
-     * @param val the value to check against
-     * @param fieldsToCompare a list of the fields in the val parameter to compare against the sub-document
-     * @return T
-     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     */
-    T doesNotHaveThisElement(Object val, String... fieldsToCompare);
 
     /**
      * Checks that a field has the value listed.

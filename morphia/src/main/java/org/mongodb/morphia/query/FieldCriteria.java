@@ -1,7 +1,6 @@
 package org.mongodb.morphia.query;
 
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.logging.Logger;
@@ -13,10 +12,8 @@ import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 /**
@@ -34,8 +31,7 @@ class FieldCriteria extends AbstractCriteria {
         this(query, field, op, value, false);
     }
 
-    FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
-                  final boolean not, final String... fieldsToCompare) {
+    FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
         //validate might modify prop string to translate java field name to db field name
         final StringBuilder sb = new StringBuilder(fieldName);
         final MappedField mf = validateQuery(query.getEntityClass(),
@@ -79,40 +75,10 @@ class FieldCriteria extends AbstractCriteria {
             mappedValue = Collections.emptyList();
         }
 
-        if (op == FilterOperator.ELEMENT_MATCH && mappedValue instanceof DBObject && !(mappedValue instanceof BasicDBList)) {
-            if (fieldsToCompare.length == 0) {
-                removeIdFieldFromComparison((DBObject) mappedValue, Mapper.ID_KEY);
-            } else {
-                limitComparisonToSelectedFields((DBObject) mappedValue, fieldsToCompare);
-            }
-        }
-
         this.field = sb.toString();
         this.operator = op;
         this.value = mappedValue;
         this.not = not;
-    }
-
-    private void removeIdFieldFromComparison(final DBObject mappedValue, final String idKey) {
-        mappedValue.removeField(idKey);
-    }
-
-    private void limitComparisonToSelectedFields(final DBObject mappedValue, final String... fieldsToCompare) {
-        HashSet<String> fields = extractFieldsAsHashSet(mappedValue);
-        HashSet<String> set = new HashSet<String>(asList(fieldsToCompare));
-        for (String field : fields) {
-            if (!set.contains(field)) {
-                mappedValue.removeField(field);
-            }
-        }
-    }
-
-    private HashSet<String> extractFieldsAsHashSet(final DBObject mappedValue) {
-        HashSet<String> fields = new HashSet<String>();
-        for (String field : mappedValue.keySet()) {
-            fields.add(field);
-        }
-        return fields;
     }
 
     @Override

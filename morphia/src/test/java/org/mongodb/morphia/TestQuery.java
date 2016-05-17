@@ -58,6 +58,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -311,14 +312,14 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testDeepQuery() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
         assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
     }
 
     @Test
     public void testDeepQueryWithBadArgs() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         PhotoWithKeywords p = getDs().find(PhotoWithKeywords.class, "keywords.keyword", 1).get();
         assertNull(p);
         p = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california".getBytes()).get();
@@ -329,7 +330,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testDeepQueryWithRenamedFields() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
         assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
     }
@@ -374,24 +375,37 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
         final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
+        final PhotoWithKeywords pwk4 = new PhotoWithKeywords(new Keyword("Scott", 14));
 
-        getDs().save(pwk1, pwk2, pwk3);
+        getDs().save(pwk1, pwk2, pwk3, pwk4);
 
         Mapper mapper = getMorphia().getMapper();
 
         Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
                                                 .field("keywords")
-                                                .hasThisElement(new Keyword("Scott"), "keyword");
+                                                .hasThisElement(new Keyword("Scott"));
         List<Key<PhotoWithKeywords>> keys = query.asKeyList();
 
-        assertEquals(1, query.asList().size());
+        assertEquals(2, query.asList().size());
         assertFalse("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
         assertFalse("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
         assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
+        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk4)));
 
         query = getDs().find(PhotoWithKeywords.class)
                        .field("keywords")
-                       .doesNotHaveThisElement(new Keyword("Scott"), "keyword");
+                       .hasThisElement(new Keyword(14));
+        keys = query.asKeyList();
+
+        assertEquals(1, query.asList().size());
+        assertFalse(keys.contains(mapper.getKey(pwk1)));
+        assertFalse(keys.contains(mapper.getKey(pwk2)));
+        assertFalse(keys.contains(mapper.getKey(pwk3)));
+        assertTrue(keys.contains(mapper.getKey(pwk4)));
+
+        query = getDs().find(PhotoWithKeywords.class)
+                       .field("keywords")
+                       .doesNotHaveThisElement(new Keyword("Scott"));
         keys = query.asKeyList();
 
         assertEquals(2, query.asList().size());
@@ -448,7 +462,7 @@ public class TestQuery extends TestBase {
 
         final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
         q.and(q.criteria("keywords.keyword").hasThisOne("scott"),
-              q.criteria("keywords.keyword").hasAnyOf(Arrays.asList("scott", "hernandez")));
+              q.criteria("keywords.keyword").hasAnyOf(asList("scott", "hernandez")));
 
         assertEquals(1, q.countAll());
         final QueryImpl<PhotoWithKeywords> qi = (QueryImpl<PhotoWithKeywords>) q;
@@ -796,7 +810,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRegexInsensitiveQuery() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         final Pattern p = Pattern.compile("(?i)caLifornia");
         assertNotNull(getDs().find(PhotoWithKeywords.class).disableValidation().filter("keywords.keyword", p).get());
         assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", Pattern.compile("blah")).get());
@@ -804,7 +818,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRegexQuery() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
                              .disableValidation()
                              .filter("keywords.keyword", Pattern.compile("california"))
@@ -992,7 +1006,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testThatElemMatchQueriesOnlyChecksRequiredFields() throws Exception {
-        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
         pwk2.keywords.add(new Keyword("Scott", 14));
 
@@ -1008,7 +1022,7 @@ public class TestQuery extends TestBase {
         // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
         Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
                                                 .field("keywords")
-                                                .hasThisElement(new Keyword("Scott"), "keyword");
+                                                .hasThisElement(new Keyword("Scott"));
         final PhotoWithKeywords pwkScott = query.get();
         assertNotNull(pwkScott);
 
@@ -1018,7 +1032,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testWhereCodeWScopeQuery() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;
         // ", new BasicDBObject("kwd","california"));
         final CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
@@ -1027,7 +1041,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testWhereStringQuery() throws Exception {
-        getDs().save(new PhotoWithKeywords());
+        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class).where("this.keywords != null").get());
     }
 
@@ -1064,7 +1078,7 @@ public class TestQuery extends TestBase {
         @Id
         private ObjectId id;
         @Embedded
-        private List<Keyword> keywords = Arrays.asList(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
+        private List<Keyword> keywords = new ArrayList<Keyword>();
 
         public PhotoWithKeywords() {
         }
@@ -1075,12 +1089,16 @@ public class TestQuery extends TestBase {
                 keywords.add(new Keyword(word));
             }
         }
+
+        public PhotoWithKeywords(final Keyword... keyword) {
+            keywords.addAll(asList(keyword));
+        }
     }
 
     @Embedded(concreteClass = Keyword.class)
     public static class Keyword {
         private String keyword;
-        private int score = 12;
+        private Integer score;
 
         protected Keyword() {
         }
@@ -1089,8 +1107,12 @@ public class TestQuery extends TestBase {
             this.keyword = k;
         }
 
-        public Keyword(final String k, final int score) {
+        public Keyword(final String k, final Integer score) {
             this.keyword = k;
+            this.score = score;
+        }
+
+        public Keyword(final Integer score) {
             this.score = score;
         }
     }

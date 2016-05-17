@@ -140,22 +140,9 @@ class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     }
 
     @Override
-    public T doesNotHaveThisElement(final Object val, final String... fieldsToCompare) {
-        Assert.parametersNotNull("val", val);
-        Assert.parametersNotNull("fieldsToCompare", (Object[]) fieldsToCompare);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val, true, fieldsToCompare);
-    }
-
-    @Override
     public T hasThisElement(final Object val) {
         Assert.parametersNotNull("val", val);
         return addCriteria(FilterOperator.ELEMENT_MATCH, val, false);
-    }
-
-    @Override
-    public T hasThisElement(final Object val, final String... fieldsToCompare) {
-        Assert.parametersNotNull("fieldsToCompare", (Object[]) fieldsToCompare);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val, false, fieldsToCompare);
     }
 
     @Override
@@ -304,7 +291,7 @@ class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     }
 
     private T addCriteria(final FilterOperator op, final Object val, final boolean not, final String... fieldsToCompare) {
-        target.add(new FieldCriteria(query, field, op, val, not, fieldsToCompare));
+        target.add(new FieldCriteria(query, field, op, val, not));
         return target;
     }
 
