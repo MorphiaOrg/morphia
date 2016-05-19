@@ -91,7 +91,7 @@ public class Mapper {
     private final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
     private final ConcurrentHashMap<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
 
-    //EntityInterceptors; these are called before EntityListeners and lifecycle methods on an Entity, for all Entities
+    //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<EntityInterceptor>();
 
     //A general cache of instances of classes; used by MappedClass for EntityListener(s)
