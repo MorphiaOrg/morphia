@@ -8,7 +8,6 @@ import org.mongodb.morphia.testmappackage.testmapsubpackage.testmapsubsubpackage
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
