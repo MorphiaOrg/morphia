@@ -214,7 +214,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         String target;
         if (firstStage) {
             MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
-            target = field.getNameToStore();
+            target = field != null ? field.getNameToStore() : projection.getTarget();
         } else {
             target = projection.getTarget();
         }
@@ -245,7 +245,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         }
     }
 
-    private BasicDBList toExpressionArgs(final List<Object> args) {
+    private DBObject toExpressionArgs(final List<Object> args) {
         BasicDBList result = new BasicDBList();
         for (Object arg : args) {
             if (arg instanceof Projection) {
@@ -255,13 +255,11 @@ public class AggregationPipelineImpl implements AggregationPipeline {
                 } else {
                     result.add("$" + projection.getTarget());
                 }
-            } else if (arg instanceof Number) {
-                result.add(arg);
-            } else if (arg instanceof String) {
+            } else {
                 result.add(arg);
             }
         }
-        return result;
+        return result.size() == 1 ? (DBObject) result.get(0) : result;
     }
 
     @Override
