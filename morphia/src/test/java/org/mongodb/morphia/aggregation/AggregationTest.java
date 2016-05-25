@@ -38,7 +38,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.mongodb.morphia.aggregation.Group.addToSet;
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
@@ -57,7 +59,7 @@ public class AggregationTest extends TestBase {
                          grouping("year", new Accumulator("$year", "date"))),
                 grouping("count", new Accumulator("$sum", 1)));
         final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        final DBObject id = (DBObject) ((DBObject) group.get("$group")).get("_id");
+        final DBObject id = getDBObject(group, "$group", "_id");
         Assert.assertEquals(new BasicDBObject("$month", "$date"), id.get("month"));
         Assert.assertEquals(new BasicDBObject("$year", "$date"), id.get("year"));
 
@@ -398,6 +400,50 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(stages.get(1), match);
     }
 
+    @Test
+    public void testGroupWithProjection() {
+        /*
+         ......aggregate([
+ {$group:
+     {"_id":"$subjectHash",
+         "authors":{$addToSet:"$fromAddress.address"},
+  ---->> "messageDataSet":{$addToSet:{"sentDate":"$sentDate","messageId":"$_id"}},
+         "messageCount":{$sum:1}}},
+          {$sort:{....}},
+         {$limit:10},
+         {$skip:0}
+         ])
+
+
+         */
+        AggregationPipeline pipeline =
+            getDs().createAggregation(Author.class)
+                   .group("subjectHash",
+                          grouping("authors", addToSet("fromAddress.address")),
+                          grouping("messageDataSet", grouping("$addToSet",
+                                                              projection("sentDate", "sentDate"),
+                                                              projection("messageId", "_id"))),
+                          grouping("messageCount", new Accumulator("$sum", 1)))
+                   .limit(10)
+                   .skip(0);
+        List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        DBObject group = stages.get(0);
+        DBObject addToSet = getDBObject(group, "$group", "messageDataSet", "$addToSet");
+        Assert.assertNotNull(addToSet);
+        Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
+        Assert.assertEquals(addToSet.get("messageId"), "$_id");
+    }
+
+    private DBObject getDBObject(final DBObject dbObject, final String... path) {
+        DBObject current = dbObject;
+        for (String step : path) {
+            Object next = current.get(step);
+            Assert.assertNotNull(format("Could not find %s in \n%s", step, current), next);
+            current = (DBObject) next;
+        }
+        return current;
+    }
+
     static class StringDates {
         @Id
         private ObjectId id;
@@ -425,7 +471,7 @@ public class AggregationTest extends TestBase {
 
         @Override
         public String toString() {
-            return String.format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
+            return format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
         }
     }
 
@@ -455,7 +501,7 @@ public class AggregationTest extends TestBase {
 
         @Override
         public String toString() {
-            return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+            return format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
         }
     }
 
