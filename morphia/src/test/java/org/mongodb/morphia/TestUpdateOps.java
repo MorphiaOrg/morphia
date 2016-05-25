@@ -512,7 +512,7 @@ public class TestUpdateOps extends TestBase {
         BasicDBObject object = new BasicDBObject("new", "value");
         updateOperations.set("raw", object);
 
-        getDs().updateFirst(query, updateOperations, false, WriteConcern.JOURNALED);
+        getDs().updateFirst(query, updateOperations, false);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
         for (int i = 0; i < list.size(); i++) {
