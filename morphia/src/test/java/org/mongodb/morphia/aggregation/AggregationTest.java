@@ -17,6 +17,7 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
+import com.mongodb.AggregationOptions.OutputMode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -41,6 +42,7 @@ import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.divide;
+import static org.mongodb.morphia.aggregation.Projection.expression;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
 
@@ -59,6 +61,26 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(new BasicDBObject("$year", "$date"), id.get("year"));
 
         pipeline.aggregate(User.class);
+    }
+
+    @Test
+    public void testDateToString() throws ParseException {
+        Date joined = new SimpleDateFormat("yyyy-MM-dd").parse("2016-05-01");
+        getDs().save(new User("John Doe", joined));
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .project(projection("string", expression("$dateToString",
+                                                     new BasicDBObject("format", "%Y-%m-%d")
+                                                         .append("date", "$joined"))));
+
+        Iterator<StringDates> aggregate = pipeline.aggregate(StringDates.class, AggregationOptions
+            .builder()
+            .outputMode(OutputMode.CURSOR)
+            .build());
+        while (aggregate.hasNext()) {
+            StringDates next = aggregate.next();
+            Assert.assertEquals("2016-05-01", next.string);
+        }
     }
 
     @Test
@@ -84,6 +106,35 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testGeoNearWithGeoJson() {
+        // given
+        Point londonPoint = point(51.5286416, -0.1015987);
+        City london = new City("London", londonPoint);
+        getDs().save(london);
+        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        getDs().save(manchester);
+        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        getDs().save(sevilla);
+
+        getDs().ensureIndexes();
+
+        // when
+        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
+                                                                  .geoNear(GeoNear.builder("distance")
+                                                                                  .setNear(londonPoint)
+                                                                                  .setSpherical(true)
+                                                                                  .build())
+                                                                  .aggregate(City.class);
+
+        // then
+        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
+        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+    }
+
+    @Test
     public void testGeoNearWithLegacyCoords() {
         // given
         double latitude = 51.5286416;
@@ -105,35 +156,6 @@ public class AggregationTest extends TestBase {
                             .setSpherical(false)
                             .build())
             .aggregate(PlaceWithLegacyCoords.class);
-
-        // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
-        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
-    }
-
-    @Test
-    public void testGeoNearWithGeoJson() {
-        // given
-        Point londonPoint = point(51.5286416, -0.1015987);
-        City london = new City("London", londonPoint);
-        getDs().save(london);
-        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
-        getDs().save(manchester);
-        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
-        getDs().save(sevilla);
-
-        getDs().ensureIndexes();
-
-        // when
-        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
-                                                                  .geoNear(GeoNear.builder("distance")
-                                                                                  .setNear(londonPoint)
-                                                                                  .setSpherical(true)
-                                                                                  .build())
-                                                                  .aggregate(City.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -343,6 +365,12 @@ public class AggregationTest extends TestBase {
         final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
         Assert.assertEquals(stages.get(0), group);
         Assert.assertEquals(stages.get(1), match);
+    }
+
+    static class StringDates {
+        @Id
+        private ObjectId id;
+        private String string;
     }
 
     @Entity(value = "books", noClassnameStored = true)
