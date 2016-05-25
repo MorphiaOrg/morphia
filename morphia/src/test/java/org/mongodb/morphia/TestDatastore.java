@@ -27,6 +27,7 @@ import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.generics.model.ChildEmbedded;
 import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
@@ -36,8 +37,12 @@ import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -62,7 +67,6 @@ public class TestDatastore extends TestBase {
     public void saveNull() {
         getDs().save((Hotel) null);
     }
-
 
     @Test
     public void shouldSaveGenericTypeVariables() throws Exception {
@@ -157,7 +161,7 @@ public class TestDatastore extends TestBase {
     @Test
     public void testGet() throws Exception {
         getMorphia().map(FacebookUser.class);
-        final List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
+        List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
         fbUsers.add(new FacebookUser(1, "user 1"));
         fbUsers.add(new FacebookUser(2, "user 2"));
         fbUsers.add(new FacebookUser(3, "user 3"));
@@ -166,10 +170,18 @@ public class TestDatastore extends TestBase {
         getDs().save(fbUsers);
         assertEquals(4, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
-        final List<Long> ids = new ArrayList<Long>(2);
-        ids.add(1L);
-        ids.add(2L);
-        final List<FacebookUser> res = getDs().get(FacebookUser.class, ids).asList();
+        List<FacebookUser> res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
+        assertEquals(2, res.size());
+        assertNotNull(res.get(0));
+        assertNotNull(res.get(0).id);
+        assertNotNull(res.get(1));
+        assertNotNull(res.get(1).username);
+
+        getDs().getCollection(FacebookUser.class).remove(new BasicDBObject());
+        getAds().insert(fbUsers);
+        assertEquals(4, getDs().getCount(FacebookUser.class));
+        assertNotNull(getDs().get(FacebookUser.class, 1));
+        res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(0).id);
@@ -309,6 +321,17 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().getCount(rect));
     }
 
+    private Set<Meeting> createMeetings() {
+        int i = 1;
+        Set<String> names = new TreeSet<String>(Arrays.asList("Bob", "Alice", "John"));
+        return new HashSet<Meeting>(asList(
+            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
+            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
+            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
+            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
+            new Meeting(names, "location " + i, (i) % 2 == 0, new Date())));
+    }
+
     private void testFirstDatastore(final Datastore ds1) {
         final FacebookUser user = ds1.find(FacebookUser.class, "id", 1).get();
         Assert.assertNotNull(user);
@@ -337,6 +360,28 @@ public class TestDatastore extends TestBase {
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 2).get());
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 3).get());
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 4).get());
+    }
+
+    @Entity("Meetings")
+    public static class Meeting {
+        @Version
+        private long version;
+        @Id
+        private ObjectId id;
+        private Set<String> attendeeUsernames;
+        private String location;
+        private boolean occurred;
+        private Date creationDate;
+
+        public Meeting() {
+        }
+
+        public Meeting(final Set<String> attendeeUsernames, final String location, final boolean occurred, final Date creationDate) {
+            this.attendeeUsernames = attendeeUsernames;
+            this.location = location;
+            this.occurred = occurred;
+            this.creationDate = creationDate;
+        }
     }
 
     @Entity("facebook_users")

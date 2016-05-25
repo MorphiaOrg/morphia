@@ -258,6 +258,15 @@ public interface AdvancedDatastore extends Datastore {
      * Inserts an entity in to the mapped collection.
      *
      * @param entity the entity to insert
+     * @param <T>    the type of the entity
+     * @return the new key of the inserted entity
+     */
+    <T> Iterable<Key<T>> insert(Iterable<T> entity);
+
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity the entity to insert
      * @param wc     the WriteConcern to use when inserting
      * @param <T>    the type of the entity
      * @return the new key of the inserted entity
