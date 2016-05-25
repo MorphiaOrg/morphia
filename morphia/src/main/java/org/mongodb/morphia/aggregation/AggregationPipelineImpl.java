@@ -77,7 +77,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collection.getName(), mapper.createEntityCache());
+        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collectionName, mapper.createEntityCache());
     }
 
     @Override
@@ -139,6 +139,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline limit(final int count) {
         stages.add(new BasicDBObject("$limit", count));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline lookup(final String from, final String localField, final String foreignField, final String as) {
+        stages.add(new BasicDBObject("$lookup", new BasicDBObject("from", from)
+            .append("localField", localField)
+            .append("foreignField", foreignField)
+            .append("as", as)));
         return this;
     }
 

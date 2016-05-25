@@ -102,6 +102,22 @@ public interface AggregationPipeline {
     AggregationPipeline limit(int count);
 
     /**
+     * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
+     * processing. The $lookup stage does an equality match between a field from the input documents with a field from the documents of the
+     * “joined” collection.  To each input document, the $lookup stage adds a new array field whose elements are the matching documents
+     * from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
+     *
+     * @param from         the collection to join
+     * @param localField   the field from the input documents
+     * @param foreignField the field from the documents of the "from" collection
+     * @param as           the output array field
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
+     * @since 1.2
+     */
+    AggregationPipeline lookup(String from, String localField, String foreignField, String as);
+
+    /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
      * MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
