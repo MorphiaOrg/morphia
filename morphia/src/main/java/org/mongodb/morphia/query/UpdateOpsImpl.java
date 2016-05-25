@@ -59,7 +59,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         }
 
         if (addDups) {
-            add(UpdateOperator.PUSH_ALL, fieldExpr, values, true);
+            add(UpdateOperator.PUSH, fieldExpr, new BasicDBObject(UpdateOperator.EACH.val(), values), true);
         } else {
             add(UpdateOperator.ADD_TO_SET_EACH, fieldExpr, values, true);
         }
