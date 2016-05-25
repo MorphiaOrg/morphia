@@ -27,7 +27,6 @@ import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.generics.model.ChildEmbedded;
 import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
@@ -37,12 +36,8 @@ import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -321,17 +316,6 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().getCount(rect));
     }
 
-    private Set<Meeting> createMeetings() {
-        int i = 1;
-        Set<String> names = new TreeSet<String>(Arrays.asList("Bob", "Alice", "John"));
-        return new HashSet<Meeting>(asList(
-            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
-            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
-            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
-            new Meeting(names, "location " + i, (i++) % 2 == 0, new Date()),
-            new Meeting(names, "location " + i, (i) % 2 == 0, new Date())));
-    }
-
     private void testFirstDatastore(final Datastore ds1) {
         final FacebookUser user = ds1.find(FacebookUser.class, "id", 1).get();
         Assert.assertNotNull(user);
@@ -360,28 +344,6 @@ public class TestDatastore extends TestBase {
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 2).get());
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 3).get());
         Assert.assertNull(getDs().find(FacebookUser.class, "id", 4).get());
-    }
-
-    @Entity("Meetings")
-    public static class Meeting {
-        @Version
-        private long version;
-        @Id
-        private ObjectId id;
-        private Set<String> attendeeUsernames;
-        private String location;
-        private boolean occurred;
-        private Date creationDate;
-
-        public Meeting() {
-        }
-
-        public Meeting(final Set<String> attendeeUsernames, final String location, final boolean occurred, final Date creationDate) {
-            this.attendeeUsernames = attendeeUsernames;
-            this.location = location;
-            this.occurred = occurred;
-            this.creationDate = creationDate;
-        }
     }
 
     @Entity("facebook_users")
