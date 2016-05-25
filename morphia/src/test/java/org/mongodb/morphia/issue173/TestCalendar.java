@@ -16,7 +16,7 @@ public class TestCalendar extends TestBase {
         getMorphia().map(A.class);
         final A a = new A();
         a.c = Calendar.getInstance();
-        getDs().save(a, WriteConcern.SAFE);
+        getDs().save(a, WriteConcern.ACKNOWLEDGED);
         // occasionally failed, so i suspected a race cond.
         final A loaded = getDs().find(A.class).get();
         Assert.assertNotNull(loaded.c);

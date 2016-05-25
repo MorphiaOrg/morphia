@@ -82,7 +82,7 @@ public class CharacterMappingTest extends TestBase {
     public void singleCharToPrimitiveArray() {
         final Characters characters = testMapping("primitiveArray", "a");
         Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
-        getDs().save(characters, WriteConcern.FSYNCED);
+        getDs().save(characters, WriteConcern.JOURNALED);
     }
 
     @Test
