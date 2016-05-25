@@ -65,6 +65,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testDateToString() throws ParseException {
+        checkMinServerVersion(3.0);
         Date joined = new SimpleDateFormat("yyyy-MM-dd").parse("2016-05-01");
         getDs().save(new User("John Doe", joined));
         AggregationPipeline pipeline = getDs()
