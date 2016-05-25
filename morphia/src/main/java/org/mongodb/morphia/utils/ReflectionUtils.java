@@ -662,7 +662,7 @@ public final class ReflectionUtils {
             if (file.isFile()) {
                 fileNames.add(packageName + '.' + file.getName());
             } else if (mapSubPackages){
-                fileNames.addAll(getFileNames(file, packageName + '.' + file.getName(), false));
+                fileNames.addAll(getFileNames(file, packageName + '.' + file.getName(), true));
             }
         }
         return fileNames;
