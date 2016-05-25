@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping.primitives;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class CharacterMappingTest extends TestBase {
     public void singleCharToPrimitiveArray() {
         final Characters characters = testMapping("primitiveArray", "a");
         Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
-        getDs().save(characters, WriteConcern.JOURNALED);
+        getDs().save(characters);
     }
 
     @Test

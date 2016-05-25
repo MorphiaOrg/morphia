@@ -77,7 +77,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collection.getName(), mapper.createEntityCache());
+        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collectionName, mapper.createEntityCache());
     }
 
     @Override
@@ -108,8 +108,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline group(final String id, final Group... groupings) {
         DBObject group = new BasicDBObject("_id", "$" + id);
         for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+//            Accumulator accumulator = grouping.getAccumulator();
+//            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+            group.putAll(toDBObject(grouping));
         }
 
         stages.add(new BasicDBObject("$group", group));
@@ -120,16 +121,11 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline group(final List<Group> id, final Group... groupings) {
         DBObject idGroup = new BasicDBObject();
         for (Group group : id) {
-            if (group.getAccumulator() != null) {
-                idGroup.put(group.getName(), new BasicDBObject(group.getAccumulator().getOperation(), group.getAccumulator().getField()));
-            } else {
-                idGroup.put(group.getName(), group.getSourceField());
-            }
+            idGroup.putAll(toDBObject(group));
         }
         DBObject group = new BasicDBObject("_id", idGroup);
         for (Group grouping : groupings) {
-            Accumulator accumulator = grouping.getAccumulator();
-            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
+            group.putAll(toDBObject(grouping));
         }
 
         stages.add(new BasicDBObject("$group", group));
@@ -139,6 +135,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline limit(final int count) {
         stages.add(new BasicDBObject("$limit", count));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline lookup(final String from, final String localField, final String foreignField, final String as) {
+        stages.add(new BasicDBObject("$lookup", new BasicDBObject("from", from)
+            .append("localField", localField)
+            .append("foreignField", foreignField)
+            .append("as", as)));
         return this;
     }
 
@@ -210,7 +215,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @return the DBObject
      */
     @SuppressWarnings("unchecked")
-    public DBObject toDBObject(final Projection projection) {
+    private DBObject toDBObject(final Projection projection) {
         String target;
         if (firstStage) {
             MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
@@ -237,6 +242,26 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         } else {
             return new BasicDBObject(target, projection.isSuppressed() ? 0 : 1);
         }
+    }
+
+    private DBObject toDBObject(final Group group) {
+        BasicDBObject dbObject = new BasicDBObject();
+
+        if (group.getAccumulator() != null) {
+            dbObject.put(group.getName(), new BasicDBObject(group.getAccumulator().getOperation(), group.getAccumulator().getField()));
+        } else if (group.getProjections() != null) {
+            final BasicDBObject projection = new BasicDBObject();
+            for (Projection p : group.getProjections()) {
+                projection.putAll(toDBObject(p));
+            }
+            dbObject.put(group.getName(), projection);
+        } else if (group.getNested() != null) {
+            dbObject.put(group.getName(), toDBObject(group.getNested()));
+        } else {
+            dbObject.put(group.getName(), group.getSourceField());
+        }
+
+        return dbObject;
     }
 
     private void putIfNull(final DBObject dbObject, final String name, final Object value) {

@@ -63,7 +63,6 @@ public class TestDatastore extends TestBase {
         getDs().save((Hotel) null);
     }
 
-
     @Test
     public void shouldSaveGenericTypeVariables() throws Exception {
         // given
@@ -157,7 +156,7 @@ public class TestDatastore extends TestBase {
     @Test
     public void testGet() throws Exception {
         getMorphia().map(FacebookUser.class);
-        final List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
+        List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
         fbUsers.add(new FacebookUser(1, "user 1"));
         fbUsers.add(new FacebookUser(2, "user 2"));
         fbUsers.add(new FacebookUser(3, "user 3"));
@@ -166,10 +165,18 @@ public class TestDatastore extends TestBase {
         getDs().save(fbUsers);
         assertEquals(4, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
-        final List<Long> ids = new ArrayList<Long>(2);
-        ids.add(1L);
-        ids.add(2L);
-        final List<FacebookUser> res = getDs().get(FacebookUser.class, ids).asList();
+        List<FacebookUser> res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
+        assertEquals(2, res.size());
+        assertNotNull(res.get(0));
+        assertNotNull(res.get(0).id);
+        assertNotNull(res.get(1));
+        assertNotNull(res.get(1).username);
+
+        getDs().getCollection(FacebookUser.class).remove(new BasicDBObject());
+        getAds().insert(fbUsers);
+        assertEquals(4, getDs().getCount(FacebookUser.class));
+        assertNotNull(getDs().get(FacebookUser.class, 1));
+        res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(0).id);

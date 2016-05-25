@@ -25,6 +25,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.geo.City;
@@ -37,7 +38,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.mongodb.morphia.aggregation.Group.addToSet;
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
@@ -56,7 +59,7 @@ public class AggregationTest extends TestBase {
                          grouping("year", new Accumulator("$year", "date"))),
                 grouping("count", new Accumulator("$sum", 1)));
         final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        final DBObject id = (DBObject) ((DBObject) group.get("$group")).get("_id");
+        final DBObject id = getDBObject(group, "$group", "_id");
         Assert.assertEquals(new BasicDBObject("$month", "$date"), id.get("month"));
         Assert.assertEquals(new BasicDBObject("$year", "$date"), id.get("year"));
 
@@ -215,6 +218,35 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(2, count);
     }
 
+    /**
+     * Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
+     */
+    @Test
+    public void testLookup() {
+        checkMinServerVersion(3.2);
+        getDs().save(new Order(1, "abc", 12, 2),
+                     new Order(2, "jkl", 20, 1),
+                     new Order(3));
+        List<Inventory> inventories = asList(new Inventory(1, "abc", "product 1", 120),
+                                             new Inventory(2, "def", "product 2", 80),
+                                             new Inventory(3, "ijk", "product 3", 60),
+                                             new Inventory(4, "jkl", "product 4", 70),
+                                             new Inventory(5, null, "Incomplete"),
+                                             new Inventory(6));
+        getDs().save(inventories);
+
+        getDs().createAggregation(Order.class)
+               .lookup("inventory", "item", "sku", "inventoryDocs")
+               .out("lookups", Order.class);
+        List<Order> lookups = getAds().createQuery("lookups", Order.class)
+                                      .order("_id")
+                                      .asList();
+        Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
+        Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
+        Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));
+        Assert.assertEquals(inventories.get(5), lookups.get(2).inventoryDocs.get(1));
+    }
+
     @Test
     public void testOut() {
         checkMinServerVersion(2.6);
@@ -368,6 +400,50 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(stages.get(1), match);
     }
 
+    @Test
+    public void testGroupWithProjection() {
+        /*
+         ......aggregate([
+ {$group:
+     {"_id":"$subjectHash",
+         "authors":{$addToSet:"$fromAddress.address"},
+  ---->> "messageDataSet":{$addToSet:{"sentDate":"$sentDate","messageId":"$_id"}},
+         "messageCount":{$sum:1}}},
+          {$sort:{....}},
+         {$limit:10},
+         {$skip:0}
+         ])
+
+
+         */
+        AggregationPipeline pipeline =
+            getDs().createAggregation(Author.class)
+                   .group("subjectHash",
+                          grouping("authors", addToSet("fromAddress.address")),
+                          grouping("messageDataSet", grouping("$addToSet",
+                                                              projection("sentDate", "sentDate"),
+                                                              projection("messageId", "_id"))),
+                          grouping("messageCount", new Accumulator("$sum", 1)))
+                   .limit(10)
+                   .skip(0);
+        List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        DBObject group = stages.get(0);
+        DBObject addToSet = getDBObject(group, "$group", "messageDataSet", "$addToSet");
+        Assert.assertNotNull(addToSet);
+        Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
+        Assert.assertEquals(addToSet.get("messageId"), "$_id");
+    }
+
+    private DBObject getDBObject(final DBObject dbObject, final String... path) {
+        DBObject current = dbObject;
+        for (String step : path) {
+            Object next = current.get(step);
+            Assert.assertNotNull(format("Could not find %s in \n%s", step, current), next);
+            current = (DBObject) next;
+        }
+        return current;
+    }
+
     static class StringDates {
         @Id
         private ObjectId id;
@@ -395,7 +471,7 @@ public class AggregationTest extends TestBase {
 
         @Override
         public String toString() {
-            return String.format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
+            return format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
         }
     }
 
@@ -425,7 +501,7 @@ public class AggregationTest extends TestBase {
 
         @Override
         public String toString() {
-            return String.format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+            return format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
         }
     }
 
@@ -442,6 +518,198 @@ public class AggregationTest extends TestBase {
 
         public int getCount() {
             return count;
+        }
+    }
+
+    @Entity("orders")
+    private static class Order {
+        @Id
+        private int id;
+        private String item;
+        private int price;
+        private int quantity;
+        @Embedded()
+        private List<Inventory> inventoryDocs;
+
+        public Order() {
+        }
+
+        public Order(final int id) {
+            this.id = id;
+        }
+
+        public Order(final int id, final String item, final int price, final int quantity) {
+            this.id = id;
+            this.item = item;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public List<Inventory> getInventoryDocs() {
+            return inventoryDocs;
+        }
+
+        public void setInventoryDocs(final List<Inventory> inventoryDocs) {
+            this.inventoryDocs = inventoryDocs;
+        }
+
+        public String getItem() {
+            return item;
+        }
+
+        public void setItem(final String item) {
+            this.item = item;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(final int price) {
+            this.price = price;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(final int quantity) {
+            this.quantity = quantity;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id;
+            result = 31 * result + (item != null ? item.hashCode() : 0);
+            result = 31 * result + price;
+            result = 31 * result + quantity;
+            return result;
+        }        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Order)) {
+                return false;
+            }
+
+            final Order order = (Order) o;
+
+            if (id != order.id) {
+                return false;
+            }
+            if (price != order.price) {
+                return false;
+            }
+            if (quantity != order.quantity) {
+                return false;
+            }
+            return item != null ? item.equals(order.item) : order.item == null;
+
+        }
+
+
+    }
+
+    @Entity(value = "inventory", noClassnameStored = true)
+    public static class Inventory {
+        @Id
+        private int id;
+        private String sku;
+        private String description;
+        private int instock;
+
+        public Inventory() {
+        }
+
+        public Inventory(final int id) {
+            this.id = id;
+        }
+
+        public Inventory(final int id, final String sku, final String description) {
+            this.id = id;
+            this.sku = sku;
+            this.description = description;
+        }
+
+        public Inventory(final int id, final String sku, final String description, final int instock) {
+            this.id = id;
+            this.sku = sku;
+            this.description = description;
+            this.instock = instock;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(final String description) {
+            this.description = description;
+        }
+
+        public int getInstock() {
+            return instock;
+        }
+
+        public void setInstock(final int instock) {
+            this.instock = instock;
+        }
+
+        public String getSku() {
+            return sku;
+        }
+
+        public void setSku(final String sku) {
+            this.sku = sku;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Inventory)) {
+                return false;
+            }
+
+            final Inventory inventory = (Inventory) o;
+
+            if (id != inventory.id) {
+                return false;
+            }
+            if (instock != inventory.instock) {
+                return false;
+            }
+            if (sku != null ? !sku.equals(inventory.sku) : inventory.sku != null) {
+                return false;
+            }
+            return description != null ? description.equals(inventory.description) : inventory.description == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id;
+            result = 31 * result + (sku != null ? sku.hashCode() : 0);
+            result = 31 * result + (description != null ? description.hashCode() : 0);
+            result = 31 * result + instock;
+            return result;
         }
     }
 }

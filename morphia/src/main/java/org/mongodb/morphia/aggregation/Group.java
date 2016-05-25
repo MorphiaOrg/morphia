@@ -8,8 +8,10 @@ import java.util.List;
  *
  * @mongodb.driver.manual reference/operator/aggregation/group/ $group
  */
-public class Group {
+public final class Group {
     private final String name;
+    private Group nested;
+    private Projection[] projections;
     private Accumulator accumulator;
     private String sourceField;
 
@@ -24,9 +26,24 @@ public class Group {
      * @param name        the name of the group
      * @param sourceField the source field
      */
-    public Group(final String name, final String sourceField) {
+    private Group(final String name, final String sourceField) {
         this.name = name;
         this.sourceField = "$" + sourceField;
+    }
+    /**
+     * Creates a new Group
+     *
+     * @param name        the name of the group
+     * @param projections the fields to create
+     */
+    private Group(final String name, final Projection... projections) {
+        this.name = name;
+        this.projections = projections;
+    }
+
+    private Group(final String name, final Group nested) {
+        this.name = name;
+        this.nested = nested;
     }
 
     /**
@@ -47,6 +64,27 @@ public class Group {
      */
     public static Group grouping(final String name) {
         return grouping(name, name);
+    }
+
+    /**
+     * Creates a named grouping
+     *
+     * @param name        the field name
+     * @param projections the fields to create
+     * @return the Group
+     */
+    public static Group grouping(final String name, final Projection... projections) {
+        return new Group(name, projections);
+    }
+    /**
+     * Creates a named grouping
+     *
+     * @param name        the field name
+     * @param group the fields to create
+     * @return the Group
+     */
+    public static Group grouping(final String name, final Group group) {
+        return new Group(name, group);
     }
 
     /**
@@ -189,5 +227,19 @@ public class Group {
      */
     public String getSourceField() {
         return sourceField;
+    }
+
+    /**
+     * @return the projections for the group
+     */
+    public Projection[] getProjections() {
+        return projections;
+    }
+
+    /**
+     * @return the nested group
+     */
+    public Group getNested() {
+        return nested;
     }
 }

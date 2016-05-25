@@ -121,7 +121,8 @@ public class TestUpdateOps extends TestBase {
         newValues.add(4);
         newValues.add(5);
         res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
-                                  getDs().createUpdateOperations(ContainsIntArray.class).addAll("values", newValues, false));
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addAll("values", newValues, false));
         assertUpdated(res, 1);
 
         cIALoaded = getDs().get(cIntArray);
@@ -129,7 +130,8 @@ public class TestUpdateOps extends TestBase {
 
         //add them again... noop
         res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
-                                  getDs().createUpdateOperations(ContainsIntArray.class).addAll("values", newValues, false));
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addAll("values", newValues, false));
         assertUpdated(res, 1);
 
         cIALoaded = getDs().get(cIntArray);
@@ -137,7 +139,8 @@ public class TestUpdateOps extends TestBase {
 
         //add dups [4,5]
         res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
-                                  getDs().createUpdateOperations(ContainsIntArray.class).addAll("values", newValues, true));
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addAll("values", newValues, true));
         assertUpdated(res, 1);
 
         cIALoaded = getDs().get(cIntArray);
@@ -167,7 +170,7 @@ public class TestUpdateOps extends TestBase {
     @Test
     public void testIncDec() throws Exception {
         final Rectangle[] array = {new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10),
-                                   new Rectangle(10, 10)};
+            new Rectangle(10, 10)};
 
         for (final Rectangle rect : array) {
             getDs().save(rect);
@@ -509,7 +512,7 @@ public class TestUpdateOps extends TestBase {
         BasicDBObject object = new BasicDBObject("new", "value");
         updateOperations.set("raw", object);
 
-        getDs().updateFirst(query, updateOperations, false, WriteConcern.JOURNALED);
+        getDs().updateFirst(query, updateOperations, false);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
         for (int i = 0; i < list.size(); i++) {

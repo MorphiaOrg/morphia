@@ -11,6 +11,7 @@ import org.junit.Before;
 
 @SuppressWarnings("deprecation")
 public abstract class TestBase {
+    public static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
     private final Morphia morphia = new Morphia();
     private DB db;
@@ -63,7 +64,7 @@ public abstract class TestBase {
 
     @Before
     public void setUp() {
-        setDb(getMongoClient().getDB("morphia_test"));
+        setDb(getMongoClient().getDB(TEST_DB_NAME));
         setDs(getMorphia().createDatastore(getMongoClient(), getDb().getName()));
         setAds((AdvancedDatastore) getDs());
         cleanup();
