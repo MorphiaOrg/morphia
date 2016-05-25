@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
-import static com.mongodb.WriteConcern.REPLICA_ACKNOWLEDGED;
+import static com.mongodb.WriteConcern.W2;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -136,7 +136,7 @@ public class TestDatastore extends TestBase {
 
         // given
         long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), REPLICA_ACKNOWLEDGED);
+        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), W2);
 
         // expect
         assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));

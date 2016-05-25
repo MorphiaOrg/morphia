@@ -509,7 +509,7 @@ public class TestUpdateOps extends TestBase {
         BasicDBObject object = new BasicDBObject("new", "value");
         updateOperations.set("raw", object);
 
-        getDs().updateFirst(query, updateOperations, false, WriteConcern.FSYNCED);
+        getDs().updateFirst(query, updateOperations, false, WriteConcern.JOURNALED);
 
         List<EntityLogs> list = getDs().createQuery(EntityLogs.class).asList();
         for (int i = 0; i < list.size(); i++) {
@@ -610,7 +610,7 @@ public class TestUpdateOps extends TestBase {
     public void testValidationBadFieldName() throws Exception {
         getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
                        getDs().createUpdateOperations(Circle.class).inc("r", 1D),
-                       true, WriteConcern.SAFE);
+                       true, WriteConcern.ACKNOWLEDGED);
     }
 
     private void assertInserted(final UpdateResults res) {

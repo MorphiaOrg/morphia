@@ -33,8 +33,8 @@ public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testBulkInsertWithoutCollection() {
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             WriteConcern.NORMAL);
-        this.getAds().insert(new ArrayList<TestEntity>(), WriteConcern.NORMAL);
+                             WriteConcern.UNACKNOWLEDGED);
+        this.getAds().insert(new ArrayList<TestEntity>(), WriteConcern.UNACKNOWLEDGED);
     }
 
     @Test

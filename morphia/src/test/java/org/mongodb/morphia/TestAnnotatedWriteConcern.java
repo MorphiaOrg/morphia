@@ -60,7 +60,7 @@ public class TestAnnotatedWriteConcern extends TestBase {
         boolean failed = false;
         try {
             getAds().insert(new Simple("simple"));
-            getAds().insert(new Simple("simple"), WriteConcern.SAFE);
+            getAds().insert(new Simple("simple"), WriteConcern.ACKNOWLEDGED);
         } catch (Exception e) {
             failed = true;
         }
