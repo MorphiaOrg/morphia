@@ -1,7 +1,9 @@
 package org.mongodb.morphia.aggregation;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Defines a group pipeline stage.
@@ -11,7 +13,7 @@ import java.util.List;
 public final class Group {
     private final String name;
     private Group nested;
-    private Projection[] projections;
+    private List<Projection> projections;
     private Accumulator accumulator;
     private String sourceField;
 
@@ -38,7 +40,7 @@ public final class Group {
      */
     private Group(final String name, final Projection... projections) {
         this.name = name;
-        this.projections = projections;
+        this.projections = asList(projections);
     }
 
     private Group(final String name, final Group nested) {
@@ -53,7 +55,7 @@ public final class Group {
      * @return the Group
      */
     public static List<Group> id(final Group... fields) {
-        return Arrays.asList(fields);
+        return asList(fields);
     }
 
     /**
@@ -232,8 +234,8 @@ public final class Group {
     /**
      * @return the projections for the group
      */
-    public Projection[] getProjections() {
-        return projections;
+    public List<Projection> getProjections() {
+        return projections != null ? new ArrayList<Projection>(projections) : null;
     }
 
     /**
