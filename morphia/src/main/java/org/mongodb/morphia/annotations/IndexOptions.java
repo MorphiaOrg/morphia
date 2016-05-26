@@ -78,4 +78,9 @@ public @interface IndexOptions {
      * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
      */
     boolean unique() default false;
+
+    /**
+     * Removes an existing index, if the options of the existing index with the same name have changed.
+     */
+    boolean dropOutdated() default false;
 }

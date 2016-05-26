@@ -12,10 +12,13 @@ import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -259,7 +262,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
-                                                   Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
+                                                   Collections.<MappedField>emptyList()), unique, dropDupsOnCreate,
+                                                   false, false, -1, false);
     }
 
     @Override
@@ -844,7 +848,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                 final boolean dropDupsOnCreate) {
         ensureIndex(getCollection(collection), name,
                     parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
-                                      Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
+                                      Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1, false);
     }
 
     @Override
@@ -1066,14 +1070,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> void ensureIndex(final Class<T> clazz, final String name, final BasicDBObject fields, final boolean unique,
                                    final boolean dropDupsOnCreate, final boolean background, final boolean sparse,
-                                   final int expireAfterSeconds) {
+                                   final int expireAfterSeconds, final boolean dropOutdated) {
         final DBCollection dbColl = getCollection(clazz);
-        ensureIndex(dbColl, name, fields, unique, dropDupsOnCreate, background, sparse, expireAfterSeconds);
+        ensureIndex(dbColl, name, fields, unique, dropDupsOnCreate, background, sparse, expireAfterSeconds, dropOutdated);
     }
 
     protected void ensureIndex(final DBCollection dbColl, final String name, final BasicDBObject fields, final boolean unique,
                                final boolean dropDupsOnCreate, final boolean background, final boolean sparse,
-                               final int expireAfterSeconds) {
+                               final int expireAfterSeconds, final boolean dropOutdated) {
         final BasicDBObject opts = new BasicDBObject();
         if (name != null && name.length() != 0) {
             opts.append("name", name);
@@ -1095,9 +1099,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (expireAfterSeconds > -1) {
             opts.append("expireAfterSeconds", expireAfterSeconds);
         }
+        if (dropOutdated) {
+            opts.append("dropOutdated", true);
+        }
 
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), fields, opts));
-        dbColl.createIndex(fields, opts);
+        createMongoIndex(dbColl, fields, opts);
     }
 
     protected void ensureIndex(final MappedClass mc, final DBCollection dbColl, final Field[] fields, final IndexOptions options,
@@ -1144,12 +1151,58 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
-        dbColl.createIndex(keys, opts);
+        createMongoIndex(dbColl, keys, opts);
     }
 
-    protected void ensureIndex(final DBCollection dbColl, final DBObject keys, final DBObject options) {
+    protected void ensureIndex(final DBCollection dbColl, final DBObject keys, final BasicDBObject options) {
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, options));
-        dbColl.createIndex(keys, options);
+        createMongoIndex(dbColl, keys, options);
+    }
+
+    private void createMongoIndex(final DBCollection dbColl, final DBObject keys, final DBObject options) {
+        try {
+            dbColl.createIndex(keys, options);
+        } catch (MongoCommandException ex) {
+            if (options.containsField("dropOutdated") && getBoolean(options, "dropOutdated", false)) {
+                final BsonDocument errorDocument = ex.getResponse();
+                if (errorDocument.getInt32("code").intValue() == 85) {
+                    String indexName;
+                    if (options.containsKey("name")) {
+                        indexName = getString(options, "name");
+                    } else {
+                        final BsonString errorMessage = errorDocument.getString("errmsg");
+                        final String[] errorSplit = errorMessage.getValue().split("\\s");
+                        indexName = errorSplit[3];
+                    }
+                    dbColl.dropIndex(indexName);
+                    dbColl.createIndex(keys, options);
+                    return;
+                }
+            }
+            throw ex;
+        }
+    }
+
+    private boolean getBoolean(final DBObject options, final String key, final boolean def) {
+        Object foo = options.get(key);
+        if (foo == null) {
+            return def;
+        }
+        if (foo instanceof Number) {
+            return ((Number) foo).intValue() > 0;
+        }
+        if (foo instanceof Boolean) {
+            return (Boolean) foo;
+        }
+        throw new IllegalArgumentException("can't coerce to bool:" + foo.getClass());
+    }
+
+    private String getString(final DBObject options, final String key) {
+        Object foo = options.get(key);
+        if (foo == null) {
+            return null;
+        }
+        return foo.toString();
     }
 
     protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
@@ -1315,7 +1368,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             weights.put(field, index.value());
         }
         LOG.debug(format("Creating index for %s with keys:%s and opts:%s", dbColl.getName(), keys, opts));
-        dbColl.createIndex(keys, opts);
+        createMongoIndex(dbColl, keys, opts);
     }
 
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
@@ -1332,6 +1385,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         putIfTrue(opts, "dropDups", options.dropDups());
         putIfTrue(opts, "sparse", options.sparse());
         putIfTrue(opts, "unique", options.unique());
+        putIfTrue(opts, "dropOutdated", options.dropOutdated());
         if (options.expireAfterSeconds() != -1) {
             opts.put("expireAfterSeconds", options.expireAfterSeconds());
         }
@@ -1346,6 +1400,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         putIfTrue(opts, "dropDups", indexed.dropDups());
         putIfTrue(opts, "sparse", indexed.sparse());
         putIfTrue(opts, "unique", indexed.unique());
+        putIfTrue(opts, "dropOutdated", indexed.dropOutdated());
         if (indexed.expireAfterSeconds() != -1) {
             opts.put("expireAfterSeconds", indexed.expireAfterSeconds());
         }
@@ -1474,7 +1529,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                             final BasicDBObject fields = parseFieldsString(index.value(), mc.getClazz(), mapper,
                                                                            !index.disableValidation(), parentMCs, parentMFs);
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
-                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
+                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds(),
+                                        index.dropOutdated());
                         }
                     }
                 }
@@ -1518,7 +1574,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                                 index.dropDups(),
                                 index.background() || background,
                                 index.sparse(),
-                                index.expireAfterSeconds());
+                                index.expireAfterSeconds(),
+                                index.dropOutdated());
                 }
             }
 
