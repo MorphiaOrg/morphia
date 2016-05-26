@@ -1,5 +1,6 @@
 package org.mongodb.morphia.aggregation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -233,7 +234,12 @@ public final class Group {
      * @return the projections for the group
      */
     public Projection[] getProjections() {
-        return projections;
+        if (projections != null) {
+            List<Projection> list = new ArrayList<Projection>();
+            list.addAll(Arrays.asList(projections));
+            return list.toArray(new Projection[projections.length]);
+        }
+        return null;
     }
 
     /**
