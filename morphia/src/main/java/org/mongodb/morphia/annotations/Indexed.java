@@ -76,14 +76,6 @@ public @interface Indexed {
     boolean unique() default false;
 
     /**
-     * Removes an existing index, if the options of the existing index with the same name have changed.
-     *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    @Deprecated
-    boolean dropOutdated() default false;
-
-    /**
      * Indicates the direction of the index (ascending, descending); default is ascending
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}

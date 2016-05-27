@@ -1163,12 +1163,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         try {
             dbColl.createIndex(keys, options);
         } catch (MongoCommandException ex) {
-            if (options.containsField("dropOutdated") && getBoolean(options, "dropOutdated", false)) {
+            final BasicDBObject basicOptions = (BasicDBObject) options;
+            if (basicOptions.getBoolean("dropOutdated", false)) {
                 final BsonDocument errorDocument = ex.getResponse();
                 if (errorDocument.getInt32("code").intValue() == 85) {
                     String indexName;
                     if (options.containsKey("name")) {
-                        indexName = getString(options, "name");
+                        indexName = basicOptions.getString("name");
                     } else {
                         final BsonString errorMessage = errorDocument.getString("errmsg");
                         final String[] errorSplit = errorMessage.getValue().split("\\s");
@@ -1181,28 +1182,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
             throw ex;
         }
-    }
-
-    private boolean getBoolean(final DBObject options, final String key, final boolean def) {
-        Object foo = options.get(key);
-        if (foo == null) {
-            return def;
-        }
-        if (foo instanceof Number) {
-            return ((Number) foo).intValue() > 0;
-        }
-        if (foo instanceof Boolean) {
-            return (Boolean) foo;
-        }
-        throw new IllegalArgumentException("can't coerce to bool:" + foo.getClass());
-    }
-
-    private String getString(final DBObject options, final String key) {
-        Object foo = options.get(key);
-        if (foo == null) {
-            return null;
-        }
-        return foo.toString();
     }
 
     protected void ensureIndexes(final MappedClass mc, final boolean background, final List<MappedClass> parentMCs,
@@ -1400,7 +1379,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         putIfTrue(opts, "dropDups", indexed.dropDups());
         putIfTrue(opts, "sparse", indexed.sparse());
         putIfTrue(opts, "unique", indexed.unique());
-        putIfTrue(opts, "dropOutdated", indexed.dropOutdated());
         if (indexed.expireAfterSeconds() != -1) {
             opts.put("expireAfterSeconds", indexed.expireAfterSeconds());
         }
@@ -1529,8 +1507,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                             final BasicDBObject fields = parseFieldsString(index.value(), mc.getClazz(), mapper,
                                                                            !index.disableValidation(), parentMCs, parentMFs);
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
-                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds(),
-                                        index.dropOutdated());
+                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds(), false);
                         }
                     }
                 }
@@ -1575,7 +1552,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                 index.background() || background,
                                 index.sparse(),
                                 index.expireAfterSeconds(),
-                                index.dropOutdated());
+                                false);
                 }
             }
 

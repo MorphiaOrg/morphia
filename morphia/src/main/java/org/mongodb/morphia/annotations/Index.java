@@ -105,14 +105,6 @@ public @interface Index {
     boolean unique() default false;
 
     /**
-     * Removes an existing index, if the options of the existing index with the same name have changed.
-     *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
-     */
-    @Deprecated
-    boolean dropOutdated() default false;
-
-    /**
      * List of fields (prepended with "-" for desc; defaults to asc).  If a value is defined for {@link #fields()} this value will be
      * ignored and logged.
      *
