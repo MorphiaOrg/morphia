@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
@@ -106,19 +107,19 @@ public class TestIndexOptionAsDropOutdated extends TestBase {
 
 
     @Entity(value = "IndexCollection")
-    @Indexes(@Index(value = "indexField", unique = true))
+    @Indexes(@Index(fields = @Field(value = "indexField"), options = @IndexOptions(unique = true)))
     private static class EnsureIndexWithDropOutdatedIndex7 extends BaseEntity {
         private long indexField;
     }
 
     @Entity(value = "IndexCollection")
-    @Indexes(@Index(value = "indexField", dropOutdated = true))
+    @Indexes(@Index(fields = @Field(value = "indexField"), options = @IndexOptions(dropOutdated = true)))
     private static class EnsureIndexWithDropOutdatedIndex8 extends BaseEntity {
         private long indexField;
     }
 
     @Entity(value = "IndexCollection")
-    @Indexes(@Index(value = "indexField"))
+    @Indexes(@Index(fields = @Field(value = "indexField")))
     private static class EnsureIndexWithDropOutdatedIndex9 extends BaseEntity {
         private long indexField;
     }
