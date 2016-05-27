@@ -1507,7 +1507,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                             final BasicDBObject fields = parseFieldsString(index.value(), mc.getClazz(), mapper,
                                                                            !index.disableValidation(), parentMCs, parentMFs);
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
-                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds(), false);
+                                        index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds(),
+                                        false);
                         }
                     }
                 }
