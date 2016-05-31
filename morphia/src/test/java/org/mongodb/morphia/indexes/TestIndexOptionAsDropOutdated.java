@@ -44,20 +44,22 @@ public class TestIndexOptionAsDropOutdated extends TestBase {
     }
 
     private void executeTest(final Class entityWithIndex, final Class entityWithDropOutdated, final Class entityWithoutDropOutdated) {
-        getMorphia().map(entityWithIndex);
-        getDs().ensureIndexes();
-        getMorphia().map(entityWithDropOutdated);
-        try {
+        if (serverIsAtLeastVersion(2.6)) {
+            getMorphia().map(entityWithIndex);
             getDs().ensureIndexes();
-        } catch (MongoCommandException ex) {
-            fail("Changed index should have been updated.");
-        }
-        getMorphia().map(entityWithoutDropOutdated);
-        try {
-            getDs().ensureIndexes();
-            fail("Should throw a MongoCommandException for existing index with different options.");
-        } catch (MongoCommandException ex) {
-            assertThat(ex.getMessage().startsWith("Command failed with error 85"), is(true));
+            getMorphia().map(entityWithDropOutdated);
+            try {
+                getDs().ensureIndexes();
+            } catch (MongoCommandException ex) {
+                fail("Changed index should have been updated.");
+            }
+            getMorphia().map(entityWithoutDropOutdated);
+            try {
+                getDs().ensureIndexes();
+                fail("Should throw a MongoCommandException for existing index with different options.");
+            } catch (MongoCommandException ex) {
+                assertThat(ex.getMessage().startsWith("Command failed with error 85"), is(true));
+            }
         }
     }
 
