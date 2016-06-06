@@ -704,13 +704,13 @@
 
 
 
-<h1 id="querying">Querying</h1>
+<h1 id="querying:50d269286defa89dcc6793dab2a5c4d0">Querying</h1>
 
 <p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
  to provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
 the type of your entity.</p>
 
-<h2 id="creating-a-query">Creating a Query</h2>
+<h2 id="creating-a-query:50d269286defa89dcc6793dab2a5c4d0">Creating a Query</h2>
 
 <p>The <code>Datastore</code> is the key class when using Morphia.  Virtually all operations begin with the <code>Datastore</code>.  To create the <code>Query</code>, we
 invoke the following code:</p>
@@ -720,7 +720,7 @@ invoke the following code:</p>
 
 <p><code>createQuery()</code> returns an instance of <code>Query</code> with which we can build a query.</p>
 
-<h3 id="filter"><code>filter()</code></h3>
+<h3 id="filter:50d269286defa89dcc6793dab2a5c4d0"><code>filter()</code></h3>
 
 <p>The first method of interest is <code>filter()</code>.  This method takes two values: a condition string and a value.  The <code>value</code> parameter is, of
 course, the value to use when applying the <code>condition</code> clause.  The <code>condition</code> parameter is a bit more complicated.  At its simplest,
@@ -883,7 +883,7 @@ like this:</p>
  the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use
  either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
 
-<h3 id="field"><code>field()</code></h3>
+<h3 id="field:50d269286defa89dcc6793dab2a5c4d0"><code>field()</code></h3>
 
 <p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
 returns an instance of a <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
@@ -906,7 +906,7 @@ result in an error.</p>
 </div>
 
 
-<h2 id="complex-queries">Complex Queries</h2>
+<h2 id="complex-queries:50d269286defa89dcc6793dab2a5c4d0">Complex Queries</h2>
 
 <p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <code>and()</code> and <code>or()</code> to build up more
 complex queries.  An <code>and</code> query might look something like this:</p>
@@ -930,7 +930,7 @@ method instead of <code>field()</code> but it is used in much the same fashion. 
 
 <p>This generates an implicit <code>and</code> across the field comparisons.</p>
 
-<h2 id="text-searching">Text Searching</h2>
+<h2 id="text-searching:50d269286defa89dcc6793dab2a5c4d0">Text Searching</h2>
 
 <p>Morphia also supports MongoDB&rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
 have a <a href="http://docs.mongodb.org/manual//core/index-text/
@@ -973,12 +973,12 @@ Assert.assertEquals(4, good.size());
 <p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
 &ldquo;good&rdquo; in any document.  We created four such documents and our query returns exactly those four.</p>
 
-<h2 id="other-query-options">Other Query Options</h2>
+<h2 id="other-query-options:50d269286defa89dcc6793dab2a5c4d0">Other Query Options</h2>
 
 <p>There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.</p>
 
-<h3 id="projections">Projections</h3>
+<h3 id="projections:50d269286defa89dcc6793dab2a5c4d0">Projections</h3>
 
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
@@ -1020,7 +1020,7 @@ Assert.assertNull(found.lastName);
 </div>
 
 
-<h3 id="limiting-and-skipping">Limiting and Skipping</h3>
+<h3 id="limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0">Limiting and Skipping</h3>
 
 <p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
 for these cases.  An example of these methods in action would look like this:</p>
@@ -1035,7 +1035,7 @@ for these cases.  An example of these methods in action would look like this:</p
 pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip
 ">skip</a> documentation for more detail.</p>
 
-<h3 id="ordering">Ordering</h3>
+<h3 id="ordering:50d269286defa89dcc6793dab2a5c4d0">Ordering</h3>
 
 <p>Ordering the results of a query is done via <a href="/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-"><code>Query.order(String)</code></a>
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
@@ -1045,7 +1045,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 <pre><code class="language-java">query.order(&quot;age,-income&quot;);
 </code></pre>
 
-<h3 id="tailable-cursors">Tailable Cursors</h3>
+<h3 id="tailable-cursors:50d269286defa89dcc6793dab2a5c4d0">Tailable Cursors</h3>
 
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
@@ -1075,7 +1075,7 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.</li>
 </ol>
 
-<h3 id="raw-querying">Raw Querying</h3>
+<h3 id="raw-querying:50d269286defa89dcc6793dab2a5c4d0">Raw Querying</h3>
 
 <p>You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.</p>
 
@@ -1126,22 +1126,22 @@ Artist result = findQuery.get();
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#querying">Querying</a>
+<li><a href="#querying:50d269286defa89dcc6793dab2a5c4d0">Querying</a>
 <ul>
-<li><a href="#creating-a-query">Creating a Query</a>
+<li><a href="#creating-a-query:50d269286defa89dcc6793dab2a5c4d0">Creating a Query</a>
 <ul>
-<li><a href="#filter"><code>filter()</code></a></li>
-<li><a href="#field"><code>field()</code></a></li>
+<li><a href="#filter:50d269286defa89dcc6793dab2a5c4d0"><code>filter()</code></a></li>
+<li><a href="#field:50d269286defa89dcc6793dab2a5c4d0"><code>field()</code></a></li>
 </ul></li>
-<li><a href="#complex-queries">Complex Queries</a></li>
-<li><a href="#text-searching">Text Searching</a></li>
-<li><a href="#other-query-options">Other Query Options</a>
+<li><a href="#complex-queries:50d269286defa89dcc6793dab2a5c4d0">Complex Queries</a></li>
+<li><a href="#text-searching:50d269286defa89dcc6793dab2a5c4d0">Text Searching</a></li>
+<li><a href="#other-query-options:50d269286defa89dcc6793dab2a5c4d0">Other Query Options</a>
 <ul>
-<li><a href="#projections">Projections</a></li>
-<li><a href="#limiting-and-skipping">Limiting and Skipping</a></li>
-<li><a href="#ordering">Ordering</a></li>
-<li><a href="#tailable-cursors">Tailable Cursors</a></li>
-<li><a href="#raw-querying">Raw Querying</a></li>
+<li><a href="#projections:50d269286defa89dcc6793dab2a5c4d0">Projections</a></li>
+<li><a href="#limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0">Limiting and Skipping</a></li>
+<li><a href="#ordering:50d269286defa89dcc6793dab2a5c4d0">Ordering</a></li>
+<li><a href="#tailable-cursors:50d269286defa89dcc6793dab2a5c4d0">Tailable Cursors</a></li>
+<li><a href="#raw-querying:50d269286defa89dcc6793dab2a5c4d0">Raw Querying</a></li>
 </ul></li>
 </ul></li>
 </ul>
