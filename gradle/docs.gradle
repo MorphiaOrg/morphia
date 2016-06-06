@@ -10,7 +10,7 @@ def gitVersion() {
         ignoreExitValue = true
     }
 
-    return stdOut.toString()
+    return stdOut.toString().trim()
 }
 
 def forceLanding() {
