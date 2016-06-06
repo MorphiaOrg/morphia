@@ -1249,13 +1249,13 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
       <guid>/morphia/1.2/guides/querying/</guid>
       <description>
 
-&lt;h1 id=&#34;querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Querying&lt;/h1&gt;
+&lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
 
 &lt;p&gt;Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
  to provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
 the type of your entity.&lt;/p&gt;
 
-&lt;h2 id=&#34;creating-a-query:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Creating a Query&lt;/h2&gt;
+&lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
 
 &lt;p&gt;The &lt;code&gt;Datastore&lt;/code&gt; is the key class when using Morphia.  Virtually all operations begin with the &lt;code&gt;Datastore&lt;/code&gt;.  To create the &lt;code&gt;Query&lt;/code&gt;, we
 invoke the following code:&lt;/p&gt;
@@ -1265,7 +1265,7 @@ invoke the following code:&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;createQuery()&lt;/code&gt; returns an instance of &lt;code&gt;Query&lt;/code&gt; with which we can build a query.&lt;/p&gt;
 
-&lt;h3 id=&#34;filter:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;filter&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;The first method of interest is &lt;code&gt;filter()&lt;/code&gt;.  This method takes two values: a condition string and a value.  The &lt;code&gt;value&lt;/code&gt; parameter is, of
 course, the value to use when applying the &lt;code&gt;condition&lt;/code&gt; clause.  The &lt;code&gt;condition&lt;/code&gt; parameter is a bit more complicated.  At its simplest,
@@ -1428,7 +1428,7 @@ like this:&lt;/p&gt;
  the equal operator, you can use the canonical &lt;code&gt;$eq&lt;/code&gt; operator as you would when building a query in the shell or you could opt to use
  either the &lt;code&gt;=&lt;/code&gt; or &lt;code&gt;==&lt;/code&gt; aliases which might feel a little more natural to use than the dollar operators.&lt;/p&gt;
 
-&lt;h3 id=&#34;field:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
 returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
@@ -1451,7 +1451,7 @@ result in an error.&lt;/p&gt;
 &lt;/div&gt;
 
 
-&lt;h2 id=&#34;complex-queries:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Complex Queries&lt;/h2&gt;
+&lt;h2 id=&#34;complex-queries&#34;&gt;Complex Queries&lt;/h2&gt;
 
 &lt;p&gt;Of course, queries are usually more complex than single field comparisons.  Morphia offers both &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; to build up more
 complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something like this:&lt;/p&gt;
@@ -1475,7 +1475,7 @@ method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the sa
 
 &lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; across the field comparisons.&lt;/p&gt;
 
-&lt;h2 id=&#34;text-searching:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Text Searching&lt;/h2&gt;
+&lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
 
 &lt;p&gt;Morphia also supports MongoDB&amp;rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
 have a &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text/
@@ -1518,12 +1518,12 @@ Assert.assertEquals(4, good.size());
 &lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the word
 &amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
 
-&lt;h2 id=&#34;other-query-options:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Other Query Options&lt;/h2&gt;
+&lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
 
 &lt;p&gt;There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.&lt;/p&gt;
 
-&lt;h3 id=&#34;projections:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Projections&lt;/h3&gt;
+&lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
@@ -1565,7 +1565,7 @@ Assert.assertNull(found.lastName);
 &lt;/div&gt;
 
 
-&lt;h3 id=&#34;limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Limiting and Skipping&lt;/h3&gt;
+&lt;h3 id=&#34;limiting-and-skipping&#34;&gt;Limiting and Skipping&lt;/h3&gt;
 
 &lt;p&gt;Pagination of query results is often done as a combination of skips and limits.  Morphia offers &lt;code&gt;Query.limit(int)&lt;/code&gt; and &lt;code&gt;Query.offset(int)&lt;/code&gt;
 for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
@@ -1580,7 +1580,7 @@ for these cases.  An example of these methods in action would look like this:&lt
 pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/cursor.skip
 &#34;&gt;skip&lt;/a&gt; documentation for more detail.&lt;/p&gt;
 
-&lt;h3 id=&#34;ordering:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Ordering&lt;/h3&gt;
+&lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
 
 &lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.2/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
@@ -1590,7 +1590,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.order(&amp;quot;age,-income&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;tailable-cursors:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Tailable Cursors&lt;/h3&gt;
+&lt;h3 id=&#34;tailable-cursors&#34;&gt;Tailable Cursors&lt;/h3&gt;
 
 &lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
 &#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
@@ -1620,7 +1620,7 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;raw-querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Raw Querying&lt;/h3&gt;
+&lt;h3 id=&#34;raw-querying&#34;&gt;Raw Querying&lt;/h3&gt;
 
 &lt;p&gt;You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.&lt;/p&gt;
 
