@@ -1,5 +1,5 @@
 def urlVersion = version.split('\\.')[0..1].join('.')
-def formalVersion = version.split('\\.').dropRight(1).join('.') + '-SNAPSHOT'
+def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 

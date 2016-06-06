@@ -1,8 +1,13 @@
 current = "1.1.1"
 
 [[versions]]
-  version = "1.1.1"
+  version = "1.2.0"
   status = "current"
+  docs = "./1.2"
+  api = "/javadoc"
+
+[[versions]]
+  version = "1.1.1"
   docs = "./1.1"
   api = "/javadoc"
 
@@ -11,12 +16,7 @@ current = "1.1.1"
   docs = "./1.0"
   api = "/javadoc"
 
-[[versions]]
-  version = "1.2.0-SNAPSHOT"
-  docs = "./1.2"
-  api = "/javadoc"
-
 [[drivers]]
   name = "morphia"
   description = "The MongoDB Java Object Document Mapper"
-  versions = "1.2.0-SNAPSHOT,1.1.1,1.0.1"
+  versions = "1.2.0,1.1.1,1.0.1"
