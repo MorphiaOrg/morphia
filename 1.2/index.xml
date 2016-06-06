@@ -715,7 +715,7 @@ and a simple tutorial to get up and running quickly.&lt;/p&gt;
       <guid>/morphia/1.2/getting-started/quick-tour/</guid>
       <description>
 
-&lt;h1 id=&#34;quick-tour:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Quick Tour&lt;/h1&gt;
+&lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
 
 &lt;p&gt;Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
 abstract much of that away but if something is confusing, please consult the Java driver &lt;a href=&#34;http://mongodb.github
@@ -725,7 +725,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Setting up Morphia&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
 
 &lt;p&gt;The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
 Morphia maps your entities and validates your queries.&lt;/p&gt;
@@ -752,7 +752,7 @@ package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@E
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.&lt;/p&gt;
 
-&lt;h3 id=&#34;mapping-options:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Options&lt;/h3&gt;
+&lt;h3 id=&#34;mapping-options&#34;&gt;Mapping Options&lt;/h3&gt;
 
 &lt;p&gt;Once you have an instance of Morphia, you can configure various mapping options via the &lt;code&gt;MappingOptions&lt;/code&gt; class.  While it&amp;rsquo;s possible to
 specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia, most users will use the default mapper.  In either case, the &lt;code&gt;Mapper&lt;/code&gt; can
@@ -761,7 +761,7 @@ specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia
  application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
  for you.  There are a few other options to configure on &lt;code&gt;MappingOptions&lt;/code&gt;, but we&amp;rsquo;ll not be covering them here.&lt;/p&gt;
 
-&lt;h2 id=&#34;mapping-classes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Classes&lt;/h2&gt;
+&lt;h2 id=&#34;mapping-classes&#34;&gt;Mapping Classes&lt;/h2&gt;
 
 &lt;p&gt;There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt;
  is treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
@@ -811,7 +811,7 @@ Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.&lt;/p&gt;
 
-&lt;h2 id=&#34;saving-data:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Saving Data&lt;/h2&gt;
+&lt;h2 id=&#34;saving-data&#34;&gt;Saving Data&lt;/h2&gt;
 
 &lt;p&gt;For the most part, you treat your Java objects just like you normally would.  When you&amp;rsquo;re ready to write an object to the database, it&amp;rsquo;s
 as simple as this:&lt;/p&gt;
@@ -841,7 +841,7 @@ efficient way of doing updates.  It is possible to update directly in the databa
 Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
 how to query.&lt;/p&gt;
 
-&lt;h2 id=&#34;querying:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Querying&lt;/h2&gt;
+&lt;h2 id=&#34;querying&#34;&gt;Querying&lt;/h2&gt;
 
 &lt;p&gt;Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
 directly and only rarely do you need to take additional action.  As with everything else, &lt;code&gt;Datastore&lt;/code&gt; is where we start:&lt;/p&gt;
@@ -877,7 +877,7 @@ validate and potentially get wrong:&lt;/p&gt;
 field called &lt;code&gt;salary&lt;/code&gt; on the &lt;code&gt;Employee&lt;/code&gt; class.  If you happen to have mapped that field such that the name in the database doesn&amp;rsquo;t match
 the Java field, Morphia can use either form and will validate against either name.&lt;/p&gt;
 
-&lt;h2 id=&#34;updates:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Updates&lt;/h2&gt;
+&lt;h2 id=&#34;updates&#34;&gt;Updates&lt;/h2&gt;
 
 &lt;p&gt;Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
 of update operations.  In this example, we&amp;rsquo;ll find all the underpaid employees and give them raise of 10000.  The first step is to create
@@ -903,7 +903,7 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
 &lt;p&gt;This line executes the update in the database without having to pull in however many documents are matched by the query.  The
 &lt;code&gt;UpdateResults&lt;/code&gt; instance returned will contain various statistics about the update operation.&lt;/p&gt;
 
-&lt;h2 id=&#34;removes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Removes&lt;/h2&gt;
+&lt;h2 id=&#34;removes&#34;&gt;Removes&lt;/h2&gt;
 
 &lt;p&gt;After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
 then tell the &lt;code&gt;Datastore&lt;/code&gt; to delete them:&lt;/p&gt;
@@ -945,7 +945,7 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
       <guid>/morphia/1.2/guides/aggregation/</guid>
       <description>
 
-&lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
+&lt;h1 id=&#34;aggregation:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation&lt;/h1&gt;
 
 &lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
@@ -970,7 +970,7 @@ against.  Because of the transformational operations available in the aggregatio
  Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
 equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
@@ -986,7 +986,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
  { &amp;quot;_id&amp;quot; : &amp;quot;Dante&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Banquet&amp;quot;, &amp;quot;Divine Comedy&amp;quot;, &amp;quot;Eclogues&amp;quot; ] }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;executing-the-pipeline&#34;&gt;Executing the Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Executing the Pipeline&lt;/h2&gt;
 
 &lt;p&gt;There are two basic ways to execute an aggregation pipeline:  &lt;code&gt;aggregate()&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt;.  These methods are Morphia&amp;rsquo;s cues to send the
  pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
@@ -995,7 +995,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   We can changes this behavior using the &lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html&#34;&gt;&lt;code&gt;AggregationOptions&lt;/code&gt;&lt;/a&gt;
   class.  The &lt;code&gt;options&lt;/code&gt; reference we passed to &lt;code&gt;out()&lt;/code&gt; also applies to &lt;code&gt;aggregate()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;aggregation-options&#34;&gt;Aggregation Options&lt;/h3&gt;
+&lt;h3 id=&#34;aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation Options&lt;/h3&gt;
 
 &lt;p&gt;There are a handful options here but there&amp;rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
  returns everything &amp;ldquo;inline&amp;rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
@@ -1005,7 +1005,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.&lt;/p&gt;
 
-&lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
+&lt;h3 id=&#34;out:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;$out&lt;/h3&gt;
 
 &lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
 &#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
@@ -1026,7 +1026,7 @@ output mode to &lt;code&gt;CURSOR&lt;/code&gt; with &lt;code&gt;aggregate()&lt;/
 database and any existing data.  The use of &lt;code&gt;$out&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt; can be greatly beneficial in scenarios such as precomputed aggregated
 results for later retrieval.&lt;/p&gt;
 
-&lt;h3 id=&#34;typed-results&#34;&gt;Typed Results&lt;/h3&gt;
+&lt;h3 id=&#34;typed-results:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Typed Results&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;out()&lt;/code&gt; has several variants.  In this example, we&amp;rsquo;re passing in &lt;code&gt;Author.class&lt;/code&gt; which tells Morphia that we want to map each document
 returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsquo;re using &lt;code&gt;out()&lt;/code&gt; instead of &lt;code&gt;aggregate()&lt;/code&gt;, Morphia will use the mapped collection for
@@ -1249,13 +1249,13 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
       <guid>/morphia/1.2/guides/querying/</guid>
       <description>
 
-&lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
+&lt;h1 id=&#34;querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Querying&lt;/h1&gt;
 
 &lt;p&gt;Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
  to provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
 the type of your entity.&lt;/p&gt;
 
-&lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
+&lt;h2 id=&#34;creating-a-query:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Creating a Query&lt;/h2&gt;
 
 &lt;p&gt;The &lt;code&gt;Datastore&lt;/code&gt; is the key class when using Morphia.  Virtually all operations begin with the &lt;code&gt;Datastore&lt;/code&gt;.  To create the &lt;code&gt;Query&lt;/code&gt;, we
 invoke the following code:&lt;/p&gt;
@@ -1265,7 +1265,7 @@ invoke the following code:&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;createQuery()&lt;/code&gt; returns an instance of &lt;code&gt;Query&lt;/code&gt; with which we can build a query.&lt;/p&gt;
 
-&lt;h3 id=&#34;filter&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;filter:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;The first method of interest is &lt;code&gt;filter()&lt;/code&gt;.  This method takes two values: a condition string and a value.  The &lt;code&gt;value&lt;/code&gt; parameter is, of
 course, the value to use when applying the &lt;code&gt;condition&lt;/code&gt; clause.  The &lt;code&gt;condition&lt;/code&gt; parameter is a bit more complicated.  At its simplest,
@@ -1428,7 +1428,7 @@ like this:&lt;/p&gt;
  the equal operator, you can use the canonical &lt;code&gt;$eq&lt;/code&gt; operator as you would when building a query in the shell or you could opt to use
  either the &lt;code&gt;=&lt;/code&gt; or &lt;code&gt;==&lt;/code&gt; aliases which might feel a little more natural to use than the dollar operators.&lt;/p&gt;
 
-&lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;field:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
 returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
@@ -1451,7 +1451,7 @@ result in an error.&lt;/p&gt;
 &lt;/div&gt;
 
 
-&lt;h2 id=&#34;complex-queries&#34;&gt;Complex Queries&lt;/h2&gt;
+&lt;h2 id=&#34;complex-queries:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Complex Queries&lt;/h2&gt;
 
 &lt;p&gt;Of course, queries are usually more complex than single field comparisons.  Morphia offers both &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; to build up more
 complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something like this:&lt;/p&gt;
@@ -1475,7 +1475,7 @@ method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the sa
 
 &lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; across the field comparisons.&lt;/p&gt;
 
-&lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
+&lt;h2 id=&#34;text-searching:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Text Searching&lt;/h2&gt;
 
 &lt;p&gt;Morphia also supports MongoDB&amp;rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
 have a &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text/
@@ -1518,12 +1518,12 @@ Assert.assertEquals(4, good.size());
 &lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the word
 &amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
 
-&lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
+&lt;h2 id=&#34;other-query-options:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Other Query Options&lt;/h2&gt;
 
 &lt;p&gt;There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.&lt;/p&gt;
 
-&lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
+&lt;h3 id=&#34;projections:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Projections&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
@@ -1565,7 +1565,7 @@ Assert.assertNull(found.lastName);
 &lt;/div&gt;
 
 
-&lt;h3 id=&#34;limiting-and-skipping&#34;&gt;Limiting and Skipping&lt;/h3&gt;
+&lt;h3 id=&#34;limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Limiting and Skipping&lt;/h3&gt;
 
 &lt;p&gt;Pagination of query results is often done as a combination of skips and limits.  Morphia offers &lt;code&gt;Query.limit(int)&lt;/code&gt; and &lt;code&gt;Query.offset(int)&lt;/code&gt;
 for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
@@ -1580,7 +1580,7 @@ for these cases.  An example of these methods in action would look like this:&lt
 pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/cursor.skip
 &#34;&gt;skip&lt;/a&gt; documentation for more detail.&lt;/p&gt;
 
-&lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
+&lt;h3 id=&#34;ordering:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Ordering&lt;/h3&gt;
 
 &lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.2/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
@@ -1590,7 +1590,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.order(&amp;quot;age,-income&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;tailable-cursors&#34;&gt;Tailable Cursors&lt;/h3&gt;
+&lt;h3 id=&#34;tailable-cursors:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Tailable Cursors&lt;/h3&gt;
 
 &lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
 &#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
@@ -1620,7 +1620,7 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;raw-querying&#34;&gt;Raw Querying&lt;/h3&gt;
+&lt;h3 id=&#34;raw-querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Raw Querying&lt;/h3&gt;
 
 &lt;p&gt;You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.&lt;/p&gt;
 
