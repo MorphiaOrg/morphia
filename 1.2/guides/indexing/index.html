@@ -765,8 +765,8 @@ an entity&rsquo;s source.  In addition to the familiar ascending/descending inde
 
 <h2 id="class-level-indexes:b3040529c742e665af59b7e3b005e4ad">Class Level Indexes</h2>
 
-<p>Class level indexing begins with the <a href="/morphia/1.2/guides/annotations/#indexes:b3040529c742e665af59b7e3b005e4ad"><code>@Indexes</code></a> annotation.  This is a container
-annotation whose sole purpose is to hold a number of <a href="/morphia/1.2/guides/annotations/#index:b3040529c742e665af59b7e3b005e4ad"><code>@Index</code></a> annotations.  This annotation
+<p>Class level indexing begins with the <a href="/morphia/1.2/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8"><code>@Indexes</code></a> annotation.  This is a container
+annotation whose sole purpose is to hold a number of <a href="/morphia/1.2/guides/annotations/#index:338aacf6337d00fc0cde843c3182c3f8"><code>@Index</code></a> annotations.  This annotation
 has two primary components to cover here:  <code>fields</code> and <code>options</code>.  An index definition would take the following form:</p>
 
 <pre><code class="language-java">@Entity
@@ -787,14 +787,14 @@ public class IndexExample {
 
 <h3 id="fields:b3040529c742e665af59b7e3b005e4ad">Fields</h3>
 
-<p>The fields to use in an index definition are defined with the <a href="/morphia/1.2/guides/annotations/#field:b3040529c742e665af59b7e3b005e4ad"><code>@Field</code></a> annotation. An
+<p>The fields to use in an index definition are defined with the <a href="/morphia/1.2/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8"><code>@Field</code></a> annotation. An
 arbitrary number of <code>@Field</code>s can be given but at least one must be present.</p>
 
 <h4 id="value:b3040529c742e665af59b7e3b005e4ad">value()</h4>
 
 <p>Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.2/guides/annotations/#property:b3040529c742e665af59b7e3b005e4ad"><code>@Property</code></a> or
- <a href="/morphia/1.2/guides/annotations/#embedded:b3040529c742e665af59b7e3b005e4ad"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
+name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.2/guides/annotations/#property:338aacf6337d00fc0cde843c3182c3f8"><code>@Property</code></a> or
+ <a href="/morphia/1.2/guides/annotations/#embedded:338aacf6337d00fc0cde843c3182c3f8"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
   exception is made for <a href="#text-indexing:b3040529c742e665af59b7e3b005e4ad">text indexes</a> as discussed below.</p>
 
 <h4 id="type:b3040529c742e665af59b7e3b005e4ad">type()</h4>
@@ -813,7 +813,7 @@ name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1
 
 <h3 id="index-options:b3040529c742e665af59b7e3b005e4ad">Index Options</h3>
 
-<p>Options for an index are defined on the <a href="/morphia/1.2/guides/annotations/#indexoptions:b3040529c742e665af59b7e3b005e4ad"><code>@IndexOptions</code></a>.  More complete coverage can
+<p>Options for an index are defined on the <a href="/morphia/1.2/guides/annotations/#indexoptions:338aacf6337d00fc0cde843c3182c3f8"><code>@IndexOptions</code></a>.  More complete coverage can
 be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 ">manual</a> but we&rsquo;ll provide some basic coverage
 here as well.</p>
@@ -906,8 +906,8 @@ existing value in the index.  Specify <code>true</code> to create a unique index
 <h2 id="field-level-indexes:b3040529c742e665af59b7e3b005e4ad">Field Level Indexes</h2>
 
 <p>Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-<a href="/morphia/1.2/guides/annotations/#indexed:b3040529c742e665af59b7e3b005e4ad"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the <a href="/morphia/1.2/guides/annotations/#field:b3040529c742e665af59b7e3b005e4ad"><code>@Field</code></a>
+<a href="/morphia/1.2/guides/annotations/#indexed:338aacf6337d00fc0cde843c3182c3f8"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the <a href="/morphia/1.2/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8"><code>@Field</code></a>
 annotations are unnecessary.  The options for the index are the same as defined <a href="#options:b3040529c742e665af59b7e3b005e4ad">above</a>.  A field level index
 definition would look like this:</p>
 
