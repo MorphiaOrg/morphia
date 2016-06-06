@@ -421,7 +421,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public DBObject getSortObject() {
-        return (sort == null) ? null : sort;
+        return (sort == null) ? null : new BasicDBObject(sort);
     }
 
     @Override
