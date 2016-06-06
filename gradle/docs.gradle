@@ -1,30 +1,46 @@
 def urlVersion = version.split('\\.')[0..1].join('.')
 def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
+def ghPages = file("build/gh-pages")
+
+def gitVersion() {
+    def stdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--abbrev-ref", "HEAD"
+        standardOutput = stdOut
+        ignoreExitValue = true
+    }
+
+    return stdOut.toString()
+}
+
+def forceLanding() {
+    gitVersion() == 'master' || buildingWith('forceLanding')
+}
+
 
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 
-    def dest = file("build/gh-pages/${urlVersion}")
-    dest.mkdirs()
+    def referencePage = new File(ghPages, urlVersion)
+    referencePage.mkdirs()
     copy {
         from 'docs/reference/public'
-        into dest
+        into referencePage
     }
     exec {
-        workingDir dest
+        workingDir referencePage
         commandLine "/usr/local/bin/git"
         args("add", ".")
     }
 }
 
 task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
-    def dest = file("build/gh-pages")
-    dest.mkdirs()
+    ghPages.mkdirs()
     copy {
         from 'docs/landing/public'
-        into dest
+        into ghPages
     }
     exec {
-        workingDir dest
+        workingDir ghPages
         environment System.getenv()
         commandLine "git"
         args("add", ".")
@@ -32,15 +48,14 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
 }
 
 task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
-    def dest = file("build/gh-pages")
     exec {
-        workingDir dest
+        workingDir ghPages
         environment System.getenv()
         commandLine "git"
         args("commit", "-a", "-m", "pushing docs updates")
     }
     exec {
-        workingDir dest
+        workingDir ghPages
         environment System.getenv()
         commandLine "git"
         args("push")
@@ -55,6 +70,9 @@ task landing << {
         commandLine 'hugo'
     }
 }
+
+landing.onlyIf { forceLanding() }
+publishLanding.onlyIf { forceLanding() }
 
 task reference(dependsOn: ':morphia:javadoc') << {
     exec {
@@ -131,13 +149,5 @@ task clonePages << {
             args("pull")
         }
 
-    }
-}
-
-task watch_landing() << {
-    exec {
-        workingDir 'docs/landing'
-        environment System.getenv()
-        commandLine 'hugo', 'server', '--baseUrl=http://localhost/', ' --buildDrafts', ' --watch'
     }
 }
