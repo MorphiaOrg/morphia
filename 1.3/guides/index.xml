@@ -596,7 +596,7 @@ class BankAccountWatcher{
       <guid>/morphia/1.3/guides/aggregation/</guid>
       <description>
 
-&lt;h1 id=&#34;aggregation:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation&lt;/h1&gt;
+&lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
 
 &lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
@@ -621,7 +621,7 @@ against.  Because of the transformational operations available in the aggregatio
  Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;The Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
 equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
@@ -637,7 +637,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
  { &amp;quot;_id&amp;quot; : &amp;quot;Dante&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Banquet&amp;quot;, &amp;quot;Divine Comedy&amp;quot;, &amp;quot;Eclogues&amp;quot; ] }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Executing the Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;executing-the-pipeline&#34;&gt;Executing the Pipeline&lt;/h2&gt;
 
 &lt;p&gt;There are two basic ways to execute an aggregation pipeline:  &lt;code&gt;aggregate()&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt;.  These methods are Morphia&amp;rsquo;s cues to send the
  pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
@@ -646,7 +646,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   We can changes this behavior using the &lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html&#34;&gt;&lt;code&gt;AggregationOptions&lt;/code&gt;&lt;/a&gt;
   class.  The &lt;code&gt;options&lt;/code&gt; reference we passed to &lt;code&gt;out()&lt;/code&gt; also applies to &lt;code&gt;aggregate()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation Options&lt;/h3&gt;
+&lt;h3 id=&#34;aggregation-options&#34;&gt;Aggregation Options&lt;/h3&gt;
 
 &lt;p&gt;There are a handful options here but there&amp;rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
  returns everything &amp;ldquo;inline&amp;rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
@@ -656,7 +656,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.&lt;/p&gt;
 
-&lt;h3 id=&#34;out:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;$out&lt;/h3&gt;
+&lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
 
 &lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
 &#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
@@ -677,7 +677,7 @@ output mode to &lt;code&gt;CURSOR&lt;/code&gt; with &lt;code&gt;aggregate()&lt;/
 database and any existing data.  The use of &lt;code&gt;$out&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt; can be greatly beneficial in scenarios such as precomputed aggregated
 results for later retrieval.&lt;/p&gt;
 
-&lt;h3 id=&#34;typed-results:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Typed Results&lt;/h3&gt;
+&lt;h3 id=&#34;typed-results&#34;&gt;Typed Results&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;out()&lt;/code&gt; has several variants.  In this example, we&amp;rsquo;re passing in &lt;code&gt;Author.class&lt;/code&gt; which tells Morphia that we want to map each document
 returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsquo;re using &lt;code&gt;out()&lt;/code&gt; instead of &lt;code&gt;aggregate()&lt;/code&gt;, Morphia will use the mapped collection for
@@ -695,23 +695,23 @@ instances, you can use &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/
       <guid>/morphia/1.3/guides/indexing/</guid>
       <description>
 
-&lt;h1 id=&#34;indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Indexing&lt;/h1&gt;
+&lt;h1 id=&#34;indexing&#34;&gt;Indexing&lt;/h1&gt;
 
 &lt;p&gt;Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
 an entity&amp;rsquo;s source.  In addition to the familiar ascending/descending index types, Morphia and MongoDB support &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
 &#34;&gt;TTL&lt;/a&gt;, &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
 &#34;&gt;text&lt;/a&gt;, and &lt;a href=&#34;http://docs.mongodb.org/manual/applications/geospatial-indexes/
 &#34;&gt;geospatial&lt;/a&gt;
- indexes.   When defining &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text&lt;/a&gt; indexes there are certain restrictions which will be covered below.  Full
+ indexes.   When defining &lt;a href=&#34;#text-indexing&#34;&gt;text&lt;/a&gt; indexes there are certain restrictions which will be covered below.  Full
   details for all these types are available in the &lt;a href=&#34;http://docs.mongodb.org/manual/indexes
 &#34;&gt;manual&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;There are two ways to define indexes:  at the class level and at the field level.&lt;/p&gt;
 
-&lt;h2 id=&#34;class-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Class Level Indexes&lt;/h2&gt;
+&lt;h2 id=&#34;class-level-indexes&#34;&gt;Class Level Indexes&lt;/h2&gt;
 
-&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
-annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#index:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
+&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexes&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
+annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#index&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
 has two primary components to cover here:  &lt;code&gt;fields&lt;/code&gt; and &lt;code&gt;options&lt;/code&gt;.  An index definition would take the following form:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -730,19 +730,19 @@ public class IndexExample {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;fields:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Fields&lt;/h3&gt;
+&lt;h3 id=&#34;fields&#34;&gt;Fields&lt;/h3&gt;
 
-&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
+&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
 arbitrary number of &lt;code&gt;@Field&lt;/code&gt;s can be given but at least one must be present.&lt;/p&gt;
 
-&lt;h4 id=&#34;value:b3040529c742e665af59b7e3b005e4ad&#34;&gt;value()&lt;/h4&gt;
+&lt;h4 id=&#34;value&#34;&gt;value()&lt;/h4&gt;
 
 &lt;p&gt;Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#property:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
- &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#embedded:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
-  exception is made for &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
+name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#property&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
+ &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#embedded&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
+  exception is made for &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
 
-&lt;h4 id=&#34;type:b3040529c742e665af59b7e3b005e4ad&#34;&gt;type()&lt;/h4&gt;
+&lt;h4 id=&#34;type&#34;&gt;type()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: IndexType.ASC&lt;/em&gt;&lt;/p&gt;
 
@@ -750,20 +750,20 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;weight:b3040529c742e665af59b7e3b005e4ad&#34;&gt;weight()&lt;/h4&gt;
+&lt;h4 id=&#34;weight&#34;&gt;weight()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Specifies the weight to use when creating a text index.  This value only makes sense when direction is &lt;code&gt;IndexType.TEXT&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;index-options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Index Options&lt;/h3&gt;
+&lt;h3 id=&#34;index-options&#34;&gt;Index Options&lt;/h3&gt;
 
-&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexoptions:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
+&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexoptions&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
 be found in the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 &#34;&gt;manual&lt;/a&gt; but we&amp;rsquo;ll provide some basic coverage
 here as well.&lt;/p&gt;
 
-&lt;h4 id=&#34;background:b3040529c742e665af59b7e3b005e4ad&#34;&gt;background()&lt;/h4&gt;
+&lt;h4 id=&#34;background&#34;&gt;background()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
@@ -773,18 +773,18 @@ until the index build completes. For potentially long running index building ope
 MongoDB database remains available during the index building operation.  The MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-creation/#background-construction
 &#34;&gt;manual&lt;/a&gt; has more detail.&lt;/p&gt;
 
-&lt;h4 id=&#34;disablevalidation:b3040529c742e665af59b7e3b005e4ad&#34;&gt;disableValidation()&lt;/h4&gt;
+&lt;h4 id=&#34;disablevalidation&#34;&gt;disableValidation()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
 mapped document names.  Setting this to &lt;code&gt;true&lt;/code&gt; disables this validation.&lt;/p&gt;
 
-&lt;h4 id=&#34;dropdups:b3040529c742e665af59b7e3b005e4ad&#34;&gt;dropDups()&lt;/h4&gt;
+&lt;h4 id=&#34;dropdups&#34;&gt;dropDups()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;When defining a &lt;a href=&#34;#unique:b3040529c742e665af59b7e3b005e4ad&#34;&gt;unique&lt;/a&gt; index, if there are duplicate values found, the index creation will.  Setting this value to
+&lt;p&gt;When defining a &lt;a href=&#34;#unique&#34;&gt;unique&lt;/a&gt; index, if there are duplicate values found, the index creation will.  Setting this value to
 true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt;
 
 &lt;div class=&#34;admonition important&#34;&gt;
@@ -794,7 +794,7 @@ true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt
 &lt;/div&gt;
 
 
-&lt;h4 id=&#34;expireafterseconds:b3040529c742e665af59b7e3b005e4ad&#34;&gt;expireAfterSeconds()&lt;/h4&gt;
+&lt;h4 id=&#34;expireafterseconds&#34;&gt;expireAfterSeconds()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
@@ -802,26 +802,26 @@ true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt
 &#34;&gt;TTL&lt;/a&gt; to control how long MongoDB retains documents in
 this collection.  The field listed must contain values that are dates.&lt;/p&gt;
 
-&lt;h4 id=&#34;language:b3040529c742e665af59b7e3b005e4ad&#34;&gt;language()&lt;/h4&gt;
+&lt;h4 id=&#34;language&#34;&gt;language()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;For &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt;, the language that determines the list of stop words and the rules for the stemmer and
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the language that determines the list of stop words and the rules for the stemmer and
 tokenizer. See &lt;a href=&#34;http://docs.mongodb.org/manual/reference/text-search-languages/
 &#34;&gt;Text Search Languages&lt;/a&gt; for the available languages and &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index
 &#34;&gt;Specify a
 Language for Text Index&lt;/a&gt; for more information and examples. The default value
  is &lt;strong&gt;english&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;languageoverride:b3040529c742e665af59b7e3b005e4ad&#34;&gt;languageOverride()&lt;/h4&gt;
+&lt;h4 id=&#34;languageoverride&#34;&gt;languageOverride()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;For &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt;, the name of the field in the collection’s documents that contains the
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the name of the field in the collection’s documents that contains the
 override language for the document. The default value is &lt;strong&gt;language&lt;/strong&gt;. See &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/#specify-language-field-text-index-example
 &#34;&gt;Use any Field to Specify the Language for a Document&lt;/a&gt; for an example.&lt;/p&gt;
 
-&lt;h4 id=&#34;name:b3040529c742e665af59b7e3b005e4ad&#34;&gt;name()&lt;/h4&gt;
+&lt;h4 id=&#34;name&#34;&gt;name()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
@@ -832,7 +832,7 @@ the sort order.&lt;/p&gt;
  the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length
 &#34;&gt;Index Name Limit&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;sparse:b3040529c742e665af59b7e3b005e4ad&#34;&gt;sparse()&lt;/h4&gt;
+&lt;h4 id=&#34;sparse&#34;&gt;sparse()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
@@ -841,19 +841,19 @@ some situations (particularly sorts).  See &lt;a href=&#34;http://docs.mongodb.o
 &#34;&gt;Sparse Indexes&lt;/a&gt; for more
 information.&lt;/p&gt;
 
-&lt;h4 id=&#34;unique:b3040529c742e665af59b7e3b005e4ad&#34;&gt;unique()&lt;/h4&gt;
+&lt;h4 id=&#34;unique&#34;&gt;unique()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a unique index.&lt;/p&gt;
 
-&lt;h2 id=&#34;field-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Field Level Indexes&lt;/h2&gt;
+&lt;h2 id=&#34;field-level-indexes&#34;&gt;Field Level Indexes&lt;/h2&gt;
 
 &lt;p&gt;Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexed:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field:b3040529c742e665af59b7e3b005e4ad&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
-annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;above&lt;/a&gt;.  A field level index
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexed&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
+annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options&#34;&gt;above&lt;/a&gt;.  A field level index
 definition would look like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -866,7 +866,7 @@ private class FieldIndex {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Text Indexing&lt;/h2&gt;
+&lt;h2 id=&#34;text-indexing&#34;&gt;Text Indexing&lt;/h2&gt;
 
 &lt;p&gt;Morphia&amp;rsquo;s indexing supports MongoDB&amp;rsquo;s text indexing and search functionality as we&amp;rsquo;ve briefly seen above.  Full details can be found in
 the &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
@@ -883,12 +883,12 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    @Indexes(@Index(fields = @Field(value = &amp;quot;$**&amp;quot;, type = TEXT)))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;div class=&#34;admonition important&#34;&gt;
 &lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
 &lt;p&gt;A collection can have at most one text index.&lt;/p&gt;
 
 &lt;/div&gt;
-&lt;/p&gt;
+
 </description>
     </item>
     
@@ -900,13 +900,13 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
       <guid>/morphia/1.3/guides/querying/</guid>
       <description>
 
-&lt;h1 id=&#34;querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Querying&lt;/h1&gt;
+&lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
 
 &lt;p&gt;Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
  to provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
 the type of your entity.&lt;/p&gt;
 
-&lt;h2 id=&#34;creating-a-query:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Creating a Query&lt;/h2&gt;
+&lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
 
 &lt;p&gt;The &lt;code&gt;Datastore&lt;/code&gt; is the key class when using Morphia.  Virtually all operations begin with the &lt;code&gt;Datastore&lt;/code&gt;.  To create the &lt;code&gt;Query&lt;/code&gt;, we
 invoke the following code:&lt;/p&gt;
@@ -916,7 +916,7 @@ invoke the following code:&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;createQuery()&lt;/code&gt; returns an instance of &lt;code&gt;Query&lt;/code&gt; with which we can build a query.&lt;/p&gt;
 
-&lt;h3 id=&#34;filter:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;filter&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;The first method of interest is &lt;code&gt;filter()&lt;/code&gt;.  This method takes two values: a condition string and a value.  The &lt;code&gt;value&lt;/code&gt; parameter is, of
 course, the value to use when applying the &lt;code&gt;condition&lt;/code&gt; clause.  The &lt;code&gt;condition&lt;/code&gt; parameter is a bit more complicated.  At its simplest,
@@ -1079,7 +1079,7 @@ like this:&lt;/p&gt;
  the equal operator, you can use the canonical &lt;code&gt;$eq&lt;/code&gt; operator as you would when building a query in the shell or you could opt to use
  either the &lt;code&gt;=&lt;/code&gt; or &lt;code&gt;==&lt;/code&gt; aliases which might feel a little more natural to use than the dollar operators.&lt;/p&gt;
 
-&lt;h3 id=&#34;field:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
 returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
@@ -1102,7 +1102,7 @@ result in an error.&lt;/p&gt;
 &lt;/div&gt;
 
 
-&lt;h2 id=&#34;complex-queries:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Complex Queries&lt;/h2&gt;
+&lt;h2 id=&#34;complex-queries&#34;&gt;Complex Queries&lt;/h2&gt;
 
 &lt;p&gt;Of course, queries are usually more complex than single field comparisons.  Morphia offers both &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; to build up more
 complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something like this:&lt;/p&gt;
@@ -1126,7 +1126,7 @@ method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the sa
 
 &lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; across the field comparisons.&lt;/p&gt;
 
-&lt;h2 id=&#34;text-searching:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Text Searching&lt;/h2&gt;
+&lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
 
 &lt;p&gt;Morphia also supports MongoDB&amp;rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
 have a &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text/
@@ -1169,12 +1169,12 @@ Assert.assertEquals(4, good.size());
 &lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the word
 &amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
 
-&lt;h2 id=&#34;other-query-options:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Other Query Options&lt;/h2&gt;
+&lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
 
 &lt;p&gt;There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.&lt;/p&gt;
 
-&lt;h3 id=&#34;projections:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Projections&lt;/h3&gt;
+&lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
@@ -1216,7 +1216,7 @@ Assert.assertNull(found.lastName);
 &lt;/div&gt;
 
 
-&lt;h3 id=&#34;limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Limiting and Skipping&lt;/h3&gt;
+&lt;h3 id=&#34;limiting-and-skipping&#34;&gt;Limiting and Skipping&lt;/h3&gt;
 
 &lt;p&gt;Pagination of query results is often done as a combination of skips and limits.  Morphia offers &lt;code&gt;Query.limit(int)&lt;/code&gt; and &lt;code&gt;Query.offset(int)&lt;/code&gt;
 for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
@@ -1231,7 +1231,7 @@ for these cases.  An example of these methods in action would look like this:&lt
 pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/cursor.skip
 &#34;&gt;skip&lt;/a&gt; documentation for more detail.&lt;/p&gt;
 
-&lt;h3 id=&#34;ordering:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Ordering&lt;/h3&gt;
+&lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
 
 &lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
@@ -1241,7 +1241,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.order(&amp;quot;age,-income&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;tailable-cursors:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Tailable Cursors&lt;/h3&gt;
+&lt;h3 id=&#34;tailable-cursors&#34;&gt;Tailable Cursors&lt;/h3&gt;
 
 &lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
 &#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
@@ -1271,7 +1271,7 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;raw-querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Raw Querying&lt;/h3&gt;
+&lt;h3 id=&#34;raw-querying&#34;&gt;Raw Querying&lt;/h3&gt;
 
 &lt;p&gt;You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.&lt;/p&gt;
 

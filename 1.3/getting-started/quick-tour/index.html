@@ -514,7 +514,7 @@
 
 
     <li class="toctree-l1">
-    <a href="/morphia/1.3/javadoc/">
+    <a href="/morphia/1.3/javadoc">
         <i class='fa fa-file-text-o'></i>
         API Documentation
     </a>
@@ -650,7 +650,7 @@
 
 
 
-<h1 id="quick-tour:b8bcd3c4cba9ac16433f82561ee44461">Quick Tour</h1>
+<h1 id="quick-tour">Quick Tour</h1>
 
 <p>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
 abstract much of that away but if something is confusing, please consult the Java driver <a href="http://mongodb.github
@@ -660,7 +660,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 that can be found with the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 ">Morphia source</a>.</p>
 
-<h2 id="setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461">Setting up Morphia</h2>
+<h2 id="setting-up-morphia">Setting up Morphia</h2>
 
 <p>The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
 Morphia maps your entities and validates your queries.</p>
@@ -687,7 +687,7 @@ package we&rsquo;ve given and find every class annotated with <code>@Entity</cod
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.</p>
 
-<h3 id="mapping-options:b8bcd3c4cba9ac16433f82561ee44461">Mapping Options</h3>
+<h3 id="mapping-options">Mapping Options</h3>
 
 <p>Once you have an instance of Morphia, you can configure various mapping options via the <code>MappingOptions</code> class.  While it&rsquo;s possible to
 specify the <code>Mapper</code> when creating an instance of Morphia, most users will use the default mapper.  In either case, the <code>Mapper</code> can
@@ -696,7 +696,7 @@ specify the <code>Mapper</code> when creating an instance of Morphia, most users
  application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
  for you.  There are a few other options to configure on <code>MappingOptions</code>, but we&rsquo;ll not be covering them here.</p>
 
-<h2 id="mapping-classes:b8bcd3c4cba9ac16433f82561ee44461">Mapping Classes</h2>
+<h2 id="mapping-classes">Mapping Classes</h2>
 
 <p>There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with <code>@Entity</code>
  is treated as a top level document stored directly in a collection.  Any class with <code>@Entity</code> must have a field annotated with <code>@Id</code> to
@@ -724,11 +724,11 @@ class Employee {
 so we know that it will be a top level document.  In the annotation, you&rsquo;ll see <code>&quot;employees&quot;</code>.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
 <code>Employee</code> instances will be saved in to the <code>employees</code> collection instead.  There is a little more to this annotation but the
-<a href="/morphia/1.3/guides/annotations/#entity:b8bcd3c4cba9ac16433f82561ee44461">annotations guide</a> covers those details.</p>
+<a href="/morphia/1.3/guides/annotations/#entity">annotations guide</a> covers those details.</p>
 
 <p>The <code>@Indexes</code> annotation lists which indexes Morphia should create.  In this instance, we&rsquo;re defining an index named <code>salary</code> on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  <a href="/morphia/1.3/guides/annotations/#indexes:b8bcd3c4cba9ac16433f82561ee44461">here</a>.</p>
+  <a href="/morphia/1.3/guides/annotations/#indexes">here</a>.</p>
 
 <p>We&rsquo;ve marked the <code>id</code> field to be used as our primary key (the <code>_id</code> field in the document).  In this instance we&rsquo;re using the Java driver
 type of <code>ObjectId</code> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <code>ObjectId</code> or <code>Long</code>.  There are
@@ -746,7 +746,7 @@ Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.</p>
 
-<h2 id="saving-data:b8bcd3c4cba9ac16433f82561ee44461">Saving Data</h2>
+<h2 id="saving-data">Saving Data</h2>
 
 <p>For the most part, you treat your Java objects just like you normally would.  When you&rsquo;re ready to write an object to the database, it&rsquo;s
 as simple as this:</p>
@@ -776,7 +776,7 @@ efficient way of doing updates.  It is possible to update directly in the databa
 Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
 how to query.</p>
 
-<h2 id="querying:b8bcd3c4cba9ac16433f82561ee44461">Querying</h2>
+<h2 id="querying">Querying</h2>
 
 <p>Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
 directly and only rarely do you need to take additional action.  As with everything else, <code>Datastore</code> is where we start:</p>
@@ -812,7 +812,7 @@ validate and potentially get wrong:</p>
 field called <code>salary</code> on the <code>Employee</code> class.  If you happen to have mapped that field such that the name in the database doesn&rsquo;t match
 the Java field, Morphia can use either form and will validate against either name.</p>
 
-<h2 id="updates:b8bcd3c4cba9ac16433f82561ee44461">Updates</h2>
+<h2 id="updates">Updates</h2>
 
 <p>Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
 of update operations.  In this example, we&rsquo;ll find all the underpaid employees and give them raise of 10000.  The first step is to create
@@ -838,7 +838,7 @@ of update operations.  In this example, we&rsquo;ll find all the underpaid emplo
 <p>This line executes the update in the database without having to pull in however many documents are matched by the query.  The
 <code>UpdateResults</code> instance returned will contain various statistics about the update operation.</p>
 
-<h2 id="removes:b8bcd3c4cba9ac16433f82561ee44461">Removes</h2>
+<h2 id="removes">Removes</h2>
 
 <p>After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
 then tell the <code>Datastore</code> to delete them:</p>
@@ -877,17 +877,17 @@ is a <code>delete</code> that can take that reference and delete it.  There is m
     <span class="toc-header">On this page</span>
     <nav id="TableOfContents">
 <ul>
-<li><a href="#quick-tour:b8bcd3c4cba9ac16433f82561ee44461">Quick Tour</a>
+<li><a href="#quick-tour">Quick Tour</a>
 <ul>
-<li><a href="#setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461">Setting up Morphia</a>
+<li><a href="#setting-up-morphia">Setting up Morphia</a>
 <ul>
-<li><a href="#mapping-options:b8bcd3c4cba9ac16433f82561ee44461">Mapping Options</a></li>
+<li><a href="#mapping-options">Mapping Options</a></li>
 </ul></li>
-<li><a href="#mapping-classes:b8bcd3c4cba9ac16433f82561ee44461">Mapping Classes</a></li>
-<li><a href="#saving-data:b8bcd3c4cba9ac16433f82561ee44461">Saving Data</a></li>
-<li><a href="#querying:b8bcd3c4cba9ac16433f82561ee44461">Querying</a></li>
-<li><a href="#updates:b8bcd3c4cba9ac16433f82561ee44461">Updates</a></li>
-<li><a href="#removes:b8bcd3c4cba9ac16433f82561ee44461">Removes</a></li>
+<li><a href="#mapping-classes">Mapping Classes</a></li>
+<li><a href="#saving-data">Saving Data</a></li>
+<li><a href="#querying">Querying</a></li>
+<li><a href="#updates">Updates</a></li>
+<li><a href="#removes">Removes</a></li>
 </ul></li>
 </ul>
 </nav>
