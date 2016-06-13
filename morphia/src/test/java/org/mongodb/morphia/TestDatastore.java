@@ -487,7 +487,7 @@ public class TestDatastore extends TestBase {
             postLoad = true;
         }
 
-        @PreLoad
+        @PostLoad
         void postLoadWithParam(final DBObject dbObj) {
             if (postLoadWithParam) {
                 throw new RuntimeException("already called");
