@@ -31,7 +31,7 @@ public class MapNotSerializable extends FieldConstraint {
                     }
                 }
                 if (valueClass != null) {
-                    if (!Serializable.class.isAssignableFrom(keyClass)) {
+                    if (!Serializable.class.isAssignableFrom(valueClass)) {
                         ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                                        "Value class (" + valueClass.getName() + ") is not Serializable"));
                     }
