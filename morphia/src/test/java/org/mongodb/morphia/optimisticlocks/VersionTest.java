@@ -4,15 +4,21 @@ package org.mongodb.morphia.optimisticlocks;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.validation.ConstraintViolationException;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -94,6 +100,38 @@ public class VersionTest extends TestBase {
         Assert.assertFalse(version1 == version2);
     }
 
+    @Test
+    public void testVersionsWithFindAndModify() {
+        final ALongPrimitive initial = new ALongPrimitive();
+        Datastore ds = getDs();
+        ds.save(initial);
+
+        Query<ALongPrimitive> query = ds.createQuery(ALongPrimitive.class)
+                                     .field("id").equal(initial.getId());
+        UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
+                                                    .set("text", "some new value");
+        ALongPrimitive postUpdate = ds.findAndModify(query, update);
+
+        Assert.assertEquals(initial.hubba + 1, postUpdate.hubba);
+    }
+
+    @Test
+    public void testVersionsWithUpdate() {
+        final ALongPrimitive initial = new ALongPrimitive();
+        Datastore ds = getDs();
+        ds.save(initial);
+
+        Query<ALongPrimitive> query = ds.createQuery(ALongPrimitive.class)
+                                     .field("id").equal(initial.getId());
+        UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
+                                                    .set("text", "some new value");
+        UpdateResults results = ds.update(query, update);
+        assertEquals(1, results.getUpdatedCount());
+        ALongPrimitive postUpdate = ds.get(ALongPrimitive.class, initial.getId());
+
+        Assert.assertEquals(initial.hubba + 1, postUpdate.hubba);
+    }
+
     @Entity
     public static class VersionInHashcode {
         @Id
@@ -117,6 +155,22 @@ public class VersionTest extends TestBase {
         private long hubba;
 
         private String text;
+
+        public long getHubba() {
+            return hubba;
+        }
+
+        public void setHubba(final long hubba) {
+            this.hubba = hubba;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(final String text) {
+            this.text = text;
+        }
     }
 
     public static class ALong extends TestEntity {

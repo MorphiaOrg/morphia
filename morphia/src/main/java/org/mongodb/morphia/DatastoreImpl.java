@@ -358,6 +358,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         DBObject res = null;
         try {
+            updateForVersioning(query, operations);
             res = dbColl.findAndModify(query.getQueryObject(), query.getFieldsObject(), query.getSortObject(), false,
                                        ((UpdateOpsImpl<T>) operations).getOps(), !oldVersion, createIfMissing);
         } catch (MongoException e) {
@@ -366,11 +367,17 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
-        if (res == null) {
-            return null;
-        } else {
-            return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+    }
+
+    private <T> void updateForVersioning(final Query<T> query, final UpdateOperations<T> operations) {
+        final MappedClass mc = mapper.getMappedClass(query.getEntityClass());
+
+        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
+            MappedField versionField = mc.getMappedVersionField();
+            operations.inc(versionField.getNameToStore());
         }
+
     }
 
     @Override
@@ -1592,7 +1599,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> UpdateResults update(final Query<T> query, final DBObject u, final boolean createIfMissing, final boolean multi,
+    private <T> UpdateResults update(final Query<T> query, final DBObject update, final boolean createIfMissing, final boolean multi,
                                      final WriteConcern wc) {
 
         DBCollection dbColl = query.getCollection();
@@ -1611,34 +1618,34 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new QueryException("a query limit is not allowed for updates.");
         }
 
-        DBObject q = query.getQueryObject();
-        if (q == null) {
-            q = new BasicDBObject();
+        DBObject queryObject = query.getQueryObject();
+        if (queryObject == null) {
+            queryObject = new BasicDBObject();
         }
 
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
-            if (q.get(versionMF.getNameToStore()) == null) {
-                if (!u.containsField("$inc")) {
-                    u.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+            if (queryObject.get(versionMF.getNameToStore()) == null) {
+                if (!update.containsField("$inc")) {
+                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
                 } else {
-                    ((Map<String, Object>) (u.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                    ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
                 }
             }
         }
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Executing update(" + dbColl.getName() + ") for query: " + q + ", ops: " + u + ", multi: " + multi + ", upsert: "
-                          + createIfMissing);
+            LOG.trace(String.format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
+                                    dbColl.getName(), queryObject, update, multi, createIfMissing));
         }
 
         final WriteResult wr;
         if (wc == null) {
-            wr = dbColl.update(q, u, createIfMissing, multi);
+            wr = dbColl.update(queryObject, update, createIfMissing, multi);
         } else {
-            wr = dbColl.update(q, u, createIfMissing, multi, wc);
+            wr = dbColl.update(queryObject, update, createIfMissing, multi, wc);
         }
 
         return new UpdateResults(wr);
@@ -1649,11 +1656,11 @@ public class DatastoreImpl implements AdvancedDatastore {
      *
      * @param clazzOrEntity the class or entity to use when looking up the WriteConcern
      */
-    WriteConcern getWriteConcern(final Object clazzOrEntity) {
+    private WriteConcern getWriteConcern(final Object clazzOrEntity) {
         WriteConcern wc = defConcern;
         if (clazzOrEntity != null) {
             final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-            if (entityAnn != null && entityAnn.concern() != null && entityAnn.concern().length() != 0) {
+            if (entityAnn != null && entityAnn.concern().length() != 0) {
                 wc = WriteConcern.valueOf(entityAnn.concern());
             }
         }
