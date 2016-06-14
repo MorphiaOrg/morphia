@@ -26,7 +26,6 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.PreLoad;
-import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
@@ -35,12 +34,12 @@ import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -436,7 +435,7 @@ public class TestUpdateOps extends TestBase {
         Query<EntityLogs> finder = getDs().find(EntityLogs.class).field("uuid").equal(uuid);
 
         // both of these entries will have a className attribute
-        List<EntityLog> latestLogs = Arrays.asList(new EntityLog("whatever1"), new EntityLog("whatever2"));
+        List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
         UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
                                                                   .addAll("logs", latestLogs, false);
         getDs().update(finder, updateOperationsAll, true);
@@ -444,13 +443,13 @@ public class TestUpdateOps extends TestBase {
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever3"), false);
+                                                                .add("logs", new EntityLog("whatever3", new Date()), false);
         getDs().update(finder, updateOperations3, true);
         validateNoClassName(finder.get());
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever4"), false);
+                                                                .add("logs", new EntityLog("whatever4", new Date()), false);
         getDs().update(finder, updateOperations4, true);
         validateNoClassName(finder.get());
     }
@@ -616,6 +615,33 @@ public class TestUpdateOps extends TestBase {
                        true, WriteConcern.ACKNOWLEDGED);
     }
 
+    @Test
+    public void testRemoveAll() {
+        EntityLogs logs = new EntityLogs();
+        Date date = new Date();
+        logs.logs.addAll(asList(
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date),
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date)));
+
+        Datastore ds = getDs();
+        ds.save(logs);
+
+        UpdateOperations<EntityLogs> operations =
+            ds.createUpdateOperations(EntityLogs.class).removeAll("logs", new EntityLog("log3", date));
+
+        UpdateResults results = ds.update(ds.createQuery(EntityLogs.class), operations);
+        Assert.assertEquals(1, results.getUpdatedCount());
+        EntityLogs updated = ds.createQuery(EntityLogs.class).get();
+        Assert.assertEquals(4, updated.logs.size());
+        for (int i = 0; i < 4; i++) {
+            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+        }
+    }
+
     private void assertInserted(final UpdateResults res) {
         assertThat(res.getInsertedCount(), is(1));
         assertThat(res.getUpdatedCount(), is(0));
@@ -681,26 +707,47 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Embedded
+    @Entity(noClassnameStored = true)
     public static class EntityLog {
         private Date receivedTs;
         private String value;
-        private DBObject raw;
 
         public EntityLog() {
         }
 
-        public EntityLog(final String value) {
+        public EntityLog(final String value, final Date date) {
             this.value = value;
+            receivedTs = date;
         }
 
-        @PrePersist
-        public void pickReceivedTs() {
-            receivedTs = new Date();
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof EntityLog)) {
+                return false;
+            }
+
+            final EntityLog entityLog = (EntityLog) o;
+
+            if (receivedTs != null ? !receivedTs.equals(entityLog.receivedTs) : entityLog.receivedTs != null) {
+                return false;
+            }
+            return value != null ? value.equals(entityLog.value) : entityLog.value == null;
+
         }
 
-        @PreLoad
-        public void preload(final DBObject raw) {
-            this.raw = raw;
+        @Override
+        public int hashCode() {
+            int result = receivedTs != null ? receivedTs.hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("EntityLog{receivedTs=%s, value='%s'}", receivedTs, value);
         }
     }
 
