@@ -12,6 +12,7 @@ import org.mongodb.morphia.mapping.validation.ConstraintViolation.Level;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,6 +67,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint {
     }
 
     private boolean isFieldToInspect(final Field field) {
-        return (!field.isAnnotationPresent(Transient.class) && !field.isAnnotationPresent(Reference.class));
+        return (!field.isAnnotationPresent(Transient.class) && !field.isAnnotationPresent(Reference.class))
+            && !Modifier.isTransient(field.getModifiers());
     }
 }

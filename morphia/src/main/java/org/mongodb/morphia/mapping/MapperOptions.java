@@ -18,6 +18,10 @@ import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
 @SuppressWarnings("deprecation")
 public class MapperOptions {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapperOptions.class);
+    /**
+     * @deprecated this is actually the default and proper behavior.  this setting is redundant
+     */
+    @Deprecated
     private boolean actLikeSerializer;
     private boolean ignoreFinals; //ignore final fields.
     private boolean storeNulls;
@@ -179,6 +183,7 @@ public class MapperOptions {
 
     /**
      * @return true if Morphia should ignore transient fields
+     * @deprecated this is actually the default and proper behavior.  this setting is redundant
      */
     public boolean isActLikeSerializer() {
         return actLikeSerializer;
@@ -188,6 +193,7 @@ public class MapperOptions {
      * Instructs Morphia to follow JDK serialization semantics and ignore values marked up with the transient keyword
      *
      * @param actLikeSerializer true if Morphia should ignore transient fields
+     * @deprecated this is actually the default and proper behavior.  this setting is redundant
      */
     public void setActLikeSerializer(final boolean actLikeSerializer) {
         this.actLikeSerializer = actLikeSerializer;
