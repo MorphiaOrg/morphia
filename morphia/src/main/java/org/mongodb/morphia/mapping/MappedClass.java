@@ -611,9 +611,9 @@ public class MappedClass {
 
     private boolean isIgnorable(final java.lang.reflect.Field field, final int fieldMods, final Mapper mapper) {
         return field.isAnnotationPresent(Transient.class)
-               || field.isSynthetic() && (fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT
-               || mapper.getOptions().isActLikeSerializer() && ((fieldMods & Modifier.TRANSIENT) == Modifier.TRANSIENT)
-               || mapper.getOptions().isIgnoreFinals() && ((fieldMods & Modifier.FINAL) == Modifier.FINAL);
+               || Modifier.isTransient(fieldMods)
+               || field.isSynthetic() && Modifier.isTransient(fieldMods)
+               || mapper.getOptions().isIgnoreFinals() && Modifier.isFinal(fieldMods);
     }
 
     private static class ClassMethodPair {

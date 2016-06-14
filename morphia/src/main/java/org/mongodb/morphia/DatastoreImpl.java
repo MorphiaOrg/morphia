@@ -30,7 +30,6 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Text;
-import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -1527,7 +1526,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
 
             if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                    && !mf.hasAnnotation(NotSaved.class) && !mf.hasAnnotation(Transient.class)) {
+                    && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
                 final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
                 final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
                 newParentClasses.add(mc);

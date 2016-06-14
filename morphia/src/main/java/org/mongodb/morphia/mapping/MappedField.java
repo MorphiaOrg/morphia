@@ -14,6 +14,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Text;
+import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -25,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -302,6 +304,13 @@ public class MappedField {
      */
     public Type getSubType() {
         return subType;
+    }
+
+    /**
+     * @return true if this field is marked as transient
+     */
+    public boolean isTransient() {
+        return hasAnnotation(Transient.class) || Modifier.isTransient(field.getModifiers());
     }
 
     void setSubType(final Type subType) {

@@ -23,7 +23,6 @@ import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 
@@ -37,11 +36,8 @@ import java.lang.annotation.Target;
  * @author Scott Hernandez
  */
 public class IgnoreFieldsAnnotationTest extends TestBase {
-
-    private Transient transAnn;
-
-    @Override
     @Before
+    @Override
     public void setUp() {
         super.setUp();
         MappedClass.addInterestingAnnotation(IgnoreFields.class);
