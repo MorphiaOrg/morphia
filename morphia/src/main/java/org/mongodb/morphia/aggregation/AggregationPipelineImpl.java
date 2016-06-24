@@ -255,7 +255,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         BasicDBObject dbObject = new BasicDBObject();
 
         if (group.getAccumulator() != null) {
-            dbObject.put(group.getName(), new BasicDBObject(group.getAccumulator().getOperation(), group.getAccumulator().getField()));
+            dbObject.put(group.getName(), group.getAccumulator().toDBObject());
         } else if (group.getProjections() != null) {
             final BasicDBObject projection = new BasicDBObject();
             for (Projection p : group.getProjections()) {

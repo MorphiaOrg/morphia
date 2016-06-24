@@ -16,12 +16,18 @@
 
 package org.mongodb.morphia.aggregation;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Defines an accumulator for use in an aggregation pipeline.
  */
-public class Accumulator {
+public class Accumulator implements AggregationElement {
     private final String operation;
-    private final Object field;
+    private final Object value;
 
     /**
      * Defines an accumulator for use in an aggregation pipeline.
@@ -41,14 +47,16 @@ public class Accumulator {
      */
     public Accumulator(final String operation, final Object field) {
         this.operation = operation;
-        this.field = field;
+        this.value = field;
     }
 
     /**
-     * @return the field for this accumulator
+     * @return the value for this accumulator
+     * @deprecated use {@link #getValue()}
      */
+    @Deprecated
     public Object getField() {
-        return field;
+        return getValue();
     }
 
     /**
@@ -56,5 +64,34 @@ public class Accumulator {
      */
     public String getOperation() {
         return operation;
+    }
+
+    /**
+     * @return the value for this accumulator
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
+    public DBObject toDBObject() {
+        BasicDBObject dbObject = new BasicDBObject();
+        if (value instanceof List) {
+            List<Object> dbValue = new ArrayList<Object>();
+            for (Object o : (List) value) {
+                if (o instanceof AggregationElement) {
+                    dbValue.add(((AggregationElement) o).toDBObject());
+                } else {
+                    dbValue.add(o);
+                }
+            }
+            dbObject.put(operation, dbValue);
+        } else if (value instanceof AggregationElement) {
+            dbObject.put(operation, ((AggregationElement) value).toDBObject());
+        } else {
+            dbObject.put(operation, value);
+        }
+
+        return dbObject;
     }
 }

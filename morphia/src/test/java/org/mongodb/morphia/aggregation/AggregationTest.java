@@ -414,20 +414,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testGroupWithProjection() {
-        /*
-         ......aggregate([
- {$group:
-     {"_id":"$subjectHash",
-         "authors":{$addToSet:"$fromAddress.address"},
-  ---->> "messageDataSet":{$addToSet:{"sentDate":"$sentDate","messageId":"$_id"}},
-         "messageCount":{$sum:1}}},
-          {$sort:{....}},
-         {$limit:10},
-         {$skip:0}
-         ])
-
-
-         */
         AggregationPipeline pipeline =
             getDs().createAggregation(Author.class)
                    .group("subjectHash",
@@ -444,6 +430,23 @@ public class AggregationTest extends TestBase {
         Assert.assertNotNull(addToSet);
         Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
         Assert.assertEquals(addToSet.get("messageId"), "$_id");
+    }
+
+    @Test
+    public void testAdd() {
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(Book.class)
+            .group(grouping("summation",
+                            new Accumulator("$sum", new Accumulator("$add", asList("$amountFromTBInDouble", "$amountFromParentPNLInDouble"))
+                            )));
+
+        DBObject group = (DBObject) ((AggregationPipelineImpl) pipeline).getStages().get(0).get("$group");
+        DBObject summation = (DBObject) group.get("summation");
+        DBObject sum = (DBObject) summation.get("$sum");
+        List<?> add = (List<?>) sum.get("$add");
+        Assert.assertTrue(add.get(0) instanceof String);
+        Assert.assertEquals("$amountFromTBInDouble", add.get(0));
+        pipeline.aggregate(User.class);
     }
 
     private DBObject getDBObject(final DBObject dbObject, final String... path) {
