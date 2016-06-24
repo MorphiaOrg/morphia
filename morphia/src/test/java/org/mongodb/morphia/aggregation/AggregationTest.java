@@ -42,6 +42,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.mongodb.morphia.aggregation.Group.addToSet;
 import static org.mongodb.morphia.aggregation.Group.grouping;
+import static org.mongodb.morphia.aggregation.Group.id;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.divide;
@@ -54,14 +55,25 @@ public class AggregationTest extends TestBase {
     public void testDateAggregation() {
         AggregationPipeline pipeline = getDs()
             .createAggregation(User.class)
-            .group(
-                Group.id(grouping("month", new Accumulator("$month", "date")),
+            .group(id(grouping("month", new Accumulator("$month", "date")),
                          grouping("year", new Accumulator("$year", "date"))),
                 grouping("count", new Accumulator("$sum", 1)));
         final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
         final DBObject id = getDBObject(group, "$group", "_id");
         Assert.assertEquals(new BasicDBObject("$month", "$date"), id.get("month"));
         Assert.assertEquals(new BasicDBObject("$year", "$date"), id.get("year"));
+
+        pipeline.aggregate(User.class);
+    }
+
+    @Test
+    public void testNullGroupId() {
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .group(grouping("count", new Accumulator("$sum", 1)));
+
+        final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
+        Assert.assertNull(group.get("_id"));
 
         pipeline.aggregate(User.class);
     }

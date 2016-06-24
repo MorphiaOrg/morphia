@@ -105,11 +105,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
+    public AggregationPipeline group(final Group... groupings) {
+        return group((String) null, groupings);
+    }
+
+    @Override
     public AggregationPipeline group(final String id, final Group... groupings) {
-        DBObject group = new BasicDBObject("_id", "$" + id);
+        DBObject group = new BasicDBObject();
+        group.put("_id", id != null ? "$" + id : null);
         for (Group grouping : groupings) {
-//            Accumulator accumulator = grouping.getAccumulator();
-//            group.put(grouping.getName(), new BasicDBObject(accumulator.getOperation(), accumulator.getField()));
             group.putAll(toDBObject(grouping));
         }
 
@@ -119,9 +123,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline group(final List<Group> id, final Group... groupings) {
-        DBObject idGroup = new BasicDBObject();
-        for (Group group : id) {
-            idGroup.putAll(toDBObject(group));
+        DBObject idGroup = null;
+        if (id != null) {
+            idGroup = new BasicDBObject();
+            for (Group group : id) {
+                idGroup.putAll(toDBObject(group));
+            }
         }
         DBObject group = new BasicDBObject("_id", idGroup);
         for (Group grouping : groupings) {
