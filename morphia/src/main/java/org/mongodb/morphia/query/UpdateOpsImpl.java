@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
@@ -38,31 +39,90 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     }
 
     @Override
-    public UpdateOperations<T> add(final String fieldExpr, final Object value) {
-        return add(fieldExpr, value, false);
+    @Deprecated
+    public UpdateOperations<T> add(final String field, final Object value) {
+        return add(field, value, false);
     }
 
     @Override
-    public UpdateOperations<T> add(final String fieldExpr, final Object value, final boolean addDups) {
+    @Deprecated
+    public UpdateOperations<T> add(final String field, final Object value, final boolean addDups) {
         if (value == null) {
             throw new QueryException("Value cannot be null.");
         }
 
-        add((addDups) ? UpdateOperator.PUSH : UpdateOperator.ADD_TO_SET, fieldExpr, value, true);
+        if (addDups) {
+            List<?> values = value instanceof List ? (List<?>) value : singletonList(value);
+            push(field, values);
+        } else {
+            List<?> values = value instanceof List ? (List<?>) value : singletonList(value);
+            addToSet(field, values);
+        }
         return this;
     }
 
     @Override
-    public UpdateOperations<T> addAll(final String fieldExpr, final List<?> values, final boolean addDups) {
+    public UpdateOperations<T> addAll(final String field, final List<?> values, final boolean addDups) {
         if (values == null || values.isEmpty()) {
             throw new QueryException("Values cannot be null or empty.");
         }
 
         if (addDups) {
-            add(UpdateOperator.PUSH, fieldExpr, new BasicDBObject(UpdateOperator.EACH.val(), values), true);
+            push(field, values);
         } else {
-            add(UpdateOperator.ADD_TO_SET_EACH, fieldExpr, values, true);
+            addToSet(field, values);
         }
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> addToSet(final String field, final Object value) {
+        if (value == null) {
+            throw new QueryException("Value cannot be null.");
+        }
+
+        add(UpdateOperator.ADD_TO_SET, field, value, true);
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> addToSet(final String field, final List<?> values) {
+        if (values == null || values.isEmpty()) {
+            throw new QueryException("Values cannot be null or empty.");
+        }
+
+        add(UpdateOperator.ADD_TO_SET_EACH, field, values, true);
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final Object value) {
+        return push(field, value instanceof List ? (List<?>) value : singletonList(value), Integer.MAX_VALUE);
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final Object value, final int position) {
+        return push(field, value instanceof List ? (List<?>) value : singletonList(value), position);
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final List<?> values) {
+        return push(field, values, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final List<?> values, final int position) {
+        if (values == null || values.isEmpty()) {
+            throw new QueryException("Values cannot be null or empty.");
+        }
+        if (position < 0) {
+            throw new UpdateException("The position must be at least 0.");
+        }
+
+        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), values);
+        dbObject.put("$position", position);
+        add(UpdateOperator.PUSH, field, dbObject, true);
+
         return this;
     }
 

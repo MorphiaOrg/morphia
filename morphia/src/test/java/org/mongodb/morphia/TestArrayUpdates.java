@@ -10,12 +10,12 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonMap;
 
 public class TestArrayUpdates extends TestBase {
     @Test
@@ -24,8 +24,8 @@ public class TestArrayUpdates extends TestBase {
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 
-        datastore.save(new Student(1L, new Grade(80, Collections.singletonMap("name", "Homework")),
-                                   new Grade(90, Collections.singletonMap("name", "Test"))));
+        datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
+                                   new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> testQuery = datastore.find(Student.class)
                                             .field("_id").equal(1L)

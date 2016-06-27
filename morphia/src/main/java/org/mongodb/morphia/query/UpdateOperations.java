@@ -15,36 +15,60 @@ public interface UpdateOperations<T> {
     /**
      * adds the value to an array field
      *
-     * @param fieldExpr the field to update
+     * @param field the field to update
      * @param value     the value to add
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      */
-    UpdateOperations<T> add(String fieldExpr, Object value);
+    UpdateOperations<T> add(String field, Object value);
 
     /**
      * adds the value to an array field
      *
-     * @param fieldExpr the field to update
+     * @param field the field to update
      * @param value     the value to add
      * @param addDups   if true, the value will be added even if it already exists in the array ($push)
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      * @mongodb.driver.manual reference/operator/update/push/ $push
+     * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, Object)} instead
      */
-    UpdateOperations<T> add(String fieldExpr, Object value, boolean addDups);
+    @Deprecated
+    UpdateOperations<T> add(String field, Object value, boolean addDups);
 
     /**
      * adds the values to an array field
      *
-     * @param fieldExpr the field to update
+     * @param field the field to update
      * @param values    the values to add
      * @param addDups   if true, the values will be added even if they already exists in the array ($push)
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      * @mongodb.driver.manual reference/operator/update/push/ $push
+     * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, List)}
      */
-    UpdateOperations<T> addAll(String fieldExpr, List<?> values, boolean addDups);
+    @Deprecated
+    UpdateOperations<T> addAll(String field, List<?> values, boolean addDups);
+
+    /**
+     * adds the value to an array field if it doesn't already exist in the array
+     *
+     * @param field the field to update
+     * @param value     the value to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     */
+    UpdateOperations<T> addToSet(String field, Object value);
+
+    /**
+     * adds the values to an array field if they doesn't already exist in the array
+     *
+     * @param field the field to update
+     * @param values    the values to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     */
+    UpdateOperations<T> addToSet(String field, List<?> values);
 
     /**
      * Decrements the numeric field by 1
@@ -115,6 +139,50 @@ public interface UpdateOperations<T> {
      * @mongodb.driver.manual reference/operator/update/min/ $min
      */
     UpdateOperations<T> min(String field, Number value);
+
+    /**
+     * Adds new values to an array field.
+     *
+     * @param field the field to updated
+     * @param value   the value to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     */
+    UpdateOperations<T> push(String field, Object value);
+
+    /**
+     * Adds new values to an array field at the given position
+     *
+     * @param field    the field to updated
+     * @param value   the value to add
+     * @param position the position at which to add the new values
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     * @mongodb.driver.manual reference/operator/update/position/ $position
+     */
+    UpdateOperations<T> push(String field, Object value, int position);
+
+    /**
+     * Adds new values to an array field.
+     *
+     * @param field the field to updated
+     * @param values the values to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     */
+    UpdateOperations<T> push(String field, List<?> values);
+
+    /**
+     * Adds new values to an array field at the given position
+     *
+     * @param field    the field to updated
+     * @param values   the values to add
+     * @param position the position at which to add the new values
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/push/ $push
+     * @mongodb.driver.manual reference/operator/update/position/ $position
+     */
+    UpdateOperations<T> push(String field, List<?> values, int position);
 
     /**
      * removes the value from the array field

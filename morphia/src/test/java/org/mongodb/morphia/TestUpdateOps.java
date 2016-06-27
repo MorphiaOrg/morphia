@@ -80,6 +80,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testAdd() throws Exception {
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
@@ -89,7 +90,8 @@ public class TestUpdateOps extends TestBase {
 
         //add 4 to array
         UpdateResults res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
-                                                getDs().createUpdateOperations(ContainsIntArray.class).add("values", 4, false));
+                                                getDs().createUpdateOperations(ContainsIntArray.class)
+                                                       .add("values", 4, false));
         assertUpdated(res, 1);
 
         cIALoaded = getDs().get(cIntArray);
@@ -97,7 +99,8 @@ public class TestUpdateOps extends TestBase {
 
         //add unique (4) -- noop
         res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
-                                  getDs().createUpdateOperations(ContainsIntArray.class).add("values", 4, false));
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .add("values", 4, false));
         assertUpdated(res, 1);
 
         cIALoaded = getDs().get(cIntArray);
@@ -145,6 +148,76 @@ public class TestUpdateOps extends TestBase {
         cIALoaded = getDs().get(cIntArray);
         assertThat(cIALoaded.values, is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
 
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testAddAll() {
+        getMorphia().map(EntityLogs.class, EntityLog.class);
+        String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
+
+        EntityLogs logs = new EntityLogs();
+        logs.uuid = uuid;
+        getDs().save(logs);
+
+        Query<EntityLogs> finder = getDs().find(EntityLogs.class).field("uuid").equal(uuid);
+
+        // both of these entries will have a className attribute
+        List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
+        UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
+                                                                  .addAll("logs", latestLogs, false);
+        getDs().update(finder, updateOperationsAll, true);
+        validateNoClassName(finder.get());
+
+        // this entry will NOT have a className attribute
+        UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
+                                                                .add("logs", new EntityLog("whatever3", new Date()), false);
+        getDs().update(finder, updateOperations3, true);
+        validateNoClassName(finder.get());
+
+        // this entry will NOT have a className attribute
+        UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
+                                                                .add("logs", new EntityLog("whatever4", new Date()), false);
+        getDs().update(finder, updateOperations4, true);
+        validateNoClassName(finder.get());
+    }
+
+    @Test
+    public void testAddToSet() throws Exception {
+        ContainsIntArray cIntArray = new ContainsIntArray();
+        getDs().save(cIntArray);
+        assertThat(getDs().get(cIntArray).values, is((new ContainsIntArray()).values));
+
+        //add 4 to array
+        UpdateResults res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                                                getDs().createUpdateOperations(ContainsIntArray.class)
+                                                       .addToSet("values", 4));
+        assertUpdated(res, 1);
+
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
+
+        res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addToSet("values", 4));
+
+        assertUpdated(res, 1);
+
+        final List<Integer> newValues = new ArrayList<Integer>();
+        newValues.add(4);
+        newValues.add(5);
+        res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addToSet("values", newValues));
+        assertUpdated(res, 1);
+
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
+
+        res = getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                                  getDs().createUpdateOperations(ContainsIntArray.class)
+                                         .addToSet("values", newValues));
+        assertUpdated(res, 1);
+
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
     }
 
     @Test
@@ -346,6 +419,76 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    public void testPush() throws Exception {
+        ContainsIntArray cIntArray = new ContainsIntArray();
+        getDs().save(cIntArray);
+        ContainsIntArray cIALoaded;
+        assertThat(getDs().get(cIntArray).values, is((new ContainsIntArray()).values));
+
+        getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                            getDs().createUpdateOperations(ContainsIntArray.class)
+                                   .push("values", 4));
+
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
+
+        getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                            getDs().createUpdateOperations(ContainsIntArray.class)
+                                   .push("values", 4));
+
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 4}));
+
+        getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                            getDs().createUpdateOperations(ContainsIntArray.class)
+                                   .push("values", asList(5, 6)));
+
+        cIALoaded = getDs().get(cIntArray);
+        assertThat(cIALoaded.values, is(new Integer[]{1, 2, 3, 4, 4, 5, 6}));
+
+        getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                            getDs().createUpdateOperations(ContainsIntArray.class)
+                                   .push("values", 12, 2));
+
+        cIALoaded = getDs().get(cIntArray);
+        assertThat(cIALoaded.values, is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
+
+
+        getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
+                            getDs().createUpdateOperations(ContainsIntArray.class)
+                                   .push("values", asList(99, 98, 97), 4));
+
+        cIALoaded = getDs().get(cIntArray);
+        assertThat(cIALoaded.values, is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
+
+    }
+
+    @Test
+    public void testRemoveAll() {
+        EntityLogs logs = new EntityLogs();
+        Date date = new Date();
+        logs.logs.addAll(asList(
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date),
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date)));
+
+        Datastore ds = getDs();
+        ds.save(logs);
+
+        UpdateOperations<EntityLogs> operations =
+            ds.createUpdateOperations(EntityLogs.class).removeAll("logs", new EntityLog("log3", date));
+
+        UpdateResults results = ds.update(ds.createQuery(EntityLogs.class), operations);
+        Assert.assertEquals(1, results.getUpdatedCount());
+        EntityLogs updated = ds.createQuery(EntityLogs.class).get();
+        Assert.assertEquals(4, updated.logs.size());
+        for (int i = 0; i < 4; i++) {
+            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+        }
+    }
+
+    @Test
     public void testRemoveFirst() throws Exception {
         final ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
@@ -421,37 +564,6 @@ public class TestUpdateOps extends TestBase {
 
         final Circle c2 = getDs().getByKey(Circle.class, key);
         assertThat(c2.getRadius(), is(0D));
-    }
-
-    @Test
-    public void testUpdateAll() {
-        getMorphia().map(EntityLogs.class, EntityLog.class);
-        String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
-
-        EntityLogs logs = new EntityLogs();
-        logs.uuid = uuid;
-        getDs().save(logs);
-
-        Query<EntityLogs> finder = getDs().find(EntityLogs.class).field("uuid").equal(uuid);
-
-        // both of these entries will have a className attribute
-        List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
-        UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
-                                                                  .addAll("logs", latestLogs, false);
-        getDs().update(finder, updateOperationsAll, true);
-        validateNoClassName(finder.get());
-
-        // this entry will NOT have a className attribute
-        UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever3", new Date()), false);
-        getDs().update(finder, updateOperations3, true);
-        validateNoClassName(finder.get());
-
-        // this entry will NOT have a className attribute
-        UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever4", new Date()), false);
-        getDs().update(finder, updateOperations4, true);
-        validateNoClassName(finder.get());
     }
 
     @Test
@@ -615,33 +727,6 @@ public class TestUpdateOps extends TestBase {
                        true, WriteConcern.ACKNOWLEDGED);
     }
 
-    @Test
-    public void testRemoveAll() {
-        EntityLogs logs = new EntityLogs();
-        Date date = new Date();
-        logs.logs.addAll(asList(
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date),
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date)));
-
-        Datastore ds = getDs();
-        ds.save(logs);
-
-        UpdateOperations<EntityLogs> operations =
-            ds.createUpdateOperations(EntityLogs.class).removeAll("logs", new EntityLog("log3", date));
-
-        UpdateResults results = ds.update(ds.createQuery(EntityLogs.class), operations);
-        Assert.assertEquals(1, results.getUpdatedCount());
-        EntityLogs updated = ds.createQuery(EntityLogs.class).get();
-        Assert.assertEquals(4, updated.logs.size());
-        for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
-        }
-    }
-
     private void assertInserted(final UpdateResults res) {
         assertThat(res.getInsertedCount(), is(1));
         assertThat(res.getUpdatedCount(), is(0));
@@ -715,9 +800,16 @@ public class TestUpdateOps extends TestBase {
         public EntityLog() {
         }
 
-        public EntityLog(final String value, final Date date) {
+        EntityLog(final String value, final Date date) {
             this.value = value;
             receivedTs = date;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = receivedTs != null ? receivedTs.hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            return result;
         }
 
         @Override
@@ -731,19 +823,12 @@ public class TestUpdateOps extends TestBase {
 
             final EntityLog entityLog = (EntityLog) o;
 
-            if (receivedTs != null ? !receivedTs.equals(entityLog.receivedTs) : entityLog.receivedTs != null) {
-                return false;
-            }
-            return value != null ? value.equals(entityLog.value) : entityLog.value == null;
+            return receivedTs != null ? receivedTs.equals(entityLog.receivedTs)
+                                      : entityLog.receivedTs == null && (value != null ? value.equals(entityLog.value)
+                                                                                       : entityLog.value == null);
 
         }
 
-        @Override
-        public int hashCode() {
-            int result = receivedTs != null ? receivedTs.hashCode() : 0;
-            result = 31 * result + (value != null ? value.hashCode() : 0);
-            return result;
-        }
 
         @Override
         public String toString() {
@@ -788,14 +873,9 @@ public class TestUpdateOps extends TestBase {
 
             Child child = (Child) o;
 
-            if (first != null ? !first.equals(child.first) : child.first != null) {
-                return false;
-            }
-            if (last != null ? !last.equals(child.last) : child.last != null) {
-                return false;
-            }
+            return first != null ? first.equals(child.first)
+                                 : child.first == null && (last != null ? last.equals(child.last) : child.last == null);
 
-            return true;
         }
     }
 }
