@@ -38,6 +38,8 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.MorphiaIterator;
+import org.mongodb.morphia.query.MorphiaKeyIterator;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.ValidationException;
@@ -1059,6 +1061,33 @@ public class TestQuery extends TestBase {
             // fine
         }
 
+    }
+
+    @Test
+    public void testFetchKeys() {
+        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
+        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
+        getDs().save(pwk1, pwk2, pwk3);
+
+        MorphiaKeyIterator<PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchKeys();
+        assertTrue(keys.hasNext());
+        assertEquals(pwk1.id, keys.next().getId());
+        assertEquals(pwk2.id, keys.next().getId());
+        assertEquals(pwk3.id, keys.next().getId());
+    }
+    @Test
+    public void testFetchEmptyEntities() {
+        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
+        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
+        getDs().save(pwk1, pwk2, pwk3);
+
+        MorphiaIterator<PhotoWithKeywords, PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchEmptyEntities();
+        assertTrue(keys.hasNext());
+        assertEquals(pwk1.id, keys.next().id);
+        assertEquals(pwk2.id, keys.next().id);
+        assertEquals(pwk3.id, keys.next().id);
     }
 
     private void turnOffProfilingAndDropProfileCollection() {

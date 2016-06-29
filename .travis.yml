@@ -1,23 +1,20 @@
 language: java
-jdk: 
+jdk:
 - oraclejdk8
 - oraclejdk7
 
-notifications: 
-  email: 
-    recipients: 
+notifications:
+  email:
+    recipients:
     - justin.lee@mongodb.com
-    - trisha.gee@mongodb.com
     on_success: change
     on_failure: always
-  flowdock:
-    secure: "Ziw1Be2tV0QAYuiYDrepfdNH/oBfNhnXFMji3AdRi6MePVpc6CtOOT/b9Fra\nQgMMrX3AHk/QIDo6QQx9/aVB3FS1fzOPGQkSsEZmiljZU7wZCct1sSSyttf/\nsRG0lyTnmgFNTHyTSDT3JbXAkyF/vJmG/JJJoBUZhmFxzR2fM0Q="
 
-services: 
+services:
 - mongodb
 
-#branches: 
-#  only: 
+#branches:
+#  only:
 #  - master
 #  - aggfluent
 
