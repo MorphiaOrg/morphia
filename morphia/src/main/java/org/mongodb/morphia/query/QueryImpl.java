@@ -184,31 +184,19 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public MorphiaIterator<T, T> fetchEmptyEntities() {
-        final String[] oldFields = fields;
-        final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
-        includeFields = true;
-        final MorphiaIterator<T, T> res = fetch();
-        fields = oldFields;
-        includeFields = oldInclude;
-        return res;
+        QueryImpl<T> cloned = cloneQuery();
+        cloned.fields = new String[]{Mapper.ID_KEY};
+        cloned.includeFields = true;
+        return cloned.fetch();
     }
 
     @Override
     public MorphiaKeyIterator<T> fetchKeys() {
-        final String[] oldFields = fields;
-        final Boolean oldInclude = includeFields;
-        fields = new String[]{Mapper.ID_KEY};
-        includeFields = true;
-        final DBCursor cursor = prepareCursor();
+        QueryImpl<T> cloned = cloneQuery();
+        cloned.fields = new String[]{Mapper.ID_KEY};
+        cloned.includeFields = true;
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Getting cursor(" + dbColl.getName() + ") for query:" + cursor.getQuery());
-        }
-
-        fields = oldFields;
-        includeFields = oldInclude;
-        return new MorphiaKeyIterator<T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName());
+        return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(), ds.getMapper(), clazz, dbColl.getName());
     }
 
     @Override

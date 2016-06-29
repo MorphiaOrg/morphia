@@ -24,6 +24,7 @@ import java.util.List;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class BasicDAO<T, K> implements DAO<T, K> {
     //CHECKSTYLE:OFF
     /**
@@ -138,20 +139,14 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public boolean exists(final Query<T> query) {
-        return ds.getCount(query) > 0;
+        return query.limit(1).get() != null;
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.DAO#find()
-     */
     @Override
     public QueryResults<T> find() {
         return createQuery();
     }
 
-    /* (non-Javadoc)
-     * @see org.mongodb.morphia.DAO#find(org.mongodb.morphia.query.Query)
-     */
     @Override
     public QueryResults<T> find(final Query<T> query) {
         return query;
