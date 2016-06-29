@@ -19,6 +19,7 @@ import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.TestQuery.Photo;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.dao.DAO;
 import org.mongodb.morphia.query.Query;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +43,36 @@ import static org.junit.Assert.assertTrue;
  * @author Olafur Gauti Gudmundsson
  */
 public class TestDAO extends TestBase {
+
+    @Test
+    public void testExists() throws Exception {
+        final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
+
+        Hotel borg = new Hotel();
+        borg.setName("Hotel Borg");
+        borg.setStars(4);
+        borg.setTakesCreditCards(true);
+        borg.setStartDate(new Date());
+        borg.setType(Hotel.Type.LEISURE);
+        final Address address = new Address();
+        address.setStreet("Posthusstraeti 11");
+        address.setPostCode("101");
+        address.setSecretWord("philodendron");
+        borg.setAddress(address);
+        hotelDAO.save(borg);
+
+        Hotel grand = new Hotel();
+        grand.setName("The Grand Budapest Hotel");
+        grand.setStars(5);
+        grand.setStartDate(new Date());
+        grand.setType(Hotel.Type.LEISURE);
+        getDs().save(new Photo());
+        hotelDAO.save(grand);
+
+        assertTrue(hotelDAO.exists(getDs().createQuery(Hotel.class).field("address").exists()));
+
+        assertFalse(hotelDAO.exists("name", "Hotel California"));
+    }
 
     @Test
     public void testDAO() throws Exception {
