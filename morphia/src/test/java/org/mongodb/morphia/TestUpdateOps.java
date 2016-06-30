@@ -82,6 +82,8 @@ public class TestUpdateOps extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testAdd() throws Exception {
+        checkMinServerVersion(2.6);
+
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
         ContainsIntArray cIALoaded = getDs().get(cIntArray);
@@ -420,6 +422,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testPush() throws Exception {
+        checkMinServerVersion(2.6);
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
         ContainsIntArray cIALoaded;
