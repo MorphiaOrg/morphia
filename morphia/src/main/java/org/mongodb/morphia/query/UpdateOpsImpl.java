@@ -97,30 +97,27 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
     @Override
     public UpdateOperations<T> push(final String field, final Object value) {
-        return push(field, value instanceof List ? (List<?>) value : singletonList(value), Integer.MAX_VALUE);
+        return push(field, value instanceof List ? (List<?>) value : singletonList(value), new PushOptions());
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final Object value, final int position) {
-        return push(field, value instanceof List ? (List<?>) value : singletonList(value), position);
+    public UpdateOperations<T> push(final String field, final Object value, final PushOptions options) {
+        return push(field, value instanceof List ? (List<?>) value : singletonList(value), options);
     }
 
     @Override
     public UpdateOperations<T> push(final String field, final List<?> values) {
-        return push(field, values, Integer.MAX_VALUE);
+        return push(field, values, new PushOptions());
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final List<?> values, final int position) {
+    public UpdateOperations<T> push(final String field, final List<?> values, final PushOptions options) {
         if (values == null || values.isEmpty()) {
             throw new QueryException("Values cannot be null or empty.");
         }
-        if (position < 0) {
-            throw new UpdateException("The position must be at least 0.");
-        }
 
         BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), values);
-        dbObject.put("$position", position);
+        options.update(dbObject);
         add(UpdateOperator.PUSH, field, dbObject, true);
 
         return this;

@@ -40,12 +40,14 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mongodb.morphia.query.PushOptions.options;
 
 /**
  * @author Scott Hernandez
@@ -69,7 +71,8 @@ public class TestUpdateOps extends TestBase {
         // when
         Query<Parent> query = getDs().createQuery(Parent.class)
                                      .field("_id").equal(parentId)
-                                     .field("children.first").equal(childName);
+                                     .field("children.first")
+                                     .equal(childName);
         UpdateOperations<Parent> updateOps = getDs().createUpdateOperations(Parent.class)
                                                     .set("children.$.last", updatedLastName);
         UpdateResults updateResults = getDs().update(query, updateOps);
@@ -449,7 +452,7 @@ public class TestUpdateOps extends TestBase {
 
         getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
                             getDs().createUpdateOperations(ContainsIntArray.class)
-                                   .push("values", 12, 2));
+                                   .push("values", 12, options().position(2)));
 
         cIALoaded = getDs().get(cIntArray);
         assertThat(cIALoaded.values, is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
@@ -457,7 +460,7 @@ public class TestUpdateOps extends TestBase {
 
         getDs().updateFirst(getDs().createQuery(ContainsIntArray.class),
                             getDs().createUpdateOperations(ContainsIntArray.class)
-                                   .push("values", asList(99, 98, 97), 4));
+                                   .push("values", asList(99, 98, 97), options().position(4)));
 
         cIALoaded = getDs().get(cIntArray);
         assertThat(cIALoaded.values, is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
@@ -465,7 +468,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testRemoveAll() {
+    public void testRemoveAllSingleValue() {
         EntityLogs logs = new EntityLogs();
         Date date = new Date();
         logs.logs.addAll(asList(
@@ -481,6 +484,32 @@ public class TestUpdateOps extends TestBase {
 
         UpdateOperations<EntityLogs> operations =
             ds.createUpdateOperations(EntityLogs.class).removeAll("logs", new EntityLog("log3", date));
+
+        UpdateResults results = ds.update(ds.createQuery(EntityLogs.class), operations);
+        Assert.assertEquals(1, results.getUpdatedCount());
+        EntityLogs updated = ds.createQuery(EntityLogs.class).get();
+        Assert.assertEquals(4, updated.logs.size());
+        for (int i = 0; i < 4; i++) {
+            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+        }
+    }
+    @Test
+    public void testRemoveAllList() {
+        EntityLogs logs = new EntityLogs();
+        Date date = new Date();
+        logs.logs.addAll(asList(
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date),
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date)));
+
+        Datastore ds = getDs();
+        ds.save(logs);
+
+        UpdateOperations<EntityLogs> operations =
+            ds.createUpdateOperations(EntityLogs.class).removeAll("logs", singletonList(new EntityLog("log3", date)));
 
         UpdateResults results = ds.update(ds.createQuery(EntityLogs.class), operations);
         Assert.assertEquals(1, results.getUpdatedCount());

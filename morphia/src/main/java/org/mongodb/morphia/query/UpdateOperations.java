@@ -153,14 +153,13 @@ public interface UpdateOperations<T> {
     /**
      * Adds new values to an array field at the given position
      *
-     * @param field    the field to updated
+     * @param field   the field to updated
      * @param value   the value to add
-     * @param position the position at which to add the new values
+     * @param options the options to apply to the push
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @mongodb.driver.manual reference/operator/update/position/ $position
      */
-    UpdateOperations<T> push(String field, Object value, int position);
+    UpdateOperations<T> push(String field, Object value, final PushOptions options);
 
     /**
      * Adds new values to an array field.
@@ -175,14 +174,13 @@ public interface UpdateOperations<T> {
     /**
      * Adds new values to an array field at the given position
      *
-     * @param field    the field to updated
-     * @param values   the values to add
-     * @param position the position at which to add the new values
+     * @param field   the field to updated
+     * @param values  the values to add
+     * @param options the options to apply to the push
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @mongodb.driver.manual reference/operator/update/position/ $position
      */
-    UpdateOperations<T> push(String field, List<?> values, int position);
+    UpdateOperations<T> push(String field, List<?> values, PushOptions options);
 
     /**
      * removes the value from the array field
