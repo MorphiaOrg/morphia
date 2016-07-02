@@ -1,6 +1,7 @@
 package org.mongodb.morphia.mapping;
 
 
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.mongodb.morphia.Datastore;
@@ -100,7 +101,7 @@ class ReferenceMapper implements CustomMapper {
                 return proxy.__getKey();
             }
             final MappedClass mappedClass = mapper.getMappedClass(entity);
-            final Object id = mappedClass.getIdField().get(entity);
+            Object id = mappedClass.getIdField().get(entity);
             if (id == null) {
                 throw new MappingException("@Id field cannot be null!");
             }
@@ -195,15 +196,15 @@ class ReferenceMapper implements CustomMapper {
     }
 
     private void readSingle(final Datastore datastore, final Mapper mapper, final Object entity, final Class fieldType,
-                            final Reference refAnn, final EntityCache cache, final MappedField mf, final DBObject dbObject) {
+                            final Reference annotation, final EntityCache cache, final MappedField mf, final DBObject dbObject) {
 
         final Object ref = mf.getDbObjectValue(dbObject);
         if (ref != null) {
             Object resolvedObject;
-            if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, refAnn.idOnly());
+            if (annotation.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
+                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, annotation.idOnly());
             } else {
-                resolvedObject = resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), ref);
+                resolvedObject = resolveObject(datastore, mapper, cache, mf, annotation.idOnly(), ref);
             }
 
             if (resolvedObject != null) {
@@ -279,9 +280,17 @@ class ReferenceMapper implements CustomMapper {
                 dbObject.put(name, null);
             }
         } else {
-            dbObject.put(name, refAnn.idOnly()
-                               ? mapper.keyToId(getKey(fieldValue, mapper))
-                               : mapper.keyToDBRef(getKey(fieldValue, mapper)));
+            Key<?> key = getKey(fieldValue, mapper);
+            if (refAnn.idOnly()) {
+                Object id = mapper.keyToId(key);
+                if (id != null && mapper.isMapped(id.getClass())) {
+                    id = mapper.toMongoObject(id, true);
+                }
+
+                dbObject.put(name, id);
+            } else {
+                dbObject.put(name, mapper.keyToDBRef(key));
+            }
         }
     }
 
@@ -300,8 +309,21 @@ class ReferenceMapper implements CustomMapper {
             return cached;
         }
 
-        final DBObject refDbObject = idOnly ? datastore.getCollection(key.getType()).findOne(ref)
-                                            : datastore.getDB().getCollection(dbRef.getCollectionName()).findOne(dbRef.getId());
+        final DBObject refDbObject;
+        DBCollection collection;
+        Object id;
+
+        if (idOnly) {
+            collection = datastore.getCollection(key.getType());
+            id = ref;
+        } else {
+            collection = datastore.getDB().getCollection(dbRef.getCollectionName());
+            id = dbRef.getId();
+        }
+        if (id instanceof DBObject) {
+            ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+        }
+        refDbObject = collection.findOne(id);
 
         if (refDbObject != null) {
             Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDbObject);

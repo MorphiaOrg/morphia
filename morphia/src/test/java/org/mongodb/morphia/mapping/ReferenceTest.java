@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -16,11 +17,11 @@ import org.mongodb.morphia.mapping.lazy.ProxyTestBase;
 import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
@@ -29,6 +30,30 @@ import static org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies.testDepen
  * @author Gene Trog, (eternal0@github.com)
  */
 public class ReferenceTest extends ProxyTestBase {
+    @Test
+    public void testComplexIds() {
+        Complex complex = new Complex(new ChildId("Bob", 67), "Kelso");
+        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
+                                    new Complex(new ChildId("JD", 26), "Dorian"),
+                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
+        List<Complex> lazyList = asList(new Complex(new ChildId("Bippity", 67), "Boppity"),
+                                    new Complex(new ChildId("Cinder", 22), "Ella"),
+                                    new Complex(new ChildId("Prince", 29), "Charming"));
+
+        ComplexParent parent = new ComplexParent();
+        parent.complex = complex;
+        parent.list = list;
+        parent.lazyList = lazyList;
+
+        getDs().save(complex);
+        getDs().save(list);
+        getDs().save(lazyList);
+        getDs().save(parent);
+
+        ComplexParent complexParent = getDs().get(ComplexParent.class, parent.id);
+        assertEquals(parent, complexParent);
+    }
+
     @Test
     public void testFindByEntityReference() {
         final Ref ref = new Ref("refId");
@@ -121,13 +146,13 @@ public class ReferenceTest extends ProxyTestBase {
         final Container container = new Container(ref);
         getDs().save(container);
         final Query<Container> query = getDs().createQuery(Container.class)
-//                                             .disableValidation()
-                                             .field("singleRef").equal(ref);
+                                              //                                             .disableValidation()
+                                              .field("singleRef").equal(ref);
         Assert.assertNotNull(query.get());
     }
 
     @Test
-    public void testReferencesWithoutMapping() throws Exception {
+    public void testReferencesWithoutMapping() {
         Child child1 = new Child();
         getDs().save(child1);
 
@@ -184,8 +209,8 @@ public class ReferenceTest extends ProxyTestBase {
         public Container(final Ref... refs) {
             singleRef = refs[0];
             lazySingleRef = refs[0];
-            collectionRef = Arrays.asList(refs);
-            lazyCollectionRef = Arrays.asList(refs);
+            collectionRef = asList(refs);
+            lazyCollectionRef = asList(refs);
             mapRef = new LinkedHashMap<Integer, Ref>();
             lazyMapRef = new LinkedHashMap<Integer, Ref>();
 
@@ -269,14 +294,200 @@ public class ReferenceTest extends ProxyTestBase {
     public static class Child {
         @Id
         private ObjectId id;
+
     }
 
     @Entity(value = "parents", noClassnameStored = true)
     public static class Parent {
+
+        @Id
+        private ObjectId id;
+        @Reference(lazy = true)
+        private List<Child> children = new ArrayList<Child>();
+
+    }
+
+    private static class ComplexParent {
         @Id
         private ObjectId id;
 
+        @Reference
+        private Complex complex;
+
+        @Reference
+        private List<Complex> list = new ArrayList<Complex>();
+
         @Reference(lazy = true)
-        private List<Child> children = new ArrayList<Child>();
+        private List<Complex> lazyList = new ArrayList<Complex>();
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public Complex getComplex() {
+            return complex;
+        }
+
+        public void setComplex(final Complex complex) {
+            this.complex = complex;
+        }
+
+        public List<Complex> getList() {
+            return list;
+        }
+
+        public void setList(final List<Complex> list) {
+            this.list = list;
+        }
+
+        public List<Complex> getLazyList() {
+            return lazyList;
+        }
+
+        public void setLazyList(final List<Complex> lazyList) {
+            this.lazyList = lazyList;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ComplexParent)) {
+                return false;
+            }
+
+            final ComplexParent that = (ComplexParent) o;
+
+            if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
+                return false;
+            }
+            if (getComplex() != null ? !getComplex().equals(that.getComplex()) : that.getComplex() != null) {
+                return false;
+            }
+            if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null) {
+                return false;
+            }
+            return getLazyList() != null ? getLazyList().equals(that.getLazyList()) : that.getLazyList() == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getComplex() != null ? getComplex().hashCode() : 0);
+            result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+            result = 31 * result + (getLazyList() != null ? getLazyList().hashCode() : 0);
+            return result;
+        }
+    }
+
+    @Entity("complex")
+    private static class Complex {
+        @Id
+        @Embedded
+        private ChildId id;
+
+        private String value;
+
+        public Complex() {
+        }
+
+        public Complex(final ChildId id, final String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public ChildId getId() {
+            return id;
+        }
+
+        public void setId(final ChildId id) {
+            this.id = id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(final String value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Complex)) {
+                return false;
+            }
+
+            final Complex complex = (Complex) o;
+
+            if (getId() != null ? !getId().equals(complex.getId()) : complex.getId() != null) {
+                return false;
+            }
+            return getValue() != null ? getValue().equals(complex.getValue()) : complex.getValue() == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+            return result;
+        }
+    }
+
+    @Embedded
+    private static class ChildId {
+        private String name;
+        private int age;
+
+        public ChildId() {
+        }
+
+        public ChildId(final String name, final int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ChildId)) {
+                return false;
+            }
+
+            final ChildId childId = (ChildId) o;
+
+            if (getAge() != childId.getAge()) {
+                return false;
+            }
+            return getName() != null ? getName().equals(childId.getName()) : childId.getName() == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getName() != null ? getName().hashCode() : 0;
+            result = 31 * result + getAge();
+            return result;
+        }
     }
 }
