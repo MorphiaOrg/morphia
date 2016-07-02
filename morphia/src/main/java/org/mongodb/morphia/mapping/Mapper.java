@@ -485,7 +485,11 @@ public class Mapper {
             key.setCollection(getCollectionName(key.getType()));
         }
 
-        return new DBRef(key.getCollection(), key.getId());
+        Object id = key.getId();
+        if (isMapped(id.getClass())) {
+            id = toMongoObject(id, true);
+        }
+        return new DBRef(key.getCollection(), id);
     }
 
     /**

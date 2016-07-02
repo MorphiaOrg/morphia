@@ -409,7 +409,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
         }
 
-        return get(clazz, key.getId());
+        Object id = key.getId();
+        if (id instanceof DBObject) {
+            ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+        }
+        return get(clazz, id);
     }
 
     @Override
