@@ -14,16 +14,20 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.lazy.ProxyTestBase;
+import org.mongodb.morphia.query.MorphiaKeyIterator;
 import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
 
 /**
@@ -169,6 +173,36 @@ public class ReferenceTest extends ProxyTestBase {
 
         parentList = localDs.find(Parent.class).asList();
         Assert.assertEquals(1, parentList.size());
+    }
+
+    @Test
+    public void testFetchKeys() {
+        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
+                                    new Complex(new ChildId("JD", 26), "Dorian"),
+                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
+        getDs().save(list);
+
+        MorphiaKeyIterator<Complex> keys = getDs().createQuery(Complex.class).fetchKeys();
+        assertTrue(keys.hasNext());
+        assertEquals(list.get(0).getId(), keys.next().getId());
+        assertEquals(list.get(1).getId(), keys.next().getId());
+        assertEquals(list.get(2).getId(), keys.next().getId());
+        assertFalse(keys.hasNext());
+    }
+
+    @Test
+    public void testFetchEmptyEntities() {
+        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
+                                    new Complex(new ChildId("JD", 26), "Dorian"),
+                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
+        getDs().save(list);
+
+        Iterator<Complex> keys = getDs().createQuery(Complex.class).fetchEmptyEntities();
+        assertTrue(keys.hasNext());
+        assertEquals(list.get(0).getId(), keys.next().getId());
+        assertEquals(list.get(1).getId(), keys.next().getId());
+        assertEquals(list.get(2).getId(), keys.next().getId());
+        assertFalse(keys.hasNext());
     }
 
     private void allNull(final Container container) {

@@ -193,6 +193,26 @@ public class Mapper {
     }
 
     /**
+     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     *
+     * @param datastore the Datastore to use when fetching this reference
+     * @param dbObject  the DBObject
+     * @param <T>       the type of the referenced entity
+     * @return the entity
+     */
+    <T> T fromDBObject(final Datastore datastore, final DBObject dbObject) {
+        if (dbObject.containsField(CLASS_NAME_FIELDNAME)) {
+            T entity = opts.getObjectFactory().createInstance(null, dbObject);
+            entity = fromDb(datastore, dbObject, entity, createEntityCache());
+
+            return entity;
+        } else {
+            throw new MappingException(format("The DBOBbject does not contain a %s key.  Determining entity type is impossible.",
+                                              CLASS_NAME_FIELDNAME));
+        }
+    }
+
+    /**
      * Converts a DBObject back to a type-safe java object (POJO)
      *
      * @param <T>       the type of the entity
@@ -517,6 +537,7 @@ public class Mapper {
     }
 
     /**
+     * /**
      * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
      *
      * @param entity The POJO
