@@ -141,11 +141,14 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
         return dbObj;
     }
 
-    protected V processItem(final DBObject dbObj) {
+    private V processItem(final DBObject dbObj) {
         final long start = System.currentTimeMillis();
         final V item = convertItem(dbObj);
         mapperTime += System.currentTimeMillis() - start;
         return item;
     }
 
+    Datastore getDatastore() {
+        return datastore;
+    }
 }
