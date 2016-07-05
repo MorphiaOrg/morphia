@@ -2,7 +2,6 @@ package org.mongodb.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
@@ -15,52 +14,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unchecked")
-@Ignore
 public class TestReferenceCollection extends ProxyTestBase {
-    @Test
-    public final void testCreateProxy() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
-
-        Origin origin = new Origin();
-        final Endpoint endpoint1 = new Endpoint();
-        final Endpoint endpoint2 = new Endpoint();
-
-        origin.list.add(endpoint1);
-        origin.list.add(endpoint2);
-
-        Collection<Endpoint> lazyEndpoints = origin.lazyList;
-        lazyEndpoints.add(endpoint1);
-        lazyEndpoints.add(endpoint2);
-
-        getDs().save(endpoint2, endpoint1, origin);
-
-        origin = getDs().get(origin);
-
-        lazyEndpoints = origin.lazyList;
-        Assert.assertNotNull(lazyEndpoints);
-        assertNotFetched(lazyEndpoints);
-
-        Assert.assertNotNull(lazyEndpoints.iterator().next());
-        assertFetched(lazyEndpoints);
-
-        origin = deserialize(origin);
-
-        lazyEndpoints = origin.lazyList;
-        Assert.assertNotNull(lazyEndpoints);
-        assertNotFetched(lazyEndpoints);
-
-        Assert.assertNotNull(lazyEndpoints.iterator().next());
-        assertFetched(lazyEndpoints);
-
-        origin = deserialize(origin);
-
-        getDs().save(origin);
-        lazyEndpoints = origin.lazyList;
-        assertNotFetched(lazyEndpoints);
-    }
 
     @Test
     public void testOrderingPreserved() throws Exception {

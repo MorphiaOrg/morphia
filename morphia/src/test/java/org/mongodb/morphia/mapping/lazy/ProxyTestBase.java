@@ -5,10 +5,6 @@ import org.junit.Assert;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedReference;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +16,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class ProxyTestBase extends TestBase {
 
-    protected ProxiedReference asProxiedReference(final Object e) {
+    private ProxiedReference asProxiedReference(final Object e) {
         return (ProxiedReference) e;
     }
 
@@ -40,21 +36,7 @@ public class ProxyTestBase extends TestBase {
         Assert.assertFalse("Should not be a proxy", p instanceof ProxiedReference);
     }
 
-    protected <T> T deserialize(final Object t) {
-        try {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final ObjectOutputStream os = new ObjectOutputStream(baos);
-            os.writeObject(t);
-            os.close();
-            final byte[] ba = baos.toByteArray();
-
-            return (T) new ObjectInputStream(new ByteArrayInputStream(ba)).readObject();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected boolean isFetched(final Object e) {
+    private boolean isFetched(final Object e) {
         return asProxiedReference(e).__isFetched();
     }
 
