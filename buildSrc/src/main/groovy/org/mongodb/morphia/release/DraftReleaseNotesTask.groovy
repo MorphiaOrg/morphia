@@ -63,7 +63,7 @@ class DraftReleaseNotesTask extends DefaultTask {
 Below and on maven central.
 
 ### Docs
-${javadoc}
+Full documentation and javadoc can be found at http://mongodb.github.io/morphia/.
 
 ### Issues Resolved
 """
