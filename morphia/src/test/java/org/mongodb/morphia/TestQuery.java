@@ -417,8 +417,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testExplainPlanIsReturnedAndContainsCorrectValueForN() {
-        checkMinServerVersion(2.7);
+    public void testExplainPlan() {
         // Given
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
 
@@ -426,20 +425,9 @@ public class TestQuery extends TestBase {
         Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
 
         // Then
-        assertEquals(4, ((Map) explainResult.get("executionStats")).get("nReturned"));
-    }
-
-    @Test
-    public void testExplainPlanIsReturnedAndContainsCorrectValueForNForServersPriorTo27() {
-        checkMaxServerVersion(2.7);
-        // Given
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
-
-        // When
-        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
-
-        // Then
-        assertEquals(4, explainResult.get("n"));
+        assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
+                                                  ? explainResult.get("n")
+                                                  : ((Map) explainResult.get("executionStats")).get("nReturned"));
     }
 
     @Test

@@ -50,7 +50,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 
 /**
  * @author Scott Hernandez
@@ -131,14 +130,10 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testExistsWhenSecondaryPreferred() throws Exception {
-        assumeTrue(isReplicaSet());
-
-        // given
-        long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"), W2);
-
-        // expect
-        assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
+        if (isReplicaSet()) {
+            final Key<FacebookUser> key = getDs().save(new FacebookUser(System.currentTimeMillis(), "user 1"), W2);
+            assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
+        }
     }
 
     @Test
