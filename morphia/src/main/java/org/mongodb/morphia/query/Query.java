@@ -86,7 +86,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
 
     /**
      * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
-     * compatible with order/sort and hint. *
+     * compatible with order/sort and hint.
      *
      * @return this
      */
