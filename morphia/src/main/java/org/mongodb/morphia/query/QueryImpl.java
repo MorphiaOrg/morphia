@@ -2,7 +2,6 @@ package org.mongodb.morphia.query;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -22,8 +21,6 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +45,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
-    private String[] fields;
+    private BasicDBObject projections;
     private Boolean includeFields;
     private BasicDBObject sort;
     private BasicDBObject max;
@@ -101,13 +98,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * @param clazz    the class to use when validating
      * @param mapper   the Mapper to use
      * @param validate true if the results should be validated
-     * @param parentMCs List of parent MappedClasses for tracking potential naming schemes
-     * @param parentMFs List of parent MappedFields for tracking potential naming schemes
      * @return the DBObject
      */
-    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate,
-                                                  final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
-        BasicDBObjectBuilder ret = BasicDBObjectBuilder.start();
+    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
+        BasicDBObject ret = new BasicDBObject();
         final String[] parts = str.split(",");
         for (String s : parts) {
             s = s.trim();
@@ -123,9 +117,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                 validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
                 s = sb.toString();
             }
-            ret = ret.add(s, dir);
+            ret.put(s, dir);
         }
-        return (BasicDBObject) ret.get();
+        return ret;
     }
 
     @Override
@@ -185,7 +179,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MorphiaIterator<T, T> fetchEmptyEntities() {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.fields = new String[]{Mapper.ID_KEY};
+        cloned.projections = new BasicDBObject(Mapper.ID_KEY, 1);
         cloned.includeFields = true;
         return cloned.fetch();
     }
@@ -193,7 +187,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MorphiaKeyIterator<T> fetchKeys() {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.fields = new String[]{Mapper.ID_KEY};
+        cloned.projections = new BasicDBObject(Mapper.ID_KEY, 1);
         cloned.includeFields = true;
 
         return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(), ds.getMapper(), clazz, dbColl.getName());
@@ -242,7 +236,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
         n.batchSize = batchSize;
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
-        n.fields = fields == null ? null : copy();
         n.includeFields = includeFields;
         n.indexHint = indexHint;
         n.limit = limit;
@@ -253,10 +246,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.snapshotted = snapshotted;
         n.validateName = validateName;
         n.validateType = validateType;
-        n.sort = (BasicDBObject) (sort == null ? null : sort.clone());
         n.max = max;
         n.min = min;
-        n.baseQuery = (BasicDBObject) (baseQuery == null ? null : baseQuery.clone());
+        n.projections = copy(projections);
+        n.sort = copy(sort);
+        n.baseQuery = copy(baseQuery);
 
         // fields from superclass
         n.setAttachedTo(getAttachedTo());
@@ -264,6 +258,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.tail = tail;
         n.tailAwaitData = tailAwaitData;
         return n;
+    }
+
+    protected BasicDBObject copy(final BasicDBObject dbObject) {
+        return dbObject == null ? null : new BasicDBObject(dbObject.toMap());
     }
 
     @Override
@@ -353,26 +351,21 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public DBObject getFieldsObject() {
-        if (fields == null || fields.length == 0) {
+        if (projections == null || projections.size() == 0) {
             return null;
-        }
-
-        final Map<String, Integer> fieldsFilter = new HashMap<String, Integer>();
-        for (String field : fields) {
-            final StringBuilder sb = new StringBuilder(field); //validate might modify prop string to translate java field name to db
-            validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
-            field = sb.toString();
-            fieldsFilter.put(field, (includeFields ? 1 : 0));
         }
 
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
 
+
         Entity entityAnnotation = mc.getEntityAnnotation();
+        final BasicDBObject fieldsFilter = copy(projections);
+
         if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
             fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
         }
 
-        return new BasicDBObject(fieldsFilter);
+        return fieldsFilter;
     }
 
     @Override
@@ -457,8 +450,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         if (snapshotted) {
             throw new QueryException("order cannot be used on a snapshotted query.");
         }
-        this.sort = parseFieldsString(sort, clazz, ds.getMapper(), validateName, Collections.<MappedClass>emptyList(),
-                                      Collections.<MappedField>emptyList());
+        this.sort = parseFieldsString(sort, clazz, ds.getMapper(), validateName
+                                     );
 
         return this;
     }
@@ -489,12 +482,47 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public Query<T> project(final String field, final boolean include) {
+        final StringBuilder sb = new StringBuilder(field);
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+        String fieldName = sb.toString();
+        validateProjections(fieldName, include);
+        projections.put(fieldName, include ? 1 : 0);
+        return this;
+    }
+
+    @Override
+    public Query<T> project(final String field, final ArraySlice slice) {
+        final StringBuilder sb = new StringBuilder(field);
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+        String fieldName = sb.toString();
+        validateProjections(fieldName, true);
+        projections.put(fieldName, slice.toDatabase());
+        return this;
+    }
+
+    private void validateProjections(final String field, final boolean include) {
+        if (includeFields != null && include != includeFields) {
+            if (!includeFields || !"_id".equals(field)) {
+                throw new ValidationException("You cannot mix included and excluded fields together");
+            }
+        }
+        if (projections == null) {
+            projections = new BasicDBObject();
+        }
+        if (includeFields == null) {
+            includeFields = include;
+        }
+    }
+
+    @Override
     public Query<T> retrievedFields(final boolean include, final String... list) {
         if (includeFields != null && include != includeFields) {
-            throw new IllegalStateException("You cannot mix include and excluded fields together!");
+            throw new IllegalStateException("You cannot mix included and excluded fields together");
         }
-        includeFields = include;
-        fields = list;
+        for (String field : list) {
+            project(field, include);
+        }
         return this;
     }
 
@@ -677,7 +705,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public String toString() {
-        return getQueryObject().toString();
+        return String.format("{ %s %s }", getQueryObject(), projections == null ? "" : ", " + getFieldsObject());
     }
 
     /**
@@ -686,12 +714,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      */
     protected FilterOperator translate(final String operator) {
         return FilterOperator.fromString(operator);
-    }
-
-    private String[] copy() {
-        final String[] copy = new String[fields.length];
-        System.arraycopy(fields, 0, copy, 0, fields.length);
-        return copy;
     }
 
     private FieldEnd<? extends Query<T>> field(final String field, final boolean validate) {

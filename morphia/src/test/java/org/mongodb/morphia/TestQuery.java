@@ -38,6 +38,7 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.ArraySlice;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.MorphiaKeyIterator;
 import org.mongodb.morphia.query.Query;
@@ -61,7 +62,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.copyOfRange;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -69,7 +72,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mongodb.morphia.testutil.JSONMatcher.jsonEqual;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -292,7 +295,7 @@ public class TestQuery extends TestBase {
         query.field("keywords").not().sizeEq(3);
 
         // then
-        assertThat(query.toString(), jsonEqual("{ keywords: { $not: { $size: 3 } } }"));
+        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$not", new BasicDBObject("$size", 3))), query.getQueryObject());
     }
 
     @Test
@@ -428,6 +431,34 @@ public class TestQuery extends TestBase {
         assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
                                                   ? explainResult.get("n")
                                                   : ((Map) explainResult.get("executionStats")).get("nReturned"));
+    }
+
+    @Test
+    public void testFetchEmptyEntities() {
+        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
+        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
+        getDs().save(pwk1, pwk2, pwk3);
+
+        MorphiaIterator<PhotoWithKeywords, PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchEmptyEntities();
+        assertTrue(keys.hasNext());
+        assertEquals(pwk1.id, keys.next().id);
+        assertEquals(pwk2.id, keys.next().id);
+        assertEquals(pwk3.id, keys.next().id);
+    }
+
+    @Test
+    public void testFetchKeys() {
+        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
+        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
+        getDs().save(pwk1, pwk2, pwk3);
+
+        MorphiaKeyIterator<PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchKeys();
+        assertTrue(keys.hasNext());
+        assertEquals(pwk1.id, keys.next().getId());
+        assertEquals(pwk2.id, keys.next().getId());
+        assertEquals(pwk3.id, keys.next().getId());
     }
 
     @Test
@@ -680,7 +711,7 @@ public class TestQuery extends TestBase {
         query.criteria("score").not().greaterThan(7);
 
         // then
-        assertThat(query.toString(), jsonEqual("{ score: { $not: { $gt: 7} } }"));
+        assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))), query.getQueryObject());
     }
 
     @Test
@@ -692,7 +723,108 @@ public class TestQuery extends TestBase {
         query.criteria("keywords.keyword").not().startsWith("ralph");
 
         // then
-        assertThat(query.toString(), jsonEqual("{ keywords.keyword: { $not: { $regex: '^ralph'} } }"));
+        DBObject queryObject = query.getQueryObject();
+        BasicDBObject expected = new BasicDBObject("keywords.keyword",
+                                                 new BasicDBObject("$not", new BasicDBObject("$regex", "^ralph")));
+        assertEquals(expected.toString(), queryObject.toString());
+    }
+
+    @Test
+    public void testProject() throws Exception {
+        ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
+        getDs().save(user);
+
+        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class)
+                                             .project("first_name", true)
+                                             .get();
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
+
+        found = getDs().find(ContainsRenamedFields.class)
+                       .project("firstName", true)
+                       .get();
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
+
+        try {
+            getDs()
+                .find(ContainsRenamedFields.class)
+                .project("bad field name", true)
+                .get();
+            fail("Validation should have caught the bad field");
+        } catch (ValidationException e) {
+            // success!
+        }
+
+        Query<ContainsRenamedFields> query = getDs()
+            .find(ContainsRenamedFields.class)
+            .project("_id", true)
+            .project("first_name", true);
+        DBObject fields = query.getFieldsObject();
+        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+    }
+
+    @Test
+    public void testMixedProjection() throws Exception {
+        ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
+        getDs().save(user);
+
+        try {
+            getDs().find(ContainsRenamedFields.class)
+                   .project("first_name", true)
+                   .project("last_name", false);
+            fail("An exception should have been thrown indication a mixed projection");
+        } catch (ValidationException e) {
+            // all good
+        }
+
+        try {
+            getDs().find(ContainsRenamedFields.class)
+                   .project("first_name", true)
+                   .project("last_name", true)
+                   .project("_id", false);
+        } catch (ValidationException e) {
+            fail("An exception should not have been thrown indication a mixed projection because _id suppression is a special case");
+        }
+
+        try {
+            getDs().find(ContainsRenamedFields.class)
+                   .project("first_name", false)
+                   .project("last_name", false)
+                   .project("_id", true);
+            fail("An exception should have been thrown indication a mixed projection");
+        } catch (ValidationException e) {
+            // all good
+        }
+
+        try {
+            getDs().find(IntVector.class)
+                   .project("name", false)
+                   .project("scalars", new ArraySlice(5));
+            fail("An exception should have been thrown indication a mixed projection");
+        } catch (ValidationException e) {
+            // all good
+        }
+    }
+
+    @Test
+    public void testProjectArrayField() throws Exception {
+        int[] ints = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30};
+        IntVector vector = new IntVector(ints);
+        getDs().save(vector);
+
+        assertArrayEquals(copy(ints, 0, 4), getDs().find(IntVector.class)
+                                                   .project("scalars", new ArraySlice(4))
+                                                   .get().scalars);
+        assertArrayEquals(copy(ints, 5, 4), getDs().find(IntVector.class)
+                                                   .project("scalars", new ArraySlice(5, 4))
+                                                   .get().scalars);
+        assertArrayEquals(copy(ints, ints.length - 10, 6), getDs().find(IntVector.class)
+                                                                  .project("scalars", new ArraySlice(-10, 6))
+                                                                  .get().scalars);
+        assertArrayEquals(copy(ints, ints.length - 12, 12), getDs().find(IntVector.class)
+                                                                   .project("scalars", new ArraySlice(-12))
+                                                                   .get().scalars);
     }
 
     @Test
@@ -826,23 +958,31 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testRetrievedFields() throws Exception {
         ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
         getDs().save(user);
 
-        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "first_name").get();
+        ContainsRenamedFields found = getDs()
+            .find(ContainsRenamedFields.class)
+            .retrievedFields(true, "first_name")
+            .get();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
-        found = getDs().find(ContainsRenamedFields.class).retrievedFields(true, "firstName").get();
+        found = getDs()
+            .find(ContainsRenamedFields.class)
+            .retrievedFields(true, "firstName")
+            .get();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         try {
             getDs()
                 .find(ContainsRenamedFields.class)
-                .retrievedFields(true, "bad field name").get();
-            Assert.fail("Validation should have caught the bad field");
+                .retrievedFields(true, "bad field name")
+                .get();
+            fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
             // success!
         }
@@ -852,7 +992,6 @@ public class TestQuery extends TestBase {
             .retrievedFields(true, "_id", "first_name");
         DBObject fields = query.getFieldsObject();
         assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
-
     }
 
     @Test
@@ -924,7 +1063,7 @@ public class TestQuery extends TestBase {
         query.field("keywords").sizeEq(3);
 
         // then
-        assertThat(query.toString(), jsonEqual("{ keywords: { $size: 3 } }"));
+        assertEquals(query.getQueryObject(), new BasicDBObject("keywords", new BasicDBObject("$size", 3)));
     }
 
     @Test
@@ -1042,7 +1181,7 @@ public class TestQuery extends TestBase {
         try {
             // must fail
             assertNotNull(getDs().find(PhotoWithKeywords.class).where(hasKeyword.getCode()).get());
-            Assert.fail("Invalid javascript magically isn't invalid anymore?");
+            fail("Invalid javascript magically isn't invalid anymore?");
         } catch (MongoInternalException e) {
             // fine
         } catch (MongoException e) {
@@ -1051,31 +1190,8 @@ public class TestQuery extends TestBase {
 
     }
 
-    @Test
-    public void testFetchKeys() {
-        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
-        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
-        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(pwk1, pwk2, pwk3);
-
-        MorphiaKeyIterator<PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchKeys();
-        assertTrue(keys.hasNext());
-        assertEquals(pwk1.id, keys.next().getId());
-        assertEquals(pwk2.id, keys.next().getId());
-        assertEquals(pwk3.id, keys.next().getId());
-    }
-    @Test
-    public void testFetchEmptyEntities() {
-        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
-        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
-        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(pwk1, pwk2, pwk3);
-
-        MorphiaIterator<PhotoWithKeywords, PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchEmptyEntities();
-        assertTrue(keys.hasNext());
-        assertEquals(pwk1.id, keys.next().id);
-        assertEquals(pwk2.id, keys.next().id);
-        assertEquals(pwk3.id, keys.next().id);
+    private int[] copy(final int[] array, final int start, final int count) {
+        return copyOfRange(array, start, start + count);
     }
 
     private void turnOffProfilingAndDropProfileCollection() {
@@ -1338,6 +1454,20 @@ public class TestQuery extends TestBase {
             }
 
             return true;
+        }
+    }
+
+    static class IntVector {
+        @Id
+        private ObjectId id;
+        private String name;
+        private int[] scalars;
+
+        public IntVector() {
+        }
+
+        public IntVector(final int... scalars) {
+            this.scalars = scalars;
         }
     }
 }

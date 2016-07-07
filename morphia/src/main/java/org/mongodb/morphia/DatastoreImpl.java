@@ -257,8 +257,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
-                                                   Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
+        ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true
+                                                  ), unique, dropDupsOnCreate, false, false, -1);
     }
 
     @Override
@@ -853,8 +853,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         ensureIndex(getCollection(collection), name,
-                    parseFieldsString(fields, clazz, mapper, true, Collections.<MappedClass>emptyList(),
-                                      Collections.<MappedField>emptyList()), unique, dropDupsOnCreate, false, false, -1);
+                    parseFieldsString(fields, clazz, mapper, true
+                                     ), unique, dropDupsOnCreate, false, false, -1);
     }
 
     @Override
@@ -1482,7 +1482,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                             LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                    + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                             final BasicDBObject fields = parseFieldsString(index.value(), mc.getClazz(), mapper,
-                                                                           !index.disableValidation(), parentMCs, parentMFs);
+                                                                           !index.disableValidation());
                             ensureIndex(dbColl, index.name(), fields, index.unique(), index.dropDups(),
                                         index.background() ? index.background() : background, index.sparse(), index.expireAfterSeconds());
                         }

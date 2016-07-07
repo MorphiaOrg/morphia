@@ -64,7 +64,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> disableCursorTimeout();
 
     /**
-     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates. *
+     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
      *
      * @return this
      */
@@ -267,6 +267,29 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> order(String sort);
 
     /**
+     * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
+     * be inclusions or exclusions.  You can not include and exclude fields at the same time with the exception of the _id field.  The
+     * _id field is always included unless explicitly suppressed.
+     *
+     * @param field the field to project
+     * @param include true to include the field in the results
+     * @return this
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     */
+    Query<T> project(String field, boolean include);
+
+    /**
+     * Adds an sliced array field to a projection.
+     *
+     * @param field the field to project
+     * @param slice the options for projecting an array field
+     * @return this
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
+     */
+    Query<T> project(String field, ArraySlice slice);
+
+    /**
      * Route query to non-primary node
      *
      * @return this
@@ -298,7 +321,9 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param include true if the fields should be included in the results.  false to exclude them.
      * @param fields  the fields in question
      * @return this
+     * @deprecated use {@link #project(String, boolean)} instead
      */
+    @Deprecated
     Query<T> retrievedFields(boolean include, String... fields);
 
     /**
@@ -328,9 +353,6 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @mongodb.driver.manual reference/operator/query/text/ $text
      */
     Query<T> search(String text, String language);
-
-    @Override
-    String toString();
 
     /**
      * <p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query. <p/> You can chain

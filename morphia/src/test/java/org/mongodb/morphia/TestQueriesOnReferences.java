@@ -22,10 +22,10 @@ public class TestQueriesOnReferences extends TestBase {
 
         Assert.assertNotNull(getDs().createQuery(ContainsPic.class)
                                     .field("pic").exists()
-                                    .retrievedFields(true, "pic").get());
+                                    .project("pic", true).get());
         Assert.assertNull(getDs().createQuery(ContainsPic.class)
                                  .field("pic").doesNotExist()
-                                 .retrievedFields(true, "pic").get());
+                                 .project("pic", true).get());
     }
 
     @Test(expected = MappingException.class)
