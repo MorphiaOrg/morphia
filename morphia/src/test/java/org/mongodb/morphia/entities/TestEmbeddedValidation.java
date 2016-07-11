@@ -16,13 +16,56 @@
 
 package org.mongodb.morphia.entities;
 
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 public class TestEmbeddedValidation extends TestBase {
+
+    /**
+     *
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testCreateEntityWithBasicDBList() throws Exception {
+        getMorphia().map(TestEntity.class);
+        BasicDAO<TestEntity, ObjectId> dao = new BasicDAO<TestEntity, ObjectId>(TestEntity.class, getDs());
+        TestEntity entity = new TestEntity();
+
+        Map<String, Object> map = mapOf("type", "text");
+        map.put("data", mapOf("text", "sometext"));
+
+        Map<String, Object> map1 = mapOf("data", mapOf("id", "123"));
+        map1.put("type", "image");
+        List<Map<String, Object>> data = asList(map, map1);
+
+        entity.setData(data);
+        dao.save(entity);
+
+        TestEntity testEntity = dao.get(entity.getId());
+        assertEquals(entity, testEntity);
+
+        Query<TestEntity> query = dao.createQuery();
+        query.disableValidation();
+        query.criteria("data.data.id").equal("123");
+
+        assertNotNull(query.get());
+    }
 
     @Test
     public void testDottedNames() {
@@ -41,5 +84,60 @@ public class TestEmbeddedValidation extends TestBase {
                                     .field("embedded.flag").equal(true);
 
         Assert.assertEquals(parentType, query.get());
+    }
+
+    private Map<String, Object> mapOf(final String key, final Object value) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(key, value);
+        return map;
+    }
+
+    /**
+     *
+     */
+    @Entity
+    public static class TestEntity {
+
+        @Id
+        private ObjectId id;
+        private List<Map<String, Object>> data;
+
+        public List<Map<String, Object>> getData() {
+            return data;
+        }
+
+        public void setData(final List<Map<String, Object>> data) {
+            this.data = new ArrayList<Map<String, Object>>();
+            this.data.addAll(data);
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getData() != null ? getData().hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof TestEntity)) {
+                return false;
+            }
+
+            final TestEntity that = (TestEntity) o;
+
+            if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
+                return false;
+            }
+            return getData() != null ? getData().equals(that.getData()) : that.getData() == null;
+
+        }
     }
 }

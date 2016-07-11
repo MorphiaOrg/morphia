@@ -97,6 +97,9 @@ public class DefaultCreator implements ObjectFactory {
         Class c = getClass(dbObj);
         if (c == null) {
             c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
+            if (c.equals(Object.class)) {
+                c = mf.getConcreteType();
+            }
         }
         try {
             return createInstance(c, dbObj);

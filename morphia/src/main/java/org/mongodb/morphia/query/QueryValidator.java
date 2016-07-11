@@ -40,8 +40,6 @@ final class QueryValidator {
      */
     static MappedField validateQuery(final Class clazz, final Mapper mapper, final StringBuilder origProp, final FilterOperator op,
                                      final Object val, final boolean validateNames, final boolean validateTypes) {
-        //TODO: cache validations (in static?).
-
         MappedField mf = null;
         final String prop = origProp.toString();
         boolean hasTranslations = false;

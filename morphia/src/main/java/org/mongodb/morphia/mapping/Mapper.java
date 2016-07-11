@@ -242,25 +242,37 @@ public class Mapper {
             }
         }
 
-        final MappedClass mc = getMappedClass(entity);
-
-        final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
-        try {
-            for (final MappedField mf : mc.getPersistenceFields()) {
-                readMappedField(datastore, mf, entity, cache, updated);
+        if (entity instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) entity;
+            for (String key : dbObject.keySet()) {
+                Object o = dbObject.get(key);
+                map.put(key, (o instanceof DBObject) ? fromDBObject(datastore, (DBObject) o) : o);
             }
-        } catch (final MappingException e) {
-            Object id = dbObject.get(ID_KEY);
-            String entityName = entity.getClass().getName();
-            throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
-                                              datastore.getDB().getName()), e);
-        }
+        } else if (entity instanceof Collection) {
+            Collection<Object> collection = (Collection<Object>) entity;
+            for (Object o : ((List) dbObject)) {
+                collection.add((o instanceof DBObject) ? fromDBObject(datastore, (DBObject) o) : o);
+            }
+        } else {
+            final MappedClass mc = getMappedClass(entity);
+            final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
+            try {
+                for (final MappedField mf : mc.getPersistenceFields()) {
+                    readMappedField(datastore, mf, entity, cache, updated);
+                }
+            } catch (final MappingException e) {
+                Object id = dbObject.get(ID_KEY);
+                String entityName = entity.getClass().getName();
+                throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
+                                                  datastore.getDB().getName()), e);
+            }
 
-        if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
-            final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
-            cache.putEntity(key, entity);
+            if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
+                final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
+                cache.putEntity(key, entity);
+            }
+            mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
         }
-        mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
         return entity;
     }
 
