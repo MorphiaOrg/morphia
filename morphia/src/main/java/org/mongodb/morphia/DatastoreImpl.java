@@ -464,6 +464,24 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getDB().getCollection(collName);
     }
 
+    /**
+     * @param obj the instance to use for looking up the collection mapping
+     * @return the collection mapped for the type of obj
+     */
+    public DBCollection getCollection(final Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
+    }
+
+    protected DBCollection getCollection(final String kind) {
+        if (kind == null) {
+            return null;
+        }
+        return getDB().getCollection(kind);
+    }
+
     @Override
     public <T> long getCount(final T entity) {
         return getCollection(ProxyHelper.unwrap(entity)).count();
@@ -1022,17 +1040,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * @param obj the instance to use for looking up the collection mapping
-     * @return the collection mapped for the type of obj
-     */
-    public DBCollection getCollection(final Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
-    }
-
-    /**
      * @return the Mapper used by this Datastore
      */
     public Mapper getMapper() {
@@ -1187,13 +1194,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected void ensureIndexes(final MappedClass mc, final boolean background) {
         ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
-    }
-
-    protected DBCollection getCollection(final String kind) {
-        if (kind == null) {
-            return null;
-        }
-        return getDB().getCollection(kind);
     }
 
     @Deprecated
@@ -1672,4 +1672,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wc;
     }
 
+    @Override
+    public <T> MorphiaReference<T> referenceTo(final T entity) {
+        return MorphiaReference.toEntity(entity, this);
+    }
+
+    @Override
+    public <T> T fetch(final MorphiaReference<T> reference) {
+        T fetch = reference.fetch(this);
+        return fetch;
+    }
 }

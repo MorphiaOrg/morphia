@@ -1,20 +1,17 @@
 package org.mongodb.morphia.mapping;
 
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.dao.BasicDAO;
-
-import java.io.Serializable;
+import org.mongodb.morphia.testmodel.CompoundId;
 
 
 public class CompoundIdTest extends TestBase {
@@ -44,8 +41,8 @@ public class CompoundIdTest extends TestBase {
 
         getDs().save(entity);
         entity = getDs().get(entity);
-        Assert.assertEquals("test", entity.id.name);
-        Assert.assertNotNull(entity.id.id);
+        Assert.assertEquals("test", entity.id.getName());
+        Assert.assertNotNull(entity.id.getId());
     }
 
     @Test
@@ -75,36 +72,6 @@ public class CompoundIdTest extends TestBase {
 
         final CompoundIdEntity loaded = getDs().get(entity);
         Assert.assertEquals(entity, loaded);
-    }
-
-    @Embedded
-    private static class CompoundId implements Serializable {
-        private final ObjectId id = new ObjectId();
-        private String name;
-
-        CompoundId() {
-        }
-
-        CompoundId(final String n) {
-            name = n;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id.hashCode();
-            result = 31 * result + name.hashCode();
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof CompoundId)) {
-                return false;
-            }
-            final CompoundId other = ((CompoundId) obj);
-            return other.id.equals(id) && other.name.equals(name);
-        }
-
     }
 
     private static class CompoundIdEntity {
