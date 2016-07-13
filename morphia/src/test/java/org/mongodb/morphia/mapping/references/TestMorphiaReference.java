@@ -35,23 +35,23 @@ public class TestMorphiaReference extends TestBase {
         Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
         getDs().save(contained);
 
-        List<MorphiaReference<Contained>> list = new ArrayList<MorphiaReference<Contained>>();
+        List<Contained> list = new ArrayList<Contained>();
         for (int i = 0; i < 10; i++) {
             Contained item = new Contained(new CompoundId("" + i), "" + i);
             getDs().save(item);
-            list.add(getDs().referenceTo(item));
+            list.add(item);
         }
 
         Container container = new Container();
 
         container.reference = getDs().referenceTo(contained);
-        container.references = list;
+        container.references = getDs().referenceTo(list);
         getDs().save(container);
 
         Container fetched = getDs().createQuery(Container.class).get();
         Assert.assertEquals(contained, getDs().fetch(fetched.reference));
         for (int i = 0; i < fetched.references.size(); i++) {
-            Assert.assertEquals(getDs().fetch(list.get(i)), getDs().fetch(fetched.references.get(i)));
+            Assert.assertEquals(getDs().fetch(container.references.get(i)), getDs().fetch(fetched.references.get(i)));
         }
     }
 
