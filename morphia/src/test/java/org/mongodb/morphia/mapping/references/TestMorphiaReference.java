@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestMorphiaReference extends TestBase {
+
     @Test
     public void testReferences() {
         getMorphia().map(Container.class, Contained.class, CompoundId.class);
@@ -51,6 +52,33 @@ public class TestMorphiaReference extends TestBase {
         Assert.assertEquals(contained, getDs().fetch(fetched.reference));
         for (int i = 0; i < fetched.references.size(); i++) {
             Assert.assertEquals(getDs().fetch(list.get(i)), getDs().fetch(fetched.references.get(i)));
+        }
+    }
+
+    @Test
+    public void testReferenceToDifferentCollection() {
+        getMorphia().map(Container.class, Contained.class, CompoundId.class);
+        Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
+        String collection = "somewherelse";
+        getAds().save(collection, contained);
+
+        List<Contained> list = new ArrayList<Contained>();
+        for (int i = 0; i < 10; i++) {
+            Contained item = new Contained(new CompoundId("" + i), "" + i);
+            getAds().save(collection, item);
+            list.add(item);
+        }
+
+        Container container = new Container();
+
+        container.reference = getAds().referenceTo(collection, contained);
+        container.references = getAds().referenceTo(collection, list);
+        getDs().save(container);
+
+        Container fetched = getDs().createQuery(Container.class).get();
+        Assert.assertEquals(contained, getDs().fetch(fetched.reference));
+        for (int i = 0; i < fetched.references.size(); i++) {
+            Assert.assertEquals(getDs().fetch(container.references.get(i)), getDs().fetch(fetched.references.get(i)));
         }
     }
 

@@ -613,6 +613,15 @@ public interface Datastore {
     <T> MorphiaReference<T> referenceTo(T entity);
 
     /**
+     * Creates references to entities for inclusion.
+     *
+     * @param entities The entities for the reference
+     * @param <T>      the type of the entities
+     * @return the new reference to the entities
+     */
+    <T> List<MorphiaReference<T>> referenceTo(List<T> entities);
+
+    /**
      * Fetches a reference to another entity
      *
      * @param reference the reference to the entity

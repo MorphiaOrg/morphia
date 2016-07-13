@@ -16,7 +16,7 @@
 
 package org.mongodb.morphia;
 
-import com.mongodb.DBCollection;
+import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryException;
 import org.mongodb.morphia.query.ValidationException;
 
@@ -45,9 +45,9 @@ public class MorphiaReference<T> {
         return ref;
     }
 
-    static <T> MorphiaReference<T> toEntity(final T entity, final DBCollection collection, final Datastore datastore) {
+    static <T> MorphiaReference<T> toEntity(final T entity, final String collection, final Datastore datastore) {
         MorphiaReference<T> ref = toEntity(entity, datastore);
-        ref.collection = collection.getName();
+        ref.collection = collection;
 
         return ref;
     }
@@ -55,14 +55,13 @@ public class MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     T fetch(final Datastore datastore) {
         if (entity == null) {
-            if (collection != null) {
-                entity = (T) ((DatastoreImpl) datastore).getCollection(collection).findOne(id);
-            } else {
-                try {
-                    entity = (T) datastore.createQuery(getTypeClass()).field("_id").equal(id).get();
-                } catch (ClassNotFoundException e) {
-                    throw new QueryException("No class definition could be found for " + type, e);
-                }
+            try {
+                Query<?> query = collection != null
+                                 ? ((AdvancedDatastore) datastore).createQuery(collection, getTypeClass())
+                                 : datastore.createQuery(getTypeClass());
+                entity = (T) query.field("_id").equal(id).get();
+            } catch (ClassNotFoundException e) {
+                throw new QueryException("No class definition could be found for " + type, e);
             }
         }
 

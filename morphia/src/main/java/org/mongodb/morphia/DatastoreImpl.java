@@ -1678,8 +1678,30 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> List<MorphiaReference<T>> referenceTo(final List<T> entities) {
+        List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
+        for (T entity : entities) {
+            list.add(referenceTo(entity));
+        }
+        return list;
+    }
+
+    @Override
+    public <T> MorphiaReference<T> referenceTo(final String collection, final T entity) {
+        return MorphiaReference.toEntity(entity, collection, this);
+    }
+
+    @Override
+    public <T> List<MorphiaReference<T>> referenceTo(final String collection, final List<T> entities) {
+        List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
+        for (T entity : entities) {
+            list.add(referenceTo(collection, entity));
+        }
+        return list;
+    }
+
+    @Override
     public <T> T fetch(final MorphiaReference<T> reference) {
-        T fetch = reference.fetch(this);
-        return fetch;
+        return reference.fetch(this);
     }
 }
