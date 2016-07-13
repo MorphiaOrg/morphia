@@ -18,7 +18,6 @@ package org.mongodb.morphia.testmodel;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.mapping.CompoundIdTest;
 
 import java.io.Serializable;
 
