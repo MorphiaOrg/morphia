@@ -83,13 +83,13 @@ class ReferenceMapper implements CustomMapper {
     }
 
     private Object createOrReuseProxy(final Datastore datastore, final Mapper mapper, final Class referenceObjClass, final Object ref,
-                                      final EntityCache cache, final boolean idOnly) {
-        final Key key = idOnly ? mapper.manualRefToKey(referenceObjClass, ref) : mapper.refToKey((DBRef) ref);
+                                      final EntityCache cache, final Reference anntotation) {
+        final Key key = anntotation.idOnly() ? mapper.manualRefToKey(referenceObjClass, ref) : mapper.refToKey((DBRef) ref);
         final Object proxyAlreadyCreated = cache.getProxy(key);
         if (proxyAlreadyCreated != null) {
             return proxyAlreadyCreated;
         }
-        final Object newProxy = mapper.getProxyFactory().createProxy(datastore, referenceObjClass, key);
+        final Object newProxy = mapper.getProxyFactory().createProxy(datastore, referenceObjClass, key, anntotation.ignoreMissing());
         cache.putProxy(key, newProxy);
         return newProxy;
     }
@@ -202,7 +202,7 @@ class ReferenceMapper implements CustomMapper {
         if (ref != null) {
             Object resolvedObject;
             if (annotation.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, annotation.idOnly());
+                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, annotation);
             } else {
                 resolvedObject = resolveObject(datastore, mapper, cache, mf, annotation.idOnly(), ref);
             }

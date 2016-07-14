@@ -44,8 +44,9 @@ public interface LazyProxyFactory {
      * @param datastore         the Datastore to use when fetching this reference
      * @param targetClass       the referenced object's Class
      * @param key               the Key of the reference
+     * @param ignoreMissing     ignore references that don't exist in the database
      * @return the proxy
      */
-    <T> T createProxy(final Datastore datastore, Class<T> targetClass, final Key<T> key);
+    <T> T createProxy(final Datastore datastore, Class<T> targetClass, final Key<T> key, final boolean ignoreMissing);
 
 }

@@ -59,9 +59,9 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
     }
 
     @Override
-    public <T> T createProxy(final Datastore datastore, final Class<T> targetClass, final Key<T> key) {
+    public <T> T createProxy(final Datastore datastore, final Class<T> targetClass, final Key<T> key, final boolean ignoreMissing) {
 
-        final EntityObjectReference objectReference = new EntityObjectReference(datastore, targetClass, key);
+        final EntityObjectReference objectReference = new EntityObjectReference(datastore, targetClass, key, ignoreMissing);
 
         final T backend = (T) new NonFinalizingHotSwappingInvoker(new Class[]{targetClass, Serializable.class}, factory, objectReference,
                                                                   DelegationMode.SIGNATURE).proxy();

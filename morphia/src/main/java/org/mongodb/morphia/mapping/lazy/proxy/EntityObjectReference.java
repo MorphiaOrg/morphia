@@ -17,12 +17,13 @@ public class EntityObjectReference extends AbstractReference implements ProxiedE
     /**
      * Creates an object reference
      *
-     * @param datastore   the Datastore to use when fetching this reference
-     * @param targetClass the Class of the referenced item
-     * @param key         the Key value
+     * @param datastore     the Datastore to use when fetching this reference
+     * @param targetClass   the Class of the referenced item
+     * @param key           the Key value
+     * @param ignoreMissing ignore references that don't exist in the database
      */
-    public EntityObjectReference(final Datastore datastore, final Class targetClass, final Key key) {
-        super(datastore, targetClass, false);
+    public EntityObjectReference(final Datastore datastore, final Class targetClass, final Key key, final boolean ignoreMissing) {
+        super(datastore, targetClass, ignoreMissing);
         this.key = key;
     }
 
@@ -42,7 +43,7 @@ public class EntityObjectReference extends AbstractReference implements ProxiedE
     @SuppressWarnings("unchecked")
     protected Object fetch() {
         final Object entity = getDatastore().getByKey(referenceObjClass, key);
-        if (entity == null) {
+        if (entity == null && !ignoreMissing) {
             throw new LazyReferenceFetchingException(format("During the lifetime of the proxy, the Entity identified by '%s' "
                                                                 + "disappeared from the Datastore.", key));
         }
