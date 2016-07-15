@@ -16,10 +16,8 @@
 
 package org.mongodb.morphia;
 
+import com.mongodb.DBRef;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryException;
-import org.mongodb.morphia.query.ValidationException;
 
 /**
  * Defines a reference to a mapped entity.  This class is the replacement for annotating referenced entities with {@link Reference} and
@@ -28,35 +26,17 @@ import org.mongodb.morphia.query.ValidationException;
  * @param <T> the type of the entity referenced
  */
 public final class MorphiaReference<T> {
-    private Object id;
-    private String type;
-    private String collection;
+    private DBRef dbRef;
 
     private transient T entity;
     private transient Class<?> typeClass;
 
-    private MorphiaReference() {
+    MorphiaReference() {
     }
 
-    static <T> MorphiaReference<T> toEntity(final T entity, final Datastore datastore) {
-        MorphiaReference<T> ref = new MorphiaReference<T>();
-        ref.entity = entity;
-        ref.typeClass = entity.getClass();
-        ref.type = entity.getClass().getName();
-        Object id = datastore.getKey(entity).getId();
-        ref.id = id;
-        if (id == null) {
-            throw new ValidationException("The referenced entity has no ID.  Please save the entity first.");
-        }
-
-        return ref;
-    }
-
-    static <T> MorphiaReference<T> toEntity(final T entity, final String collection, final Datastore datastore) {
-        MorphiaReference<T> ref = toEntity(entity, datastore);
-        ref.collection = collection;
-
-        return ref;
+    public MorphiaReference(final Object id, final String collection, final T entity) {
+        dbRef = new DBRef(collection, id);
+        this.entity = entity;
     }
 
     /**
@@ -65,22 +45,7 @@ public final class MorphiaReference<T> {
      * @return the collection name
      */
     public String getCollection() {
-        return collection;
-    }
-
-    /**
-     * @return the id of the referenced entity
-     */
-    public Object getId() {
-        return id;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + (collection != null ? collection.hashCode() : 0);
-        return result;
+        return dbRef.getCollectionName();
     }
 
     @Override
@@ -94,36 +59,24 @@ public final class MorphiaReference<T> {
 
         final MorphiaReference<?> that = (MorphiaReference<?>) o;
 
-        if (!id.equals(that.id)) {
-            return false;
-        }
-        if (!type.equals(that.type)) {
-            return false;
-        }
-        return collection != null ? collection.equals(that.collection) : that.collection == null;
+        return dbRef.equals(that.dbRef);
 
     }
 
-    private Class<?> getTypeClass() throws ClassNotFoundException {
-        if (typeClass == null) {
-            typeClass = Class.forName(type);
-        }
-        return typeClass;
+    public DBRef getDBRef() {
+        return dbRef;
     }
 
-    @SuppressWarnings("unchecked")
-    T fetch(final Datastore datastore) {
-        if (entity == null) {
-            try {
-                Query<?> query = collection != null
-                                 ? ((AdvancedDatastore) datastore).createQuery(collection, getTypeClass())
-                                 : datastore.createQuery(getTypeClass());
-                entity = (T) query.field("_id").equal(id).get();
-            } catch (ClassNotFoundException e) {
-                throw new QueryException("No class definition could be found for " + type, e);
-            }
-        }
-
+    T getEntity() {
         return entity;
+    }
+
+    void setEntity(final T entity) {
+        this.entity = entity;
+    }
+
+    @Override
+    public int hashCode() {
+        return dbRef.hashCode();
     }
 }

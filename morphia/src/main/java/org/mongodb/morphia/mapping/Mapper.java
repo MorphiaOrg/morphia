@@ -20,6 +20,7 @@ import org.bson.BasicBSONEncoder;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.EntityInterceptor;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.MorphiaReference;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.NotSaved;

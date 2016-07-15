@@ -42,7 +42,7 @@ public class CompoundIdTest extends TestBase {
         getDs().save(entity);
         entity = getDs().get(entity);
         Assert.assertEquals("test", entity.id.getName());
-        Assert.assertNotNull(entity.id.getId());
+        Assert.assertNotNull(entity.id.getValue());
     }
 
     @Test

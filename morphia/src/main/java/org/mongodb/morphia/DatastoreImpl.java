@@ -47,6 +47,7 @@ import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
+import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.utils.ReflectionUtils;
@@ -1674,7 +1675,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> MorphiaReference<T> referenceTo(final T entity) {
-        return MorphiaReference.toEntity(entity, this);
+        return referenceTo(getCollection(entity).getName(), entity);
     }
 
     @Override
@@ -1688,7 +1689,13 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> MorphiaReference<T> referenceTo(final String collection, final T entity) {
-        return MorphiaReference.toEntity(entity, collection, this);
+        Object id = getKey(entity).getId();
+        if (id == null) {
+            throw new ValidationException("The referenced entity has no ID.  Please save the entity first.");
+        }
+        id = getMapper().toDBObject(id);
+
+        return new MorphiaReference<T>(id, collection, entity);
     }
 
     @Override
@@ -1701,7 +1708,25 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T fetch(final MorphiaReference<T> reference) {
-        return reference.fetch(this);
+        T entity = reference.getEntity();
+        DBRef dbRef = reference.getDBRef();
+        if (reference.getEntity() == null) {
+            Object id = dbRef.getId();
+            if (id instanceof DBObject) {
+                ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+            }
+            entity = (T) createQuery(dbRef.getCollectionName(), null)
+                .field("_id").equal(id)
+                .get();
+            reference.setEntity(entity);
+            if (entity == null) {
+                throw new QueryException(format("Could find an entity matching the ID '%s' in the collection '%s'",
+                                                id, dbRef.getCollectionName()));
+            }
+        }
+
+        return entity;
     }
 }

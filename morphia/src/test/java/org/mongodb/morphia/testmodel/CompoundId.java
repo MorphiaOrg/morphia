@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 @Embedded
 public class CompoundId implements Serializable {
-    private ObjectId id;
+    private ObjectId value;
     private String name;
 
     CompoundId() {
@@ -31,11 +31,11 @@ public class CompoundId implements Serializable {
 
     public CompoundId(final String n) {
         name = n;
-        id = new ObjectId();
+        value = new ObjectId();
     }
 
-    public ObjectId getId() {
-        return id;
+    public ObjectId getValue() {
+        return value;
     }
 
     public String getName() {
@@ -44,7 +44,7 @@ public class CompoundId implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
+        int result = value.hashCode();
         result = 31 * result + name.hashCode();
         return result;
     }
@@ -55,7 +55,7 @@ public class CompoundId implements Serializable {
             return false;
         }
         final CompoundId other = ((CompoundId) obj);
-        return other.id.equals(id) && other.name.equals(name);
+        return other.value.equals(value) && other.name.equals(name);
     }
 
 }
