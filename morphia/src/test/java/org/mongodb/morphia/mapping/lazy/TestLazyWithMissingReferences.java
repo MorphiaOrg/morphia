@@ -80,7 +80,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         }
     }
 
-    class Target {
+    static class Target {
         @Id
         private ObjectId id = new ObjectId();
         private String foo = "bar";
