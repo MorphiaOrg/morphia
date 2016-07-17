@@ -1,7 +1,12 @@
 package org.mongodb.morphia.query;
 
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Bytes;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.ReadPreference;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;

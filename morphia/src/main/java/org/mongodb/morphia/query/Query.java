@@ -267,8 +267,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> order(String sort);
 
     /**
-     * Sorts based on a meta data (defines return order).  Examples:
-     *
+     * Sorts based on a metadata (defines return order). Example:
+     * {@code order(Meta.textScore())}  ({textScore : { $meta: "textScore" }})
      * @param sort the sort order to apply
      * @return this
      */
@@ -298,9 +298,9 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> project(String field, ArraySlice slice);
 
     /**
-     * Adds an meta field to a projection.
+     * Adds a metadata field to a projection.
      *
-     * @param meta the options for projecting
+     * @param meta the metadata option for projecting
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @mongodb.driver.manual reference/operator/aggregation/meta/ $meta
