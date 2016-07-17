@@ -1,12 +1,7 @@
 package org.mongodb.morphia.query;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.Bytes;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.ReadPreference;
+import com.mongodb.*;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -457,6 +452,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public Query<T> order(final Meta sort) {
+        if (snapshotted) {
+            throw new QueryException("order cannot be used on a snapshotted query.");
+        }
+        final StringBuilder sb = new StringBuilder(sort.getField());
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
+        this.sort = (BasicDBObject) sort.toDatabase();
+
+        return this;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public Query<T> queryNonPrimary() {
         readPref = ReadPreference.secondary();
@@ -499,6 +506,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         validateProjections(fieldName, true);
         projections.put(fieldName, slice.toDatabase());
         return this;
+    }
+
+    @Override
+    public Query<T> project(final Meta meta) {
+        final StringBuilder sb = new StringBuilder(meta.getField());
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+        String fieldName = sb.toString();
+        validateProjections(fieldName, true);
+        projections.putAll(meta.toDatabase());
+        return this;
+
     }
 
     private void validateProjections(final String field, final boolean include) {
