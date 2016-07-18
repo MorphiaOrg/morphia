@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 class EmbeddedMapper implements CustomMapper {
-    public static boolean shouldSaveClassName(final Object rawVal, final Object convertedVal, final MappedField mf) {
+    static boolean shouldSaveClassName(final Object rawVal, final Object convertedVal, final MappedField mf) {
         if (rawVal == null || mf == null) {
             return true;
         }
@@ -109,7 +109,7 @@ class EmbeddedMapper implements CustomMapper {
     @SuppressWarnings("unchecked")
     private void readCollection(final Datastore datastore, final Mapper mapper, final Object entity, final EntityCache cache,
                                 final MappedField mf, final DBObject dbObject) {
-        Collection values = null;
+        Collection values;
 
         final Object dbVal = mf.getDbObjectValue(dbObject);
         if (dbVal != null) {
@@ -158,40 +158,42 @@ class EmbeddedMapper implements CustomMapper {
     @SuppressWarnings("unchecked")
     private void readMap(final Datastore datastore, final Mapper mapper, final Object entity, final EntityCache cache,
                          final MappedField mf, final DBObject dbObject) {
-        final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
-
         final DBObject dbObj = (DBObject) mf.getDbObjectValue(dbObject);
 
-        final EphemeralMappedField ephemeralMappedField = isMapOrCollection(mf)
-                                                          ? new EphemeralMappedField((ParameterizedType) mf.getSubType(), mf, mapper)
-                                                          : null;
-        new IterHelper<Object, Object>().loopMap(dbObj, new MapIterCallback<Object, Object>() {
-            @Override
-            public void eval(final Object k, final Object val) {
-                Object newEntity = null;
+        if (dbObj != null) {
+            final Map map = mapper.getOptions().getObjectFactory().createMap(mf);
 
-                //run converters
-                if (val != null) {
-                    if (mapper.getConverters().hasSimpleValueConverter(mf)
-                        || mapper.getConverters().hasSimpleValueConverter(mf.getSubClass())) {
-                        newEntity = mapper.getConverters().decode(mf.getSubClass(), val, mf);
-                    } else {
-                        if (val instanceof DBObject) {
-                            newEntity = readMapOrCollectionOrEntity(datastore, mapper, cache, mf, ephemeralMappedField, (DBObject) val);
+            final EphemeralMappedField ephemeralMappedField = isMapOrCollection(mf)
+                                                              ? new EphemeralMappedField((ParameterizedType) mf.getSubType(), mf, mapper)
+                                                              : null;
+            new IterHelper<Object, Object>().loopMap(dbObj, new MapIterCallback<Object, Object>() {
+                @Override
+                public void eval(final Object k, final Object val) {
+                    Object newEntity = null;
+
+                    //run converters
+                    if (val != null) {
+                        if (mapper.getConverters().hasSimpleValueConverter(mf)
+                            || mapper.getConverters().hasSimpleValueConverter(mf.getSubClass())) {
+                            newEntity = mapper.getConverters().decode(mf.getSubClass(), val, mf);
                         } else {
-                            newEntity = val;
+                            if (val instanceof DBObject) {
+                                newEntity = readMapOrCollectionOrEntity(datastore, mapper, cache, mf, ephemeralMappedField, (DBObject) val);
+                            } else {
+                                newEntity = val;
+                            }
+
                         }
-
                     }
+
+                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), k, mf);
+                    map.put(objKey, newEntity);
                 }
+            });
 
-                final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), k, mf);
-                map.put(objKey, newEntity);
+            if (!map.isEmpty() || mapper.getOptions().isStoreEmpties()) {
+                mf.setFieldValue(entity, map);
             }
-        });
-
-        if (!map.isEmpty() || mapper.getOptions().isStoreEmpties()) {
-            mf.setFieldValue(entity, map);
         }
     }
 
