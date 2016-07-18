@@ -28,7 +28,7 @@ task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
     }
     exec {
         workingDir referencePage
-        commandLine "/usr/local/bin/git"
+        commandLine "git"
         args("add", ".")
     }
 }
