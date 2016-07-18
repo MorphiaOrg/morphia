@@ -2,10 +2,28 @@ def urlVersion = version.split('\\.')[0..1].join('.')
 def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 def ghPages = file("build/gh-pages")
 
+ext.hugo = find('hugo')
+ext.git = find('git')
+
+def find(executable) {
+    def list = ['/usr/local/bin/', 'usr/bin/']
+    list.findResult {
+        def exec = file(it + executable)
+        if(exec.exists()) {
+            exec.absolutePath
+        }
+    }
+}
+
+task showExecutables << {
+    println "hugo = $hugo"
+    println "git = $git"
+}
+
 def gitVersion() {
     def stdOut = new ByteArrayOutputStream()
     exec {
-        commandLine "git", "rev-parse", "--abbrev-ref", "HEAD"
+        commandLine git, "rev-parse", "--abbrev-ref", "HEAD"
         standardOutput = stdOut
         ignoreExitValue = true
     }
@@ -28,7 +46,7 @@ task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
     }
     exec {
         workingDir referencePage
-        commandLine "git"
+        commandLine git
         args("add", ".")
     }
 }
@@ -42,7 +60,7 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
     exec {
         workingDir ghPages
         environment System.getenv()
-        commandLine "git"
+        commandLine git
         args("add", ".")
     }
 }
@@ -51,13 +69,14 @@ task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
     exec {
         workingDir ghPages
         environment System.getenv()
-        commandLine "git"
+        commandLine git
+        ignoreExitValue true
         args("commit", "-a", "-m", "pushing docs updates")
     }
     exec {
         workingDir ghPages
         environment System.getenv()
-        commandLine "git"
+        commandLine git
         args("push")
     }
 
@@ -67,7 +86,7 @@ task landing << {
     exec {
         workingDir 'docs/landing'
         environment System.getenv()
-        commandLine 'hugo'
+        commandLine hugo
     }
 }
 
@@ -78,7 +97,7 @@ task reference(dependsOn: ':morphia:javadoc') << {
     exec {
         workingDir 'docs/reference'
         environment System.getenv()
-        commandLine 'hugo'
+        commandLine hugo
     }
     copy {
         from 'morphia/build/docs'
@@ -127,7 +146,7 @@ task clonePages << {
         exec {
             workingDir rootDir
             environment System.getenv()
-            commandLine "git"
+            commandLine git
             args("config", "--get", "remote.origin.url")
             standardOutput = stream
         }
@@ -137,7 +156,7 @@ task clonePages << {
         exec {
             workingDir 'build'
             environment System.getenv()
-            commandLine "git"
+            commandLine git
             args("clone", url, "-b", "gh-pages", "gh-pages")
         }
     } else {
@@ -145,7 +164,7 @@ task clonePages << {
         exec {
             workingDir 'build/gh-pages'
             environment System.getenv()
-            commandLine "git"
+            commandLine git
             args("pull")
         }
 
