@@ -694,7 +694,7 @@ class BankAccountWatcher{
 
 &lt;h2 id=&#34;morphia-documentation&#34;&gt;Morphia Documentation&lt;/h2&gt;
 
-&lt;p&gt;Welcome to the Morphia documentation hub.&lt;/p&gt;
+&lt;p&gt;Welcome to the Morphia documentation.&lt;/p&gt;
 
 &lt;p&gt;Morphia is built upon the
 &lt;a href=&#34;https://github.com/mongodb/mongo-java-driver/&#34;&gt;&lt;code&gt;MongoDB Java Driver&lt;/code&gt;&lt;/a&gt;.
