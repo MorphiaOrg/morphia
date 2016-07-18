@@ -267,6 +267,14 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> order(String sort);
 
     /**
+     * Sorts based on a metadata (defines return order). Example:
+     * {@code order(Meta.textScore())}  ({textScore : { $meta: "textScore" }})
+     * @param sort the sort order to apply
+     * @return this
+     */
+    Query<T> order(Meta sort);
+
+    /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
      * be inclusions or exclusions.  You can not include and exclude fields at the same time with the exception of the _id field.  The
      * _id field is always included unless explicitly suppressed.
@@ -288,6 +296,16 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
      */
     Query<T> project(String field, ArraySlice slice);
+
+    /**
+     * Adds a metadata field to a projection.
+     *
+     * @param meta the metadata option for projecting
+     * @return this
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     * @mongodb.driver.manual reference/operator/aggregation/meta/ $meta
+     */
+    Query<T> project(Meta meta);
 
     /**
      * Route query to non-primary node

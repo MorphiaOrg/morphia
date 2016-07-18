@@ -70,6 +70,66 @@ public class TestTextSearching extends TestBase {
                                       .asList().size());
     }
 
+
+    @Test
+    public void testTextSearchWithMeta() {
+        getMorphia().map(Book.class);
+        getDs().ensureIndexes();
+
+        getDs().save(new Book("The Banquet", "Dante"),
+                new Book("Divine Comedy", "Dante"),
+                new Book("Eclogues", "Dante"),
+                new Book("The Odyssey", "Homer"),
+                new Book("Iliad", "Homer"));
+
+        List<Book> books = getDs().createQuery(Book.class)
+                .search("Dante").project(Meta.textScore("score"))
+                .order(Meta.textScore("score"))
+                .asList();
+        Assert.assertEquals(3, books.size());
+        for(Book book : books) {
+            Assert.assertEquals("Dante", book.author);
+            Assert.assertTrue(book.score > 0);
+        }
+    }
+
+    @Test
+    public void testTextSearchSorting() {
+        getMorphia().map(Book.class);
+        getDs().ensureIndexes();
+
+        getDs().save(new Book("The Banquet", "Dante"),
+                new Book("Divine Comedy", "Dante"),
+                new Book("Eclogues", "Dante"),
+                new Book("The Odyssey", "Homer"),
+                new Book("Iliad", "Homer"));
+
+        List<Book> books = getDs().createQuery(Book.class)
+                .search("Dante Comedy").project(Meta.textScore("score"))
+                .order(Meta.textScore("score"))
+                .asList();
+        Assert.assertEquals(3, books.size());
+        Assert.assertEquals("Divine Comedy", books.get(0).title);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void testTextSearchValidationFailed() {
+        getMorphia().map(Book.class);
+        getDs().ensureIndexes();
+
+        getDs().save(new Book("The Banquet", "Dante"),
+                new Book("Divine Comedy", "Dante"),
+                new Book("Eclogues", "Dante"),
+                new Book("The Odyssey", "Homer"),
+                new Book("Iliad", "Homer"));
+
+        List<Book> books = getDs().createQuery(Book.class)
+                .search("Dante").project(Meta.textScore())
+                .order(Meta.textScore("score"))
+                .asList();
+        Assert.fail("ValidationException expected!");
+    }
+
     @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
     public static class Greeting {
         @Id
@@ -83,6 +143,24 @@ public class TestTextSearching extends TestBase {
         public Greeting(final String value, final String language) {
             this.language = language;
             this.value = value;
+        }
+    }
+
+    @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
+    private static class Book {
+        @Id
+        private ObjectId id;
+        private String title;
+        private String author;
+        //field is used for textScore sorting
+        private Double score;
+
+        public Book() {
+        }
+
+        public Book(final String title, final String author) {
+            this.author = author;
+            this.title = title;
         }
     }
 }
