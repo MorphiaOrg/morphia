@@ -391,3 +391,9 @@ code {
   background-color: #ddd;
   color: #494747;
 }
+
+.development {
+    font-style: oblique;
+    background-color: lightgrey !important;
+    color: darkgrey !important;
+}
