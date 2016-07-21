@@ -151,7 +151,7 @@ def gitVersion() {
 }
 
 def find(executable) {
-    def list = ['/usr/local/bin/', 'usr/bin/']
+    def list = ['/usr/local/bin/', '/usr/bin/']
     list.findResult {
         def exec = file(it + executable)
         if(exec.exists()) {
