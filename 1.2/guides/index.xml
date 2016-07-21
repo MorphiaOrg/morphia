@@ -82,8 +82,8 @@ this annotation looks like this:&lt;/p&gt;
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To see the next few annotations in context, please refer to &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
-&#34;&gt;TestIndexCollections.java&lt;/a&gt; or &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
+&lt;p&gt;To see the next few annotations in context, please refer to &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
+&#34;&gt;TestIndexCollections.java&lt;/a&gt; or &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
 &#34;&gt;TestIndexed.java&lt;/a&gt; in the Morphia source.&lt;/p&gt;
 
 &lt;h3 id=&#34;index&#34;&gt;Index&lt;/h3&gt;
@@ -605,7 +605,7 @@ convert your data from one form to another.  This guide will not go in to the de
  MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this
  guide will
- focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+ focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
 &#34;&gt;tests&lt;/a&gt; in Morphia itself.&lt;/p&gt;
 
 &lt;p&gt;Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the &lt;code&gt;Datastore&lt;/code&gt;:&lt;/p&gt;
@@ -936,7 +936,7 @@ like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{ price: { $gte: 1000 } }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The list of supported filter operations can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
+&lt;p&gt;The list of supported filter operations can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
 &#34;&gt;FilterOperator&lt;/a&gt; class.&lt;/p&gt;
 
 &lt;table&gt;
@@ -1082,7 +1082,7 @@ like this:&lt;/p&gt;
 &lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
-returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
+returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
 &#34;&gt;class&lt;/a&gt; providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  &lt;code&gt;filter()&lt;/code&gt; can be.  To perform the same query as above, you&amp;rsquo;d write this:&lt;/p&gt;
@@ -1144,7 +1144,7 @@ public static class Greeting {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The &lt;code&gt;$**&lt;/code&gt; value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
 &#34;&gt;test&lt;/a&gt; does:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;morphia.map(Greeting.class);
@@ -1178,7 +1178,7 @@ the query results in different ways.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 &#34;&gt;unit tests&lt;/a&gt;, this is an example of this feature in action:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ContainsRenamedFields user = new ContainsRenamedFields(&amp;quot;Frank&amp;quot;, &amp;quot;Zappa&amp;quot;);
@@ -1246,7 +1246,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 &lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
 &#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
 are added to the collection that match your query, they&amp;rsquo;ll be returned by the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-&#34;&gt;tailable cursor&lt;/a&gt;.  An example of this feature in action can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+&#34;&gt;tailable cursor&lt;/a&gt;.  An example of this feature in action can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 &#34;&gt;unit tests&lt;/a&gt; in the &lt;code&gt;testTailableCursors()&lt;/code&gt; test:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;getMorphia().map(CappedPic.class);
