@@ -462,7 +462,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             throw new QueryException("order cannot be used on a snapshotted query.");
         }
         final StringBuilder sb = new StringBuilder(sort.getField());
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", false, false);
         this.sort = (BasicDBObject) sort.toDatabase();
 
         return this;
@@ -516,7 +516,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public Query<T> project(final Meta meta) {
         final StringBuilder sb = new StringBuilder(meta.getField());
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
+        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, false, false);
         String fieldName = sb.toString();
         validateProjections(fieldName, true);
         projections.putAll(meta.toDatabase());

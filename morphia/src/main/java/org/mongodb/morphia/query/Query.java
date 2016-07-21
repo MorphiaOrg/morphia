@@ -303,7 +303,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param meta the metadata option for projecting
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     * @mongodb.driver.manual reference/operator/aggregation/meta/ $meta
+     * @mongodb.driver.manual reference/operator/projection/meta/ $meta
      */
     Query<T> project(Meta meta);
 

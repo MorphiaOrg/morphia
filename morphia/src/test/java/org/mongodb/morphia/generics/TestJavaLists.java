@@ -20,13 +20,33 @@ import com.mongodb.BasicDBObject;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 import java.util.List;
-import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TestJavaLists extends TestBase {
+    @Test
+    public void emptyModel() {
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        getMorphia().getMapper().getOptions().setStoreNulls(false);
+
+        TestEmptyModel model = new TestEmptyModel();
+        model.text = "text";
+        model.wrapped = new TestEmptyModel.Wrapped();
+        model.wrapped.text = "textWrapper";
+        getDs().save(model);
+        TestEmptyModel model2 = getDs().createQuery(TestEmptyModel.class).filter("id", model.id).get();
+        assertNull(model.wrapped.others);
+        assertNull(model2.wrapped.others);
+    }
+
     @Test
     public void jsonObjects() {
         getMorphia().map(JsonList.class);
@@ -35,8 +55,56 @@ public class TestJavaLists extends TestBase {
         populate(new BasicDBObject(Document.parse("{\"jsonList\" : [ {  \"foo\" : \"bar\" }],}")));
     }
 
+    @Test
+    public void mapperTest() {
+        getMorphia().map(Employee.class);
+
+        for (boolean nulls : new boolean[]{true, false}) {
+            for (boolean empties : new boolean[]{true, false}) {
+                getMorphia().getMapper().getOptions().setStoreNulls(nulls);
+                getMorphia().getMapper().getOptions().setStoreEmpties(empties);
+                empties();
+            }
+        }
+    }
+
+    private void empties() {
+        Datastore ds = getDs();
+        ds.delete(ds.createQuery(Employee.class));
+        Employee employee = new Employee();
+        employee.byteList = asList((byte) 1, (byte) 2);
+        ds.save(employee);
+
+        Employee loaded = ds.createQuery(Employee.class).get();
+
+        assertEquals(employee.byteList, loaded.byteList);
+        assertNull(loaded.floatList);
+    }
+
     private void populate(final BasicDBObject jsonObject) {
         getMorphia().fromDBObject(null, JsonList.class, jsonObject);
+    }
+
+    @Entity
+    static class TestEmptyModel {
+        @Id
+        private ObjectId id;
+        private String text;
+        private Wrapped wrapped;
+
+        private static class Wrapped {
+            private List<Wrapped> others;
+            private String text;
+        }
+    }
+
+    @Entity("employees")
+    static class Employee {
+        @Id
+        private ObjectId id;
+
+        private List<Float> floatList;
+        private List<Byte> byteList;
     }
 }
 
@@ -44,5 +112,5 @@ class JsonList {
     @Id
     private ObjectId id;
     private List<Object> jsonList;
-    private Map<String, Object> jsonObject;
+    private List<Object> jsonObject;
 }

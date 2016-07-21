@@ -10,7 +10,6 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.testutil.TestEntity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,13 +37,28 @@ public class TestJavaMaps extends TestBase {
         Employee employee = new Employee();
         HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
         byteMap.put("b", (byte) 1);
-        employee.setByteMap(byteMap);
+        employee.byteMap = byteMap;
         ds.save(employee);
 
         Employee loaded = ds.createQuery(Employee.class).get();
 
-        assertEquals(Byte.valueOf((byte) 1), loaded.getByteMap().get("b"));
-        assertNull(loaded.getFloatMap());
+        assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
+        assertNull(loaded.floatMap);
+    }
+
+    @Test
+    public void emptyModel() {
+        getMorphia().getMapper().getOptions().setStoreEmpties(true);
+        getMorphia().getMapper().getOptions().setStoreNulls(false);
+
+        TestEmptyModel model = new TestEmptyModel();
+        model.text = "text";
+        model.wrapped = new TestEmptyModel.Wrapped();
+        model.wrapped.text = "textWrapper";
+        getDs().save(model);
+        TestEmptyModel model2 = getDs().createQuery(TestEmptyModel.class).filter("id", model.id).get();
+        Assert.assertNull(model.wrapped.others);
+        Assert.assertNull(model2.wrapped.others);
     }
 
     @Test
@@ -57,48 +71,40 @@ public class TestJavaMaps extends TestBase {
         getDs().save(expectedEntity);
         LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class).get();
         Assert.assertNotNull(storedEntity);
-        Assert.assertEquals(
-            new ArrayList<Integer>(expectedEntity.getLinkedHashMap().keySet()),
-            new ArrayList<Integer>(storedEntity.getLinkedHashMap().keySet()));
+        Assert.assertEquals(expectedEntity.getLinkedHashMap(), storedEntity.getLinkedHashMap());
     }
 
-}
+    @Entity
+    static class TestEmptyModel{
+        @Id
+        private ObjectId id;
+        private String text;
+        private Wrapped wrapped;
 
-@Entity
-class LinkedHashMapTestEntity extends TestEntity {
-    @Embedded(concreteClass = java.util.LinkedHashMap.class)
-    private final Map<Integer, String> linkedHashMap = new LinkedHashMap<Integer, String>();
-
-    public Map<Integer, String> getLinkedHashMap() {
-        return linkedHashMap;
-    }
-}
-
-@Entity("employees")
-class Employee {
-    @Id
-    private ObjectId id;
-
-    private Map<String, Float> floatMap;
-    private Map<String, Byte> byteMap;
-
-    public Map<String, Byte> getByteMap() {
-        return byteMap;
+        private static class Wrapped {
+            private Map<String, Wrapped> others;
+            private String text;
+        }
     }
 
-    public void setByteMap(final Map<String, Byte> byteMap) {
-        this.byteMap = byteMap;
+    @Entity("employees")
+    static class Employee {
+        @Id
+        private ObjectId id;
+
+        private Map<String, Float> floatMap;
+        private Map<String, Byte> byteMap;
     }
 
-    public Map<String, Float> getFloatMap() {
-        return floatMap;
+    @Entity
+    static class LinkedHashMapTestEntity extends TestEntity {
+
+        @Embedded(concreteClass = java.util.LinkedHashMap.class)
+        private final Map<Integer, String> linkedHashMap = new LinkedHashMap<Integer, String>();
+        private Map<Integer, String> getLinkedHashMap() {
+            return linkedHashMap;
+        }
+
     }
 
-    public void setFloatMap(final Map<String, Float> floatMap) {
-        this.floatMap = floatMap;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
 }
