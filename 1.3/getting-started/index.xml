@@ -52,7 +52,7 @@
     &amp;lt;dependency&amp;gt;
         &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
         &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.1&amp;lt;/version&amp;gt;
+        &amp;lt;version&amp;gt;1.3.0-SNAPSHOT&amp;lt;/version&amp;gt;
     &amp;lt;/dependency&amp;gt;
 &amp;lt;/dependencies&amp;gt;
 
@@ -61,14 +61,14 @@
 &lt;section class=&#34;gradle hidden&#34;&gt;
 &lt;pre&gt;&lt;code&gt;
   dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.1&#39;
+      compile &#39;org.mongodb.morphia:morphia:1.3.0-SNAPSHOT&#39;
   }
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/section&gt;
 &lt;section class=&#34;downloadInfo&#34;&gt;
 &lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.1&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.3.0-SNAPSHOT&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
   from sonatype.&lt;/a&gt;
 &lt;/p&gt;
 
