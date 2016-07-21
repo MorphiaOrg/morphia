@@ -1,5 +1,8 @@
 ext.configDir = new File(rootDir, 'config')
 ext.slf4jVersion = '1.7.5'
+ext.git = find('git')
+ext.majorVersion = version.split('\\.').dropRight(1).join('.') + ( gitVersion() == 'master' ? '-SNAPSHOT' : '')
+ext.latest = gitVersion() == 'master' ? version : latest_release
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
@@ -120,7 +123,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
         options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
         options.links 'http://api.mongodb.org/java/3.0/'
-        title "Morphia ${version} API"
+        title "Morphia ${majorVersion} API"
         options.encoding = 'UTF-8'
         options.charSet 'UTF-8'
         options.docEncoding 'UTF-8'
@@ -134,6 +137,27 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {
 
 def buildingWith(n) {
     project.hasProperty(n)
+}
+
+def gitVersion() {
+    def stdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine git, "rev-parse", "--abbrev-ref", "HEAD"
+        standardOutput = stdOut
+        ignoreExitValue = true
+    }
+
+    return stdOut.toString().trim()
+}
+
+def find(executable) {
+    def list = ['/usr/local/bin/', 'usr/bin/']
+    list.findResult {
+        def exec = file(it + executable)
+        if(exec.exists()) {
+            exec.absolutePath
+        }
+    }
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
