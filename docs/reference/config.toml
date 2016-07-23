@@ -4,10 +4,6 @@ title = "Morphia"
 theme = "mongodb"
 canonifyurls = false
 
-[blackfriday]
-  plainIdAnchors = true
-
-# Update versions in mongodb.toml as well
 [[menu.main]]
     name = "API Documentation"
     pre = "<i class='fa fa-file-text-o'></i>"

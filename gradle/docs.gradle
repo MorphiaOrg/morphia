@@ -3,32 +3,10 @@ def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.cont
 def ghPages = file("build/gh-pages")
 
 ext.hugo = find('hugo')
-ext.git = find('git')
-
-def find(executable) {
-    def list = ['/usr/local/bin/', 'usr/bin/']
-    list.findResult {
-        def exec = file(it + executable)
-        if(exec.exists()) {
-            exec.absolutePath
-        }
-    }
-}
 
 task showExecutables << {
     println "hugo = $hugo"
     println "git = $git"
-}
-
-def gitVersion() {
-    def stdOut = new ByteArrayOutputStream()
-    exec {
-        commandLine git, "rev-parse", "--abbrev-ref", "HEAD"
-        standardOutput = stdOut
-        ignoreExitValue = true
-    }
-
-    return stdOut.toString().trim()
 }
 
 def forceLanding() {
@@ -83,6 +61,11 @@ task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
 }
 
 task landing << {
+    def file = file('docs/landing/data/releases.toml')
+    if (!file.text.contains(latest_release)) {
+        throw new TaskExecutionException(it, new Exception("Latest release not listed in $file"))
+    }
+
     exec {
         workingDir 'docs/landing'
         environment System.getenv()
@@ -104,23 +87,20 @@ task reference(dependsOn: ':morphia:javadoc') << {
         into 'docs/reference/public'
     }
 
-    def input = 'docs/reference/config.toml'
-    def temp = input + '.temp'
-    file( temp ).withWriter { w ->
-      file( input ).eachLine { line ->
-        w << (line.startsWith('baseurl = "') ? "baseurl = \"/morphia/${urlVersion}\"" : line) + '\n'
-      }
-    }
-    file(temp).renameTo(file(input))
+    update('docs/reference/content/getting-started/installation-guide.md', [
+            [ '{{< install version', "{{< install version=\"${latest}\" >}}"]
+    ])
 
-    input = 'docs/reference/data/mongodb.toml'
-    temp = input + '.temp'
-    new File( temp ).withWriter { w ->
-      new File( input ).eachLine { line ->
-        w << (line.startsWith('currentVersion = "') ? "currentVersion = \"${formalVersion}\"" : line) + '\n'
-      }
-    }
-    file(temp).renameTo(file(input))
+    update('docs/reference/config.toml', [
+            [ 'baseurl = "', "baseurl = \"/morphia/${urlVersion}\""],
+            [ 'latest = "', "latest = \"${latest}\""]
+    ])
+
+    update('docs/reference/data/mongodb.toml', [
+            ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
+            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
+    ])
+
 /*
     copy {
         from 'docs/reference/config.toml'
@@ -136,6 +116,24 @@ task reference(dependsOn: ':morphia:javadoc') << {
         into 'docs/reference/config.toml'
     }
 */
+}
+
+task viewLanding(dependsOn: 'landing') << {
+    exec {
+        workingDir 'docs/landing'
+        environment System.getenv()
+        commandLine hugo
+        args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+    }
+}
+
+task viewReference(dependsOn: 'reference') << {
+    exec {
+        workingDir 'docs/reference'
+        environment System.getenv()
+        commandLine hugo
+        args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+    }
 }
 
 task clonePages << {
@@ -169,4 +167,17 @@ task clonePages << {
         }
 
     }
+}
+
+def update(input, replacements) {
+    def temp = input + '.temp'
+    file(temp).withWriter { w ->
+        file(input).eachLine { line ->
+            replacements.forEach { replacement ->
+                if (line.startsWith(replacement[0])) line = replacement[1]
+            }
+            w << line + '\n'
+        }
+    }
+    file(temp).renameTo(file(input))
 }

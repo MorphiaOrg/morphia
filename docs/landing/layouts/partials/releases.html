@@ -7,7 +7,7 @@
     {{ range . }}
       <tr>
         <th class="{{.status}}">{{.version}}</th>
-        <td><a href="{{.docs}}" class="reference">Reference</a> &#124; <a href="{{.docs}}/javadoc">API</a></td>
+        <td class="{{.status}}"><a href="{{.docs}}" class="reference">Reference</a> &#124; <a href="{{.docs}}/javadoc">API</a></td>
       </tr>
     {{ end }}
   </tbody>
