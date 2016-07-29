@@ -24,19 +24,17 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.testmodel.CompoundId;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestMorphiaReference extends TestBase {
-
+public class TestObjectIDMorphiaReference extends TestBase {
     @Test
     public void testOldReferencesWithNew() {
-        getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
-        final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
+        getMorphia().map(OldContainer.class, Container.class);
+        final Contained contained = new Contained(new ObjectId(), "contained");
         final List<Contained> list = compoundList();
         getDs().getDB().dropDatabase();
         getDs().save(contained);
@@ -61,11 +59,11 @@ public class TestMorphiaReference extends TestBase {
 
     @Test
     public void testReferenceToDifferentCollection() {
-        getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
-        final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
+        getMorphia().map(OldContainer.class, Container.class);
+        final Contained contained = new Contained(new ObjectId(), "contained");
         final List<Contained> list = compoundList();
         getDs().getDB().dropDatabase();
-        getMorphia().map(Container.class, Contained.class, CompoundId.class);
+        getMorphia().map(Container.class, Contained.class);
         String collection = "somewhereelse";
 
         getAds().save(collection, contained);
@@ -93,8 +91,8 @@ public class TestMorphiaReference extends TestBase {
 
     @Test
     public void testReferences() {
-        getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
-        final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
+        getMorphia().map(OldContainer.class, Container.class);
+        final Contained contained = new Contained(new ObjectId(), "contained");
         final List<Contained> list = compoundList();
         getDs().getDB().dropDatabase();
         getDs().save(contained);
@@ -120,7 +118,7 @@ public class TestMorphiaReference extends TestBase {
     private List<Contained> compoundList() {
         List<Contained> list = new ArrayList<Contained>();
         for (int i = 0; i < 3; i++) {
-                list.add(new Contained(new CompoundId("" + i), "" + i));
+                list.add(new Contained(new ObjectId(), "" + i));
         }
         return list;
     }
@@ -187,14 +185,14 @@ public class TestMorphiaReference extends TestBase {
 
     public static class Contained {
         @Id
-        private CompoundId id;
+        private ObjectId id;
         private String name;
 
         public Contained() {
         }
 
-        public Contained(final CompoundId compoundId, final String name) {
-            id = compoundId;
+        public Contained(final ObjectId ObjectId, final String name) {
+            id = ObjectId;
             this.name = name;
         }
 
@@ -223,4 +221,5 @@ public class TestMorphiaReference extends TestBase {
             return result;
         }
     }
+
 }

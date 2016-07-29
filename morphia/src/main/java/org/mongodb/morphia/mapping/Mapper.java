@@ -843,7 +843,16 @@ public class Mapper {
     }
 
     Object keyToId(final Key key) {
-        return key == null ? null : key.getId();
+        if (key == null) {
+            return null;
+        } else {
+            Object id = key.getId();
+            if (id != null && isMapped(id.getClass())) {
+                id = toMongoObject(id, true);
+            }
+
+            return id;
+        }
     }
 
     /**

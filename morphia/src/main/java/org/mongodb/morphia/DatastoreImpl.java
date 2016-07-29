@@ -1680,6 +1680,9 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> List<MorphiaReference<T>> referenceTo(final List<T> entities) {
+        if (entities == null) {
+            return null;
+        }
         List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
         for (T entity : entities) {
             list.add(referenceTo(entity));
@@ -1689,17 +1692,26 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> MorphiaReference<T> referenceTo(final String collection, final T entity) {
+        if (entity == null) {
+            return null;
+        }
+        MappedClass mappedClass = mapper.getMappedClass(entity);
+        MappedField idField = mappedClass.getMappedIdField();
+        boolean typeMongoCompatible = idField.isTypeMongoCompatible();
         Object id = getKey(entity).getId();
         if (id == null) {
             throw new ValidationException("The referenced entity has no ID.  Please save the entity first.");
         }
-        id = getMapper().toDBObject(id);
+        id = typeMongoCompatible ? id : getMapper().toDBObject(id);
 
         return new MorphiaReference<T>(id, collection, entity);
     }
 
     @Override
     public <T> List<MorphiaReference<T>> referenceTo(final String collection, final List<T> entities) {
+        if (entities == null) {
+            return null;
+        }
         List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
         for (T entity : entities) {
             list.add(referenceTo(collection, entity));
@@ -1710,6 +1722,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T fetch(final MorphiaReference<T> reference) {
+        if (reference == null) {
+            return null;
+        }
         T entity = reference.getEntity();
         DBRef dbRef = reference.getDBRef();
         if (reference.getEntity() == null) {

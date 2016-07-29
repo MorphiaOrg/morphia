@@ -31,9 +31,6 @@ public final class MorphiaReference<T> {
     private transient T entity;
     private transient Class<?> typeClass;
 
-    MorphiaReference() {
-    }
-
     public MorphiaReference(final Object id, final String collection, final T entity) {
         dbRef = new DBRef(collection, id);
         this.entity = entity;
@@ -67,7 +64,7 @@ public final class MorphiaReference<T> {
         return dbRef;
     }
 
-    T getEntity() {
+    public T getEntity() {
         return entity;
     }
 
