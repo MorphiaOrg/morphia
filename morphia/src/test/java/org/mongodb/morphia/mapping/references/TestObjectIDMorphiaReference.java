@@ -16,6 +16,7 @@
 
 package org.mongodb.morphia.mapping.references;
 
+import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -112,6 +113,41 @@ public class TestObjectIDMorphiaReference extends TestBase {
         Assert.assertEquals(container.map, fetched.map);
         for (int i = 0; i < fetched.references.size(); i++) {
             Assert.assertEquals(getDs().fetch(container.references.get(i)), getDs().fetch(fetched.references.get(i)));
+        }
+    }
+
+    @Test
+    public void testIdOnlyReferences() {
+        getMorphia().map(OldContainer.class, Container.class);
+        final Contained contained = new Contained(new ObjectId(), "contained");
+        final List<Contained> list = compoundList();
+        getDs().getDB().dropDatabase();
+        getDs().save(contained);
+        getDs().save(list);
+
+        Container container = new Container();
+
+        container.idOnly = getDs().referenceTo(contained).idOnly(true);
+        container.idsOnly = getDs().referenceTo(list);
+        for (MorphiaReference<Contained> reference : container.idsOnly) {
+            reference.idOnly(true);
+        }
+        getDs().save(container);
+
+        DBObject one = getDs().getCollection(Container.class).findOne();
+        Assert.assertTrue(one.get("idOnly") instanceof ObjectId);
+        Object idsOnly = one.get("idsOnly");
+        Assert.assertTrue(idsOnly instanceof List);
+        for (Object o : (List) idsOnly) {
+            Assert.assertTrue(o instanceof ObjectId);
+        }
+
+        Container fetched = getDs().createQuery(Container.class).get();
+        Assert.assertEquals(container.idOnly, fetched.idOnly);
+
+        Assert.assertEquals(contained, getDs().fetch(fetched.idOnly));
+        for (int i = 0; i < fetched.idsOnly.size(); i++) {
+            Assert.assertEquals(getDs().fetch(container.idsOnly.get(i)), getDs().fetch(fetched.idsOnly.get(i)));
         }
     }
 

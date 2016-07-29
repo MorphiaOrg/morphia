@@ -27,6 +27,7 @@ import org.mongodb.morphia.annotations.Reference;
  */
 public final class MorphiaReference<T> {
     private DBRef dbRef;
+    private boolean idOnly = false;
 
     private transient T entity;
     private transient Class<?> typeClass;
@@ -34,6 +35,15 @@ public final class MorphiaReference<T> {
     public MorphiaReference(final Object id, final String collection, final T entity) {
         dbRef = new DBRef(collection, id);
         this.entity = entity;
+    }
+
+    public boolean isIdOnly() {
+        return idOnly;
+    }
+
+    public MorphiaReference<T> idOnly(final boolean idOnly) {
+        this.idOnly = idOnly;
+        return this;
     }
 
     /**
@@ -56,8 +66,22 @@ public final class MorphiaReference<T> {
 
         final MorphiaReference<?> that = (MorphiaReference<?>) o;
 
-        return dbRef.equals(that.dbRef);
+        if (idOnly != that.idOnly) {
+            return false;
+        }
+        if (dbRef != null ? !dbRef.equals(that.dbRef) : that.dbRef != null) {
+            return false;
+        }
+        return typeClass != null ? typeClass.equals(that.typeClass) : that.typeClass == null;
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dbRef != null ? dbRef.hashCode() : 0;
+        result = 31 * result + (idOnly ? 1 : 0);
+        result = 31 * result + (typeClass != null ? typeClass.hashCode() : 0);
+        return result;
     }
 
     public DBRef getDBRef() {
@@ -72,8 +96,4 @@ public final class MorphiaReference<T> {
         this.entity = entity;
     }
 
-    @Override
-    public int hashCode() {
-        return dbRef.hashCode();
-    }
 }

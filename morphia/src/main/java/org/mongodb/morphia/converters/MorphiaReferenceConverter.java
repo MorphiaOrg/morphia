@@ -19,26 +19,16 @@ package org.mongodb.morphia.converters;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.mongodb.morphia.MorphiaReference;
-import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
+
+import static java.lang.String.format;
 
 public class MorphiaReferenceConverter extends TypeConverter implements SimpleValueConverter {
 
     protected MorphiaReferenceConverter() {
         super(MorphiaReference.class);
-    }
-
-    @Override
-    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
-        return super.isSupported(c, optionalExtraInfo);
-    }
-
-    @Override
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        return value instanceof MorphiaReference ? ((MorphiaReference) value).getDBRef() : value;
-
     }
 
     @Override
@@ -57,7 +47,25 @@ public class MorphiaReferenceConverter extends TypeConverter implements SimpleVa
             if (fromDBObject instanceof DBObject) {
                 ((DBObject) fromDBObject).removeField(Mapper.CLASS_NAME_FIELDNAME);
             }
-            return new MorphiaReference<Object>(fromDBObject, mappedClass.getCollectionName(), null);
+            return new MorphiaReference<Object>(fromDBObject, mappedClass.getCollectionName(), null).idOnly(true);
         }
+    }
+
+    @Override
+    public Object encode(final Object value, final MappedField mf) {
+        if (value == null) {
+            return null;
+        }
+        if (!(value instanceof MorphiaReference)) {
+            throw new ConverterException(format("Cannot cast %s to MorphiaReference for MappedField: %s", value.getClass(), mf));
+        }
+        MorphiaReference reference = (MorphiaReference) value;
+        return reference.isIdOnly() ? reference.getDBRef().getId() : reference.getDBRef();
+
+    }
+
+    @Override
+    protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
+        return super.isSupported(c, optionalExtraInfo);
     }
 }

@@ -31,14 +31,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestMorphiaReference extends TestBase {
+public class TestCompoundIdMorphiaReference extends TestBase {
 
     @Test
     public void testOldReferencesWithNew() {
         getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
+
         final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
         final List<Contained> list = compoundList();
-        getDs().getDB().dropDatabase();
+
         getDs().save(contained);
         getDs().save(list);
         OldContainer old = new OldContainer();
@@ -64,8 +65,6 @@ public class TestMorphiaReference extends TestBase {
         getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
         final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
         final List<Contained> list = compoundList();
-        getDs().getDB().dropDatabase();
-        getMorphia().map(Container.class, Contained.class, CompoundId.class);
         String collection = "somewhereelse";
 
         getAds().save(collection, contained);
@@ -96,7 +95,6 @@ public class TestMorphiaReference extends TestBase {
         getMorphia().map(OldContainer.class, Container.class, CompoundId.class);
         final Contained contained = new Contained(new CompoundId("I'm an ID!"), "contained");
         final List<Contained> list = compoundList();
-        getDs().getDB().dropDatabase();
         getDs().save(contained);
         getDs().save(list);
 
