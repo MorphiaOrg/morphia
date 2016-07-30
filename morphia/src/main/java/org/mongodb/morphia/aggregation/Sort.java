@@ -1,11 +1,14 @@
 package org.mongodb.morphia.aggregation;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 /**
  * Defines a sort stage in an aggregation pipeline
  *
  * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
  */
-public class Sort {
+public class Sort implements SortElement {
     private final String field;
     private final int direction;
 
@@ -56,5 +59,11 @@ public class Sort {
      */
     public String getField() {
         return field;
+    }
+
+    @Override
+    public DBObject toDBObject() {
+
+        return new BasicDBObject(this.getField(), this.getDirection());
     }
 }

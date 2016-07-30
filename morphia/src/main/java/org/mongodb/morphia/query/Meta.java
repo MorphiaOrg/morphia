@@ -71,7 +71,11 @@ public class Meta {
         return new Meta(MetaDataKeyword.textScore, field);
     }
 
-    DBObject toDatabase() {
+    /**
+     *
+     * @return DBObject representation of Meta object
+     */
+    public DBObject toDatabase() {
         BasicDBObject metaObject = new BasicDBObject(META, metaDataKeyword.getName());
         return new BasicDBObject(field, metaObject);
     }

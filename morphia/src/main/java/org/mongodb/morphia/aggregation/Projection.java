@@ -1,6 +1,10 @@
 package org.mongodb.morphia.aggregation;
 
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,12 +14,14 @@ import java.util.List;
  *
  * @mongodb.driver.manual reference/operator/aggregation/project/ $project
  */
-public final class  Projection {
+public final class  Projection implements ProjectionElement {
 
     private final String target;
     private final String source;
     private List<Projection> projections;
     private List<Object> arguments;
+    private String mappedFieldName;
+
     private boolean suppressed = false;
 
     private Projection(final String field, final String source) {
@@ -197,9 +203,53 @@ public final class  Projection {
         return this;
     }
 
+    void setMappedFieldName(final String mappedFieldName) {
+        this.mappedFieldName = mappedFieldName;
+    }
+
     @Override
     public String toString() {
         return String.format("Projection{projectedField='%s', sourceField='%s', projections=%s, suppressed=%s}",
                              source, target, projections, suppressed);
+    }
+
+    @Override
+    public DBObject toDBObject() {
+        String target = mappedFieldName == null ? this.target : mappedFieldName;
+        if (this.getProjections() != null) {
+            List<Projection> list = this.getProjections();
+            DBObject projections = new BasicDBObject();
+            for (Projection subProjection : list) {
+                projections.putAll(subProjection.toDBObject());
+            }
+            return new BasicDBObject(target, projections);
+        } else if (this.getSource() != null) {
+            return new BasicDBObject(target, this.getSource());
+        } else if (this.getArguments() != null) {
+            if (target == null) {
+                return toExpressionArgs(this.getArguments());
+            } else {
+                return new BasicDBObject(target, toExpressionArgs(this.getArguments()));
+            }
+        } else {
+            return new BasicDBObject(target, this.isSuppressed() ? 0 : 1);
+        }
+    }
+
+    private DBObject toExpressionArgs(final List<Object> args) {
+        BasicDBList result = new BasicDBList();
+        for (Object arg : args) {
+            if (arg instanceof Projection) {
+                Projection projection = (Projection) arg;
+                if (projection.getArguments() != null || projection.getProjections() != null || projection.getSource() != null) {
+                    result.add(projection.toDBObject());
+                } else {
+                    result.add("$" + projection.getTarget());
+                }
+            } else {
+                result.add(arg);
+            }
+        }
+        return result.size() == 1 ? (DBObject) result.get(0) : result;
     }
 }

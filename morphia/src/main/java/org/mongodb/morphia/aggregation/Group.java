@@ -1,5 +1,8 @@
 package org.mongodb.morphia.aggregation;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,7 @@ import static java.util.Arrays.asList;
  *
  * @mongodb.driver.manual reference/operator/aggregation/group/ $group
  */
-public final class Group {
+public final class Group implements GroupElement {
     private final String name;
     private Group nested;
     private List<Projection> projections;
@@ -54,7 +57,7 @@ public final class Group {
      * @param fields the Groups to group
      * @return the Group
      */
-    public static List<Group> id(final Group... fields) {
+    public static List<GroupElement> id(final GroupElement... fields) {
         return asList(fields);
     }
 
@@ -243,5 +246,26 @@ public final class Group {
      */
     public Group getNested() {
         return nested;
+    }
+
+    @Override
+    public DBObject toDBObject() {
+        BasicDBObject dbObject = new BasicDBObject();
+
+        if (this.getAccumulator() != null) {
+            dbObject.put(this.getName(), this.getAccumulator().toDBObject());
+        } else if (this.getProjections() != null) {
+            final BasicDBObject projection = new BasicDBObject();
+            for (Projection p : this.getProjections()) {
+                projection.putAll(p.toDBObject());
+            }
+            dbObject.put(this.getName(), projection);
+        } else if (this.getNested() != null) {
+            dbObject.put(this.getName(), this.getNested().toDBObject());
+        } else {
+            dbObject.put(this.getName(), this.getSourceField());
+        }
+
+        return dbObject;
     }
 }

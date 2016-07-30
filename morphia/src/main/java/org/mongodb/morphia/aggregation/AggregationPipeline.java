@@ -100,7 +100,7 @@ public interface AggregationPipeline {
      * @mongodb.driver.manual reference/operator/aggregation/group $group
      * @see #group(String, Group...)
      */
-    AggregationPipeline group(List<Group> id, Group... groupings);
+    AggregationPipeline group(List<GroupElement> id, Group... groupings);
 
     /**
      * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one
@@ -192,7 +192,7 @@ public interface AggregationPipeline {
      * @return this
      * @mongodb.driver.manual reference/operator/aggregation/project $project
      */
-    AggregationPipeline project(Projection... projections);
+    AggregationPipeline project(ProjectionElement... projections);
 
     /**
      * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For
@@ -212,7 +212,7 @@ public interface AggregationPipeline {
      * @return this
      * @mongodb.driver.manual reference/operator/aggregation/sort $sort
      */
-    AggregationPipeline sort(Sort... sorts);
+    AggregationPipeline sort(SortElement... sorts);
 
     /**
      * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array

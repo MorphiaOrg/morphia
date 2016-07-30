@@ -25,12 +25,12 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.query.Meta;
+import org.mongodb.morphia.utils.IndexType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -449,6 +449,94 @@ public class AggregationTest extends TestBase {
         pipeline.aggregate(User.class);
     }
 
+    @Test
+    public void testGroupByTextScore() {
+        getMorphia().map(Book.class);
+
+        getDs().ensureIndexes();
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                new Book("Divine Comedy", "Dante", 1),
+                new Book("Eclogues", "Dante", 2),
+                new Book("The Odyssey", "Homer", 10),
+                new Book("Some book with Dante in title", "Unknown", 1),
+                new Book("Iliad", "Homer", 10));
+
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
+                .match(getDs().createQuery(Book.class)
+                        .search("Dante Comedy"))
+                .group(id(MetaAggregation.textScore().grouping("score"), grouping("author")), grouping("copies", sum("copies")))
+                .project(
+                        projection("_id").suppress(),
+                        projection("copies"),
+                        projection("author", "_id")
+
+                )
+                .sort(Sort.descending("copies"));
+                        Iterator < Book > aggregate = pipeline.aggregate(Book.class);
+        int actual = 0;
+        int expected = 3;
+        while (aggregate.hasNext()) {
+            actual++;
+            Book book = aggregate.next();
+            if(actual == 1) {
+                // book ("Eclogues", "Dante") and ("The Banquet", "Dante") aggregated
+                Assert.assertEquals(4, book.copies.intValue());
+            }  else {
+                Assert.assertEquals(1, book.copies.intValue());
+            }
+        }
+        Assert.assertEquals(expected, actual);
+        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Assert.assertEquals(obj("$project", obj("_id", 0)
+                        .append("copies", 1)
+                        .append("author", "$_id")
+        ), stages.get(2));
+
+    }
+
+    @Test
+    public void testTextScoreProjection() {
+        getMorphia().map(Book.class);
+
+        getDs().ensureIndexes();
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                new Book("Divine Comedy", "Dante", 1),
+                new Book("Eclogues", "Dante", 2),
+                new Book("The Odyssey", "Homer", 10),
+                new Book("Iliad", "Homer", 10));
+
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
+                .match(getDs().createQuery(Book.class)
+                        .search("Dante Comedy"))
+                .project(
+                        projection("_id").suppress(),
+                        projection("title", "title"),
+                        projection("author", "author"),
+                        projection("copies", "copies"),
+                        MetaAggregation.textScore().project("score")
+
+                )
+                .sort(MetaAggregation.textScore().sort("score"));
+        Iterator<Book> aggregate = pipeline.aggregate(Book.class);
+        int actual = 0;
+        int expected = 3;
+        while (aggregate.hasNext()) {
+            actual++;
+            Book book = aggregate.next();
+            if(actual == 1) {
+                // The first book is "Divine Comedy"
+                Assert.assertEquals(1, book.copies.intValue());
+                Assert.assertEquals("Divine Comedy", book.title);
+                Assert.assertEquals("Dante", book.author);
+            }  else {
+                Assert.assertEquals(2, book.copies.intValue());
+                Assert.assertEquals("Dante", book.author);
+            }
+        }
+        Assert.assertEquals(expected, actual);
+
+    }
+
     private DBObject getDBObject(final DBObject dbObject, final String... path) {
         DBObject current = dbObject;
         for (String step : path) {
@@ -466,6 +554,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity(value = "books", noClassnameStored = true)
+    @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
     private static final class Book {
         @Id
         private ObjectId id;
