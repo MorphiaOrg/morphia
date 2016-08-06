@@ -33,7 +33,7 @@ public class TestTextSearching extends TestBase {
 
         getDs().save(new Greeting("guten Morgen", "german"));
         getDs().save(new Greeting("guten Tag", "german"));
-        getDs().save(new Greeting("guten Nacht", "german"));
+        getDs().save(new Greeting("gute Nacht", "german"));
 
         getDs().save(new Greeting("buenos días", "spanish"));
         getDs().save(new Greeting("buenas tardes", "spanish"));

@@ -156,7 +156,7 @@ datastore.save(new Greeting("good riddance", "english"));
 
 datastore.save(new Greeting("guten Morgen", "german"));
 datastore.save(new Greeting("guten Tag", "german"));
-datastore.save(new Greeting("guten Nacht", "german"));
+datastore.save(new Greeting("gute Nacht", "german"));
 
 List<Greeting> good = datastore.createQuery(Greeting.class)
                              .search("good")
