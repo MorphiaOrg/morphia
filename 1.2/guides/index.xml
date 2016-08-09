@@ -1169,31 +1169,26 @@ ops = datastore
 datastore.update(updateQuery, ops);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;push-addtoset&#34;&gt;push()/addToSet()&lt;/h3&gt;
+&lt;h3 id=&#34;add-addall&#34;&gt;add()/addAll()&lt;/h3&gt;
 
-&lt;p&gt;&lt;code&gt;push()&lt;/code&gt; is used to add a value to an array field:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
-    .createUpdateOperations(Hotel.class)
-    .push(&amp;quot;roomNumbers&amp;quot;, 11);
-datastore.update(updateQuery, ops);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will issue a &lt;code&gt;$push&lt;/code&gt; operation adding &lt;code&gt;11&lt;/code&gt; to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use &lt;code&gt;addToSet()&lt;/code&gt; instead:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;add()&lt;/code&gt; is used to add a value to an array field:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
     .createUpdateOperations(Hotel.class)
-    .addToSet(&amp;quot;roomNumbers&amp;quot;, 11);
+    .add(&amp;quot;roomNumbers&amp;quot;, 11);
 datastore.update(updateQuery, ops);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;code&gt;push()&lt;/code&gt; and &lt;code&gt;addToSet()&lt;/code&gt; can take either single values or a &lt;code&gt;List&lt;/code&gt; of values.  The &lt;code&gt;push()&lt;/code&gt; methods can also optionally take a
-&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/query/PushOptions.html
-&#34;&gt;&lt;code&gt;PushOptions&lt;/code&gt;&lt;/a&gt; instance allowing for tweaking how the values are added to the
-list.  See &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
-&#34;&gt;the manual&lt;/a&gt; for more information about the various modifiers
-available.&lt;/p&gt;
+&lt;p&gt;This will issue a &lt;code&gt;$addToSet&lt;/code&gt; operation adding &lt;code&gt;11&lt;/code&gt; to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded &lt;code&gt;add()&lt;/code&gt; that takes a boolean instead:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&amp;quot;roomNumbers&amp;quot;, 11, true);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;addAll()&lt;/code&gt; takes a &lt;code&gt;List&lt;/code&gt; of values and behaves similarly.&lt;/p&gt;
 
 &lt;h3 id=&#34;removefirst-removelast-removeall&#34;&gt;removeFirst()/removeLast()/removeAll()&lt;/h3&gt;
 

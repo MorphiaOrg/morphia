@@ -1056,31 +1056,26 @@ ops = datastore
 datastore.update(updateQuery, ops);
 </code></pre>
 
-<h3 id="push-addtoset">push()/addToSet()</h3>
+<h3 id="add-addall">add()/addAll()</h3>
 
-<p><code>push()</code> is used to add a value to an array field:</p>
-
-<pre><code class="language-java">ops = datastore
-    .createUpdateOperations(Hotel.class)
-    .push(&quot;roomNumbers&quot;, 11);
-datastore.update(updateQuery, ops);
-</code></pre>
-
-<p>This will issue a <code>$push</code> operation adding <code>11</code> to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use <code>addToSet()</code> instead:</p>
+<p><code>add()</code> is used to add a value to an array field:</p>
 
 <pre><code class="language-java">ops = datastore
     .createUpdateOperations(Hotel.class)
-    .addToSet(&quot;roomNumbers&quot;, 11);
+    .add(&quot;roomNumbers&quot;, 11);
 datastore.update(updateQuery, ops);
 </code></pre>
 
-<p><code>push()</code> and <code>addToSet()</code> can take either single values or a <code>List</code> of values.  The <code>push()</code> methods can also optionally take a
-<a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/query/PushOptions.html
-"><code>PushOptions</code></a> instance allowing for tweaking how the values are added to the
-list.  See <a href="http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
-">the manual</a> for more information about the various modifiers
-available.</p>
+<p>This will issue a <code>$addToSet</code> operation adding <code>11</code> to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded <code>add()</code> that takes a boolean instead:</p>
+
+<pre><code class="language-java">ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&quot;roomNumbers&quot;, 11, true);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p><code>addAll()</code> takes a <code>List</code> of values and behaves similarly.</p>
 
 <h3 id="removefirst-removelast-removeall">removeFirst()/removeLast()/removeAll()</h3>
 
@@ -1232,7 +1227,7 @@ datastore
 <ul>
 <li><a href="#set-unset">set()/unset()</a></li>
 <li><a href="#inc-dec">inc()/dec()</a></li>
-<li><a href="#push-addtoset">push()/addToSet()</a></li>
+<li><a href="#add-addall">add()/addAll()</a></li>
 <li><a href="#removefirst-removelast-removeall">removeFirst()/removeLast()/removeAll()</a></li>
 <li><a href="#updatefirst">updateFirst()</a></li>
 </ul></li>
