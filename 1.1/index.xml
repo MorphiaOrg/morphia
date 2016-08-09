@@ -17,7 +17,7 @@
       <guid>/morphia/1.1/issues-help/</guid>
       <description>
 
-&lt;h1 id=&#34;issues-help:ce90a820d60b3f485edfd34eecd462d1&#34;&gt;Issues &amp;amp; Help&lt;/h1&gt;
+&lt;h1 id=&#34;issues-help&#34;&gt;Issues &amp;amp; Help&lt;/h1&gt;
 
 &lt;p&gt;We are lucky to have a vibrant MongoDB Java community with lots of varying
 experience of using Morphia.  We often find the quickest way to get support for
@@ -27,7 +27,7 @@ or through &lt;a href=&#34;https://stackoverflow.com/questions/tagged/morphia&#3
 refer to our own &lt;a href=&#34;http://www.mongodb.org/about/support&#34;&gt;support channels&lt;/a&gt; documentation.  If you have a question or think you&amp;rsquo;ve
 encountered a bug, the mailing list is the place to start.&lt;/p&gt;
 
-&lt;h2 id=&#34;bugs-feature-requests:ce90a820d60b3f485edfd34eecd462d1&#34;&gt;Bugs / Feature Requests&lt;/h2&gt;
+&lt;h2 id=&#34;bugs-feature-requests&#34;&gt;Bugs / Feature Requests&lt;/h2&gt;
 
 &lt;p&gt;If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
  &lt;a href=&#34;https://github.com/mongodb/morphia/issues&#34;&gt;github&lt;/a&gt;. Please provide as much information as possible (including version numbers) about the
@@ -37,7 +37,7 @@ encountered a bug, the mailing list is the place to start.&lt;/p&gt;
 MongoDB project, please report it according to the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report
 &#34;&gt;instructions here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;pull-requests:ce90a820d60b3f485edfd34eecd462d1&#34;&gt;Pull Requests&lt;/h2&gt;
+&lt;h2 id=&#34;pull-requests&#34;&gt;Pull Requests&lt;/h2&gt;
 
 &lt;p&gt;We are happy to accept contributions to help improve Morphia.  We will guide user contributions to ensure they meet the standards of the
 codebase. Please ensure that any pull requests include documentation, tests and also pass a the gradle checks.&lt;/p&gt;
@@ -64,509 +64,132 @@ $ git checkout -b myNewFeature
       <guid>/morphia/1.1/guides/annotations/</guid>
       <description>
 
-&lt;h1 id=&#34;annotations:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Annotations&lt;/h1&gt;
+&lt;h1 id=&#34;annotations&#34;&gt;Annotations&lt;/h1&gt;
 
 &lt;p&gt;Below is a list of all the annotations and a brief description of how to use them.&lt;/p&gt;
 
-&lt;h2 id=&#34;entity:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Entity&lt;/h2&gt;
+&lt;h2 id=&#34;indexes&#34;&gt;Indexes&lt;/h2&gt;
 
-&lt;p&gt;Marks entities to be stored directly in a collection. This annotations is optional in most cases (though this is likely to change in
-future versions). There is no harm in including it to be more verbose, and make clear the intention for the class.  The definition of
-this annotation looks like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Entity {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  CappedAt cap() default @CappedAt(0);
-  boolean noClassnameStored() default false;
-  boolean queryNonPrimary() default false;
-  String concern() default &amp;quot;&amp;quot;;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;Defines the collection to use.  Defaults to using the classname&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;cap()&lt;/td&gt;
-&lt;td&gt;Marks this collection as capped and sets the size to use.  See the &lt;a href=&#34;#capped:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Capped&lt;/code&gt;&lt;/a&gt; below&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;noClassnameStored()&lt;/td&gt;
-&lt;td&gt;Tells Morphia to not store the classname in the document.  The default is to store the classname.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;queryNonPrimary()&lt;/td&gt;
-&lt;td&gt;Indicates that queries against this collection can use secondaries.  The default is primary only reads.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;concern()&lt;/td&gt;
-&lt;td&gt;The WriteConcern to use when writing to this collection.  The default WriteConcern depends on how the &lt;code&gt;MongoClient&lt;/code&gt; passed to the &lt;code&gt;Datastore&lt;/code&gt; was created.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Indexes&lt;/h2&gt;
-
-&lt;p&gt;In addition to being able to declare an index on a single field you can also declare the indexes at the class level. This allows you to
- create more than just a single field index; it allows you to create compound indexes with multiple fields.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Indexes {
-    Index[] value();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To see the next few annotations in context, please refer to &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
-&#34;&gt;TestIndexCollections.java&lt;/a&gt; or &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
+&lt;p&gt;Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes.  To see the next few
+annotations in context, please refer to &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
+&#34;&gt;TestIndexCollections.java&lt;/a&gt; or &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
 &#34;&gt;TestIndexed.java&lt;/a&gt; in the Morphia source.&lt;/p&gt;
 
-&lt;h3 id=&#34;index:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Index&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Index {
-    String value() default &amp;quot;&amp;quot;;
-    String name() default &amp;quot;&amp;quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
-
-    Field[] fields() default {};
-    IndexOptions options() default @IndexOptions();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the &lt;code&gt;@IndexOptions&lt;/code&gt;
- annotation.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;List of fields (prepended with &amp;ldquo;-&amp;rdquo; for desc; defaults to asc).&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;name()&lt;/td&gt;
-&lt;td&gt;The name of the index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;unique()&lt;/td&gt;
-&lt;td&gt;Requires values in the index to be unique&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;dropDups()&lt;/td&gt;
-&lt;td&gt;Drop any duplicate values during the creation of a unique index.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
-&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;disableValidation()&lt;/td&gt;
-&lt;td&gt;By default, Morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
-&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;fields()&lt;/td&gt;
-&lt;td&gt;This is the new way to define which fields to index. &lt;a href=&#34;#Field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Details&lt;/a&gt; can be found below.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;options()&lt;/td&gt;
-&lt;td&gt;This is the new way to define index options. &lt;a href=&#34;#IndexOptions:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Details&lt;/a&gt; can be found below.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Field&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt; public @interface Field {
-     String value();
-     IndexType type() default IndexType.ASC;
-     int weight() default -1;
- }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;The field to include in the index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;type()&lt;/td&gt;
-&lt;td&gt;The type of index to create.  This includes the following values:   &lt;code&gt;ASC&lt;/code&gt;, &lt;code&gt;DESC&lt;/code&gt;, &lt;code&gt;GEO2D&lt;/code&gt;, &lt;code&gt;GEO2DSPHERE&lt;/code&gt;, &lt;code&gt;TEXT&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;weight()&lt;/td&gt;
-&lt;td&gt;When defining a text index, this is the weight to apply&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;indexoptions:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;IndexOptions&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface IndexOptions {
-    String name() default &amp;quot;&amp;quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
-    String language() default &amp;quot;&amp;quot;;
-    String languageOverride() default &amp;quot;&amp;quot;;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;name()&lt;/td&gt;
-&lt;td&gt;The name of the index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;unique()&lt;/td&gt;
-&lt;td&gt;Requires values in the index to be unique&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;dropDups()&lt;/td&gt;
-&lt;td&gt;Drop any duplicate values during the creation of a unique index.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
-&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
-&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;disableValidation()&lt;/td&gt;
-&lt;td&gt;By default, Morphia will validate field names being index.  This disables those checks.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;language()&lt;/td&gt;
-&lt;td&gt;Default language for the index.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;languageOverride()&lt;/td&gt;
-&lt;td&gt;The field in the document to use to override the default language.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;indexed:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Indexed&lt;/h4&gt;
-
-&lt;p&gt;Applied to a Java field, marks the field to be indexed by MongoDB.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Indexed {
-    IndexDirection value() default IndexDirection.ASC;
-    String name() default &amp;quot;&amp;quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    int expireAfterSeconds() default -1;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;The sort direction for the index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;name()&lt;/td&gt;
-&lt;td&gt;The name of the index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;unique()&lt;/td&gt;
-&lt;td&gt;Requires values in the index to be unique&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;dropDups()&lt;/td&gt;
-&lt;td&gt;Drop any duplicate values during the creation of a unique index.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;background()&lt;/td&gt;
-&lt;td&gt;Create this index in the background.  There are some &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-&#34;&gt;considerations&lt;/a&gt; to keep in mind.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;sparse()&lt;/td&gt;
-&lt;td&gt;Create a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-sparse/
-&#34;&gt;sparse&lt;/a&gt; index&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;expireAfterSeconds()&lt;/td&gt;
-&lt;td&gt;Creates a &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
-&#34;&gt;TTL Index&lt;/a&gt; on a date field.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;id:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Id&lt;/h2&gt;
-
-&lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to be the &amp;ldquo;_id&amp;rdquo; field in MongoDB.&lt;/p&gt;
-
-&lt;h2 id=&#34;property:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Property&lt;/h2&gt;
-
-&lt;p&gt;An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
- as the property name.  This can be overridden by passing a String with the new name to the annotation.&lt;/p&gt;
-
-&lt;h2 id=&#34;transient:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Transient&lt;/h2&gt;
-
-&lt;p&gt;Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
-
-&lt;h2 id=&#34;serialized:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Serialized&lt;/h2&gt;
-
-&lt;p&gt;Instructs Morphia to serialize this field using JDK serialization.  The field&amp;rsquo;s value gets converted to a &lt;code&gt;byte[]&lt;/code&gt; and passed
- off to MongoDB.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Serialized {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  boolean disableCompression() default false;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;the field name to use in the document&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;disableCompression()&lt;/td&gt;
-&lt;td&gt;By default, Morphia compresses the &lt;code&gt;byte[]&lt;/code&gt; after serialization.  Setting this to true disables the compression.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;notsaved:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;NotSaved&lt;/h2&gt;
-
-&lt;p&gt;Instructs Morphia to ignore this field when saving but will still be loaded.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Good for data migration.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;alsoload:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;AlsoLoad&lt;/h2&gt;
-
-&lt;p&gt;When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation
-to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names
-when loading a document.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Good for data migration.&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface AlsoLoad {
-  String[] value();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;The array of names to try when loading the field&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;version:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Version&lt;/h2&gt;
-
-&lt;p&gt;Marks a field in an &lt;code&gt;@Entity&lt;/code&gt; to control optimistic locking for that entity. If the versions change while modifying an entity (including
-deletes) a &lt;code&gt;ConcurrentModificationException&lt;/code&gt; will be thrown. This field will be automatically managed for you &amp;ndash; there is no need to set
- a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this
- annotation to change the document&amp;rsquo;s field name.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
-class MyClass {
-   ...
-   @Version Long v;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;reference:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Reference&lt;/h2&gt;
-
-&lt;p&gt;Marks fields as stored in another collection and which are linked (by a &lt;code&gt;DBRef&lt;/code&gt; field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an &lt;code&gt;@Reference&lt;/code&gt; field must have already been saved in MongoDB or have the Java object&amp;rsquo;s
-  &lt;code&gt;@Id&lt;/code&gt; already assigned.  Otherwise, no key can be copied in to the &lt;code&gt;Key&lt;/code&gt; for storage in the database.  If you&amp;rsquo;re always saving the
-  referenced entity in the mapped collection (&lt;code&gt;Datastore&lt;/code&gt; can be told to save in to a collection other than the mapped collection) a lot
-  of space can be saved by using the &lt;code&gt;idOnly()&lt;/code&gt; parameter to just save the key value.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Reference {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class&amp;lt;?&amp;gt; concreteClass() default Object.class;
-  boolean ignoreMissing() default false;
-  boolean lazy() default false;
-  boolean idOnly() default false;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;The field name to use in the document.  Defaults to the Java field name.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ignoreMissing()&lt;/td&gt;
-&lt;td&gt;Ignore any missing documents&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;lazy()&lt;/td&gt;
-&lt;td&gt;Instructs Morphia to defer loading of the referenced document.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;idOnly()&lt;/td&gt;
-&lt;td&gt;Instructs Morphia to only store the key of the referenced document rather than a full &lt;code&gt;DBRef&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;embedded:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Embedded&lt;/h2&gt;
-
-&lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection, &lt;code&gt;@Embedded&lt;/code&gt; tells Morphia
-to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of
-the embedded type or on the field holding the embedded instance.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public @interface Embedded {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class&amp;lt;?&amp;gt; concreteClass() default Object.class;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Parameter&lt;/th&gt;
-&lt;th&gt;Usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;value()&lt;/td&gt;
-&lt;td&gt;The field name to use in the document.  Defaults to the Java field name.&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;concreteClass()&lt;/td&gt;
-&lt;td&gt;The concrete class to use when instantiating the embedded entity&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;lifecycle-annotations:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Lifecycle Annotations&lt;/h2&gt;
+&lt;h3 id=&#34;index&#34;&gt;Index&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Index.html
+&#34;&gt;here&lt;/a&gt;.  There are two pieces to this
+annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
+in the 2.x series.  These options and more have been conglomerated in the &lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation.&lt;/p&gt;
+
+&lt;h4 id=&#34;field&#34;&gt;Field&lt;/h4&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Field.html
+&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation defines indexing on a specific document field.  Multiple
+instances of this annotation may be passed to the &lt;code&gt;@Index&lt;/code&gt; annotation to define a compound index on multiple fields.&lt;/p&gt;
+
+&lt;h4 id=&#34;indexoptions&#34;&gt;IndexOptions&lt;/h4&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation defines the options to apply to an index
+definition.  This annotation replaces the fields found directly on the &lt;code&gt;@Index&lt;/code&gt; annotation.  This annotation was added to ensure that index
+options are consistent across the various index definition approaches.&lt;/p&gt;
+
+&lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Indexed.html
+&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt;, applied to a Java field, marks the field to be indexed by MongoDB.
+  This is used for simple, single-field indexes.  As stated above, the &lt;code&gt;options&lt;/code&gt; value replaces the individual setting values on the
+   &lt;code&gt;@Indexed&lt;/code&gt; annotation itself.&lt;/p&gt;
+
+&lt;h2 id=&#34;entity-mapping&#34;&gt;Entity Mapping&lt;/h2&gt;
+
+&lt;p&gt;Morphia provides a number of annotations providing for the customization of object mapping.&lt;/p&gt;
+
+&lt;h3 id=&#34;entity&#34;&gt;Entity&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Entity.html
+&#34;&gt;&lt;code&gt;@Entity&lt;/code&gt;&lt;/a&gt; marks entities to be stored directly in a collection. This annotation
+is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
+collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
+references and embedding.&lt;/p&gt;
+
+&lt;h3 id=&#34;reference&#34;&gt;Reference&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Reference.html
+&#34;&gt;&lt;code&gt;@Reference&lt;/code&gt;&lt;/a&gt; marks a field as a reference to a document stored in another
+collection and is linked (by a &lt;code&gt;DBRef&lt;/code&gt; field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
+via an &lt;code&gt;@Reference&lt;/code&gt; field must have already have a non-null &lt;code&gt;@Id&lt;/code&gt; value in the referenced entity. This can be done by either saving the
+referenced entities first or by manually assigning them ID values.  By default, these referenced entities are automatically loaded by
+Morphia along with the referencing entity.  This can result in a high number of database round trips just to load a single entity.  To
+resolve this, &lt;code&gt;lazy = true&lt;/code&gt; can be passed to the annotation.  This will create a dynamic proxy which will lazily load the entity the first
+time it is referenced in code.&lt;/p&gt;
+
+&lt;p&gt;Fields annotated with &lt;code&gt;@Reference&lt;/code&gt; will show up in MongoDB as &lt;code&gt;DBRef&lt;/code&gt; fields by default.  A &lt;code&gt;DBRef&lt;/code&gt; stores not only the entity&amp;rsquo;s ID value
+but also the collection name.  In most cases, this is probably redundant information as the collection name is already encoded in the
+entity&amp;rsquo;s mapping information.  To reduce the amount of storage necessary to track these references, use &lt;code&gt;idOnly = true&lt;/code&gt; in the mapping.
+This will result in only the ID value being stored in the document.&lt;/p&gt;
+
+&lt;h3 id=&#34;embedded&#34;&gt;Embedded&lt;/h3&gt;
+
+&lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection,
+&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Embedded.html
+&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; tells Morphia to embed the document created from the Java object
+in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
+embedded instance.&lt;/p&gt;
+
+&lt;h3 id=&#34;id&#34;&gt;Id&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Id.html
+&#34;&gt;&lt;code&gt;@Id&lt;/code&gt;&lt;/a&gt; marks a field in an entity to be the &lt;code&gt;_id&lt;/code&gt; field in MongoDB.  This
+annotation is required on all top level entities regardless of the presence of an &lt;code&gt;@Entity&lt;/code&gt; annotation.  If a class is marked with
+&lt;code&gt;@Embedded&lt;/code&gt; this annotation is not required since embedded documents are not required to have _id fields.&lt;/p&gt;
+
+&lt;h3 id=&#34;property&#34;&gt;Property&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Property.html
+&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; is an optional annotation instructing Morphia to persist the
+field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
+overridden by passing a String with the new name to the annotation.&lt;/p&gt;
+
+&lt;h3 id=&#34;transient&#34;&gt;Transient&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Transient.html
+&#34;&gt;&lt;code&gt;@Transient&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when converting an
+entity to a document.  The Java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
+
+&lt;h3 id=&#34;serialized&#34;&gt;Serialized&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Serialized.html
+&#34;&gt;&lt;code&gt;@Serialized&lt;/code&gt;&lt;/a&gt; instructs Morphia to serialize this field using JDK
+serialization.  The field&amp;rsquo;s value gets converted to a &lt;code&gt;byte[]&lt;/code&gt; and passed to MongoDB.&lt;/p&gt;
+
+&lt;h3 id=&#34;notsaved&#34;&gt;NotSaved&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/NotSaved.html
+&#34;&gt;&lt;code&gt;@NotSaved&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when saving but will
+ still be loaded from the database when the entity is read.&lt;/p&gt;
+
+&lt;h3 id=&#34;alsoload&#34;&gt;AlsoLoad&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
+&#34;&gt;&lt;code&gt;@AlsoLoad&lt;/code&gt;&lt;/a&gt; instructs Morphia to look for a field under different names than
+the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
+this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and
+new key names when loading a document.  These alternate names are not used in queries, however, so if there are queries against this field
+they should be updated to use the alternate names as well or the database should be updated such that every instance of the old name is
+renamed.&lt;/p&gt;
+
+&lt;h3 id=&#34;version&#34;&gt;Version&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/annotations/Version.html
+&#34;&gt;&lt;code&gt;@Version&lt;/code&gt;&lt;/a&gt; marks a field in an entity to control optimistic locking. If the
+versions change in the database while modifying an entity (including deletes) a &lt;code&gt;ConcurrentModificationException&lt;/code&gt; will be thrown. This
+field will be automatically managed for you &amp;ndash; there is no need to set a value and you should not do so.  If another name beside the Java
+field name is desired, a name can be passed to this annotation to change the document&amp;rsquo;s field name.&lt;/p&gt;
+
+&lt;h2 id=&#34;lifecycle-annotations&#34;&gt;Lifecycle Annotations&lt;/h2&gt;
 
 &lt;p&gt;There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.&lt;/p&gt;
 
@@ -578,14 +201,14 @@ the embedded type or on the field holding the embedded instance.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;@PostPersist&lt;/code&gt; - Called after the save call to the datastore&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;examples:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;Examples&lt;/h3&gt;
+&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63&#34;&gt;This&lt;/a&gt; is one of the test
 classes.&lt;/p&gt;
 
 &lt;p&gt;All parameters and return values are optional in your implemented methods.&lt;/p&gt;
 
-&lt;h4 id=&#34;prepersist:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@PrePersist&lt;/code&gt;&lt;/h4&gt;
+&lt;h4 id=&#34;prepersist&#34;&gt;&lt;code&gt;@PrePersist&lt;/code&gt;&lt;/h4&gt;
 
 &lt;p&gt;Here is a simple example of an entity that always saves the Date it was last updated at.&lt;/p&gt;
 
@@ -597,7 +220,7 @@ classes.&lt;/p&gt;
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;entitylisteners:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@EntityListeners&lt;/code&gt;&lt;/h4&gt;
+&lt;h4 id=&#34;entitylisteners&#34;&gt;&lt;code&gt;@EntityListeners&lt;/code&gt;&lt;/h4&gt;
 
 &lt;p&gt;In addition, you can separate the lifecycle event implementation in an external class, or many.&lt;/p&gt;
 
@@ -624,7 +247,7 @@ class BankAccountWatcher{
       <guid>/morphia/1.1/getting-started/</guid>
       <description>
 
-&lt;h2 id=&#34;getting-started:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Getting Started&lt;/h2&gt;
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
 
 &lt;p&gt;To help you get started quickly with Morphia follow:&lt;/p&gt;
 
@@ -643,7 +266,7 @@ class BankAccountWatcher{
       <guid>/morphia/1.1/getting-started/installation-guide/</guid>
       <description>
 
-&lt;h1 id=&#34;installation:9d4f5debee078ff2736b8039cc26277c&#34;&gt;Installation&lt;/h1&gt;
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
 
 &lt;p&gt;The recommended way to get started using Morphia in your project is with a dependency management system.&lt;/p&gt;
 
@@ -652,14 +275,14 @@ class BankAccountWatcher{
 &lt;/div&gt;
 
 
-&lt;p&gt;
+
 &lt;section class=&#34;maven&#34;&gt;
 &lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
 &amp;lt;dependencies&amp;gt;
     &amp;lt;dependency&amp;gt;
         &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
         &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.0.1&amp;lt;/version&amp;gt;
+        &amp;lt;version&amp;gt;1.1.0&amp;lt;/version&amp;gt;
     &amp;lt;/dependency&amp;gt;
 &amp;lt;/dependencies&amp;gt;
 
@@ -668,19 +291,19 @@ class BankAccountWatcher{
 &lt;section class=&#34;gradle hidden&#34;&gt;
 &lt;pre&gt;&lt;code&gt;
   dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.0.1&#39;
+      compile &#39;org.mongodb.morphia:morphia:1.1.0&#39;
   }
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/section&gt;
 &lt;section class=&#34;downloadInfo&#34;&gt;
 &lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.0.1&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.1.0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
   from sonatype.&lt;/a&gt;
 &lt;/p&gt;
 
 &lt;/section&gt;
-&lt;/p&gt;
+
 </description>
     </item>
     
@@ -692,7 +315,7 @@ class BankAccountWatcher{
       <guid>/morphia/1.1/</guid>
       <description>
 
-&lt;h2 id=&#34;morphia-documentation:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Morphia Documentation&lt;/h2&gt;
+&lt;h2 id=&#34;morphia-documentation&#34;&gt;Morphia Documentation&lt;/h2&gt;
 
 &lt;p&gt;Welcome to the Morphia documentation hub.&lt;/p&gt;
 
@@ -700,7 +323,7 @@ class BankAccountWatcher{
 &lt;a href=&#34;https://github.com/mongodb/mongo-java-driver/&#34;&gt;&lt;code&gt;MongoDB Java Driver&lt;/code&gt;&lt;/a&gt;.
 For reference documentation please see the driver documentation.&lt;/p&gt;
 
-&lt;h3 id=&#34;getting-started:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Getting Started&lt;/h3&gt;
+&lt;h3 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h3&gt;
 
 &lt;p&gt;The &lt;a href=&#34;/morphia/1.1/morphia/1.1/getting-started/&#34;&gt;Getting Started&lt;/a&gt; guide contains installation instructions
 and a simple tutorial to get up and running quickly.&lt;/p&gt;
@@ -715,17 +338,17 @@ and a simple tutorial to get up and running quickly.&lt;/p&gt;
       <guid>/morphia/1.1/getting-started/quick-tour/</guid>
       <description>
 
-&lt;h1 id=&#34;quick-tour:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Quick Tour&lt;/h1&gt;
+&lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
 
 &lt;p&gt;Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
 abstract much of that away but if something is confusing, please consult the Java driver &lt;a href=&#34;http://mongodb.github
 .io/mongo-java-driver/&#34;&gt;documentation&lt;/a&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.java&lt;/code&gt; example code
-that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
+that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&#34;setting-up-morphia:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Setting up Morphia&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
 
 &lt;p&gt;The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
 Morphia maps your entities and validates your queries.&lt;/p&gt;
@@ -752,7 +375,7 @@ package we&amp;rsquo;ve given and find every class annotated with &lt;code&gt;@E
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.&lt;/p&gt;
 
-&lt;h3 id=&#34;mapping-options:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Options&lt;/h3&gt;
+&lt;h3 id=&#34;mapping-options&#34;&gt;Mapping Options&lt;/h3&gt;
 
 &lt;p&gt;Once you have an instance of Morphia, you can configure various mapping options via the &lt;code&gt;MappingOptions&lt;/code&gt; class.  While it&amp;rsquo;s possible to
 specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia, most users will use the default mapper.  In either case, the &lt;code&gt;Mapper&lt;/code&gt; can
@@ -761,7 +384,7 @@ specify the &lt;code&gt;Mapper&lt;/code&gt; when creating an instance of Morphia
  application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
  for you.  There are a few other options to configure on &lt;code&gt;MappingOptions&lt;/code&gt;, but we&amp;rsquo;ll not be covering them here.&lt;/p&gt;
 
-&lt;h2 id=&#34;mapping-classes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Mapping Classes&lt;/h2&gt;
+&lt;h2 id=&#34;mapping-classes&#34;&gt;Mapping Classes&lt;/h2&gt;
 
 &lt;p&gt;There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with &lt;code&gt;@Entity&lt;/code&gt;
  is treated as a top level document stored directly in a collection.  Any class with &lt;code&gt;@Entity&lt;/code&gt; must have a field annotated with &lt;code&gt;@Id&lt;/code&gt; to
@@ -789,11 +412,11 @@ class Employee {
 so we know that it will be a top level document.  In the annotation, you&amp;rsquo;ll see &lt;code&gt;&amp;quot;employees&amp;quot;&lt;/code&gt;.  By default, Morphia will use the class
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
 &lt;code&gt;Employee&lt;/code&gt; instances will be saved in to the &lt;code&gt;employees&lt;/code&gt; collection instead.  There is a little more to this annotation but the
-&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#entity:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
+&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#entity&#34;&gt;annotations guide&lt;/a&gt; covers those details.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;@Indexes&lt;/code&gt; annotation lists which indexes Morphia should create.  In this instance, we&amp;rsquo;re defining an index named &lt;code&gt;salary&lt;/code&gt; on the
  field salary with the default ordering of ascending.  More information on indexing can found
-  &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+  &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ve marked the &lt;code&gt;id&lt;/code&gt; field to be used as our primary key (the &lt;code&gt;_id&lt;/code&gt; field in the document).  In this instance we&amp;rsquo;re using the Java driver
 type of &lt;code&gt;ObjectId&lt;/code&gt; as the ID type.  The ID can be any type you&amp;rsquo;d like but is generally something like &lt;code&gt;ObjectId&lt;/code&gt; or &lt;code&gt;Long&lt;/code&gt;.  There are
@@ -811,7 +434,7 @@ Morphia will store what MongoDB calls a &lt;a href=&#34;http://docs.mongodb.org/
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.&lt;/p&gt;
 
-&lt;h2 id=&#34;saving-data:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Saving Data&lt;/h2&gt;
+&lt;h2 id=&#34;saving-data&#34;&gt;Saving Data&lt;/h2&gt;
 
 &lt;p&gt;For the most part, you treat your Java objects just like you normally would.  When you&amp;rsquo;re ready to write an object to the database, it&amp;rsquo;s
 as simple as this:&lt;/p&gt;
@@ -841,7 +464,7 @@ efficient way of doing updates.  It is possible to update directly in the databa
 Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
 how to query.&lt;/p&gt;
 
-&lt;h2 id=&#34;querying:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Querying&lt;/h2&gt;
+&lt;h2 id=&#34;querying&#34;&gt;Querying&lt;/h2&gt;
 
 &lt;p&gt;Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
 directly and only rarely do you need to take additional action.  As with everything else, &lt;code&gt;Datastore&lt;/code&gt; is where we start:&lt;/p&gt;
@@ -877,7 +500,7 @@ validate and potentially get wrong:&lt;/p&gt;
 field called &lt;code&gt;salary&lt;/code&gt; on the &lt;code&gt;Employee&lt;/code&gt; class.  If you happen to have mapped that field such that the name in the database doesn&amp;rsquo;t match
 the Java field, Morphia can use either form and will validate against either name.&lt;/p&gt;
 
-&lt;h2 id=&#34;updates:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Updates&lt;/h2&gt;
+&lt;h2 id=&#34;updates&#34;&gt;Updates&lt;/h2&gt;
 
 &lt;p&gt;Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
 of update operations.  In this example, we&amp;rsquo;ll find all the underpaid employees and give them raise of 10000.  The first step is to create
@@ -903,7 +526,7 @@ of update operations.  In this example, we&amp;rsquo;ll find all the underpaid e
 &lt;p&gt;This line executes the update in the database without having to pull in however many documents are matched by the query.  The
 &lt;code&gt;UpdateResults&lt;/code&gt; instance returned will contain various statistics about the update operation.&lt;/p&gt;
 
-&lt;h2 id=&#34;removes:b8bcd3c4cba9ac16433f82561ee44461&#34;&gt;Removes&lt;/h2&gt;
+&lt;h2 id=&#34;removes&#34;&gt;Removes&lt;/h2&gt;
 
 &lt;p&gt;After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
 then tell the &lt;code&gt;Datastore&lt;/code&gt; to delete them:&lt;/p&gt;
@@ -928,11 +551,22 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
 
 &lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
 
+&lt;h3 id=&#34;core-guides&#34;&gt;Core Guides&lt;/h3&gt;
+
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/updating/&#34;&gt;Updating&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/lifeCycleMethods/&#34;&gt;Life Cycle Methods&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;extension-guides&#34;&gt;Extension Guides&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/jrebel/&#34;&gt;JRebel Support&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/validationExtension/&#34;&gt;Validation Extension&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -945,7 +579,7 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
       <guid>/morphia/1.1/guides/aggregation/</guid>
       <description>
 
-&lt;h1 id=&#34;aggregation:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation&lt;/h1&gt;
+&lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
 
 &lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;aggregation framework&lt;/a&gt; in MongoDB allows you to define a series (called a pipeline) of
@@ -954,7 +588,7 @@ convert your data from one form to another.  This guide will not go in to the de
  MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/aggregation
 &#34;&gt;documentation&lt;/a&gt; has extensive tutorials on such details.  Rather, this
  guide will
- focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+ focus on the Morphia API.  The examples shown here are taken from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
 &#34;&gt;tests&lt;/a&gt; in Morphia itself.&lt;/p&gt;
 
 &lt;p&gt;Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the &lt;code&gt;Datastore&lt;/code&gt;:&lt;/p&gt;
@@ -970,7 +604,7 @@ against.  Because of the transformational operations available in the aggregatio
  Morphia can not validate as much as it can with querying so care will need to be taken to ensure
  document fields actually exist when referencing them in your pipeline.&lt;/p&gt;
 
-&lt;h2 id=&#34;the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;The Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;the-pipeline&#34;&gt;The Pipeline&lt;/h2&gt;
 
 &lt;p&gt;Aggregation operations are comprised of a series stages.  Our example here has only one stage: &lt;code&gt;group()&lt;/code&gt;.  This method is the Morphia
 equivalent of the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/
@@ -986,7 +620,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
  { &amp;quot;_id&amp;quot; : &amp;quot;Dante&amp;quot;, &amp;quot;books&amp;quot; : [ &amp;quot;The Banquet&amp;quot;, &amp;quot;Divine Comedy&amp;quot;, &amp;quot;Eclogues&amp;quot; ] }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;executing-the-pipeline:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Executing the Pipeline&lt;/h2&gt;
+&lt;h2 id=&#34;executing-the-pipeline&#34;&gt;Executing the Pipeline&lt;/h2&gt;
 
 &lt;p&gt;There are two basic ways to execute an aggregation pipeline:  &lt;code&gt;aggregate()&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt;.  These methods are Morphia&amp;rsquo;s cues to send the
  pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
@@ -995,7 +629,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   We can changes this behavior using the &lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html&#34;&gt;&lt;code&gt;AggregationOptions&lt;/code&gt;&lt;/a&gt;
   class.  The &lt;code&gt;options&lt;/code&gt; reference we passed to &lt;code&gt;out()&lt;/code&gt; also applies to &lt;code&gt;aggregate()&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;aggregation-options:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Aggregation Options&lt;/h3&gt;
+&lt;h3 id=&#34;aggregation-options&#34;&gt;Aggregation Options&lt;/h3&gt;
 
 &lt;p&gt;There are a handful options here but there&amp;rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
  returns everything &amp;ldquo;inline&amp;rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
@@ -1005,7 +639,7 @@ in the final document.  This example is the Morphia equivalent of an &lt;a href=
   the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.&lt;/p&gt;
 
-&lt;h3 id=&#34;out:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;$out&lt;/h3&gt;
+&lt;h3 id=&#34;out&#34;&gt;$out&lt;/h3&gt;
 
 &lt;p&gt;But this example doesn&amp;rsquo;t use &lt;code&gt;aggregate()&lt;/code&gt;, of course, it uses &lt;code&gt;out()&lt;/code&gt; which gives us access to the &lt;code&gt;$out&lt;/code&gt; pipeline stage.  &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/out/
 &#34;&gt;&lt;code&gt;$out&lt;/code&gt;&lt;/a&gt; is a new operator in MongoDB 2.6 that allows the results of a
@@ -1026,7 +660,7 @@ output mode to &lt;code&gt;CURSOR&lt;/code&gt; with &lt;code&gt;aggregate()&lt;/
 database and any existing data.  The use of &lt;code&gt;$out&lt;/code&gt; and &lt;code&gt;out()&lt;/code&gt; can be greatly beneficial in scenarios such as precomputed aggregated
 results for later retrieval.&lt;/p&gt;
 
-&lt;h3 id=&#34;typed-results:f74d38643fe7ae9d1c437e4fb3096e53&#34;&gt;Typed Results&lt;/h3&gt;
+&lt;h3 id=&#34;typed-results&#34;&gt;Typed Results&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;out()&lt;/code&gt; has several variants.  In this example, we&amp;rsquo;re passing in &lt;code&gt;Author.class&lt;/code&gt; which tells Morphia that we want to map each document
 returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsquo;re using &lt;code&gt;out()&lt;/code&gt; instead of &lt;code&gt;aggregate()&lt;/code&gt;, Morphia will use the mapped collection for
@@ -1044,23 +678,23 @@ instances, you can use &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/
       <guid>/morphia/1.1/guides/indexing/</guid>
       <description>
 
-&lt;h1 id=&#34;indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Indexing&lt;/h1&gt;
+&lt;h1 id=&#34;indexing&#34;&gt;Indexing&lt;/h1&gt;
 
 &lt;p&gt;Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
 an entity&amp;rsquo;s source.  In addition to the familiar ascending/descending index types, Morphia and MongoDB support &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-ttl/
 &#34;&gt;TTL&lt;/a&gt;, &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
 &#34;&gt;text&lt;/a&gt;, and &lt;a href=&#34;http://docs.mongodb.org/manual/applications/geospatial-indexes/
 &#34;&gt;geospatial&lt;/a&gt;
- indexes.   When defining &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text&lt;/a&gt; indexes there are certain restrictions which will be covered below.  Full
+ indexes.   When defining &lt;a href=&#34;#text-indexing&#34;&gt;text&lt;/a&gt; indexes there are certain restrictions which will be covered below.  Full
   details for all these types are available in the &lt;a href=&#34;http://docs.mongodb.org/manual/indexes
 &#34;&gt;manual&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;There are two ways to define indexes:  at the class level and at the field level.&lt;/p&gt;
 
-&lt;h2 id=&#34;class-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Class Level Indexes&lt;/h2&gt;
+&lt;h2 id=&#34;class-level-indexes&#34;&gt;Class Level Indexes&lt;/h2&gt;
 
-&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
-annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#index:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
+&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexes&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
+annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#index&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
 has two primary components to cover here:  &lt;code&gt;fields&lt;/code&gt; and &lt;code&gt;options&lt;/code&gt;.  An index definition would take the following form:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -1079,19 +713,19 @@ public class IndexExample {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;fields:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Fields&lt;/h3&gt;
+&lt;h3 id=&#34;fields&#34;&gt;Fields&lt;/h3&gt;
 
-&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
+&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
 arbitrary number of &lt;code&gt;@Field&lt;/code&gt;s can be given but at least one must be present.&lt;/p&gt;
 
-&lt;h4 id=&#34;value:b3040529c742e665af59b7e3b005e4ad&#34;&gt;value()&lt;/h4&gt;
+&lt;h4 id=&#34;value&#34;&gt;value()&lt;/h4&gt;
 
 &lt;p&gt;Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#property:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
- &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#embedded:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
-  exception is made for &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
+name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#property&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
+ &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#embedded&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
+  exception is made for &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
 
-&lt;h4 id=&#34;type:b3040529c742e665af59b7e3b005e4ad&#34;&gt;type()&lt;/h4&gt;
+&lt;h4 id=&#34;type&#34;&gt;type()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: IndexType.ASC&lt;/em&gt;&lt;/p&gt;
 
@@ -1099,20 +733,20 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;weight:b3040529c742e665af59b7e3b005e4ad&#34;&gt;weight()&lt;/h4&gt;
+&lt;h4 id=&#34;weight&#34;&gt;weight()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Specifies the weight to use when creating a text index.  This value only makes sense when direction is &lt;code&gt;IndexType.TEXT&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&#34;index-options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Index Options&lt;/h3&gt;
+&lt;h3 id=&#34;index-options&#34;&gt;Index Options&lt;/h3&gt;
 
-&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexoptions:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
+&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexoptions&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
 be found in the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 &#34;&gt;manual&lt;/a&gt; but we&amp;rsquo;ll provide some basic coverage
 here as well.&lt;/p&gt;
 
-&lt;h4 id=&#34;background:b3040529c742e665af59b7e3b005e4ad&#34;&gt;background()&lt;/h4&gt;
+&lt;h4 id=&#34;background&#34;&gt;background()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
@@ -1122,18 +756,18 @@ until the index build completes. For potentially long running index building ope
 MongoDB database remains available during the index building operation.  The MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-creation/#background-construction
 &#34;&gt;manual&lt;/a&gt; has more detail.&lt;/p&gt;
 
-&lt;h4 id=&#34;disablevalidation:b3040529c742e665af59b7e3b005e4ad&#34;&gt;disableValidation()&lt;/h4&gt;
+&lt;h4 id=&#34;disablevalidation&#34;&gt;disableValidation()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
 mapped document names.  Setting this to &lt;code&gt;true&lt;/code&gt; disables this validation.&lt;/p&gt;
 
-&lt;h4 id=&#34;dropdups:b3040529c742e665af59b7e3b005e4ad&#34;&gt;dropDups()&lt;/h4&gt;
+&lt;h4 id=&#34;dropdups&#34;&gt;dropDups()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;When defining a &lt;a href=&#34;#unique:b3040529c742e665af59b7e3b005e4ad&#34;&gt;unique&lt;/a&gt; index, if there are duplicate values found, the index creation will.  Setting this value to
+&lt;p&gt;When defining a &lt;a href=&#34;#unique&#34;&gt;unique&lt;/a&gt; index, if there are duplicate values found, the index creation will.  Setting this value to
 true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt;
 
 &lt;div class=&#34;admonition important&#34;&gt;
@@ -1143,7 +777,7 @@ true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt
 &lt;/div&gt;
 
 
-&lt;h4 id=&#34;expireafterseconds:b3040529c742e665af59b7e3b005e4ad&#34;&gt;expireAfterSeconds()&lt;/h4&gt;
+&lt;h4 id=&#34;expireafterseconds&#34;&gt;expireAfterSeconds()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
@@ -1151,26 +785,26 @@ true will instruct MongoDB to drop the documents with duplicate values.&lt;/p&gt
 &#34;&gt;TTL&lt;/a&gt; to control how long MongoDB retains documents in
 this collection.  The field listed must contain values that are dates.&lt;/p&gt;
 
-&lt;h4 id=&#34;language:b3040529c742e665af59b7e3b005e4ad&#34;&gt;language()&lt;/h4&gt;
+&lt;h4 id=&#34;language&#34;&gt;language()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;For &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt;, the language that determines the list of stop words and the rules for the stemmer and
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the language that determines the list of stop words and the rules for the stemmer and
 tokenizer. See &lt;a href=&#34;http://docs.mongodb.org/manual/reference/text-search-languages/
 &#34;&gt;Text Search Languages&lt;/a&gt; for the available languages and &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index
 &#34;&gt;Specify a
 Language for Text Index&lt;/a&gt; for more information and examples. The default value
  is &lt;strong&gt;english&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;languageoverride:b3040529c742e665af59b7e3b005e4ad&#34;&gt;languageOverride()&lt;/h4&gt;
+&lt;h4 id=&#34;languageoverride&#34;&gt;languageOverride()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;For &lt;a href=&#34;#text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;text indexes&lt;/a&gt;, the name of the field in the collection’s documents that contains the
+&lt;p&gt;For &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt;, the name of the field in the collection’s documents that contains the
 override language for the document. The default value is &lt;strong&gt;language&lt;/strong&gt;. See &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/#specify-language-field-text-index-example
 &#34;&gt;Use any Field to Specify the Language for a Document&lt;/a&gt; for an example.&lt;/p&gt;
 
-&lt;h4 id=&#34;name:b3040529c742e665af59b7e3b005e4ad&#34;&gt;name()&lt;/h4&gt;
+&lt;h4 id=&#34;name&#34;&gt;name()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
@@ -1181,7 +815,7 @@ the sort order.&lt;/p&gt;
  the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length
 &#34;&gt;Index Name Limit&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;sparse:b3040529c742e665af59b7e3b005e4ad&#34;&gt;sparse()&lt;/h4&gt;
+&lt;h4 id=&#34;sparse&#34;&gt;sparse()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
@@ -1190,19 +824,19 @@ some situations (particularly sorts).  See &lt;a href=&#34;http://docs.mongodb.o
 &#34;&gt;Sparse Indexes&lt;/a&gt; for more
 information.&lt;/p&gt;
 
-&lt;h4 id=&#34;unique:b3040529c742e665af59b7e3b005e4ad&#34;&gt;unique()&lt;/h4&gt;
+&lt;h4 id=&#34;unique&#34;&gt;unique()&lt;/h4&gt;
 
 &lt;p&gt;&lt;em&gt;Default: false&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a unique index.&lt;/p&gt;
 
-&lt;h2 id=&#34;field-level-indexes:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Field Level Indexes&lt;/h2&gt;
+&lt;h2 id=&#34;field-level-indexes&#34;&gt;Field Level Indexes&lt;/h2&gt;
 
 &lt;p&gt;Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexed:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field:338aacf6337d00fc0cde843c3182c3f8&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
-annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options:b3040529c742e665af59b7e3b005e4ad&#34;&gt;above&lt;/a&gt;.  A field level index
+&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#indexed&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
+annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options&#34;&gt;above&lt;/a&gt;.  A field level index
 definition would look like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -1215,7 +849,7 @@ private class FieldIndex {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;text-indexing:b3040529c742e665af59b7e3b005e4ad&#34;&gt;Text Indexing&lt;/h2&gt;
+&lt;h2 id=&#34;text-indexing&#34;&gt;Text Indexing&lt;/h2&gt;
 
 &lt;p&gt;Morphia&amp;rsquo;s indexing supports MongoDB&amp;rsquo;s text indexing and search functionality as we&amp;rsquo;ve briefly seen above.  Full details can be found in
 the &lt;a href=&#34;http://docs.mongodb.org/manual/core/index-text/
@@ -1232,12 +866,142 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    @Indexes(@Index(fields = @Field(value = &amp;quot;$**&amp;quot;, type = TEXT)))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;div class=&#34;admonition important&#34;&gt;
 &lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
 &lt;p&gt;A collection can have at most one text index.&lt;/p&gt;
 
 &lt;/div&gt;
-&lt;/p&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>JRebel</title>
+      <link>/morphia/1.1/guides/jrebel/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.1/guides/jrebel/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;Of course you need to run JRebel (&lt;a href=&#34;http://zeroturnaround.com&#34;&gt;http://zeroturnaround.com&lt;/a&gt;) for this extension to be useful.
+On top of that, you need to tell JRebel about the Plugin. In order to do that, add the following two new Elements to the VM startup command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.
+- Choose Window-&amp;gt;Prefs-&amp;gt;JRebel
+- Click Agent Settings
+- Choose Plugins Tab
+- Click custom plugins
+- add the plugin jar, OK
+- Choose custom, add key &amp;ldquo;rebel.morphia&amp;rdquo; with value of &amp;ldquo;true&amp;rdquo;&lt;/p&gt;
+
+&lt;h1 id=&#34;using&#34;&gt;Using&lt;/h1&gt;
+
+&lt;p&gt;Register the Extension to your Morphia instance&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;new JRebelExtension(morphia);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;dependencies&#34;&gt;Dependencies&lt;/h2&gt;
+
+&lt;h3 id=&#34;maven&#34;&gt;Maven&lt;/h3&gt;
+
+&lt;p&gt;If you use Maven to manage your project, you can reference the Extension as a dependency:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;morphia-jrebel-plug&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;1.2.1&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Life Cycle Methods</title>
+      <link>/morphia/1.1/guides/lifeCycleMethods/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.1/guides/lifeCycleMethods/</guid>
+      <description>
+
+&lt;h1 id=&#34;life-cycle-methods&#34;&gt;Life Cycle Methods&lt;/h1&gt;
+
+&lt;p&gt;There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save)
+, and Pre/Post-Load.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;@PrePersist&lt;/code&gt; - Called before save, it can return a &lt;code&gt;DBObject&lt;/code&gt; in place of an empty one.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@PreSave&lt;/code&gt; - Called right before &lt;code&gt;DBCollection.save()&lt;/code&gt; is called. Changes made to the entity will not be persisted; the &lt;code&gt;DBObject&lt;/code&gt; can
+be passed as an argument (you can add/remove/change values)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@PostPersist&lt;/code&gt; - Called after the save call to the database&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@PreLoad&lt;/code&gt; - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can
+add/remove/change values)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@PostLoad&lt;/code&gt; - Called after populating the entity with the values from the document&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See the &lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/annotations/&#34;&gt;annotations guide&lt;/a&gt; for a full list of the annotations supported.&lt;/p&gt;
+
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63&#34;&gt;Here&lt;/a&gt; is a one of the test classes.&lt;/p&gt;
+
+&lt;p&gt;All parameters and return values are options in your implemented methods.&lt;/p&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;Here is a simple example of an entity that always saves the Date it was last updated.  Alternatively, the resulting serialized form can
+be passed back in just prior to sending the document to the database.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+
+  @PrePersist
+  public void trackUpdate() {
+    lastUpdated = new Date();
+  }
+
+  @PrePersist
+  public void prePersist(final DBObject dbObj) {
+    // perform operations on serialized form of the entity
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;entitylisteners&#34;&gt;EntityListeners&lt;/h3&gt;
+
+&lt;p&gt;If your application has more generalized life cycle events, these methods can be stored on classes external to your model.  For example&amp;rsquo;s
+ sake, let&amp;rsquo;s assume there&amp;rsquo;s a need to digitally sign all documents before storing it in the database.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@EntityListeners(DigitalSigner.class)
+public class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+}
+
+class DigitalSigner {
+  @PrePersist
+  void prePersist(final Object entity, final DBObject dbObject) {
+     dbObject.put(&amp;quot;signature&amp;quot;, sign(dbObject));
+  }
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;no-delete-support&#34;&gt;No Delete Support&lt;/h2&gt;
+
+&lt;p&gt;Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.&lt;/p&gt;
 </description>
     </item>
     
@@ -1249,13 +1013,13 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
       <guid>/morphia/1.1/guides/querying/</guid>
       <description>
 
-&lt;h1 id=&#34;querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Querying&lt;/h1&gt;
+&lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
 
 &lt;p&gt;Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
  to provide as much type safety and validation as possible.  To this end, Morphia offers the &lt;code&gt;Query&amp;lt;T&amp;gt;&lt;/code&gt; class which can be parameterized to
 the type of your entity.&lt;/p&gt;
 
-&lt;h2 id=&#34;creating-a-query:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Creating a Query&lt;/h2&gt;
+&lt;h2 id=&#34;creating-a-query&#34;&gt;Creating a Query&lt;/h2&gt;
 
 &lt;p&gt;The &lt;code&gt;Datastore&lt;/code&gt; is the key class when using Morphia.  Virtually all operations begin with the &lt;code&gt;Datastore&lt;/code&gt;.  To create the &lt;code&gt;Query&lt;/code&gt;, we
 invoke the following code:&lt;/p&gt;
@@ -1265,7 +1029,7 @@ invoke the following code:&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;createQuery()&lt;/code&gt; returns an instance of &lt;code&gt;Query&lt;/code&gt; with which we can build a query.&lt;/p&gt;
 
-&lt;h3 id=&#34;filter:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;filter&#34;&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;The first method of interest is &lt;code&gt;filter()&lt;/code&gt;.  This method takes two values: a condition string and a value.  The &lt;code&gt;value&lt;/code&gt; parameter is, of
 course, the value to use when applying the &lt;code&gt;condition&lt;/code&gt; clause.  The &lt;code&gt;condition&lt;/code&gt; parameter is a bit more complicated.  At its simplest,
@@ -1285,7 +1049,7 @@ like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{ price: { $gte: 1000 } }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The list of supported filter operations can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
+&lt;p&gt;The list of supported filter operations can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
 &#34;&gt;FilterOperator&lt;/a&gt; class.&lt;/p&gt;
 
 &lt;table&gt;
@@ -1428,10 +1192,10 @@ like this:&lt;/p&gt;
  the equal operator, you can use the canonical &lt;code&gt;$eq&lt;/code&gt; operator as you would when building a query in the shell or you could opt to use
  either the &lt;code&gt;=&lt;/code&gt; or &lt;code&gt;==&lt;/code&gt; aliases which might feel a little more natural to use than the dollar operators.&lt;/p&gt;
 
-&lt;h3 id=&#34;field:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;field&#34;&gt;&lt;code&gt;field()&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;For those who would prefer more compile time validation of their queries, there is &lt;code&gt;field()&lt;/code&gt;.  This method takes only the field name and
-returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
+returns an instance of a &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
 &#34;&gt;class&lt;/a&gt; providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  &lt;code&gt;filter()&lt;/code&gt; can be.  To perform the same query as above, you&amp;rsquo;d write this:&lt;/p&gt;
@@ -1451,7 +1215,7 @@ result in an error.&lt;/p&gt;
 &lt;/div&gt;
 
 
-&lt;h2 id=&#34;complex-queries:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Complex Queries&lt;/h2&gt;
+&lt;h2 id=&#34;complex-queries&#34;&gt;Complex Queries&lt;/h2&gt;
 
 &lt;p&gt;Of course, queries are usually more complex than single field comparisons.  Morphia offers both &lt;code&gt;and()&lt;/code&gt; and &lt;code&gt;or()&lt;/code&gt; to build up more
 complex queries.  An &lt;code&gt;and&lt;/code&gt; query might look something like this:&lt;/p&gt;
@@ -1475,7 +1239,7 @@ method instead of &lt;code&gt;field()&lt;/code&gt; but it is used in much the sa
 
 &lt;p&gt;This generates an implicit &lt;code&gt;and&lt;/code&gt; across the field comparisons.&lt;/p&gt;
 
-&lt;h2 id=&#34;text-searching:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Text Searching&lt;/h2&gt;
+&lt;h2 id=&#34;text-searching&#34;&gt;Text Searching&lt;/h2&gt;
 
 &lt;p&gt;Morphia also supports MongoDB&amp;rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
 have a &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text/
@@ -1487,13 +1251,13 @@ public static class Greeting {
     private ObjectId id;
     private String value;
     private String language;
-    
+
     ...
 }
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The &lt;code&gt;$**&lt;/code&gt; value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
 &#34;&gt;test&lt;/a&gt; does:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;morphia.map(Greeting.class);
@@ -1518,16 +1282,16 @@ Assert.assertEquals(4, good.size());
 &lt;p&gt;As you can see here, we create &lt;code&gt;Greeting&lt;/code&gt; objects for multiple languages.  In our test query, we&amp;rsquo;re looking for occurrences of the word
 &amp;ldquo;good&amp;rdquo; in any document.  We created four such documents and our query returns exactly those four.&lt;/p&gt;
 
-&lt;h2 id=&#34;other-query-options:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Other Query Options&lt;/h2&gt;
+&lt;h2 id=&#34;other-query-options&#34;&gt;Other Query Options&lt;/h2&gt;
 
 &lt;p&gt;There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.&lt;/p&gt;
 
-&lt;h3 id=&#34;projections:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Projections&lt;/h3&gt;
+&lt;h3 id=&#34;projections&#34;&gt;Projections&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 &#34;&gt;Projections&lt;/a&gt; allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 &#34;&gt;unit tests&lt;/a&gt;, this is an example of this feature in action:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ContainsRenamedFields user = new ContainsRenamedFields(&amp;quot;Frank&amp;quot;, &amp;quot;Zappa&amp;quot;);
@@ -1565,7 +1329,7 @@ Assert.assertNull(found.lastName);
 &lt;/div&gt;
 
 
-&lt;h3 id=&#34;limiting-and-skipping:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Limiting and Skipping&lt;/h3&gt;
+&lt;h3 id=&#34;limiting-and-skipping&#34;&gt;Limiting and Skipping&lt;/h3&gt;
 
 &lt;p&gt;Pagination of query results is often done as a combination of skips and limits.  Morphia offers &lt;code&gt;Query.limit(int)&lt;/code&gt; and &lt;code&gt;Query.offset(int)&lt;/code&gt;
 for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
@@ -1580,7 +1344,7 @@ for these cases.  An example of these methods in action would look like this:&lt
 pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/cursor.skip
 &#34;&gt;skip&lt;/a&gt; documentation for more detail.&lt;/p&gt;
 
-&lt;h3 id=&#34;ordering:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Ordering&lt;/h3&gt;
+&lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
 
 &lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.1/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
@@ -1590,12 +1354,12 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;query.order(&amp;quot;age,-income&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;tailable-cursors:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Tailable Cursors&lt;/h3&gt;
+&lt;h3 id=&#34;tailable-cursors&#34;&gt;Tailable Cursors&lt;/h3&gt;
 
 &lt;p&gt;If you have a &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/
 &#34;&gt;capped collection&lt;/a&gt; it&amp;rsquo;s possible to &amp;ldquo;tail&amp;rdquo; a query so that when new documents
 are added to the collection that match your query, they&amp;rsquo;ll be returned by the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-&#34;&gt;tailable cursor&lt;/a&gt;.  An example of this feature in action can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+&#34;&gt;tailable cursor&lt;/a&gt;.  An example of this feature in action can be found in the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
 &#34;&gt;unit tests&lt;/a&gt; in the &lt;code&gt;testTailableCursors()&lt;/code&gt; test:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;getMorphia().map(CappedPic.class);
@@ -1620,7 +1384,7 @@ version of the unit test, we tail the cursor waiting to pull out objects until w
 application.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;raw-querying:50d269286defa89dcc6793dab2a5c4d0&#34;&gt;Raw Querying&lt;/h3&gt;
+&lt;h3 id=&#34;raw-querying&#34;&gt;Raw Querying&lt;/h3&gt;
 
 &lt;p&gt;You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.&lt;/p&gt;
 
@@ -1638,6 +1402,318 @@ application.&lt;/li&gt;
 
 Query&amp;lt;Artist&amp;gt; findQuery = datastore.createQuery(Artist.class, query);
 Artist result = findQuery.get();
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Updating</title>
+      <link>/morphia/1.1/guides/updating/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.1/guides/updating/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.&lt;/p&gt;
+
+&lt;h1 id=&#34;updating-on-the-server&#34;&gt;Updating (on the server)&lt;/h1&gt;
+
+&lt;p&gt;The update method on &lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/Datastore.html
+&#34;&gt;&lt;code&gt;Datastore&lt;/code&gt;&lt;/a&gt; is used to issue a command to the server to change
+existing documents.  The effects of the update command are defined via
+&lt;a href=&#34;/morphia/1.1/morphia/1.11.1/javadoc?org/mongodb/morphia/query/UpdateOperations.html
+&#34;&gt;&lt;code&gt;UpdateOperations&lt;/code&gt;&lt;/a&gt; methods.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-field-expression&#34;&gt;The Field Expression&lt;/h2&gt;
+
+&lt;p&gt;The field expression, used by all update operations,  can be either a single field name or any dot-notation form (for embedded
+elements). The positional operator ($) can also be used in the in the field expression for array updates.  To illustrate, consider the
+entity here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity(&amp;quot;hotels&amp;quot;)
+public class Hotel
+{
+   @Id
+   private ObjectId id;
+
+   private String name;
+   private int stars;
+
+   @Embedded
+   private Address address;
+
+   List&amp;lt;Integer&amp;gt; roomNumbers = new ArrayList&amp;lt;Integer&amp;gt;();
+
+   // ... optional getters and setters
+}
+
+@Embedded
+public class Address
+{
+   private String street;
+   private String city;
+   private String postalCode;
+   private String country;
+
+   // ... optional getters and setters
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;set-unset&#34;&gt;set()/unset()&lt;/h3&gt;
+
+&lt;p&gt;To change the name of the hotel, one would use something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&amp;quot;name&amp;quot;, &amp;quot;Fairmont Chateau Laurier&amp;quot;);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This also works for embedded documents.  To change the name of the city in the address, one would use something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&amp;quot;address.city&amp;quot;, &amp;quot;Ottawa&amp;quot;);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Values can also be removed from documents as shown below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .unset(&amp;quot;name&amp;quot;);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After this update, the name of the hotel would be &lt;code&gt;null&lt;/code&gt; when the entity is loaded.&lt;/p&gt;
+
+&lt;h3 id=&#34;inc-dec&#34;&gt;inc()/dec()&lt;/h3&gt;
+
+&lt;p&gt;To simply increment or decrement values in the database, updates like these would be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;// increment &#39;stars&#39; by 4
+UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;);
+datastore.update(updateQuery, ops);
+
+// increment &#39;stars&#39; by 4
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;, 4);
+datastore.update(updateQuery, ops);
+
+// decrement &#39;stars&#39; by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .dec(&amp;quot;stars&amp;quot;);  // same as .inc(&amp;quot;stars&amp;quot;, -1)
+datastore.update(updateQuery, ops);
+
+// decrement &#39;stars&#39; by 4
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;, -4);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;add-addall&#34;&gt;add()/addAll()&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;add()&lt;/code&gt; is used to add a value to an array field:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&amp;quot;roomNumbers&amp;quot;, 11);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will issue a &lt;code&gt;$addToSet&lt;/code&gt; operation adding &lt;code&gt;11&lt;/code&gt; to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded &lt;code&gt;add()&lt;/code&gt; that takes a boolean instead:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&amp;quot;roomNumbers&amp;quot;, 11, true);
+datastore.update(updateQuery, ops);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;addAll()&lt;/code&gt; takes a &lt;code&gt;List&lt;/code&gt; of values and behaves similarly.&lt;/p&gt;
+
+&lt;h3 id=&#34;removefirst-removelast-removeall&#34;&gt;removeFirst()/removeLast()/removeAll()&lt;/h3&gt;
+
+&lt;p&gt;To remove values from a list, use &lt;code&gt;removeFirst()&lt;/code&gt;, &lt;code&gt;removeLast()&lt;/code&gt;, or &lt;code&gt;removeAll()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;//given roomNumbers = [ 1, 2, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeFirst(&amp;quot;roomNumbers&amp;quot;);
+datastore.update(updateQuery, ops);  // [ 2, 3 ]
+
+//given roomNumbers = [ 1, 2, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&amp;quot;roomNumbers&amp;quot;);
+datastore.update(updateQuery, ops);  // [ 1, 2 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&amp;quot;roomNumbers&amp;quot;);
+datastore.update(updateQuery, ops);  // [ 1 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&amp;quot;roomNumbers&amp;quot;);
+datastore.update(updateQuery, ops);  // []   empty array
+
+//given roomNumbers = [ 1, 2, 3, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeAll(&amp;quot;roomNumbers&amp;quot;, 3);
+datastore.update(updateQuery, ops);  // [ 1, 2 ]
+
+//given roomNumbers = [ 1, 2, 3, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeAll(&amp;quot;roomNumbers&amp;quot;, Arrays.asList(2, 3));
+datastore.update(updateQuery, ops);  // [ 1 ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;updatefirst&#34;&gt;updateFirst()&lt;/h3&gt;
+
+&lt;p&gt;In the default driver and shell this is the default behavior. In Morphia we feel like updating all the results of the query is a better default (see below).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;    {
+        name: &amp;quot;Fairmont&amp;quot;, 
+        stars: 5
+    },
+    {
+        name: &amp;quot;Last Chance&amp;quot;, 
+        stars: 3 
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore.createUpdateOperations(Hotel.class).inc(&amp;quot;stars&amp;quot;, 50);
+
+// morphia exposes a specific updateFirst to update only the first hotel matching the query
+datastore
+    .updateFirst(datastore
+        .find(Hotel.class)
+        .order(&amp;quot;stars&amp;quot;),
+        ops);  // update only Last Chance
+datastore
+    .updateFirst(datastore
+        .find(Hotel.class)
+        .order(&amp;quot;-stars&amp;quot;),
+        ops); // update only Fairmont
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;multiple-operations&#34;&gt;Multiple Operations&lt;/h2&gt;
+
+&lt;p&gt;You can also perform multiple update operations within a single update.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;//set city to Ottawa and increment stars by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&amp;quot;city&amp;quot;, &amp;quot;Ottawa&amp;quot;)
+    .inc(&amp;quot;stars&amp;quot;);
+datastore.update(updateQuery, ops);
+
+//if you perform multiple operations in one command on the same property, results will vary
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;, 50)
+    .inc(&amp;quot;stars&amp;quot;);  //increments by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;)
+    .inc(&amp;quot;stars&amp;quot;, 50);  //increments by 50
+
+//you can&#39;t apply conflicting operations to the same property
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&amp;quot;stars&amp;quot;, 1)
+    .inc(&amp;quot;stars&amp;quot;, 50); //causes error
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;createifmissing-overload-parameter&#34;&gt;createIfMissing (overload parameter)&lt;/h2&gt;
+
+&lt;p&gt;All of the update methods on &lt;code&gt;Datastore&lt;/code&gt; are overloaded and accept a &lt;code&gt;createIfMissing&lt;/code&gt; parameter&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&amp;quot;stars&amp;quot;, 50);
+
+//update, if not found create it
+datastore
+    .updateFirst(datastore
+        .createQuery(Hotel.class)
+        .field(&amp;quot;stars&amp;quot;).greaterThan(100),
+    ops, true);  
+
+// creates { &amp;quot;_id&amp;quot; : ObjectId(&amp;quot;4c60629d2f1200000000161d&amp;quot;), &amp;quot;stars&amp;quot; : 50 }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Validation Extension</title>
+      <link>/morphia/1.1/guides/validationExtension/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.1/guides/validationExtension/</guid>
+      <description>
+
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;This is a simple extension to Morphia to process JSR 303 Validation Annotations.&lt;/p&gt;
+
+&lt;h1 id=&#34;using&#34;&gt;Using&lt;/h1&gt;
+
+&lt;p&gt;Add this at the start of your application (or wherever you create your morphia instances).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;new ValidationExtension(morphia);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;Here is a simple example using (as an example) Hibernate validation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;...
+import org.hibernate.validator.constraints.Email;
+...
+
+@Entity
+public class Userlike {
+	@Id ObjectId id;
+	@Email String email;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
+
+&lt;p&gt;This is a lightweight wrapper around the JSR 303 API. It installs a simple global entity interceptor which listens to all
+&lt;a href=&#34;/morphia/1.1/morphia/1.1/guides/lifeCycleMethods/&#34;&gt;life cycle methods&lt;/a&gt; needed for validation. You can use any implementation of JSR 303 by
+just adding it to the classpath.&lt;/p&gt;
+
+&lt;p&gt;You can look at the code &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.1.x/validation/src/main/java/org/mongodb/morphia/ValidationExtension.java
+&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;dependencies&#34;&gt;Dependencies&lt;/h2&gt;
+
+&lt;h3 id=&#34;manual&#34;&gt;Manual&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://hibernate.org/validator/&#34;&gt;Hibernate Validator&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;maven&#34;&gt;Maven&lt;/h3&gt;
+
+&lt;p&gt;If you use Maven to manage your project, you can reference Morphia as a dependency:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;morphia-validation&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;1.2.1&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

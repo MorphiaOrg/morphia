@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="/morphia/1.1/img/favicon.png">
+
+    <title>Updating</title>
+
+    <link rel="stylesheet" href="/morphia/1.1/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/highlight/styles/idea.css" />
+<link rel="stylesheet" href="/morphia/1.1/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.1/css/java.css" type="text/css" />
+
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="/morphia/1.1/../">
+        <img src="/morphia/1.1/img/logo-mongodb-header.png", alt="MongoDB.org" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
+              University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="/morphia/1.1">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="/morphia/1.1/../">Morphia</a>
+          <a class="version pull-right" href="/morphia/1.1">1.1</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/morphia/1.1/getting-started/" class="">
+      <i class='fa fa-road'></i>
+      <span>Getting Started</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/getting-started/installation-guide/">
+        <i class='fa'></i>
+        Installation Guide
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/getting-started/quick-tour/">
+        <i class='fa'></i>
+        Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/morphia/1.1/guides/" class="">
+      <i class='fa fa-book'></i>
+      <span>Reference Guides</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/annotations/">
+        <i class='fa fa-file-text-o'></i>
+        Annotations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/indexing/">
+        <i class='fa fa-file-text-o'></i>
+        Indexing
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/jrebel/">
+        <i class='fa fa-file-text-o'></i>
+        JRebel
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/lifeCycleMethods/">
+        <i class='fa fa-file-text-o'></i>
+        Life Cycle Methods
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/querying/">
+        <i class='fa fa-file-text-o'></i>
+        Querying
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/updating/">
+        <i class='fa fa-file-text-o'></i>
+        Updating
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.1/guides/validationExtension/">
+        <i class='fa fa-file-text-o'></i>
+        Validation Extension
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.1/javadoc">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.1/issues-help/">
+        <i class='fa fa-life-ring'></i>
+        Issues &amp; Help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/morphia">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+<div class="option-popup closed hidden" id="optionsVersionsPopup">
+<div class="option-header">
+  <i class="fa fa-gear"></i>
+  <span>OPTIONS</span>
+  <i class="fa fa-angle-up pull-right"></i>
+</div>
+<div class="option-body">
+  <ul>
+      
+      <li>
+        <label>Version</label>
+        <div class="btn-group btn-group-xs pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Select Version <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
+          </ul>
+        </div>
+      </li>
+
+   
+
+
+    
+
+  </ul>
+</div>
+</div>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/1.1.x/docs/reference/content/guides/updating.md" target="_blank" title="Edit guides/updating.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/morphia/1.1/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
+  <li>Updating</li>
+</ul>
+</div>
+
+
+
+
+<h1 id="introduction">Introduction</h1>
+
+<p>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.</p>
+
+<h1 id="updating-on-the-server">Updating (on the server)</h1>
+
+<p>The update method on <a href="/morphia/1.11.1/javadoc?org/mongodb/morphia/Datastore.html
+"><code>Datastore</code></a> is used to issue a command to the server to change
+existing documents.  The effects of the update command are defined via
+<a href="/morphia/1.11.1/javadoc?org/mongodb/morphia/query/UpdateOperations.html
+"><code>UpdateOperations</code></a> methods.</p>
+
+<h2 id="the-field-expression">The Field Expression</h2>
+
+<p>The field expression, used by all update operations,  can be either a single field name or any dot-notation form (for embedded
+elements). The positional operator ($) can also be used in the in the field expression for array updates.  To illustrate, consider the
+entity here:</p>
+
+<pre><code class="language-java">@Entity(&quot;hotels&quot;)
+public class Hotel
+{
+   @Id
+   private ObjectId id;
+
+   private String name;
+   private int stars;
+
+   @Embedded
+   private Address address;
+
+   List&lt;Integer&gt; roomNumbers = new ArrayList&lt;Integer&gt;();
+
+   // ... optional getters and setters
+}
+
+@Embedded
+public class Address
+{
+   private String street;
+   private String city;
+   private String postalCode;
+   private String country;
+
+   // ... optional getters and setters
+}
+</code></pre>
+
+<h3 id="set-unset">set()/unset()</h3>
+
+<p>To change the name of the hotel, one would use something like this:</p>
+
+<pre><code class="language-java">UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&quot;name&quot;, &quot;Fairmont Chateau Laurier&quot;);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p>This also works for embedded documents.  To change the name of the city in the address, one would use something like this:</p>
+
+<pre><code class="language-java">UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&quot;address.city&quot;, &quot;Ottawa&quot;);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p>Values can also be removed from documents as shown below:</p>
+
+<pre><code class="language-java">UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .unset(&quot;name&quot;);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p>After this update, the name of the hotel would be <code>null</code> when the entity is loaded.</p>
+
+<h3 id="inc-dec">inc()/dec()</h3>
+
+<p>To simply increment or decrement values in the database, updates like these would be used:</p>
+
+<pre><code class="language-java">// increment 'stars' by 4
+UpdateOperations ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;);
+datastore.update(updateQuery, ops);
+
+// increment 'stars' by 4
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;, 4);
+datastore.update(updateQuery, ops);
+
+// decrement 'stars' by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .dec(&quot;stars&quot;);  // same as .inc(&quot;stars&quot;, -1)
+datastore.update(updateQuery, ops);
+
+// decrement 'stars' by 4
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;, -4);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<h3 id="add-addall">add()/addAll()</h3>
+
+<p><code>add()</code> is used to add a value to an array field:</p>
+
+<pre><code class="language-java">ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&quot;roomNumbers&quot;, 11);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p>This will issue a <code>$addToSet</code> operation adding <code>11</code> to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded <code>add()</code> that takes a boolean instead:</p>
+
+<pre><code class="language-java">ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .add(&quot;roomNumbers&quot;, 11, true);
+datastore.update(updateQuery, ops);
+</code></pre>
+
+<p><code>addAll()</code> takes a <code>List</code> of values and behaves similarly.</p>
+
+<h3 id="removefirst-removelast-removeall">removeFirst()/removeLast()/removeAll()</h3>
+
+<p>To remove values from a list, use <code>removeFirst()</code>, <code>removeLast()</code>, or <code>removeAll()</code>:</p>
+
+<pre><code class="language-java">//given roomNumbers = [ 1, 2, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeFirst(&quot;roomNumbers&quot;);
+datastore.update(updateQuery, ops);  // [ 2, 3 ]
+
+//given roomNumbers = [ 1, 2, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&quot;roomNumbers&quot;);
+datastore.update(updateQuery, ops);  // [ 1, 2 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&quot;roomNumbers&quot;);
+datastore.update(updateQuery, ops);  // [ 1 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeLast(&quot;roomNumbers&quot;);
+datastore.update(updateQuery, ops);  // []   empty array
+
+//given roomNumbers = [ 1, 2, 3, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeAll(&quot;roomNumbers&quot;, 3);
+datastore.update(updateQuery, ops);  // [ 1, 2 ]
+
+//given roomNumbers = [ 1, 2, 3, 3 ]
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .removeAll(&quot;roomNumbers&quot;, Arrays.asList(2, 3));
+datastore.update(updateQuery, ops);  // [ 1 ]
+</code></pre>
+
+<h3 id="updatefirst">updateFirst()</h3>
+
+<p>In the default driver and shell this is the default behavior. In Morphia we feel like updating all the results of the query is a better default (see below).</p>
+
+<pre><code class="language-javascript">    {
+        name: &quot;Fairmont&quot;, 
+        stars: 5
+    },
+    {
+        name: &quot;Last Chance&quot;, 
+        stars: 3 
+    }
+</code></pre>
+
+<pre><code class="language-java">ops = datastore.createUpdateOperations(Hotel.class).inc(&quot;stars&quot;, 50);
+
+// morphia exposes a specific updateFirst to update only the first hotel matching the query
+datastore
+    .updateFirst(datastore
+        .find(Hotel.class)
+        .order(&quot;stars&quot;),
+        ops);  // update only Last Chance
+datastore
+    .updateFirst(datastore
+        .find(Hotel.class)
+        .order(&quot;-stars&quot;),
+        ops); // update only Fairmont
+</code></pre>
+
+<h2 id="multiple-operations">Multiple Operations</h2>
+
+<p>You can also perform multiple update operations within a single update.</p>
+
+<pre><code class="language-java">//set city to Ottawa and increment stars by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&quot;city&quot;, &quot;Ottawa&quot;)
+    .inc(&quot;stars&quot;);
+datastore.update(updateQuery, ops);
+
+//if you perform multiple operations in one command on the same property, results will vary
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;, 50)
+    .inc(&quot;stars&quot;);  //increments by 1
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;)
+    .inc(&quot;stars&quot;, 50);  //increments by 50
+
+//you can't apply conflicting operations to the same property
+ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .set(&quot;stars&quot;, 1)
+    .inc(&quot;stars&quot;, 50); //causes error
+</code></pre>
+
+<h2 id="createifmissing-overload-parameter">createIfMissing (overload parameter)</h2>
+
+<p>All of the update methods on <code>Datastore</code> are overloaded and accept a <code>createIfMissing</code> parameter</p>
+
+<pre><code class="language-java">ops = datastore
+    .createUpdateOperations(Hotel.class)
+    .inc(&quot;stars&quot;, 50);
+
+//update, if not found create it
+datastore
+    .updateFirst(datastore
+        .createQuery(Hotel.class)
+        .field(&quot;stars&quot;).greaterThan(100),
+    ops, true);  
+
+// creates { &quot;_id&quot; : ObjectId(&quot;4c60629d2f1200000000161d&quot;), &quot;stars&quot; : 50 }
+</code></pre>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.1/guides/querying/">
+      <i class="fa fa-long-arrow-left"> </i> Querying
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/morphia/1.1/guides/validationExtension/">
+    Validation Extension <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#updating-on-the-server">Updating (on the server)</a>
+<ul>
+<li><a href="#the-field-expression">The Field Expression</a>
+<ul>
+<li><a href="#set-unset">set()/unset()</a></li>
+<li><a href="#inc-dec">inc()/dec()</a></li>
+<li><a href="#add-addall">add()/addAll()</a></li>
+<li><a href="#removefirst-removelast-removeall">removeFirst()/removeLast()/removeAll()</a></li>
+<li><a href="#updatefirst">updateFirst()</a></li>
+</ul></li>
+<li><a href="#multiple-operations">Multiple Operations</a></li>
+<li><a href="#createifmissing-overload-parameter">createIfMissing (overload parameter)</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "/morphia/1.1",
+   VERSION:     "1.1",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="/morphia/1.1/js/jquery.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/bootstrap.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/navbar.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/scripts.js"></script>
+<script type="text/javascript" src="/morphia/1.1/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/morphia/1.1/js/java.js"></script>
+
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+
