@@ -112,30 +112,26 @@ ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-### push()/addToSet()
+### add()/addAll()
 
-`push()` is used to add a value to an array field:
+`add()` is used to add a value to an array field:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
-    .push("roomNumbers", 11);
+    .add("roomNumbers", 11);
 datastore.update(updateQuery, ops);
 ```
 
-This will issue a `$push` operation adding `11` to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use `addToSet()` instead:
+This will issue a `$addToSet` operation adding `11` to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded `add()` that takes a boolean instead:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
-    .addToSet("roomNumbers", 11);
+    .add("roomNumbers", 11, true);
 datastore.update(updateQuery, ops);
 ```
 
-`push()` and `addToSet()` can take either single values or a `List` of values.  The `push()` methods can also optionally take a 
-[`PushOptions`]({{< apiref "org/mongodb/morphia/query/PushOptions" >}}) instance allowing for tweaking how the values are added to the 
-list.  See [the manual]({{< docsref "reference/operator/update/push/#modifiers" >}}) for more information about the various modifiers
-available.
-
+`addAll()` takes a `List` of values and behaves similarly.
 
 ### removeFirst()/removeLast()/removeAll()
 To remove values from a list, use `removeFirst()`, `removeLast()`, or `removeAll()`:
