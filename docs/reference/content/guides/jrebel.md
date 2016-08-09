@@ -7,7 +7,7 @@ title = "JRebel"
 
 # Introduction
 
-This is a simple extension to Morphia to make classes being re-mapped to morphia, once they are reloaded by JRebel.
+This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.
 
 ## Prerequisites
 

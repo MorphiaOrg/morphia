@@ -9,8 +9,14 @@ title = "Reference Guides"
 
 ## Reference Guides
 
-  * [Aggregation]({{< ref "guides/aggregation.md" >}})
-  * [Annotations]({{< ref "guides/annotations.md" >}})
-  * [Indexing]({{< ref "guides/indexing.md" >}})
-  * [Life Cycle Methods]({{< ref "guides/lifeCycleMethods.md" >}})
-  * [Querying]({{< ref "guides/querying.md" >}})
+### Core Guides
+* [Querying]({{< ref "guides/querying.md" >}})
+* [Updating]({{< ref "guides/Updating.md" >}})
+* [Aggregation]({{< ref "guides/aggregation.md" >}})
+* [Annotations]({{< ref "guides/annotations.md" >}})
+* [Indexing]({{< ref "guides/indexing.md" >}})
+* [Life Cycle Methods]({{< ref "guides/lifeCycleMethods.md" >}})
+
+### Extension Guides
+* [JRebel Support]({{< ref "guides/jrebel.md" >}})
+* [Validation Extension]({{< ref "guides/validationExtension.md" >}})
