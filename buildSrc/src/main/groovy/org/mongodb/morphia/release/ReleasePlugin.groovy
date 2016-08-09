@@ -12,8 +12,8 @@ import org.gradle.api.Project
  * <li><a href="https://github.com/kohsuke/github-api">Github plugin</a></li>
  * <li><a href="http://www.eclipse.org/jgit/download/">JGit</a></ol>
  *
- * As such, you need to provide the configuration those tools need.  You'll need Nexus and Github credentials in 
- * <code>~/.gradle/gradle.properties</code>, and Github credentials in <code>~/.github</code> - this duplication is because the two 
+ * As such, you need to provide the configuration those tools need.  You'll need Nexus and Github credentials in
+ * <code>~/.gradle/gradle.properties</code>, and Github credentials in <code>~/.github</code> - this duplication is because the two
  * git-related libraries get their configuration from different places.
  */
 class ReleasePlugin implements Plugin<Project> {
@@ -28,8 +28,7 @@ class ReleasePlugin implements Plugin<Project> {
         project.task('prepareRelease', type: PrepareReleaseTask, dependsOn: project.subprojects.clean)
         // uploadArchives is configured in publish.gradle
         project.task('draftReleaseNotes', type: DraftReleaseNotesTask, dependsOn: ['prepareRelease', project.subprojects.uploadArchives])
-        project.task('publishJavadoc', type: PublishJavadocTask, dependsOn: ['draftReleaseNotes', project.subprojects.javadoc])
-        project.task('updateToNextVersion', type: UpdateToNextVersionTask, dependsOn: 'publishJavadoc')
+        project.task('updateToNextVersion', type: UpdateToNextVersionTask, dependsOn: 'pushDocs')
         project.task('release', dependsOn: 'updateToNextVersion')
     }
 

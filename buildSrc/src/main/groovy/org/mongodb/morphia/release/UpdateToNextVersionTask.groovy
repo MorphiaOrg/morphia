@@ -14,26 +14,22 @@ class UpdateToNextVersionTask extends DefaultTask {
     @TaskAction
     def updateToNextVersion() {
         def oldVersion = project.release.releaseVersion
-        try {
-            def newVersion = incrementToNextVersion(oldVersion)
-            def buildFile = project.file('gradle.properties')
-            project.ant.replaceregexp(file: buildFile, match: oldVersion, replace: newVersion)
+        def newVersion = incrementToNextVersion(oldVersion)
+        def buildFile = project.file('gradle.properties')
+        project.ant.replaceregexp(file: buildFile, match: oldVersion, replace: newVersion)
 
-            def git = Git.open(new File('.'))
-            git.commit()
-                   .setOnly(buildFile.name)
-                   .setMessage("Updated to next development version: ${newVersion}")
-                   .call()
+        def git = Git.open(new File('.'))
+        git.commit()
+           .setOnly(buildFile.name)
+           .setMessage("Updated to next development version: ${newVersion}")
+           .call()
 
-            String username = project.property("github.credentials.username")
-            String password = project.property("github.credentials.password")
+        String username = project.property("github.credentials.username")
+        String password = project.property("github.credentials.password")
 
-            git.push()
-                   .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
-                   .call()
-        } catch (NumberFormatException e) {
-            println(">>>>> Could not update to the next version.  Please update manually.")
-        }
+        git.push()
+           .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
+           .call()
     }
 
     static incrementToNextVersion(String old) {
