@@ -62,6 +62,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     }
 
     @Override
+    @Deprecated
     public UpdateOperations<T> addAll(final String field, final List<?> values, final boolean addDups) {
         if (values == null || values.isEmpty()) {
             throw new QueryException("Values cannot be null or empty.");

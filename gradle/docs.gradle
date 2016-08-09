@@ -91,6 +91,14 @@ task reference(dependsOn: ':morphia:javadoc') << {
             [ '{{< install version', "{{< install version=\"${latest}\" >}}"]
     ])
 
+    update('docs/reference/content/guides/jrebel.md', [
+            ['    <version>###</version>', "    <version>${latest}</version>"]
+    ])
+
+    update('docs/reference/content/guides/validationExtension.md', [
+            ['    <version>###</version>', "    <version>${latest}</version>"]
+    ])
+
     update('docs/reference/config.toml', [
             [ 'baseurl = "', "baseurl = \"/morphia/${urlVersion}\""],
             [ 'latest = "', "latest = \"${latest}\""]
@@ -98,7 +106,8 @@ task reference(dependsOn: ':morphia:javadoc') << {
 
     update('docs/reference/data/mongodb.toml', [
             ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
-            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
+            ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
+            ['apiUrl = "', "apiUrl = \"${majorVersion - '-SNAPSHOT'}/javadoc\""]
     ])
 
 /*

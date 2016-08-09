@@ -3,7 +3,6 @@ date = "2015-03-17T15:36:56Z"
 title = "Annotations"
 [menu.main]
   parent = "Reference Guides"
-  weight = 85
   pre = "<i class='fa fa-file-text-o'></i>"
 +++
 
@@ -11,247 +10,97 @@ title = "Annotations"
 
 Below is a list of all the annotations and a brief description of how to use them.
 
-## Entity
-Marks entities to be stored directly in a collection. This annotations is optional in most cases (though this is likely to change in 
-future versions). There is no harm in including it to be more verbose, and make clear the intention for the class.  The definition of 
-this annotation looks like this:
-
-```java
-public @interface Entity {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  CappedAt cap() default @CappedAt(0);
-  boolean noClassnameStored() default false;
-  boolean queryNonPrimary() default false;
-  String concern() default "";
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value()             | Defines the collection to use.  Defaults to using the classname |
-| cap()               | Marks this collection as capped and sets the size to use.  See the [`@Capped`]({{< ref "#capped" >}}) below|
-| noClassnameStored() | Tells Morphia to not store the classname in the document.  The default is to store the classname. |
-| queryNonPrimary()   | Indicates that queries against this collection can use secondaries.  The default is primary only reads. |
-| concern()           | The WriteConcern to use when writing to this collection.  The default WriteConcern depends on how the `MongoClient` passed to the `Datastore` was created.| 
-
-
 ## Indexes
 
-In addition to being able to declare an index on a single field you can also declare the indexes at the class level. This allows you to 
- create more than just a single field index; it allows you to create compound indexes with multiple fields.
-
-```java
-public @interface Indexes {
-    Index[] value();
-}
-```
-
-To see the next few annotations in context, please refer to [TestIndexCollections.java]({{< srcref 
+Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes.  To see the next few
+annotations in context, please refer to [TestIndexCollections.java]({{< srcref
 "morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java">}}) or [TestIndexed.java]({{< srcref
  "morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java">}}) in the Morphia source.
 
 ### Index
- 
-```java
-public @interface Index {
-    String value() default "";
-    String name() default "";
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
 
-    Field[] fields() default {};
-    IndexOptions options() default @IndexOptions();
-}
-```
-
-There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the `@IndexOptions` 
- annotation.
- 
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | List of fields (prepended with "-" for desc; defaults to asc). |  
-| name() | The name of the index |
-| unique() | Requires values in the index to be unique |
-| dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background()| Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
-| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
-| disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
-| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
-| fields() | This is the new way to define which fields to index. [Details]({{< ref "#Field" >}}) can be found below. |
-| options() | This is the new way to define index options. [Details]({{< ref "#IndexOptions" >}}) can be found below.  |
+The `@Index` documentation can be found [here]({{< apiref "org/mongodb/morphia/annotations/Index" >}}).  There are two pieces to this 
+annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed 
+in the 2.x series.  These options and more have been conglomerated in the [`@IndexOptions`]({{< apiref "org/mongodb/morphia/annotations/IndexOptions" >}}) annotation.
 
 #### Field
-```java
- public @interface Field {
-     String value();
-     IndexType type() default IndexType.ASC;
-     int weight() default -1;
- }
-```
-
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | The field to include in the index |
-| type() | The type of index to create.  This includes the following values:   `ASC`, `DESC`, `GEO2D`, `GEO2DSPHERE`, `TEXT` |
-| weight() | When defining a text index, this is the weight to apply |
-
-
+The [`@Field`]({{< apiref "org/mongodb/morphia/annotations/Field" >}}) annotation defines indexing on a specific document field.  Multiple
+instances of this annotation may be passed to the `@Index` annotation to define a compound index on multiple fields.
 
 #### IndexOptions
-```java
-public @interface IndexOptions {
-    String name() default "";
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
-    String language() default "";
-    String languageOverride() default "";
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| name() | The name of the index |
-| unique() | Requires values in the index to be unique |
-| dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background() | Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
-| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
-| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
-| disableValidation() | By default, Morphia will validate field names being index.  This disables those checks. |
-| language() | Default language for the index. |
-| languageOverride() | The field in the document to use to override the default language. |
+The [`@IndexOptions`]({{< apiref "org/mongodb/morphia/annotations/IndexOptions" >}}) annotation defines the options to apply to an index
+definition.  This annotation replaces the fields found directly on the `@Index` annotation.  This annotation was added to ensure that index
+options are consistent across the various index definition approaches.
 
 #### Indexed
-Applied to a Java field, marks the field to be indexed by MongoDB.
+[`@Indexed`]({{< apiref "org/mongodb/morphia/annotations/Indexed" >}}), applied to a Java field, marks the field to be indexed by MongoDB.
+  This is used for simple, single-field indexes.  As stated above, the `options` value replaces the individual setting values on the
+   `@Indexed` annotation itself.
 
-```java
-public @interface Indexed {
-    IndexDirection value() default IndexDirection.ASC;
-    String name() default "";
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    int expireAfterSeconds() default -1;
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | The sort direction for the index |
-| name() | The name of the index |
-| unique() | Requires values in the index to be unique |
-| dropDups() | Drop any duplicate values during the creation of a unique index. |
-| background() | Create this index in the background.  There are some [considerations]({{< docsref "tutorial/build-indexes-in-the-background/#considerations" >}}) to keep in mind.
-| sparse() | Create a [sparse]({{< docsref "core/index-sparse/" >}}) index |
-| expireAfterSeconds() | Creates a [TTL Index]({{< docsref "core/index-ttl/" >}}) on a date field. |
+## Entity Mapping
+Morphia provides a number of annotations providing for the customization of object mapping.
 
-## Id
-Marks a field in an `@Entity` to be the "_id" field in MongoDB.
+### Entity
+[`@Entity`]({{< apiref "org/mongodb/morphia/annotations/Entity" >}}) marks entities to be stored directly in a collection. This annotation
+is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the 
+collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
+references and embedding.
 
-## Property
-An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
- as the property name.  This can be overridden by passing a String with the new name to the annotation.
+### Reference
+[`@Reference`]({{< apiref "org/mongodb/morphia/annotations/Reference" >}}) marks a field as a reference to a document stored in another
+collection and is linked (by a `DBRef` field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced 
+via an `@Reference` field must have already have a non-null `@Id` value in the referenced entity. This can be done by either saving the 
+referenced entities first or by manually assigning them ID values.  By default, these referenced entities are automatically loaded by 
+Morphia along with the referencing entity.  This can result in a high number of database round trips just to load a single entity.  To 
+resolve this, `lazy = true` can be passed to the annotation.  This will create a dynamic proxy which will lazily load the entity the first 
+time it is referenced in code.  
 
-## Transient
-Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword `transient` can also be used instead.
-
-## Serialized
-Instructs Morphia to serialize this field using JDK serialization.  The field's value gets converted to a `byte[]` and passed
- off to MongoDB.
-
-```java
-public @interface Serialized {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  boolean disableCompression() default false;
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | the field name to use in the document |
-| disableCompression() | By default, Morphia compresses the `byte[]` after serialization.  Setting this to true disables the compression. |
-
-
-## NotSaved
-Instructs Morphia to ignore this field when saving but will still be loaded.
+Fields annotated with `@Reference` will show up in MongoDB as `DBRef` fields by default.  A `DBRef` stores not only the entity's ID value 
+but also the collection name.  In most cases, this is probably redundant information as the collection name is already encoded in the 
+entity's mapping information.  To reduce the amount of storage necessary to track these references, use `idOnly = true` in the mapping.
+This will result in only the ID value being stored in the document.
  
-_Good for data migration._
+### Embedded
+In contrast to `@Reference` where a nested Java reference ends up as a separate document in a collection, 
+[`@Embedded`]({{< apiref "org/mongodb/morphia/annotations/Embedded" >}}) tells Morphia to embed the document created from the Java object
+in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
+embedded instance.
 
-## AlsoLoad
-When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation 
-to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names 
-when loading a document.
+### Id
+[`@Id`]({{< apiref "org/mongodb/morphia/annotations/Id" >}}) marks a field in an entity to be the `_id` field in MongoDB.  This 
+annotation is required on all top level entities regardless of the presence of an `@Entity` annotation.  If a class is marked with 
+`@Embedded` this annotation is not required since embedded documents are not required to have _id fields.
 
-_Good for data migration._
+### Property
+[`@Property`]({{< apiref "org/mongodb/morphia/annotations/Property" >}}) is an optional annotation instructing Morphia to persist the 
+field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
+overridden by passing a String with the new name to the annotation.
 
-```java
-public @interface AlsoLoad {
-  String[] value();
-}
-```
+### Transient
+[`@Transient`]({{< apiref "org/mongodb/morphia/annotations/Transient" >}}) instructs Morphia to ignore this field when converting an 
+entity to a document.  The Java keyword `transient` can also be used instead.
 
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | The array of names to try when loading the field |
+### Serialized
+[`@Serialized`]({{< apiref "org/mongodb/morphia/annotations/Serialized" >}}) instructs Morphia to serialize this field using JDK 
+serialization.  The field's value gets converted to a `byte[]` and passed to MongoDB.
 
-## Version
-Marks a field in an `@Entity` to control optimistic locking for that entity. If the versions change while modifying an entity (including 
-deletes) a `ConcurrentModificationException` will be thrown. This field will be automatically managed for you -- there is no need to set
- a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this 
- annotation to change the document's field name.
+### NotSaved
+[`@NotSaved`]({{< apiref "org/mongodb/morphia/annotations/NotSaved" >}}) instructs Morphia to ignore this field when saving but will
+ still be loaded from the database when the entity is read.
 
-```java
-@Entity
-class MyClass {
-   ...
-   @Version Long v;
-}
-```
+### AlsoLoad
+[`@AlsoLoad`]({{< apiref "org/mongodb/morphia/annotations/AlsoLoad" >}}) instructs Morphia to look for a field under different names than 
+the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use 
+this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and 
+new key names when loading a document.  These alternate names are not used in queries, however, so if there are queries against this field
+they should be updated to use the alternate names as well or the database should be updated such that every instance of the old name is 
+renamed.
 
-## Reference
-Marks fields as stored in another collection and which are linked (by a `DBRef` field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an `@Reference` field must have already been saved in MongoDB or have the Java object's
-  `@Id` already assigned.  Otherwise, no key can be copied in to the `Key` for storage in the database.  If you're always saving the 
-  referenced entity in the mapped collection (`Datastore` can be told to save in to a collection other than the mapped collection) a lot 
-  of space can be saved by using the `idOnly()` parameter to just save the key value.
-
-```java
-public @interface Reference {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class<?> concreteClass() default Object.class;
-  boolean ignoreMissing() default false;
-  boolean lazy() default false;
-  boolean idOnly() default false;
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | The field name to use in the document.  Defaults to the Java field name. |
-| ignoreMissing() | Ignore any missing documents |
-| lazy() | Instructs Morphia to defer loading of the referenced document. |
-| idOnly() | Instructs Morphia to only store the key of the referenced document rather than a full `DBRef` |
-
-
-## Embedded
-In contrast to `@Reference` where a nested Java reference ends up as a separate document in a collection, `@Embedded` tells Morphia 
-to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of 
-the embedded type or on the field holding the embedded instance.
-
-```java
-public @interface Embedded {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class<?> concreteClass() default Object.class;
-}
-```
-| Parameter           | Usage           |
-| ------------------- | --------------  |
-| value() | The field name to use in the document.  Defaults to the Java field name. |
-| concreteClass() | The concrete class to use when instantiating the embedded entity |
+### Version
+[`@Version`]({{< apiref "org/mongodb/morphia/annotations/Version" >}}) marks a field in an entity to control optimistic locking. If the
+versions change in the database while modifying an entity (including deletes) a `ConcurrentModificationException` will be thrown. This 
+field will be automatically managed for you -- there is no need to set a value and you should not do so.  If another name beside the Java
+field name is desired, a name can be passed to this annotation to change the document's field name.
 
 ## Lifecycle Annotations
 
@@ -264,7 +113,7 @@ There are various annotations which can be used to register callbacks on certain
 - `@PostPersist` - Called after the save call to the datastore
 
 ### Examples
-[This](https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is one of the test 
+[This](https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is one of the test
 classes.
 
 All parameters and return values are optional in your implemented methods.

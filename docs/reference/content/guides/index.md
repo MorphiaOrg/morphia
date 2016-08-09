@@ -9,7 +9,8 @@ title = "Reference Guides"
 
 ## Reference Guides
 
-  * [Annotations]({{< ref "guides/annotations.md" >}})
-  * [Querying]({{< ref "guides/querying.md" >}})
   * [Aggregation]({{< ref "guides/aggregation.md" >}})
+  * [Annotations]({{< ref "guides/annotations.md" >}})
   * [Indexing]({{< ref "guides/indexing.md" >}})
+  * [Life Cycle Methods]({{< ref "guides/lifeCycleMethods.md" >}})
+  * [Querying]({{< ref "guides/querying.md" >}})
