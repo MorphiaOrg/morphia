@@ -11,7 +11,7 @@ title = "Reference Guides"
 
 ### Core Guides
 * [Querying]({{< ref "guides/querying.md" >}})
-* [Updating]({{< ref "guides/Updating.md" >}})
+* [Updating]({{< ref "guides/updating.md" >}})
 * [Aggregation]({{< ref "guides/aggregation.md" >}})
 * [Annotations]({{< ref "guides/annotations.md" >}})
 * [Indexing]({{< ref "guides/indexing.md" >}})
