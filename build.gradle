@@ -1,7 +1,8 @@
 ext.configDir = new File(rootDir, 'config')
 ext.slf4jVersion = '1.7.5'
 ext.git = find('git')
-ext.majorVersion = version.split('\\.').dropRight(1).join('.') + ( gitVersion() == 'master' ? '-SNAPSHOT' : '')
+ext.majorVersion = major(version)
+
 ext.latest = gitVersion() == 'master' ? version : latest_release
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -29,7 +30,6 @@ buildscript {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.13'
 }
-
 
 configure(subprojects.findAll { it.name != 'util' }) {
     apply plugin: 'java'
@@ -137,6 +137,11 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {
 
 def buildingWith(n) {
     project.hasProperty(n)
+}
+
+def major(fullVersion) {
+    fullVersion.split('\\.').dropRight(1).join('.') +
+        (gitVersion() == 'master' && fullVersion.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 }
 
 def gitVersion() {

@@ -1,5 +1,4 @@
 def urlVersion = version.split('\\.')[0..1].join('.')
-def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 def ghPages = file("build/gh-pages")
 
 ext.hugo = find('hugo')
@@ -66,6 +65,10 @@ task landing << {
         throw new TaskExecutionException(it, new Exception("Latest release not listed in $file"))
     }
 
+    update('docs/landing/layouts/partials/hero.html', [
+            [ '      <a id="latest" ', "      <a id=\"latest\" href=\"${major(latest_release)}\""]
+    ])
+
     exec {
         workingDir 'docs/landing'
         environment System.getenv()
@@ -109,22 +112,6 @@ task reference(dependsOn: ':morphia:javadoc') << {
             ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
             ['apiUrl = "', "apiUrl = \"${majorVersion - '-SNAPSHOT'}/javadoc\""]
     ])
-
-/*
-    copy {
-        from 'docs/reference/config.toml'
-        into 'docs/reference/config.toml.backup'
-
-        filter { String line ->
-            line.startsWith('baseurl = "') ? "baseurl = /morphia/${shortVersion}" : line
-        }
-    }
-
-    move {
-        from 'docs/reference/config.toml.backup'
-        into 'docs/reference/config.toml'
-    }
-*/
 }
 
 task viewLanding(dependsOn: 'landing') << {
