@@ -551,12 +551,22 @@ is a &lt;code&gt;delete&lt;/code&gt; that can take that reference and delete it.
 
 &lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
 
+&lt;h3 id=&#34;core-guides&#34;&gt;Core Guides&lt;/h3&gt;
+
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/updating/&#34;&gt;Updating&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/lifeCycleMethods/&#34;&gt;Life Cycle Methods&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;extension-guides&#34;&gt;Extension Guides&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/jrebel/&#34;&gt;JRebel Support&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/guides/validationExtension/&#34;&gt;Validation Extension&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -875,7 +885,7 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;This is a simple extension to Morphia to make classes being re-mapped to morphia, once they are reloaded by JRebel.&lt;/p&gt;
+&lt;p&gt;This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.&lt;/p&gt;
 
 &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
 
