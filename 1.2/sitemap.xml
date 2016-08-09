@@ -50,7 +50,23 @@
   </url>
   
   <url>
+    <loc>/morphia/1.2/guides/jrebel/</loc>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.2/guides/lifeCycleMethods/</loc>
+  </url>
+  
+  <url>
     <loc>/morphia/1.2/guides/querying/</loc>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.2/guides/updating/</loc>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.2/guides/validationExtension/</loc>
   </url>
   
 </urlset>

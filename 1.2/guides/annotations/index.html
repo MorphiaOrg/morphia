@@ -199,6 +199,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
   
   
   
@@ -223,6 +250,15 @@
       
       
         
+      
+    
+      
+      
+    
+      
+      
+    
+      
       
     
       
@@ -418,6 +454,35 @@
 
 
 
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.2/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
   
 
 
@@ -427,6 +492,93 @@
     <a href="/morphia/1.2/guides/annotations/">
         <i class='fa fa-file-text-o'></i>
         Annotations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.2/guides/indexing/">
+        <i class='fa fa-file-text-o'></i>
+        Indexing
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.2/guides/jrebel/">
+        <i class='fa fa-file-text-o'></i>
+        JRebel
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.2/guides/lifeCycleMethods/">
+        <i class='fa fa-file-text-o'></i>
+        Life Cycle Methods
     </a>
   </li>
 
@@ -482,9 +634,9 @@
 
 
     <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/aggregation/">
+    <a href="/morphia/1.2/guides/updating/">
         <i class='fa fa-file-text-o'></i>
-        Aggregation
+        Updating
     </a>
   </li>
 
@@ -511,9 +663,9 @@
 
 
     <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/indexing/">
+    <a href="/morphia/1.2/guides/validationExtension/">
         <i class='fa fa-file-text-o'></i>
-        Indexing
+        Validation Extension
     </a>
   </li>
 
@@ -684,503 +836,126 @@
 
 <p>Below is a list of all the annotations and a brief description of how to use them.</p>
 
-<h2 id="entity">Entity</h2>
-
-<p>Marks entities to be stored directly in a collection. This annotations is optional in most cases (though this is likely to change in
-future versions). There is no harm in including it to be more verbose, and make clear the intention for the class.  The definition of
-this annotation looks like this:</p>
-
-<pre><code class="language-java">public @interface Entity {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  CappedAt cap() default @CappedAt(0);
-  boolean noClassnameStored() default false;
-  boolean queryNonPrimary() default false;
-  String concern() default &quot;&quot;;
-}
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>Defines the collection to use.  Defaults to using the classname</td>
-</tr>
-
-<tr>
-<td>cap()</td>
-<td>Marks this collection as capped and sets the size to use.  See the <a href="#capped"><code>@Capped</code></a> below</td>
-</tr>
-
-<tr>
-<td>noClassnameStored()</td>
-<td>Tells Morphia to not store the classname in the document.  The default is to store the classname.</td>
-</tr>
-
-<tr>
-<td>queryNonPrimary()</td>
-<td>Indicates that queries against this collection can use secondaries.  The default is primary only reads.</td>
-</tr>
-
-<tr>
-<td>concern()</td>
-<td>The WriteConcern to use when writing to this collection.  The default WriteConcern depends on how the <code>MongoClient</code> passed to the <code>Datastore</code> was created.</td>
-</tr>
-</tbody>
-</table>
-
 <h2 id="indexes">Indexes</h2>
 
-<p>In addition to being able to declare an index on a single field you can also declare the indexes at the class level. This allows you to
- create more than just a single field index; it allows you to create compound indexes with multiple fields.</p>
-
-<pre><code class="language-java">public @interface Indexes {
-    Index[] value();
-}
-</code></pre>
-
-<p>To see the next few annotations in context, please refer to <a href="https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
+<p>Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes.  To see the next few
+annotations in context, please refer to <a href="https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/TestIndexCollections.java
 ">TestIndexCollections.java</a> or <a href="https://github.com/mongodb/morphia/blob/1.2.x/morphia/src/test/java/org/mongodb/morphia/indexes/TestIndexed.java
 ">TestIndexed.java</a> in the Morphia source.</p>
 
 <h3 id="index">Index</h3>
 
-<pre><code class="language-java">public @interface Index {
-    String value() default &quot;&quot;;
-    String name() default &quot;&quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
-
-    Field[] fields() default {};
-    IndexOptions options() default @IndexOptions();
-}
-</code></pre>
-
-<p>There are two pieces to this annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe
- to use but are unlikely to survive past the 1.x series.  These options and more have been conglomerated in the <code>@IndexOptions</code>
- annotation.</p>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>List of fields (prepended with &ldquo;-&rdquo; for desc; defaults to asc).</td>
-</tr>
-
-<tr>
-<td>name()</td>
-<td>The name of the index</td>
-</tr>
-
-<tr>
-<td>unique()</td>
-<td>Requires values in the index to be unique</td>
-</tr>
-
-<tr>
-<td>dropDups()</td>
-<td>Drop any duplicate values during the creation of a unique index.</td>
-</tr>
-
-<tr>
-<td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-">considerations</a> to keep in mind.</td>
-</tr>
-
-<tr>
-<td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
-">sparse</a> index</td>
-</tr>
-
-<tr>
-<td>disableValidation()</td>
-<td>By default, Morphia will validate field names being index.  This disables those checks.</td>
-</tr>
-
-<tr>
-<td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
-">TTL Index</a> on a date field.</td>
-</tr>
-
-<tr>
-<td>fields()</td>
-<td>This is the new way to define which fields to index. <a href="#Field">Details</a> can be found below.</td>
-</tr>
-
-<tr>
-<td>options()</td>
-<td>This is the new way to define index options. <a href="#IndexOptions">Details</a> can be found below.</td>
-</tr>
-</tbody>
-</table>
+<p>The <code>@Index</code> documentation can be found <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Index.html
+">here</a>.  There are two pieces to this
+annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
+in the 2.x series.  These options and more have been conglomerated in the <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+"><code>@IndexOptions</code></a> annotation.</p>
 
 <h4 id="field">Field</h4>
 
-<pre><code class="language-java"> public @interface Field {
-     String value();
-     IndexType type() default IndexType.ASC;
-     int weight() default -1;
- }
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>The field to include in the index</td>
-</tr>
-
-<tr>
-<td>type()</td>
-<td>The type of index to create.  This includes the following values:   <code>ASC</code>, <code>DESC</code>, <code>GEO2D</code>, <code>GEO2DSPHERE</code>, <code>TEXT</code></td>
-</tr>
-
-<tr>
-<td>weight()</td>
-<td>When defining a text index, this is the weight to apply</td>
-</tr>
-</tbody>
-</table>
+<p>The <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Field.html
+"><code>@Field</code></a> annotation defines indexing on a specific document field.  Multiple
+instances of this annotation may be passed to the <code>@Index</code> annotation to define a compound index on multiple fields.</p>
 
 <h4 id="indexoptions">IndexOptions</h4>
 
-<pre><code class="language-java">public @interface IndexOptions {
-    String name() default &quot;&quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    boolean disableValidation() default false;
-    int expireAfterSeconds() default -1;
-    String language() default &quot;&quot;;
-    String languageOverride() default &quot;&quot;;
-}
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>name()</td>
-<td>The name of the index</td>
-</tr>
-
-<tr>
-<td>unique()</td>
-<td>Requires values in the index to be unique</td>
-</tr>
-
-<tr>
-<td>dropDups()</td>
-<td>Drop any duplicate values during the creation of a unique index.</td>
-</tr>
-
-<tr>
-<td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-">considerations</a> to keep in mind.</td>
-</tr>
-
-<tr>
-<td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
-">sparse</a> index</td>
-</tr>
-
-<tr>
-<td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
-">TTL Index</a> on a date field.</td>
-</tr>
-
-<tr>
-<td>disableValidation()</td>
-<td>By default, Morphia will validate field names being index.  This disables those checks.</td>
-</tr>
-
-<tr>
-<td>language()</td>
-<td>Default language for the index.</td>
-</tr>
-
-<tr>
-<td>languageOverride()</td>
-<td>The field in the document to use to override the default language.</td>
-</tr>
-</tbody>
-</table>
+<p>The <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+"><code>@IndexOptions</code></a> annotation defines the options to apply to an index
+definition.  This annotation replaces the fields found directly on the <code>@Index</code> annotation.  This annotation was added to ensure that index
+options are consistent across the various index definition approaches.</p>
 
 <h4 id="indexed">Indexed</h4>
 
-<p>Applied to a Java field, marks the field to be indexed by MongoDB.</p>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Indexed.html
+"><code>@Indexed</code></a>, applied to a Java field, marks the field to be indexed by MongoDB.
+  This is used for simple, single-field indexes.  As stated above, the <code>options</code> value replaces the individual setting values on the
+   <code>@Indexed</code> annotation itself.</p>
 
-<pre><code class="language-java">public @interface Indexed {
-    IndexDirection value() default IndexDirection.ASC;
-    String name() default &quot;&quot;;
-    boolean unique() default false;
-    boolean dropDups() default false;
-    boolean background() default false;
-    boolean sparse() default false;
-    int expireAfterSeconds() default -1;
-}
-</code></pre>
+<h2 id="entity-mapping">Entity Mapping</h2>
 
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
+<p>Morphia provides a number of annotations providing for the customization of object mapping.</p>
 
-<tbody>
-<tr>
-<td>value()</td>
-<td>The sort direction for the index</td>
-</tr>
+<h3 id="entity">Entity</h3>
 
-<tr>
-<td>name()</td>
-<td>The name of the index</td>
-</tr>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Entity.html
+"><code>@Entity</code></a> marks entities to be stored directly in a collection. This annotation
+is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
+collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
+references and embedding.</p>
 
-<tr>
-<td>unique()</td>
-<td>Requires values in the index to be unique</td>
-</tr>
+<h3 id="reference">Reference</h3>
 
-<tr>
-<td>dropDups()</td>
-<td>Drop any duplicate values during the creation of a unique index.</td>
-</tr>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Reference.html
+"><code>@Reference</code></a> marks a field as a reference to a document stored in another
+collection and is linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
+via an <code>@Reference</code> field must have already have a non-null <code>@Id</code> value in the referenced entity. This can be done by either saving the
+referenced entities first or by manually assigning them ID values.  By default, these referenced entities are automatically loaded by
+Morphia along with the referencing entity.  This can result in a high number of database round trips just to load a single entity.  To
+resolve this, <code>lazy = true</code> can be passed to the annotation.  This will create a dynamic proxy which will lazily load the entity the first
+time it is referenced in code.</p>
 
-<tr>
-<td>background()</td>
-<td>Create this index in the background.  There are some <a href="http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/#considerations
-">considerations</a> to keep in mind.</td>
-</tr>
+<p>Fields annotated with <code>@Reference</code> will show up in MongoDB as <code>DBRef</code> fields by default.  A <code>DBRef</code> stores not only the entity&rsquo;s ID value
+but also the collection name.  In most cases, this is probably redundant information as the collection name is already encoded in the
+entity&rsquo;s mapping information.  To reduce the amount of storage necessary to track these references, use <code>idOnly = true</code> in the mapping.
+This will result in only the ID value being stored in the document.</p>
 
-<tr>
-<td>sparse()</td>
-<td>Create a <a href="http://docs.mongodb.org/manual/core/index-sparse/
-">sparse</a> index</td>
-</tr>
+<h3 id="embedded">Embedded</h3>
 
-<tr>
-<td>expireAfterSeconds()</td>
-<td>Creates a <a href="http://docs.mongodb.org/manual/core/index-ttl/
-">TTL Index</a> on a date field.</td>
-</tr>
-</tbody>
-</table>
+<p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection,
+<a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Embedded.html
+"><code>@Embedded</code></a> tells Morphia to embed the document created from the Java object
+in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
+embedded instance.</p>
 
-<h2 id="id">Id</h2>
+<h3 id="id">Id</h3>
 
-<p>Marks a field in an <code>@Entity</code> to be the &ldquo;_id&rdquo; field in MongoDB.</p>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Id.html
+"><code>@Id</code></a> marks a field in an entity to be the <code>_id</code> field in MongoDB.  This
+annotation is required on all top level entities regardless of the presence of an <code>@Entity</code> annotation.  If a class is marked with
+<code>@Embedded</code> this annotation is not required since embedded documents are not required to have _id fields.</p>
 
-<h2 id="property">Property</h2>
+<h3 id="property">Property</h3>
 
-<p>An optional annotation instructing Morphia to persist the field in to the document given to MongoDB.  By default, the field name is used
- as the property name.  This can be overridden by passing a String with the new name to the annotation.</p>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Property.html
+"><code>@Property</code></a> is an optional annotation instructing Morphia to persist the
+field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
+overridden by passing a String with the new name to the annotation.</p>
 
-<h2 id="transient">Transient</h2>
+<h3 id="transient">Transient</h3>
 
-<p>Instructs Morphia to ignore this field when converting an entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Transient.html
+"><code>@Transient</code></a> instructs Morphia to ignore this field when converting an
+entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
 
-<h2 id="serialized">Serialized</h2>
+<h3 id="serialized">Serialized</h3>
 
-<p>Instructs Morphia to serialize this field using JDK serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed
- off to MongoDB.</p>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Serialized.html
+"><code>@Serialized</code></a> instructs Morphia to serialize this field using JDK
+serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed to MongoDB.</p>
 
-<pre><code class="language-java">public @interface Serialized {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  boolean disableCompression() default false;
-}
-</code></pre>
+<h3 id="notsaved">NotSaved</h3>
 
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/NotSaved.html
+"><code>@NotSaved</code></a> instructs Morphia to ignore this field when saving but will
+ still be loaded from the database when the entity is read.</p>
 
-<tbody>
-<tr>
-<td>value()</td>
-<td>the field name to use in the document</td>
-</tr>
+<h3 id="alsoload">AlsoLoad</h3>
 
-<tr>
-<td>disableCompression()</td>
-<td>By default, Morphia compresses the <code>byte[]</code> after serialization.  Setting this to true disables the compression.</td>
-</tr>
-</tbody>
-</table>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
+"><code>@AlsoLoad</code></a> instructs Morphia to look for a field under different names than
+the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
+this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and
+new key names when loading a document.  These alternate names are not used in queries, however, so if there are queries against this field
+they should be updated to use the alternate names as well or the database should be updated such that every instance of the old name is
+renamed.</p>
 
-<h2 id="notsaved">NotSaved</h2>
+<h3 id="version">Version</h3>
 
-<p>Instructs Morphia to ignore this field when saving but will still be loaded.</p>
-
-<p><em>Good for data migration.</em></p>
-
-<h2 id="alsoload">AlsoLoad</h2>
-
-<p>When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation
-to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and new key names
-when loading a document.</p>
-
-<p><em>Good for data migration.</em></p>
-
-<pre><code class="language-java">public @interface AlsoLoad {
-  String[] value();
-}
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>The array of names to try when loading the field</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="version">Version</h2>
-
-<p>Marks a field in an <code>@Entity</code> to control optimistic locking for that entity. If the versions change while modifying an entity (including
-deletes) a <code>ConcurrentModificationException</code> will be thrown. This field will be automatically managed for you &ndash; there is no need to set
- a value and you should not do so anyway.  If another name beside the Java field name is desired, a name can be passed to this
- annotation to change the document&rsquo;s field name.</p>
-
-<pre><code class="language-java">@Entity
-class MyClass {
-   ...
-   @Version Long v;
-}
-</code></pre>
-
-<h2 id="reference">Reference</h2>
-
-<p>Marks fields as stored in another collection and which are linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced Entity
- can also be loaded.  Any document referenced via an <code>@Reference</code> field must have already been saved in MongoDB or have the Java object&rsquo;s
-  <code>@Id</code> already assigned.  Otherwise, no key can be copied in to the <code>Key</code> for storage in the database.  If you&rsquo;re always saving the
-  referenced entity in the mapped collection (<code>Datastore</code> can be told to save in to a collection other than the mapped collection) a lot
-  of space can be saved by using the <code>idOnly()</code> parameter to just save the key value.</p>
-
-<pre><code class="language-java">public @interface Reference {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class&lt;?&gt; concreteClass() default Object.class;
-  boolean ignoreMissing() default false;
-  boolean lazy() default false;
-  boolean idOnly() default false;
-}
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>The field name to use in the document.  Defaults to the Java field name.</td>
-</tr>
-
-<tr>
-<td>ignoreMissing()</td>
-<td>Ignore any missing documents</td>
-</tr>
-
-<tr>
-<td>lazy()</td>
-<td>Instructs Morphia to defer loading of the referenced document.</td>
-</tr>
-
-<tr>
-<td>idOnly()</td>
-<td>Instructs Morphia to only store the key of the referenced document rather than a full <code>DBRef</code></td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="embedded">Embedded</h2>
-
-<p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection, <code>@Embedded</code> tells Morphia
-to embed the document created from the Java object in the document of the parent object.  This annotation can be applied to the class of
-the embedded type or on the field holding the embedded instance.</p>
-
-<pre><code class="language-java">public @interface Embedded {
-  String value() default Mapper.IGNORED_FIELDNAME;
-  Class&lt;?&gt; concreteClass() default Object.class;
-}
-</code></pre>
-
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Usage</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>value()</td>
-<td>The field name to use in the document.  Defaults to the Java field name.</td>
-</tr>
-
-<tr>
-<td>concreteClass()</td>
-<td>The concrete class to use when instantiating the embedded entity</td>
-</tr>
-</tbody>
-</table>
+<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Version.html
+"><code>@Version</code></a> marks a field in an entity to control optimistic locking. If the
+versions change in the database while modifying an entity (including deletes) a <code>ConcurrentModificationException</code> will be thrown. This
+field will be automatically managed for you &ndash; there is no need to set a value and you should not do so.  If another name beside the Java
+field name is desired, a name can be passed to this annotation to change the document&rsquo;s field name.</p>
 
 <h2 id="lifecycle-annotations">Lifecycle Annotations</h2>
 
@@ -1237,10 +1012,16 @@ class BankAccountWatcher{
 
 <div id="btnv">
   
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.2/guides/aggregation/">
+      <i class="fa fa-long-arrow-left"> </i> Aggregation
+  </a>
+  </div>
+  
   
   <div class="pull-right">
-  <a class="navigation next" href="/morphia/1.2/guides/querying/">
-    Querying <i class="fa fa-long-arrow-right"> </i>
+  <a class="navigation next" href="/morphia/1.2/guides/indexing/">
+    Indexing <i class="fa fa-long-arrow-right"> </i>
   </a>
   
 </div>
@@ -1257,7 +1038,6 @@ class BankAccountWatcher{
 <ul>
 <li><a href="#annotations">Annotations</a>
 <ul>
-<li><a href="#entity">Entity</a></li>
 <li><a href="#indexes">Indexes</a>
 <ul>
 <li><a href="#index">Index</a>
@@ -1267,6 +1047,11 @@ class BankAccountWatcher{
 <li><a href="#indexed">Indexed</a></li>
 </ul></li>
 </ul></li>
+<li><a href="#entity-mapping">Entity Mapping</a>
+<ul>
+<li><a href="#entity">Entity</a></li>
+<li><a href="#reference">Reference</a></li>
+<li><a href="#embedded">Embedded</a></li>
 <li><a href="#id">Id</a></li>
 <li><a href="#property">Property</a></li>
 <li><a href="#transient">Transient</a></li>
@@ -1274,8 +1059,7 @@ class BankAccountWatcher{
 <li><a href="#notsaved">NotSaved</a></li>
 <li><a href="#alsoload">AlsoLoad</a></li>
 <li><a href="#version">Version</a></li>
-<li><a href="#reference">Reference</a></li>
-<li><a href="#embedded">Embedded</a></li>
+</ul></li>
 <li><a href="#lifecycle-annotations">Lifecycle Annotations</a>
 <ul>
 <li><a href="#examples">Examples</a>
