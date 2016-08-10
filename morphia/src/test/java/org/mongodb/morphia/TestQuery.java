@@ -357,6 +357,30 @@ public class TestQuery extends TestBase {
                           .hasThisElement(new Keyword("Randy"))
                           .get());
     }
+    @Test
+    public void testComplexElemMatchQuery() {
+        Keyword oscar = new Keyword("Oscar", 42);
+        getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
+        Query<Keyword> query = getDs()
+            .createQuery(Keyword.class)
+            .filter("keyword = ", "Oscar")
+            .filter("score = ", 12);
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords")
+                          .hasThisElement(query)
+                          .get());
+
+        query = getDs()
+            .createQuery(Keyword.class)
+            .filter("score > ", 20)
+            .filter("score < ", 100);
+        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
+                                                  .field("keywords")
+                                                  .hasThisElement(query)
+                                                  .asList();
+        assertEquals(1, keywords.size());
+        assertEquals(oscar, keywords.get(0).keywords.get(0));
+    }
 
     @Test
     public void testElemMatchQueryCanBeNegated() {
@@ -1165,6 +1189,31 @@ public class TestQuery extends TestBase {
 
         public Keyword(final Integer score) {
             this.score = score;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Keyword)) {
+                return false;
+            }
+
+            final Keyword keyword1 = (Keyword) o;
+
+            if (keyword != null ? !keyword.equals(keyword1.keyword) : keyword1.keyword != null) {
+                return false;
+            }
+            return score != null ? score.equals(keyword1.score) : keyword1.score == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = keyword != null ? keyword.hashCode() : 0;
+            result = 31 * result + (score != null ? score.hashCode() : 0);
+            return result;
         }
     }
 

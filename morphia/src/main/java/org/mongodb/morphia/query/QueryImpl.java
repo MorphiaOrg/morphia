@@ -728,7 +728,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public String toString() {
-        return String.format("{ %s %s }", getQueryObject(), projections == null ? "" : ", " + getFieldsObject());
+        return String.format("{ query: %s %s }", getQueryObject(), projections == null ? "" : ", projection: " + getFieldsObject());
     }
 
     /**

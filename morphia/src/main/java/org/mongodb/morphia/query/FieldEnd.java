@@ -141,6 +141,8 @@ public interface FieldEnd<T> {
      */
     T hasThisElement(Object val);
 
+//    T hasThisElement(Criteria... values);
+
     /**
      * Checks that a field does not have the value listed.  The options to store null/empty values apply here so to do partial matches on
      * embedded objects, pass a reference to a partially populated instance with only the values of interest set to the values to check.
