@@ -367,7 +367,7 @@ public class TestQuery extends TestBase {
             .filter("score = ", 12);
         assertNull(getDs().find(PhotoWithKeywords.class)
                           .field("keywords")
-                          .hasThisElement(query)
+                          .elemMatch(query)
                           .get());
 
         query = getDs()
@@ -376,7 +376,7 @@ public class TestQuery extends TestBase {
             .filter("score < ", 100);
         List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
                                                   .field("keywords")
-                                                  .hasThisElement(query)
+                                                  .elemMatch(query)
                                                   .asList();
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
