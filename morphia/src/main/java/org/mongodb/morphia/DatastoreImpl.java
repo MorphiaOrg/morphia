@@ -257,8 +257,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true
-                                                  ), unique, dropDupsOnCreate, false, false, -1);
+        ensureIndex(clazz, name, parseFieldsString(fields, clazz, mapper, true), unique, dropDupsOnCreate, false, false, -1);
     }
 
     @Override

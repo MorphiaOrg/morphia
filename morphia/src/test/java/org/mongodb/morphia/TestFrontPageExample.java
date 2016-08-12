@@ -49,7 +49,7 @@ public class TestFrontPageExample extends TestBase {
         Assert.assertNotNull(key);
 
         final UpdateResults res = getDs().update(boss, getDs().createUpdateOperations(Employee.class)
-                                                              .add("underlings", key)); //add Scott as an employee of his manager
+                                                              .addToSet("underlings", key)); //add Scott as an employee of his manager
         Assert.assertNotNull(res);
         Assert.assertTrue("Should update existing document", res.getUpdatedExisting());
         Assert.assertEquals("Should update one document", 1, res.getUpdatedCount());

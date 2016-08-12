@@ -602,7 +602,10 @@ public class Mapper {
                         }
                     }
                 } else {
-                    final Key<?> key = (value instanceof Key) ? (Key<?>) value : getKey(value);
+                    Key<?> key = null;
+                    if (value != null) {
+                        key = (value instanceof Key) ? (Key<?>) value : getKey(value);
+                    }
                     if (key == null) {
                         mappedValue = toMongoObject(value, false);
                     } else {

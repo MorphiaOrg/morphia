@@ -19,7 +19,7 @@ public interface UpdateOperations<T> {
      * @param value the value to add
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @deprecated use {@link #push(String, List)} instead
+     * @deprecated use {@link #addToSet(String, Object)} instead
      */
     @Deprecated
     UpdateOperations<T> add(String field, Object value);

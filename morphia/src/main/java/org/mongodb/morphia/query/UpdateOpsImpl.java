@@ -8,6 +8,7 @@ import org.mongodb.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     @Override
     @Deprecated
     public UpdateOperations<T> add(final String field, final Object value) {
-        return add(field, value, false);
+        return addToSet(field, value);
     }
 
     @Override
@@ -68,12 +69,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             throw new QueryException("Values cannot be null or empty.");
         }
 
-        if (addDups) {
-            push(field, values);
-        } else {
-            addToSet(field, values);
-        }
-        return this;
+        return (addDups) ? push(field, values) : addToSet(field, values);
     }
 
     @Override
@@ -117,9 +113,12 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             throw new QueryException("Values cannot be null or empty.");
         }
 
-        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), values);
+        StringBuilder fieldName = new StringBuilder(field);
+        MappedField mf = validate(values, fieldName);
+
+        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(mf, null, values));
         options.update(dbObject);
-        add(UpdateOperator.PUSH, field, dbObject, true);
+        addOperation(UpdateOperator.PUSH, fieldName, dbObject);
 
         return this;
     }
@@ -260,12 +259,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             throw new QueryException("Val cannot be null");
         }
 
-        Object val = null;
-        MappedField mf = null;
-        final StringBuilder sb = new StringBuilder(f);
-        if (validateNames || validateTypes) {
-            mf = validateQuery(clazz, mapper, sb, FilterOperator.EQUAL, val, validateNames, validateTypes);
-        }
+        Object val = value;
+        StringBuilder fieldName = new StringBuilder(f);
+        MappedField mf = validate(val, fieldName);
 
         if (convert) {
             if (UpdateOperator.PULL_ALL.equals(op) && value instanceof List) {
@@ -280,16 +276,22 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             val = new BasicDBObject(UpdateOperator.EACH.val(), val);
         }
 
-        if (val == null) {
-            val = value;
-        }
+        addOperation(op, fieldName, val);
+    }
 
+    private void addOperation(final UpdateOperator op, final StringBuilder fieldName, final Object val) {
         final String opString = op.val();
 
         if (!ops.containsKey(opString)) {
-            ops.put(opString, new HashMap<String, Object>());
+            ops.put(opString, new LinkedHashMap<String, Object>());
         }
-        ops.get(opString).put(sb.toString(), val);
+        ops.get(opString).put(fieldName.toString(), val);
+    }
+
+    private MappedField validate(final Object val, final StringBuilder fieldName) {
+        return validateNames || validateTypes
+               ? validateQuery(clazz, mapper, fieldName, FilterOperator.EQUAL, val, validateNames, validateTypes)
+               : null;
     }
 
     protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {
