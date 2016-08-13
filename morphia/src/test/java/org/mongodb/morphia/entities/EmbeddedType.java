@@ -20,6 +20,14 @@ public class EmbeddedType {
     private Long number;
     private String text;
 
+    public EmbeddedType() {
+    }
+
+    public EmbeddedType(final Long number, final String text) {
+        this.number = number;
+        this.text = text;
+    }
+
     public Long getNumber() {
         return number;
     }

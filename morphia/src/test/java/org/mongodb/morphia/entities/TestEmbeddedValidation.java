@@ -25,6 +25,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +38,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class TestEmbeddedValidation extends TestBase {
 
-    /**
-     *
-     */
     @Test
     @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() throws Exception {
@@ -86,15 +84,43 @@ public class TestEmbeddedValidation extends TestBase {
         Assert.assertEquals(parentType, query.get());
     }
 
+    @Test
+    public void testEmbeddedListQueries() {
+        EntityWithListsAndArrays entity = new EntityWithListsAndArrays();
+        EmbeddedType fortyTwo = new EmbeddedType(42L, "forty-two");
+        entity.setListEmbeddedType(asList(fortyTwo, new EmbeddedType(1L, "one")));
+        getDs().save(entity);
+
+        Query<EntityWithListsAndArrays> query = getDs().createQuery(EntityWithListsAndArrays.class)
+                                                          .field("listEmbeddedType.number").equal(42L);
+        List<EntityWithListsAndArrays> list = query.asList();
+
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(fortyTwo, list.get(0).getListEmbeddedType().get(0));
+
+        UpdateOperations<EntityWithListsAndArrays> operations = getDs()
+            .createUpdateOperations(EntityWithListsAndArrays.class)
+            .set("listEmbeddedType.$.number", 0);
+        getDs().update(query, operations);
+
+        Assert.assertEquals(0, query.countAll());
+
+        fortyTwo.setNumber(0L);
+        query = getDs().createQuery(EntityWithListsAndArrays.class)
+                       .field("listEmbeddedType.number").equal(0);
+        list = query.asList();
+
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(fortyTwo, list.get(0).getListEmbeddedType().get(0));
+
+    }
+
     private Map<String, Object> mapOf(final String key, final Object value) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(key, value);
         return map;
     }
 
-    /**
-     *
-     */
     @Entity
     public static class TestEntity {
 
