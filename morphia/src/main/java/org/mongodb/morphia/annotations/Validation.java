@@ -28,7 +28,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static com.mongodb.client.model.ValidationAction.*;
+import static com.mongodb.client.model.ValidationAction.ERROR;
 import static com.mongodb.client.model.ValidationLevel.STRICT;
 
 
