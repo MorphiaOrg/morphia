@@ -3,6 +3,7 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.BulkWriteOperation;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -16,6 +17,11 @@ import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationOptions;
+import org.bson.Document;
+import org.bson.json.JsonParseException;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -30,6 +36,7 @@ import org.mongodb.morphia.annotations.PostPersist;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Text;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -62,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static com.mongodb.BasicDBObjectBuilder.start;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.mongodb.morphia.query.QueryImpl.parseFieldsString;
@@ -78,6 +86,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final Morphia morphia;
     private final MongoClient mongoClient;
     private final DB db;
+    private final String dbName;
     private Mapper mapper;
     private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
     private DBDecoderFactory decoderFactory;
@@ -120,6 +129,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         this.db = db;
+        this.dbName = db.getName();
     }
 
     /**
@@ -224,7 +234,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
                 final CappedAt cap = mc.getEntityAnnotation().cap();
                 final String collName = mapper.getCollectionName(mc.getClazz());
-                final BasicDBObjectBuilder dbCapOpts = BasicDBObjectBuilder.start("capped", true);
+                final BasicDBObjectBuilder dbCapOpts = start("capped", true);
                 if (cap.value() > 0) {
                     dbCapOpts.add("size", cap.value());
                 }
@@ -233,7 +243,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
                 final DB database = getDB();
                 if (database.getCollectionNames().contains(collName)) {
-                    final DBObject dbResult = database.command(BasicDBObjectBuilder.start("collstats", collName).get());
+                    final DBObject dbResult = database.command(start("collstats", collName).get());
                     if (dbResult.containsField("capped")) {
                         // TODO: check the cap options.
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
@@ -244,6 +254,40 @@ public class DatastoreImpl implements AdvancedDatastore {
                 } else {
                     getDB().createCollection(collName, dbCapOpts.get());
                     LOG.debug("Created capped DBCollection (" + collName + ") with opts " + dbCapOpts);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void enableDocumentValidation() {
+        for (final MappedClass mc : mapper.getMappedClasses()) {
+            Validation validation = (Validation) mc.getAnnotation(Validation.class);
+            if (validation != null) {
+                String collectionName = mc.getCollectionName();
+                CommandResult result = getDB()
+                    .command(new BasicDBObject("collMod", collectionName)
+                                 .append("validator", Document.parse(validation.value()))
+                                 .append("validationLevel", validation.level().getValue())
+                                 .append("validationAction", validation.action().getValue())
+                            );
+
+                if (!result.ok()) {
+                    if (result.getInt("code") == 26) {
+                        try {
+                            ValidationOptions options = new ValidationOptions()
+                                .validator(Document.parse(validation.value()))
+                                .validationLevel(validation.level())
+                                .validationAction(validation.action());
+                            getDatabase().createCollection(collectionName,
+                                                           new CreateCollectionOptions()
+                                                                        .validationOptions(options));
+                        } catch (JsonParseException e) {
+                            LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, e.getMessage()));
+                        }
+                    } else {
+                        LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, result.getErrorMessage()));
+                    }
                 }
             }
         }
@@ -481,6 +525,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public DB getDB() {
         return db;
+    }
+
+    @Override
+    public MongoDatabase getDatabase() {
+        return mongoClient.getDatabase(dbName);
     }
 
     @Override

@@ -20,6 +20,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -73,6 +74,7 @@ public class MappedClass {
         INTERESTING_ANNOTATIONS.add(Version.class);
         INTERESTING_ANNOTATIONS.add(Converters.class);
         INTERESTING_ANNOTATIONS.add(Indexes.class);
+        INTERESTING_ANNOTATIONS.add(Validation.class);
         INTERESTING_ANNOTATIONS.add(Field.class);
         INTERESTING_ANNOTATIONS.add(IndexOptions.class);
     }
