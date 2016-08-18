@@ -1,13 +1,15 @@
 package org.mongodb.morphia;
 
+import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
 
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
@@ -17,6 +19,15 @@ import org.mongodb.morphia.query.UpdateOperations;
  */
 public interface AdvancedDatastore extends Datastore {
 
+    /**
+     * Returns an {@link AggregationPipeline} bound to the given collection and class.
+     *
+     * @param collection the collection to query
+     * @param source The class to create aggregation against
+     * @return the aggregation pipeline
+     */
+    AggregationPipeline createAggregation(String collection, Class<?> clazz);
+  
     /**
      * @param <T>        The type of the entity
      * @param collection the collection to query

@@ -37,11 +37,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * Creates an AggregationPipeline
      *
      * @param datastore the datastore to use
+     * @param collection the database collection on which to operate
      * @param source    the source type to aggregate
      */
-    public AggregationPipelineImpl(final DatastoreImpl datastore, final Class source) {
+    public AggregationPipelineImpl(final DatastoreImpl datastore, final DBCollection collection, final Class source) {
         this.datastore = datastore;
-        this.collection = datastore.getCollection(source);
+        this.collection = collection;
         mapper = datastore.getMapper();
         this.source = source;
     }

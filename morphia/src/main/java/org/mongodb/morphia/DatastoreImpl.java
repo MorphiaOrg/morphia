@@ -16,6 +16,7 @@ import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -138,9 +139,14 @@ public class DatastoreImpl implements AdvancedDatastore {
      */
     @Override
     public AggregationPipeline createAggregation(final Class source) {
-        return new AggregationPipelineImpl(this, source);
+        return new AggregationPipelineImpl(this, getCollection(source), source);
     }
 
+    @Override
+    public AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
+      return new AggregationPipelineImpl(this, db.getCollection(collection), clazz);
+    }
+    
     @Override
     public <T> Query<T> createQuery(final Class<T> collection) {
         return newQuery(collection, getCollection(collection));
