@@ -23,11 +23,11 @@ public interface AdvancedDatastore extends Datastore {
      * Returns an {@link AggregationPipeline} bound to the given collection and class.
      *
      * @param collection the collection to query
-     * @param source The class to create aggregation against
+     * @param clazz The class to create aggregation against
      * @return the aggregation pipeline
      */
     AggregationPipeline createAggregation(String collection, Class<?> clazz);
-  
+
     /**
      * @param <T>        The type of the entity
      * @param collection the collection to query

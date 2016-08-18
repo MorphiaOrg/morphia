@@ -144,9 +144,9 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
-      return new AggregationPipelineImpl(this, db.getCollection(collection), clazz);
+        return new AggregationPipelineImpl(this, db.getCollection(collection), clazz);
     }
-    
+
     @Override
     public <T> Query<T> createQuery(final Class<T> collection) {
         return newQuery(collection, getCollection(collection));
