@@ -3,6 +3,7 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.BulkWriteOperation;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -17,6 +18,7 @@ import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -81,6 +83,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final Morphia morphia;
     private final MongoClient mongoClient;
     private final DB db;
+    private final String dbName;
     private Mapper mapper;
     private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
     private DBDecoderFactory decoderFactory;
@@ -123,6 +126,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         this.db = db;
+        this.dbName = db.getName();
     }
 
     /**

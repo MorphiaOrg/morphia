@@ -18,30 +18,13 @@ package org.mongodb.morphia;
 
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcernException;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.ValidationAction;
-import com.mongodb.client.model.ValidationLevel;
-import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
 import org.junit.Test;
-import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.entities.DocumentValidation;
-import org.mongodb.morphia.mapping.MappedClass;
-import sun.reflect.annotation.AnnotationParser;
 
 import java.util.Date;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-@SuppressWarnings("Since15")
 public class TestDocumentValidation extends TestBase {
     @Test
     public void createValidation() {
