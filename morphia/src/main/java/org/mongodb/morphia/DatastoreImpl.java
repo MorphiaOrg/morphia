@@ -20,7 +20,6 @@ import com.mongodb.WriteResult;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
 import org.bson.json.JsonParseException;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
@@ -267,7 +266,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 String collectionName = mc.getCollectionName();
                 CommandResult result = getDB()
                     .command(new BasicDBObject("collMod", collectionName)
-                                 .append("validator", Document.parse(validation.value()))
+                                 .append("validator", BasicDBObject.parse(validation.value()))
                                  .append("validationLevel", validation.level().getValue())
                                  .append("validationAction", validation.action().getValue())
                             );
@@ -276,12 +275,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                     if (result.getInt("code") == 26) {
                         try {
                             ValidationOptions options = new ValidationOptions()
-                                .validator(Document.parse(validation.value()))
+                                .validator(BasicDBObject.parse(validation.value()))
                                 .validationLevel(validation.level())
                                 .validationAction(validation.action());
-                            getDatabase().createCollection(collectionName,
-                                                           new CreateCollectionOptions()
-                                                                        .validationOptions(options));
+                            getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
                         } catch (JsonParseException e) {
                             LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, e.getMessage()));
                         }
@@ -527,8 +524,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return db;
     }
 
-    @Override
-    public MongoDatabase getDatabase() {
+    private MongoDatabase getDatabase() {
         return mongoClient.getDatabase(dbName);
     }
 

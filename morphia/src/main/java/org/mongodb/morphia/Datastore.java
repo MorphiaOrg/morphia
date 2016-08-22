@@ -365,12 +365,6 @@ public interface Datastore {
     DB getDB();
 
     /**
-     * @return the MongoDatabase this Datastore uses
-     * @since 1.3
-     */
-    MongoDatabase getDatabase();
-
-    /**
      * @return the default WriteConcern used by this Datastore
      */
     WriteConcern getDefaultWriteConcern();
