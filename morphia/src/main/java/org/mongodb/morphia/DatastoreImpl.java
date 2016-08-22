@@ -264,31 +264,30 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void enableDocumentValidation() {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            process(mc, (Validation) mc.getAnnotation(Validation.class));
-        }
-    }
+            Validation validation = (Validation) mc.getAnnotation(Validation.class);
+            if (validation != null) {
+                String collectionName = mc.getCollectionName();
+                CommandResult result = getDB()
+                    .command(new BasicDBObject("collMod", collectionName)
+                                 .append("validator", BasicDBObject.parse(validation.value()))
+                                 .append("validationLevel", validation.level().getValue())
+                                 .append("validationAction", validation.action().getValue())
+                            );
 
-    protected void process(final MappedClass mc, final Validation validation) {
-        if (validation != null) {
-            String collectionName = mc.getCollectionName();
-            try {
-                getDatabase().runCommand(new Document("collMod", collectionName)
-                                             .append("validator", Document.parse(validation.value()))
-                                             .append("validationLevel", validation.level().getValue())
-                                             .append("validationAction", validation.action().getValue()));
-            } catch (MongoCommandException e) {
-                if (e.getErrorCode() == 26) {
-                    try {
-                        ValidationOptions options = new ValidationOptions()
-                            .validator(BasicDBObject.parse(validation.value()))
-                            .validationLevel(validation.level())
-                            .validationAction(validation.action());
-                        getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
-                    } catch (JsonParseException parseException) {
-                        LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, parseException.getMessage()));
+                if (!result.ok()) {
+                    if (result.getInt("code") == 26) {
+                        try {
+                            ValidationOptions options = new ValidationOptions()
+                                .validator(BasicDBObject.parse(validation.value()))
+                                .validationLevel(validation.level())
+                                .validationAction(validation.action());
+                            getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
+                        } catch (JsonParseException e) {
+                            LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, e.getMessage()));
+                        }
+                    } else {
+                        LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, result.getErrorMessage()));
                     }
-                } else {
-                    LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, e.getErrorMessage()));
                 }
             }
         }
@@ -529,7 +528,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(db.getName());
+        return mongoClient.getDatabase(dbName);
     }
 
     @Override
