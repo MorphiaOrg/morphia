@@ -85,7 +85,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final Morphia morphia;
     private final MongoClient mongoClient;
     private final DB db;
-    private final String dbName;
     private Mapper mapper;
     private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
     private DBDecoderFactory decoderFactory;
@@ -128,7 +127,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         this.db = db;
-        this.dbName = db.getName();
     }
 
     /**
@@ -525,7 +523,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(dbName);
+        return mongoClient.getDatabase(db.getName());
     }
 
     @Override
