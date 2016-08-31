@@ -117,7 +117,7 @@ public interface Datastore {
     void ensureCaps();
 
     /**
-     * Process any {@link Validation} annotations for document validation
+     * Process any {@link Validation} annotations for document validation.
      *
      * @since 1.3
      * @mongodb.driver.manual core/document-validation/

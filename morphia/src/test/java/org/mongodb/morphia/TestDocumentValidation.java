@@ -35,6 +35,9 @@ public class TestDocumentValidation extends TestBase {
         } catch (WriteConcernException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
+
+        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+
     }
 
     @Test
