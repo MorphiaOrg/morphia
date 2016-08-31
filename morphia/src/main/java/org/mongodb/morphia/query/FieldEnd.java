@@ -143,6 +143,13 @@ public interface FieldEnd<T> {
     @Deprecated
     T hasThisElement(Object val);
 
+    /**
+     * Checks that a field matches the provided query definition
+     *
+     * @param query the query to find certain field values
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
     T elemMatch(Query query);
 
     /**

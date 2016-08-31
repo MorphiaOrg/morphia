@@ -361,22 +361,20 @@ public class TestQuery extends TestBase {
     public void testComplexElemMatchQuery() {
         Keyword oscar = new Keyword("Oscar", 42);
         getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
-        Query<Keyword> query = getDs()
-            .createQuery(Keyword.class)
-            .filter("keyword = ", "Oscar")
-            .filter("score = ", 12);
         assertNull(getDs().find(PhotoWithKeywords.class)
                           .field("keywords")
-                          .elemMatch(query)
+                          .elemMatch(getDs()
+                                         .createQuery(Keyword.class)
+                                         .filter("keyword = ", "Oscar")
+                                         .filter("score = ", 12))
                           .get());
 
-        query = getDs()
-            .createQuery(Keyword.class)
-            .filter("score > ", 20)
-            .filter("score < ", 100);
         List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
                                                   .field("keywords")
-                                                  .elemMatch(query)
+                                                  .elemMatch(getDs()
+                                                                 .createQuery(Keyword.class)
+                                                                 .filter("score > ", 20)
+                                                                 .filter("score < ", 100))
                                                   .asList();
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
@@ -393,37 +391,67 @@ public class TestQuery extends TestBase {
 
         Mapper mapper = getMorphia().getMapper();
 
-        List<Key<PhotoWithKeywords>> keys = getDs().find(PhotoWithKeywords.class)
+        validate(pwk1, pwk2, pwk3, pwk4, mapper, getDs().find(PhotoWithKeywords.class)
+                                                        .field("keywords")
+                                                        .hasThisElement(new Keyword("Scott"))
+                                                        .asKeyList());
+
+        validate(pwk1, pwk2, pwk3, pwk4, mapper, getDs().find(PhotoWithKeywords.class)
+                                                        .field("keywords")
+                                                        .elemMatch(getDs()
+                                                                       .createQuery(Keyword.class)
+                                                                       .field("keyword").equal("Scott"))
+                                                        .asKeyList());
+
+        validate2(pwk1, pwk2, pwk3, pwk4, mapper, getDs().find(PhotoWithKeywords.class)
+                                                         .field("keywords")
+                                                         .hasThisElement(new Keyword(14))
+                                                         .asKeyList());
+
+        validate2(pwk1, pwk2, pwk3, pwk4, mapper, getDs().find(PhotoWithKeywords.class)
+                                                         .field("keywords")
+                                                         .elemMatch(getDs()
+                                                                        .createQuery(Keyword.class)
+                                                                        .field("score").equal(14))
+                                                         .asKeyList());
+
+        validate3(pwk1, pwk2, pwk3, mapper, getDs().find(PhotoWithKeywords.class)
                                                    .field("keywords")
-                                                   .hasThisElement(new Keyword("Scott"))
-                                                   .asKeyList();
+                                                   .doesNotHaveThisElement(new Keyword("Scott"))
+                                                   .asKeyList());
 
+        validate3(pwk1, pwk2, pwk3, mapper, getDs().find(PhotoWithKeywords.class)
+                                                   .field("keywords").not()
+                                                   .elemMatch(getDs()
+                                                                  .createQuery(Keyword.class)
+                                                                  .field("keyword").equal("Scott"))
+                                                   .asKeyList());
+    }
+
+    private void validate3(final PhotoWithKeywords pwk1, final PhotoWithKeywords pwk2, final PhotoWithKeywords pwk3, final Mapper mapper,
+                             final List<Key<PhotoWithKeywords>> keys) {
         assertEquals(2, keys.size());
-        assertFalse("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
-        assertFalse("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
-        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
-        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk4)));
+        assertTrue("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
+        assertTrue("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
+        assertFalse("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
+    }
 
-        keys = getDs().find(PhotoWithKeywords.class)
-                      .field("keywords")
-                      .hasThisElement(new Keyword(14))
-                      .asKeyList();
-
+    private void validate2(final PhotoWithKeywords pwk1, final PhotoWithKeywords pwk2, final PhotoWithKeywords pwk3,
+                             final PhotoWithKeywords pwk4, final Mapper mapper, final List<Key<PhotoWithKeywords>> keys) {
         assertEquals(1, keys.size());
         assertFalse(keys.contains(mapper.getKey(pwk1)));
         assertFalse(keys.contains(mapper.getKey(pwk2)));
         assertFalse(keys.contains(mapper.getKey(pwk3)));
         assertTrue(keys.contains(mapper.getKey(pwk4)));
+    }
 
-        keys = getDs().find(PhotoWithKeywords.class)
-                      .field("keywords")
-                      .doesNotHaveThisElement(new Keyword("Scott"))
-                      .asKeyList();
-
+    private void validate(final PhotoWithKeywords pwk1, final PhotoWithKeywords pwk2, final PhotoWithKeywords pwk3,
+                            final PhotoWithKeywords pwk4, final Mapper mapper, final List<Key<PhotoWithKeywords>> keys) {
         assertEquals(2, keys.size());
-        assertTrue("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
-        assertTrue("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
-        assertFalse("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
+        assertFalse("because it doesn't have any keywords.", keys.contains(mapper.getKey(pwk1)));
+        assertFalse("because it doesn't have a matching keyword.", keys.contains(mapper.getKey(pwk2)));
+        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk3)));
+        assertTrue("because it has matching keyword.", keys.contains(mapper.getKey(pwk4)));
     }
 
     @Test
