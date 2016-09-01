@@ -20,6 +20,8 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcernException;
 import org.junit.Test;
 import org.mongodb.morphia.entities.DocumentValidation;
+import org.mongodb.morphia.mapping.MappedClass;
+import sun.reflect.annotation.AnnotationParser;
 
 import java.util.Date;
 
