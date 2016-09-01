@@ -159,8 +159,10 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @deprecated use {@link #elemMatch(Query)} instead
      * @see MapperOptions
      */
+    @Deprecated
     T doesNotHaveThisElement(Object val);
 
     /**
