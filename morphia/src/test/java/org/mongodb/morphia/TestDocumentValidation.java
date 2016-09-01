@@ -27,9 +27,14 @@ import org.bson.Document;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.entities.DocumentValidation;
+import org.mongodb.morphia.mapping.MappedClass;
+import sun.reflect.annotation.AnnotationParser;
 
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,6 +47,7 @@ public class TestDocumentValidation extends TestBase {
     public void createValidation() {
         getMorphia().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
+        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
             getDs().save(new DocumentValidation("John", 1, new Date()));
@@ -55,6 +61,44 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
+    public void validationDocuments() {
+        Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
+        getMorphia().map(DocumentValidation.class);
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
+
+        for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
+            for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
+                checkValidation(validator, mappedClass, level, action);
+            }
+        }
+    }
+
+    private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
+                                   final ValidationAction action) {
+        updateValidation(mappedClass, level, action);
+        Document expected = new Document("validator", validator)
+            .append("validationLevel", level.getValue())
+            .append("validationAction", action.getValue());
+
+        assertEquals(expected, getValidation());
+    }
+
+    private  void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
+        Validation validation = createAnnotationInstance("{ jelly : { $ne : 'rhubarb' } }", level, action);
+        ((DatastoreImpl) getDs()).process(mappedClass, validation);
+    }
+
+    private static Validation createAnnotationInstance(final String validator, final ValidationLevel level, final ValidationAction action) {
+        Map<String, Object> values = new HashMap<String, Object>();
+
+        values.put("value", validator);
+        values.put("level", level);
+        values.put("action", action);
+
+        return (Validation) AnnotationParser.annotationForMap(Validation.class, values);
+    }
+
+    @Test
     public void overwriteValidation() {
         Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
         ValidationOptions options = new ValidationOptions()
@@ -65,7 +109,7 @@ public class TestDocumentValidation extends TestBase {
         database.getCollection("validation").drop();
         database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
 
-        assertEquals(validator, getValidator(database));
+        assertEquals(validator, getValidator());
 
         Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
         database.getCollection("validation").insertOne(new Document("jelly", "grape"));
@@ -78,7 +122,7 @@ public class TestDocumentValidation extends TestBase {
 
         getMorphia().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
-        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator(database));
+        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
             database.getCollection("validation").insertOne(rhubarb);
@@ -92,15 +136,19 @@ public class TestDocumentValidation extends TestBase {
         } catch (WriteConcernException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
-
-        getDs().enableDocumentValidation();
     }
 
     @SuppressWarnings("unchecked")
-    private Document getValidator(final MongoDatabase database) {
-        Document document = database.runCommand(new Document("listCollections", 1).append("filter", new Document("name", "validation")));
+    private Document getValidator() {
+        return (Document) getValidation().get("validator");
+    }
+
+    private Document getValidation() {
+        Document document = getMongoClient().getDatabase(TEST_DB_NAME)
+                                            .runCommand(new Document("listCollections", 1)
+                                                            .append("filter", new Document("name", "validation")));
+
         List<Document> firstBatch = (List<Document>) ((Document) document.get("cursor")).get("firstBatch");
-        Document o = (Document) firstBatch.get(0).get("options");
-        return (Document) o.get("validator");
+        return (Document) firstBatch.get(0).get("options");
     }
 }
