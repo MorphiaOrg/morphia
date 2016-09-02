@@ -17,7 +17,6 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -32,14 +31,12 @@ public class LocalTimeConverterTest extends ConverterTest<LocalTime, Long> {
 
     @Test
     public void convertNull() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Assert.assertNull(getConverter().decode(null, null));
         Assert.assertNull(getConverter().encode(null));
     }
 
     @Test
     public void spanClock() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Random random = new Random();
         for (int hour = 0; hour < 23; hour++) {
             for (int minute = 0; minute < 60; minute++) {
@@ -52,7 +49,6 @@ public class LocalTimeConverterTest extends ConverterTest<LocalTime, Long> {
 
     @Test
     public void testConversion() throws ParseException {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
         final LocalTime time = LocalTime.of(12, 30, 45);
 
         compare(LocalTime.class, LocalTime.now());
