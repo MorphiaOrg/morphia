@@ -17,6 +17,8 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
@@ -31,6 +33,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @SuppressWarnings("Since15")
 public class Java8EntityTest extends TestBase {
+    @Before
+    public void jdkVersionCheck() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
+    }
+
     @Test
     public void queries() {
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());

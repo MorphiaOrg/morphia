@@ -14,9 +14,9 @@ import org.mongodb.morphia.mapping.Mapper;
  * @author scotthernandez
  */
 public class DefaultConverters extends Converters {
+    public static final boolean JAVA_8;
     private final IdentityConverter identityConverter;
     private final SerializedObjectConverter serializedConverter;
-    private static final boolean JAVA_8;
 
     static {
         boolean found;

@@ -17,6 +17,8 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -26,6 +28,11 @@ import java.util.Date;
 public class InstantConverterTest extends ConverterTest<Instant, Date> {
     public InstantConverterTest() {
         super(new InstantConverter());
+    }
+
+    @Before
+    public void jdkVersionCheck() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
     }
 
     @Test

@@ -17,6 +17,8 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -27,6 +29,11 @@ import java.util.Random;
 public class LocalTimeConverterTest extends ConverterTest<LocalTime, Long> {
     public LocalTimeConverterTest() {
         super(new LocalTimeConverter());
+    }
+
+    @Before
+    public void jdkVersionCheck() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
     }
 
     @Test
