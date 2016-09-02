@@ -101,7 +101,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
         if (!JavaVersion.current().isJava8Compatible()) {
             exclude 'org/mongodb/morphia/converters/LocalDate*', 'org/mongodb/morphia/converters/LocalTime*',
-                    'org/mongodb/morphia/converters/Instannt*', 'org/mongodb/morphia/converters/Java8*'
+                    'org/mongodb/morphia/converters/Instant*', 'org/mongodb/morphia/converters/Java8*'
         }
 
         jacoco { enabled = false }
