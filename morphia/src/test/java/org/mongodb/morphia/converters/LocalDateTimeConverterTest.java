@@ -18,7 +18,6 @@ package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -32,19 +31,16 @@ public class LocalDateTimeConverterTest extends ConverterTest<LocalDateTime, Dat
         super(new LocalDateTimeConverter());
     }
 
-    @Before
-    public void jdkVersionCheck() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
-    }
-
     @Test
     public void convertNull() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Assert.assertNull(getConverter().decode(null, null));
         Assert.assertNull(getConverter().encode(null));
     }
 
     @Test
     public void testConversion() throws ParseException {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
 
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.MAY, 1, 12, 30, 45);

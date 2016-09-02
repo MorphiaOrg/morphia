@@ -18,7 +18,6 @@ package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -30,19 +29,16 @@ public class InstantConverterTest extends ConverterTest<Instant, Date> {
         super(new InstantConverter());
     }
 
-    @Before
-    public void jdkVersionCheck() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
-    }
-
     @Test
     public void convertNull() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Assert.assertNull(getConverter().decode(null, null));
         Assert.assertNull(getConverter().encode(null));
     }
 
     @Test
     public void testConversion() {
+        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Instant instant = Instant.ofEpochSecond(42);
 
         assertFormat(instant, new Date(42000));
