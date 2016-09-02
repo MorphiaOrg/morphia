@@ -17,7 +17,6 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
@@ -35,7 +34,6 @@ public class Java8EntityTest extends TestBase {
 
     @Test
     public void queries() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDate localDate = LocalDate.of(1995, 10, 15);
         LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 14, 15, 16, 123 * 1000000);
@@ -51,7 +49,6 @@ public class Java8EntityTest extends TestBase {
 
     @Test
     public void rangeQueries() {
-        Assume.assumeTrue(DefaultConverters.JAVA_8);
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDate localDate = LocalDate.of(1995, 10, 15);
         LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 14, 15, 16, 123 * 1000000);
