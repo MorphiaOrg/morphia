@@ -16,7 +16,18 @@ import org.mongodb.morphia.mapping.Mapper;
 public class DefaultConverters extends Converters {
     private final IdentityConverter identityConverter;
     private final SerializedObjectConverter serializedConverter;
+    private static final boolean JAVA_8;
 
+    static {
+        boolean found;
+        try {
+            Class.forName("java.time.LocalDateTime");
+            found = true;
+        } catch (ClassNotFoundException e) {
+            found = false;
+        }
+        JAVA_8 = found;
+    }
     /**
      * Creates a bundle with a particular Mapper.
      *
@@ -55,6 +66,13 @@ public class DefaultConverters extends Converters {
         addConverter(new GeometryShapeConverter.PolygonConverter());
         addConverter(new GeometryShapeConverter.MultiPolygonConverter());
         addConverter(new GeometryConverter());
+
+        if (JAVA_8) {
+            addConverter(LocalTimeConverter.class);
+            addConverter(LocalDateTimeConverter.class);
+            addConverter(LocalDateConverter.class);
+            addConverter(InstantConverter.class);
+        }
 
         //generic converter that will just pass things through.
         identityConverter = new IdentityConverter();
