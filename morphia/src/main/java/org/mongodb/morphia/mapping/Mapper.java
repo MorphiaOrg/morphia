@@ -39,6 +39,8 @@ import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.ValidationException;
 
 import java.io.IOException;
@@ -584,10 +586,9 @@ public class Mapper {
     public Object toMongoObject(final MappedField mf, final MappedClass mc, final Object value) {
         Object mappedValue = value;
 
-       /* if (mf == null && mc != null && value != null) {
-            mappedValue = toMongoObject(mappedValue, false);
-        } else*/
-        if (isAssignable(mf, value) || isEntity(mc)) {
+        if (value instanceof Query) {
+            mappedValue = ((QueryImpl) value).getQueryObject();
+        } else if (isAssignable(mf, value) || isEntity(mc)) {
             //convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
             try {
                 if (value instanceof Iterable) {
