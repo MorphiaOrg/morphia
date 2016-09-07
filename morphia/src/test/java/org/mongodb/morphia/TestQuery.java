@@ -381,7 +381,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testElemMatchQueryCanBeNegated() {
+    public void testElemMatchVariants() {
         final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
         final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
@@ -418,16 +418,16 @@ public class TestQuery extends TestBase {
                                                                 .asKeyList());
 
         validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
-                                                   .field("keywords")
-                                                   .doesNotHaveThisElement(new Keyword("Scott"))
-                                                   .asKeyList());
+                                                                .field("keywords")
+                                                                .doesNotHaveThisElement(new Keyword("Scott"))
+                                                                .asKeyList());
 
         validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
-                                                   .field("keywords").not()
-                                                   .elemMatch(getDs()
-                                                                  .createQuery(Keyword.class)
-                                                                  .field("keyword").equal("Scott"))
-                                                   .asKeyList());
+                                                                .field("keywords").not()
+                                                                .elemMatch(getDs()
+                                                                               .createQuery(Keyword.class)
+                                                                               .field("keyword").equal("Scott"))
+                                                                .asKeyList());
     }
 
     private void validate(final List<Key<PhotoWithKeywords>> found, final List<Key<PhotoWithKeywords>> notFound,
