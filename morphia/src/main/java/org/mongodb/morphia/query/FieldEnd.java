@@ -138,8 +138,19 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
      * @see MapperOptions
+     * @deprecated use {@link #elemMatch(Query)} instead
      */
+    @Deprecated
     T hasThisElement(Object val);
+
+    /**
+     * Checks that a field matches the provided query definition
+     *
+     * @param query the query to find certain field values
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     */
+    T elemMatch(Query query);
 
     /**
      * Checks that a field does not have the value listed.  The options to store null/empty values apply here so to do partial matches on
@@ -148,8 +159,10 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @deprecated use {@link #elemMatch(Query)} instead
      * @see MapperOptions
      */
+    @Deprecated
     T doesNotHaveThisElement(Object val);
 
     /**
