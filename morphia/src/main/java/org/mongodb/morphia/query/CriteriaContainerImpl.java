@@ -46,7 +46,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return criteria(name);
+        return new FieldEndImpl<CriteriaContainerImpl>(query, name, this);
     }
 
     @Override
