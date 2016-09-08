@@ -3,6 +3,8 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.WriteResult;
 
+import static java.lang.String.format;
+
 /**
  * This class holds various metrics about the results of an update operation.
  */
@@ -58,5 +60,10 @@ public class UpdateResults {
      */
     protected int getN() {
         return wr.getN();
+    }
+
+    @Override
+    public String toString() {
+        return format("UpdateResults{wr=%s}", wr);
     }
 }
