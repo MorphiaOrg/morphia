@@ -75,6 +75,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public class TestQuery extends TestBase {
 
     @Test

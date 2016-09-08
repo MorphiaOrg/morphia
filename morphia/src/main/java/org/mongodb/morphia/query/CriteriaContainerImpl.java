@@ -46,7 +46,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return criteria(name, query.isValidatingNames());
+        return criteria(name);
     }
 
     @Override
@@ -167,9 +167,5 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         add(parent);
 
         return parent;
-    }
-
-    private FieldEnd<? extends CriteriaContainer> criteria(final String field, final boolean validateName) {
-        return new FieldEndImpl<CriteriaContainerImpl>(query, field, this, validateName);
     }
 }

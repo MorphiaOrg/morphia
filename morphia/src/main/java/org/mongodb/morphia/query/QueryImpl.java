@@ -271,6 +271,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public FieldEnd<? extends CriteriaContainerImpl> criteria(final String field) {
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
+        add(container);
+
+        return new FieldEndImpl<CriteriaContainerImpl>(this, field, container);
+    }
+
+    @Override
     public Query<T> disableCursorTimeout() {
         noTimeout = true;
         return this;
@@ -316,7 +324,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
-        return field(name, validateName);
+        return new FieldEndImpl<QueryImpl<T>>(this, name, this);
     }
 
     @Override
@@ -560,7 +568,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         final BasicDBObject op = new BasicDBObject("$search", search);
 
-        this.criteria("$text", false).equal(op);
+        this.criteria("$text").equal(op);
 
         return this;
     }
@@ -571,7 +579,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final BasicDBObject op = new BasicDBObject("$search", search)
                                      .append("$language", language);
 
-        this.criteria("$text", false).equal(op);
+        this.criteria("$text").equal(op);
 
         return this;
     }
@@ -601,11 +609,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public Query<T> where(final CodeWScope js) {
         add(new WhereCriteria(js));
         return this;
-    }
-
-    @Override
-    public FieldEnd<? extends CriteriaContainerImpl> criteria(final String field) {
-        return criteria(field, validateName);
     }
 
     @Override
@@ -737,16 +740,5 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      */
     protected FilterOperator translate(final String operator) {
         return FilterOperator.fromString(operator);
-    }
-
-    private FieldEnd<? extends Query<T>> field(final String field, final boolean validate) {
-        return new FieldEndImpl<QueryImpl<T>>(this, field, this, validate);
-    }
-
-    FieldEnd<? extends CriteriaContainerImpl> criteria(final String field, final boolean validate) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
-        add(container);
-
-        return new FieldEndImpl<CriteriaContainerImpl>(this, field, container, validate);
     }
 }
