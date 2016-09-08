@@ -28,8 +28,7 @@ class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     private final QueryImpl<?> query;
     private final String field;
     private final T target;
-    private final boolean validateName;
-    private boolean not;
+    private boolean not = false;
 
     /**
      * Creates a FieldEnd for a particular field.
@@ -37,18 +36,11 @@ class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
      * @param query        the owning query
      * @param field        the field to consider
      * @param target       the CriteriaContainer
-     * @param validateName true if the field name should be validated
      */
-    FieldEndImpl(final QueryImpl<?> query, final String field, final T target, final boolean validateName) {
-        this(query, field, target, validateName, false);
-    }
-
-    private FieldEndImpl(final QueryImpl<?> query, final String field, final T target, final boolean validateName, final boolean not) {
+    FieldEndImpl(final QueryImpl<?> query, final String field, final T target) {
         this.query = query;
         this.field = field;
         this.target = target;
-        this.validateName = validateName;
-        this.not = not;
     }
 
     @Override
@@ -296,7 +288,7 @@ class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
         return addCriteria(op, val, not);
     }
 
-    private T addCriteria(final FilterOperator op, final Object val, final boolean not, final String... fieldsToCompare) {
+    private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
         target.add(new FieldCriteria(query, field, op, val, not));
         return target;
     }
