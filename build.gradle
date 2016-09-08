@@ -118,7 +118,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
         maxHeapSize = "512m"
     }
 
-    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest']) {}
+    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'findbugsMain']) {}
 
     javadoc {
         dependsOn project(':util').compileJava //We need taglets to be compiled
