@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
@@ -18,6 +18,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestQuery.ContainsPic;
 import org.mongodb.morphia.TestQuery.Pic;
@@ -26,6 +27,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.PreLoad;
+import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
@@ -47,6 +49,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mongodb.morphia.logging.MorphiaLoggerFactory.get;
 import static org.mongodb.morphia.query.PushOptions.options;
 
 /**
@@ -54,6 +57,7 @@ import static org.mongodb.morphia.query.PushOptions.options;
  */
 @SuppressWarnings("UnusedDeclaration") // Morphia uses the fields
 public class TestUpdateOps extends TestBase {
+    private static final Logger LOG = get(TestUpdateOps.class);
 
     @Test
     public void shouldUpdateAnArrayElement() {
@@ -521,6 +525,28 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    @Ignore("mapping in WriteResult needs to be resolved")
+    public void testRemoveWithNoData() {
+        DumbColl dumbColl = new DumbColl("ID");
+        dumbColl.fromArray = singletonList(new DumbArrayElement("something"));
+        DumbColl dumbColl2 = new DumbColl("ID2");
+        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
+        getDs().save(dumbColl, dumbColl2);
+
+        UpdateResults deleteResults = getDs().update(
+            getDs().createQuery(DumbColl.class).field("opaqueId").equalIgnoreCase("ID"),
+            getAds().createUpdateOperations(DumbColl.class,
+                new BasicDBObject("$pull", new BasicDBObject("fromArray", new BasicDBObject("whereId", "not there")))));
+        LOG.debug("************ deleteResults = " + deleteResults);
+
+        deleteResults = getDs().update(
+            getDs().createQuery(DumbColl.class).field("opaqueId").equalIgnoreCase("ID"),
+            getAds().createUpdateOperations(DumbColl.class)
+                .removeAll("fromArray", new DumbArrayElement("something")));
+        LOG.debug("************ deleteResults = " + deleteResults);
+    }
+
+    @Test
     public void testRemoveFirst() throws Exception {
         final ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
@@ -908,6 +934,26 @@ public class TestUpdateOps extends TestBase {
             return first != null ? first.equals(child.first)
                                  : child.first == null && (last != null ? last.equals(child.last) : child.last == null);
 
+        }
+    }
+
+    private static final class DumbColl {
+        private String opaqueId;
+        private List<DumbArrayElement> fromArray;
+
+        private DumbColl() {
+        }
+
+        private DumbColl(final String opaqueId) {
+            this.opaqueId = opaqueId;
+        }
+    }
+
+    private static final class DumbArrayElement {
+        private String whereId;
+
+        private DumbArrayElement(final String whereId) {
+            this.whereId = whereId;
         }
     }
 }
