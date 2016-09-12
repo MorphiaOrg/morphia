@@ -153,7 +153,7 @@ def major(fullVersion) {
 def gitVersion() {
     def stdOut = new ByteArrayOutputStream()
     exec {
-        commandLine git, "rev-parse", "--abbrev-ref", "HEAD"
+        commandLine "git", "rev-parse", "--abbrev-ref", "HEAD"
         standardOutput = stdOut
         ignoreExitValue = true
     }
