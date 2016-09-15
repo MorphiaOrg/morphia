@@ -106,25 +106,8 @@ task reference(dependsOn: ':morphia:javadoc') << {
 
     update('docs/reference/data/mongodb.toml', [
             ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
-            ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
-            ['apiUrl = "', "apiUrl = \"${majorVersion - '-SNAPSHOT'}/javadoc\""]
+            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
     ])
-
-/*
-    copy {
-        from 'docs/reference/config.toml'
-        into 'docs/reference/config.toml.backup'
-
-        filter { String line ->
-            line.startsWith('baseurl = "') ? "baseurl = /morphia/${shortVersion}" : line
-        }
-    }
-
-    move {
-        from 'docs/reference/config.toml.backup'
-        into 'docs/reference/config.toml'
-    }
-*/
 }
 
 task viewLanding(dependsOn: 'landing') << {
