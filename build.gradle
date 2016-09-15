@@ -168,7 +168,7 @@ def find(executable) {
         if(exec.exists()) {
             exec.absolutePath
         }
-    }
+    } ?: executable
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
