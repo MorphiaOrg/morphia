@@ -109,8 +109,7 @@ task reference(dependsOn: ':morphia:javadoc') << {
 
     update('docs/reference/data/mongodb.toml', [
             ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
-            ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
-            ['apiUrl = "', "apiUrl = \"${majorVersion - '-SNAPSHOT'}/javadoc\""]
+            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
     ])
 }
 
