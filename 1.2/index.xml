@@ -77,28 +77,28 @@ annotations in context, please refer to &lt;a href=&#34;https://github.com/mongo
 
 &lt;h3 id=&#34;index&#34;&gt;Index&lt;/h3&gt;
 
-&lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Index.html
+&lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Index.html
 &#34;&gt;here&lt;/a&gt;.  There are two pieces to this
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
-in the 2.x series.  These options and more have been conglomerated in the &lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+in the 2.x series.  These options and more have been conglomerated in the &lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 &#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation.&lt;/p&gt;
 
 &lt;h4 id=&#34;field&#34;&gt;Field&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Field.html
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Field.html
 &#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation defines indexing on a specific document field.  Multiple
 instances of this annotation may be passed to the &lt;code&gt;@Index&lt;/code&gt; annotation to define a compound index on multiple fields.&lt;/p&gt;
 
 &lt;h4 id=&#34;indexoptions&#34;&gt;IndexOptions&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 &#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation defines the options to apply to an index
 definition.  This annotation replaces the fields found directly on the &lt;code&gt;@Index&lt;/code&gt; annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.&lt;/p&gt;
 
 &lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Indexed.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Indexed.html
 &#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt;, applied to a Java field, marks the field to be indexed by MongoDB.
   This is used for simple, single-field indexes.  As stated above, the &lt;code&gt;options&lt;/code&gt; value replaces the individual setting values on the
    &lt;code&gt;@Indexed&lt;/code&gt; annotation itself.&lt;/p&gt;
@@ -109,7 +109,7 @@ options are consistent across the various index definition approaches.&lt;/p&gt;
 
 &lt;h3 id=&#34;entity&#34;&gt;Entity&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Entity.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Entity.html
 &#34;&gt;&lt;code&gt;@Entity&lt;/code&gt;&lt;/a&gt; marks entities to be stored directly in a collection. This annotation
 is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
 collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
@@ -117,7 +117,7 @@ references and embedding.&lt;/p&gt;
 
 &lt;h3 id=&#34;reference&#34;&gt;Reference&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Reference.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Reference.html
 &#34;&gt;&lt;code&gt;@Reference&lt;/code&gt;&lt;/a&gt; marks a field as a reference to a document stored in another
 collection and is linked (by a &lt;code&gt;DBRef&lt;/code&gt; field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
 via an &lt;code&gt;@Reference&lt;/code&gt; field must have already have a non-null &lt;code&gt;@Id&lt;/code&gt; value in the referenced entity. This can be done by either saving the
@@ -134,46 +134,46 @@ This will result in only the ID value being stored in the document.&lt;/p&gt;
 &lt;h3 id=&#34;embedded&#34;&gt;Embedded&lt;/h3&gt;
 
 &lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection,
-&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Embedded.html
+&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Embedded.html
 &#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.&lt;/p&gt;
 
 &lt;h3 id=&#34;id&#34;&gt;Id&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Id.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Id.html
 &#34;&gt;&lt;code&gt;@Id&lt;/code&gt;&lt;/a&gt; marks a field in an entity to be the &lt;code&gt;_id&lt;/code&gt; field in MongoDB.  This
 annotation is required on all top level entities regardless of the presence of an &lt;code&gt;@Entity&lt;/code&gt; annotation.  If a class is marked with
 &lt;code&gt;@Embedded&lt;/code&gt; this annotation is not required since embedded documents are not required to have _id fields.&lt;/p&gt;
 
 &lt;h3 id=&#34;property&#34;&gt;Property&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Property.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Property.html
 &#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; is an optional annotation instructing Morphia to persist the
 field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
 overridden by passing a String with the new name to the annotation.&lt;/p&gt;
 
 &lt;h3 id=&#34;transient&#34;&gt;Transient&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Transient.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Transient.html
 &#34;&gt;&lt;code&gt;@Transient&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when converting an
 entity to a document.  The Java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
 
 &lt;h3 id=&#34;serialized&#34;&gt;Serialized&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Serialized.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Serialized.html
 &#34;&gt;&lt;code&gt;@Serialized&lt;/code&gt;&lt;/a&gt; instructs Morphia to serialize this field using JDK
 serialization.  The field&amp;rsquo;s value gets converted to a &lt;code&gt;byte[]&lt;/code&gt; and passed to MongoDB.&lt;/p&gt;
 
 &lt;h3 id=&#34;notsaved&#34;&gt;NotSaved&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/NotSaved.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/NotSaved.html
 &#34;&gt;&lt;code&gt;@NotSaved&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when saving but will
  still be loaded from the database when the entity is read.&lt;/p&gt;
 
 &lt;h3 id=&#34;alsoload&#34;&gt;AlsoLoad&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
 &#34;&gt;&lt;code&gt;@AlsoLoad&lt;/code&gt;&lt;/a&gt; instructs Morphia to look for a field under different names than
 the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
 this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and
@@ -183,7 +183,7 @@ renamed.&lt;/p&gt;
 
 &lt;h3 id=&#34;version&#34;&gt;Version&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Version.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Version.html
 &#34;&gt;&lt;code&gt;@Version&lt;/code&gt;&lt;/a&gt; marks a field in an entity to control optimistic locking. If the
 versions change in the database while modifying an entity (including deletes) a &lt;code&gt;ConcurrentModificationException&lt;/code&gt; will be thrown. This
 field will be automatically managed for you &amp;ndash; there is no need to set a value and you should not do so.  If another name beside the Java
@@ -1420,10 +1420,10 @@ Artist result = findQuery.get();
 
 &lt;h1 id=&#34;updating-on-the-server&#34;&gt;Updating (on the server)&lt;/h1&gt;
 
-&lt;p&gt;The update method on &lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/Datastore.html
+&lt;p&gt;The update method on &lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/Datastore.html
 &#34;&gt;&lt;code&gt;Datastore&lt;/code&gt;&lt;/a&gt; is used to issue a command to the server to change
 existing documents.  The effects of the update command are defined via
-&lt;a href=&#34;/morphia/1.2/morphia/1.21.2/javadoc?org/mongodb/morphia/query/UpdateOperations.html
+&lt;a href=&#34;/morphia/1.2/morphia/1.2/javadoc?org/mongodb/morphia/query/UpdateOperations.html
 &#34;&gt;&lt;code&gt;UpdateOperations&lt;/code&gt;&lt;/a&gt; methods.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-field-expression&#34;&gt;The Field Expression&lt;/h2&gt;

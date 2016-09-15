@@ -845,28 +845,28 @@ annotations in context, please refer to <a href="https://github.com/mongodb/morp
 
 <h3 id="index">Index</h3>
 
-<p>The <code>@Index</code> documentation can be found <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Index.html
+<p>The <code>@Index</code> documentation can be found <a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Index.html
 ">here</a>.  There are two pieces to this
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
-in the 2.x series.  These options and more have been conglomerated in the <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+in the 2.x series.  These options and more have been conglomerated in the <a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 "><code>@IndexOptions</code></a> annotation.</p>
 
 <h4 id="field">Field</h4>
 
-<p>The <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Field.html
+<p>The <a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Field.html
 "><code>@Field</code></a> annotation defines indexing on a specific document field.  Multiple
 instances of this annotation may be passed to the <code>@Index</code> annotation to define a compound index on multiple fields.</p>
 
 <h4 id="indexoptions">IndexOptions</h4>
 
-<p>The <a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+<p>The <a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 "><code>@IndexOptions</code></a> annotation defines the options to apply to an index
 definition.  This annotation replaces the fields found directly on the <code>@Index</code> annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.</p>
 
 <h4 id="indexed">Indexed</h4>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Indexed.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Indexed.html
 "><code>@Indexed</code></a>, applied to a Java field, marks the field to be indexed by MongoDB.
   This is used for simple, single-field indexes.  As stated above, the <code>options</code> value replaces the individual setting values on the
    <code>@Indexed</code> annotation itself.</p>
@@ -877,7 +877,7 @@ options are consistent across the various index definition approaches.</p>
 
 <h3 id="entity">Entity</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Entity.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Entity.html
 "><code>@Entity</code></a> marks entities to be stored directly in a collection. This annotation
 is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
 collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
@@ -885,7 +885,7 @@ references and embedding.</p>
 
 <h3 id="reference">Reference</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Reference.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Reference.html
 "><code>@Reference</code></a> marks a field as a reference to a document stored in another
 collection and is linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
 via an <code>@Reference</code> field must have already have a non-null <code>@Id</code> value in the referenced entity. This can be done by either saving the
@@ -902,46 +902,46 @@ This will result in only the ID value being stored in the document.</p>
 <h3 id="embedded">Embedded</h3>
 
 <p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection,
-<a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Embedded.html
+<a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Embedded.html
 "><code>@Embedded</code></a> tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.</p>
 
 <h3 id="id">Id</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Id.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Id.html
 "><code>@Id</code></a> marks a field in an entity to be the <code>_id</code> field in MongoDB.  This
 annotation is required on all top level entities regardless of the presence of an <code>@Entity</code> annotation.  If a class is marked with
 <code>@Embedded</code> this annotation is not required since embedded documents are not required to have _id fields.</p>
 
 <h3 id="property">Property</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Property.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Property.html
 "><code>@Property</code></a> is an optional annotation instructing Morphia to persist the
 field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
 overridden by passing a String with the new name to the annotation.</p>
 
 <h3 id="transient">Transient</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Transient.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Transient.html
 "><code>@Transient</code></a> instructs Morphia to ignore this field when converting an
 entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
 
 <h3 id="serialized">Serialized</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Serialized.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Serialized.html
 "><code>@Serialized</code></a> instructs Morphia to serialize this field using JDK
 serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed to MongoDB.</p>
 
 <h3 id="notsaved">NotSaved</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/NotSaved.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/NotSaved.html
 "><code>@NotSaved</code></a> instructs Morphia to ignore this field when saving but will
  still be loaded from the database when the entity is read.</p>
 
 <h3 id="alsoload">AlsoLoad</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
 "><code>@AlsoLoad</code></a> instructs Morphia to look for a field under different names than
 the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
 this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and
@@ -951,7 +951,7 @@ renamed.</p>
 
 <h3 id="version">Version</h3>
 
-<p><a href="/morphia/1.21.2/javadoc?org/mongodb/morphia/annotations/Version.html
+<p><a href="/morphia/1.2/javadoc?org/mongodb/morphia/annotations/Version.html
 "><code>@Version</code></a> marks a field in an entity to control optimistic locking. If the
 versions change in the database while modifying an entity (including deletes) a <code>ConcurrentModificationException</code> will be thrown. This
 field will be automatically managed for you &ndash; there is no need to set a value and you should not do so.  If another name beside the Java
