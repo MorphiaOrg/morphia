@@ -79,6 +79,7 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.String.format;
 import static java.lang.reflect.Proxy.newProxyInstance;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -832,6 +833,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Deprecated
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
+        if (dropDupsOnCreate) {
+            throw new MappingException("dropDupsOnCreate value has been desupported by the server.  Please set this value to false and "
+                                           + "validate your system behaves as expected.");
+        }
         MappedClass mc = getMapper().getMappedClass(clazz);
         Index index = synthesizeIndex(fields, name, false, false, false, unique, -1);
 
@@ -868,6 +873,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
+        if (dropDupsOnCreate) {
+            throw new MappingException("dropDupsOnCreate value has been desupported by the server.  Please set this value to false and "
+                                           + "validate your system behaves as expected.");
+        }
+
         MappedClass mappedClass = getMapper().getMappedClass(clazz);
         Index index = synthesizeIndex(fields, name, false, false, false, false, -1);
         ensureIndex(mappedClass, getMongoCollection(collection), index, false);
@@ -885,12 +895,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
-        ensureIndexes(getMongoCollection(collName), mc, background, Collections.<MappedClass>emptyList(),
-                      Collections.<MappedField>emptyList());
+        ensureIndexes(getMongoCollection(collName), mc, background);
     }
 
     protected void ensureIndexes(final MappedClass mc, final boolean background) {
-        ensureIndexes(getMongoCollection(mc.getClazz()), mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
+        ensureIndexes(getMongoCollection(mc.getClazz()), mc, background);
     }
 
     private void ensureIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
@@ -975,6 +984,119 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                  .build();
     }
 
+    private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
+
+        for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+            BsonDocument keys = new BsonDocument();
+            for (Field field : index.fields()) {
+                if (field.weight() != -1) {
+                    if (field.type() != IndexType.TEXT) {
+                        throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
+                    }
+                }
+                keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
+            }
+
+            createIndex(collection, keys, convert(index.options(), background));
+        }
+    }
+
+    private List<Index> collectIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
+        if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
+            return emptyList();
+        }
+
+        List<Index> indexes = collectTopLevelIndexes(mc);
+        indexes.addAll(collectFieldIndexes(mc));
+        indexes.addAll(collectNestedIndexes(mc, parentMCs));
+
+        /*
+                    if (mf.hasAnnotation(Text.class)) {
+                createTextIndex(collection, parentMCs, parentMFs, mf);
+            }
+
+
+         */
+
+        return indexes;
+    }
+
+    private List<Index> collectTopLevelIndexes(final MappedClass mc) {
+        List<Index> list = new ArrayList<Index>();
+        final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
+        if (annotations != null) {
+            for (final Indexes indexes : annotations) {
+                for (final Index index : indexes.value()) {
+                    Index updated = index;
+                    if (index.fields().length == 0) {
+                        LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
+                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
+                        updated = synthesizeIndex(index);
+                    }
+                    List<Field> fields = new ArrayList<Field>();
+                    for (Field field : updated.fields()) {
+                        String path = null;
+                        try {
+                            path = findField(mc, asList(field.value().split("\\.")));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        fields.add(field(path, field.type(), field.weight()));
+                    }
+
+                    list.add(replaceFields(updated, fields));
+                }
+            }
+        }
+        return list;
+    }
+
+    private List<Index> collectFieldIndexes(final MappedClass mc) {
+        List<Index> list = new ArrayList<Index>();
+        for (final MappedField mf : mc.getPersistenceFields()) {
+            if (mf.hasAnnotation(Indexed.class)) {
+
+                final Indexed index = mf.getAnnotation(Indexed.class);
+                final BasicDBObject newOptions = (BasicDBObject) extractOptions(index.options());
+                if (!extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
+                    throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
+                                                   + "allowed.  Please migrate all settings to @IndexOptions");
+                }
+
+                List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.fromValue(index.value().toIndexValue()), -1));
+                list.add(!newOptions.isEmpty()
+                         ? synthesizeIndex(index.name(), index.options().background(), true, index.options().sparse(),
+                                           index.options().unique(), index.options().expireAfterSeconds(), fields)
+                         : synthesizeIndex(index.name(), index.background(), true, index.sparse(), index.unique(),
+                                           index.expireAfterSeconds(), fields));
+            }
+        }
+        return list;
+    }
+
+    private List<Index> collectNestedIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
+        List<Index> list = new ArrayList<Index>();
+        for (final MappedField mf : mc.getPersistenceFields()) {
+            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
+                    && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
+                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
+                newParentClasses.add(mc);
+                List<Index> indexes =
+                    collectIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), newParentClasses);
+                for (Index index : indexes) {
+                    List<Field> fields = new ArrayList<Field>();
+                    for (Field field : index.fields()) {
+                        fields.add(field(mf.getNameToStore() + "." + field.value(), field.type(), field.weight()));
+                    }
+                    list.add(replaceFields(index, fields));
+                }
+            }
+        }
+
+        return list;
+    }
+
+/*
     private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background,
                                final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
         if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
@@ -985,6 +1107,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         processEmbeddedAnnotations(collection, mc, background, parentMCs, parentMFs);
     }
+*/
 
     @Override
     public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
@@ -1479,31 +1602,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return keys;
     }
 
-    @SuppressWarnings("deprecation")
-    private void processClassAnnotations(final MongoCollection dbColl, final MappedClass mc, final boolean background) {
-        final List<Indexes> indexes = mc.getAnnotations(Indexes.class);
-        if (indexes != null) {
-            for (final Indexes idx : indexes) {
-                if (idx.value().length > 0) {
-                    for (final Index index : idx.value()) {
-                        BsonDocument keys;
-                        if (index.fields().length == 0) {
-                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                                   + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                            keys = calculateKeys(mc, index);
-                            ensureIndex(mc, dbColl, synthesizeIndex(index), background);
-                        } else {
-                            keys = calculateKeys(mc, index);
-                            ensureIndex(mc, dbColl, index, background);
-                        }
-
-                        createIndex(dbColl, keys, index.options());
-                    }
-                }
-            }
-        }
-    }
-
     private Index synthesizeIndex(final Index index) {
         return synthesizeIndex(index.value(), index.name(), index.background(), index.disableValidation(),
                                index.sparse(), index.unique(), index.expireAfterSeconds());
@@ -1521,6 +1619,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         indexMap.put("fields", list.toArray(new Field[0]));
 
         indexMap.put("options", synthesizeOptions(name, background, disableValidation, sparse, unique, expireAfterSeconds));
+
+        return annotationForMap(Index.class, indexMap);
+    }
+
+    private Index replaceFields(final Index original, final List<Field> list) {
+        Map<String, Object> indexMap = toMap(original);
+        indexMap.put("fields", list.toArray(new Field[0]));
 
         return annotationForMap(Index.class, indexMap);
     }
@@ -1589,54 +1694,19 @@ public class DatastoreImpl implements AdvancedDatastore {
                                     new AnnotationInvocationHandler(annotationType, values));
     }
 
-    /**
-     * Ensure indexes from field annotations, and embedded entities
-     */
-    private void processEmbeddedAnnotations(final MongoCollection collection, final MappedClass mc, final boolean background,
-                                            final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
-        if (mc.getFieldsAnnotatedWith(Text.class).size() > 1) {
-            throw new MappingException("Only one text index can be defined per collection: " + mc.getClazz().getName());
-        }
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (mf.hasAnnotation(Indexed.class)) {
-                final StringBuilder prefix = new StringBuilder();
-                if (!parentMFs.isEmpty()) {
-                    for (final MappedField pmf : parentMFs) {
-                        prefix.append(pmf.getNameToStore()).append(".");
-                    }
+    private static <T extends Annotation> Map<String, Object> toMap(final T annotation) {
+        final Map<String, Object> values = new HashMap<String, Object>();
+
+        for (Method method : annotation.getClass().getDeclaredMethods()) {
+            try {
+                if ((method.getParameterTypes().length == 0) && !method.getName().equals("hashCode")) {
+                    values.put(method.getName(), method.invoke(annotation));
                 }
-
-                final Indexed index = mf.getAnnotation(Indexed.class);
-                final BasicDBObject newOptions = (BasicDBObject) extractOptions(index.options());
-                if (!extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
-                    throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
-                                                   + "allowed.  Please migrate all settings to @IndexOptions");
-                }
-
-                List<Field> fields = singletonList(field(prefix + mf.getNameToStore(),
-                                                         IndexType.fromValue(index.value().toIndexValue()), -1));
-                Index newIndex = !newOptions.isEmpty()
-                                 ? synthesizeIndex(index.name(), index.options().background() || background, true, index.options().sparse(),
-                                                   index.options().unique(), index.options().expireAfterSeconds(), fields)
-                                 : synthesizeIndex(index.name(), index.background() || background, true, index.sparse(), index.unique(),
-                                                   index.expireAfterSeconds(), fields);
-                ensureIndex(parentMCs.isEmpty() ? mc : parentMCs.get(0), collection, newIndex, background);
-            }
-
-            if (mf.hasAnnotation(Text.class)) {
-                createTextIndex(collection, parentMCs, parentMFs, mf);
-            }
-
-            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                    && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
-                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
-                final List<MappedField> newParents = new ArrayList<MappedField>(parentMFs);
-                newParentClasses.add(mc);
-                newParents.add(mf);
-                ensureIndexes(collection, mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), background,
-                              newParentClasses, newParents);
+            } catch (Exception e) {
+                throw new MappingException(e.getMessage(), e);
             }
         }
+        return values;
     }
 
     private void putIfNotEmpty(final DBObject opts, final String key, final String value) {

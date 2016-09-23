@@ -141,8 +141,7 @@ public interface Datastore {
      * @param name             the name of the index to create
      * @param fields           the fields to index
      * @param unique           true if the index should enforce uniqueness on the fields indexed
-     * @param dropDupsOnCreate if unique is true and this is true, any documents with duplicated fields being indexed will be dropped.  If
-     *                         this is false, index creation will fail.
+     * @param dropDupsOnCreate This value has been desupported.  Setting this to true will result in an error.
      * @param <T>              the type to index
      * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
      * methods in the Java driver itself.
