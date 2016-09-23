@@ -45,8 +45,9 @@ public @interface IndexOptions {
     boolean disableValidation() default false;
 
     /**
-     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
+     * @deprecated This value has been desupported.  Setting this to true will result in an error.
      */
+    @Deprecated
     boolean dropDups() default false;
 
     /**
@@ -78,4 +79,9 @@ public @interface IndexOptions {
      * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
      */
     boolean unique() default false;
+
+    /**
+     * Defines the collation to be used for this index
+     */
+    Collation collation() default @Collation(locale = "");
 }

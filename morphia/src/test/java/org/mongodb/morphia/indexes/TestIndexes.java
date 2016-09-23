@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Collation;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -35,7 +36,7 @@ import java.util.List;
 public class TestIndexes extends TestBase {
 
     @Test
-    public void testIndices() {
+    public void testIndexes() {
 
         final Datastore datastore = getDs();
         datastore.delete(datastore.createQuery(TestWithIndexOption.class));
@@ -73,6 +74,7 @@ public class TestIndexes extends TestBase {
             }
         }
     }
+
     private void assertHashed(final List<DBObject> indexInfo) {
         for (final DBObject dbObject : indexInfo) {
             BasicDBObject index = (BasicDBObject) dbObject;
@@ -83,9 +85,8 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(noClassnameStored = true)
-    @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "name")})})
+    @Indexes({@Index(options = @IndexOptions(collation = @Collation(locale = "en_US")), fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
-
         private String name;
 
     }
@@ -103,5 +104,6 @@ public class TestIndexes extends TestBase {
     public static class TestWithHashedIndex {
         private String hashedValue;
     }
+
 
 }

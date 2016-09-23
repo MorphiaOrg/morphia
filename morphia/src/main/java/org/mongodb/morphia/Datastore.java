@@ -4,15 +4,20 @@ package org.mongodb.morphia;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MapReduceCommand;
+import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.IndexOptions;
+import org.bson.conversions.Bson;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +126,11 @@ public interface Datastore {
      * @param clazz  the class from which to get the index definitions
      * @param fields the fields to index
      * @param <T>    the type to index
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(Bson, IndexOptions)
      */
+    @Deprecated
     <T> void ensureIndex(Class<T> clazz, String fields);
 
     /**
@@ -135,7 +144,11 @@ public interface Datastore {
      * @param dropDupsOnCreate if unique is true and this is true, any documents with duplicated fields being indexed will be dropped.  If
      *                         this is false, index creation will fail.
      * @param <T>              the type to index
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(Bson, IndexOptions)
      */
+    @Deprecated
     <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
 
     /**
@@ -319,8 +332,16 @@ public interface Datastore {
     /**
      * @param clazz the class to use for mapping
      * @return the mapped collection for the collection
+     * @deprecated use {@link #getMongoCollection(Class)} instead
      */
+    @Deprecated
     DBCollection getCollection(Class<?> clazz);
+
+    /**
+     * @param clazz the class to use for mapping
+     * @return the mapped collection for the collection
+     */
+    MongoCollection getMongoCollection(Class<?> clazz);
 
     /**
      * Gets the count this kind ({@link DBCollection})

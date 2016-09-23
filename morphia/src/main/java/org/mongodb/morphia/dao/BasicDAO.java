@@ -258,7 +258,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     }
 
     protected void initDS(final MongoClient mongoClient, final Morphia mor, final String db) {
-        ds = new DatastoreImpl(mor, mongoClient, db);
+        ds = (DatastoreImpl) mor.createDatastore(mongoClient, db);
     }
 
     protected void initType(final Class<T> type) {
