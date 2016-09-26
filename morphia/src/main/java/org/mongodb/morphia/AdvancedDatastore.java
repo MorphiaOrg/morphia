@@ -129,6 +129,7 @@ public interface AdvancedDatastore extends Datastore {
      * methods in the Java driver itself.
      * @see #ensureIndexes(String, Class)
      */
+    @Deprecated
     <T> void ensureIndex(String collection, Class<T> clazz, String fields);
 
     /**
@@ -146,6 +147,7 @@ public interface AdvancedDatastore extends Datastore {
      * methods in the Java driver itself.
      * @see #ensureIndexes(String, Class)
      */
+    @Deprecated
     <T> void ensureIndex(String collection, Class<T> clazz, String name,
                          String fields, boolean unique, boolean dropDupsOnCreate);
 

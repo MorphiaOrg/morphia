@@ -58,7 +58,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void testNestedInterfaces() {
-        getMorphia().map(WithNested.class, Nested.class, NestedImpl.class);
+        getMorphia().map(WithNested.class);
         getDs().ensureIndexes();
 
         final List<DBObject> indexInfo = getDs().getCollection(WithNested.class).getIndexInfo();

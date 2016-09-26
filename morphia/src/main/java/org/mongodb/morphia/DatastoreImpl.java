@@ -839,11 +839,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final String collection, final Class<T> type, final String fields) {
         ensureIndex(collection, type, null, fields, false, false);
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
@@ -862,8 +864,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
-        final MappedClass mc = mapper.getMappedClass(clazz);
-        indexHelper.ensureIndexes(collection, mc, background);
+        indexHelper.ensureIndexes(collection, mapper.getMappedClass(clazz), background);
     }
 
     @Override
