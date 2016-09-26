@@ -16,8 +16,6 @@
 
 package org.mongodb.morphia;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import org.mongodb.morphia.annotations.Collation;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -30,6 +28,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,47 +91,42 @@ final class AnnotationUtils {
                                                  .build();
     }
 
-    @SuppressWarnings("deprecation")
-    static Index synthesizeIndex(final Index index) {
-        return synthesizeIndex(index.value(), index.name(), index.background(), index.disableValidation(),
-                               index.sparse(), index.unique(), index.expireAfterSeconds(), null, null, null);
+    static Index synthesizeIndexFromOldFormat(final Index index) {
+        return synthesizeIndex(annotationForMap(IndexOptions.class, toMap(index)), parseFieldsString(index.value()));
     }
 
-    static Index synthesizeIndex(final String fields, final String name, final boolean background, final boolean disableValidation,
-                                 final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
-                                 final String languageOverride, final Collation collation) {
-        return synthesizeIndex(name, background, disableValidation, sparse, unique, expireAfterSeconds, language, languageOverride,
-                               collation, parseFieldsString(fields));
-    }
-
-    static Index synthesizeIndex(final String name, final boolean background, final boolean disableValidation,
-                                 final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
-                                 final String languageOverride, final Collation collation, final List<Field> list) {
+    static Index synthesizeIndex(final String fields, final String name, final boolean unique) {
         Map<String, Object> indexMap = new HashMap<String, Object>();
 
-        indexMap.put("fields", list.toArray(new Field[0]));
+        indexMap.put("fields", parseFieldsString(fields).toArray(new Field[0]));
 
-        indexMap.put("options", synthesizeOptions(name, background, disableValidation, sparse, unique, expireAfterSeconds, language,
-                                                  languageOverride, collation));
+        Map<String, Object> optionsMap = new HashMap<String, Object>();
+        optionsMap.put("name", name != null ? name : "");
+        optionsMap.put("unique", unique);
+
+        indexMap.put("options", annotationForMap(IndexOptions.class, optionsMap));
 
         return annotationForMap(Index.class, indexMap);
     }
 
-    private static IndexOptions synthesizeOptions(final String name, final boolean background, final boolean disableValidation,
-                                                  final boolean sparse, final boolean unique, final int expireAfterSeconds,
-                                                  final String language, final String languageOverride, final Collation collation) {
-        Map<String, Object> optionsMap = new HashMap<String, Object>();
-        optionsMap.put("name", name != null ? name : "");
-        optionsMap.put("background", background);
-        optionsMap.put("disableValidation", disableValidation);
-        optionsMap.put("sparse", sparse);
-        optionsMap.put("unique", unique);
-        optionsMap.put("expireAfterSeconds", expireAfterSeconds);
-        optionsMap.put("language", language != null ? language : "");
-        optionsMap.put("languageOverride", languageOverride != null ? languageOverride : "");
-        optionsMap.put("collation", collation);
+    static Index synthesizeIndex(final IndexOptions options, final List<Field> list) {
+        Map<String, Object> indexMap = new HashMap<String, Object>();
 
-        return annotationForMap(IndexOptions.class, optionsMap);
+        indexMap.put("fields", list.toArray(new Field[0]));
+
+        indexMap.put("options", options);
+
+        return annotationForMap(Index.class, indexMap);
+    }
+
+    static Index synthesizeIndex(final Indexed indexed, final List<Field> list) {
+        Map<String, Object> indexMap = new HashMap<String, Object>();
+
+        indexMap.put("fields", list.toArray(new Field[0]));
+
+        indexMap.put("options", annotationForMap(IndexOptions.class, toMap(indexed)));
+
+        return annotationForMap(Index.class, indexMap);
     }
 
     @SuppressWarnings("unchecked")
@@ -153,13 +147,18 @@ final class AnnotationUtils {
                                     new AnnotationInvocationHandler(annotationType, values));
     }
 
+    @SuppressWarnings("unchecked")
     private static <T extends Annotation> Map<String, Object> toMap(final T annotation) {
         final Map<String, Object> values = new HashMap<String, Object>();
 
         try {
-            for (Method method : annotation.getClass().getDeclaredMethods()) {
-                if ((method.getParameterTypes().length == 0) && !method.getName().equals("hashCode")) {
-                    values.put(method.getName(), method.invoke(annotation));
+            Class<T> annotationType = annotation instanceof Proxy
+                                      ? extractType(Proxy.getInvocationHandler(annotation))
+                                      : (Class<T>) annotation.getClass();
+            for (Method method : annotationType.getDeclaredMethods()) {
+                Object value = method.invoke(annotation);
+                if (!method.getDefaultValue().equals(value)) {
+                    values.put(method.getName(), value);
                 }
             }
         } catch (Exception e) {
@@ -168,12 +167,16 @@ final class AnnotationUtils {
         return values;
     }
 
-    /**
-     * Parses the string and validates each part
-     *
-     * @param str the String to parse
-     * @return the DBObject
-     */
+    private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
+        if (invocationHandler instanceof AnnotationInvocationHandler) {
+            return ((AnnotationInvocationHandler) invocationHandler).type;
+        }
+
+        java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
+        type.setAccessible(true);
+        return (Class) type.get(invocationHandler);
+    }
+
     private static List<Field> parseFieldsString(final String str) {
         List<Field> fields = new ArrayList<Field>();
         final String[] parts = str.split(",");
@@ -207,53 +210,24 @@ final class AnnotationUtils {
         return annotationForMap(Index.class, indexMap);
     }
 
-    static DBObject extractOptions(final IndexOptions options) {
-        final DBObject opts = new BasicDBObject();
-
-        putIfNotEmpty(opts, "name", options.name());
-        putIfNotEmpty(opts, "default_language", options.language());
-        putIfNotEmpty(opts, "language_override", options.languageOverride());
-        putIfTrue(opts, "background", options.background());
-        putIfTrue(opts, "sparse", options.sparse());
-        putIfTrue(opts, "unique", options.unique());
-        if (options.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", options.expireAfterSeconds());
-        }
-        return opts;
+    static Map<String, Object> extractOptions(final IndexOptions options) {
+        return toMap(options);
     }
 
-    @SuppressWarnings("deprecation")
-    static BasicDBObject extractOptions(final Indexed indexed) {
-        final BasicDBObject opts = new BasicDBObject();
-
-        putIfNotEmpty(opts, "name", indexed.name());
-        putIfTrue(opts, "background", indexed.background());
-        putIfTrue(opts, "sparse", indexed.sparse());
-        putIfTrue(opts, "unique", indexed.unique());
-        if (indexed.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", indexed.expireAfterSeconds());
+    static Map<String, Object> extractOptions(final Indexed indexed) {
+        Map<String, Object> map = toMap(indexed);
+        if (indexed.options().collation().locale().equals("")) {
+            map.remove("options");
         }
-        return opts;
-    }
-
-    private static void putIfNotEmpty(final DBObject opts, final String key, final String value) {
-        if (!value.equals("")) {
-            opts.put(key, value);
-        }
-    }
-
-    private static void putIfTrue(final DBObject opts, final String key, final boolean value) {
-        if (value) {
-            opts.put(key, true);
-        }
+        return map;
     }
 
     private static class AnnotationInvocationHandler<T> implements InvocationHandler {
-        private final Class<T> annotationType;
+        private final Class<T> type;
         private final Map<String, Object> values;
 
-        AnnotationInvocationHandler(final Class<T> annotationType, final Map<String, Object> values) {
-            this.annotationType = annotationType;
+        AnnotationInvocationHandler(final Class<T> type, final Map<String, Object> values) {
+            this.type = type;
             this.values = values;
         }
 
@@ -268,7 +242,7 @@ final class AnnotationUtils {
 
         @Override
         public String toString() {
-            return format("%s %s", annotationType.getSimpleName(), values.toString());
+            return format("%s %s", type.getSimpleName(), values.toString());
         }
     }
 }

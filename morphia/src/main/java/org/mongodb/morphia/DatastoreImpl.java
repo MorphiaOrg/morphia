@@ -73,8 +73,11 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.mongodb.morphia.AnnotationUtils.convert;
+import static org.mongodb.morphia.AnnotationUtils.extractOptions;
 import static org.mongodb.morphia.AnnotationUtils.field;
+import static org.mongodb.morphia.AnnotationUtils.replaceFields;
 import static org.mongodb.morphia.AnnotationUtils.synthesizeIndex;
+import static org.mongodb.morphia.AnnotationUtils.synthesizeIndexFromOldFormat;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 /**
@@ -867,9 +870,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
 
-        MappedClass mappedClass = getMapper().getMappedClass(clazz);
-        Index index = synthesizeIndex(fields, name, false, false, false, unique, -1, null, null, null);
-        ensureIndex(mappedClass, getMongoCollection(collection), index, false);
+        ensureIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection), synthesizeIndex(fields, name, unique), false);
     }
 
     @Override
@@ -892,15 +893,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private void ensureIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
-
-        if (index.options().dropDups()) {
-            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
-                                           + "validate your system behaves as expected.");
-        }
-
-        BsonDocument keys = calculateKeys(mc, index);
-
-        createIndex(collection, keys, convert(index.options(), background));
+        createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
     }
 
     private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
@@ -986,7 +979,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     if (index.fields().length == 0) {
                         LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                        updated = synthesizeIndex(index);
+                        updated = synthesizeIndexFromOldFormat(index);
                     }
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
@@ -994,7 +987,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         fields.add(field(path, field.type(), field.weight()));
                     }
 
-                    list.add(AnnotationUtils.replaceFields(updated, fields));
+                    list.add(replaceFields(updated, fields));
                 }
             }
         }
@@ -1005,31 +998,25 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
-                final Indexed index = mf.getAnnotation(Indexed.class);
-                if (index.options().dropDups()) {
+                final Indexed indexed = mf.getAnnotation(Indexed.class);
+                if (indexed.options().dropDups()) {
                     throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
                                                    + "validate your system behaves as expected.");
                 }
-                final BasicDBObject newOptions = (BasicDBObject) AnnotationUtils.extractOptions(index.options());
-                if (!AnnotationUtils.extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
+                final Map<String, Object> newOptions = extractOptions(indexed.options());
+                Map<String, Object> oldOptions = extractOptions(indexed);
+                if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
                     throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
-                List<Field> fields = singletonList(field(mf.getNameToStore(), fromValue(index.value().toIndexValue()), -1));
-                list.add(!newOptions.isEmpty()
-                         ? synthesizeIndex(index.name(), index.options().background(), true, index.options().sparse(),
-                                           index.options().unique(), index.options().expireAfterSeconds(), index.options().language(),
-                                           index.options().languageOverride(), index.options().collation(), fields)
-                         : synthesizeIndex(index.name(), index.background(), true, index.sparse(), index.unique(),
-                                           index.expireAfterSeconds(), null, null, null, fields));
+                List<Field> fields = singletonList(field(mf.getNameToStore(), fromValue(indexed.value().toIndexValue()), -1));
+                list.add(newOptions.isEmpty() ? synthesizeIndex(indexed, fields) : synthesizeIndex(indexed.options(), fields));
             } else if (mf.hasAnnotation(Text.class)) {
                 final Text index = mf.getAnnotation(Text.class);
 
                 List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.TEXT, index.value()));
-                list.add(synthesizeIndex(index.options().name(), index.options().background(), true, index.options().sparse(),
-                                         index.options().unique(), index.options().expireAfterSeconds(), index.options().language(),
-                                         index.options().languageOverride(), index.options().collation(), fields));
+                list.add(synthesizeIndex(index.options(), fields));
             }
         }
         return list;
@@ -1052,7 +1039,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                          : mf.getNameToStore() + "." + field.value(),
                                          field.type(), field.weight()));
                     }
-                    list.add(AnnotationUtils.replaceFields(index, fields));
+                    list.add(replaceFields(index, fields));
                 }
             }
         }
