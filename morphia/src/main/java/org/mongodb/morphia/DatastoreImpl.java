@@ -838,7 +838,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
         MappedClass mc = getMapper().getMappedClass(clazz);
-        Index index = synthesizeIndex(fields, name, false, false, false, unique, -1);
+        Index index = synthesizeIndex(fields, name, false, false, false, unique, -1, null, null, null);
 
         ensureIndex(mc, getMongoCollection(clazz), index, false);
     }
@@ -879,7 +879,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         MappedClass mappedClass = getMapper().getMappedClass(clazz);
-        Index index = synthesizeIndex(fields, name, false, false, false, false, -1);
+        Index index = synthesizeIndex(fields, name, false, false, false, false, -1, null, null, null);
         ensureIndex(mappedClass, getMongoCollection(collection), index, false);
     }
 
@@ -963,6 +963,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (options.expireAfterSeconds() != -1) {
             indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
         }
+        if (options.expireAfterSeconds() != -1) {
+            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
+        }
         if (!options.collation().locale().equals("")) {
             indexOptions.collation(convert(options.collation()));
         }
@@ -987,17 +990,25 @@ public class DatastoreImpl implements AdvancedDatastore {
     private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
             BsonDocument keys = new BsonDocument();
             for (Field field : index.fields()) {
                 if (field.weight() != -1) {
                     if (field.type() != IndexType.TEXT) {
                         throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
                     }
+                    BsonDocument weights = (BsonDocument) options.getWeights();
+                    if (weights == null) {
+                        weights = new BsonDocument();
+                        options.weights(weights);
+                    }
+                    weights.putAll(toBsonDocument(field.value(), field.weight()));
                 }
+
                 keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
             }
 
-            createIndex(collection, keys, convert(index.options(), background));
+            createIndex(collection, keys, options);
         }
     }
 
@@ -1035,12 +1046,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     }
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
-                        String path = null;
-                        try {
-                            path = findField(mc, asList(field.value().split("\\.")));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        String path = findField(mc, asList(field.value().split("\\.")));
                         fields.add(field(path, field.type(), field.weight()));
                     }
 
@@ -1055,7 +1061,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
-
                 final Indexed index = mf.getAnnotation(Indexed.class);
                 final BasicDBObject newOptions = (BasicDBObject) extractOptions(index.options());
                 if (!extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
@@ -1066,9 +1071,17 @@ public class DatastoreImpl implements AdvancedDatastore {
                 List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.fromValue(index.value().toIndexValue()), -1));
                 list.add(!newOptions.isEmpty()
                          ? synthesizeIndex(index.name(), index.options().background(), true, index.options().sparse(),
-                                           index.options().unique(), index.options().expireAfterSeconds(), fields)
+                                           index.options().unique(), index.options().expireAfterSeconds(), index.options().language(),
+                                           index.options().languageOverride(), index.options().collation(), fields)
                          : synthesizeIndex(index.name(), index.background(), true, index.sparse(), index.unique(),
-                                           index.expireAfterSeconds(), fields));
+                                           index.expireAfterSeconds(), null, null, null, fields));
+            } else if (mf.hasAnnotation(Text.class)) {
+                final Text index = mf.getAnnotation(Text.class);
+
+                List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.TEXT, index.value()));
+                list.add(synthesizeIndex(index.options().name(), index.options().background(), true, index.options().sparse(),
+                                         index.options().unique(), index.options().expireAfterSeconds(), index.options().language(),
+                                         index.options().languageOverride(), index.options().collation(), fields));
             }
         }
         return list;
@@ -1086,7 +1099,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                 for (Index index : indexes) {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : index.fields()) {
-                        fields.add(field(mf.getNameToStore() + "." + field.value(), field.type(), field.weight()));
+                        fields.add(field(field.value().equals("$**")
+                                         ? field.value()
+                                         : mf.getNameToStore() + "." + field.value(),
+                                         field.type(), field.weight()));
                     }
                     list.add(replaceFields(index, fields));
                 }
@@ -1477,6 +1493,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private String findField(final MappedClass mc, final List<String> path) {
         String segment = path.get(0);
+        if (segment.equals("$**")) {
+            return segment;
+        }
+
         MappedField mf = mc.getMappedField(segment);
         if (mf == null) {
             mf = mc.getMappedFieldByJavaField(segment);
@@ -1604,21 +1624,25 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private Index synthesizeIndex(final Index index) {
         return synthesizeIndex(index.value(), index.name(), index.background(), index.disableValidation(),
-                               index.sparse(), index.unique(), index.expireAfterSeconds());
+                               index.sparse(), index.unique(), index.expireAfterSeconds(), null, null, null);
     }
 
     private Index synthesizeIndex(final String fields, final String name, final boolean background, final boolean disableValidation,
-                                  final boolean sparse, final boolean unique, final int expireAfterSeconds) {
-        return synthesizeIndex(name, background, disableValidation, sparse, unique, expireAfterSeconds, parseFieldsString(fields));
+                                  final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
+                                  final String languageOverride, final Collation collation) {
+        return synthesizeIndex(name, background, disableValidation, sparse, unique, expireAfterSeconds, language, languageOverride,
+                               collation, parseFieldsString(fields));
     }
 
     private Index synthesizeIndex(final String name, final boolean background, final boolean disableValidation,
-                                  final boolean sparse, final boolean unique, final int expireAfterSeconds, final List<Field> list) {
+                                  final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
+                                  final String languageOverride, final Collation collation, final List<Field> list) {
         Map<String, Object> indexMap = new HashMap<String, Object>();
 
         indexMap.put("fields", list.toArray(new Field[0]));
 
-        indexMap.put("options", synthesizeOptions(name, background, disableValidation, sparse, unique, expireAfterSeconds));
+        indexMap.put("options", synthesizeOptions(name, background, disableValidation, sparse, unique, expireAfterSeconds, language,
+                                                  languageOverride, collation));
 
         return annotationForMap(Index.class, indexMap);
     }
@@ -1631,15 +1655,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private IndexOptions synthesizeOptions(final String name, final boolean background, final boolean disableValidation,
-                                           final boolean sparse, final boolean unique,
-                                           final int expireAfterSeconds) {
+                                           final boolean sparse, final boolean unique, final int expireAfterSeconds,
+                                           final String language, final String languageOverride, final Collation collation) {
         Map<String, Object> optionsMap = new HashMap<String, Object>();
-        optionsMap.put("name", name);
+        optionsMap.put("name", name != null ? name : "");
         optionsMap.put("background", background);
         optionsMap.put("disableValidation", disableValidation);
         optionsMap.put("sparse", sparse);
         optionsMap.put("unique", unique);
         optionsMap.put("expireAfterSeconds", expireAfterSeconds);
+        optionsMap.put("language", language != null ? language : "");
+        optionsMap.put("languageOverride", languageOverride != null ? languageOverride : "");
+        optionsMap.put("collation", collation);
+
         return annotationForMap(IndexOptions.class, optionsMap);
     }
 
