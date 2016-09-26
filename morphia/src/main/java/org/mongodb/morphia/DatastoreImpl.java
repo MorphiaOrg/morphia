@@ -25,7 +25,6 @@ import org.bson.codecs.EncoderContext;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
-import org.mongodb.morphia.annotations.Collation;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -58,10 +57,6 @@ import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,13 +67,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
-import static java.lang.reflect.Proxy.newProxyInstance;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.mongodb.morphia.AnnotationUtils.field;
+import static org.mongodb.morphia.AnnotationUtils.synthesizeIndex;
+import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -904,7 +900,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         BsonDocument keys = calculateKeys(mc, index);
 
-        createIndex(collection, keys, convert(index.options(), background));
+        createIndex(collection, keys, AnnotationUtils.convert(index.options(), background));
     }
 
     private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
@@ -943,52 +939,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         return writer.getDocument();
     }
 
-    protected static com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
-        com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-            .background(options.background() || background)
-            .sparse(options.sparse())
-            .unique(options.unique());
-
-        if (!options.language().equals("")) {
-            indexOptions.defaultLanguage(options.language());
-        }
-        if (!options.languageOverride().equals("")) {
-            indexOptions.languageOverride(options.languageOverride());
-        }
-        if (!options.name().equals("")) {
-            indexOptions.name(options.name());
-        }
-        if (options.expireAfterSeconds() != -1) {
-            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
-        }
-        if (options.expireAfterSeconds() != -1) {
-            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
-        }
-        if (!options.collation().locale().equals("")) {
-            indexOptions.collation(convert(options.collation()));
-        }
-
-        return indexOptions;
-    }
-
-    protected static com.mongodb.client.model.Collation convert(final Collation collation) {
-        return com.mongodb.client.model.Collation.builder()
-                                                 .locale(collation.locale())
-                                                 .backwards(collation.backwards())
-                                                 .caseLevel(collation.caseLevel())
-                                                 .collationAlternate(collation.alternate())
-                                                 .collationCaseFirst(collation.caseFirst())
-                                                 .collationMaxVariable(collation.maxVariable())
-                                                 .collationStrength(collation.strength())
-                                                 .normalization(collation.normalization())
-                                                 .numericOrdering(collation.numericOrdering())
-                                                 .build();
-    }
-
     private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
+            com.mongodb.client.model.IndexOptions options = AnnotationUtils.convert(index.options(), background);
             BsonDocument keys = new BsonDocument();
             for (Field field : index.fields()) {
                 if (field.weight() != -1) {
@@ -1040,7 +994,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         fields.add(field(path, field.type(), field.weight()));
                     }
 
-                    list.add(replaceFields(updated, fields));
+                    list.add(AnnotationUtils.replaceFields(updated, fields));
                 }
             }
         }
@@ -1052,13 +1006,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed index = mf.getAnnotation(Indexed.class);
-                final BasicDBObject newOptions = (BasicDBObject) extractOptions(index.options());
-                if (!extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
+                final BasicDBObject newOptions = (BasicDBObject) AnnotationUtils.extractOptions(index.options());
+                if (!AnnotationUtils.extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
                     throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
-                List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.fromValue(index.value().toIndexValue()), -1));
+                List<Field> fields = singletonList(field(mf.getNameToStore(), fromValue(index.value().toIndexValue()), -1));
                 list.add(!newOptions.isEmpty()
                          ? synthesizeIndex(index.name(), index.options().background(), true, index.options().sparse(),
                                            index.options().unique(), index.options().expireAfterSeconds(), index.options().language(),
@@ -1094,7 +1048,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                          : mf.getNameToStore() + "." + field.value(),
                                          field.type(), field.weight()));
                     }
-                    list.add(replaceFields(index, fields));
+                    list.add(AnnotationUtils.replaceFields(index, fields));
                 }
             }
         }
@@ -1431,36 +1385,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
 
-    private DBObject extractOptions(final IndexOptions options) {
-        final DBObject opts = new BasicDBObject();
-
-        putIfNotEmpty(opts, "name", options.name());
-        putIfNotEmpty(opts, "default_language", options.language());
-        putIfNotEmpty(opts, "language_override", options.languageOverride());
-        putIfTrue(opts, "background", options.background());
-        putIfTrue(opts, "dropDups", options.dropDups());
-        putIfTrue(opts, "sparse", options.sparse());
-        putIfTrue(opts, "unique", options.unique());
-        if (options.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", options.expireAfterSeconds());
-        }
-        return opts;
-    }
-
-    private BasicDBObject extractOptions(final Indexed indexed) {
-        final BasicDBObject opts = new BasicDBObject();
-
-        putIfNotEmpty(opts, "name", indexed.name());
-        putIfTrue(opts, "background", indexed.background());
-        putIfTrue(opts, "dropDups", indexed.dropDups());
-        putIfTrue(opts, "sparse", indexed.sparse());
-        putIfTrue(opts, "unique", indexed.unique());
-        if (indexed.expireAfterSeconds() != -1) {
-            opts.put("expireAfterSeconds", indexed.expireAfterSeconds());
-        }
-        return opts;
-    }
-
     private String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
         String segment = path.get(0);
         if (segment.equals("$**")) {
@@ -1509,7 +1433,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
     }
 
-    private String join(final List<String> path, final char delimiter) {
+    private static String join(final List<String> path, final char delimiter) {
         StringBuilder builder = new StringBuilder();
         for (String element : path) {
             if (builder.length() != 0) {
@@ -1599,133 +1523,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         }
         return keys;
-    }
-
-    private Index synthesizeIndex(final Index index) {
-        return synthesizeIndex(index.value(), index.name(), index.background(), index.disableValidation(),
-                               index.sparse(), index.unique(), index.expireAfterSeconds(), null, null, null);
-    }
-
-    private Index synthesizeIndex(final String fields, final String name, final boolean background, final boolean disableValidation,
-                                  final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
-                                  final String languageOverride, final Collation collation) {
-        return synthesizeIndex(name, background, disableValidation, sparse, unique, expireAfterSeconds, language, languageOverride,
-                               collation, parseFieldsString(fields));
-    }
-
-    private Index synthesizeIndex(final String name, final boolean background, final boolean disableValidation,
-                                  final boolean sparse, final boolean unique, final int expireAfterSeconds, final String language,
-                                  final String languageOverride, final Collation collation, final List<Field> list) {
-        Map<String, Object> indexMap = new HashMap<String, Object>();
-
-        indexMap.put("fields", list.toArray(new Field[0]));
-
-        indexMap.put("options", synthesizeOptions(name, background, disableValidation, sparse, unique, expireAfterSeconds, language,
-                                                  languageOverride, collation));
-
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    private Index replaceFields(final Index original, final List<Field> list) {
-        Map<String, Object> indexMap = toMap(original);
-        indexMap.put("fields", list.toArray(new Field[0]));
-
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    private IndexOptions synthesizeOptions(final String name, final boolean background, final boolean disableValidation,
-                                           final boolean sparse, final boolean unique, final int expireAfterSeconds,
-                                           final String language, final String languageOverride, final Collation collation) {
-        Map<String, Object> optionsMap = new HashMap<String, Object>();
-        optionsMap.put("name", name != null ? name : "");
-        optionsMap.put("background", background);
-        optionsMap.put("disableValidation", disableValidation);
-        optionsMap.put("sparse", sparse);
-        optionsMap.put("unique", unique);
-        optionsMap.put("expireAfterSeconds", expireAfterSeconds);
-        optionsMap.put("language", language != null ? language : "");
-        optionsMap.put("languageOverride", languageOverride != null ? languageOverride : "");
-        optionsMap.put("collation", collation);
-
-        return annotationForMap(IndexOptions.class, optionsMap);
-    }
-
-    /**
-     * Parses the string and validates each part
-     *
-     * @param str      the String to parse
-     * @return the DBObject
-     */
-    private static List<Field> parseFieldsString(final String str) {
-        List<Field> fields = new ArrayList<Field>();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            IndexType dir = IndexType.ASC;
-
-            if (s.startsWith("-")) {
-                dir = IndexType.DESC;
-                s = s.substring(1).trim();
-            }
-
-            fields.add(field(s, dir, -1));
-        }
-        return fields;
-    }
-
-    private static Field field(final String name, final IndexType direction, final int weight) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("value", name);
-        map.put("type", direction);
-        map.put("weight", weight);
-
-        return annotationForMap(Field.class, map);
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Annotation> T annotationForMap(final Class<T> annotationType, final Map<String, Object> valuesMap) {
-        final Map<String, Object> values = new HashMap<String, Object>();
-
-        for (Method method : annotationType.getDeclaredMethods()) {
-            values.put(method.getName(), method.getDefaultValue());
-        }
-
-        for (Entry<String, Object> entry : valuesMap.entrySet()) {
-            if (entry.getValue() != null) {
-                values.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return (T) newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType},
-                                    new AnnotationInvocationHandler(annotationType, values));
-    }
-
-    private static <T extends Annotation> Map<String, Object> toMap(final T annotation) {
-        final Map<String, Object> values = new HashMap<String, Object>();
-
-        for (Method method : annotation.getClass().getDeclaredMethods()) {
-            try {
-                if ((method.getParameterTypes().length == 0) && !method.getName().equals("hashCode")) {
-                    values.put(method.getName(), method.invoke(annotation));
-                }
-            } catch (Exception e) {
-                throw new MappingException(e.getMessage(), e);
-            }
-        }
-        return values;
-    }
-
-    private void putIfNotEmpty(final DBObject opts, final String key, final String value) {
-        if (!value.equals("")) {
-            opts.put(key, value);
-        }
-    }
-
-    private void putIfTrue(final DBObject opts, final String key, final boolean value) {
-        if (value) {
-            opts.put(key, true);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -1838,29 +1635,5 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return wc;
-    }
-
-    private static class AnnotationInvocationHandler<T> implements InvocationHandler {
-        private final Class<T> annotationType;
-        private final Map<String, Object> values;
-
-        AnnotationInvocationHandler(final Class<T> annotationType, final Map<String, Object> values) {
-            this.annotationType = annotationType;
-            this.values = values;
-        }
-
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args)
-            throws InvocationTargetException, IllegalAccessException {
-            if (method.getName().equals("toString")) {
-                return toString();
-            }
-            return values.get(method.getName());
-        }
-
-        @Override
-        public String toString() {
-            return format("%s %s", annotationType.getSimpleName(), values.toString());
-        }
     }
 }
