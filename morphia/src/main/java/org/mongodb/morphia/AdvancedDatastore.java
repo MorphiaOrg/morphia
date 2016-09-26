@@ -1,5 +1,6 @@
 package org.mongodb.morphia;
 
+import com.mongodb.client.MongoCollection;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -250,6 +251,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param fact the DBDecoderFactory to use
      */
     void setDecoderFact(DBDecoderFactory fact);
+
+    MongoCollection getMongoCollection(String name);
 
     /**
      * Inserts an entity in to the named collection.

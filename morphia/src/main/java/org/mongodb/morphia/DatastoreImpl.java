@@ -18,24 +18,12 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWriter;
-import org.bson.codecs.Encoder;
-import org.bson.codecs.EncoderContext;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Field;
-import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.IndexOptions;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.PostPersist;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -54,11 +42,9 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.utils.Assert;
-import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -70,15 +56,8 @@ import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.mongodb.morphia.AnnotationUtils.convert;
-import static org.mongodb.morphia.AnnotationUtils.extractOptions;
-import static org.mongodb.morphia.AnnotationUtils.field;
-import static org.mongodb.morphia.AnnotationUtils.replaceFields;
-import static org.mongodb.morphia.AnnotationUtils.synthesizeIndex;
-import static org.mongodb.morphia.AnnotationUtils.synthesizeIndexFromOldFormat;
-import static org.mongodb.morphia.utils.IndexType.fromValue;
+import static org.mongodb.morphia.IndexHelper.synthesizeIndex;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -88,11 +67,11 @@ import static org.mongodb.morphia.utils.IndexType.fromValue;
 @SuppressWarnings("deprecation")
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
-    private static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private final Morphia morphia;
     private final MongoClient mongoClient;
     private final MongoDatabase database;
+    private final IndexHelper indexHelper;
     private DB db;
     private Mapper mapper;
     private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
@@ -113,6 +92,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         this.database = database;
+        this.indexHelper = new IndexHelper(this, mapper, database);
     }
 
     /**
@@ -437,7 +417,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getMongoCollection(mapper.getCollectionName(clazz));
     }
 
-    private MongoCollection getMongoCollection(final String name) {
+    @Override
+    public MongoCollection getMongoCollection(final String name) {
         return database.getCollection(name);
     }
 
@@ -843,7 +824,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes(final boolean background) {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            ensureIndexes(mc, background);
+            indexHelper.ensureIndexes(mc, background);
         }
     }
 
@@ -854,7 +835,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
-        ensureIndexes(mapper.getMappedClass(clazz), background);
+        indexHelper.ensureIndexes(mapper.getMappedClass(clazz), background);
     }
 
     @Override
@@ -870,7 +851,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
 
-        ensureIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection), synthesizeIndex(fields, name, unique), false);
+        indexHelper.ensureIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection),
+                                synthesizeIndex(fields, name, unique), false);
     }
 
     @Override
@@ -881,184 +863,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
         final MappedClass mc = mapper.getMappedClass(clazz);
-        ensureIndexes(collection, mc, background);
+        indexHelper.ensureIndexes(collection, mc, background);
     }
-
-    protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
-        ensureIndexes(getMongoCollection(collName), mc, background);
-    }
-
-    protected void ensureIndexes(final MappedClass mc, final boolean background) {
-        ensureIndexes(getMongoCollection(mc.getClazz()), mc, background);
-    }
-
-    private void ensureIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
-        createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
-    }
-
-    private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
-        BsonDocument keys = new BsonDocument();
-        for (Field field : index.fields()) {
-            if (field.weight() != -1) {
-                if (field.type() != IndexType.TEXT) {
-                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                }
-            }
-            String path;
-            try {
-                path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
-            } catch (Exception e) {
-                path = field.value();
-                LOG.warning(format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                                   path, mc.getClazz().getName()));
-            }
-            keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
-        }
-        return keys;
-    }
-
-    private String createIndex(final MongoCollection collection, final BsonDocument keys,
-                               final com.mongodb.client.model.IndexOptions options) {
-        return collection.createIndex(keys, options);
-    }
-
-    @SuppressWarnings("unchecked")
-    private BsonDocument toBsonDocument(final String key, final Object value) {
-        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
-        writer.writeStartDocument();
-        writer.writeName(key);
-        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
-        writer.writeEndDocument();
-        return writer.getDocument();
-    }
-
-    private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
-
-        for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
-            BsonDocument keys = new BsonDocument();
-            for (Field field : index.fields()) {
-                if (field.weight() != -1) {
-                    if (field.type() != IndexType.TEXT) {
-                        throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                    }
-                    BsonDocument weights = (BsonDocument) options.getWeights();
-                    if (weights == null) {
-                        weights = new BsonDocument();
-                        options.weights(weights);
-                    }
-                    weights.putAll(toBsonDocument(field.value(), field.weight()));
-                }
-
-                keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
-            }
-
-            createIndex(collection, keys, options);
-        }
-    }
-
-    private List<Index> collectIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
-        if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
-            return emptyList();
-        }
-
-        List<Index> indexes = collectTopLevelIndexes(mc);
-        indexes.addAll(collectFieldIndexes(mc));
-        indexes.addAll(collectNestedIndexes(mc, parentMCs));
-
-        return indexes;
-    }
-
-    private List<Index> collectTopLevelIndexes(final MappedClass mc) {
-        List<Index> list = new ArrayList<Index>();
-        final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
-        if (annotations != null) {
-            for (final Indexes indexes : annotations) {
-                for (final Index index : indexes.value()) {
-                    Index updated = index;
-                    if (index.fields().length == 0) {
-                        LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                        updated = synthesizeIndexFromOldFormat(index);
-                    }
-                    List<Field> fields = new ArrayList<Field>();
-                    for (Field field : updated.fields()) {
-                        String path = findField(mc, index.options(), asList(field.value().split("\\.")));
-                        fields.add(field(path, field.type(), field.weight()));
-                    }
-
-                    list.add(replaceFields(updated, fields));
-                }
-            }
-        }
-        return list;
-    }
-
-    private List<Index> collectFieldIndexes(final MappedClass mc) {
-        List<Index> list = new ArrayList<Index>();
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (mf.hasAnnotation(Indexed.class)) {
-                final Indexed indexed = mf.getAnnotation(Indexed.class);
-                if (indexed.options().dropDups()) {
-                    throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
-                                                   + "validate your system behaves as expected.");
-                }
-                final Map<String, Object> newOptions = extractOptions(indexed.options());
-                Map<String, Object> oldOptions = extractOptions(indexed);
-                if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
-                    throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
-                                                   + "allowed.  Please migrate all settings to @IndexOptions");
-                }
-
-                List<Field> fields = singletonList(field(mf.getNameToStore(), fromValue(indexed.value().toIndexValue()), -1));
-                list.add(newOptions.isEmpty() ? synthesizeIndex(indexed, fields) : synthesizeIndex(indexed.options(), fields));
-            } else if (mf.hasAnnotation(Text.class)) {
-                final Text index = mf.getAnnotation(Text.class);
-
-                List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.TEXT, index.value()));
-                list.add(synthesizeIndex(index.options(), fields));
-            }
-        }
-        return list;
-    }
-
-    private List<Index> collectNestedIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
-        List<Index> list = new ArrayList<Index>();
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                    && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
-                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
-                newParentClasses.add(mc);
-                List<Index> indexes =
-                    collectIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), newParentClasses);
-                for (Index index : indexes) {
-                    List<Field> fields = new ArrayList<Field>();
-                    for (Field field : index.fields()) {
-                        fields.add(field(field.value().equals("$**")
-                                         ? field.value()
-                                         : mf.getNameToStore() + "." + field.value(),
-                                         field.type(), field.weight()));
-                    }
-                    list.add(replaceFields(index, fields));
-                }
-            }
-        }
-
-        return list;
-    }
-
-/*
-    private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background,
-                               final List<MappedClass> parentMCs, final List<MappedField> parentMFs) {
-        if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
-            return;
-        }
-
-        processClassAnnotations(collection, mc, background);
-
-        processEmbeddedAnnotations(collection, mc, background, parentMCs, parentMFs);
-    }
-*/
 
     @Override
     public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
@@ -1374,65 +1180,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
-    }
-
-    private String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
-        String segment = path.get(0);
-        if (segment.equals("$**")) {
-            return segment;
-        }
-
-        MappedField mf = mc.getMappedField(segment);
-        if (mf == null) {
-            mf = mc.getMappedFieldByJavaField(segment);
-        }
-        if (mf == null && mc.isInterface()) {
-            for (final MappedClass mappedClass : mapper.getSubTypes(mc)) {
-                try {
-                    return findField(mappedClass, options, new ArrayList<String>(path));
-                } catch (MappingException e) {
-                    // try the next one
-                }
-            }
-        }
-        String namePath;
-        if (mf != null) {
-            namePath = mf.getNameToStore();
-        } else {
-            if (!options.disableValidation()) {
-                throw pathFail(mc, path);
-            } else {
-                return join(path, '.');
-            }
-        }
-        if (path.size() > 1) {
-            try {
-                Class concreteType = !mf.isSingleValue() ? mf.getSubClass() : mf.getConcreteType();
-                namePath += "." + findField(getMapper().getMappedClass(concreteType), options, path.subList(1, path.size()));
-            } catch (MappingException e) {
-                if (!options.disableValidation()) {
-                    throw pathFail(mc, path);
-                } else {
-                    return join(path, '.');
-                }
-            }
-        }
-        return namePath;
-    }
-
-    private MappingException pathFail(final MappedClass mc, final List<String> path) {
-        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
-    }
-
-    private static String join(final List<String> path, final char delimiter) {
-        StringBuilder builder = new StringBuilder();
-        for (String element : path) {
-            if (builder.length() != 0) {
-                builder.append(delimiter);
-            }
-            builder.append(element);
-        }
-        return builder.toString();
     }
 
     @SuppressWarnings("unchecked")
