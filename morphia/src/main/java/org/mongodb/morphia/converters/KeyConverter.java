@@ -28,15 +28,28 @@ public class KeyConverter extends TypeConverter {
 
 
         DBRef ref = (DBRef) o;
-        Class<?> keyType;
-        if (optionalExtraInfo != null && optionalExtraInfo.getTypeParameters().size() == 1) {
-            keyType = optionalExtraInfo.getTypeParameters().get(0).getType();
-        } else {
-            keyType = getMapper().getClassFromCollection(ref.getCollectionName());
-        }
+
+        MappedField actualType = getActualType(optionalExtraInfo);
+
+
+        final Class<?> keyType = actualType != null
+                                 ? actualType.getConcreteType()
+                                 : getMapper().getClassFromCollection(ref.getCollectionName());
+
         final Key<?> key = new Key<Object>(keyType, ref.getCollectionName(), ref.getId());
 
         return key;
+    }
+
+    private MappedField getActualType(final MappedField field) {
+        if (field == null) {
+            return null;
+        }
+        MappedField mappedField = field.getTypeParameters().get(0);
+        if (mappedField.getTypeParameters().size() != 0) {
+            mappedField = getActualType(mappedField);
+        }
+        return mappedField;
     }
 
     @Override
