@@ -15,19 +15,23 @@ package org.mongodb.morphia;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.entities.version.AbstractVersionedBase;
 import org.mongodb.morphia.entities.version.Versioned;
 import org.mongodb.morphia.entities.version.VersionedChildEntity;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class TestVersionAnnotation extends TestBase {
 
@@ -64,24 +68,30 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        // when
         Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.entities.version");
 
-        // then
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+        assertThat(mappedClasses.size(), is(2));
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        for (MappedClass mappedClass : mappedClasses) {
+            list.add(mappedClass.getClazz());
+        }
+        assertTrue(list.contains(VersionedChildEntity.class));
+        assertTrue(list.contains(AbstractVersionedBase.class));
     }
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        // when
         Morphia morphia = getMorphia().map(VersionedChildEntity.class);
 
-        // then
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getClazz(), VersionedChildEntity.class);
+        assertThat(mappedClasses.size(), is(2));
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        for (MappedClass mappedClass : mappedClasses) {
+            list.add(mappedClass.getClazz());
+        }
+        assertTrue(list.contains(VersionedChildEntity.class));
+        assertTrue(list.contains(AbstractVersionedBase.class));
     }
 
     @Test

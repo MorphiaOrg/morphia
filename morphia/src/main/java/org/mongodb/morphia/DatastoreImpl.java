@@ -20,8 +20,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
 import org.bson.codecs.Encoder;
 import org.bson.codecs.EncoderContext;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
@@ -919,7 +917,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
             String path;
             try {
-                path = findField(mc, new ArrayList<String>(asList(field.value().split("\\."))));
+                path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
             } catch (Exception e) {
                 path = field.value();
                 LOG.warning(format("The path '%s' can not be validated against '%s' and may represent an invalid index",
@@ -1038,7 +1036,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     }
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
-                        String path = findField(mc, asList(field.value().split("\\.")));
+                        String path = findField(mc, index.options(), asList(field.value().split("\\.")));
                         fields.add(field(path, field.type(), field.weight()));
                     }
 
@@ -1463,7 +1461,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return opts;
     }
 
-    private String findField(final MappedClass mc, final List<String> path) {
+    private String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
         String segment = path.get(0);
         if (segment.equals("$**")) {
             return segment;
@@ -1476,7 +1474,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (mf == null && mc.isInterface()) {
             for (final MappedClass mappedClass : mapper.getSubTypes(mc)) {
                 try {
-                    return findField(mappedClass, new ArrayList<String>(path));
+                    return findField(mappedClass, options, new ArrayList<String>(path));
                 } catch (MappingException e) {
                     // try the next one
                 }
@@ -1486,14 +1484,22 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (mf != null) {
             namePath = mf.getNameToStore();
         } else {
-            throw pathFail(mc, path);
+            if (!options.disableValidation()) {
+                throw pathFail(mc, path);
+            } else {
+                return join(path, '.');
+            }
         }
         if (path.size() > 1) {
             try {
                 Class concreteType = !mf.isSingleValue() ? mf.getSubClass() : mf.getConcreteType();
-                namePath += "." + findField(getMapper().getMappedClass(concreteType), path.subList(1, path.size()));
+                namePath += "." + findField(getMapper().getMappedClass(concreteType), options, path.subList(1, path.size()));
             } catch (MappingException e) {
-                throw pathFail(mc, path);
+                if (!options.disableValidation()) {
+                    throw pathFail(mc, path);
+                } else {
+                    return join(path, '.');
+                }
             }
         }
         return namePath;
