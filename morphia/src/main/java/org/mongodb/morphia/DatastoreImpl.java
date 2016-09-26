@@ -1021,14 +1021,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         indexes.addAll(collectFieldIndexes(mc));
         indexes.addAll(collectNestedIndexes(mc, parentMCs));
 
-        /*
-                    if (mf.hasAnnotation(Text.class)) {
-                createTextIndex(collection, parentMCs, parentMFs, mf);
-            }
-
-
-         */
-
         return indexes;
     }
 
@@ -1437,26 +1429,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.createEntityCache();
     }
 
-    private void createTextIndex(final MongoCollection collection, final List<MappedClass> parentMCs, final List<MappedField> parentMFs,
-                                 final MappedField mf) {
-        final Text index = mf.getAnnotation(Text.class);
-        final StringBuilder prefix = new StringBuilder();
-        if (!parentMCs.isEmpty()) {
-            for (final MappedField pmf : parentMFs) {
-                prefix.append(pmf.getNameToStore()).append(".");
-            }
-        }
-
-        String field = prefix + mf.getNameToStore();
-
-        BsonDocument keys = new BsonDocument(field, new BsonString(IndexType.TEXT.toIndexValue().toString()));
-        com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions();
-        if (index.value() != -1) {
-            indexOptions.weights(new BsonDocument(field, new BsonInt32(index.value())));
-        }
-        createIndex(collection, keys, indexOptions);
-    }
-
     private DBObject entityToDBObj(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
@@ -1518,7 +1490,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         if (path.size() > 1) {
             try {
-                namePath += "." + findField(getMapper().getMappedClass(mf.getConcreteType()), path.subList(1, path.size()));
+                Class concreteType = !mf.isSingleValue() ? mf.getSubClass() : mf.getConcreteType();
+                namePath += "." + findField(getMapper().getMappedClass(concreteType), path.subList(1, path.size()));
             } catch (MappingException e) {
                 throw pathFail(mc, path);
             }
