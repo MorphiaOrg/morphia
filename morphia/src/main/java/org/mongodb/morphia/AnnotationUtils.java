@@ -45,7 +45,12 @@ final class AnnotationUtils {
 
     }
 
+    @SuppressWarnings("deprecation")
     protected static com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
+        if (options.dropDups()) {
+            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+                                           + "validate your system behaves as expected.");
+        }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
             .background(options.background() || background)
             .sparse(options.sparse())

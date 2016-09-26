@@ -72,6 +72,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.mongodb.morphia.AnnotationUtils.convert;
 import static org.mongodb.morphia.AnnotationUtils.field;
 import static org.mongodb.morphia.AnnotationUtils.synthesizeIndex;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
@@ -827,14 +828,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Deprecated
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
-        if (dropDupsOnCreate) {
-            throw new MappingException("dropDupsOnCreate value has been desupported by the server.  Please set this value to false and "
-                                           + "validate your system behaves as expected.");
-        }
-        MappedClass mc = getMapper().getMappedClass(clazz);
-        Index index = synthesizeIndex(fields, name, false, false, false, unique, -1, null, null, null);
-
-        ensureIndex(mc, getMongoCollection(clazz), index, false);
+        MappedClass mappedClass = getMapper().getMappedClass(clazz);
+        ensureIndex(mappedClass.getCollectionName(), clazz, name, fields, unique, dropDupsOnCreate);
     }
 
     @Override
@@ -868,12 +863,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
-            throw new MappingException("dropDupsOnCreate value has been desupported by the server.  Please set this value to false and "
+            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
                                            + "validate your system behaves as expected.");
         }
 
         MappedClass mappedClass = getMapper().getMappedClass(clazz);
-        Index index = synthesizeIndex(fields, name, false, false, false, false, -1, null, null, null);
+        Index index = synthesizeIndex(fields, name, false, false, false, unique, -1, null, null, null);
         ensureIndex(mappedClass, getMongoCollection(collection), index, false);
     }
 
@@ -898,9 +893,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private void ensureIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
 
+        if (index.options().dropDups()) {
+            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+                                           + "validate your system behaves as expected.");
+        }
+
         BsonDocument keys = calculateKeys(mc, index);
 
-        createIndex(collection, keys, AnnotationUtils.convert(index.options(), background));
+        createIndex(collection, keys, convert(index.options(), background));
     }
 
     private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
@@ -942,7 +942,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-            com.mongodb.client.model.IndexOptions options = AnnotationUtils.convert(index.options(), background);
+            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
             BsonDocument keys = new BsonDocument();
             for (Field field : index.fields()) {
                 if (field.weight() != -1) {
@@ -1006,6 +1006,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed index = mf.getAnnotation(Indexed.class);
+                if (index.options().dropDups()) {
+                    throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+                                                   + "validate your system behaves as expected.");
+                }
                 final BasicDBObject newOptions = (BasicDBObject) AnnotationUtils.extractOptions(index.options());
                 if (!AnnotationUtils.extractOptions(index).isEmpty() && !newOptions.isEmpty()) {
                     throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
