@@ -295,7 +295,7 @@ class IndexHelper {
                 }
                 final Map<String, Object> newOptions = extractOptions(indexed.options());
                 if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
-                    throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
+                    throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
