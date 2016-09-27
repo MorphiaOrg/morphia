@@ -98,9 +98,6 @@ class IndexHelper {
         if (options.expireAfterSeconds() != -1) {
             indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
         }
-        if (options.expireAfterSeconds() != -1) {
-            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
-        }
         if (!options.collation().locale().equals("")) {
             indexOptions.collation(convert(options.collation()));
         }
