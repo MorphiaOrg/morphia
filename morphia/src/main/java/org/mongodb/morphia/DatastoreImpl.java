@@ -824,7 +824,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes(final boolean background) {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            indexHelper.ensureIndexes(mc, background);
+            indexHelper.createIndex(mc, background);
         }
     }
 
@@ -835,7 +835,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
-        indexHelper.ensureIndexes(mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(mapper.getMappedClass(clazz), background);
     }
 
     @Override
@@ -853,7 +853,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
 
-        indexHelper.ensureIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection),
+        indexHelper.createIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection),
                                 synthesizeIndex(fields, name, unique), false);
     }
 
@@ -864,7 +864,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
-        indexHelper.ensureIndexes(collection, mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(collection, mapper.getMappedClass(clazz), background);
     }
 
     @Override

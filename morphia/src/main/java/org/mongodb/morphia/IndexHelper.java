@@ -125,14 +125,12 @@ class IndexHelper {
     }
 
     static Index synthesizeIndex(final String fields, final String name, final boolean unique) {
-        Map<String, Object> indexMap = new HashMap<String, Object>();
-
-        indexMap.put("fields", parseFieldsString(fields).toArray(new Field[0]));
-
         Map<String, Object> optionsMap = new HashMap<String, Object>();
         optionsMap.put("name", name != null ? name : "");
         optionsMap.put("unique", unique);
 
+        Map<String, Object> indexMap = new HashMap<String, Object>();
+        indexMap.put("fields", parseFieldsString(fields).toArray(new Field[0]));
         indexMap.put("options", annotationForMap(IndexOptions.class, optionsMap));
 
         return annotationForMap(Index.class, indexMap);
@@ -140,21 +138,15 @@ class IndexHelper {
 
     static Index synthesizeIndex(final IndexOptions options, final List<Field> list) {
         Map<String, Object> indexMap = new HashMap<String, Object>();
-
         indexMap.put("fields", list.toArray(new Field[0]));
-
         indexMap.put("options", options);
-
         return annotationForMap(Index.class, indexMap);
     }
 
     static Index synthesizeIndex(final Indexed indexed, final List<Field> list) {
         Map<String, Object> indexMap = new HashMap<String, Object>();
-
         indexMap.put("fields", list.toArray(new Field[0]));
-
         indexMap.put("options", annotationForMap(IndexOptions.class, toMap(indexed)));
-
         return annotationForMap(Index.class, indexMap);
     }
 
@@ -218,12 +210,12 @@ class IndexHelper {
                 s = s.substring(1).trim();
             }
 
-            fields.add(field(s, dir, -1));
+            fields.add(synthesizeField(s, dir, -1));
         }
         return fields;
     }
 
-    static Field field(final String name, final IndexType direction, final int weight) {
+    private static Field synthesizeField(final String name, final IndexType direction, final int weight) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("value", name);
         map.put("type", direction);
@@ -262,12 +254,12 @@ class IndexHelper {
         return builder.toString();
     }
 
-    protected void ensureIndexes(final String collName, final MappedClass mc, final boolean background) {
-        ensureIndexes(datastore.getMongoCollection(collName), mc, background);
+    protected void createIndex(final String collName, final MappedClass mc, final boolean background) {
+        createIndex(datastore.getMongoCollection(collName), mc, background);
     }
 
-    protected void ensureIndexes(final MappedClass mc, final boolean background) {
-        ensureIndexes(datastore.getMongoCollection(mc.getClazz()), mc, background);
+    protected void createIndex(final MappedClass mc, final boolean background) {
+        createIndex(datastore.getMongoCollection(mc.getClazz()), mc, background);
     }
 
     private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
@@ -302,19 +294,18 @@ class IndexHelper {
                                                    + "validate your system behaves as expected.");
                 }
                 final Map<String, Object> newOptions = extractOptions(indexed.options());
-                Map<String, Object> oldOptions = extractOptions(indexed);
-                if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
+                if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
                     throw new MappingException("Mixed usage of deprecated @Indexed value with the new @IndexOption values is not "
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
-                List<Field> fields = singletonList(field(mf.getNameToStore(), fromValue(indexed.value().toIndexValue()), -1));
+                List<Field> fields = singletonList(synthesizeField(mf.getNameToStore(), fromValue(indexed.value().toIndexValue()), -1));
                 list.add(newOptions.isEmpty() ? synthesizeIndex(indexed, fields) : synthesizeIndex(indexed.options(), fields));
             } else if (mf.hasAnnotation(Text.class)) {
-                final Text index = mf.getAnnotation(Text.class);
+                final Text text = mf.getAnnotation(Text.class);
 
-                List<Field> fields = singletonList(field(mf.getNameToStore(), IndexType.TEXT, index.value()));
-                list.add(synthesizeIndex(index.options(), fields));
+                list.add(synthesizeIndex(text.options(),
+                                         singletonList(synthesizeField(mf.getNameToStore(), IndexType.TEXT, text.value()))));
             }
         }
         return list;
@@ -344,10 +335,10 @@ class IndexHelper {
                 for (Index index : indexes) {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : index.fields()) {
-                        fields.add(field(field.value().equals("$**")
+                        fields.add(synthesizeField(field.value().equals("$**")
                                          ? field.value()
                                          : mf.getNameToStore() + "." + field.value(),
-                                         field.type(), field.weight()));
+                                                   field.type(), field.weight()));
                     }
                     list.add(replaceFields(index, fields));
                 }
@@ -372,7 +363,7 @@ class IndexHelper {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
                         String path = findField(mc, index.options(), asList(field.value().split("\\.")));
-                        fields.add(field(path, field.type(), field.weight()));
+                        fields.add(synthesizeField(path, field.type(), field.weight()));
                     }
 
                     list.add(replaceFields(updated, fields));
@@ -387,7 +378,7 @@ class IndexHelper {
         return collection.createIndex(keys, options);
     }
 
-    private void ensureIndexes(final MongoCollection collection, final MappedClass mc, final boolean background) {
+    private void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
             com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
@@ -450,7 +441,7 @@ class IndexHelper {
         }
     }
 
-    void ensureIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
+    void createIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
         createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
     }
 
