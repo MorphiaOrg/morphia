@@ -413,13 +413,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public MongoCollection getMongoCollection(final Class clazz) {
-        return getMongoCollection(mapper.getCollectionName(clazz));
+    public <T> MongoCollection<T> getMongoCollection(final Class<T> clazz) {
+        return getMongoCollection(mapper.getCollectionName(clazz), clazz);
     }
 
     @Override
-    public MongoCollection getMongoCollection(final String name) {
-        return database.getCollection(name);
+    public <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
+        return database.getCollection(name, clazz);
     }
 
     @Override
@@ -853,7 +853,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
 
-        indexHelper.createIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection),
+        indexHelper.createIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection, clazz),
                                 synthesizeIndex(fields, name, unique), false);
     }
 

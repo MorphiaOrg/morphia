@@ -254,11 +254,11 @@ class IndexHelper {
         return builder.toString();
     }
 
-    protected void createIndex(final String collName, final MappedClass mc, final boolean background) {
-        createIndex(datastore.getMongoCollection(collName), mc, background);
+    void createIndex(final String collName, final MappedClass mc, final boolean background) {
+        createIndex(datastore.getMongoCollection(collName, mc.getClazz()), mc, background);
     }
 
-    protected void createIndex(final MappedClass mc, final boolean background) {
+    void createIndex(final MappedClass mc, final boolean background) {
         createIndex(datastore.getMongoCollection(mc.getClazz()), mc, background);
     }
 

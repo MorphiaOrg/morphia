@@ -1,16 +1,15 @@
 package org.mongodb.morphia;
 
-import com.mongodb.client.MongoCollection;
-import org.mongodb.morphia.aggregation.AggregationPipeline;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
+import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
@@ -254,7 +253,15 @@ public interface AdvancedDatastore extends Datastore {
      */
     void setDecoderFact(DBDecoderFactory fact);
 
-    MongoCollection getMongoCollection(String name);
+    /**
+     * Returns the {@see MongoCollection} for the given name
+     *
+     * @param <T>   the type of the MongoCollection
+     * @param name  the name of the collection
+     * @param clazz the type of the collection
+     * @return the collection
+     */
+    <T> MongoCollection<T> getMongoCollection(String name, Class<T> clazz);
 
     /**
      * Inserts an entity in to the named collection.
