@@ -61,7 +61,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
-class IndexHelper {
+final class IndexHelper {
     private static final Logger LOG = MorphiaLoggerFactory.get(IndexHelper.class);
     private static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
@@ -76,9 +76,9 @@ class IndexHelper {
     }
 
     @SuppressWarnings("deprecation")
-    protected com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
+    private com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
-            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
                                            + "validate your system behaves as expected.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
@@ -290,7 +290,7 @@ class IndexHelper {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed indexed = mf.getAnnotation(Indexed.class);
                 if (indexed.options().dropDups()) {
-                    throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+                    LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
                                                    + "validate your system behaves as expected.");
                 }
                 final Map<String, Object> newOptions = extractOptions(indexed.options());

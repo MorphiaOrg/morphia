@@ -80,5 +80,5 @@ public @interface Collation {
     /**
      * Sets the collation strength
      */
-    CollationStrength strength() default CollationStrength.IDENTICAL;
+    CollationStrength strength() default CollationStrength.TERTIARY;
 }

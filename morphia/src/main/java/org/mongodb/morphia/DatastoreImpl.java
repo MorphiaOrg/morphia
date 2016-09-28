@@ -79,11 +79,31 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
-    DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
+    /**
+     * Create a new DatastoreImpl
+     *
+     * @param morphia     the Morphia instance
+     * @param mongoClient the connection to the MongoDB instance
+     * @param dbName      the name of the database for this data store.
+     * @deprecated This is not meant to be directly instantiated by end user code.  Use
+     * {@see Morphia#createDatastore(MongoClient, Mapper, String)}
+     */
+    @Deprecated
+    public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
         this(morphia, morphia.getMapper(), mongoClient, dbName);
     }
 
-    DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
+    /**
+     * Create a new DatastoreImpl
+     *
+     * @param morphia     the Morphia instance
+     * @param mapper      an initialised Mapper
+     * @param mongoClient the connection to the MongoDB instance
+     * @param dbName      the name of the database for this data store.
+     * @deprecated This is not meant to be directly instantiated by end user code.  Use
+     * {@see Morphia#createDatastore(MongoClient, Mapper, String)} */
+    @Deprecated
+    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this(morphia, mapper, mongoClient, mongoClient.getDatabase(dbName));
     }
 
@@ -92,6 +112,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
         this.mongoClient = mongoClient;
         this.database = database;
+        this.db = mongoClient.getDB(database.getName());
         this.indexHelper = new IndexHelper(this, mapper, database);
     }
 
@@ -439,7 +460,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public DB getDB() {
-        return db != null ? db : mongoClient.getDB(database.getName());
+        return db;
     }
 
     @Override

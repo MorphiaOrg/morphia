@@ -25,7 +25,7 @@ public enum IndexType {
      */
     public static IndexType fromValue(final Object value) {
         for (IndexType indexType : values()) {
-            if (indexType.type.equals(value) || indexType.name().equals(value)) {
+            if (indexType.type.equals(value)) {
                 return indexType;
             }
         }

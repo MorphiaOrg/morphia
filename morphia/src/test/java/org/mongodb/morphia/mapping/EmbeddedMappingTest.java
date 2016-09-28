@@ -203,6 +203,10 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    public static class AnotherNested implements Nested {
+        private Long value;
+    }
+
     @Indexes({
         @Index(fields = {@Field("nested.field.fail")},
             options = @IndexOptions(disableValidation = true, sparse = true))

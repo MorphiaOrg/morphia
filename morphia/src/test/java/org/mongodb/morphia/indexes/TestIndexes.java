@@ -55,7 +55,13 @@ public class TestIndexes extends TestBase {
 
         datastore.ensureIndexes(TestWithIndexOption.class, true);
         Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
-        assertBackground(indexOptionColl.getIndexInfo());
+        List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
+        assertBackground(indexInfo);
+        for (DBObject dbObject : indexInfo) {
+            if (dbObject.get("name").equals("collated")) {
+                Assert.assertEquals("en_US", ((DBObject) dbObject.get("collation")).get("locale"));
+            }
+        }
 
         datastore.ensureIndexes(TestWithDeprecatedIndex.class, true);
         Assert.assertEquals(2, depIndexColl.getIndexInfo().size());
@@ -85,7 +91,8 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(noClassnameStored = true)
-    @Indexes({@Index(options = @IndexOptions(collation = @Collation(locale = "en_US")), fields = {@Field(value = "name")})})
+    @Indexes({@Index(options = @IndexOptions(name = "collated", collation = @Collation(locale = "en_US")),
+        fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
         private String name;
 

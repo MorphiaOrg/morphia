@@ -364,7 +364,7 @@ public class MappedClass {
      * @param clazz the annotation to search with
      * @return the list of methods
      */
-    List<ClassMethodPair> getLifecycleMethods(final Class<Annotation> clazz) {
+    public List<ClassMethodPair> getLifecycleMethods(final Class<Annotation> clazz) {
         return lifecycleMethods.get(clazz);
     }
 
