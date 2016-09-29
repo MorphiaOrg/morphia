@@ -7,6 +7,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.DBCollectionFindOptions;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
@@ -51,7 +54,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private BasicDBObject max;
     private BasicDBObject min;
     private int offset;
-    private int limit = -1;
+    private int limit;
     private int batchSize;
     private String indexHint;
     private BasicDBObject baseQuery;
@@ -61,10 +64,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean tailAwaitData;
     private ReadPreference readPref;
     private Integer maxScan;
-    private Long maxTime;
-    private TimeUnit maxTimeUnit;
+    private long maxTime;
+    private TimeUnit maxTimeUnit = MILLISECONDS;
     private String comment;
     private boolean returnKey;
+    private Collation collation;
 
     /**
      * Creates a Query for the given type and collection
@@ -260,6 +264,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return n;
     }
 
+    @Override
+    public Query<T> collation(final Collation collation) {
+        this.collation = collation;
+        return this;
+    }
+
+    @Override
+    public Collation getCollation() {
+        return collation;
+    }
+
     protected BasicDBObject copy(final BasicDBObject dbObject) {
         return dbObject == null ? null : new BasicDBObject(dbObject.toMap());
     }
@@ -442,9 +457,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> maxTime(final long value, final TimeUnit timeUnitValue) {
-        maxTime = value > 0 ? value : null;
+        maxTime = value;
         maxTimeUnit = timeUnitValue;
         return this;
+    }
+
+    @Override
+    public long getMaxTime(final TimeUnit unit) {
+        return unit.convert(maxTime, maxTimeUnit);
     }
 
     @Override
@@ -651,38 +671,30 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final DBObject query = getQueryObject();
         final DBObject fields = getFieldsObject();
 
+        DBCollectionFindOptions options = new DBCollectionFindOptions()
+            .collation(getCollation())
+            .skip(offset)
+            .limit(limit)
+            .batchSize(batchSize)
+            .sort(sort)
+            .readPreference(readPref)
+            .noCursorTimeout(noTimeout)
+            .maxTime(maxTime, maxTimeUnit)
+            .projection(fields);
+
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Running query(" + dbColl.getName() + ") : " + query + ", fields:" + fields + ",off:" + offset + ",limit:" + limit);
+            LOG.trace(String.format("Running query(%s) : %s, options: %s,", dbColl.getName(), query, options));
         }
 
-        final DBCursor cursor = dbColl.find(query, fields);
+
+        final DBCursor cursor = dbColl.find(query, options);
         cursor.setDecoderFactory(ds.getDecoderFact());
 
-        if (offset > 0) {
-            cursor.skip(offset);
-        }
-        if (limit > 0) {
-            cursor.limit(limit);
-        }
-        if (batchSize != 0) {
-            cursor.batchSize(batchSize);
-        }
         if (snapshotted) {
             cursor.snapshot();
         }
-        if (sort != null) {
-            cursor.sort(sort);
-        }
         if (indexHint != null) {
             cursor.hint(indexHint);
-        }
-
-        if (null != readPref) {
-            cursor.setReadPreference(readPref);
-        }
-
-        if (noTimeout) {
-            cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
         }
 
         if (tail) {
@@ -704,10 +716,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         if (maxScan != null) {
             cursor.addSpecial("$maxScan", maxScan);
-        }
-
-        if (maxTime != null && maxTimeUnit != null) {
-            cursor.maxTime(maxTime, maxTimeUnit);
         }
 
         if (max != null) {

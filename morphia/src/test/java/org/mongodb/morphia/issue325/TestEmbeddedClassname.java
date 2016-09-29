@@ -54,7 +54,7 @@ public class TestEmbeddedClassname extends TestBase {
         Root entity = new Root();
         entity.singleA = new B();
         ds.save(entity);
-        ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).add("aList", new B()));
+        ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new B()));
         r = ds.get(Root.class, "id");
 
         // test that singleA.raw *does* contain the classname because we stored a subclass there

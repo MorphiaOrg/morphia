@@ -18,6 +18,8 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
+import com.mongodb.client.model.DBCollectionRemoveOptions;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -53,6 +55,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -176,26 +179,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl = getCollection(query.getEntityClass());
         }
 
-        final WriteResult wr;
-
         if (query.getSortObject() != null || query.getOffset() != 0 || query.getLimit() > 0) {
             throw new QueryException("Delete does not allow sort/offset/limit query options.");
         }
 
-        final DBObject queryObject = query.getQueryObject();
-        if (queryObject != null) {
-            if (wc == null) {
-                wr = dbColl.remove(queryObject);
-            } else {
-                wr = dbColl.remove(queryObject, wc);
-            }
-        } else if (wc == null) {
-            wr = dbColl.remove(new BasicDBObject());
-        } else {
-            wr = dbColl.remove(new BasicDBObject(), wc);
-        }
-
-        return wr;
+        return dbColl.remove(query.getQueryObject(), new DBCollectionRemoveOptions()
+            .writeConcern(wc)
+            .collation(query.getCollation()));
     }
 
     @Override
@@ -286,14 +276,18 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        final DBObject result = dbColl.findAndModify(query.getQueryObject(), query.getFieldsObject(), query.getSortObject(), true,
-                                                     null, false, false);
+        DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
+            .maxTime(query.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+            .projection(query.getFieldsObject())
+            .sort(query.getSortObject())
+            .remove(true)
+            .returnNew(false)
+            .upsert(false)
+            .collation(query.getCollation());
+        final DBObject result = dbColl.findAndModify(query.getQueryObject(), options);
 
-        if (result != null) {
-            return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
-        }
+        return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
 
-        return null;
     }
 
     @Override

@@ -15,6 +15,8 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +32,7 @@ import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.generics.model.ChildEmbedded;
 import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.testmodel.Address;
 import org.mongodb.morphia.testmodel.Hotel;
@@ -309,6 +312,41 @@ public class TestDatastore extends TestBase {
         assertEquals(2, getDs().getCount(rect));
         getDs().delete(Rectangle.class, singletonList(id1));
         assertEquals(1, getDs().getCount(rect));
+    }
+
+    @Test
+    public void testDeleteWithCollation() {
+        getDs().getCollection(FacebookUser.class).drop();
+        getDs().save(new FacebookUser(1, "John Doe"),
+                     new FacebookUser(2, "john doe"));
+
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        assertEquals(1, getDs().delete(query).getN());
+
+        query.collation(Collation.builder()
+                       .locale("en")
+                       .collationStrength(CollationStrength.SECONDARY)
+                       .build());
+        assertEquals(1, getDs().delete(query).getN());
+    }
+
+    @Test
+    public void testFindAndDeleteWithCollation() {
+        getDs().getCollection(FacebookUser.class).drop();
+        getDs().save(new FacebookUser(1, "John Doe"),
+                     new FacebookUser(2, "john doe"));
+
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        assertNotNull(getDs().findAndDelete(query));
+        assertNull(getDs().findAndDelete(query));
+
+        query.collation(Collation.builder()
+                       .locale("en")
+                       .collationStrength(CollationStrength.SECONDARY)
+                       .build());
+        assertNotNull(getDs().findAndDelete(query));
     }
 
     private void testFirstDatastore(final Datastore ds1) {

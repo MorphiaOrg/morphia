@@ -21,6 +21,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
+import com.mongodb.client.model.CollationStrength;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
@@ -58,6 +59,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static com.mongodb.client.model.Collation.builder;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static org.hamcrest.core.Is.is;
@@ -78,6 +80,13 @@ import static org.junit.Assert.fail;
 @SuppressWarnings({"deprecation", "unchecked"})
 public class TestQuery extends TestBase {
 
+    @Test
+    public void maxTime() {
+        Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
+                                                                      .maxTime(15, TimeUnit.MINUTES);
+
+        assertEquals(900, query.getMaxTime(TimeUnit.SECONDS));
+    }
     @Test
     public void genericMultiKeyValueQueries() {
         getMorphia().map(GenericKeyValue.class);
@@ -1139,6 +1148,23 @@ public class TestQuery extends TestBase {
             // fine
         }
 
+    }
+
+
+    @Test
+    public void testCollations() {
+        getMorphia().map(ContainsRenamedFields.class);
+        getDs().save(new ContainsRenamedFields("first", "last"),
+                     new ContainsRenamedFields("First", "Last"));
+
+        Query query = getDs().createQuery(ContainsRenamedFields.class)
+                                                          .field("last_name").equal("last");
+        assertEquals(1, query.asList().size());
+        assertEquals(2, query.collation(builder()
+                                            .locale("en")
+                                            .collationStrength(CollationStrength.SECONDARY)
+                                            .build())
+                             .asList().size());
     }
 
     private int[] copy(final int[] array, final int start, final int count) {

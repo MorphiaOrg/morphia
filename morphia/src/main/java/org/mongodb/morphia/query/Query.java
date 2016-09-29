@@ -4,6 +4,7 @@ package org.mongodb.morphia.query;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.model.Collation;
 import org.bson.types.CodeWScope;
 
 import java.util.Map;
@@ -37,6 +38,21 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      */
     Query<T> cloneQuery();
+
+    /**
+     * Sets the collation to use for the query
+     *
+     * @param collation the collation
+     * @return this
+     */
+    Query<T> collation(Collation collation);
+
+    /**
+     * Returns the collation to use for the query
+     *
+     * @return the collation for this query or null if none has been defined.
+     */
+    Collation getCollation();
 
     /**
      * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments can make
@@ -234,6 +250,14 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      */
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
+
+    /**
+     * Returns the max time for the query in the requested unit of time
+     *
+     * @param unit the unit desired
+     * @return the max time value adjusted in to the requested unit
+     */
+    long getMaxTime(TimeUnit unit);
 
     /**
      * Starts the query results at a particular zero-based offset.
