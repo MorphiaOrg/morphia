@@ -433,13 +433,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getDB().getCollection(collName);
     }
 
-    @Override
-    public <T> MongoCollection<T> getMongoCollection(final Class<T> clazz) {
+    private <T> MongoCollection<T> getMongoCollection(final Class<T> clazz) {
         return getMongoCollection(mapper.getCollectionName(clazz), clazz);
     }
 
-    @Override
-    public <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
+    private <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
         return database.getCollection(name, clazz);
     }
 
@@ -845,7 +843,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes(final boolean background) {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            indexHelper.createIndex(mc, background);
+            indexHelper.createIndex(getMongoCollection(mc.getClazz()), mc, background);
         }
     }
 
@@ -856,7 +854,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
-        indexHelper.createIndex(mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz), background);
     }
 
     @Override
@@ -885,7 +883,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
-        indexHelper.createIndex(collection, mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz), background);
     }
 
     @Override

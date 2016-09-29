@@ -331,14 +331,6 @@ public interface Datastore {
     DBCollection getCollection(Class<?> clazz);
 
     /**
-     * @param <T> the type of the MongoCollection
-     * @param clazz the class to use for mapping
-     * @return the mapped collection for the collection
-     * @see MongoCollection
-     */
-    <T> MongoCollection<T> getMongoCollection(Class<T> clazz);
-
-    /**
      * Gets the count this kind ({@link DBCollection})
      *
      * @param entity The entity whose type to count

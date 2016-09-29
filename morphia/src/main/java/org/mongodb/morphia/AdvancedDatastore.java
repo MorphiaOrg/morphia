@@ -255,16 +255,6 @@ public interface AdvancedDatastore extends Datastore {
     void setDecoderFact(DBDecoderFactory fact);
 
     /**
-     * Returns the {@see MongoCollection} for the given name
-     *
-     * @param <T>   the type of the MongoCollection
-     * @param name  the name of the collection
-     * @param clazz the type of the collection
-     * @return the collection
-     */
-    <T> MongoCollection<T> getMongoCollection(String name, Class<T> clazz);
-
-    /**
      * Inserts an entity in to the named collection.
      *
      * @param collection the collection to update

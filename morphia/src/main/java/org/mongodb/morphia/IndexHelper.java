@@ -254,14 +254,6 @@ final class IndexHelper {
         return builder.toString();
     }
 
-    void createIndex(final String collName, final MappedClass mc, final boolean background) {
-        createIndex(datastore.getMongoCollection(collName, mc.getClazz()), mc, background);
-    }
-
-    void createIndex(final MappedClass mc, final boolean background) {
-        createIndex(datastore.getMongoCollection(mc.getClazz()), mc, background);
-    }
-
     private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
         BsonDocument keys = new BsonDocument();
         for (Field field : index.fields()) {
@@ -378,7 +370,7 @@ final class IndexHelper {
         return collection.createIndex(keys, options);
     }
 
-    private void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
+    void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
             com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
