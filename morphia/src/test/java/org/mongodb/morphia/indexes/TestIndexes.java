@@ -19,6 +19,9 @@ package org.mongodb.morphia.indexes;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.CollationCaseFirst;
+import com.mongodb.client.model.CollationMaxVariable;
+import com.mongodb.client.model.CollationStrength;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
@@ -32,6 +35,8 @@ import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
+
+import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 
 public class TestIndexes extends TestBase {
 
@@ -59,7 +64,17 @@ public class TestIndexes extends TestBase {
         assertBackground(indexInfo);
         for (DBObject dbObject : indexInfo) {
             if (dbObject.get("name").equals("collated")) {
-                Assert.assertEquals("en_US", ((DBObject) dbObject.get("collation")).get("locale"));
+                BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
+                Assert.assertEquals("en_US", collation.get("locale"));
+                Assert.assertEquals("upper", collation.get("caseFirst"));
+                Assert.assertEquals("shifted", collation.get("alternate"));
+                Assert.assertTrue(collation.getBoolean("backwards"));
+                Assert.assertEquals("upper", collation.get("caseFirst"));
+                Assert.assertTrue(collation.getBoolean("caseLevel"));
+                Assert.assertEquals("space", collation.get("maxVariable"));
+                Assert.assertTrue(collation.getBoolean("normalization"));
+                Assert.assertTrue(collation.getBoolean("numericOrdering"));
+                Assert.assertEquals(5, collation.get("strength"));
             }
         }
 
@@ -91,7 +106,10 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(noClassnameStored = true)
-    @Indexes({@Index(options = @IndexOptions(name = "collated", collation = @Collation(locale = "en_US")),
+    @Indexes({@Index(options = @IndexOptions(name = "collated",
+        collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
+            caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true,
+            numericOrdering = true, strength = CollationStrength.IDENTICAL)),
         fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
         private String name;
