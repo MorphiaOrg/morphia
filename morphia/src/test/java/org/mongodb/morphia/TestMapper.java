@@ -81,7 +81,7 @@ public class TestMapper extends TestBase {
 
     @Test
     public void subTypes() {
-        getMorphia().map(WithNested.class, NestedImpl.class, Nested.class, AnotherNested.class);
+        getMorphia().map(NestedImpl.class, AnotherNested.class);
 
         Mapper mapper = getMorphia().getMapper();
         List<MappedClass> subTypes = mapper.getSubTypes(mapper.getMappedClass(Nested.class));
