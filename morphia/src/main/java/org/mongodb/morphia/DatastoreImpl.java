@@ -113,7 +113,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mongoClient = mongoClient;
         this.database = database;
         this.db = mongoClient.getDB(database.getName());
-        this.indexHelper = new IndexHelper(this, mapper, database);
+        this.indexHelper = new IndexHelper(mapper, database);
     }
 
     /**

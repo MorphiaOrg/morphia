@@ -65,12 +65,10 @@ final class IndexHelper {
     private static final Logger LOG = MorphiaLoggerFactory.get(IndexHelper.class);
     private static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
-    private final AdvancedDatastore datastore;
     private final Mapper mapper;
     private final MongoDatabase database;
 
-    IndexHelper(final AdvancedDatastore datastore, final Mapper mapper, final MongoDatabase database) {
-        this.datastore = datastore;
+    IndexHelper(final Mapper mapper, final MongoDatabase database) {
         this.mapper = mapper;
         this.database = database;
     }
