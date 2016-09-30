@@ -21,6 +21,8 @@ import com.mongodb.AggregationOptions.OutputMode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.query.Query;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +54,35 @@ import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
 
 public class AggregationTest extends TestBase {
+
+    @Test
+    public void testCollation() {
+        getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
+
+        Query query = getDs().createQuery(User.class).field("name").equal("john doe");
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .match(query);
+        Assert.assertEquals(1, count(pipeline.aggregate(User.class)));
+
+        Assert.assertEquals(2, count(pipeline.aggregate(User.class,
+                                                        AggregationOptions.builder()
+                                                                          .collation(Collation.builder()
+                                                                                              .locale("en")
+                                                                                              .collationStrength(
+                                                                                                  CollationStrength.SECONDARY)
+                                                                                              .build()).build())));
+    }
+
+    private int count(final Iterator<User> iterator) {
+        int count = 0;
+        while (iterator.hasNext()) {
+            count++;
+            iterator.next();
+        }
+        return count;
+    }
+
     @Test
     public void testDateAggregation() {
         AggregationPipeline pipeline = getDs()
