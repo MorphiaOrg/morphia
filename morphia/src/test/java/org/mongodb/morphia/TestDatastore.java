@@ -34,6 +34,8 @@ import org.mongodb.morphia.generics.model.ChildEntity;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateException;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.testmodel.Address;
 import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
@@ -315,6 +317,31 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    public void testUpdateWithCollation() {
+        getDs().getCollection(FacebookUser.class).drop();
+        getDs().save(new FacebookUser(1, "John Doe"),
+                     new FacebookUser(2, "john doe"));
+
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
+            .inc("loginCount");
+        UpdateResults results = getDs().update(query, updateOperations);
+        assertEquals(1, results.getUpdatedCount());
+        assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+
+        query.collation(Collation.builder()
+                       .locale("en")
+                       .collationStrength(CollationStrength.SECONDARY)
+                       .build());
+        results = getDs().update(query, updateOperations);
+        assertEquals(2, results.getUpdatedCount());
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(2, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+    }
+
+    @Test
     public void testDeleteWithCollation() {
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
@@ -384,6 +411,7 @@ public class TestDatastore extends TestBase {
         @Id
         private long id;
         private String username;
+        private int loginCount;
         @Reference
         private List<FacebookUser> friends = new ArrayList<FacebookUser>();
 
@@ -402,6 +430,10 @@ public class TestDatastore extends TestBase {
 
         public String getUsername() {
             return username;
+        }
+
+        public int getLoginCount() {
+            return loginCount;
         }
     }
 

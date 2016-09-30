@@ -20,6 +20,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
 import com.mongodb.client.model.DBCollectionRemoveOptions;
+import com.mongodb.client.model.DBCollectionUpdateOptions;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -1317,13 +1318,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     @SuppressWarnings("rawtypes")
     private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi,
                                      final WriteConcern wc) {
+        Query<T> updateQuery = query;
         final DBObject u = ((UpdateOpsImpl) ops).getOps();
         if (((UpdateOpsImpl) ops).isIsolated()) {
-            final Query<T> q = query.cloneQuery();
-            q.disableValidation().filter("$atomic", true);
-            return update(q, u, createIfMissing, multi, wc);
+            updateQuery = query.cloneQuery();
+            updateQuery.disableValidation().filter("$atomic", true);
         }
-        return update(query, u, createIfMissing, multi, wc);
+        return update(updateQuery, u, createIfMissing, multi, wc);
     }
 
     @SuppressWarnings("unchecked")
@@ -1347,9 +1348,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         DBObject queryObject = query.getQueryObject();
-        if (queryObject == null) {
-            queryObject = new BasicDBObject();
-        }
 
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
@@ -1369,14 +1367,13 @@ public class DatastoreImpl implements AdvancedDatastore {
                              dbColl.getName(), queryObject, update, multi, createIfMissing));
         }
 
-        final WriteResult wr;
-        if (wc == null) {
-            wr = dbColl.update(queryObject, update, createIfMissing, multi);
-        } else {
-            wr = dbColl.update(queryObject, update, createIfMissing, multi, wc);
-        }
+        DBCollectionUpdateOptions options = new DBCollectionUpdateOptions()
+            .collation(query.getCollation())
+            .multi(multi)
+            .upsert(createIfMissing)
+            .writeConcern(wc);
 
-        return new UpdateResults(wr);
+        return new UpdateResults(dbColl.update(queryObject, update, options));
     }
 
     /**
