@@ -496,6 +496,27 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> MapreduceResults<T> mapReduce(final MapReduceOptions<T> options) {
+
+
+        DBCollection collection = options.getQuery().getCollection();
+
+        final EntityCache cache = createCache();
+        MapreduceResults<T> results = new MapreduceResults<T>(collection.mapReduce(options.toCommand()));
+
+        results.setOutputType(options.getOutputType());
+
+        if (OutputType.INLINE.equals(options.getOutputType())) {
+            results.setInlineRequiredOptions(this, options.getResultType(), getMapper(), cache);
+        } else {
+            results.setQuery(newQuery(options.getResultType(), getDB().getCollection(results.getOutputCollectionName())));
+        }
+
+        return results;
+
+    }
+
+    @Override
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
                                              final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
 
@@ -503,23 +524,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final String outColl = mapper.getCollectionName(outputType);
 
-        final OutputType outType;
-        switch (type) {
-            case REDUCE:
-                outType = OutputType.REDUCE;
-                break;
-            case MERGE:
-                outType = OutputType.MERGE;
-                break;
-            case INLINE:
-                outType = OutputType.INLINE;
-                break;
-            default:
-                outType = OutputType.REPLACE;
-                break;
-        }
-
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, outType, query.getQueryObject());
+        final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, type.toOutputType(), query.getQueryObject());
 
         if (query.getLimit() > 0) {
             cmd.setLimit(query.getLimit());
@@ -552,21 +557,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
         }
 
-        final OutputType outType;
-        switch (type) {
-            case REDUCE:
-                outType = OutputType.REDUCE;
-                break;
-            case MERGE:
-                outType = OutputType.MERGE;
-                break;
-            case INLINE:
-                outType = OutputType.INLINE;
-                break;
-            default:
-                outType = OutputType.REPLACE;
-                break;
-        }
+        final OutputType outType = type.toOutputType();
 
         final DBCollection dbColl = query.getCollection();
 

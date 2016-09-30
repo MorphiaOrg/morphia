@@ -1,21 +1,33 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoException;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.CollationStrength;
+import com.mongodb.operation.MapReduceWithInlineResultsOperation;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.aggregation.Accumulator;
+import org.mongodb.morphia.aggregation.AggregationTest.Book;
+import org.mongodb.morphia.aggregation.AggregationTest.CountResult;
+import org.mongodb.morphia.aggregation.Sort;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PreLoad;
+import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
 import org.mongodb.morphia.testmodel.Shape;
 
 import java.util.Iterator;
 import java.util.Random;
+
+import static org.mongodb.morphia.aggregation.Group.grouping;
 
 
 public class TestMapreduce extends TestBase {
@@ -51,13 +63,41 @@ public class TestMapreduce extends TestBase {
         final MapreduceResults<ResultEntity> inline =
             getDs().mapReduce(MapreduceType.INLINE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
         final Iterator<ResultEntity> iterator = inline.iterator();
-        int count = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            count++;
-        }
-        Assert.assertEquals(2, count);
+        Assert.assertEquals(2, count(iterator));
         Assert.assertEquals(100, inline.iterator().next().getValue().count, 0);
+    }
+
+    @Test
+    public void testCollation() {
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
+
+        final String map = "function () { emit(this.author, 1); return; }";
+        final String reduce = "function (key, values) { return values.length }";
+
+        Query<Book> query = getAds().createQuery(Book.class)
+            .field("author").equal("dante");
+        MapReduceOptions<CountResult> options = new MapReduceOptions<CountResult>()
+            .outputType(OutputType.INLINE)
+            .query(query)
+            .map(map)
+            .reduce(reduce)
+            .resultType(CountResult.class);
+        Iterator<CountResult> iterator = getDs().mapReduce(options).getInlineResults();
+
+        Assert.assertEquals(0, count(iterator));
+
+        options.collation(Collation.builder()
+                         .locale("en")
+                         .collationStrength(CollationStrength.SECONDARY)
+                         .build());
+        iterator = getDs().mapReduce(options).getInlineResults();
+        CountResult result = iterator.next();
+        Assert.assertEquals("Dante", result.getAuthor());
+        Assert.assertEquals(3D, result.getCount(), 0);
     }
 
     @Entity("mr_results")

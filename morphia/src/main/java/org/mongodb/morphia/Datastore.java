@@ -405,6 +405,15 @@ public interface Datastore {
     void setQueryFactory(QueryFactory queryFactory);
 
     /**
+     * Runs a map/reduce job at the server
+     *
+     * @param <T>     The type of resulting data
+     * @param options the options to apply to the map/reduce job
+     * @return the results
+     */
+    <T> MapreduceResults<T> mapReduce(MapReduceOptions<T> options);
+
+    /**
      * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
      *
      * @param <T>         The type of resulting data
@@ -416,7 +425,9 @@ public interface Datastore {
      * @param finalize    The finalize function, in javascript, as a string; can be null
      * @param scopeFields Each map entry will be a global variable in all the functions; can be null
      * @return counts and stuff
+     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      */
+    @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize,
                                       Map<String, Object> scopeFields, Class<T> outputType);
 
@@ -429,7 +440,9 @@ public interface Datastore {
      * @param outputType  The type of resulting data; inline is not working yet
      * @param baseCommand The base command to fill in and send to the server
      * @return counts and stuff
+     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      */
+    @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, Class<T> outputType, MapReduceCommand baseCommand);
 
     /**

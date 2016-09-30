@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
+import java.util.Iterator;
+
 @SuppressWarnings("deprecation")
 public abstract class TestBase {
     public static final String TEST_DB_NAME = "morphia_test";
@@ -89,6 +91,15 @@ public abstract class TestBase {
         if (db != null) {
             db.dropDatabase();
         }
+    }
+
+    protected int count(final Iterator<?> iterator) {
+        int count = 0;
+        while (iterator.hasNext()) {
+            count++;
+            iterator.next();
+        }
+        return count;
     }
 
     /**

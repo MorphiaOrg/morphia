@@ -27,6 +27,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -72,15 +73,6 @@ public class AggregationTest extends TestBase {
                                                                                               .collationStrength(
                                                                                                   CollationStrength.SECONDARY)
                                                                                               .build()).build())));
-    }
-
-    private int count(final Iterator<User> iterator) {
-        int count = 0;
-        while (iterator.hasNext()) {
-            count++;
-            iterator.next();
-        }
-        return count;
     }
 
     @Test
@@ -498,7 +490,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity(value = "books", noClassnameStored = true)
-    private static final class Book {
+    public static final class Book {
         @Id
         private ObjectId id;
         private String title;
@@ -509,7 +501,7 @@ public class AggregationTest extends TestBase {
         private Book() {
         }
 
-        private Book(final String title, final String author, final Integer copies, final String... tags) {
+        public Book(final String title, final String author, final Integer copies, final String... tags) {
             this.title = title;
             this.author = author;
             this.copies = copies;
@@ -523,7 +515,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity("authors")
-    private static class Author {
+    public static class Author {
         @Id
         private String name;
         private List<String> books;
@@ -553,10 +545,11 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity
-    private static class CountResult {
+    public static class CountResult {
 
         @Id
         private String author;
+        @AlsoLoad("value")
         private int count;
 
         public String getAuthor() {
