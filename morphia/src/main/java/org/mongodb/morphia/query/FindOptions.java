@@ -156,7 +156,7 @@ public class FindOptions {
 
     }
 
-    public FindOptions projection(final DBObject projection) {
+    FindOptions projection(final DBObject projection) {
         options.projection(projection);
         return this;
 
@@ -185,7 +185,7 @@ public class FindOptions {
 
     }
 
-    DBCollectionFindOptions toDriverOptions() {
+    DBCollectionFindOptions getOptions() {
         return options;
     }
 

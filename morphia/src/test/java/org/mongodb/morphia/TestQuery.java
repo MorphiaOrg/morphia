@@ -26,7 +26,6 @@ import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
@@ -41,6 +40,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.ArraySlice;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.MorphiaKeyIterator;
 import org.mongodb.morphia.query.Query;
@@ -1155,23 +1155,20 @@ public class TestQuery extends TestBase {
 
 
     @Test
-    @Ignore
     public void testCollations() {
         getMorphia().map(ContainsRenamedFields.class);
         getDs().save(new ContainsRenamedFields("first", "last"),
                      new ContainsRenamedFields("First", "Last"));
 
         Query query = getDs().createQuery(ContainsRenamedFields.class)
-                                                          .field("last_name").equal("last");
+                             .field("last_name").equal("last");
         assertEquals(1, query.asList().size());
-        fail("fix the options");
-/*
-        assertEquals(2, query.collation(builder()
-                                            .locale("en")
-                                            .collationStrength(CollationStrength.SECONDARY)
-                                            .build())
-                             .asList().size());
-*/
+        assertEquals(2, query.asList(new FindOptions()
+                                         .collation(builder()
+                                                        .locale("en")
+                                                        .collationStrength(CollationStrength.SECONDARY)
+                                                        .build()))
+                             .size());
     }
 
     private int[] copy(final int[] array, final int start, final int count) {

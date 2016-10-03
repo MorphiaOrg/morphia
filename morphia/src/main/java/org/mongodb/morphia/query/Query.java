@@ -4,7 +4,6 @@ package org.mongodb.morphia.query;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.model.Collation;
 import org.bson.types.CodeWScope;
 
 import java.util.Map;
@@ -29,7 +28,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @param value must be >= 0.  A value of 0 indicates the server default.
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> batchSize(int value);
 
     /**
@@ -46,7 +48,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param comment the comment to add
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/meta/comment $comment
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> comment(String comment);
 
     /**
@@ -61,14 +66,20 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * Disables cursor timeout on server.
      *
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> disableCursorTimeout();
 
     /**
      * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
      *
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> disableSnapshotMode();
 
     /**
@@ -82,7 +93,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * Enables cursor timeout on server.
      *
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> enableCursorTimeout();
 
     /**
@@ -90,7 +104,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * compatible with order/sort and hint.
      *
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> enableSnapshotMode();
 
     /**
@@ -150,7 +167,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     /**
      * @return the batch size
      * @see #batchSize(int)
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     int getBatchSize();
 
     /**
@@ -171,13 +191,19 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     /**
      * @return the limit
      * @see #limit(int)
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     int getLimit();
 
     /**
      * @return the offset.
      * @see #offset(int)
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     int getOffset();
 
     /**
@@ -195,7 +221,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @param idxName the index name to hint
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> hintIndex(String idxName);
 
     /**
@@ -204,7 +233,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link #batchSize(int)} which is the preferred
      *              method
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> limit(int value);
 
     /**
@@ -215,7 +247,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param lowerBound The inclusive lower bound.
      * @return this
      * @mongodb.driver.manual reference/operator/meta/min/ $min
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> lowerIndexBound(DBObject lowerBound);
 
     /**
@@ -224,7 +259,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param value must be > 0.  A value < 0 indicates no limit
      * @return this
      * @mongodb.driver.manual reference/operator/meta/maxScan/#op._S_maxScan $maxScan
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> maxScan(int value);
 
     /**
@@ -233,7 +271,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param maxTime     must be > 0.  A value < 0 indicates no limit
      * @param maxTimeUnit the unit of time to use
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
 
     /**
@@ -243,7 +284,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return the max time value adjusted in to the requested unit
      *
      * @since 1.3
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     long getMaxTime(TimeUnit unit);
 
     /**
@@ -251,7 +295,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @param value must be >= 0
      * @return this
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> offset(int value);
 
     /**
@@ -324,8 +371,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      * @see ReadPreference#secondary()
      * @see ReadPreference#secondaryPreferred()
-     * @deprecated use #useReadPreference(ReadPreference) instead
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> queryNonPrimary();
 
     /**
@@ -333,8 +382,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @return this
      * @see ReadPreference#primary()
-     * @deprecated use #useReadPreference(ReadPreference)
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> queryPrimaryOnly();
 
     /**
@@ -361,7 +412,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/meta/returnKey/#op._S_returnKey $returnKey
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> returnKey();
 
     /**
@@ -391,7 +445,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param upperBound The exclusive upper bound.
      * @return this
      * @mongodb.driver.manual reference/operator/meta/max/ $max
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> upperIndexBound(DBObject upperBound);
 
     /**
@@ -400,7 +457,10 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param readPref the ReadPreference to use
      * @return this
      * @see ReadPreference
+     * @deprecated use the methods that accept Options directly
+     * @see #asList(FindOptions)
      */
+    @Deprecated
     Query<T> useReadPreference(ReadPreference readPref);
 
     /**

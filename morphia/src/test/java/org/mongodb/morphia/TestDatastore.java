@@ -319,7 +319,6 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    @Ignore
     public void testUpdateWithCollation() {
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
@@ -348,7 +347,6 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    @Ignore
     public void testDeleteWithCollation() {
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),

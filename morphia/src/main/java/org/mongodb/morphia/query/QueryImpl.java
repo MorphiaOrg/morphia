@@ -21,7 +21,6 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -118,8 +117,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public List<Key<T>> asKeyList() {
+        return asKeyList(getOptions());
+    }
+
+    @Override
+    public List<Key<T>> asKeyList(final FindOptions options) {
         final List<Key<T>> results = new ArrayList<Key<T>>();
-        MorphiaKeyIterator<T> keys = fetchKeys();
+        MorphiaKeyIterator<T> keys = fetchKeys(options);
         try {
             for (final Key<T> key : keys) {
                 results.add(key);
@@ -132,8 +136,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public List<T> asList() {
+        return asList(getOptions());
+    }
+
+    @Override
+    public List<T> asList(final FindOptions options) {
         final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = fetch();
+        final MorphiaIterator<T, T> iter = fetch(options);
         try {
             for (final T ent : iter) {
                 results.add(ent);
@@ -176,7 +185,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return fetch(getOptions());
     }
 
-    private MorphiaIterator<T, T> fetch(final FindOptions options) {
+    @Override
+    public MorphiaIterator<T, T> fetch(final FindOptions options) {
         final DBCursor cursor = prepareCursor(options);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
@@ -187,6 +197,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public MorphiaIterator<T, T> fetchEmptyEntities() {
+        return fetchEmptyEntities(getOptions());
+    }
+
+    @Override
+    public MorphiaIterator<T, T> fetchEmptyEntities(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
         cloned.includeFields = true;
@@ -198,7 +213,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return fetchKeys(getOptions());
     }
 
-    private MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
+    @Override
+    public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
         cloned.includeFields = true;
@@ -208,26 +224,42 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public T get() {
-        FindOptions copy = getOptions().copy();
+        return get(getOptions());
+    }
+
+    @Override
+    public T get(final FindOptions options) {
+        FindOptions copy = options.copy();
         copy.limit(1);
-        final Iterator<T> it = fetch(copy).iterator();
-        return (it.hasNext()) ? it.next() : null;
+        final MorphiaIterator<T, T> it = fetch(copy);
+        T t = (it.hasNext()) ? it.next() : null;
+        it.close();
+        return t;
     }
 
     @Override
     public Key<T> getKey() {
-        FindOptions copy = getOptions().copy();
-        copy.limit(1);
-        final Iterator<Key<T>> it = fetchKeys(copy).iterator();
-        return (it.hasNext()) ? it.next() : null;
+        return getKey(getOptions());
     }
 
     @Override
+    public Key<T> getKey(final FindOptions options) {
+        FindOptions copy = options.copy();
+        copy.limit(1);
+        final MorphiaIterator<T, Key<T>> it = fetchKeys(copy);
+        Key<T> key = (it.hasNext()) ? it.next() : null;
+        it.close();
+        return key;
+    }
+
+    @Override
+    @Deprecated
     public MorphiaIterator<T, T> tail() {
         return tail(true);
     }
 
     @Override
+    @Deprecated
     public MorphiaIterator<T, T> tail(final boolean awaitData) {
         FindOptions copy = getOptions().copy();
         copy.cursorType(awaitData ? TailableAwait : Tailable);
@@ -235,6 +267,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> batchSize(final int value) {
         getOptions().batchSize(value);
         return this;
@@ -262,6 +295,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> comment(final String comment) {
         getOptions().getModifiersDBObject().put("$comment", comment);
         return this;
@@ -276,12 +310,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> disableCursorTimeout() {
         getOptions().noCursorTimeout(true);
         return this;
     }
 
     @Override
+    @Deprecated
     public Query<T> disableSnapshotMode() {
         getOptions().getModifiersDBObject().remove("$snapshot");
 
@@ -296,12 +332,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> enableCursorTimeout() {
         getOptions().noCursorTimeout(false);
         return this;
     }
 
     @Override
+    @Deprecated
     public Query<T> enableSnapshotMode() {
         getOptions().getModifiersDBObject().put("$snapshot", true);
         return this;
@@ -340,6 +378,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public int getBatchSize() {
         return getOptions().getBatchSize();
     }
@@ -374,11 +413,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public int getLimit() {
         return getOptions().getLimit();
     }
 
     @Override
+    @Deprecated
     public int getOffset() {
         return getOptions().getSkip();
     }
@@ -412,18 +453,21 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> hintIndex(final String idxName) {
         getOptions().getModifiersDBObject().put("$hint", idxName);
         return this;
     }
 
     @Override
+    @Deprecated
     public Query<T> limit(final int value) {
         getOptions().limit(value);
         return this;
     }
 
     @Override
+    @Deprecated
     public Query<T> lowerIndexBound(final DBObject lowerBound) {
         if (lowerBound != null) {
             getOptions().getModifiersDBObject().put("$min", new BasicDBObject(lowerBound.toMap()));
@@ -432,6 +476,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> maxScan(final int value) {
         if (value > 0) {
             getOptions().getModifiersDBObject().put("$maxScan", value);
@@ -440,18 +485,21 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> maxTime(final long value, final TimeUnit unit) {
         getOptions().getModifiersDBObject().put("$maxTimeMS", MILLISECONDS.convert(value, unit));
         return this;
     }
 
     @Override
+    @Deprecated
     public long getMaxTime(final TimeUnit unit) {
         Long maxTime = (Long) getOptions().getModifiersDBObject().get("$maxTimeMS");
         return unit.convert(maxTime != null ? maxTime : 0, MILLISECONDS);
     }
 
     @Override
+    @Deprecated
     public Query<T> offset(final int value) {
         getOptions().skip(value);
         return this;
@@ -487,6 +535,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> queryNonPrimary() {
         getOptions().readPreference(ReadPreference.secondaryPreferred());
         return this;
@@ -494,6 +543,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     @SuppressWarnings("deprecation")
+    @Deprecated
     public Query<T> queryPrimaryOnly() {
         getOptions().readPreference(ReadPreference.primary());
         return this;
@@ -582,6 +632,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> returnKey() {
         getOptions().getModifiersDBObject().put("$returnKey", true);
         return this;
@@ -609,6 +660,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> upperIndexBound(final DBObject upperBound) {
         if (upperBound != null) {
             getOptions().getModifiersDBObject().put("$max", new BasicDBObject(upperBound.toMap()));
@@ -618,6 +670,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> useReadPreference(final ReadPreference readPref) {
         getOptions().readPreference(readPref);
         return this;
@@ -685,7 +738,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
 
 
-        final DBCursor cursor = dbColl.find(query, findOptions.toDriverOptions()
+        final DBCursor cursor = dbColl.find(query, findOptions.getOptions()
                                                               .sort(getSortObject())
                                                               .projection(getFieldsObject()));
         cursor.setDecoderFactory(ds.getDecoderFact());
