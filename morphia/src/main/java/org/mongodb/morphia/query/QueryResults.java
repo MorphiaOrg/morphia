@@ -30,8 +30,27 @@ public interface QueryResults<T> extends Iterable<T> {
      * Count the total number of values in the result, ignoring limit and offset
      *
      * @return the count
+     * @deprecated use {@see #count} instead
      */
+    @Deprecated
     long countAll();
+
+    /**
+     * Count the total number of values in the result, ignoring limit and offset
+     *
+     * @return the count
+     * @since 1.3
+     */
+    long count();
+
+    /**
+     * Count the total number of values in the result, ignoring limit and offset
+     *
+     * @param options the options to apply to the count operation
+     * @return the count
+     * @since 1.3
+     */
+    long count(CountOptions options);
 
     /**
      * Execute the query and get the results.  This method is provided for orthogonality; Query.fetch().iterator() is identical to

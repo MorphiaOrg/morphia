@@ -40,21 +40,6 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> cloneQuery();
 
     /**
-     * Sets the collation to use for the query
-     *
-     * @param collation the collation
-     * @return this
-     */
-    Query<T> collation(Collation collation);
-
-    /**
-     * Returns the collation to use for the query
-     *
-     * @return the collation for this query or null if none has been defined.
-     */
-    Collation getCollation();
-
-    /**
      * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments can make
      * your profile data much easier to interpret and trace.
      *
