@@ -185,8 +185,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return dbColl.remove(query.getQueryObject(), new DBCollectionRemoveOptions()
-            .writeConcern(wc)
-            .collation(query.getCollation()));
+            .writeConcern(wc));
     }
 
     @Override
@@ -283,8 +282,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             .sort(query.getSortObject())
             .remove(true)
             .returnNew(false)
-            .upsert(false)
-            .collation(query.getCollation());
+            .upsert(false);
         final DBObject result = dbColl.findAndModify(query.getQueryObject(), options);
 
         return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
@@ -1359,7 +1357,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         DBCollectionUpdateOptions options = new DBCollectionUpdateOptions()
-            .collation(query.getCollation())
             .multi(multi)
             .upsert(createIfMissing)
             .writeConcern(wc);

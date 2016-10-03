@@ -7,7 +7,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.model.Collation;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -256,17 +255,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         n.setAttachedTo(getAttachedTo());
         n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
         return n;
-    }
-
-    @Override
-    public Query<T> collation(final Collation collation) {
-        getOptions().collation(collation);
-        return this;
-    }
-
-    @Override
-    public Collation getCollation() {
-        return getOptions().getCollation();
     }
 
     protected BasicDBObject copy(final BasicDBObject dbObject) {
@@ -706,6 +694,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                 cursor.addOption(Bytes.QUERYOPTION_AWAITDATA);
             case Tailable:
                 cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
+                break;
+            default:
                 break;
         }
 

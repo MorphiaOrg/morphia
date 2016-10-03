@@ -241,6 +241,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @param unit the unit desired
      * @return the max time value adjusted in to the requested unit
+     *
+     * @since 1.3
      */
     long getMaxTime(TimeUnit unit);
 
