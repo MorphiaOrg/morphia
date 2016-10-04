@@ -42,7 +42,7 @@ public class FindOptions {
     public FindOptions() {
     }
 
-    FindOptions(final DBCollectionFindOptions copy) {
+    private FindOptions(final DBCollectionFindOptions copy) {
         options = copy.copy();
     }
 
@@ -198,9 +198,11 @@ public class FindOptions {
      *
      * @param key the modifier name
      * @param value the modifier value
+     * @return this
      */
-    public void modifier(final String key, final Object value) {
+    public FindOptions modifier(final String key, final Object value) {
         options.getModifiers().put(key, value);
+        return this;
     }
 
     /**
@@ -408,6 +410,14 @@ public class FindOptions {
 
     DBCollectionFindOptions getOptions() {
         return options;
+    }
+
+    boolean isSnapshot() {
+        return getModifiersDBObject().getBoolean("$snapshot");
+    }
+
+    boolean hasHint() {
+        return getModifiers().get("$indexHint") != null;
     }
 
     @Override

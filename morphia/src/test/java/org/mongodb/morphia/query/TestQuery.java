@@ -12,7 +12,7 @@
  */
 
 
-package org.mongodb.morphia;
+package org.mongodb.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
@@ -27,6 +27,8 @@ import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
 import org.mongodb.morphia.TestMapper.CustomId;
@@ -44,6 +46,7 @@ import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.MorphiaKeyIterator;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.QueryImpl;
 import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
@@ -86,8 +89,9 @@ public class TestQuery extends TestBase {
         Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
                                                                       .maxTime(15, TimeUnit.MINUTES);
 
-        assertEquals(900, query.getMaxTime(TimeUnit.SECONDS));
+        assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
     }
+
     @Test
     public void genericMultiKeyValueQueries() {
         getMorphia().map(GenericKeyValue.class);

@@ -747,19 +747,21 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
-        return update(query, operations, false, false);
+        return update(query, operations, new UpdateOptions());
     }
 
     @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, createIfMissing, false);
+        return update(query, operations, new UpdateOptions().upsert(createIfMissing));
 
     }
 
     @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                          final WriteConcern wc) {
-        return update(query, operations, createIfMissing, false, wc);
+        return update(query, operations, new UpdateOptions()
+            .upsert(createIfMissing)
+            .writeConcern(wc));
     }
 
     @Override
@@ -1310,27 +1312,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return dbObject;
     }
 
-    private <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
-                                     final boolean multi) {
-        return update(query, ops, new UpdateOptions()
-            .upsert(createIfMissing)
-            .multi(multi)
-            .writeConcern(getWriteConcern(query.getEntityClass())));
-    }
-
-    @SuppressWarnings("rawtypes")
-    private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi,
-                                     final WriteConcern wc) {
-        Query<T> updateQuery = query;
-        final DBObject u = ((UpdateOpsImpl) ops).getOps();
-        if (ops.isIsolated()) {
-            updateQuery = query.cloneQuery();
-            updateQuery.disableValidation().filter("$atomic", true);
-        }
-        return update(updateQuery, u, createIfMissing, multi, wc);
-    }
-
-    @SuppressWarnings("Duplicates")
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
         DBCollection dbColl = query.getCollection();

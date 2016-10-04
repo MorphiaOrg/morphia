@@ -278,19 +278,6 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
 
     /**
-     * Returns the max time for the query in the requested unit of time
-     *
-     * @param unit the unit desired
-     * @return the max time value adjusted in to the requested unit
-     *
-     * @since 1.3
-     * @deprecated use the methods that accept Options directly
-     * @see #asList(FindOptions)
-     */
-    @Deprecated
-    long getMaxTime(TimeUnit unit);
-
-    /**
      * Starts the query results at a particular zero-based offset.
      *
      * @param value must be >= 0

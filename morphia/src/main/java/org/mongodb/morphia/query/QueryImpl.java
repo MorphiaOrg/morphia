@@ -229,9 +229,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public T get(final FindOptions options) {
-        FindOptions copy = options.copy();
-        copy.limit(1);
-        final MorphiaIterator<T, T> it = fetch(copy);
+        final MorphiaIterator<T, T> it = fetch(options
+                                                   .copy()
+                                                   .limit(1));
         T t = (it.hasNext()) ? it.next() : null;
         it.close();
         return t;
@@ -244,9 +244,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Key<T> getKey(final FindOptions options) {
-        FindOptions copy = options.copy();
-        copy.limit(1);
-        final MorphiaIterator<T, Key<T>> it = fetchKeys(copy);
+        final MorphiaIterator<T, Key<T>> it = fetchKeys(options
+                                                            .copy()
+                                                            .limit(1));
         Key<T> key = (it.hasNext()) ? it.next() : null;
         it.close();
         return key;
@@ -491,9 +491,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return this;
     }
 
-    @Override
-    @Deprecated
-    public long getMaxTime(final TimeUnit unit) {
+    long getMaxTime(final TimeUnit unit) {
         Long maxTime = (Long) getOptions().getModifiersDBObject().get("$maxTimeMS");
         return unit.convert(maxTime != null ? maxTime : 0, MILLISECONDS);
     }
@@ -507,27 +505,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> order(final String sort) {
-        if (isSnapshot()) {
-            throw new QueryException("order cannot be used on a snapshotted query.");
-        }
         getOptions().sort(parseFieldsString(sort, clazz, ds.getMapper(), validateName));
-
         return this;
-    }
-
-    private boolean isSnapshot() {
-        Boolean snapshot = (Boolean) getOptions().getModifiersDBObject().get("$snaphot");
-        return snapshot != null && snapshot;
     }
 
     @Override
     public Query<T> order(final Meta sort) {
-        if (isSnapshot()) {
-            throw new QueryException("order cannot be used on a snapshotted query.");
-        }
-
-        final StringBuilder sb = new StringBuilder(sort.getField());
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", false, false);
+        validateQuery(clazz, ds.getMapper(), new StringBuilder(sort.getField()), FilterOperator.IN, "", false, false);
 
         getOptions().sort(sort.toDatabase());
 
@@ -752,7 +736,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                 break;
         }
 
-        if (isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.getModifiersDBObject().get("$indexHint") != null)) {
+        if (options.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
             LOG.warning("Snapshotted query should not have hint/sort.");
         }
 
