@@ -195,6 +195,24 @@ public class Mapper {
     }
 
     /**
+     * Finds any subtypes for the given MappedClass.
+     *
+     * @param mc the parent type
+     *
+     * @return the list of subtypes
+     */
+    public List<MappedClass> getSubTypes(final MappedClass mc) {
+        List<MappedClass> subtypes = new ArrayList<MappedClass>();
+        for (MappedClass mappedClass : getMappedClasses()) {
+            if (mappedClass.isSubType(mc)) {
+                subtypes.add(mappedClass);
+            }
+        }
+
+        return subtypes;
+    }
+
+    /**
      * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
      *
      * @param datastore the Datastore to use when fetching this reference

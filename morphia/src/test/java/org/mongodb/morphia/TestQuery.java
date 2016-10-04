@@ -75,7 +75,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unchecked"})
 public class TestQuery extends TestBase {
 
     @Test

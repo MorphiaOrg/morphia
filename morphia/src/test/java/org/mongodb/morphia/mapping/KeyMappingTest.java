@@ -24,7 +24,8 @@ public class KeyMappingTest extends TestBase {
 
         Channel channel = datastore.find(Channel.class, "name", "Sport channel").get();
 
-        Assert.assertTrue(followedChannels.contains(datastore.getKey(channel)));
+        Key<Channel> key = datastore.getKey(channel);
+        Assert.assertTrue(followedChannels.contains(key));
     }
 
     @Test
