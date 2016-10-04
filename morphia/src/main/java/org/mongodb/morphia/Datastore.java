@@ -9,6 +9,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -82,13 +83,26 @@ public interface Datastore {
     <T> WriteResult delete(Query<T> query);
 
     /**
+     * Deletes entities based on the query
+     *
+     * @param query   the query to use when finding documents to delete
+     * @param options the options to apply to the delete
+     * @param <T>     the type to delete
+     * @return results of the delete
+     * @since 1.3
+     */
+    <T> WriteResult delete(Query<T> query, RemoveOptions options);
+
+    /**
      * Deletes entities based on the query, with the WriteConcern
      *
      * @param query the query to use when finding documents to delete
      * @param wc    the WriteConcern to use when deleting
      * @param <T>   the type to delete
      * @return results of the delete
+     * @deprecated use {@link #delete(Query, RemoveOptions)} instead
      */
+    @Deprecated
     <T> WriteResult delete(Query<T> query, WriteConcern wc);
 
     /**
@@ -219,7 +233,9 @@ public interface Datastore {
      * @param <T>      the type to query
      * @param <V>      the type to filter value
      * @return the query
+     * @deprecated use {@link FindOptions} when running the query instead
      */
+    @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
 
     /**
@@ -230,6 +246,15 @@ public interface Datastore {
      * @return the deleted Entity
      */
     <T> T findAndDelete(Query<T> query);
+    /**
+     * Deletes the given entities based on the query (first item only).
+     *
+     * @param query the query to use when finding entities to delete
+     * @param options the options to apply to the delete
+     * @param <T>   the type to query
+     * @return the deleted Entity
+     */
+    <T> T findAndDelete(Query<T> query, FindAndModifyOptions options);
 
     /**
      * Find the first Entity from the Query, and modify it.
@@ -551,6 +576,18 @@ public interface Datastore {
      * @return the results of the updates
      */
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations);
+
+    /**
+     * Updates all entities found with the operations; this is an atomic operation per entity
+     *
+     * @param query      the query used to match the documents to update
+     * @param operations the update operations to perform
+     * @param options    the options to apply to the update
+     * @param <T>        the type of the entity
+     * @return the results of the updates
+     * @since 1.3
+     */
+    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options);
 
     /**
      * Updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;

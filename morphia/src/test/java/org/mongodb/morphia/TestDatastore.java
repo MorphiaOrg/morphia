@@ -19,7 +19,6 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.EntityListeners;
@@ -332,15 +331,12 @@ public class TestDatastore extends TestBase {
         assertEquals(1, results.getUpdatedCount());
         assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
         assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
-        fail("fix the options");
 
-/*
-        query.collation(Collation.builder()
-                       .locale("en")
-                       .collationStrength(CollationStrength.SECONDARY)
-                       .build());
-*/
-        results = getDs().update(query, updateOperations);
+        results = getDs().update(query, updateOperations, new UpdateOptions()
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build()));
         assertEquals(2, results.getUpdatedCount());
         assertEquals(1, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
         assertEquals(2, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
@@ -355,15 +351,12 @@ public class TestDatastore extends TestBase {
         Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
                                            .field("username").equal("john doe");
         assertEquals(1, getDs().delete(query).getN());
-        fail("fix the options");
 
-/*
-        query.collation(Collation.builder()
-                       .locale("en")
-                       .collationStrength(CollationStrength.SECONDARY)
-                       .build());
-*/
-        assertEquals(1, getDs().delete(query).getN());
+        assertEquals(1, getDs().delete(query, new RemoveOptions()
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build())).getN());
     }
 
     @Test
@@ -376,15 +369,12 @@ public class TestDatastore extends TestBase {
                                            .field("username").equal("john doe");
         assertNotNull(getDs().findAndDelete(query));
         assertNull(getDs().findAndDelete(query));
-        fail("fix the options");
 
-/*
-        query.collation(Collation.builder()
-                       .locale("en")
-                       .collationStrength(CollationStrength.SECONDARY)
-                       .build());
-*/
-        assertNotNull(getDs().findAndDelete(query));
+        assertNotNull(getDs().findAndDelete(query, new FindAndModifyOptions()
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build())));
     }
 
     private void testFirstDatastore(final Datastore ds1) {

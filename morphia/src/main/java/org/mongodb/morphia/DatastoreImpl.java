@@ -18,8 +18,6 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
-import com.mongodb.client.model.DBCollectionRemoveOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
@@ -56,7 +54,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -156,6 +153,22 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> WriteResult delete(final Query<T> query, final RemoveOptions options) {
+
+        DBCollection dbColl = query.getCollection();
+        // TODO remove this after testing.
+        if (dbColl == null) {
+            dbColl = getCollection(query.getEntityClass());
+        }
+
+        if (query.getSortObject() != null || query.getOffset() != 0 || query.getLimit() > 0) {
+            throw new QueryException("Delete does not allow sort/offset/limit query options.");
+        }
+
+        return dbColl.remove(query.getQueryObject(), options.getOptions());
+    }
+
+    @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
         return delete(clazz, id, getWriteConcern(clazz));
     }
@@ -168,24 +181,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> WriteResult delete(final Query<T> query) {
-        return delete(query, getWriteConcern(query.getEntityClass()));
+        return delete(query, new RemoveOptions().writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
     public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
-
-        DBCollection dbColl = query.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
-        }
-
-        if (query.getSortObject() != null || query.getOffset() != 0 || query.getLimit() > 0) {
-            throw new QueryException("Delete does not allow sort/offset/limit query options.");
-        }
-
-        return dbColl.remove(query.getQueryObject(), new DBCollectionRemoveOptions()
-            .writeConcern(wc));
+        return delete(query, new RemoveOptions().writeConcern(wc));
     }
 
     @Override
@@ -257,6 +258,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
         final Query<T> query = createQuery(clazz);
         query.offset(offset);
@@ -266,8 +268,17 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T findAndDelete(final Query<T> query) {
+        FindAndModifyOptions options = new FindAndModifyOptions()
+            .remove(true)
+            .returnNew(false)
+            .upsert(false);
+
+        return findAndDelete(query, options);
+    }
+
+    @Override
+    public <T> T findAndDelete(final Query<T> query, final FindAndModifyOptions options) {
         DBCollection dbColl = query.getCollection();
-        // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
         }
@@ -276,14 +287,14 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
-            .maxTime(query.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-            .projection(query.getFieldsObject())
-            .sort(query.getSortObject())
-            .remove(true)
-            .returnNew(false)
-            .upsert(false);
-        final DBObject result = dbColl.findAndModify(query.getQueryObject(), options);
+        FindAndModifyOptions copy = options.copy()
+                                           .projection(query.getFieldsObject())
+                                           .sort(query.getSortObject())
+                                           .returnNew(false)
+                                           .upsert(false)
+                                           .remove(true);
+
+        final DBObject result = dbColl.findAndModify(query.getQueryObject(), copy.getOptions());
 
         return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
 
@@ -715,18 +726,24 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations) {
-        return update(query, operations, false, true);
+        return update(query, operations, new UpdateOptions()
+            .upsert(false)
+            .multi(true));
     }
 
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, createIfMissing, getWriteConcern(query.getEntityClass()));
+        return update(query, operations, new UpdateOptions()
+            .upsert(createIfMissing)
+            .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                     final WriteConcern wc) {
-        return update(query, operations, createIfMissing, true, wc);
+        return update(query, operations, new UpdateOptions()
+                    .upsert(createIfMissing)
+                    .writeConcern(wc));
     }
 
     @Override
@@ -1300,8 +1317,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return dbObject;
     }
 
-    private <T> UpdateResults update(final Query<T> query, final UpdateOperations ops, final boolean createIfMissing, final boolean multi) {
-        return update(query, ops, createIfMissing, multi, getWriteConcern(query.getEntityClass()));
+    private <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> ops, final boolean createIfMissing,
+                                     final boolean multi) {
+        return update(query, ops, new UpdateOptions()
+            .upsert(createIfMissing)
+            .multi(multi)
+            .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @SuppressWarnings("rawtypes")
@@ -1309,12 +1330,54 @@ public class DatastoreImpl implements AdvancedDatastore {
                                      final WriteConcern wc) {
         Query<T> updateQuery = query;
         final DBObject u = ((UpdateOpsImpl) ops).getOps();
-        if (((UpdateOpsImpl) ops).isIsolated()) {
+        if (ops.isIsolated()) {
             updateQuery = query.cloneQuery();
             updateQuery.disableValidation().filter("$atomic", true);
         }
         return update(updateQuery, u, createIfMissing, multi, wc);
     }
+
+    @Override
+    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
+        DBCollection dbColl = query.getCollection();
+        // TODO remove this after testing.
+        if (dbColl == null) {
+            dbColl = getCollection(query.getEntityClass());
+        }
+
+        DBObject queryObject = query.getQueryObject();
+        final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();
+        if (operations.isIsolated()) {
+            queryObject.put("$isolated", true);
+        }
+
+        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
+        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
+
+        if (!fields.isEmpty()) {
+            final MappedField versionMF = fields.get(0);
+            if (queryObject.get(versionMF.getNameToStore()) == null) {
+                if (!update.containsField("$inc")) {
+                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+                } else {
+                    ((BasicDBObject) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                }
+            }
+        }
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
+                             dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
+        }
+
+//        DBCollectionUpdateOptions options = new DBCollectionUpdateOptions()
+//            .multi(multi)
+//            .upsert(createIfMissing)
+//            .writeConcern(wc);
+
+        return new UpdateResults(dbColl.update(queryObject, update, options.getOptions()));
+    }
+
 
     @SuppressWarnings("unchecked")
     private <T> UpdateResults update(final Query<T> query, final DBObject update, final boolean createIfMissing, final boolean multi,
