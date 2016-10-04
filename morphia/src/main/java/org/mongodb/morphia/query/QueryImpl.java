@@ -261,9 +261,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public MorphiaIterator<T, T> tail(final boolean awaitData) {
-        FindOptions copy = getOptions().copy();
-        copy.cursorType(awaitData ? TailableAwait : Tailable);
-        return fetch(copy);
+        return fetch(getOptions()
+                         .copy()
+                         .cursorType(awaitData ? TailableAwait : Tailable));
     }
 
     @Override
@@ -297,7 +297,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> comment(final String comment) {
-        getOptions().getModifiersDBObject().put("$comment", comment);
+        getOptions().modifier("$comment", comment);
         return this;
     }
 
@@ -341,7 +341,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> enableSnapshotMode() {
-        getOptions().getModifiersDBObject().put("$snapshot", true);
+        getOptions().modifier("$snapshot", true);
         return this;
     }
 
@@ -455,7 +455,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> hintIndex(final String idxName) {
-        getOptions().getModifiersDBObject().put("$hint", idxName);
+        getOptions().modifier("$hint", idxName);
         return this;
     }
 
@@ -470,7 +470,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Deprecated
     public Query<T> lowerIndexBound(final DBObject lowerBound) {
         if (lowerBound != null) {
-            getOptions().getModifiersDBObject().put("$min", new BasicDBObject(lowerBound.toMap()));
+            getOptions().modifier("$min", new BasicDBObject(lowerBound.toMap()));
         }
         return this;
     }
@@ -479,7 +479,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Deprecated
     public Query<T> maxScan(final int value) {
         if (value > 0) {
-            getOptions().getModifiersDBObject().put("$maxScan", value);
+            getOptions().modifier("$maxScan", value);
         }
         return this;
     }
@@ -487,7 +487,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> maxTime(final long value, final TimeUnit unit) {
-        getOptions().getModifiersDBObject().put("$maxTimeMS", MILLISECONDS.convert(value, unit));
+        getOptions().modifier("$maxTimeMS", MILLISECONDS.convert(value, unit));
         return this;
     }
 

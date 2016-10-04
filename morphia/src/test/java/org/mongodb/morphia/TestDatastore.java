@@ -55,7 +55,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Scott Hernandez
@@ -333,6 +332,7 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
 
         results = getDs().update(query, updateOperations, new UpdateOptions()
+            .multi(true)
             .collation(Collation.builder()
                                 .locale("en")
                                 .collationStrength(CollationStrength.SECONDARY)
@@ -356,7 +356,8 @@ public class TestDatastore extends TestBase {
             .collation(Collation.builder()
                                 .locale("en")
                                 .collationStrength(CollationStrength.SECONDARY)
-                                .build())).getN());
+                                .build()))
+                               .getN());
     }
 
     @Test

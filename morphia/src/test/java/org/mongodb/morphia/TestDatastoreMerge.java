@@ -44,9 +44,9 @@ public class TestDatastoreMerge extends TestBase {
         getDs().merge(te2);
 
         final Merger teLoaded = getDs().get(te);
-        assertEquals(teLoaded.name, te.name);
-        assertEquals(teLoaded.foo, te.foo);
-        assertEquals(teLoaded.position, te2.position);
+        assertEquals(te.name, teLoaded.name);
+        assertEquals(te.foo, teLoaded.foo);
+        assertEquals(te2.position, teLoaded.position);
     }
 
     private static class Merger {

@@ -23,14 +23,17 @@ import com.mongodb.client.model.Collation;
 import org.bson.Document;
 import org.junit.Test;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
+import org.mongodb.morphia.query.Query;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MapReduceOptionsTest extends TestBase {
     @Test
     public void mapReduceCommand() {
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class);
         MapReduceOptions<FacebookUser> options = new MapReduceOptions<FacebookUser>()
             .bypassDocumentValidation(true)
             .collation(Collation.builder().locale("en").build())
@@ -42,30 +45,30 @@ public class MapReduceOptionsTest extends TestBase {
             .outputCollection("output collection")
             .outputDB("output db")
             .outputType(OutputType.INLINE)
-            .query(getDs().createQuery(FacebookUser.class))
+            .query(query)
             .readPreference(ReadPreference.primaryPreferred())
             .reduce("i'm a reduce function")
-            .resultType(FacebookUser.class)
             .scope(new Document("key", "value").append("key2", "value2"))
             .verbose(true);
 
-        MapReduceCommand command = options.toCommand();
+        MapReduceCommand command = options.toCommand(getMorphia().getMapper());
 
-        assertEquals(options.getBypassDocumentValidation(), command.getBypassDocumentValidation());
-        assertEquals(options.getCollation(), command.getCollation());
-        assertEquals(options.getFinalize(), command.getFinalize());
-        assertEquals(options.getJsMode(), command.getJsMode());
-        assertEquals(options.getLimit(), command.getLimit());
-        assertEquals(options.getMap(), command.getMap());
-        assertEquals(options.getMaxTimeMS(), command.getMaxTime(TimeUnit.MILLISECONDS));
-        assertEquals(options.getOutputCollection(), command.getOutputTarget());
-        assertEquals(options.getOutputDB(), command.getOutputDB());
-        assertEquals(options.getQuery().getQueryObject(), command.getQuery());
-        assertEquals(options.getQuery().getSortObject(), command.getSort());
-        assertEquals(options.getReadPreference(), command.getReadPreference());
-        assertEquals(options.getReduce(), command.getReduce());
-        assertEquals(options.getScope(), command.getScope());
-        assertEquals(options.getVerbose(), command.isVerbose());
+        assertTrue(command.getBypassDocumentValidation());
+        assertEquals(Collation.builder().locale("en").build(), command.getCollation());
+        assertTrue(command.getJsMode());
+        assertEquals(42, command.getLimit());
+        assertEquals("i'm a map function", command.getMap());
+        assertEquals(42000, command.getMaxTime(TimeUnit.MILLISECONDS));
+        assertEquals("output collection", command.getOutputTarget());
+        assertEquals("output db", command.getOutputDB());
+        assertEquals(query.getQueryObject(), command.getQuery());
+        assertEquals(query.getSortObject(), command.getSort());
+        assertEquals(ReadPreference.primaryPreferred(), command.getReadPreference());
+        assertEquals("i'm a map function", command.getMap());
+        assertEquals("i'm a reduce function", command.getReduce());
+        assertEquals("i'm a finalize function", command.getFinalize());
+        assertEquals(new Document("key", "value").append("key2", "value2"), command.getScope());
+        assertTrue(command.isVerbose());
 
     }
 }

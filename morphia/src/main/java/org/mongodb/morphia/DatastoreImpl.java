@@ -43,7 +43,6 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.utils.Assert;
-import org.mongodb.morphia.utils.ReflectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -511,7 +510,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         DBCollection collection = options.getQuery().getCollection();
 
         final EntityCache cache = createCache();
-        MapreduceResults<T> results = new MapreduceResults<T>(collection.mapReduce(options.toCommand()));
+        MapreduceResults<T> results = new MapreduceResults<T>(collection.mapReduce(options.toCommand(getMapper())));
 
         results.setOutputType(options.getOutputType());
 
@@ -1161,17 +1160,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         //        mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion != 1) {
-            final Query<?> query = find(dbColl.getName(), entity.getClass());
-            boolean compoundId = !ReflectionUtils.isPrimitiveLike(mc.getMappedIdField().getType())
-                                     && idValue instanceof DBObject;
-            if (compoundId) {
-                query.disableValidation();
-            }
-            query.filter(Mapper.ID_KEY, idValue);
-            if (compoundId) {
-                query.enableValidation();
-            }
-            query.filter(versionKeyName, oldVersion);
+            final Query<?> query = find(dbColl.getName(), entity.getClass())
+                .disableValidation()
+                .filter(Mapper.ID_KEY, idValue)
+                .enableValidation()
+                .filter(versionKeyName, oldVersion);
             final UpdateResults res = update(query, dbObj, false, false, wc);
 
             wr = res.getWriteResult();
@@ -1337,6 +1330,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(updateQuery, u, createIfMissing, multi, wc);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
         DBCollection dbColl = query.getCollection();
@@ -1345,26 +1339,23 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl = getCollection(query.getEntityClass());
         }
 
-        DBObject queryObject = query.getQueryObject();
-        final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();
         if (operations.isIsolated()) {
-            queryObject.put("$isolated", true);
+            query.disableValidation().filter("$isolated", true).enableValidation();
         }
 
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
 
+        DBObject queryObject = query.getQueryObject();
+
         if (!fields.isEmpty()) {
-            final MappedField versionMF = fields.get(0);
-            if (queryObject.get(versionMF.getNameToStore()) == null) {
-                if (!update.containsField("$inc")) {
-                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
-                } else {
-                    ((BasicDBObject) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
-                }
+            final MappedField versionField = fields.get(0);
+            if (queryObject.get(versionField.getNameToStore()) == null) {
+                operations.inc(versionField.getNameToStore(), 1);
             }
         }
 
+        final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
                              dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
