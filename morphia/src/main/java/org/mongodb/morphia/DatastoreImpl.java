@@ -62,8 +62,9 @@ import static org.mongodb.morphia.IndexHelper.synthesizeIndex;
 /**
  * A generic (type-safe) wrapper around mongodb collections
  *
- * @author Scott Hernandez
+ * @deprecated This is an internal implementation of a published API.  No public alternative planned.
  */
+@Deprecated
 @SuppressWarnings("deprecation")
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
@@ -420,7 +421,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
-    private DBCollection getCollection(final Object obj) {
+    /**
+     * @param obj the value to search with
+     * @return the DBCollection
+     * @deprecated this is an internal method.  no replacement is planned.
+     */
+    @Deprecated
+    public DBCollection getCollection(final Object obj) {
         if (obj == null) {
             return null;
         }
@@ -868,7 +875,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
-            throw new MappingException("dropDups value has been desupported by the server.  Please set this value to false and "
+            throw new MappingException("Support for this has been removed from the server.  Please set this value to false and "
                                            + "validate your system behaves as expected.");
         }
 
