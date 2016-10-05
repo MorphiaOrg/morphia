@@ -745,6 +745,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                     final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
                     .upsert(createIfMissing)
+                    .multi(true)
                     .writeConcern(wc));
     }
 
