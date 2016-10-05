@@ -200,6 +200,7 @@ public class Mapper {
      * @param mc the parent type
      *
      * @return the list of subtypes
+     * @since 1.3
      */
     public List<MappedClass> getSubTypes(final MappedClass mc) {
         List<MappedClass> subtypes = new ArrayList<MappedClass>();

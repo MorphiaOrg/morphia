@@ -22,6 +22,7 @@ public enum IndexType {
      *
      * @param value the value to find
      * @return the enum instance
+     * @since 1.3
      */
     public static IndexType fromValue(final Object value) {
         for (IndexType indexType : values()) {

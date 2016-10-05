@@ -23,6 +23,7 @@ import com.mongodb.client.model.CollationStrength;
 
 /**
  * Defines the collation options for an index
+ * @since 1.3
  */
 public @interface Collation {
     /**

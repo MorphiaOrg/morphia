@@ -254,6 +254,7 @@ public interface Datastore {
      * @param options the options to apply to the delete
      * @param <T>   the type to query
      * @return the deleted Entity
+     * @since 1.3
      */
     <T> T findAndDelete(Query<T> query, FindAndModifyOptions options);
 
@@ -265,6 +266,7 @@ public interface Datastore {
      * @param options    the options to apply to the update
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
+     * @since 1.3
      */
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
 
@@ -462,6 +464,7 @@ public interface Datastore {
      * @param <T>     The type of resulting data
      * @param options the options to apply to the map/reduce job
      * @return the results
+     * @since 1.3
      */
     <T> MapreduceResults<T> mapReduce(MapReduceOptions<T> options);
 

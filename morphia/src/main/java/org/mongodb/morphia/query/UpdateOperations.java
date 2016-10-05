@@ -126,6 +126,7 @@ public interface UpdateOperations<T> {
      * @return true if this update is to be run in isolation
      *
      * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
+     * @since 1.3
      */
     boolean isIsolated();
 

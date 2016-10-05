@@ -123,6 +123,7 @@ public class MapreduceResults<T> implements Iterable<T> {
 
     /**
      * @return the type of the operation
+     * @since 1.3
      */
     public OutputType getOutputType() {
         return outputType;
@@ -132,6 +133,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      * Sets the output type for this mapreduce job
      *
      * @param outputType the output type
+     * @since 1.3
      */
     public void setOutputType(final OutputType outputType) {
         this.outputType = outputType;
