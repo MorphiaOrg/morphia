@@ -5,7 +5,7 @@ import com.mongodb.MapReduceCommand.OutputType;
 
 /**
  * Defines how the output of the map reduce job is handled.
- * @deprecated use {@see com.mongodb.MapReduceCommand.OutputType} instead
+ * @deprecated use {@link OutputType} instead
  */
 @Deprecated
 public enum MapreduceType {

@@ -87,7 +87,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
      * @deprecated This is not meant to be directly instantiated by end user code.  Use
-     * {@see Morphia#createDatastore(MongoClient, Mapper, String)}
+     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
     @Deprecated
     public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
@@ -102,7 +102,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
      * @deprecated This is not meant to be directly instantiated by end user code.  Use
-     * {@see Morphia#createDatastore(MongoClient, Mapper, String)}
+     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
     @Deprecated
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
@@ -123,7 +123,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      *
      * @param database the new database to use for operations
      * @return the new Datastore instance
-     * @deprecated use {@see Morphia#createDatastore(MongoClient, Mapper, String)}
+     * @deprecated use {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
     @Deprecated
     public DatastoreImpl copy(final String database) {
