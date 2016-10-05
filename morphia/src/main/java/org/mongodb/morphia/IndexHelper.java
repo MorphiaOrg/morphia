@@ -73,55 +73,6 @@ final class IndexHelper {
         this.database = database;
     }
 
-    @SuppressWarnings("deprecation")
-    private com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
-        if (options.dropDups()) {
-            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                                           + "validate your system behaves as expected.");
-        }
-        com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-            .background(options.background() || background)
-            .sparse(options.sparse())
-            .unique(options.unique());
-
-        if (!options.language().equals("")) {
-            indexOptions.defaultLanguage(options.language());
-        }
-        if (!options.languageOverride().equals("")) {
-            indexOptions.languageOverride(options.languageOverride());
-        }
-        if (!options.name().equals("")) {
-            indexOptions.name(options.name());
-        }
-        if (options.expireAfterSeconds() != -1) {
-            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
-        }
-        if (!options.collation().locale().equals("")) {
-            indexOptions.collation(convert(options.collation()));
-        }
-
-        return indexOptions;
-    }
-
-    private com.mongodb.client.model.Collation convert(final Collation collation) {
-        return com.mongodb.client.model.Collation.builder()
-                                                 .locale(collation.locale())
-                                                 .backwards(collation.backwards())
-                                                 .caseLevel(collation.caseLevel())
-                                                 .collationAlternate(collation.alternate())
-                                                 .collationCaseFirst(collation.caseFirst())
-                                                 .collationMaxVariable(collation.maxVariable())
-                                                 .collationStrength(collation.strength())
-                                                 .normalization(collation.normalization())
-                                                 .numericOrdering(collation.numericOrdering())
-                                                 .build();
-    }
-
-    @SuppressWarnings("deprecation")
-    private Index synthesizeIndexFromOldFormat(final Index index) {
-        return synthesizeIndex(annotationForMap(IndexOptions.class, toMap(index)), parseFieldsString(index.value()));
-    }
-
     static Index synthesizeIndex(final String fields, final String name, final boolean unique) {
         Map<String, Object> optionsMap = new HashMap<String, Object>();
         optionsMap.put("name", name != null ? name : "");
@@ -222,25 +173,6 @@ final class IndexHelper {
         return annotationForMap(Field.class, map);
     }
 
-    private Index replaceFields(final Index original, final List<Field> list) {
-        Map<String, Object> indexMap = toMap(original);
-        indexMap.put("fields", list.toArray(new Field[0]));
-
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    private Map<String, Object> extractOptions(final IndexOptions options) {
-        return toMap(options);
-    }
-
-    private Map<String, Object> extractOptions(final Indexed indexed) {
-        Map<String, Object> map = toMap(indexed);
-        if (indexed.options().collation().locale().equals("")) {
-            map.remove("options");
-        }
-        return map;
-    }
-
     private static String join(final List<String> path, final char delimiter) {
         StringBuilder builder = new StringBuilder();
         for (String element : path) {
@@ -281,7 +213,7 @@ final class IndexHelper {
                 final Indexed indexed = mf.getAnnotation(Indexed.class);
                 if (indexed.options().dropDups()) {
                     LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                                                   + "validate your system behaves as expected.");
+                                    + "validate your system behaves as expected.");
                 }
                 final Map<String, Object> newOptions = extractOptions(indexed.options());
                 if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
@@ -326,8 +258,8 @@ final class IndexHelper {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : index.fields()) {
                         fields.add(synthesizeField(field.value().equals("$**")
-                                         ? field.value()
-                                         : mf.getNameToStore() + "." + field.value(),
+                                                   ? field.value()
+                                                   : mf.getNameToStore() + "." + field.value(),
                                                    field.type(), field.weight()));
                     }
                     list.add(replaceFields(index, fields));
@@ -363,76 +295,65 @@ final class IndexHelper {
         return list;
     }
 
+    @SuppressWarnings("deprecation")
+    private com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
+        if (options.dropDups()) {
+            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
+                            + "validate your system behaves as expected.");
+        }
+        com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
+            .background(options.background() || background)
+            .sparse(options.sparse())
+            .unique(options.unique());
+
+        if (!options.language().equals("")) {
+            indexOptions.defaultLanguage(options.language());
+        }
+        if (!options.languageOverride().equals("")) {
+            indexOptions.languageOverride(options.languageOverride());
+        }
+        if (!options.name().equals("")) {
+            indexOptions.name(options.name());
+        }
+        if (options.expireAfterSeconds() != -1) {
+            indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
+        }
+        if (!options.collation().locale().equals("")) {
+            indexOptions.collation(convert(options.collation()));
+        }
+
+        return indexOptions;
+    }
+
+    private com.mongodb.client.model.Collation convert(final Collation collation) {
+        return com.mongodb.client.model.Collation.builder()
+                                                 .locale(collation.locale())
+                                                 .backwards(collation.backwards())
+                                                 .caseLevel(collation.caseLevel())
+                                                 .collationAlternate(collation.alternate())
+                                                 .collationCaseFirst(collation.caseFirst())
+                                                 .collationMaxVariable(collation.maxVariable())
+                                                 .collationStrength(collation.strength())
+                                                 .normalization(collation.normalization())
+                                                 .numericOrdering(collation.numericOrdering())
+                                                 .build();
+    }
+
     private String createIndex(final MongoCollection collection, final BsonDocument keys,
                                final com.mongodb.client.model.IndexOptions options) {
         return collection.createIndex(keys, options);
     }
 
-    void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
-
-        for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
-            BsonDocument keys = new BsonDocument();
-            for (Field field : index.fields()) {
-                if (field.weight() != -1) {
-                    if (field.type() != IndexType.TEXT) {
-                        throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                    }
-                    BsonDocument weights = (BsonDocument) options.getWeights();
-                    if (weights == null) {
-                        weights = new BsonDocument();
-                        options.weights(weights);
-                    }
-                    weights.putAll(toBsonDocument(field.value(), field.weight()));
-                }
-
-                keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
-            }
-
-            createIndex(collection, keys, options);
-        }
+    private Map<String, Object> extractOptions(final IndexOptions options) {
+        return toMap(options);
     }
 
-    private MappingException pathFail(final MappedClass mc, final List<String> path) {
-        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
-    }
-
-    @SuppressWarnings("unchecked")
-    private BsonDocument toBsonDocument(final String key, final Object value) {
-        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
-        writer.writeStartDocument();
-        writer.writeName(key);
-        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
-        writer.writeEndDocument();
-        return writer.getDocument();
-    }
-
-    private static class AnnotationInvocationHandler<T> implements InvocationHandler {
-        private final Class<T> type;
-        private final Map<String, Object> values;
-
-        AnnotationInvocationHandler(final Class<T> type, final Map<String, Object> values) {
-            this.type = type;
-            this.values = values;
+    private Map<String, Object> extractOptions(final Indexed indexed) {
+        Map<String, Object> map = toMap(indexed);
+        if (indexed.options().collation().locale().equals("")) {
+            map.remove("options");
         }
-
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args)
-            throws InvocationTargetException, IllegalAccessException {
-            if (method.getName().equals("toString")) {
-                return toString();
-            }
-            return values.get(method.getName());
-        }
-
-        @Override
-        public String toString() {
-            return format("%s %s", type.getSimpleName(), values.toString());
-        }
-    }
-
-    void createIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
-        createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
+        return map;
     }
 
     private String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
@@ -477,6 +398,85 @@ final class IndexHelper {
             }
         }
         return namePath;
+    }
+
+    private MappingException pathFail(final MappedClass mc, final List<String> path) {
+        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
+    }
+
+    private Index replaceFields(final Index original, final List<Field> list) {
+        Map<String, Object> indexMap = toMap(original);
+        indexMap.put("fields", list.toArray(new Field[0]));
+
+        return annotationForMap(Index.class, indexMap);
+    }
+
+    @SuppressWarnings("deprecation")
+    private Index synthesizeIndexFromOldFormat(final Index index) {
+        return synthesizeIndex(annotationForMap(IndexOptions.class, toMap(index)), parseFieldsString(index.value()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private BsonDocument toBsonDocument(final String key, final Object value) {
+        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
+        writer.writeStartDocument();
+        writer.writeName(key);
+        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
+        writer.writeEndDocument();
+        return writer.getDocument();
+    }
+
+    private static class AnnotationInvocationHandler<T> implements InvocationHandler {
+        private final Class<T> type;
+        private final Map<String, Object> values;
+
+        AnnotationInvocationHandler(final Class<T> type, final Map<String, Object> values) {
+            this.type = type;
+            this.values = values;
+        }
+
+        @Override
+        public Object invoke(final Object proxy, final Method method, final Object[] args)
+            throws InvocationTargetException, IllegalAccessException {
+            if (method.getName().equals("toString")) {
+                return toString();
+            }
+            return values.get(method.getName());
+        }
+
+        @Override
+        public String toString() {
+            return format("%s %s", type.getSimpleName(), values.toString());
+        }
+    }
+
+    void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
+
+        for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
+            BsonDocument keys = new BsonDocument();
+            for (Field field : index.fields()) {
+                if (field.weight() != -1) {
+                    if (field.type() != IndexType.TEXT) {
+                        throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
+                    }
+                    BsonDocument weights = (BsonDocument) options.getWeights();
+                    if (weights == null) {
+                        weights = new BsonDocument();
+                        options.weights(weights);
+                    }
+                    weights.putAll(toBsonDocument(field.value(), field.weight()));
+                }
+
+                keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
+            }
+
+            createIndex(collection, keys, options);
+        }
+    }
+
+    void createIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
+        createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
     }
 
 }
