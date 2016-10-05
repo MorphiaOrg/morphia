@@ -32,7 +32,7 @@ public class VersionTest extends TestBase {
         getMorphia().map(ALongPrimitive.class);
 
         final ALongPrimitive a = new ALongPrimitive();
-        Assert.assertEquals(0, a.hubba);
+        Assert.assertEquals(0, a.version);
         getDs().save(a);
 
         getDs().save(getDs().get(a));
@@ -88,14 +88,14 @@ public class VersionTest extends TestBase {
     @Test
     public void testVersions() throws Exception {
         final ALongPrimitive a = new ALongPrimitive();
-        Assert.assertEquals(0, a.hubba);
+        Assert.assertEquals(0, a.version);
         getDs().save(a);
-        Assert.assertTrue(a.hubba > 0);
-        final long version1 = a.hubba;
+        Assert.assertTrue(a.version > 0);
+        final long version1 = a.version;
 
         getDs().save(a);
-        Assert.assertTrue(a.hubba > 0);
-        final long version2 = a.hubba;
+        Assert.assertTrue(a.version > 0);
+        final long version2 = a.version;
 
         Assert.assertFalse(version1 == version2);
     }
@@ -112,7 +112,7 @@ public class VersionTest extends TestBase {
                                                     .set("text", "some new value");
         ALongPrimitive postUpdate = ds.findAndModify(query, update);
 
-        Assert.assertEquals(initial.hubba + 1, postUpdate.hubba);
+        Assert.assertEquals(initial.version + 1, postUpdate.version);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class VersionTest extends TestBase {
         assertEquals(1, results.getUpdatedCount());
         ALongPrimitive postUpdate = ds.get(ALongPrimitive.class, initial.getId());
 
-        Assert.assertEquals(initial.hubba + 1, postUpdate.hubba);
+        Assert.assertEquals(initial.version + 1, postUpdate.version);
     }
 
     @Entity
@@ -152,16 +152,16 @@ public class VersionTest extends TestBase {
     public static class ALongPrimitive extends TestEntity {
 
         @Version
-        private long hubba;
+        private long version;
 
         private String text;
 
-        public long getHubba() {
-            return hubba;
+        public long getVersion() {
+            return version;
         }
 
-        public void setHubba(final long hubba) {
-            this.hubba = hubba;
+        public void setVersion(final long version) {
+            this.version = version;
         }
 
         public String getText() {

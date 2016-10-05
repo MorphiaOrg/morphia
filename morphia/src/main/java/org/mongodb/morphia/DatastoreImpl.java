@@ -12,7 +12,6 @@ import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
@@ -102,7 +101,8 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
      * @deprecated This is not meant to be directly instantiated by end user code.  Use
-     * {@see Morphia#createDatastore(MongoClient, Mapper, String)} */
+     * {@see Morphia#createDatastore(MongoClient, Mapper, String)}
+     */
     @Deprecated
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this(morphia, mapper, mongoClient, mongoClient.getDatabase(dbName));
@@ -122,7 +122,9 @@ public class DatastoreImpl implements AdvancedDatastore {
      *
      * @param database the new database to use for operations
      * @return the new Datastore instance
+     * @deprecated use {@see Morphia#createDatastore(MongoClient, Mapper, String)}
      */
+    @Deprecated
     public DatastoreImpl copy(final String database) {
         return new DatastoreImpl(morphia, mapper, mongoClient, database);
     }
@@ -174,8 +176,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
-        final Query<T> q = find(clazz).filter(Mapper.ID_KEY + " in", ids);
-        return delete(q);
+        return delete(find(clazz).filter(Mapper.ID_KEY + " in", ids));
     }
 
     @Override
@@ -200,9 +201,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
         try {
-            final Object id = mapper.getId(wrapped);
-            return delete(wrapped.getClass(), id, wc);
-
+            return delete(wrapped.getClass(), mapper.getId(wrapped), wc);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -225,7 +224,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (database.getCollectionNames().contains(collName)) {
                     final DBObject dbResult = database.command(BasicDBObjectBuilder.start("collstats", collName).get());
                     if (dbResult.containsField("capped")) {
-                        // TODO: check the cap options.
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
                     } else {
                         LOG.warning("DBCollection already exists with same name(" + collName
@@ -300,19 +298,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations) {
-        return findAndModify(query, operations, false);
-    }
-
-    @Override
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
-        return findAndModify(query, operations, oldVersion, false);
-    }
-
-    @Override
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
-                               final boolean createIfMissing) {
-
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final FindAndModifyOptions options) {
         DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
@@ -322,26 +308,45 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (LOG.isTraceEnabled()) {
             LOG.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
         }
-        DBObject res = null;
-        try {
-            updateForVersioning(query, operations);
-            res = dbColl.findAndModify(query.getQueryObject(), query.getFieldsObject(), query.getSortObject(), false,
-                                       ((UpdateOpsImpl<T>) operations).getOps(), !oldVersion, createIfMissing);
-        } catch (MongoException e) {
-            if (e.getMessage() == null || !e.getMessage().contains("matching")) {
-                throw e;
-            }
-        }
+
+        updateForVersioning(query, operations);
+        DBObject res = dbColl.findAndModify(query.getQueryObject(), options.copy()
+                                                                           .sort(query.getSortObject())
+                                                                           .projection(query.getFieldsObject())
+                                                                           .update(((UpdateOpsImpl<T>) operations).getOps())
+                                           .getOptions());
 
         return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations) {
+        return findAndModify(query, operations, new FindAndModifyOptions()
+            .returnNew(true));
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
+        return findAndModify(query, operations, new FindAndModifyOptions()
+            .returnNew(!oldVersion)
+            .upsert(false));
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
+                               final boolean createIfMissing) {
+        return findAndModify(query, operations, new FindAndModifyOptions()
+            .returnNew(!oldVersion)
+            .upsert(createIfMissing));
+
     }
 
     private <T> void updateForVersioning(final Query<T> query, final UpdateOperations<T> operations) {
         final MappedClass mc = mapper.getMappedClass(query.getEntityClass());
 
         if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            MappedField versionField = mc.getMappedVersionField();
-            operations.inc(versionField.getNameToStore());
+            operations.inc(mc.getMappedVersionField().getNameToStore());
         }
 
     }
@@ -505,8 +510,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> MapreduceResults<T> mapReduce(final MapReduceOptions<T> options) {
-
-
         DBCollection collection = options.getQuery().getCollection();
 
         final EntityCache cache = createCache();
@@ -525,6 +528,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
                                              final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
 
@@ -553,6 +557,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
                                              final MapReduceCommand baseCommand) {
 
@@ -699,18 +704,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             return update((Query<T>) entity, operations);
         }
 
-        final MappedClass mc = mapper.getMappedClass(entity);
-        final Query<T> q = (Query<T>) createQuery(mc.getClazz());
-        q.disableValidation().filter(Mapper.ID_KEY, mapper.getId(entity));
-
-        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            final MappedField versionMF = mc.getFieldsAnnotatedWith(Version.class).get(0);
-            final Long oldVer = (Long) versionMF.getFieldValue(entity);
-            q.filter(versionMF.getNameToStore(), oldVer);
-            operations.set(versionMF.getNameToStore(), nextValue(oldVer));
-        }
-
-        return update(q, operations);
+        return update((Query<T>) createQuery(mapper.getMappedClass(entity).getClazz())
+                          .disableValidation()
+                          .filter(Mapper.ID_KEY, mapper.getId(entity)),
+                      operations);
     }
 
     @Override

@@ -31,7 +31,8 @@ import static com.mongodb.assertions.Assertions.notNull;
  * @since 1.3
  */
 public final class FindAndModifyOptions {
-    private DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions();
+    private DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
+        .returnNew(true);
 
     FindAndModifyOptions copy() {
         FindAndModifyOptions copy = new FindAndModifyOptions();
@@ -67,7 +68,7 @@ public final class FindAndModifyOptions {
      *
      * @return the sort
      */
-    public DBObject getSort() {
+    DBObject getSort() {
         return options.getSort();
     }
 
@@ -77,7 +78,7 @@ public final class FindAndModifyOptions {
      * @param sort the sort
      * @return this
      */
-    public FindAndModifyOptions sort(final DBObject sort) {
+    FindAndModifyOptions sort(final DBObject sort) {
         options.sort(sort);
         return this;
     }

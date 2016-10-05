@@ -261,6 +261,17 @@ public interface Datastore {
      *
      * @param query      the query to use when finding entities to update
      * @param operations the updates to apply to the matched documents
+     * @param options    the options to apply to the update
+     * @param <T>        the type to query
+     * @return The modified Entity (the result of the update)
+     */
+    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
+
+    /**
+     * Find the first Entity from the Query, and modify it.
+     *
+     * @param query      the query to use when finding entities to update
+     * @param operations the updates to apply to the matched documents
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
      */
@@ -274,7 +285,9 @@ public interface Datastore {
      * @param oldVersion indicated the old version of the Entity should be returned
      * @param <T>        the type to query
      * @return The Entity (the result of the update if oldVersion is false)
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
+    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion);
 
     /**
@@ -286,7 +299,9 @@ public interface Datastore {
      * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
      * @param <T>             the type of the entity
      * @return The Entity (the result of the update if oldVersion is false)
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
+    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion, boolean createIfMissing);
 
     /**

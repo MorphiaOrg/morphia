@@ -343,6 +343,96 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    public void testFindAndModify() {
+        getDs().getCollection(FacebookUser.class).drop();
+        getDs().save(new FacebookUser(1, "John Doe"),
+                     new FacebookUser(2, "john doe"));
+
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
+            .inc("loginCount");
+        FacebookUser results = getDs().findAndModify(query, updateOperations);
+        assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+        assertEquals(1, results.loginCount);
+
+        results = getDs().findAndModify(query, updateOperations, true);
+        assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(2, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+        assertEquals(1, results.loginCount);
+
+        results = getDs().findAndModify(getDs().createQuery(FacebookUser.class)
+                                               .field("id").equal(3L)
+                                               .field("username").equal("Jon Snow"), updateOperations, true, true);
+        assertNull(results);
+        FacebookUser user = getDs().find(FacebookUser.class, "id", 3).get();
+        assertEquals(1, user.loginCount);
+        assertEquals("Jon Snow", user.username);
+
+
+        results = getDs().findAndModify(getDs().createQuery(FacebookUser.class)
+                                               .field("id").equal(4L)
+                                               .field("username").equal("Ron Swanson"), updateOperations, false, true);
+        assertNotNull(results);
+        user = getDs().find(FacebookUser.class, "id", 4).get();
+        assertEquals(1, results.loginCount);
+        assertEquals("Ron Swanson", results.username);
+        assertEquals(1, user.loginCount);
+        assertEquals("Ron Swanson", user.username);
+    }
+
+    @Test
+    public void testFindAndModifyWithOptions() {
+        getDs().getCollection(FacebookUser.class).drop();
+        getDs().save(new FacebookUser(1, "John Doe"),
+                     new FacebookUser(2, "john doe"));
+
+        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
+            .inc("loginCount");
+        FacebookUser results = getDs().findAndModify(query, updateOperations, new FindAndModifyOptions());
+        assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+        assertEquals(1, results.loginCount);
+
+        results = getDs().findAndModify(query, updateOperations, new FindAndModifyOptions()
+            .returnNew(false)
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build()));
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
+        assertEquals(0, results.loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
+
+        results = getDs().findAndModify(getDs().createQuery(FacebookUser.class)
+                                               .field("id").equal(3L)
+                                               .field("username").equal("Jon Snow"),
+                                        updateOperations, new FindAndModifyOptions()
+                                            .returnNew(false)
+                                            .upsert(true));
+        assertNull(results);
+        FacebookUser user = getDs().find(FacebookUser.class, "id", 3).get();
+        assertEquals(1, user.loginCount);
+        assertEquals("Jon Snow", user.username);
+
+
+        results = getDs().findAndModify(getDs().createQuery(FacebookUser.class)
+                                               .field("id").equal(4L)
+                                               .field("username").equal("Ron Swanson"),
+                                        updateOperations, new FindAndModifyOptions()
+                                            .upsert(true));
+        assertNotNull(results);
+        user = getDs().find(FacebookUser.class, "id", 4).get();
+        assertEquals(1, results.loginCount);
+        assertEquals("Ron Swanson", results.username);
+        assertEquals(1, user.loginCount);
+        assertEquals("Ron Swanson", user.username);
+    }
+
+    @Test
     public void testDeleteWithCollation() {
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),

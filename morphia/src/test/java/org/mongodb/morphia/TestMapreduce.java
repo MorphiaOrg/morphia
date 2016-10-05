@@ -116,7 +116,9 @@ public class TestMapreduce extends TestBase {
 
         Assert.assertEquals(0, count(iterator));
 
-        options.collation(Collation.builder()
+        options
+            .inputCollection(getMorphia().getMapper().getCollectionName(Book.class))
+            .collation(Collation.builder()
                          .locale("en")
                          .collationStrength(CollationStrength.SECONDARY)
                          .build());
