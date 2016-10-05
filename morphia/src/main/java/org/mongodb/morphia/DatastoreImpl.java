@@ -1324,14 +1324,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             dbColl = getCollection(query.getEntityClass());
         }
 
-        if (operations.isIsolated()) {
-            query.disableValidation().filter("$isolated", true).enableValidation();
-        }
-
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
 
         DBObject queryObject = query.getQueryObject();
+        if (operations.isIsolated()) {
+            queryObject.put("$isolated", true);
+        }
 
         if (!fields.isEmpty()) {
             final MappedField versionField = fields.get(0);
