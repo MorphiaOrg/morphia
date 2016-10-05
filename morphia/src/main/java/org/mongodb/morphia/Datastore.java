@@ -9,6 +9,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.query.CountOptions;
 import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
@@ -396,6 +397,17 @@ public interface Datastore {
      * @return the count
      */
     <T> long getCount(Query<T> query);
+
+    /**
+     * Gets the count of items returned by this query; same as {@code query.countAll()}
+     *
+     * @param query   the query to filter the documents to count
+     * @param <T>     the type to count
+     * @param options the options to apply to the count
+     * @return the count
+     * @since 1.3
+     */
+    <T> long getCount(Query<T> query, CountOptions options);
 
     /**
      * @return the DB this Datastore uses

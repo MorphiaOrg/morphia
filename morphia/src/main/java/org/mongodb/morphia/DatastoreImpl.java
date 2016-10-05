@@ -33,6 +33,7 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
+import org.mongodb.morphia.query.CountOptions;
 import org.mongodb.morphia.query.DefaultQueryFactory;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryException;
@@ -468,7 +469,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> long getCount(final Query<T> query) {
-        return query.countAll();
+        return query.count();
+    }
+
+    @Override
+    public <T> long getCount(final Query<T> query, final CountOptions options) {
+        return query.count(options);
     }
 
     @Override
@@ -1339,11 +1345,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                              dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
-//        DBCollectionUpdateOptions options = new DBCollectionUpdateOptions()
-//            .multi(multi)
-//            .upsert(createIfMissing)
-//            .writeConcern(wc);
-
         return new UpdateResults(dbColl.update(queryObject, update, options.getOptions()));
     }
 
@@ -1388,12 +1389,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                              dbColl.getName(), queryObject, update, multi, createIfMissing));
         }
 
-        DBCollectionUpdateOptions options = new DBCollectionUpdateOptions()
+        return new UpdateResults(dbColl.update(queryObject, update, new DBCollectionUpdateOptions()
             .multi(multi)
             .upsert(createIfMissing)
-            .writeConcern(wc);
-
-        return new UpdateResults(dbColl.update(queryObject, update, options));
+            .writeConcern(wc)));
     }
 
     /**
