@@ -34,6 +34,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappingException;
@@ -88,6 +89,19 @@ public class IndexHelperTest extends TestBase {
                          .append("text", new BsonString("text"))
                          .append("nest", new BsonInt32(-1)),
                      keys);
+    }
+
+    @Test(expected = MappingException.class)
+    public void calculateBadKeys() {
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        indexHelper.calculateKeys(mappedClass, new IndexBuilder()
+            .fields(new FieldBuilder()
+                        .value("texting")
+                        .type(IndexType.TEXT)
+                        .weight(1),
+                    new FieldBuilder()
+                        .value("nest")
+                        .type(IndexType.DESC)));
     }
 
     @Test
@@ -149,6 +163,20 @@ public class IndexHelperTest extends TestBase {
         }
     }
 
+    @Test
+    public void createIndex() {
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        indexHelper.createIndex(collection, mappedClass, false);
+        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
+                                          .getIndexInfo();
+        for (DBObject dbObject : indexInfo) {
+            System.out.println("************ dbObject = " + dbObject);
+
+        }
+
+    }
     @Test
     public void indexCollationConversion() {
         Collation collation = collation();
@@ -263,6 +291,9 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Entity("indexes")
+    @Indexes(
+        @Index(fields = @Field("latitude"))
+    )
     private static class IndexedClass {
         @Id
         private ObjectId id;

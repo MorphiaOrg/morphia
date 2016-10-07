@@ -39,10 +39,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     AnnotationBuilder(final T original) {
         try {
             for (Method method : annotationType().getDeclaredMethods()) {
-                Object value = method.invoke(original);
-                if (!method.getDefaultValue().equals(value)) {
-                    values.put(method.getName(), value);
-                }
+                values.put(method.getName(), method.invoke(original));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -62,28 +59,9 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
         values.putAll(map);
     }
 
-    private static class AnnotationInvocationHandler<T> implements InvocationHandler {
-        private final Class<T> type;
-        private final Map<String, Object> values;
-
-        AnnotationInvocationHandler(final Class<T> type, final Map<String, Object> values) {
-            this.type = type;
-            this.values = values;
-        }
-
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args)
-            throws InvocationTargetException, IllegalAccessException {
-            if (method.getName().equals("toString")) {
-                return values.toString();
-            }
-            return values.get(method.getName());
-        }
-
-        @Override
-        public String toString() {
-            return format("%s %s", type.getSimpleName(), values.toString());
-        }
+    @Override
+    public String toString() {
+        return format("@%s %s", annotationType().getName(), values.toString());
     }
 
     @Override

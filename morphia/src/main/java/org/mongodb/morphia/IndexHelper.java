@@ -124,8 +124,12 @@ final class IndexHelper {
                 path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
             } catch (Exception e) {
                 path = field.value();
-                LOG.warning(format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                                   path, mc.getClazz().getName()));
+                String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
+                                       path, mc.getClazz().getName());
+                if (!index.options().disableValidation()) {
+                    throw new MappingException(message);
+                }
+                LOG.warning(message);
             }
             keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
         }
