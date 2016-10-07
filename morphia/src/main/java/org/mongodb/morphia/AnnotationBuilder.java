@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,15 +76,21 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
 
         final Map<String, Object> map = new HashMap<String, Object>();
         try {
-            for (Method method : annotationType().getDeclaredMethods()) {
-                Object value = method.invoke(annotation);
-                if (!method.getDefaultValue().equals(value)) {
-                    map.put(method.getName(), value);
-                }
+            Class<A> annotationType = extractType(Proxy.getInvocationHandler(annotation));
+            for (Method method : annotationType.getDeclaredMethods()) {
+                map.put(method.getName(), method.invoke(annotation));
             }
         } catch (Exception e) {
             throw new MappingException(e.getMessage(), e);
         }
         return map;
     }
+
+    private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
+        java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
+        type.setAccessible(true);
+        return (Class) type.get(invocationHandler);
+    }
+
+
 }

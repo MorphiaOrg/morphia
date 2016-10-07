@@ -142,38 +142,46 @@ final class IndexHelper {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed indexed = mf.getAnnotation(Indexed.class);
-                if (indexed.options().dropDups()) {
-                    LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                                    + "validate your system behaves as expected.");
-                }
-                final Map<String, Object> newOptions = extractOptions(indexed.options());
-                if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
-                    throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
-                                                   + "allowed.  Please migrate all settings to @IndexOptions");
-                }
-
-                List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
-                                                                          .value(mf.getNameToStore())
-                                                                          .type(fromValue(indexed.value().toIndexValue())));
-                list.add(newOptions.isEmpty()
-                         ? new IndexBuilder()
-                             .options(new IndexOptionsBuilder()
-                                          .migrate(indexed))
-                             .fields(fields)
-                         : new IndexBuilder()
-                             .options(indexed.options())
-                             .fields(fields));
+                list.add(collect(mf, indexed));
             } else if (mf.hasAnnotation(Text.class)) {
                 final Text text = mf.getAnnotation(Text.class);
-                list.add(new IndexBuilder()
-                             .options(text.options())
-                             .fields(Collections.<Field>singletonList(new FieldBuilder()
-                                                                          .value(mf.getNameToStore())
-                                                                          .type(IndexType.TEXT)
-                                                                          .weight(text.value()))));
+                list.add(collect(mf, text));
             }
         }
         return list;
+    }
+
+    private IndexBuilder collect(final MappedField mf, final Text text) {
+        return new IndexBuilder()
+                     .options(text.options())
+                     .fields(Collections.<Field>singletonList(new FieldBuilder()
+                                                                  .value(mf.getNameToStore())
+                                                                  .type(IndexType.TEXT)
+                                                                  .weight(text.value())));
+    }
+
+    private Index collect(final MappedField mf, final Indexed indexed) {
+        if (indexed.dropDups() || indexed.options().dropDups()) {
+            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
+                            + "validate your system behaves as expected.");
+        }
+        final Map<String, Object> newOptions = extractOptions(indexed.options());
+        if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
+            throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
+                                           + "allowed.  Please migrate all settings to @IndexOptions");
+        }
+
+        List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
+                                                                  .value(mf.getNameToStore())
+                                                                  .type(fromValue(indexed.value().toIndexValue())));
+        return newOptions.isEmpty()
+                 ? new IndexBuilder()
+                     .options(new IndexOptionsBuilder()
+                                  .migrate(indexed))
+                     .fields(fields)
+                 : new IndexBuilder()
+                     .options(indexed.options())
+                     .fields(fields);
     }
 
     private List<Index> collectIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
@@ -196,18 +204,25 @@ final class IndexHelper {
 
                 final List<MappedClass> parents = new ArrayList<MappedClass>(parentMCs);
                 parents.add(mc);
-                for (Index index : collectIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), parents)) {
-                    List<Field> fields = new ArrayList<Field>();
-                    for (Field field : index.fields()) {
-                        fields.add(new FieldBuilder()
-                                       .value(field.value().equals("$**")
-                                              ? field.value()
-                                              : mf.getNameToStore() + "." + field.value())
-                                       .type(field.type())
-                                       .weight(field.weight()));
+
+                List<MappedClass> classes = new ArrayList<MappedClass>();
+                MappedClass mappedClass = mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass());
+                classes.add(mappedClass);
+                classes.addAll(mapper.getSubTypes(mappedClass));
+                for (MappedClass aClass : classes) {
+                    for (Index index : collectIndexes(aClass, parents)) {
+                        List<Field> fields = new ArrayList<Field>();
+                        for (Field field : index.fields()) {
+                            fields.add(new FieldBuilder()
+                                           .value(field.value().equals("$**")
+                                                  ? field.value()
+                                                  : mf.getNameToStore() + "." + field.value())
+                                           .type(field.type())
+                                           .weight(field.weight()));
+                        }
+                        list.add(new IndexBuilder(index)
+                                     .fields(fields));
                     }
-                    list.add(new IndexBuilder(index)
-                                 .fields(fields));
                 }
             }
         }

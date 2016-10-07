@@ -50,6 +50,7 @@ import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static com.mongodb.client.model.CollationCaseFirst.UPPER;
 import static com.mongodb.client.model.CollationMaxVariable.SPACE;
 import static com.mongodb.client.model.CollationStrength.IDENTICAL;
+import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -171,8 +172,28 @@ public class IndexHelperTest extends TestBase {
         indexHelper.createIndex(collection, mappedClass, false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
+        assertEquals("Should have 4 indexes", 4, indexInfo.size());
         for (DBObject dbObject : indexInfo) {
-            System.out.println("************ dbObject = " + dbObject);
+            String name = dbObject.get("name").toString();
+            if (name.equals("_id_")) {
+                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"_id\" : 1} , \"name\" : \"_id_\" , \"ns\" : \"morphia_test"
+                                                     + ".indexes\"}"), dbObject);
+            } else if (name.equals("latitude_1")) {
+                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"latitude\" : 1} , \"name\" : \"latitude_1\" , \"ns\" : "
+                                                     + "\"morphia_test.indexes\"}"), dbObject);
+            } else if (name.equals("behind_interface")) {
+                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"nest.name\" : -1} , \"name\" : \"behind_interface\" , "
+                                                     + "\"collation\" : { \"locale\" : \"en\" , \"caseLevel\" : false , \"caseFirst\" : "
+                                                     + "\"off\" , \"strength\" : 2 , \"numericOrdering\" : false , \"alternate\" : "
+                                                     + "\"non-ignorable\" , \"maxVariable\" : \"punct\" , \"normalization\" : false , "
+                                                     + "\"backwards\" : false , \"version\" : \"57.1\"} , \"ns\" : \"morphia_test"
+                                                     + ".indexes\"}"), dbObject);
+            } else if (name.equals("nest.name_1")) {
+                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"nest.name\" : 1} , \"name\" : \"nest.name_1\" , \"ns\" : "
+                                                     + "\"morphia_test.indexes\"}"), dbObject);
+            } else {
+                throw new MappingException("Found an index I wasn't expecting:  " + name);
+            }
 
         }
 
@@ -305,6 +326,10 @@ public class IndexHelperTest extends TestBase {
         private NestedClass nested;
     }
 
+    @Indexes(
+        @Index(fields = @Field(value = "name", type = IndexType.DESC),
+            options = @IndexOptions(name = "behind_interface", collation = @Collation(locale = "en", strength = SECONDARY)))
+    )
     private static class NestedClassImpl implements NestedClass {
         @Indexed
         private String name;
