@@ -36,6 +36,7 @@ import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Annotation;
@@ -53,6 +54,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class IndexHelperTest extends TestBase {
     private final IndexHelper indexHelper = new IndexHelper(getMorphia().getMapper(), getDatabase());
@@ -78,13 +80,10 @@ public class IndexHelperTest extends TestBase {
             .fields(new FieldBuilder()
                         .value("text")
                         .type(IndexType.TEXT)
-                        .weight(1)
-                        .build(),
+                        .weight(1),
                     new FieldBuilder()
                         .value("nest")
-                        .type(IndexType.DESC)
-                        .build())
-            .build());
+                        .type(IndexType.DESC)));
         assertEquals(new BsonDocument()
                          .append("text", new BsonString("text"))
                          .append("nest", new BsonInt32(-1)),
@@ -95,10 +94,20 @@ public class IndexHelperTest extends TestBase {
     public void findField() {
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 
-        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder().build(), singletonList("index_name")));
-        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder().build(), singletonList("name")));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder().build(), asList("nested", "name")));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder().build(), asList("nest", "name")));
+        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("index_name")));
+        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("name")));
+        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nested", "name")));
+        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "name")));
+
+        try {
+            assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "whatsit")));
+            fail("Should have failed on the bad index path");
+        } catch (MappingException e) {
+            // alles ist gut
+        }
+        assertEquals("nest.whatsit.nested.more.deeply.than.the.object.model",
+                     indexHelper.findField(mappedClass, new IndexOptionsBuilder().disableValidation(true),
+                                           asList("nest", "whatsit", "nested", "more", "deeply", "than", "the", "object", "model")));
     }
 
     @Test
@@ -109,14 +118,11 @@ public class IndexHelperTest extends TestBase {
         indexes.drop();
         Index index = new IndexBuilder()
             .fields(new FieldBuilder()
-                        .value("index_name")
-                        .build(),
+                        .value("index_name"),
                     new FieldBuilder()
                         .value("text")
-                        .type(IndexType.DESC)
-                        .build())
-            .options(indexOptions().build())
-            .build();
+                        .type(IndexType.DESC))
+            .options(indexOptions());
         indexHelper.createIndex(indexes, mappedClass, index, false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
@@ -161,7 +167,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void indexOptionsConversion() {
         IndexOptionsBuilder indexOptions = indexOptions();
-        com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions.build(), false);
+        com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions, false);
         assertEquals("index_name", options.getName());
         assertTrue(options.isBackground());
         assertTrue(options.isUnique());
@@ -169,13 +175,13 @@ public class IndexHelperTest extends TestBase {
         assertEquals(Long.valueOf(42), options.getExpireAfter(TimeUnit.SECONDS));
         assertEquals("en", options.getDefaultLanguage());
         assertEquals("de", options.getLanguageOverride());
-        assertEquals(indexHelper.convert(indexOptions.build().collation()), options.getCollation());
+        assertEquals(indexHelper.convert(indexOptions.collation()), options.getCollation());
 
-        assertTrue(indexHelper.convert(indexOptions.build(), true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(false).build(), true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(true).build(), true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(true).build(), false).isBackground());
-        assertFalse(indexHelper.convert(indexOptions.background(false).build(), false).isBackground());
+        assertTrue(indexHelper.convert(indexOptions, true).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(false), true).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(true), true).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(true), false).isBackground());
+        assertFalse(indexHelper.convert(indexOptions.background(false), false).isBackground());
 
     }
 
@@ -194,7 +200,7 @@ public class IndexHelperTest extends TestBase {
             .sparse(true)
             .unique(true)
             .value("index_name, -text")
-            .build();
+            ;
         indexHelper.createIndex(indexes, mappedClass, index, false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
@@ -224,7 +230,7 @@ public class IndexHelperTest extends TestBase {
             .normalization(true)
             .numericOrdering(true)
             .strength(IDENTICAL)
-            .build();
+            ;
     }
 
     private <T extends Annotation> void compareFields(final Class<T> annotationType, final Class<? extends AnnotationBuilder<T>> builder) {

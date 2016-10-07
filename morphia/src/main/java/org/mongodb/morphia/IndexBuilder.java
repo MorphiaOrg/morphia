@@ -24,7 +24,7 @@ import org.mongodb.morphia.utils.IndexType;
 import java.util.ArrayList;
 import java.util.List;
 
-class IndexBuilder extends AnnotationBuilder<Index> {
+class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     IndexBuilder() {
     }
 
@@ -33,12 +33,15 @@ class IndexBuilder extends AnnotationBuilder<Index> {
     }
 
     static Index normalize(final Index index) {
-        if (index.fields().length != 0) {
-            return index;
-        }
-        return new IndexBuilder()
-            .migrate(index)
-            .build();
+        return index.fields().length != 0
+               ? index
+               : new IndexBuilder()
+                   .migrate(index);
+    }
+
+    @Override
+    public Class<Index> annotationType() {
+        return Index.class;
     }
 
     public IndexBuilder fields(final String fields) {
@@ -46,8 +49,72 @@ class IndexBuilder extends AnnotationBuilder<Index> {
     }
 
     @Override
-    Class<Index> getAnnotationType() {
-        return Index.class;
+    public Field[] fields() {
+        return get("fields");
+    }
+
+    @Override
+    public IndexOptions options() {
+        return get("options");
+    }
+
+    @Override
+    public boolean background() {
+        return get("background");
+    }
+
+    @Override
+    public boolean disableValidation() {
+        return get("disableValidation");
+    }
+
+    @Override
+    public boolean dropDups() {
+        return get("dropDups");
+    }
+
+    @Override
+    public int expireAfterSeconds() {
+        return get("expireAfterSeconds");
+    }
+
+    @Override
+    public String name() {
+        return get("name");
+    }
+
+    @Override
+    public boolean sparse() {
+        return get("sparse");
+    }
+
+    @Override
+    public boolean unique() {
+        return get("unique");
+    }
+
+    @Override
+    public String value() {
+        return get("value");
+    }
+
+    private List<Field> parseFieldsString(final String str) {
+        List<Field> fields = new ArrayList<Field>();
+        final String[] parts = str.split(",");
+        for (String s : parts) {
+            s = s.trim();
+            IndexType dir = IndexType.ASC;
+
+            if (s.startsWith("-")) {
+                dir = IndexType.DESC;
+                s = s.substring(1).trim();
+            }
+
+            fields.add(new FieldBuilder()
+                           .value(s)
+                           .type(dir));
+        }
+        return fields;
     }
 
     IndexBuilder fields(final List<Field> fields) {
@@ -134,29 +201,6 @@ class IndexBuilder extends AnnotationBuilder<Index> {
 
     IndexBuilder migrate(final Index index) {
         return fields(parseFieldsString(index.value()))
-            .options(new IndexOptionsBuilder()
-                         .migrate(index)
-                         .build());
+            .options(new IndexOptionsBuilder().migrate(index));
     }
-
-    private List<Field> parseFieldsString(final String str) {
-        List<Field> fields = new ArrayList<Field>();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            IndexType dir = IndexType.ASC;
-
-            if (s.startsWith("-")) {
-                dir = IndexType.DESC;
-                s = s.substring(1).trim();
-            }
-
-            fields.add(new FieldBuilder()
-                           .value(s)
-                           .type(dir)
-                           .build());
-        }
-        return fields;
-    }
-
 }

@@ -22,10 +22,55 @@ import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
 import org.mongodb.morphia.annotations.Collation;
 
-class CollationBuilder extends AnnotationBuilder<Collation> {
+class CollationBuilder extends AnnotationBuilder<Collation> implements Collation {
     @Override
-    Class<Collation> getAnnotationType() {
+    public Class<Collation> annotationType() {
         return Collation.class;
+    }
+
+    @Override
+    public boolean backwards() {
+        return get("backwards");
+    }
+
+    @Override
+    public boolean caseLevel() {
+        return get("caseLevel");
+    }
+
+    @Override
+    public String locale() {
+        return get("locale");
+    }
+
+    @Override
+    public boolean normalization() {
+        return get("normalization");
+    }
+
+    @Override
+    public boolean numericOrdering() {
+        return get("numericOrdering");
+    }
+
+    @Override
+    public CollationAlternate alternate() {
+        return get("alternate");
+    }
+
+    @Override
+    public CollationCaseFirst caseFirst() {
+        return get("caseFirst");
+    }
+
+    @Override
+    public CollationMaxVariable maxVariable() {
+        return get("maxVariable");
+    }
+
+    @Override
+    public CollationStrength strength() {
+        return get("strength");
     }
 
     CollationBuilder backwards(final boolean backwards) {

@@ -16,32 +16,29 @@
 
 package org.mongodb.morphia;
 
-import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.mapping.MappingException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.lang.reflect.Proxy.newProxyInstance;
 
-abstract class AnnotationBuilder<T extends Annotation> {
+abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     private final Map<String, Object> values = new HashMap<String, Object>();
 
     AnnotationBuilder() {
-        for (Method method : getAnnotationType().getDeclaredMethods()) {
+        for (Method method : annotationType().getDeclaredMethods()) {
             values.put(method.getName(), method.getDefaultValue());
         }
     }
 
     AnnotationBuilder(final T original) {
         try {
-            for (Method method : getAnnotationType().getDeclaredMethods()) {
+            for (Method method : annotationType().getDeclaredMethods()) {
                 Object value = method.invoke(original);
                 if (!method.getDefaultValue().equals(value)) {
                     values.put(method.getName(), value);
@@ -50,6 +47,11 @@ abstract class AnnotationBuilder<T extends Annotation> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    <V> V get(final String key) {
+        return (V) values.get(key);
     }
 
     void put(final String key, final Object value) {
@@ -84,44 +86,26 @@ abstract class AnnotationBuilder<T extends Annotation> {
         }
     }
 
-    abstract Class<T> getAnnotationType();
-
-    @SuppressWarnings("unchecked")
-    T build() {
-        final Class<T> annotationType = getAnnotationType();
-        return (T) newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType},
-                                    new AnnotationInvocationHandler(annotationType, values));
-    }
+    @Override
+    public abstract Class<T> annotationType();
 
     @SuppressWarnings("unchecked")
     <A extends Annotation> Map<String, Object> toMap(final A annotation) {
-        final Map<String, Object> values = new HashMap<String, Object>();
+        if (annotation instanceof AnnotationBuilder) {
+            return new HashMap<String, Object>(((AnnotationBuilder) annotation).values);
+        }
 
+        final Map<String, Object> map = new HashMap<String, Object>();
         try {
-            Class<A> annotationType = annotation instanceof Proxy
-                                      ? extractType(Proxy.getInvocationHandler(annotation))
-                                      : (Class<T>) annotation.getClass();
-            for (Method method : annotationType.getDeclaredMethods()) {
+            for (Method method : annotationType().getDeclaredMethods()) {
                 Object value = method.invoke(annotation);
                 if (!method.getDefaultValue().equals(value)) {
-                    values.put(method.getName(), value);
+                    map.put(method.getName(), value);
                 }
             }
         } catch (Exception e) {
             throw new MappingException(e.getMessage(), e);
         }
-        return values;
+        return map;
     }
-
-    private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
-        if (invocationHandler instanceof AnnotationInvocationHandler) {
-            return ((AnnotationInvocationHandler) invocationHandler).type;
-        }
-
-        java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
-        type.setAccessible(true);
-        return (Class) type.get(invocationHandler);
-    }
-
-
 }

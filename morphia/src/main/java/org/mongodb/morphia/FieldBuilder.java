@@ -19,10 +19,25 @@ package org.mongodb.morphia;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.utils.IndexType;
 
-class FieldBuilder extends AnnotationBuilder<Field> {
+class FieldBuilder extends AnnotationBuilder<Field> implements Field {
     @Override
-    Class<Field> getAnnotationType() {
+    public Class<Field> annotationType() {
         return Field.class;
+    }
+
+    @Override
+    public IndexType type() {
+        return get("type");
+    }
+
+    @Override
+    public String value() {
+        return get("value");
+    }
+
+    @Override
+    public int weight() {
+        return get("weight");
     }
 
     FieldBuilder type(final IndexType type) {

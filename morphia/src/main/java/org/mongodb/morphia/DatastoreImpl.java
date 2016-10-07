@@ -881,10 +881,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz), new IndexBuilder()
                                     .options(new IndexOptionsBuilder()
                                                  .name(name)
-                                                 .unique(unique)
-                                                 .build())
-                                    .fields(fields)
-                                    .build(),
+                                                 .unique(unique))
+                                    .fields(fields),
                                 false);
     }
 

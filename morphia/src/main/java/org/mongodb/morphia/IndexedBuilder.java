@@ -22,7 +22,7 @@ import org.mongodb.morphia.utils.IndexDirection;
 
 class IndexedBuilder extends AnnotationBuilder<Indexed> {
     @Override
-    Class<Indexed> getAnnotationType() {
+    public Class<Indexed> annotationType() {
         return Indexed.class;
     }
 

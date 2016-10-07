@@ -21,10 +21,60 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 
-class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> {
+class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
     @Override
-    Class<IndexOptions> getAnnotationType() {
+    public Class<IndexOptions> annotationType() {
         return IndexOptions.class;
+    }
+
+    @Override
+    public boolean background() {
+        return get("background");
+    }
+
+    @Override
+    public boolean disableValidation() {
+        return get("disableValidation");
+    }
+
+    @Override
+    public boolean dropDups() {
+        return get("dropDups");
+    }
+
+    @Override
+    public int expireAfterSeconds() {
+        return get("expireAfterSeconds");
+    }
+
+    @Override
+    public String language() {
+        return get("language");
+    }
+
+    @Override
+    public String languageOverride() {
+        return get("languageOverride");
+    }
+
+    @Override
+    public String name() {
+        return get("name");
+    }
+
+    @Override
+    public boolean sparse() {
+        return get("sparse");
+    }
+
+    @Override
+    public boolean unique() {
+        return get("unique");
+    }
+
+    @Override
+    public Collation collation() {
+        return get("collation");
     }
 
     IndexOptionsBuilder background(final boolean background) {

@@ -56,7 +56,6 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 final class IndexHelper {
@@ -149,31 +148,25 @@ final class IndexHelper {
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
-                List<Field> fields = singletonList(new FieldBuilder()
-                                                       .value(mf.getNameToStore())
-                                                       .type(fromValue(indexed.value().toIndexValue()))
-                                                       .build());
+                List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
+                                                                          .value(mf.getNameToStore())
+                                                                          .type(fromValue(indexed.value().toIndexValue())));
                 list.add(newOptions.isEmpty()
                          ? new IndexBuilder()
                              .options(new IndexOptionsBuilder()
-                                          .migrate(indexed)
-                                          .build())
+                                          .migrate(indexed))
                              .fields(fields)
-                             .build()
                          : new IndexBuilder()
                              .options(indexed.options())
-                             .fields(fields)
-                             .build());
+                             .fields(fields));
             } else if (mf.hasAnnotation(Text.class)) {
                 final Text text = mf.getAnnotation(Text.class);
                 list.add(new IndexBuilder()
                              .options(text.options())
-                             .fields(singletonList(new FieldBuilder()
-                                                       .value(mf.getNameToStore())
-                                                       .type(IndexType.TEXT)
-                                                       .weight(text.value())
-                                                       .build()))
-                             .build());
+                             .fields(Collections.<Field>singletonList(new FieldBuilder()
+                                                                          .value(mf.getNameToStore())
+                                                                          .type(IndexType.TEXT)
+                                                                          .weight(text.value()))));
             }
         }
         return list;
@@ -196,11 +189,10 @@ final class IndexHelper {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
                 && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
-                final List<MappedClass> newParentClasses = new ArrayList<MappedClass>(parentMCs);
-                newParentClasses.add(mc);
-                List<Index> indexes =
-                    collectIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), newParentClasses);
-                for (Index index : indexes) {
+
+                final List<MappedClass> parents = new ArrayList<MappedClass>(parentMCs);
+                parents.add(mc);
+                for (Index index : collectIndexes(mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass()), parents)) {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : index.fields()) {
                         fields.add(new FieldBuilder()
@@ -208,12 +200,10 @@ final class IndexHelper {
                                               ? field.value()
                                               : mf.getNameToStore() + "." + field.value())
                                        .type(field.type())
-                                       .weight(field.weight())
-                                       .build());
+                                       .weight(field.weight()));
                     }
                     list.add(new IndexBuilder(index)
-                                 .fields(fields)
-                                 .build());
+                                 .fields(fields));
                 }
             }
         }
@@ -232,16 +222,14 @@ final class IndexHelper {
                         LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                         updated = new IndexBuilder()
-                            .migrate(index)
-                            .build();
+                            .migrate(index);
                     }
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
                         fields.add(new FieldBuilder()
                                        .value(findField(mc, index.options(), asList(field.value().split("\\."))))
                                        .type(field.type())
-                                       .weight(field.weight())
-                                       .build());
+                                       .weight(field.weight()));
                     }
 
                     list.add(replaceFields(updated, fields));
@@ -357,8 +345,7 @@ final class IndexHelper {
 
     private Index replaceFields(final Index original, final List<Field> list) {
         return new IndexBuilder(original)
-            .fields(list)
-            .build();
+            .fields(list);
     }
 
     @SuppressWarnings("unchecked")
@@ -399,27 +386,6 @@ final class IndexHelper {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
             createIndex(collection, mc, index, background);
-/*
-            com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
-            BsonDocument keys = new BsonDocument();
-            for (Field field : index.fields()) {
-                if (field.weight() != -1) {
-                    if (field.type() != IndexType.TEXT) {
-                        throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                    }
-                    BsonDocument weights = (BsonDocument) options.getWeights();
-                    if (weights == null) {
-                        weights = new BsonDocument();
-                        options.weights(weights);
-                    }
-                    weights.putAll(toBsonDocument(field.value(), field.weight()));
-                }
-
-                keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
-            }
-
-            collection.createIndex(keys, options);
-*/
         }
     }
 
