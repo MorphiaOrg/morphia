@@ -51,11 +51,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
-import static java.lang.reflect.Proxy.newProxyInstance;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -71,50 +69,6 @@ final class IndexHelper {
     IndexHelper(final Mapper mapper, final MongoDatabase database) {
         this.mapper = mapper;
         this.database = database;
-    }
-
-    static Index synthesizeIndex(final String fields, final String name, final boolean unique) {
-        Map<String, Object> optionsMap = new HashMap<String, Object>();
-        optionsMap.put("name", name != null ? name : "");
-        optionsMap.put("unique", unique);
-
-        Map<String, Object> indexMap = new HashMap<String, Object>();
-        indexMap.put("fields", parseFieldsString(fields).toArray(new Field[0]));
-        indexMap.put("options", annotationForMap(IndexOptions.class, optionsMap));
-
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    static Index synthesizeIndex(final IndexOptions options, final List<Field> list) {
-        Map<String, Object> indexMap = new HashMap<String, Object>();
-        indexMap.put("fields", list.toArray(new Field[0]));
-        indexMap.put("options", options);
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    static Index synthesizeIndex(final Indexed indexed, final List<Field> list) {
-        Map<String, Object> indexMap = new HashMap<String, Object>();
-        indexMap.put("fields", list.toArray(new Field[0]));
-        indexMap.put("options", annotationForMap(IndexOptions.class, toMap(indexed)));
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Annotation> T annotationForMap(final Class<T> annotationType, final Map<String, Object> valuesMap) {
-        final Map<String, Object> values = new HashMap<String, Object>();
-
-        for (Method method : annotationType.getDeclaredMethods()) {
-            values.put(method.getName(), method.getDefaultValue());
-        }
-
-        for (Entry<String, Object> entry : valuesMap.entrySet()) {
-            if (entry.getValue() != null) {
-                values.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return (T) newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType},
-                                    new AnnotationInvocationHandler(annotationType, values));
     }
 
     @SuppressWarnings("unchecked")
@@ -147,32 +101,6 @@ final class IndexHelper {
         return (Class) type.get(invocationHandler);
     }
 
-    private static List<Field> parseFieldsString(final String str) {
-        List<Field> fields = new ArrayList<Field>();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            IndexType dir = IndexType.ASC;
-
-            if (s.startsWith("-")) {
-                dir = IndexType.DESC;
-                s = s.substring(1).trim();
-            }
-
-            fields.add(synthesizeField(s, dir, -1));
-        }
-        return fields;
-    }
-
-    private static Field synthesizeField(final String name, final IndexType direction, final int weight) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("value", name);
-        map.put("type", direction);
-        map.put("weight", weight);
-
-        return annotationForMap(Field.class, map);
-    }
-
     private static String join(final List<String> path, final char delimiter) {
         StringBuilder builder = new StringBuilder();
         for (String element : path) {
@@ -184,7 +112,7 @@ final class IndexHelper {
         return builder.toString();
     }
 
-    private BsonDocument calculateKeys(final MappedClass mc, final Index index) {
+    BsonDocument calculateKeys(final MappedClass mc, final Index index) {
         BsonDocument keys = new BsonDocument();
         for (Field field : index.fields()) {
             if (field.weight() != -1) {
@@ -221,13 +149,31 @@ final class IndexHelper {
                                                    + "allowed.  Please migrate all settings to @IndexOptions");
                 }
 
-                List<Field> fields = singletonList(synthesizeField(mf.getNameToStore(), fromValue(indexed.value().toIndexValue()), -1));
-                list.add(newOptions.isEmpty() ? synthesizeIndex(indexed, fields) : synthesizeIndex(indexed.options(), fields));
+                List<Field> fields = singletonList(new FieldBuilder()
+                                                       .value(mf.getNameToStore())
+                                                       .type(fromValue(indexed.value().toIndexValue()))
+                                                       .build());
+                list.add(newOptions.isEmpty()
+                         ? new IndexBuilder()
+                             .options(new IndexOptionsBuilder()
+                                          .migrate(indexed)
+                                          .build())
+                             .fields(fields)
+                             .build()
+                         : new IndexBuilder()
+                             .options(indexed.options())
+                             .fields(fields)
+                             .build());
             } else if (mf.hasAnnotation(Text.class)) {
                 final Text text = mf.getAnnotation(Text.class);
-
-                list.add(synthesizeIndex(text.options(),
-                                         singletonList(synthesizeField(mf.getNameToStore(), IndexType.TEXT, text.value()))));
+                list.add(new IndexBuilder()
+                             .options(text.options())
+                             .fields(singletonList(new FieldBuilder()
+                                                       .value(mf.getNameToStore())
+                                                       .type(IndexType.TEXT)
+                                                       .weight(text.value())
+                                                       .build()))
+                             .build());
             }
         }
         return list;
@@ -257,12 +203,17 @@ final class IndexHelper {
                 for (Index index : indexes) {
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : index.fields()) {
-                        fields.add(synthesizeField(field.value().equals("$**")
-                                                   ? field.value()
-                                                   : mf.getNameToStore() + "." + field.value(),
-                                                   field.type(), field.weight()));
+                        fields.add(new FieldBuilder()
+                                       .value(field.value().equals("$**")
+                                              ? field.value()
+                                              : mf.getNameToStore() + "." + field.value())
+                                       .type(field.type())
+                                       .weight(field.weight())
+                                       .build());
                     }
-                    list.add(replaceFields(index, fields));
+                    list.add(new IndexBuilder(index)
+                                 .fields(fields)
+                                 .build());
                 }
             }
         }
@@ -280,12 +231,17 @@ final class IndexHelper {
                     if (index.fields().length == 0) {
                         LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                        updated = synthesizeIndexFromOldFormat(index);
+                        updated = new IndexBuilder()
+                            .migrate(index)
+                            .build();
                     }
                     List<Field> fields = new ArrayList<Field>();
                     for (Field field : updated.fields()) {
-                        String path = findField(mc, index.options(), asList(field.value().split("\\.")));
-                        fields.add(synthesizeField(path, field.type(), field.weight()));
+                        fields.add(new FieldBuilder()
+                                       .value(findField(mc, index.options(), asList(field.value().split("\\."))))
+                                       .type(field.type())
+                                       .weight(field.weight())
+                                       .build());
                     }
 
                     list.add(replaceFields(updated, fields));
@@ -296,7 +252,7 @@ final class IndexHelper {
     }
 
     @SuppressWarnings("deprecation")
-    private com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
+    com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
             LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
                             + "validate your system behaves as expected.");
@@ -325,7 +281,7 @@ final class IndexHelper {
         return indexOptions;
     }
 
-    private com.mongodb.client.model.Collation convert(final Collation collation) {
+    com.mongodb.client.model.Collation convert(final Collation collation) {
         return com.mongodb.client.model.Collation.builder()
                                                  .locale(collation.locale())
                                                  .backwards(collation.backwards())
@@ -337,11 +293,6 @@ final class IndexHelper {
                                                  .normalization(collation.normalization())
                                                  .numericOrdering(collation.numericOrdering())
                                                  .build();
-    }
-
-    private String createIndex(final MongoCollection collection, final BsonDocument keys,
-                               final com.mongodb.client.model.IndexOptions options) {
-        return collection.createIndex(keys, options);
     }
 
     private Map<String, Object> extractOptions(final IndexOptions options) {
@@ -356,7 +307,7 @@ final class IndexHelper {
         return map;
     }
 
-    private String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
+    String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
         String segment = path.get(0);
         if (segment.equals("$**")) {
             return segment;
@@ -405,15 +356,9 @@ final class IndexHelper {
     }
 
     private Index replaceFields(final Index original, final List<Field> list) {
-        Map<String, Object> indexMap = toMap(original);
-        indexMap.put("fields", list.toArray(new Field[0]));
-
-        return annotationForMap(Index.class, indexMap);
-    }
-
-    @SuppressWarnings("deprecation")
-    private Index synthesizeIndexFromOldFormat(final Index index) {
-        return synthesizeIndex(annotationForMap(IndexOptions.class, toMap(index)), parseFieldsString(index.value()));
+        return new IndexBuilder(original)
+            .fields(list)
+            .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -453,6 +398,8 @@ final class IndexHelper {
     void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
 
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+            createIndex(collection, mc, index, background);
+/*
             com.mongodb.client.model.IndexOptions options = convert(index.options(), background);
             BsonDocument keys = new BsonDocument();
             for (Field field : index.fields()) {
@@ -471,12 +418,13 @@ final class IndexHelper {
                 keys.putAll(toBsonDocument(field.value(), field.type().toIndexValue()));
             }
 
-            createIndex(collection, keys, options);
+            collection.createIndex(keys, options);
+*/
         }
     }
 
-    void createIndex(final MappedClass mc, final MongoCollection collection, final Index index, final boolean background) {
-        createIndex(collection, calculateKeys(mc, index), convert(index.options(), background));
+    void createIndex(final MongoCollection collection, final MappedClass mc, final Index index, final boolean background) {
+        Index normalized = IndexBuilder.normalize(index);
+        collection.createIndex(calculateKeys(mc, normalized), convert(normalized.options(), background));
     }
-
 }

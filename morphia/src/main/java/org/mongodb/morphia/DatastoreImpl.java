@@ -57,7 +57,6 @@ import java.util.Map.Entry;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.mongodb.morphia.IndexHelper.synthesizeIndex;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -879,8 +878,14 @@ public class DatastoreImpl implements AdvancedDatastore {
                                            + "validate your system behaves as expected.");
         }
 
-        indexHelper.createIndex(getMapper().getMappedClass(clazz), getMongoCollection(collection, clazz),
-                                synthesizeIndex(fields, name, unique), false);
+        indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz), new IndexBuilder()
+                                    .options(new IndexOptionsBuilder()
+                                                 .name(name)
+                                                 .unique(unique)
+                                                 .build())
+                                    .fields(fields)
+                                    .build(),
+                                false);
     }
 
     @Override
