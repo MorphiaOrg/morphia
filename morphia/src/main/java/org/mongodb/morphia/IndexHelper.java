@@ -41,13 +41,9 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.IndexType;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -67,25 +63,6 @@ final class IndexHelper {
     IndexHelper(final Mapper mapper, final MongoDatabase database) {
         this.mapper = mapper;
         this.database = database;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Annotation> Map<String, Object> toMap(final T annotation) {
-        final Map<String, Object> values = new HashMap<String, Object>();
-
-        try {
-
-            Class<T> annotationType = (Class<T>) annotation.annotationType();
-            for (Method method : annotationType.getDeclaredMethods()) {
-                Object value = method.invoke(annotation);
-                if (!method.getDefaultValue().equals(value)) {
-                    values.put(method.getName(), value);
-                }
-            }
-        } catch (Exception e) {
-            throw new MappingException(e.getMessage(), e);
-        }
-        return values;
     }
 
     private static String join(final List<String> path, final char delimiter) {
@@ -123,7 +100,7 @@ final class IndexHelper {
                                                          .weight(text.value())));
     }
 
-     Index convert(final Indexed indexed, final String nameToStore) {
+    Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
             LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
                             + "validate your system behaves as expected.");
@@ -237,14 +214,15 @@ final class IndexHelper {
     }
 
     private Map<String, Object> extractOptions(final IndexOptions options) {
-        return toMap(options);
+        return AnnotationBuilder.toMap(options);
     }
 
     private Map<String, Object> extractOptions(final Indexed indexed) {
-        Map<String, Object> map = toMap(indexed);
+        Map<String, Object> map = AnnotationBuilder.toMap(indexed);
         if (indexed.options().collation().locale().equals("")) {
             map.remove("options");
         }
+        map.remove("value");
         return map;
     }
 

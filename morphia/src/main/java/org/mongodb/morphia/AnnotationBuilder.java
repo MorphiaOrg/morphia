@@ -21,7 +21,6 @@ import org.mongodb.morphia.mapping.MappingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,16 +69,15 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     public abstract Class<T> annotationType();
 
     @SuppressWarnings("unchecked")
-    <A extends Annotation> Map<String, Object> toMap(final A annotation) {
-        if (annotation instanceof AnnotationBuilder) {
-            return new HashMap<String, Object>(((AnnotationBuilder) annotation).values);
-        }
-
+    static <A extends Annotation> Map<String, Object> toMap(final A annotation) {
         final Map<String, Object> map = new HashMap<String, Object>();
         try {
             Class<A> annotationType = (Class<A>) annotation.annotationType();
             for (Method method : annotationType.getDeclaredMethods()) {
-                map.put(method.getName(), method.invoke(annotation));
+                Object value = method.invoke(annotation);
+                if (!method.getDefaultValue().equals(value)) {
+                    map.put(method.getName(), value);
+                }
             }
         } catch (Exception e) {
             throw new MappingException(e.getMessage(), e);

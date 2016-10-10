@@ -276,11 +276,9 @@ public class IndexHelperTest extends TestBase {
             }
         }
     }
+
     @Test
     public void oldIndexedForm() {
-        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-
-        indexes.drop();
         Indexed indexed = new IndexedBuilder()
             .name("index_name")
             .background(true)
@@ -290,6 +288,26 @@ public class IndexHelperTest extends TestBase {
             .unique(true)
             .value(IndexDirection.DESC);
         assertEquals(indexed.options().name(), "");
+
+        Index converted = indexHelper.convert(indexed, "oldstyle");
+        assertEquals(converted.options().name(), "index_name");
+        assertTrue(converted.options().background());
+        assertTrue(converted.options().dropDups());
+        assertTrue(converted.options().sparse());
+        assertTrue(converted.options().unique());
+        assertEquals(new FieldBuilder().value("oldstyle").type(IndexType.DESC), converted.fields()[0]);
+    }
+
+    @Test
+    public void normalizeIndexed() {
+        Indexed indexed = new IndexedBuilder()
+            .value(IndexDirection.DESC)
+            .options(new IndexOptionsBuilder().name("index_name")
+                                              .background(true)
+                                              .dropDups(true)
+                                              .expireAfterSeconds(42)
+                                              .sparse(true)
+                                              .unique(true));
 
         Index converted = indexHelper.convert(indexed, "oldstyle");
         assertEquals(converted.options().name(), "index_name");
