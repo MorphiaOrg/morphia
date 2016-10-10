@@ -276,6 +276,17 @@ public class IndexHelperTest extends TestBase {
         }
     }
 
+    @Test
+    public void wildcardTextIndex() {
+        getMorphia().map(WildcardTextSearch.class);
+        getDs().ensureIndexes();
+        List<DBObject> wildcard = getDb().getCollection("wildcard").getIndexInfo();
+        boolean found = false;
+        for (DBObject dbObject : wildcard) {
+            found |= dbObject.get("name").equals("$**_text");
+        }
+        assertTrue("Should have found the wildcard index", found);
+    }
     private void checkIndex(final DBObject dbObject) {
         assertTrue((Boolean) dbObject.get("background"));
         assertTrue((Boolean) dbObject.get("unique"));
@@ -331,7 +342,7 @@ public class IndexHelperTest extends TestBase {
     private static class IndexedClass {
         @Id
         private ObjectId id;
-        @Text(options = @IndexOptions(name = "searchme"))
+        @org.mongodb.morphia.annotations.Text(options = @IndexOptions(name = "searchme"))
         private String text;
         @Property("name")
         private double indexName;
@@ -342,10 +353,20 @@ public class IndexHelperTest extends TestBase {
 
     @Indexes(
         @Index(fields = @Field(value = "name", type = IndexType.DESC),
-            options = @IndexOptions(name = "behind_interface", collation = @Collation(locale = "en", strength = SECONDARY))))
+            options = @IndexOptions(name = "behind_interface",
+                collation = @Collation(locale = "en", strength = SECONDARY))))
     private static class NestedClassImpl implements NestedClass {
         @Indexed
         private String name;
     }
 
+    @Entity("wildcard")
+    @Indexes(
+        @Index(fields = { @Field(value = "$**", type = IndexType.TEXT) })
+    )
+    private static class WildcardTextSearch {
+        @Id
+        private ObjectId id;
+        private String value;
+    }
 }
