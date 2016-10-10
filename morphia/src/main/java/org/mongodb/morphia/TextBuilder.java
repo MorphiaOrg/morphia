@@ -18,7 +18,6 @@ package org.mongodb.morphia;
 
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Text;
-import org.mongodb.morphia.utils.IndexDirection;
 
 class TextBuilder extends AnnotationBuilder<Text> implements Text {
     @Override

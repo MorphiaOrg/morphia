@@ -44,7 +44,6 @@ import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +56,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -69,12 +69,13 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
-    public void builders() {
+    public void builders() throws NoSuchMethodException {
         compareFields(Index.class, IndexBuilder.class);
         compareFields(IndexOptions.class, IndexOptionsBuilder.class);
         compareFields(Indexed.class, IndexedBuilder.class);
         compareFields(Field.class, FieldBuilder.class);
         compareFields(Collation.class, CollationBuilder.class);
+        compareFields(Text.class, TextBuilder.class);
     }
 
     @Test
@@ -397,14 +398,13 @@ public class IndexHelperTest extends TestBase {
             .strength(IDENTICAL);
     }
 
-    private <T extends Annotation> void compareFields(final Class<T> annotationType, final Class<? extends AnnotationBuilder<T>> builder) {
-        List<String> names = new ArrayList<String>();
-        for (Method method : builder.getDeclaredMethods()) {
-            names.add(method.getName());
-        }
+    private <T extends Annotation> void compareFields(final Class<T> annotationType, final Class<? extends AnnotationBuilder<T>> builder)
+        throws NoSuchMethodException {
 
         for (Method method : annotationType.getDeclaredMethods()) {
-            assertTrue(String.format("Looking for %s on %s", method.getName(), builder.getSimpleName()), names.contains(method.getName()));
+            Method getter = builder.getDeclaredMethod(method.getName(), new Class<?>[]{method.getReturnType()});
+            assertNotNull(String.format("Looking for %s.%s(%s) on ", builder.getSimpleName(), method.getName(), method.getReturnType()
+                .getSimpleName()), getter);
         }
     }
 

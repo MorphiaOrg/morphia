@@ -19,7 +19,6 @@ package org.mongodb.morphia;
 import org.mongodb.morphia.mapping.MappingException;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
