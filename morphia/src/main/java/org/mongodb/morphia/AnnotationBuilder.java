@@ -77,7 +77,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
 
         final Map<String, Object> map = new HashMap<String, Object>();
         try {
-            Class<A> annotationType = extractType(Proxy.getInvocationHandler(annotation));
+            Class<A> annotationType = (Class<A>) annotation.annotationType();
             for (Method method : annotationType.getDeclaredMethods()) {
                 map.put(method.getName(), method.invoke(annotation));
             }
@@ -94,4 +94,21 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AnnotationBuilder)) {
+            return false;
+        }
+
+        return values.equals(((AnnotationBuilder<?>) o).values);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
 }

@@ -39,6 +39,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappingException;
+import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Annotation;
@@ -145,7 +146,7 @@ public class IndexHelperTest extends TestBase {
             } else if (name.equals("searchme")) {
                 assertEquals(BasicDBObject.parse(
                     "{ 'v' : 1 , 'key' : { '_fts' : 'text' , '_ftsx' : 1} , 'name' : 'searchme' , 'ns' : 'morphia_test.indexes' , "
-                        + "'weights' : { 'text' : 1} , 'default_language' : 'english' , 'language_override' : 'language' , "
+                        + "'weights' : { 'text' : 10} , 'default_language' : 'english' , 'language_override' : 'language' , "
                         + "'textIndexVersion' : 3}"),
                              dbObject);
             } else {
@@ -275,18 +276,63 @@ public class IndexHelperTest extends TestBase {
             }
         }
     }
+    @Test
+    public void oldIndexedForm() {
+        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
+
+        indexes.drop();
+        Indexed indexed = new IndexedBuilder()
+            .name("index_name")
+            .background(true)
+            .dropDups(true)
+            .expireAfterSeconds(42)
+            .sparse(true)
+            .unique(true)
+            .value(IndexDirection.DESC);
+        assertEquals(indexed.options().name(), "");
+
+        Index converted = indexHelper.convert(indexed, "oldstyle");
+        assertEquals(converted.options().name(), "index_name");
+        assertTrue(converted.options().background());
+        assertTrue(converted.options().dropDups());
+        assertTrue(converted.options().sparse());
+        assertTrue(converted.options().unique());
+        assertEquals(new FieldBuilder().value("oldstyle").type(IndexType.DESC), converted.fields()[0]);
+    }
 
     @Test
     public void wildcardTextIndex() {
-        getMorphia().map(WildcardTextSearch.class);
-        getDs().ensureIndexes();
-        List<DBObject> wildcard = getDb().getCollection("wildcard").getIndexInfo();
+        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        IndexBuilder index = new IndexBuilder()
+            .fields(new FieldBuilder()
+                        .value("$**")
+                        .type(IndexType.TEXT));
+
+        indexHelper.createIndex(indexes, mappedClass, index, false);
+
+        List<DBObject> wildcard = getDb().getCollection("indexes").getIndexInfo();
         boolean found = false;
         for (DBObject dbObject : wildcard) {
             found |= dbObject.get("name").equals("$**_text");
         }
         assertTrue("Should have found the wildcard index", found);
     }
+
+    @Test(expected = MappingException.class)
+    public void weightsOnNonTextIndex() {
+        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        IndexBuilder index = new IndexBuilder()
+            .fields(new FieldBuilder()
+                        .value("name")
+                        .weight(10));
+
+        indexHelper.createIndex(indexes, mappedClass, index, false);
+    }
+
     private void checkIndex(final DBObject dbObject) {
         assertTrue((Boolean) dbObject.get("background"));
         assertTrue((Boolean) dbObject.get("unique"));
@@ -342,7 +388,7 @@ public class IndexHelperTest extends TestBase {
     private static class IndexedClass {
         @Id
         private ObjectId id;
-        @org.mongodb.morphia.annotations.Text(options = @IndexOptions(name = "searchme"))
+        @Text(value = 10, options = @IndexOptions(name = "searchme"))
         private String text;
         @Property("name")
         private double indexName;
@@ -358,15 +404,5 @@ public class IndexHelperTest extends TestBase {
     private static class NestedClassImpl implements NestedClass {
         @Indexed
         private String name;
-    }
-
-    @Entity("wildcard")
-    @Indexes(
-        @Index(fields = { @Field(value = "$**", type = IndexType.TEXT) })
-    )
-    private static class WildcardTextSearch {
-        @Id
-        private ObjectId id;
-        private String value;
     }
 }

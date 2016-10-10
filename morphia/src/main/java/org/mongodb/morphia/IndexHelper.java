@@ -44,7 +44,6 @@ import org.mongodb.morphia.utils.IndexType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,9 +74,8 @@ final class IndexHelper {
         final Map<String, Object> values = new HashMap<String, Object>();
 
         try {
-            Class<T> annotationType = annotation instanceof Proxy
-                                      ? extractType(Proxy.getInvocationHandler(annotation))
-                                      : (Class<T>) annotation.getClass();
+
+            Class<T> annotationType = (Class<T>) annotation.annotationType();
             for (Method method : annotationType.getDeclaredMethods()) {
                 Object value = method.invoke(annotation);
                 if (!method.getDefaultValue().equals(value)) {
@@ -88,12 +86,6 @@ final class IndexHelper {
             throw new MappingException(e.getMessage(), e);
         }
         return values;
-    }
-
-    private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
-        java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
-        type.setAccessible(true);
-        return (Class) type.get(invocationHandler);
     }
 
     private static String join(final List<String> path, final char delimiter) {
@@ -107,10 +99,13 @@ final class IndexHelper {
         return builder.toString();
     }
 
-    private void calculateWeights(final Index normalized, final com.mongodb.client.model.IndexOptions indexOptions) {
+    private void calculateWeights(final Index index, final com.mongodb.client.model.IndexOptions indexOptions) {
         Document weights = new Document();
-        for (Field field : normalized.fields()) {
+        for (Field field : index.fields()) {
             if (field.weight() != -1) {
+                if (field.type() != IndexType.TEXT) {
+                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
+                }
                 weights.put(field.value(), field.weight());
             }
         }
@@ -119,16 +114,16 @@ final class IndexHelper {
         }
     }
 
-    private IndexBuilder collect(final MappedField mf, final Text text) {
+    IndexBuilder convert(final Text text, final String nameToStore) {
         return new IndexBuilder()
             .options(text.options())
             .fields(Collections.<Field>singletonList(new FieldBuilder()
-                                                         .value(mf.getNameToStore())
+                                                         .value(nameToStore)
                                                          .type(IndexType.TEXT)
                                                          .weight(text.value())));
     }
 
-    private Index collect(final MappedField mf, final Indexed indexed) {
+     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
             LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
                             + "validate your system behaves as expected.");
@@ -140,7 +135,7 @@ final class IndexHelper {
         }
 
         List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
-                                                                  .value(mf.getNameToStore())
+                                                                  .value(nameToStore)
                                                                   .type(fromValue(indexed.value().toIndexValue())));
         return newOptions.isEmpty()
                ? new IndexBuilder()
@@ -158,10 +153,10 @@ final class IndexHelper {
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 final Indexed indexed = mf.getAnnotation(Indexed.class);
-                list.add(collect(mf, indexed));
+                list.add(convert(indexed, mf.getNameToStore()));
             } else if (mf.hasAnnotation(Text.class)) {
                 final Text text = mf.getAnnotation(Text.class);
-                list.add(collect(mf, text));
+                list.add(convert(text, mf.getNameToStore()));
             }
         }
         return list;
@@ -275,11 +270,6 @@ final class IndexHelper {
     BsonDocument calculateKeys(final MappedClass mc, final Index index) {
         BsonDocument keys = new BsonDocument();
         for (Field field : index.fields()) {
-            if (field.weight() != -1) {
-                if (field.type() != IndexType.TEXT) {
-                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                }
-            }
             String path;
             try {
                 path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
