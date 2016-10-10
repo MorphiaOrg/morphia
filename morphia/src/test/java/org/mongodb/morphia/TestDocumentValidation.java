@@ -21,13 +21,32 @@ import com.mongodb.WriteConcernException;
 import org.junit.Test;
 import org.mongodb.morphia.entities.DocumentValidation;
 import org.mongodb.morphia.mapping.MappedClass;
-import sun.reflect.annotation.AnnotationParser;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Date;
 
 import static org.junit.Assert.assertTrue;
 
 public class TestDocumentValidation extends TestBase {
+    private static Validation createAnnotationInstance(final String validator, final ValidationLevel level, final ValidationAction action) {
+        final Map<String, Object> values = new HashMap<String, Object>();
+
+        values.put("value", validator);
+        values.put("level", level);
+        values.put("action", action);
+
+        InvocationHandler handler = new InvocationHandler() {
+            @Override
+            public Object invoke(final Object proxy, final Method method, final Object[] args)
+                throws Throwable {
+                return values.get(method.getName());
+            }
+        };
+        return (Validation) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), new Class[]{Validation.class}, handler);
+    }
+
     @Test
     public void createValidation() {
         getMorphia().map(DocumentValidation.class);
@@ -43,44 +62,6 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
-    }
-
-    @Test
-    public void validationDocuments() {
-        Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
-        getMorphia().map(DocumentValidation.class);
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
-
-        for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
-            for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
-                checkValidation(validator, mappedClass, level, action);
-            }
-        }
-    }
-
-    private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
-                                   final ValidationAction action) {
-        updateValidation(mappedClass, level, action);
-        Document expected = new Document("validator", validator)
-            .append("validationLevel", level.getValue())
-            .append("validationAction", action.getValue());
-
-        assertEquals(expected, getValidation());
-    }
-
-    private  void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
-        Validation validation = createAnnotationInstance("{ jelly : { $ne : 'rhubarb' } }", level, action);
-        ((DatastoreImpl) getDs()).process(mappedClass, validation);
-    }
-
-    private static Validation createAnnotationInstance(final String validator, final ValidationLevel level, final ValidationAction action) {
-        Map<String, Object> values = new HashMap<String, Object>();
-
-        values.put("value", validator);
-        values.put("level", level);
-        values.put("action", action);
-
-        return (Validation) AnnotationParser.annotationForMap(Validation.class, values);
     }
 
     @Test
@@ -123,9 +104,27 @@ public class TestDocumentValidation extends TestBase {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private Document getValidator() {
-        return (Document) getValidation().get("validator");
+    @Test
+    public void validationDocuments() {
+        Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
+        getMorphia().map(DocumentValidation.class);
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
+
+        for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
+            for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
+                checkValidation(validator, mappedClass, level, action);
+            }
+        }
+    }
+
+    private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
+                                 final ValidationAction action) {
+        updateValidation(mappedClass, level, action);
+        Document expected = new Document("validator", validator)
+            .append("validationLevel", level.getValue())
+            .append("validationAction", action.getValue());
+
+        assertEquals(expected, getValidation());
     }
 
     private Document getValidation() {
@@ -135,5 +134,15 @@ public class TestDocumentValidation extends TestBase {
 
         List<Document> firstBatch = (List<Document>) ((Document) document.get("cursor")).get("firstBatch");
         return (Document) firstBatch.get(0).get("options");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Document getValidator() {
+        return (Document) getValidation().get("validator");
+    }
+
+    private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
+        Validation validation = createAnnotationInstance("{ jelly : { $ne : 'rhubarb' } }", level, action);
+        ((DatastoreImpl) getDs()).process(mappedClass, validation);
     }
 }
