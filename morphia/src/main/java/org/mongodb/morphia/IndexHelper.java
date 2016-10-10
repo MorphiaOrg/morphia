@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.mongodb.morphia.AnnotationBuilder.toMap;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 final class IndexHelper {
@@ -214,11 +215,11 @@ final class IndexHelper {
     }
 
     private Map<String, Object> extractOptions(final IndexOptions options) {
-        return AnnotationBuilder.toMap(options);
+        return toMap(options);
     }
 
     private Map<String, Object> extractOptions(final Indexed indexed) {
-        Map<String, Object> map = AnnotationBuilder.toMap(indexed);
+        Map<String, Object> map = toMap(indexed);
         if (indexed.options().collation().locale().equals("")) {
             map.remove("options");
         }
