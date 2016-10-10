@@ -92,7 +92,7 @@ final class IndexHelper {
         }
     }
 
-    IndexBuilder convert(final Text text, final String nameToStore) {
+    Index convert(final Text text, final String nameToStore) {
         return new IndexBuilder()
             .options(text.options())
             .fields(Collections.<Field>singletonList(new FieldBuilder()

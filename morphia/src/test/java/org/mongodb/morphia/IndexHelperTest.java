@@ -299,6 +299,31 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
+    public void convertTextIndex() {
+        TextBuilder text = new TextBuilder()
+            .value(4)
+            .options(new IndexOptionsBuilder()
+                         .name("index_name")
+                         .background(true)
+                         .dropDups(true)
+                         .expireAfterSeconds(42)
+                         .sparse(true)
+                         .unique(true));
+
+        Index index = indexHelper.convert(text, "search_field");
+        assertEquals(index.options().name(), "index_name");
+        assertTrue(index.options().background());
+        assertTrue(index.options().dropDups());
+        assertTrue(index.options().sparse());
+        assertTrue(index.options().unique());
+        assertEquals(new FieldBuilder()
+                         .value("search_field")
+                         .type(IndexType.TEXT)
+                         .weight(4),
+                     index.fields()[0]);
+
+    }
+    @Test
     public void normalizeIndexed() {
         Indexed indexed = new IndexedBuilder()
             .value(IndexDirection.DESC)
