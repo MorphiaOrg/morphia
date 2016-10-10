@@ -7,7 +7,6 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
-import com.mongodb.client.MongoDatabase;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.query.Query;

@@ -3,6 +3,7 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.BulkWriteOperation;
+import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBDecoderFactory;
@@ -12,12 +13,14 @@ import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
-
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationOptions;
+import org.bson.json.JsonParseException;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -267,27 +270,29 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    protected void process(final MappedClass mc, final Validation validation) {
+    void process(final MappedClass mc, final Validation validation) {
         if (validation != null) {
             String collectionName = mc.getCollectionName();
-            try {
-                getDatabase().runCommand(new Document("collMod", collectionName)
-                                             .append("validator", Document.parse(validation.value()))
-                                             .append("validationLevel", validation.level().getValue())
-                                             .append("validationAction", validation.action().getValue()));
-            } catch (MongoCommandException e) {
-                if (e.getErrorCode() == 26) {
+            CommandResult result = getDB()
+                .command(new BasicDBObject("collMod", collectionName)
+                             .append("validator", BasicDBObject.parse(validation.value()))
+                             .append("validationLevel", validation.level().getValue())
+                             .append("validationAction", validation.action().getValue())
+                        );
+
+            if (!result.ok()) {
+                if (result.getInt("code") == 26) {
                     try {
                         ValidationOptions options = new ValidationOptions()
                             .validator(BasicDBObject.parse(validation.value()))
                             .validationLevel(validation.level())
                             .validationAction(validation.action());
                         getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
-                    } catch (JsonParseException parseException) {
-                        LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, parseException.getMessage()));
+                    } catch (JsonParseException e) {
+                        LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, e.getMessage()));
                     }
                 } else {
-                    LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, e.getErrorMessage()));
+                    LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, result.getErrorMessage()));
                 }
             }
         }
