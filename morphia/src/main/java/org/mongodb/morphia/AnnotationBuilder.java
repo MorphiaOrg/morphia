@@ -85,13 +85,6 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
         return map;
     }
 
-    private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
-        java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
-        type.setAccessible(true);
-        return (Class) type.get(invocationHandler);
-    }
-
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
