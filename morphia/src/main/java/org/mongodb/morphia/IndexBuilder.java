@@ -24,6 +24,7 @@ import org.mongodb.morphia.utils.IndexType;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     IndexBuilder() {
     }

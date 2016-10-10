@@ -20,6 +20,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
+import org.bson.Document;
 import org.bson.codecs.Encoder;
 import org.bson.codecs.EncoderContext;
 import org.mongodb.morphia.annotations.Collation;
@@ -42,7 +43,6 @@ import org.mongodb.morphia.utils.IndexType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -91,10 +91,6 @@ final class IndexHelper {
     }
 
     private static Class extractType(final InvocationHandler invocationHandler) throws NoSuchFieldException, IllegalAccessException {
-        if (invocationHandler instanceof AnnotationInvocationHandler) {
-            return ((AnnotationInvocationHandler) invocationHandler).type;
-        }
-
         java.lang.reflect.Field type = invocationHandler.getClass().getDeclaredField("type");
         type.setAccessible(true);
         return (Class) type.get(invocationHandler);
@@ -111,53 +107,25 @@ final class IndexHelper {
         return builder.toString();
     }
 
-    BsonDocument calculateKeys(final MappedClass mc, final Index index) {
-        BsonDocument keys = new BsonDocument();
-        for (Field field : index.fields()) {
+    private void calculateWeights(final Index normalized, final com.mongodb.client.model.IndexOptions indexOptions) {
+        Document weights = new Document();
+        for (Field field : normalized.fields()) {
             if (field.weight() != -1) {
-                if (field.type() != IndexType.TEXT) {
-                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                }
-            }
-            String path;
-            try {
-                path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
-            } catch (Exception e) {
-                path = field.value();
-                String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                                       path, mc.getClazz().getName());
-                if (!index.options().disableValidation()) {
-                    throw new MappingException(message);
-                }
-                LOG.warning(message);
-            }
-            keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
-        }
-        return keys;
-    }
-
-    @SuppressWarnings("deprecation")
-    private List<Index> collectFieldIndexes(final MappedClass mc) {
-        List<Index> list = new ArrayList<Index>();
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (mf.hasAnnotation(Indexed.class)) {
-                final Indexed indexed = mf.getAnnotation(Indexed.class);
-                list.add(collect(mf, indexed));
-            } else if (mf.hasAnnotation(Text.class)) {
-                final Text text = mf.getAnnotation(Text.class);
-                list.add(collect(mf, text));
+                weights.put(field.value(), field.weight());
             }
         }
-        return list;
+        if (!weights.isEmpty()) {
+            indexOptions.weights(weights);
+        }
     }
 
     private IndexBuilder collect(final MappedField mf, final Text text) {
         return new IndexBuilder()
-                     .options(text.options())
-                     .fields(Collections.<Field>singletonList(new FieldBuilder()
-                                                                  .value(mf.getNameToStore())
-                                                                  .type(IndexType.TEXT)
-                                                                  .weight(text.value())));
+            .options(text.options())
+            .fields(Collections.<Field>singletonList(new FieldBuilder()
+                                                         .value(mf.getNameToStore())
+                                                         .type(IndexType.TEXT)
+                                                         .weight(text.value())));
     }
 
     private Index collect(final MappedField mf, final Indexed indexed) {
@@ -175,13 +143,28 @@ final class IndexHelper {
                                                                   .value(mf.getNameToStore())
                                                                   .type(fromValue(indexed.value().toIndexValue())));
         return newOptions.isEmpty()
-                 ? new IndexBuilder()
-                     .options(new IndexOptionsBuilder()
-                                  .migrate(indexed))
-                     .fields(fields)
-                 : new IndexBuilder()
-                     .options(indexed.options())
-                     .fields(fields);
+               ? new IndexBuilder()
+                   .options(new IndexOptionsBuilder()
+                                .migrate(indexed))
+                   .fields(fields)
+               : new IndexBuilder()
+                   .options(indexed.options())
+                   .fields(fields);
+    }
+
+    @SuppressWarnings("deprecation")
+    private List<Index> collectFieldIndexes(final MappedClass mc) {
+        List<Index> list = new ArrayList<Index>();
+        for (final MappedField mf : mc.getPersistenceFields()) {
+            if (mf.hasAnnotation(Indexed.class)) {
+                final Indexed indexed = mf.getAnnotation(Indexed.class);
+                list.add(collect(mf, indexed));
+            } else if (mf.hasAnnotation(Text.class)) {
+                final Text text = mf.getAnnotation(Text.class);
+                list.add(collect(mf, text));
+            }
+        }
+        return list;
     }
 
     private List<Index> collectIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
@@ -258,6 +241,62 @@ final class IndexHelper {
         return list;
     }
 
+    private Map<String, Object> extractOptions(final IndexOptions options) {
+        return toMap(options);
+    }
+
+    private Map<String, Object> extractOptions(final Indexed indexed) {
+        Map<String, Object> map = toMap(indexed);
+        if (indexed.options().collation().locale().equals("")) {
+            map.remove("options");
+        }
+        return map;
+    }
+
+    private MappingException pathFail(final MappedClass mc, final List<String> path) {
+        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
+    }
+
+    private Index replaceFields(final Index original, final List<Field> list) {
+        return new IndexBuilder(original)
+            .fields(list);
+    }
+
+    @SuppressWarnings("unchecked")
+    private BsonDocument toBsonDocument(final String key, final Object value) {
+        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
+        writer.writeStartDocument();
+        writer.writeName(key);
+        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
+        writer.writeEndDocument();
+        return writer.getDocument();
+    }
+
+    BsonDocument calculateKeys(final MappedClass mc, final Index index) {
+        BsonDocument keys = new BsonDocument();
+        for (Field field : index.fields()) {
+            if (field.weight() != -1) {
+                if (field.type() != IndexType.TEXT) {
+                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
+                }
+            }
+            String path;
+            try {
+                path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
+            } catch (Exception e) {
+                path = field.value();
+                String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
+                                        path, mc.getClazz().getName());
+                if (!index.options().disableValidation()) {
+                    throw new MappingException(message);
+                }
+                LOG.warning(message);
+            }
+            keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
+        }
+        return keys;
+    }
+
     @SuppressWarnings("deprecation")
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
@@ -300,18 +339,6 @@ final class IndexHelper {
                                                  .normalization(collation.normalization())
                                                  .numericOrdering(collation.numericOrdering())
                                                  .build();
-    }
-
-    private Map<String, Object> extractOptions(final IndexOptions options) {
-        return toMap(options);
-    }
-
-    private Map<String, Object> extractOptions(final Indexed indexed) {
-        Map<String, Object> map = toMap(indexed);
-        if (indexed.options().collation().locale().equals("")) {
-            map.remove("options");
-        }
-        return map;
     }
 
     String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
@@ -358,51 +385,7 @@ final class IndexHelper {
         return namePath;
     }
 
-    private MappingException pathFail(final MappedClass mc, final List<String> path) {
-        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
-    }
-
-    private Index replaceFields(final Index original, final List<Field> list) {
-        return new IndexBuilder(original)
-            .fields(list);
-    }
-
-    @SuppressWarnings("unchecked")
-    private BsonDocument toBsonDocument(final String key, final Object value) {
-        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
-        writer.writeStartDocument();
-        writer.writeName(key);
-        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
-        writer.writeEndDocument();
-        return writer.getDocument();
-    }
-
-    private static class AnnotationInvocationHandler<T> implements InvocationHandler {
-        private final Class<T> type;
-        private final Map<String, Object> values;
-
-        AnnotationInvocationHandler(final Class<T> type, final Map<String, Object> values) {
-            this.type = type;
-            this.values = values;
-        }
-
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args)
-            throws InvocationTargetException, IllegalAccessException {
-            if (method.getName().equals("toString")) {
-                return toString();
-            }
-            return values.get(method.getName());
-        }
-
-        @Override
-        public String toString() {
-            return format("%s %s", type.getSimpleName(), values.toString());
-        }
-    }
-
     void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
-
         for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
             createIndex(collection, mc, index, background);
         }
@@ -410,6 +393,11 @@ final class IndexHelper {
 
     void createIndex(final MongoCollection collection, final MappedClass mc, final Index index, final boolean background) {
         Index normalized = IndexBuilder.normalize(index);
-        collection.createIndex(calculateKeys(mc, normalized), convert(normalized.options(), background));
+
+        BsonDocument keys = calculateKeys(mc, normalized);
+        com.mongodb.client.model.IndexOptions indexOptions = convert(normalized.options(), background);
+        calculateWeights(normalized, indexOptions);
+
+        collection.createIndex(keys, indexOptions);
     }
 }

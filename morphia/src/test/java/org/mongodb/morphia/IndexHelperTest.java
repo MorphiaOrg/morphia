@@ -36,6 +36,7 @@ import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.IndexType;
@@ -76,6 +77,28 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
+    public void calculateBadKeys() {
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        IndexBuilder index = new IndexBuilder()
+            .fields(new FieldBuilder()
+                        .value("texting")
+                        .type(IndexType.TEXT)
+                        .weight(1),
+                    new FieldBuilder()
+                        .value("nest")
+                        .type(IndexType.DESC));
+        try {
+            indexHelper.calculateKeys(mappedClass, index);
+            fail("Validation should have errored on the bad key");
+        } catch (MappingException e) {
+            // all good
+        }
+
+        index.options(new IndexOptionsBuilder().disableValidation(true));
+        indexHelper.calculateKeys(mappedClass, index);
+    }
+
+    @Test
     public void calculateKeys() {
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
         BsonDocument keys = indexHelper.calculateKeys(mappedClass, new IndexBuilder()
@@ -92,24 +115,52 @@ public class IndexHelperTest extends TestBase {
                      keys);
     }
 
-    @Test(expected = MappingException.class)
-    public void calculateBadKeys() {
+    @Test
+    public void createIndex() {
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
-        indexHelper.calculateKeys(mappedClass, new IndexBuilder()
-            .fields(new FieldBuilder()
-                        .value("texting")
-                        .type(IndexType.TEXT)
-                        .weight(1),
-                    new FieldBuilder()
-                        .value("nest")
-                        .type(IndexType.DESC)));
+
+        indexHelper.createIndex(collection, mappedClass, false);
+        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
+                                          .getIndexInfo();
+        assertEquals("Should have 5 indexes", 5, indexInfo.size());
+        for (DBObject dbObject : indexInfo) {
+            String name = dbObject.get("name").toString();
+            if (name.equals("_id_")) {
+                assertEquals(BasicDBObject.parse("{ 'v' : 1 , 'key' : { '_id' : 1} , 'name' : '_id_' , 'ns' : 'morphia_test.indexes'}"),
+                             dbObject);
+            } else if (name.equals("latitude_1")) {
+                assertEquals(BasicDBObject.parse(
+                    "{ 'v' : 1 , 'key' : { 'latitude' : 1} , 'name' : 'latitude_1' , 'ns' : 'morphia_test.indexes'}"), dbObject);
+            } else if (name.equals("behind_interface")) {
+                assertEquals(BasicDBObject.parse(
+                    "{ 'v' : 1 , 'key' : { 'nest.name' : -1} , 'name' : 'behind_interface' , 'collation' : { 'locale' : 'en' , "
+                        + "'caseLevel' : false , 'caseFirst' : 'off' , 'strength' : 2 , 'numericOrdering' : false , 'alternate' : "
+                        + "'non-ignorable' , 'maxVariable' : 'punct' , 'normalization' : false , 'backwards' : false , 'version' : "
+                        + "'57.1'} , 'ns' : 'morphia_test.indexes'}"),
+                             dbObject);
+            } else if (name.equals("nest.name_1")) {
+                assertEquals(BasicDBObject.parse(
+                    "{ 'v' : 1 , 'key' : { 'nest.name' : 1} , 'name' : 'nest.name_1' , 'ns' : 'morphia_test.indexes'}"), dbObject);
+            } else if (name.equals("searchme")) {
+                assertEquals(BasicDBObject.parse(
+                    "{ 'v' : 1 , 'key' : { '_fts' : 'text' , '_ftsx' : 1} , 'name' : 'searchme' , 'ns' : 'morphia_test.indexes' , "
+                        + "'weights' : { 'text' : 1} , 'default_language' : 'english' , 'language_override' : 'language' , "
+                        + "'textIndexVersion' : 3}"),
+                             dbObject);
+            } else {
+                throw new MappingException("Found an index I wasn't expecting:  " + dbObject);
+            }
+
+        }
+
     }
 
     @Test
     public void findField() {
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 
-        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("index_name")));
+        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("indexName")));
         assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("name")));
         assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nested", "name")));
         assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "name")));
@@ -133,7 +184,7 @@ public class IndexHelperTest extends TestBase {
         indexes.drop();
         Index index = new IndexBuilder()
             .fields(new FieldBuilder()
-                        .value("index_name"),
+                        .value("indexName"),
                     new FieldBuilder()
                         .value("text")
                         .type(IndexType.DESC))
@@ -142,7 +193,7 @@ public class IndexHelperTest extends TestBase {
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
         for (DBObject dbObject : indexInfo) {
-            if (dbObject.get("name").equals("index_name")) {
+            if (dbObject.get("name").equals("indexName")) {
                 checkIndex(dbObject);
 
                 assertEquals("en", dbObject.get("default_language"));
@@ -164,40 +215,6 @@ public class IndexHelperTest extends TestBase {
         }
     }
 
-    @Test
-    public void createIndex() {
-        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
-
-        indexHelper.createIndex(collection, mappedClass, false);
-        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
-                                          .getIndexInfo();
-        assertEquals("Should have 4 indexes", 4, indexInfo.size());
-        for (DBObject dbObject : indexInfo) {
-            String name = dbObject.get("name").toString();
-            if (name.equals("_id_")) {
-                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"_id\" : 1} , \"name\" : \"_id_\" , \"ns\" : \"morphia_test"
-                                                     + ".indexes\"}"), dbObject);
-            } else if (name.equals("latitude_1")) {
-                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"latitude\" : 1} , \"name\" : \"latitude_1\" , \"ns\" : "
-                                                     + "\"morphia_test.indexes\"}"), dbObject);
-            } else if (name.equals("behind_interface")) {
-                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"nest.name\" : -1} , \"name\" : \"behind_interface\" , "
-                                                     + "\"collation\" : { \"locale\" : \"en\" , \"caseLevel\" : false , \"caseFirst\" : "
-                                                     + "\"off\" , \"strength\" : 2 , \"numericOrdering\" : false , \"alternate\" : "
-                                                     + "\"non-ignorable\" , \"maxVariable\" : \"punct\" , \"normalization\" : false , "
-                                                     + "\"backwards\" : false , \"version\" : \"57.1\"} , \"ns\" : \"morphia_test"
-                                                     + ".indexes\"}"), dbObject);
-            } else if (name.equals("nest.name_1")) {
-                assertEquals(BasicDBObject.parse("{ \"v\" : 1 , \"key\" : { \"nest.name\" : 1} , \"name\" : \"nest.name_1\" , \"ns\" : "
-                                                     + "\"morphia_test.indexes\"}"), dbObject);
-            } else {
-                throw new MappingException("Found an index I wasn't expecting:  " + name);
-            }
-
-        }
-
-    }
     @Test
     public void indexCollationConversion() {
         Collation collation = collation();
@@ -248,8 +265,7 @@ public class IndexHelperTest extends TestBase {
             .expireAfterSeconds(42)
             .sparse(true)
             .unique(true)
-            .value("index_name, -text")
-            ;
+            .value("indexName, -text");
         indexHelper.createIndex(indexes, mappedClass, index, false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
@@ -278,8 +294,7 @@ public class IndexHelperTest extends TestBase {
             .maxVariable(SPACE)
             .normalization(true)
             .numericOrdering(true)
-            .strength(IDENTICAL)
-            ;
+            .strength(IDENTICAL);
     }
 
     private <T extends Annotation> void compareFields(final Class<T> annotationType, final Class<? extends AnnotationBuilder<T>> builder) {
@@ -312,15 +327,14 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Entity("indexes")
-    @Indexes(
-        @Index(fields = @Field("latitude"))
-    )
+    @Indexes(@Index(fields = @Field("latitude")))
     private static class IndexedClass {
         @Id
         private ObjectId id;
+        @Text(options = @IndexOptions(name = "searchme"))
         private String text;
         @Property("name")
-        private double index_name;
+        private double indexName;
         private double latitude;
         @Embedded("nest")
         private NestedClass nested;
@@ -328,8 +342,7 @@ public class IndexHelperTest extends TestBase {
 
     @Indexes(
         @Index(fields = @Field(value = "name", type = IndexType.DESC),
-            options = @IndexOptions(name = "behind_interface", collation = @Collation(locale = "en", strength = SECONDARY)))
-    )
+            options = @IndexOptions(name = "behind_interface", collation = @Collation(locale = "en", strength = SECONDARY))))
     private static class NestedClassImpl implements NestedClass {
         @Indexed
         private String name;

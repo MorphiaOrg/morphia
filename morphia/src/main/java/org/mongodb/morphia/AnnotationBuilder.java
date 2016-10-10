@@ -20,7 +20,6 @@ import org.mongodb.morphia.mapping.MappingException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -53,7 +52,9 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
     void put(final String key, final Object value) {
-        values.put(key, value);
+        if (value != null) {
+            values.put(key, value);
+        }
     }
 
     void putAll(final Map<String, Object> map) {
