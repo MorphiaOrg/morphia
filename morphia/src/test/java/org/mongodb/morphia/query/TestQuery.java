@@ -1166,6 +1166,12 @@ public class TestQuery extends TestBase {
                                                         .collationStrength(CollationStrength.SECONDARY)
                                                         .build()))
                              .size());
+        assertEquals(1, query.count());
+        assertEquals(2, query.count(new CountOptions()
+                                    .collation(builder()
+                                                        .locale("en")
+                                                        .collationStrength(CollationStrength.SECONDARY)
+                                                        .build())));
     }
 
     private int[] copy(final int[] array, final int start, final int count) {
