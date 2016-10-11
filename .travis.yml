@@ -20,4 +20,4 @@ before_script:
   - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
 install: ./gradlew -q jar --stacktrace
-script: ./gradlew -q check --stacktrace
+script: ./gradlew check --stacktrace
