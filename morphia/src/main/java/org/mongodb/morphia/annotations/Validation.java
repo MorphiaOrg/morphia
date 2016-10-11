@@ -43,7 +43,8 @@ import static com.mongodb.client.model.ValidationLevel.STRICT;
 @Target({ElementType.TYPE})
 public @interface Validation {
     /**
-     * Defines the query used to validate documents in a collection
+     * Defines the query used to validate documents in a collection.  This query is not validated so care must be taken to ensure
+     * document field names and types are correct.
      *
      * @mongodb.driver.manual core/document-validation/
      */

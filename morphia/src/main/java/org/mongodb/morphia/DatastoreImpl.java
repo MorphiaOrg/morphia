@@ -20,7 +20,6 @@ import com.mongodb.WriteResult;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.json.JsonParseException;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.aggregation.AggregationPipelineImpl;
 import org.mongodb.morphia.annotations.CappedAt;
@@ -281,17 +280,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
             if (!result.ok()) {
                 if (result.getInt("code") == 26) {
-                    try {
-                        ValidationOptions options = new ValidationOptions()
-                            .validator(parse(validation.value()))
-                            .validationLevel(validation.level())
-                            .validationAction(validation.action());
-                        getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
-                    } catch (JsonParseException e) {
-                        LOG.warning(format("Could not parse validator for '%s:'  %s", collectionName, e.getMessage()));
-                    }
+                    ValidationOptions options = new ValidationOptions()
+                        .validator(parse(validation.value()))
+                        .validationLevel(validation.level())
+                        .validationAction(validation.action());
+                    getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
                 } else {
-                    LOG.warning(format("Could not add document validation on '%s:'  %s", collectionName, result.getErrorMessage()));
+                    throw new MappingException(format("Could not add document validation on '%s:'  %s", collectionName,
+                                                      result.getErrorMessage()));
                 }
             }
         }
