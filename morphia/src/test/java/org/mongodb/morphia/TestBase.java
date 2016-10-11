@@ -5,49 +5,41 @@ import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
 @SuppressWarnings("deprecation")
 public abstract class TestBase {
-    public static final String TEST_DB_NAME = "morphia_test";
+    private static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
     private final Morphia morphia = new Morphia();
-    private DB db;
-    private Datastore ds;
-    private AdvancedDatastore ads;
+    private final DB db;
+    private final MongoDatabase database;
+    private final Datastore ds;
 
     protected TestBase() {
-        try {
-            mongoClient = new MongoClient(new MongoClientURI(System.getProperty("MONGO_URI", "mongodb://localhost:27017")));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mongoClient = new MongoClient(new MongoClientURI(System.getProperty("MONGO_URI", "mongodb://localhost:27017")));
+        db = getMongoClient().getDB(TEST_DB_NAME);
+        database = getMongoClient().getDatabase(TEST_DB_NAME);
+        ds = getMorphia().createDatastore(getMongoClient(), getDb().getName());
     }
 
     public AdvancedDatastore getAds() {
-        return ads;
-    }
-
-    public void setAds(final AdvancedDatastore ads) {
-        this.ads = ads;
+        return (AdvancedDatastore) getDs();
     }
 
     public DB getDb() {
         return db;
     }
 
-    public void setDb(final DB db) {
-        this.db = db;
+    public MongoDatabase getDatabase() {
+        return database;
     }
 
     public Datastore getDs() {
         return ds;
-    }
-
-    public void setDs(final Datastore ds) {
-        this.ds = ds;
     }
 
     public MongoClient getMongoClient() {
@@ -64,9 +56,6 @@ public abstract class TestBase {
 
     @Before
     public void setUp() {
-        setDb(getMongoClient().getDB(TEST_DB_NAME));
-        setDs(getMorphia().createDatastore(getMongoClient(), getDb().getName()));
-        setAds((AdvancedDatastore) getDs());
         cleanup();
     }
 

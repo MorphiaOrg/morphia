@@ -76,10 +76,7 @@ public @interface Indexed {
     boolean unique() default false;
 
     /**
-     * Indicates the direction of the index (ascending, descending); default is ascending
-     *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     * Indicates the type of the index (ascending, descending); default is ascending
      */
-    @Deprecated
     IndexDirection value() default IndexDirection.ASC;
 }
