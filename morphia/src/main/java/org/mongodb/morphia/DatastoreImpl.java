@@ -155,7 +155,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> WriteResult delete(final Query<T> query, final RemoveOptions options) {
+    public <T> WriteResult delete(final Query<T> query, final DeleteOptions options) {
 
         DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
@@ -182,12 +182,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> WriteResult delete(final Query<T> query) {
-        return delete(query, new RemoveOptions().writeConcern(getWriteConcern(query.getEntityClass())));
+        return delete(query, new DeleteOptions().writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
     public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
-        return delete(query, new RemoveOptions().writeConcern(wc));
+        return delete(query, new DeleteOptions().writeConcern(wc));
     }
 
     @Override
@@ -266,12 +266,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T findAndDelete(final Query<T> query) {
-        FindAndModifyOptions options = new FindAndModifyOptions()
-            .remove(true)
-            .returnNew(false)
-            .upsert(false);
-
-        return findAndDelete(query, options);
+        return findAndDelete(query, new FindAndModifyOptions());
     }
 
     @Override
@@ -710,10 +705,16 @@ public class DatastoreImpl implements AdvancedDatastore {
             return update((Query<T>) entity, operations);
         }
 
-        return update((Query<T>) createQuery(mapper.getMappedClass(entity).getClazz())
-                          .disableValidation()
-                          .filter(Mapper.ID_KEY, mapper.getId(entity)),
-                      operations);
+        final MappedClass mc = mapper.getMappedClass(entity);
+        Query<?> query = createQuery(mapper.getMappedClass(entity).getClazz())
+            .disableValidation()
+            .filter(Mapper.ID_KEY, mapper.getId(entity));
+        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
+            final MappedField field = mc.getFieldsAnnotatedWith(Version.class).get(0);
+            query.field(field.getNameToStore()).equal(field.getFieldValue(entity));
+        }
+
+        return update((Query<T>) query, operations);
     }
 
     @Override
@@ -1333,10 +1334,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         if (!fields.isEmpty()) {
-            final MappedField versionField = fields.get(0);
-            if (queryObject.get(versionField.getNameToStore()) == null) {
-                operations.inc(versionField.getNameToStore(), 1);
-            }
+            operations.inc(fields.get(0).getNameToStore(), 1);
         }
 
         final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();

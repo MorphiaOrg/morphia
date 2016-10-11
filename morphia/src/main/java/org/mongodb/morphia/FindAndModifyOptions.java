@@ -51,7 +51,7 @@ public final class FindAndModifyOptions {
     }
 
     DBCollectionFindAndModifyOptions getOptions() {
-        return options;
+        return copy().options;
     }
 
     DBObject getProjection() {

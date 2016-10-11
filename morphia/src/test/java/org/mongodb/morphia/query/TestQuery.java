@@ -41,13 +41,6 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.query.ArraySlice;
-import org.mongodb.morphia.query.FindOptions;
-import org.mongodb.morphia.query.MorphiaIterator;
-import org.mongodb.morphia.query.MorphiaKeyIterator;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryImpl;
-import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
 

@@ -51,6 +51,7 @@ import static com.mongodb.WriteConcern.W2;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -442,7 +443,7 @@ public class TestDatastore extends TestBase {
                                            .field("username").equal("john doe");
         assertEquals(1, getDs().delete(query).getN());
 
-        assertEquals(1, getDs().delete(query, new RemoveOptions()
+        assertEquals(1, getDs().delete(query, new DeleteOptions()
             .collation(Collation.builder()
                                 .locale("en")
                                 .collationStrength(CollationStrength.SECONDARY)
@@ -461,11 +462,14 @@ public class TestDatastore extends TestBase {
         assertNotNull(getDs().findAndDelete(query));
         assertNull(getDs().findAndDelete(query));
 
-        assertNotNull(getDs().findAndDelete(query, new FindAndModifyOptions()
+        FindAndModifyOptions options = new FindAndModifyOptions()
             .collation(Collation.builder()
                                 .locale("en")
                                 .collationStrength(CollationStrength.SECONDARY)
-                                .build())));
+                                .build());
+        assertNotNull(getDs().findAndDelete(query, options));
+        assertTrue("Options should not be modified by the datastore", options.isReturnNew());
+        assertFalse("Options should not be modified by the datastore", options.isRemove());
     }
 
     private void testFirstDatastore(final Datastore ds1) {

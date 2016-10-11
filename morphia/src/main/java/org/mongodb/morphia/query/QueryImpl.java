@@ -232,9 +232,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final MorphiaIterator<T, T> it = fetch(options
                                                    .copy()
                                                    .limit(1));
-        T t = (it.hasNext()) ? it.next() : null;
-        it.close();
-        return t;
+        try {
+            return (it.hasNext()) ? it.next() : null;
+        } finally {
+            it.close();
+        }
     }
 
     @Override
@@ -290,7 +292,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return n;
     }
 
-    protected BasicDBObject copy(final BasicDBObject dbObject) {
+    protected BasicDBObject copy(final DBObject dbObject) {
         return dbObject == null ? null : new BasicDBObject(dbObject.toMap());
     }
 
@@ -353,8 +355,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Object> explain() {
-        return (BasicDBObject) prepareCursor(getOptions()).explain();
+        return prepareCursor(getOptions()).explain().toMap();
     }
 
     @Override
@@ -395,8 +398,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public DBObject getFieldsObject() {
-        BasicDBObject projection = (BasicDBObject) getOptions().getProjection();
-        if (projection == null || projection.size() == 0) {
+        DBObject projection = getOptions().getProjection();
+        if (projection == null || projection.keySet().size() == 0) {
             return null;
         }
 
@@ -443,13 +446,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * @param query the DBObject containing the query
      */
     public void setQueryObject(final DBObject query) {
-        baseQuery = (BasicDBObject) query;
+        baseQuery = new BasicDBObject(query.toMap());
     }
 
     @Override
     public DBObject getSortObject() {
-        BasicDBObject sort = (BasicDBObject) getOptions().getSortDBObject();
-        return (sort == null) ? null : new BasicDBObject(sort);
+        DBObject sort = getOptions().getSortDBObject();
+        return (sort == null) ? null : new BasicDBObject(sort.toMap());
     }
 
     @Override
@@ -729,6 +732,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         switch (findOptions.getCursorType()) {
             case TailableAwait:
                 cursor.addOption(Bytes.QUERYOPTION_AWAITDATA);
+                cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
+                break;
             case Tailable:
                 cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
                 break;

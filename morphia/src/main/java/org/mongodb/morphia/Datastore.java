@@ -92,7 +92,7 @@ public interface Datastore {
      * @return results of the delete
      * @since 1.3
      */
-    <T> WriteResult delete(Query<T> query, RemoveOptions options);
+    <T> WriteResult delete(Query<T> query, DeleteOptions options);
 
     /**
      * Deletes entities based on the query, with the WriteConcern
@@ -101,7 +101,7 @@ public interface Datastore {
      * @param wc    the WriteConcern to use when deleting
      * @param <T>   the type to delete
      * @return results of the delete
-     * @deprecated use {@link #delete(Query, RemoveOptions)} instead
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
     @Deprecated
     <T> WriteResult delete(Query<T> query, WriteConcern wc);

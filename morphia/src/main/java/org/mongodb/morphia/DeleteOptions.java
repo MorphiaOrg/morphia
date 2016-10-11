@@ -26,7 +26,7 @@ import com.mongodb.client.model.DBCollectionRemoveOptions;
  * @since 1.3
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  */
-public final class RemoveOptions {
+public final class DeleteOptions {
     private final DBCollectionRemoveOptions options = new DBCollectionRemoveOptions();
 
     /**
@@ -46,7 +46,7 @@ public final class RemoveOptions {
      * @return this
      * @mongodb.server.release 3.4
      */
-    public RemoveOptions collation(final Collation collation) {
+    public DeleteOptions collation(final Collation collation) {
         options.collation(collation);
         return this;
     }
@@ -66,7 +66,7 @@ public final class RemoveOptions {
      * @param writeConcern the write concern
      * @return this
      */
-    public RemoveOptions writeConcern(final WriteConcern writeConcern) {
+    public DeleteOptions writeConcern(final WriteConcern writeConcern) {
         options.writeConcern(writeConcern);
         return this;
     }

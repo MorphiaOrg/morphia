@@ -116,7 +116,8 @@ public class TestVersionAnnotation extends TestBase {
 
         UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
         ops.set("name", "Value 3");
-        datastore.update(entity, ops);
+        Assert.assertEquals(1, datastore.update(entity, ops).getUpdatedCount());
+        Assert.assertEquals(0, datastore.update(entity, ops).getUpdatedCount());
 
         entity = datastore.get(Versioned.class, entity.getId());
         Assert.assertEquals("Value 3", entity.getName());

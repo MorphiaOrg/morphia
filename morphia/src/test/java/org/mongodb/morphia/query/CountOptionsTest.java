@@ -16,59 +16,39 @@
 
 package org.mongodb.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.CursorType;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionFindOptions;
+import com.mongodb.client.model.DBCollectionCountOptions;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-public class FindOptionsTest {
+public class CountOptionsTest {
     @Test
     public void passThrough() {
         Collation collation = Collation.builder()
                                        .locale("en")
                                        .caseLevel(true)
                                        .build();
-        DBCollectionFindOptions options = new FindOptions()
-            .batchSize(42)
+        DBCollectionCountOptions options = new CountOptions()
+            .collation(collation)
+            .hint("i'm a hint")
             .limit(18)
-            .modifier("i'm a", "modifier")
-            .modifier("i am", 2)
-            .projection(new BasicDBObject("field", "value"))
             .maxTime(15, TimeUnit.MINUTES)
-            .maxAwaitTime(45, TimeUnit.SECONDS)
-            .skip(12)
-            .sort(new BasicDBObject("field", -1))
-            .cursorType(CursorType.TailableAwait)
-            .noCursorTimeout(true)
-            .oplogReplay(true)
-            .partial(true)
             .readPreference(ReadPreference.secondaryPreferred())
             .readConcern(ReadConcern.LOCAL)
-            .collation(collation).getOptions();
+            .skip(12)
+            .getOptions();
 
-        assertEquals(42, options.getBatchSize());
+        assertEquals(collation, options.getCollation());
+        assertEquals("i'm a hint", options.getHintString());
         assertEquals(18, options.getLimit());
-        assertEquals(new BasicDBObject("i'm a", "modifier")
-                         .append("i am", 2), options.getModifiers());
-        assertEquals(new BasicDBObject("field", "value"), options.getProjection());
         assertEquals(15, options.getMaxTime(TimeUnit.MINUTES));
-        assertEquals(45, options.getMaxAwaitTime(TimeUnit.SECONDS));
-        assertEquals(12, options.getSkip());
-        assertEquals(new BasicDBObject("field", -1), options.getSort());
-        assertEquals(CursorType.TailableAwait, options.getCursorType());
-        assertTrue(options.isNoCursorTimeout());
-        assertTrue(options.isOplogReplay());
-        assertTrue(options.isPartial());
         assertEquals(ReadPreference.secondaryPreferred(), options.getReadPreference());
         assertEquals(ReadConcern.LOCAL, options.getReadConcern());
-        assertEquals(collation, options.getCollation());
+        assertEquals(12, options.getSkip());
     }
 }
