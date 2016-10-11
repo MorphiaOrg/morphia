@@ -47,6 +47,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static com.mongodb.client.model.CollationCaseFirst.UPPER;
 import static com.mongodb.client.model.CollationMaxVariable.SPACE;
@@ -128,30 +129,21 @@ public class IndexHelperTest extends TestBase {
         assertEquals("Should have 5 indexes", 5, indexInfo.size());
         for (DBObject dbObject : indexInfo) {
             String name = dbObject.get("name").toString();
-            if (name.equals("_id_")) {
-                assertEquals(BasicDBObject.parse("{ 'v' : 1 , 'key' : { '_id' : 1} , 'name' : '_id_' , 'ns' : 'morphia_test.indexes'}"),
-                             dbObject);
-            } else if (name.equals("latitude_1")) {
-                assertEquals(BasicDBObject.parse(
-                    "{ 'v' : 1 , 'key' : { 'latitude' : 1} , 'name' : 'latitude_1' , 'ns' : 'morphia_test.indexes'}"), dbObject);
+            if (name.equals("latitude_1")) {
+                assertEquals(parse("{ 'latitude' : 1 }"), dbObject.get("key"));
             } else if (name.equals("behind_interface")) {
-                assertEquals(BasicDBObject.parse(
-                    "{ 'v' : 1 , 'key' : { 'nest.name' : -1} , 'name' : 'behind_interface' , 'collation' : { 'locale' : 'en' , "
-                        + "'caseLevel' : false , 'caseFirst' : 'off' , 'strength' : 2 , 'numericOrdering' : false , 'alternate' : "
-                        + "'non-ignorable' , 'maxVariable' : 'punct' , 'normalization' : false , 'backwards' : false , 'version' : "
-                        + "'57.1'} , 'ns' : 'morphia_test.indexes'}"),
-                             dbObject);
+                assertEquals(parse("{ 'nest.name' : -1} "), dbObject.get("key"));
+                assertEquals(parse("{ 'locale' : 'en' , 'caseLevel' : false , 'caseFirst' : 'off' , 'strength' : 2 , 'numericOrdering' :"
+                                       + " false , 'alternate' : 'non-ignorable' , 'maxVariable' : 'punct' , 'normalization' : false , "
+                                       + "'backwards' : false , 'version' : '57.1'}"), dbObject.get("collation"));
             } else if (name.equals("nest.name_1")) {
-                assertEquals(BasicDBObject.parse(
-                    "{ 'v' : 1 , 'key' : { 'nest.name' : 1} , 'name' : 'nest.name_1' , 'ns' : 'morphia_test.indexes'}"), dbObject);
+                assertEquals(parse("{ 'nest.name' : 1} "), dbObject.get("key"));
             } else if (name.equals("searchme")) {
-                assertEquals(BasicDBObject.parse(
-                    "{ 'v' : 1 , 'key' : { '_fts' : 'text' , '_ftsx' : 1} , 'name' : 'searchme' , 'ns' : 'morphia_test.indexes' , "
-                        + "'weights' : { 'text' : 10} , 'default_language' : 'english' , 'language_override' : 'language' , "
-                        + "'textIndexVersion' : 3}"),
-                             dbObject);
+                assertEquals(parse("{ 'text' : 10 }"), dbObject.get("weights"));
             } else {
-                throw new MappingException("Found an index I wasn't expecting:  " + dbObject);
+                if (!"_id_".equals(dbObject.get("name"))) {
+                    throw new MappingException("Found an index I wasn't expecting:  " + dbObject);
+                }
             }
 
         }
