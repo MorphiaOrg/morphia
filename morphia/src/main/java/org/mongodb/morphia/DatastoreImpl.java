@@ -286,8 +286,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                         .validationAction(validation.action());
                     getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
                 } else {
-                    throw new MappingException(format("Could not add document validation on '%s:'  %s", collectionName,
-                                                      result.getErrorMessage()));
+                    result.throwOnError();
                 }
             }
         }
