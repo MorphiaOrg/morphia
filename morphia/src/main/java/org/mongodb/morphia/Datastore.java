@@ -8,6 +8,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -113,6 +114,14 @@ public interface Datastore {
      * ensure capped DBCollections for {@code Entity}(s)
      */
     void ensureCaps();
+
+    /**
+     * Process any {@link Validation} annotations for document validation.
+     *
+     * @since 1.3
+     * @mongodb.driver.manual core/document-validation/
+     */
+    void enableDocumentValidation();
 
     /**
      * Ensures (creating if necessary) the index including the field(s) + directions on the given collection name; eg fields = "field1,

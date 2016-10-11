@@ -1,3 +1,19 @@
+/*
+ * Copyright 2008-2016 MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mongodb.morphia.mapping;
 
 
@@ -20,6 +36,7 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -73,6 +90,7 @@ public class MappedClass {
         INTERESTING_ANNOTATIONS.add(Version.class);
         INTERESTING_ANNOTATIONS.add(Converters.class);
         INTERESTING_ANNOTATIONS.add(Indexes.class);
+        INTERESTING_ANNOTATIONS.add(Validation.class);
         INTERESTING_ANNOTATIONS.add(Field.class);
         INTERESTING_ANNOTATIONS.add(IndexOptions.class);
     }
@@ -415,17 +433,6 @@ public class MappedClass {
         List<MappedField> fields = getFieldsAnnotatedWith(Version.class);
         return fields.isEmpty() ? null : fields.get(0);
     }
-
-/*
-    */
-/**
-     * @return the Mapper this class is bound to
-     *//*
-
-    public Mapper getMapper() {
-        return mapper;
-    }
-*/
 
     /**
      * @return the persistenceFields
