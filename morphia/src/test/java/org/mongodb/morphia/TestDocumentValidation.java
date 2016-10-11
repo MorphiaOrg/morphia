@@ -24,6 +24,7 @@ import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
 import org.bson.Document;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.entities.DocumentValidation;
@@ -44,6 +45,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestDocumentValidation extends TestBase {
+    @Before
+    public void versionCheck() {
+        checkMinServerVersion(3.2);
+    }
+
     private static Validation createAnnotationInstance(final String validator, final ValidationLevel level, final ValidationAction action) {
         final Map<String, Object> values = new HashMap<String, Object>();
 
