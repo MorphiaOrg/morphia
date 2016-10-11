@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.BasicDBObjectBuilder.start;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -273,7 +274,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             String collectionName = mc.getCollectionName();
             CommandResult result = getDB()
                 .command(new BasicDBObject("collMod", collectionName)
-                             .append("validator", BasicDBObject.parse(validation.value()))
+                             .append("validator", parse(validation.value()))
                              .append("validationLevel", validation.level().getValue())
                              .append("validationAction", validation.action().getValue())
                         );
@@ -282,7 +283,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 if (result.getInt("code") == 26) {
                     try {
                         ValidationOptions options = new ValidationOptions()
-                            .validator(BasicDBObject.parse(validation.value()))
+                            .validator(parse(validation.value()))
                             .validationLevel(validation.level())
                             .validationAction(validation.action());
                         getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
