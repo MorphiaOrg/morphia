@@ -11,7 +11,7 @@ dependencies {
         compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
         println "Building with the 2.x java driver"
     } else {
-        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.2.2"
+        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.4.0-beta1"
         println "Building with the 3.x java driver"
     }
 
