@@ -58,7 +58,6 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
         assertEquals(new BigDecimal(Long.MIN_VALUE), converter.decode(BigDecimal.class, Long.MIN_VALUE));
 
         assertEquals(new BigDecimal(0), converter.decode(BigDecimal.class, 0));
-        assertEquals(new BigDecimal(-0), converter.decode(BigDecimal.class, -0));
     }
 
     @Test
