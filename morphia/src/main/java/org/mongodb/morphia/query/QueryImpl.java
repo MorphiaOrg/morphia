@@ -322,7 +322,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> disableSnapshotMode() {
-        getOptions().getModifiersDBObject().remove("$snapshot");
+        getOptions().getModifiers().removeField("$snapshot");
 
         return this;
     }
@@ -496,7 +496,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     long getMaxTime(final TimeUnit unit) {
-        Long maxTime = (Long) getOptions().getModifiersDBObject().get("$maxTimeMS");
+        Long maxTime = (Long) getOptions().getModifiers().get("$maxTimeMS");
         return unit.convert(maxTime != null ? maxTime : 0, MILLISECONDS);
     }
 
@@ -622,7 +622,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     @Deprecated
     public Query<T> returnKey() {
-        getOptions().getModifiersDBObject().put("$returnKey", true);
+        getOptions().getModifiers().put("$returnKey", true);
         return this;
     }
 
@@ -651,7 +651,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Deprecated
     public Query<T> upperIndexBound(final DBObject upperBound) {
         if (upperBound != null) {
-            getOptions().getModifiersDBObject().put("$max", new BasicDBObject(upperBound.toMap()));
+            getOptions().getModifiers().put("$max", new BasicDBObject(upperBound.toMap()));
         }
 
         return this;

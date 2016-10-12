@@ -16,7 +16,6 @@
 
 package org.mongodb.morphia.query;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
 import com.mongodb.DBObject;
 import com.mongodb.ReadConcern;
@@ -62,10 +61,6 @@ public class FindOptions {
      */
     public int getLimit() {
         return options.getLimit();
-    }
-
-    BasicDBObject getModifiersDBObject() {
-        return (BasicDBObject) getModifiers();
     }
 
     /**
@@ -189,7 +184,7 @@ public class FindOptions {
      * @return the query modifiers, which may be null
      * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
      */
-    public DBObject getModifiers() {
+    DBObject getModifiers() {
         return options.getModifiers();
     }
 
@@ -206,24 +201,12 @@ public class FindOptions {
     }
 
     /**
-     * Sets the query modifiers to apply to this operation.
-     *
-     * @param modifiers the query modifiers to apply, which may be null.
-     * @return this
-     * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
-     */
-    public FindOptions modifiers(final DBObject modifiers) {
-        options.modifiers(modifiers);
-        return this;
-    }
-
-    /**
      * Gets a document describing the fields to return for all matching documents.
      *
      * @return the project document, which may be null
      * @mongodb.driver.manual reference/method/db.collection.find/ Projection
      */
-    public DBObject getProjection() {
+    DBObject getProjection() {
         return options.getProjection();
     }
 
@@ -234,7 +217,7 @@ public class FindOptions {
      * @return this
      * @mongodb.driver.manual reference/method/db.collection.find/ Projection
      */
-    public FindOptions projection(final DBObject projection) {
+    FindOptions projection(final DBObject projection) {
         options.projection(projection);
         return this;
     }
@@ -246,7 +229,7 @@ public class FindOptions {
      * @return a document describing the sort criteria
      * @mongodb.driver.manual reference/method/cursor.sort/ Sort
      */
-    public DBObject getSortDBObject() {
+    DBObject getSortDBObject() {
         return options.getSort();
     }
 
@@ -257,7 +240,7 @@ public class FindOptions {
      * @return this
      * @mongodb.driver.manual reference/method/cursor.sort/ Sort
      */
-    public FindOptions sort(final DBObject sort) {
+    FindOptions sort(final DBObject sort) {
         options.sort(sort);
         return this;
     }
@@ -413,7 +396,8 @@ public class FindOptions {
     }
 
     boolean isSnapshot() {
-        return getModifiersDBObject().getBoolean("$snapshot");
+        Object snapshot = getModifiers().get("$snapshot");
+        return snapshot != null ? (Boolean) snapshot : false;
     }
 
     boolean hasHint() {
