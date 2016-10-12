@@ -36,7 +36,7 @@ public class QueryImplCloneTest extends TestBase {
                                .hintIndex("a")
                                .order("a");
         q.disableValidation().filter("foo", "bar");
-        Assert.assertTrue(sameState(q, q.cloneQuery()));
+        Assert.assertEquals(q, q.cloneQuery());
     }
 
     private boolean sameState(final Query q1, final Query q2) throws IllegalAccessException {

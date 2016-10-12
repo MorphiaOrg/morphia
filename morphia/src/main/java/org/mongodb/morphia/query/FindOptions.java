@@ -419,36 +419,4 @@ public class FindOptions {
     boolean hasHint() {
         return getModifiers().get("$indexHint") != null;
     }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FindOptions)) {
-            return false;
-        }
-
-        final FindOptions that = (FindOptions) o;
-
-        return getBatchSize() == that.getBatchSize()
-            && getLimit() == that.getLimit()
-            && getMaxTime(TimeUnit.MILLISECONDS) == that.getMaxTime(TimeUnit.MILLISECONDS)
-            && getMaxAwaitTime(TimeUnit.MILLISECONDS) == that.getMaxAwaitTime(TimeUnit.MILLISECONDS)
-            && getSkip() == that.getSkip()
-            && getCursorType() == that.getCursorType()
-            && isNoCursorTimeout() == that.isNoCursorTimeout()
-            && isOplogReplay() == that.isOplogReplay()
-            && isPartial() == that.isPartial()
-            && (getReadPreference() == null && that.getReadPreference() == null || getReadPreference().equals(that.getReadPreference()))
-            && (getReadConcern() == null && that.getReadConcern() == null || getReadConcern().equals(that.getReadConcern()))
-            && (getProjection() == null && that.getProjection() == null || getProjection().equals(that.getProjection()))
-            && (getCollation() == null && that.getCollation() == null || getCollation().equals(that.getCollation()));
-
-    }
-
-    @Override
-    public int hashCode() {
-        return options.hashCode();
-    }
 }

@@ -131,32 +131,6 @@ public class CountOptions {
         return options.getSkip();
     }
 
-    @Override
-    public int hashCode() {
-        return getOptions().hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CountOptions)) {
-            return false;
-        }
-
-        final CountOptions that = (CountOptions) o;
-
-        return getLimit() == that.getLimit()
-            && getMaxTime(TimeUnit.MILLISECONDS) == that.getMaxTime(TimeUnit.MILLISECONDS)
-            && getSkip() == that.getSkip()
-            && (getHint() == null && that.getHint() == null || getHint().equals(that.getHint()))
-            && (getReadPreference() == null && that.getReadPreference() == null || getReadPreference().equals(that.getReadPreference()))
-            && (getReadConcern() == null && that.getReadConcern() == null || getReadConcern().equals(that.getReadConcern()))
-            && (getCollation() == null && that.getCollation() == null || getCollation().equals(that.getCollation()));
-
-    }
-
     /**
      * Sets the hint to apply.
      *

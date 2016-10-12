@@ -7,6 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.model.DBCollectionFindOptions;
 import org.bson.BSONObject;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
@@ -278,13 +279,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
-        n.options = getOptions().copy();
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
         n.setQuery(n); // feels weird, correct?
         n.validateName = validateName;
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
+        n.options = options != null ? options.copy() : null;
 
         // fields from superclass
         n.setAttachedTo(getAttachedTo());
@@ -765,5 +766,131 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      */
     protected FilterOperator translate(final String operator) {
         return FilterOperator.fromString(operator);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof QueryImpl)) {
+            return false;
+        }
+
+        final QueryImpl<?> query = (QueryImpl<?>) o;
+
+        if (validateName != query.validateName) {
+            return false;
+        }
+        if (validateType != query.validateType) {
+            return false;
+        }
+        if (!dbColl.equals(query.dbColl)) {
+            return false;
+        }
+        if (!clazz.equals(query.clazz)) {
+            return false;
+        }
+        if (includeFields != null ? !includeFields.equals(query.includeFields) : query.includeFields != null) {
+            return false;
+        }
+        if (baseQuery != null ? !baseQuery.equals(query.baseQuery) : query.baseQuery != null) {
+            return false;
+        }
+        return compare(options, query.options);
+
+    }
+
+    private boolean compare(final FindOptions these, final FindOptions those) {
+        if (these == null && those != null || these != null && those == null) {
+            return false;
+        }
+        if (these == null) {
+            return true;
+        }
+
+        DBCollectionFindOptions dbOptions = these.getOptions();
+        DBCollectionFindOptions that = those.getOptions();
+
+        if (dbOptions.getBatchSize() != that.getBatchSize()) {
+            return false;
+        }
+        if (dbOptions.getLimit() != that.getLimit()) {
+            return false;
+        }
+        if (dbOptions.getMaxTime(MILLISECONDS) != that.getMaxTime(MILLISECONDS)) {
+            return false;
+        }
+        if (dbOptions.getMaxAwaitTime(MILLISECONDS) != that.getMaxAwaitTime(MILLISECONDS)) {
+            return false;
+        }
+        if (dbOptions.getSkip() != that.getSkip()) {
+            return false;
+        }
+        if (dbOptions.isNoCursorTimeout() != that.isNoCursorTimeout()) {
+            return false;
+        }
+        if (dbOptions.isOplogReplay() != that.isOplogReplay()) {
+            return false;
+        }
+        if (dbOptions.isPartial() != that.isPartial()) {
+            return false;
+        }
+        if (dbOptions.getModifiers() != null ? !dbOptions.getModifiers().equals(that.getModifiers()) : that.getModifiers() != null) {
+            return false;
+        }
+        if (dbOptions.getProjection() != null ? !dbOptions.getProjection().equals(that.getProjection()) : that.getProjection() != null) {
+            return false;
+        }
+        if (dbOptions.getSort() != null ? !dbOptions.getSort().equals(that.getSort()) : that.getSort() != null) {
+            return false;
+        }
+        if (dbOptions.getCursorType() != that.getCursorType()) {
+            return false;
+        }
+        if (dbOptions.getReadPreference() != null ? !dbOptions.getReadPreference().equals(that.getReadPreference())
+                                                  : that.getReadPreference() != null) {
+            return false;
+        }
+        if (dbOptions.getReadConcern() != null ? !dbOptions.getReadConcern().equals(that.getReadConcern())
+                                               : that.getReadConcern() != null) {
+            return false;
+        }
+        return dbOptions.getCollation() != null ? dbOptions.getCollation().equals(that.getCollation()) : that.getCollation() == null;
+
+    }
+
+    private int hash(final FindOptions options) {
+        if (options == null) {
+            return 0;
+        }
+        int result = options.getBatchSize();
+        result = 31 * result + getLimit();
+        result = 31 * result + (options.getModifiers() != null ? options.getModifiers().hashCode() : 0);
+        result = 31 * result + (options.getProjection() != null ? options.getProjection().hashCode() : 0);
+        result = 31 * result + (int) (options.getMaxTime(MILLISECONDS) ^ options.getMaxTime(MILLISECONDS) >>> 32);
+        result = 31 * result + (int) (options.getMaxAwaitTime(MILLISECONDS) ^ options.getMaxAwaitTime(MILLISECONDS) >>> 32);
+        result = 31 * result + options.getSkip();
+        result = 31 * result + (options.getSortDBObject() != null ? options.getSortDBObject().hashCode() : 0);
+        result = 31 * result + (options.getCursorType() != null ? options.getCursorType().hashCode() : 0);
+        result = 31 * result + (options.isNoCursorTimeout() ? 1 : 0);
+        result = 31 * result + (options.isOplogReplay() ? 1 : 0);
+        result = 31 * result + (options.isPartial() ? 1 : 0);
+        result = 31 * result + (options.getReadPreference() != null ? options.getReadPreference().hashCode() : 0);
+        result = 31 * result + (options.getReadConcern() != null ? options.getReadConcern().hashCode() : 0);
+        result = 31 * result + (options.getCollation() != null ? options.getCollation().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dbColl.hashCode();
+        result = 31 * result + clazz.hashCode();
+        result = 31 * result + (validateName ? 1 : 0);
+        result = 31 * result + (validateType ? 1 : 0);
+        result = 31 * result + (includeFields != null ? includeFields.hashCode() : 0);
+        result = 31 * result + (baseQuery != null ? baseQuery.hashCode() : 0);
+        result = 31 * result + hash(options);
+        return result;
     }
 }
