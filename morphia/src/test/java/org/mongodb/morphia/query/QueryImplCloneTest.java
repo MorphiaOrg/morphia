@@ -6,11 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.logging.Logger;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class QueryImplCloneTest extends TestBase {
 
