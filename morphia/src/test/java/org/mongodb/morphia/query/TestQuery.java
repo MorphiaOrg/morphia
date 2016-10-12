@@ -1174,6 +1174,15 @@ public class TestQuery extends TestBase {
                                                         .build())));
     }
 
+    @Test
+    public void snapshot() {
+        Query<Photo> query = getDs().createQuery(Photo.class);
+
+        Assert.assertNull(query.getQueryObject().get("$snapshot"));
+        query.enableSnapshotMode();
+        query.get();  // shouldn't throw an exception
+    }
+
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
