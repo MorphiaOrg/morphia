@@ -26,8 +26,8 @@ import java.math.BigInteger;
  * This provides a convert to/from BigDecimal in applications using the Decimal128 type introduced in the 3.4.0 release of MongoDB.
  *
  * @mongodb.server.release 3.4
- * @since 1.3
  * @see Decimal128
+ * @since 1.3
  */
 public class BigDecimalConverter extends TypeConverter implements SimpleValueConverter {
     @Override

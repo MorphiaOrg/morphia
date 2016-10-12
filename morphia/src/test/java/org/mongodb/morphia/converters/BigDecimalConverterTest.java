@@ -25,7 +25,7 @@ import java.math.BigInteger;
 
 import static org.junit.Assert.assertEquals;
 
-public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal128>{
+public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal128> {
     private BigDecimalConverter converter = new BigDecimalConverter();
 
     public BigDecimalConverterTest() {
@@ -36,26 +36,6 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
     public void convertNull() {
         Assert.assertNull(getConverter().decode(null, null));
         Assert.assertNull(getConverter().encode(null));
-    }
-
-    @Test
-    public void testConversion() {
-        compare(BigDecimal.class, new BigDecimal("12345678901234567890"));
-
-        compare(BigDecimal.class, new BigDecimal(42L));
-        compare(BigDecimal.class, new BigDecimal(Long.valueOf(42)));
-        compare(BigDecimal.class, new BigDecimal(42D));
-        compare(BigDecimal.class, new BigDecimal(Double.valueOf(42)));
-        compare(BigDecimal.class, new BigDecimal("12345678901234567890"));
-        compare(BigDecimal.class, new BigDecimal("1.2345678901234567890"));
-        compare(BigDecimal.class, new BigDecimal("0"));
-        compare(BigDecimal.class, new BigDecimal("-0"));
-
-        compare(BigDecimal.class, new BigDecimal(Long.MAX_VALUE));
-        compare(BigDecimal.class, new BigDecimal(Long.MIN_VALUE));
-
-        compare(BigDecimal.class, new BigDecimal(0));
-        compare(BigDecimal.class, new BigDecimal(-0));
     }
 
     @Test
@@ -79,6 +59,26 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
 
         assertEquals(new BigDecimal(0), converter.decode(BigDecimal.class, 0));
         assertEquals(new BigDecimal(-0), converter.decode(BigDecimal.class, -0));
+    }
+
+    @Test
+    public void testConversion() {
+        compare(BigDecimal.class, new BigDecimal("12345678901234567890"));
+
+        compare(BigDecimal.class, new BigDecimal(42L));
+        compare(BigDecimal.class, new BigDecimal(Long.valueOf(42)));
+        compare(BigDecimal.class, new BigDecimal(42D));
+        compare(BigDecimal.class, new BigDecimal(Double.valueOf(42)));
+        compare(BigDecimal.class, new BigDecimal("12345678901234567890"));
+        compare(BigDecimal.class, new BigDecimal("1.2345678901234567890"));
+        compare(BigDecimal.class, new BigDecimal("0"));
+        compare(BigDecimal.class, new BigDecimal("-0"));
+
+        compare(BigDecimal.class, new BigDecimal(Long.MAX_VALUE));
+        compare(BigDecimal.class, new BigDecimal(Long.MIN_VALUE));
+
+        compare(BigDecimal.class, new BigDecimal(0));
+        compare(BigDecimal.class, new BigDecimal(-0));
     }
 
 }
