@@ -37,6 +37,7 @@ public class DefaultConverters extends Converters {
     public DefaultConverters(final Mapper mapper) {
         super(mapper);
         addConverter(new IdentityConverter(DBObject.class, BasicDBObject.class));
+        addConverter(new MorphiaReferenceConverter());
         addConverter(new EnumSetConverter());
         addConverter(new EnumConverter());
         addConverter(new StringConverter());

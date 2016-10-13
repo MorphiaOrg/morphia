@@ -77,9 +77,7 @@ class ReferenceMapper implements CustomMapper {
         final Key key = o instanceof Key
                         ? (Key) o
                         : getKey(o, mapper);
-        values.add(idOnly
-                   ? mapper.keyToId(key)
-                   : mapper.keyToDBRef(key));
+        values.add(idOnly ? mapper.keyToId(key) : mapper.keyToDBRef(key));
     }
 
     private Object createOrReuseProxy(final Datastore datastore, final Mapper mapper, final Class referenceObjClass, final Object ref,
@@ -282,12 +280,7 @@ class ReferenceMapper implements CustomMapper {
         } else {
             Key<?> key = getKey(fieldValue, mapper);
             if (refAnn.idOnly()) {
-                Object id = mapper.keyToId(key);
-                if (id != null && mapper.isMapped(id.getClass())) {
-                    id = mapper.toMongoObject(id, true);
-                }
-
-                dbObject.put(name, id);
+                dbObject.put(name, mapper.keyToId(key));
             } else {
                 dbObject.put(name, mapper.keyToDBRef(key));
             }

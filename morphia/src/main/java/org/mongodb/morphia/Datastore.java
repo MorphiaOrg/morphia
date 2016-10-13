@@ -611,4 +611,31 @@ public interface Datastore {
      * @return the results of the updates
      */
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
+
+    /**
+     * Creates a reference to an entity for inclusion
+     *
+     * @param entity The entity for the reference
+     * @param <T>    the type of the entity
+     * @return the new reference to the entity
+     */
+    <T> MorphiaReference<T> referenceTo(T entity);
+
+    /**
+     * Creates references to entities for inclusion.
+     *
+     * @param entities The entities for the reference
+     * @param <T>      the type of the entities
+     * @return the new reference to the entities
+     */
+    <T> List<MorphiaReference<T>> referenceTo(List<T> entities);
+
+    /**
+     * Fetches a reference to another entity
+     *
+     * @param reference the reference to the entity
+     * @param <T>       the type of the entity
+     * @return The entity for the reference
+     */
+    <T> T fetch(MorphiaReference<T> reference);
 }

@@ -14,7 +14,22 @@ import java.util.List;
 
 
 @SuppressWarnings("unchecked")
-public class TestReferenceCollection extends ProxyTestBase {
+public class TestAnnotatedReferences extends ProxyTestBase {
+
+    @Test
+    public final void testArrayPersistence() {
+        Origin origin = new Origin();
+        final Endpoint b1 = new Endpoint();
+        final Endpoint b2 = new Endpoint();
+
+        origin.array = new Endpoint[2];
+        origin.array[0] = b1;
+        origin.array[1] = b2;
+
+        getDs().save(b2, b1, origin);
+
+        getDs().get(origin);
+    }
 
     @Test
     public void testOrderingPreserved() throws Exception {
@@ -54,11 +69,19 @@ public class TestReferenceCollection extends ProxyTestBase {
     }
 
     public static class Origin extends TestEntity {
+
         @Reference
         private final List<Endpoint> list = new ArrayList<Endpoint>();
 
         @Reference(lazy = true)
         private final List<Endpoint> lazyList = new ArrayList<Endpoint>();
+
+
+        @Reference
+        private Endpoint[] array;
+
+        @Reference(lazy = true)
+        private Endpoint[] lazyArray;
 
     }
 

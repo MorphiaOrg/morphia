@@ -52,6 +52,7 @@ import org.mongodb.morphia.query.UpdateException;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
+import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.utils.Assert;
 import org.mongodb.morphia.utils.IndexType;
 import org.mongodb.morphia.utils.ReflectionUtils;
@@ -504,6 +505,24 @@ public class DatastoreImpl implements AdvancedDatastore {
     public DBCollection getCollection(final Class clazz) {
         final String collName = mapper.getCollectionName(clazz);
         return getDB().getCollection(collName);
+    }
+
+    /**
+     * @param obj the instance to use for looking up the collection mapping
+     * @return the collection mapped for the type of obj
+     */
+    public DBCollection getCollection(final Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
+    }
+
+    protected DBCollection getCollection(final String kind) {
+        if (kind == null) {
+            return null;
+        }
+        return getDB().getCollection(kind);
     }
 
     @Override
@@ -1068,17 +1087,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * @param obj the instance to use for looking up the collection mapping
-     * @return the collection mapped for the type of obj
-     */
-    public DBCollection getCollection(final Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
-    }
-
-    /**
      * @return the Mapper used by this Datastore
      */
     public Mapper getMapper() {
@@ -1233,13 +1241,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected void ensureIndexes(final MappedClass mc, final boolean background) {
         ensureIndexes(mc, background, new ArrayList<MappedClass>(), new ArrayList<MappedField>());
-    }
-
-    protected DBCollection getCollection(final String kind) {
-        if (kind == null) {
-            return null;
-        }
-        return getDB().getCollection(kind);
     }
 
     @Deprecated
@@ -1718,4 +1719,75 @@ public class DatastoreImpl implements AdvancedDatastore {
         return wc;
     }
 
+    @Override
+    public <T> MorphiaReference<T> referenceTo(final T entity) {
+        return referenceTo(getCollection(entity).getName(), entity);
+    }
+
+    @Override
+    public <T> List<MorphiaReference<T>> referenceTo(final List<T> entities) {
+        if (entities == null) {
+            return null;
+        }
+        List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
+        for (T entity : entities) {
+            list.add(referenceTo(entity));
+        }
+        return list;
+    }
+
+    @Override
+    public <T> MorphiaReference<T> referenceTo(final String collection, final T entity) {
+        if (entity == null) {
+            return null;
+        }
+        MappedClass mappedClass = mapper.getMappedClass(entity);
+        MappedField idField = mappedClass.getMappedIdField();
+        boolean typeMongoCompatible = idField.isTypeMongoCompatible();
+        Object id = getKey(entity).getId();
+        if (id == null) {
+            throw new ValidationException("The referenced entity has no ID.  Please save the entity first.");
+        }
+        id = typeMongoCompatible ? id : getMapper().toDBObject(id);
+
+        return new MorphiaReference<T>(id, collection, entity);
+    }
+
+    @Override
+    public <T> List<MorphiaReference<T>> referenceTo(final String collection, final List<T> entities) {
+        if (entities == null) {
+            return null;
+        }
+        List<MorphiaReference<T>> list = new ArrayList<MorphiaReference<T>>(entities.size());
+        for (T entity : entities) {
+            list.add(referenceTo(collection, entity));
+        }
+        return list;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T fetch(final MorphiaReference<T> reference) {
+        if (reference == null) {
+            return null;
+        }
+        T entity = reference.getEntity();
+        DBRef dbRef = reference.getDBRef();
+        if (reference.getEntity() == null) {
+            Object id = dbRef.getId();
+            if (id instanceof DBObject) {
+                ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+            }
+            entity = (T) createQuery(dbRef.getCollectionName(), null)
+                .field("_id").equal(id)
+                .get();
+            reference.setEntity(entity);
+            if (entity == null) {
+                throw new QueryException(format("Could find an entity matching the ID '%s' in the collection '%s'",
+                                                id, dbRef.getCollectionName()));
+            }
+        }
+
+        return entity;
+    }
 }

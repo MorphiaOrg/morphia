@@ -11,6 +11,8 @@ import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
+import java.util.List;
+
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
  * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (DBObject).
@@ -358,4 +360,25 @@ public interface AdvancedDatastore extends Datastore {
      */
     <T> Key<T> save(String collection, T entity, WriteConcern wc);
 
+    /**
+     * Creates a reference to an entity for inclusion.  This entity is stored in the named collection which may differ from the mapped
+     * collection.
+     *
+     * @param collection the collection containing the referenced entity
+     * @param entity     The entity for the reference
+     * @param <T>        the type of the entity
+     * @return the new reference to the entity
+     */
+    <T> MorphiaReference<T> referenceTo(String collection, T entity);
+
+    /**
+     * Creates references to entities for inclusion.  This entities are stored in the named collection which may differ from the mapped
+     * collection.
+     *
+     * @param collection the collection containing the referenced entities
+     * @param entities     The entities for the reference
+     * @param <T>        the type of the entities
+     * @return the new reference to the entities
+     */
+    <T> List<MorphiaReference<T>> referenceTo(String collection, List<T> entities);
 }
