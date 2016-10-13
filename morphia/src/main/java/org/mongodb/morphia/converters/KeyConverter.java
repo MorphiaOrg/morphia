@@ -26,7 +26,30 @@ public class KeyConverter extends TypeConverter {
             throw new ConverterException(String.format("cannot convert %s to Key because it isn't a DBRef", o.toString()));
         }
 
-        return getMapper().refToKey((DBRef) o);
+
+        DBRef ref = (DBRef) o;
+
+        MappedField actualType = getActualType(optionalExtraInfo);
+
+
+        final Class<?> keyType = actualType != null
+                                 ? actualType.getConcreteType()
+                                 : getMapper().getClassFromCollection(ref.getCollectionName());
+
+        final Key<?> key = new Key<Object>(keyType, ref.getCollectionName(), ref.getId());
+
+        return key;
+    }
+
+    private MappedField getActualType(final MappedField field) {
+        if (field == null) {
+            return null;
+        }
+        MappedField mappedField = field.getTypeParameters().get(0);
+        if (mappedField.getTypeParameters().size() != 0) {
+            mappedField = getActualType(mappedField);
+        }
+        return mappedField;
     }
 
     @Override

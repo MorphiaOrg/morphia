@@ -1,6 +1,7 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
 import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.Transient;
@@ -14,18 +15,24 @@ import org.mongodb.morphia.query.Query;
 
 import java.util.Iterator;
 
+import static org.mongodb.morphia.MapreduceType.INLINE;
+import static org.mongodb.morphia.MapreduceType.MERGE;
+import static org.mongodb.morphia.MapreduceType.REDUCE;
+import static org.mongodb.morphia.MapreduceType.REPLACE;
+
 /**
  * Stores the results of a map reduce operation
  *
  * @param <T> the type of the results
  */
 @NotSaved
+@SuppressWarnings("deprecation")
 public class MapreduceResults<T> implements Iterable<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
     private final Stats counts = new Stats();
     private MapReduceOutput output;
     private String outputCollectionName;
-    private MapreduceType type;
+    private OutputType outputType;
     private Query<T> query;
 
     @Transient
@@ -50,7 +57,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      * @return the query to use against these results
      */
     public Query<T> createQuery() {
-        if (type == MapreduceType.INLINE) {
+        if (outputType == OutputType.INLINE) {
             throw new MappingException("No collection available for inline mapreduce jobs");
         }
         return query.cloneQuery();
@@ -93,13 +100,44 @@ public class MapreduceResults<T> implements Iterable<T> {
 
     /**
      * @return the type of the operation
+     * @deprecated use {@link #getOutputType()} instead
      */
+    @Deprecated
     public MapreduceType getType() {
-        return type;
+        switch (outputType) {
+            case REDUCE:
+                return REDUCE;
+            case MERGE:
+                return MERGE;
+            case INLINE:
+                return INLINE;
+            default:
+                return REPLACE;
+        }
+
     }
 
+    @Deprecated
     void setType(final MapreduceType type) {
-        this.type = type;
+        this.outputType = type.toOutputType();
+    }
+
+    /**
+     * @return the type of the operation
+     * @since 1.3
+     */
+    public OutputType getOutputType() {
+        return outputType;
+    }
+
+    /**
+     * Sets the output type for this mapreduce job
+     *
+     * @param outputType the output type
+     * @since 1.3
+     */
+    public void setOutputType(final OutputType outputType) {
+        this.outputType = outputType;
     }
 
     /**
@@ -116,12 +154,9 @@ public class MapreduceResults<T> implements Iterable<T> {
      *
      * @return the Iterator
      */
+    @Override
     public Iterator<T> iterator() {
-        if (type == MapreduceType.INLINE) {
-            return getInlineResults();
-        } else {
-            return createQuery().fetch().iterator();
-        }
+        return outputType == OutputType.INLINE ? getInlineResults() : createQuery().fetch().iterator();
     }
 
     /**
@@ -131,7 +166,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      * @param clazz     the type of the results
      * @param mapper    the mapper to use
      * @param cache     the cache of entities seen so far
-     * @see MapreduceType
+     * @see OutputType
      */
     public void setInlineRequiredOptions(final Datastore datastore, final Class<T> clazz, final Mapper mapper, final EntityCache cache) {
         this.mapper = mapper;

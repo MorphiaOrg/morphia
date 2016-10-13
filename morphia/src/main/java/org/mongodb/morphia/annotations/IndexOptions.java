@@ -78,4 +78,10 @@ public @interface IndexOptions {
      * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
      */
     boolean unique() default false;
+
+    /**
+     * Defines the collation to be used for this index
+     * @since 1.3
+     */
+    Collation collation() default @Collation(locale = "");
 }

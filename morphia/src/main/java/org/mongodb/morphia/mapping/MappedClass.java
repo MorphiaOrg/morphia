@@ -123,6 +123,8 @@ public class MappedClass {
     private Entity entityAn;
     private Embedded embeddedAn;
     private MapperOptions mapperOptions;
+    private MappedClass superClass;
+    private List<MappedClass> interfaces = new ArrayList<MappedClass>();
 
     /**
      * Creates a MappedClass instance
@@ -468,6 +470,10 @@ public class MappedClass {
 
     }
 
+    boolean isSubType(final MappedClass mc) {
+        return mc.equals(superClass) || interfaces.contains(mc);
+    }
+
     @Override
     public String toString() {
         return "MappedClass - kind:" + getCollectionName() + " for " + getClazz().getName() + " fields:" + persistenceFields;
@@ -509,6 +515,14 @@ public class MappedClass {
     protected void discover(final Mapper mapper) {
         for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
             addAnnotation(c);
+        }
+
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null && !superclass.equals(Object.class)) {
+            superClass = mapper.getMappedClass(superclass);
+        }
+        for (Class<?> aClass : clazz.getInterfaces()) {
+            interfaces.add(mapper.getMappedClass(aClass));
         }
 
         final List<Class<?>> lifecycleClasses = new ArrayList<Class<?>>();

@@ -7,14 +7,7 @@ sourceSets {
 }
 
 dependencies {
-    if (buildingWith('2.x')) {
-        compile group: "org.mongodb", name: "mongo-java-driver", version: "2.13.1"
-        println "Building with the 2.x java driver"
-    } else {
-        compile group: "org.mongodb", name: "mongo-java-driver", version: "3.2.2"
-        println "Building with the 3.x java driver"
-    }
-
+    compile 'org.mongodb:mongo-java-driver:3.4.0-beta1'
     compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
     compile 'cglib:cglib-nodep:2.2.2', optional
     testCompile 'org.zeroturnaround:zt-exec:1.5'

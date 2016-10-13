@@ -11,10 +11,26 @@ public enum IndexType {
     HASHED("hashed"),
     TEXT("text");
 
-    private final Object direction;
+    private final Object type;
 
     IndexType(final Object o) {
-        direction = o;
+        type = o;
+    }
+
+    /**
+     * Returns the enum instance for the given value
+     *
+     * @param value the value to find
+     * @return the enum instance
+     * @since 1.3
+     */
+    public static IndexType fromValue(final Object value) {
+        for (IndexType indexType : values()) {
+            if (indexType.type.equals(value)) {
+                return indexType;
+            }
+        }
+        throw new IllegalArgumentException("No enum value found for " + value);
     }
 
     /**
@@ -23,6 +39,6 @@ public enum IndexType {
      * @return the value
      */
     public Object toIndexValue() {
-        return direction;
+        return type;
     }
 }

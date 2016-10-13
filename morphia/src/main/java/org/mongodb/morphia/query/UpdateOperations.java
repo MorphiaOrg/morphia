@@ -123,6 +123,14 @@ public interface UpdateOperations<T> {
     UpdateOperations<T> isolated();
 
     /**
+     * @return true if this update is to be run in isolation
+     *
+     * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
+     * @since 1.3
+     */
+    boolean isIsolated();
+
+    /**
      * Sets the numeric field to value if it is greater than the current value.
      *
      * @param field the field to update

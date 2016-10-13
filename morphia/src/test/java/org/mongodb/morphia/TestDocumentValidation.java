@@ -144,9 +144,13 @@ public class TestDocumentValidation extends TestBase {
             .append("validationLevel", level.getValue())
             .append("validationAction", action.getValue());
 
-        assertEquals(expected, getValidation());
+        Document validation = getValidation();
+        for (String key : expected.keySet()) {
+            assertEquals(expected.get(key), validation.get(key));
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private Document getValidation() {
         Document document = getMongoClient().getDatabase(TEST_DB_NAME)
                                             .runCommand(new Document("listCollections", 1)

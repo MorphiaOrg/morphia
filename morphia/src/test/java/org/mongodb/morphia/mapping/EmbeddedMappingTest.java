@@ -58,7 +58,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void testNestedInterfaces() {
-        getMorphia().map(WithNested.class);
+        getMorphia().map(WithNested.class, NestedImpl.class);
         getDs().ensureIndexes();
 
         final List<DBObject> indexInfo = getDs().getCollection(WithNested.class).getIndexInfo();
@@ -94,6 +94,25 @@ public class EmbeddedMappingTest extends TestBase {
         Assert.assertNull(found);
     }
 
+    @Test
+    public void validateNestedInterfaces() {
+        getMorphia().map(WithNestedValidated.class);
+        try {
+            getDs().ensureIndexes();
+        } catch (MappingException e) {
+            Assert.assertEquals("Could not resolve path 'nested.field.fail' against 'org.mongodb.morphia.mapping"
+                                    + ".EmbeddedMappingTest$WithNestedValidated'.", e.getMessage());
+        }
+
+        final List<DBObject> indexInfo = getDs().getCollection(WithNestedValidated.class).getIndexInfo();
+        boolean indexFound = false;
+        for (DBObject dbObject : indexInfo) {
+            indexFound |= "nested.field.fail".equals(((DBObject) dbObject.get("key")).keySet().iterator().next());
+        }
+        Assert.assertFalse("Should not find the nested field index", indexFound);
+    }
+
+    @Embedded
     public interface Nested {
     }
 
@@ -202,6 +221,10 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    public static class AnotherNested implements Nested {
+        private Long value;
+    }
+
     @Indexes({
         @Index(fields = {@Field("nested.field.fail")},
             options = @IndexOptions(disableValidation = true, sparse = true))
@@ -235,5 +258,12 @@ public class EmbeddedMappingTest extends TestBase {
             result = 31 * result + (nested != null ? nested.hashCode() : 0);
             return result;
         }
+    }
+
+    @Indexes(@Index(fields = {@Field("nested.field.fail")}))
+    public static class WithNestedValidated {
+        @Id
+        private ObjectId id;
+        private Nested nested;
     }
 }
