@@ -319,6 +319,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testUpdateWithCollation() {
+        checkMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
                      new FacebookUser(2, "john doe"));
@@ -385,6 +386,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndModifyWithOptions() {
+        checkMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
                      new FacebookUser(2, "john doe"));
@@ -435,6 +437,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testDeleteWithCollation() {
+        checkMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
                      new FacebookUser(2, "john doe"));
@@ -453,6 +456,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndDeleteWithCollation() {
+        checkMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(new FacebookUser(1, "John Doe"),
                      new FacebookUser(2, "john doe"));

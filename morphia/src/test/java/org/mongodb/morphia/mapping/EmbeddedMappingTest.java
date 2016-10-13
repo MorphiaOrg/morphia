@@ -96,7 +96,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void validateNestedInterfaces() {
-        getMorphia().map(WithNestedValidated.class);
+        getMorphia().map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
         try {
             getDs().ensureIndexes();
         } catch (MappingException e) {
@@ -112,7 +112,6 @@ public class EmbeddedMappingTest extends TestBase {
         Assert.assertFalse("Should not find the nested field index", indexFound);
     }
 
-    @Embedded
     public interface Nested {
     }
 
@@ -190,6 +189,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    @Embedded
     public static class NestedImpl implements Nested {
         private String field;
 
@@ -221,6 +221,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    @Embedded
     public static class AnotherNested implements Nested {
         private Long value;
     }

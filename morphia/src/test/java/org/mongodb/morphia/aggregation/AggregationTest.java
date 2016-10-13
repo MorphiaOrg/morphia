@@ -58,6 +58,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testCollation() {
+        checkMinServerVersion(3.4);
         getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
 
         Query query = getDs().createQuery(User.class).field("name").equal("john doe");

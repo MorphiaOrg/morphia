@@ -1153,6 +1153,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCollations() {
+        checkMinServerVersion(3.4);
+
         getMorphia().map(ContainsRenamedFields.class);
         getDs().save(new ContainsRenamedFields("first", "last"),
                      new ContainsRenamedFields("First", "Last"));

@@ -120,6 +120,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
+        checkMinServerVersion(3.4);
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 
@@ -172,6 +173,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void index() {
+        checkMinServerVersion(3.4);
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 

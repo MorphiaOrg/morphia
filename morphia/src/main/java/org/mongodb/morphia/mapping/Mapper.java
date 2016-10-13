@@ -756,7 +756,7 @@ public class Mapper {
     private MappedClass addMappedClass(final MappedClass mc, final boolean validate) {
         addConverters(mc);
 
-        if (validate) {
+        if (validate && !mc.isInterface()) {
             mc.validate(this);
         }
 

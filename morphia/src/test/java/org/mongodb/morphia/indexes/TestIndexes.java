@@ -58,23 +58,25 @@ public class TestIndexes extends TestBase {
         hashIndexColl.drop();
         Assert.assertEquals(0, hashIndexColl.getIndexInfo().size());
 
-        datastore.ensureIndexes(TestWithIndexOption.class, true);
-        Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
-        List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
-        assertBackground(indexInfo);
-        for (DBObject dbObject : indexInfo) {
-            if (dbObject.get("name").equals("collated")) {
-                BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
-                Assert.assertEquals("en_US", collation.get("locale"));
-                Assert.assertEquals("upper", collation.get("caseFirst"));
-                Assert.assertEquals("shifted", collation.get("alternate"));
-                Assert.assertTrue(collation.getBoolean("backwards"));
-                Assert.assertEquals("upper", collation.get("caseFirst"));
-                Assert.assertTrue(collation.getBoolean("caseLevel"));
-                Assert.assertEquals("space", collation.get("maxVariable"));
-                Assert.assertTrue(collation.getBoolean("normalization"));
-                Assert.assertTrue(collation.getBoolean("numericOrdering"));
-                Assert.assertEquals(5, collation.get("strength"));
+        if (serverIsAtLeastVersion(3.4)) {
+            datastore.ensureIndexes(TestWithIndexOption.class, true);
+            Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
+            List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
+            assertBackground(indexInfo);
+            for (DBObject dbObject : indexInfo) {
+                if (dbObject.get("name").equals("collated")) {
+                    BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
+                    Assert.assertEquals("en_US", collation.get("locale"));
+                    Assert.assertEquals("upper", collation.get("caseFirst"));
+                    Assert.assertEquals("shifted", collation.get("alternate"));
+                    Assert.assertTrue(collation.getBoolean("backwards"));
+                    Assert.assertEquals("upper", collation.get("caseFirst"));
+                    Assert.assertTrue(collation.getBoolean("caseLevel"));
+                    Assert.assertEquals("space", collation.get("maxVariable"));
+                    Assert.assertTrue(collation.getBoolean("normalization"));
+                    Assert.assertTrue(collation.getBoolean("numericOrdering"));
+                    Assert.assertEquals(5, collation.get("strength"));
+                }
             }
         }
 

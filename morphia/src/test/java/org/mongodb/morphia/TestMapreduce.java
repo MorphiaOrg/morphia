@@ -97,6 +97,7 @@ public class TestMapreduce extends TestBase {
 
     @Test
     public void testCollation() {
+        checkMinServerVersion(3.4);
         getDs().save(new Book("The Banquet", "Dante", 2),
                      new Book("Divine Comedy", "Dante", 1),
                      new Book("Eclogues", "Dante", 2),
