@@ -25,8 +25,8 @@ import static org.mongodb.morphia.MapreduceType.REPLACE;
  *
  * @param <T> the type of the results
  */
-@SuppressWarnings("deprecation")
 @NotSaved
+@SuppressWarnings("deprecation")
 public class MapreduceResults<T> implements Iterable<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
     private final Stats counts = new Stats();

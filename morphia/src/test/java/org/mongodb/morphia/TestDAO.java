@@ -19,10 +19,10 @@ import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mongodb.morphia.query.TestQuery.Photo;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.dao.DAO;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.TestQuery.Photo;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.testdaos.HotelDAO;
 import org.mongodb.morphia.testmodel.Address;
@@ -125,8 +125,8 @@ public class TestDAO extends TestBase {
         final List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.createQuery().offset(1).limit(10).count());
-        assertEquals(1, hotelDAO.createQuery().limit(1).count());
+        assertEquals(1, hotelDAO.createQuery().offset(1).limit(10).asList().size());
+        assertEquals(1, hotelDAO.createQuery().limit(1).asList().size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 

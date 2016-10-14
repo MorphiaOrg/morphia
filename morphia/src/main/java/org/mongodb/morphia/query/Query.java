@@ -29,7 +29,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param value must be >= 0.  A value of 0 indicates the server default.
      * @return this
      * @deprecated use the methods that accept Options directly
-     * @see #asList(FindOptions)
+     * @see FindOptions#batchSize(int)
      */
     @Deprecated
     Query<T> batchSize(int value);
@@ -48,9 +48,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param comment the comment to add
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/meta/comment $comment
-     * @deprecated use the methods that accept Options directly. This can be replicated with {@code findOptions.modifier("$comment",
-          * comment)}
      * @see FindOptions#modifier(String, Object)
+     * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$comment", comment)}
      */
     @Deprecated
     Query<T> comment(String comment);
@@ -77,8 +76,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
      *
      * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code findOptions.modifier("$snapshot",
-     * false)}
+     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", false)}
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -106,8 +104,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * compatible with order/sort and hint.
      *
      * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code findOptions.modifier("$snapshot",
-     * true)}
+     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", true)}
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -244,7 +241,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @param idxName the index name to hint
      * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated with {@code findOptions.modifier("$hint", idxName);}
+     * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$hint", idxName)}
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -253,8 +250,8 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     /**
      * Limit the fetched result set to a certain number of values.
      *
-     * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link #batchSize(int)} which is the preferred
-     *              method
+     * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link FindOptions#batchSize(int)} which
+     *              is the preferred method
      * @return this
      * @deprecated use the methods that accept Options directly
      * @see FindOptions#limit(int)
@@ -271,7 +268,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      * @mongodb.driver.manual reference/operator/meta/min/ $min
      * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code findOptions.modifier("$min", new Document(...)) }
+     * {@code options.modifier("$min", new Document(...)) }
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -283,8 +280,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param value must be > 0.  A value < 0 indicates no limit
      * @return this
      * @mongodb.driver.manual reference/operator/meta/maxScan/#op._S_maxScan $maxScan
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code findOptions.modifier("$maxScan",
-     * value) }
+     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$maxScan", value) }
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -296,7 +292,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @param maxTime     must be > 0.  A value < 0 indicates no limit
      * @param maxTimeUnit the unit of time to use
      * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code findOptions.modifier("$maxTimeMS",
+     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.modifier("$maxTimeMS",
      * MILLISECONDS.convert(value, unit)) }
      * @see FindOptions#modifier(String, Object)
      */
@@ -429,8 +425,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      *
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/meta/returnKey/#op._S_returnKey $returnKey
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code findOptions.modifier("$returnKey",
-     * true) }
+     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.modifier("$returnKey", true) }
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
@@ -464,7 +459,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      * @mongodb.driver.manual reference/operator/meta/max/ $max
      * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code findOptions.modifier("$max", new Document(...)) }
+     * {@code options.modifier("$max", new Document(...)) }
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
