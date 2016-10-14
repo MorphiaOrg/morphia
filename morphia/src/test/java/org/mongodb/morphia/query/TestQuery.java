@@ -12,7 +12,7 @@
  */
 
 
-package org.mongodb.morphia;
+package org.mongodb.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
@@ -21,11 +21,14 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
+import com.mongodb.client.model.CollationStrength;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
 import org.mongodb.morphia.TestDatastore.KeysKeysKeys;
 import org.mongodb.morphia.TestMapper.CustomId;
@@ -38,11 +41,6 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.query.ArraySlice;
-import org.mongodb.morphia.query.MorphiaIterator;
-import org.mongodb.morphia.query.MorphiaKeyIterator;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
 
@@ -58,6 +56,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static com.mongodb.client.model.Collation.builder;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static org.hamcrest.core.Is.is;
@@ -76,8 +75,16 @@ import static org.mongodb.morphia.aggregation.Sort.*;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unchecked"})
 public class TestQuery extends TestBase {
+
+    @Test
+    public void maxTime() {
+        Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
+                                                                      .maxTime(15, TimeUnit.MINUTES);
+
+        assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
+    }
 
     @Test
     public void genericMultiKeyValueQueries() {
@@ -1089,12 +1096,14 @@ public class TestQuery extends TestBase {
         final Iterator<CappedPic> tail = query.tail();
         Awaitility
             .await()
-            .pollDelay(1, TimeUnit.SECONDS)
-            .atMost(30, TimeUnit.SECONDS)
+            .pollDelay(500, TimeUnit.MILLISECONDS)
+            .atMost(10, TimeUnit.SECONDS)
             .until(new Callable<Boolean>() {
                 @Override
                 public Boolean call() {
-                    found.add(tail.next());
+                    if (tail.hasNext()) {
+                        found.add(tail.next());
+                    }
                     return found.size() >= 10;
                 }
             });
@@ -1157,6 +1166,41 @@ public class TestQuery extends TestBase {
             // fine
         }
 
+    }
+
+
+    @Test
+    public void testCollations() {
+        checkMinServerVersion(3.4);
+
+        getMorphia().map(ContainsRenamedFields.class);
+        getDs().save(new ContainsRenamedFields("first", "last"),
+                     new ContainsRenamedFields("First", "Last"));
+
+        Query query = getDs().createQuery(ContainsRenamedFields.class)
+                             .field("last_name").equal("last");
+        assertEquals(1, query.asList().size());
+        assertEquals(2, query.asList(new FindOptions()
+                                         .collation(builder()
+                                                        .locale("en")
+                                                        .collationStrength(CollationStrength.SECONDARY)
+                                                        .build()))
+                             .size());
+        assertEquals(1, query.count());
+        assertEquals(2, query.count(new CountOptions()
+                                    .collation(builder()
+                                                        .locale("en")
+                                                        .collationStrength(CollationStrength.SECONDARY)
+                                                        .build())));
+    }
+
+    @Test
+    public void snapshot() {
+        Query<Photo> query = getDs().createQuery(Photo.class);
+
+        Assert.assertNull(query.getQueryObject().get("$snapshot"));
+        query.enableSnapshotMode();
+        query.get();  // shouldn't throw an exception
     }
 
     private int[] copy(final int[] array, final int start, final int count) {

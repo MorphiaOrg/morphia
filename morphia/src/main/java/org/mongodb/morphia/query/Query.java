@@ -87,7 +87,7 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> enableCursorTimeout();
 
     /**
-     * Enabled snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
+     * Enables snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
      * compatible with order/sort and hint.
      *
      * @return this

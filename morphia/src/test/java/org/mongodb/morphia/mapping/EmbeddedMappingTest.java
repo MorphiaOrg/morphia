@@ -58,7 +58,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void testNestedInterfaces() {
-        getMorphia().map(WithNested.class);
+        getMorphia().map(WithNested.class, NestedImpl.class);
         getDs().ensureIndexes();
 
         final List<DBObject> indexInfo = getDs().getCollection(WithNested.class).getIndexInfo();
@@ -92,6 +92,24 @@ public class EmbeddedMappingTest extends TestBase {
                        .field("nested.field.fails").equal("nested value")
                        .get();
         Assert.assertNull(found);
+    }
+
+    @Test
+    public void validateNestedInterfaces() {
+        getMorphia().map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
+        try {
+            getDs().ensureIndexes();
+        } catch (MappingException e) {
+            Assert.assertEquals("Could not resolve path 'nested.field.fail' against 'org.mongodb.morphia.mapping"
+                                    + ".EmbeddedMappingTest$WithNestedValidated'.", e.getMessage());
+        }
+
+        final List<DBObject> indexInfo = getDs().getCollection(WithNestedValidated.class).getIndexInfo();
+        boolean indexFound = false;
+        for (DBObject dbObject : indexInfo) {
+            indexFound |= "nested.field.fail".equals(((DBObject) dbObject.get("key")).keySet().iterator().next());
+        }
+        Assert.assertFalse("Should not find the nested field index", indexFound);
     }
 
     public interface Nested {
@@ -171,6 +189,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    @Embedded
     public static class NestedImpl implements Nested {
         private String field;
 
@@ -200,6 +219,11 @@ public class EmbeddedMappingTest extends TestBase {
         public int hashCode() {
             return field != null ? field.hashCode() : 0;
         }
+    }
+
+    @Embedded
+    public static class AnotherNested implements Nested {
+        private Long value;
     }
 
     @Indexes({
@@ -235,5 +259,12 @@ public class EmbeddedMappingTest extends TestBase {
             result = 31 * result + (nested != null ? nested.hashCode() : 0);
             return result;
         }
+    }
+
+    @Indexes(@Index(fields = {@Field("nested.field.fail")}))
+    public static class WithNestedValidated {
+        @Id
+        private ObjectId id;
+        private Nested nested;
     }
 }

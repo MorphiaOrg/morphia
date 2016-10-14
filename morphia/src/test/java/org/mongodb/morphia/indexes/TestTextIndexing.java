@@ -83,7 +83,7 @@ public class TestTextIndexing extends TestBase {
         getDs().ensureIndexes();
 
         List<DBObject> indexInfo = getDs().getCollection(clazz).getIndexInfo();
-        Assert.assertEquals(2, indexInfo.size());
+        Assert.assertEquals(indexInfo.toString(), 2, indexInfo.size());
         boolean found = false;
         for (DBObject dbObject : indexInfo) {
             if (dbObject.get("name").equals("single_annotation")) {
@@ -93,7 +93,7 @@ public class TestTextIndexing extends TestBase {
                 Assert.assertEquals(dbObject.toString(), 10, ((DBObject) dbObject.get("weights")).get("nickName"));
             }
         }
-        Assert.assertTrue(found);
+        Assert.assertTrue(indexInfo.toString(), found);
 
     }
 

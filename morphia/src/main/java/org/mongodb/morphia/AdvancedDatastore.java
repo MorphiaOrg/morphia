@@ -1,15 +1,14 @@
 package org.mongodb.morphia;
 
-import org.mongodb.morphia.aggregation.AggregationPipeline;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
@@ -136,8 +135,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param name             the name of the index to create
      * @param fields           the fields to index
      * @param unique           true if the index should enforce uniqueness on the fields indexed
-     * @param dropDupsOnCreate if unique is true and this is true, any documents with duplicated fields being indexed will be dropped.  If
-     *                         this is false, index creation will fail.
+     * @param dropDupsOnCreate This value is no longer supported.  Tells the unique index to drop duplicates silently when creating;
+     *                         only the first will be kept
      * @param <T>              the type to index
      */
     <T> void ensureIndex(String collection, Class<T> clazz, String name,

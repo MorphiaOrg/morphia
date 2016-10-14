@@ -96,12 +96,12 @@ public class TestIdField extends TestBase {
     @Entity
     private static class KeyAsId {
         @Id
-        private Key<?> id;
+        private Key<Rectangle> id;
 
         private KeyAsId() {
         }
 
-        public KeyAsId(final Key<?> key) {
+        public KeyAsId(final Key<Rectangle> key) {
             id = key;
         }
     }

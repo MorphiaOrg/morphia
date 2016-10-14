@@ -1,9 +1,13 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.MapReduceCommand.OutputType;
+
 /**
  * Defines how the output of the map reduce job is handled.
+ * @deprecated use {@link OutputType} instead
  */
+@Deprecated
 public enum MapreduceType {
     REPLACE,
     MERGE,
@@ -26,4 +30,17 @@ public enum MapreduceType {
         return null;
     }
 
+    OutputType toOutputType() {
+        switch (this) {
+            case REDUCE:
+                return OutputType.REDUCE;
+            case MERGE:
+                return OutputType.MERGE;
+            case INLINE:
+                return OutputType.INLINE;
+            default:
+                return OutputType.REPLACE;
+        }
+
+    }
 }

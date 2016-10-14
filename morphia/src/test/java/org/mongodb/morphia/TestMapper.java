@@ -9,9 +9,15 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PostLoad;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.mapping.EmbeddedMappingTest.AnotherNested;
+import org.mongodb.morphia.mapping.EmbeddedMappingTest.Nested;
+import org.mongodb.morphia.mapping.EmbeddedMappingTest.NestedImpl;
+import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -70,6 +76,16 @@ public class TestMapper extends TestBase {
         // A.loadCount=0;
         // Assert.assertEquals(holder.a1.getId(), holder.a2.getId());
 
+    }
+
+    @Test
+    public void subTypes() {
+        getMorphia().map(NestedImpl.class, AnotherNested.class);
+
+        Mapper mapper = getMorphia().getMapper();
+        List<MappedClass> subTypes = mapper.getSubTypes(mapper.getMappedClass(Nested.class));
+        Assert.assertTrue(subTypes.contains(mapper.getMappedClass(NestedImpl.class)));
+        Assert.assertTrue(subTypes.contains(mapper.getMappedClass(AnotherNested.class)));
     }
 
     public static class A {

@@ -8,6 +8,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.annotations.Validation;
+import org.mongodb.morphia.query.CountOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -22,6 +24,7 @@ import java.util.Map;
  *
  * @author Scott Hernandez
  */
+@SuppressWarnings("deprecation")
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -81,6 +84,17 @@ public interface Datastore {
     <T> WriteResult delete(Query<T> query);
 
     /**
+     * Deletes entities based on the query
+     *
+     * @param query   the query to use when finding documents to delete
+     * @param options the options to apply to the delete
+     * @param <T>     the type to delete
+     * @return results of the delete
+     * @since 1.3
+     */
+    <T> WriteResult delete(Query<T> query, DeleteOptions options);
+
+    /**
      * Deletes entities based on the query, with the WriteConcern
      *
      * @param query the query to use when finding documents to delete
@@ -115,6 +129,14 @@ public interface Datastore {
     void ensureCaps();
 
     /**
+     * Process any {@link Validation} annotations for document validation.
+     *
+     * @since 1.3
+     * @mongodb.driver.manual core/document-validation/
+     */
+    void enableDocumentValidation();
+
+    /**
      * Ensures (creating if necessary) the index including the field(s) + directions on the given collection name; eg fields = "field1,
      * -field2" ({field1:1, field2:-1})
      *
@@ -132,8 +154,7 @@ public interface Datastore {
      * @param name             the name of the index to create
      * @param fields           the fields to index
      * @param unique           true if the index should enforce uniqueness on the fields indexed
-     * @param dropDupsOnCreate if unique is true and this is true, any documents with duplicated fields being indexed will be dropped.  If
-     *                         this is false, index creation will fail.
+     * @param dropDupsOnCreate Support for this has been removed from the server.  This value is ignored.
      * @param <T>              the type to index
      */
     <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
@@ -222,6 +243,28 @@ public interface Datastore {
      * @return the deleted Entity
      */
     <T> T findAndDelete(Query<T> query);
+    /**
+     * Deletes the given entities based on the query (first item only).
+     *
+     * @param query the query to use when finding entities to delete
+     * @param options the options to apply to the delete
+     * @param <T>   the type to query
+     * @return the deleted Entity
+     * @since 1.3
+     */
+    <T> T findAndDelete(Query<T> query, FindAndModifyOptions options);
+
+    /**
+     * Find the first Entity from the Query, and modify it.
+     *
+     * @param query      the query to use when finding entities to update
+     * @param operations the updates to apply to the matched documents
+     * @param options    the options to apply to the update
+     * @param <T>        the type to query
+     * @return The modified Entity (the result of the update)
+     * @since 1.3
+     */
+    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
 
     /**
      * Find the first Entity from the Query, and modify it.
@@ -350,6 +393,17 @@ public interface Datastore {
     <T> long getCount(Query<T> query);
 
     /**
+     * Gets the count of items returned by this query; same as {@code query.countAll()}
+     *
+     * @param query   the query to filter the documents to count
+     * @param <T>     the type to count
+     * @param options the options to apply to the count
+     * @return the count
+     * @since 1.3
+     */
+    <T> long getCount(Query<T> query, CountOptions options);
+
+    /**
      * @return the DB this Datastore uses
      */
     DB getDB();
@@ -395,6 +449,16 @@ public interface Datastore {
      * @see QueryFactory
      */
     void setQueryFactory(QueryFactory queryFactory);
+
+    /**
+     * Runs a map/reduce job at the server
+     *
+     * @param <T>     The type of resulting data
+     * @param options the options to apply to the map/reduce job
+     * @return the results
+     * @since 1.3
+     */
+    <T> MapreduceResults<T> mapReduce(MapReduceOptions<T> options);
 
     /**
      * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
@@ -530,6 +594,18 @@ public interface Datastore {
      * @return the results of the updates
      */
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations);
+
+    /**
+     * Updates all entities found with the operations; this is an atomic operation per entity
+     *
+     * @param query      the query used to match the documents to update
+     * @param operations the update operations to perform
+     * @param options    the options to apply to the update
+     * @param <T>        the type of the entity
+     * @return the results of the updates
+     * @since 1.3
+     */
+    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options);
 
     /**
      * Updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;

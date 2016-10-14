@@ -19,10 +19,14 @@ package org.mongodb.morphia.indexes;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.CollationCaseFirst;
+import com.mongodb.client.model.CollationMaxVariable;
+import com.mongodb.client.model.CollationStrength;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.Collation;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;
 import org.mongodb.morphia.annotations.Index;
@@ -32,10 +36,12 @@ import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
+import static com.mongodb.client.model.CollationAlternate.SHIFTED;
+
 public class TestIndexes extends TestBase {
 
     @Test
-    public void testIndices() {
+    public void testIndexes() {
 
         final Datastore datastore = getDs();
         datastore.delete(datastore.createQuery(TestWithIndexOption.class));
@@ -52,9 +58,27 @@ public class TestIndexes extends TestBase {
         hashIndexColl.drop();
         Assert.assertEquals(0, hashIndexColl.getIndexInfo().size());
 
-        datastore.ensureIndexes(TestWithIndexOption.class, true);
-        Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
-        assertBackground(indexOptionColl.getIndexInfo());
+        if (serverIsAtLeastVersion(3.4)) {
+            datastore.ensureIndexes(TestWithIndexOption.class, true);
+            Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
+            List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
+            assertBackground(indexInfo);
+            for (DBObject dbObject : indexInfo) {
+                if (dbObject.get("name").equals("collated")) {
+                    BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
+                    Assert.assertEquals("en_US", collation.get("locale"));
+                    Assert.assertEquals("upper", collation.get("caseFirst"));
+                    Assert.assertEquals("shifted", collation.get("alternate"));
+                    Assert.assertTrue(collation.getBoolean("backwards"));
+                    Assert.assertEquals("upper", collation.get("caseFirst"));
+                    Assert.assertTrue(collation.getBoolean("caseLevel"));
+                    Assert.assertEquals("space", collation.get("maxVariable"));
+                    Assert.assertTrue(collation.getBoolean("normalization"));
+                    Assert.assertTrue(collation.getBoolean("numericOrdering"));
+                    Assert.assertEquals(5, collation.get("strength"));
+                }
+            }
+        }
 
         datastore.ensureIndexes(TestWithDeprecatedIndex.class, true);
         Assert.assertEquals(2, depIndexColl.getIndexInfo().size());
@@ -73,6 +97,7 @@ public class TestIndexes extends TestBase {
             }
         }
     }
+
     private void assertHashed(final List<DBObject> indexInfo) {
         for (final DBObject dbObject : indexInfo) {
             BasicDBObject index = (BasicDBObject) dbObject;
@@ -83,9 +108,12 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(noClassnameStored = true)
-    @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "name")})})
+    @Indexes({@Index(options = @IndexOptions(name = "collated",
+        collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
+            caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true,
+            numericOrdering = true, strength = CollationStrength.IDENTICAL)),
+        fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
-
         private String name;
 
     }
@@ -103,5 +131,6 @@ public class TestIndexes extends TestBase {
     public static class TestWithHashedIndex {
         private String hashedValue;
     }
+
 
 }

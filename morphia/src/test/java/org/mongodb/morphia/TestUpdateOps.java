@@ -20,8 +20,6 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mongodb.morphia.TestQuery.ContainsPic;
-import org.mongodb.morphia.TestQuery.Pic;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -29,6 +27,8 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.PreLoad;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.TestQuery.ContainsPic;
+import org.mongodb.morphia.query.TestQuery.Pic;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.query.ValidationException;
@@ -48,7 +48,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mongodb.morphia.logging.MorphiaLoggerFactory.get;
 import static org.mongodb.morphia.query.PushOptions.options;
 
@@ -782,6 +784,19 @@ public class TestUpdateOps extends TestBase {
     public void testValidationBadFieldName() throws Exception {
         getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
                        getDs().createUpdateOperations(Circle.class).inc("r", 1D),
+                       true, WriteConcern.ACKNOWLEDGED);
+    }
+
+    @Test
+    public void isolated() {
+        UpdateOperations<Circle> updates = getDs().createUpdateOperations(Circle.class)
+                                                 .inc("radius", 1D);
+        assertFalse(updates.isIsolated());
+        updates.isolated();
+        assertTrue(updates.isIsolated());
+
+        getDs().update(getDs().createQuery(Circle.class).field("radius").equal(0),
+                       updates,
                        true, WriteConcern.ACKNOWLEDGED);
     }
 

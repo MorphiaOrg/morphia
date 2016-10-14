@@ -21,16 +21,20 @@ import com.mongodb.AggregationOptions.OutputMode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
+import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.query.Query;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +55,27 @@ import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
 
 public class AggregationTest extends TestBase {
+
+    @Test
+    public void testCollation() {
+        checkMinServerVersion(3.4);
+        getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
+
+        Query query = getDs().createQuery(User.class).field("name").equal("john doe");
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .match(query);
+        Assert.assertEquals(1, count(pipeline.aggregate(User.class)));
+
+        Assert.assertEquals(2, count(pipeline.aggregate(User.class,
+                                                        AggregationOptions.builder()
+                                                                          .collation(Collation.builder()
+                                                                                              .locale("en")
+                                                                                              .collationStrength(
+                                                                                                  CollationStrength.SECONDARY)
+                                                                                              .build()).build())));
+    }
+
     @Test
     public void testDateAggregation() {
         AggregationPipeline pipeline = getDs()
@@ -466,7 +491,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity(value = "books", noClassnameStored = true)
-    private static final class Book {
+    public static final class Book {
         @Id
         private ObjectId id;
         private String title;
@@ -477,7 +502,7 @@ public class AggregationTest extends TestBase {
         private Book() {
         }
 
-        private Book(final String title, final String author, final Integer copies, final String... tags) {
+        public Book(final String title, final String author, final Integer copies, final String... tags) {
             this.title = title;
             this.author = author;
             this.copies = copies;
@@ -491,7 +516,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity("authors")
-    private static class Author {
+    public static class Author {
         @Id
         private String name;
         private List<String> books;
@@ -521,10 +546,11 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity
-    private static class CountResult {
+    public static class CountResult {
 
         @Id
         private String author;
+        @AlsoLoad("value")
         private int count;
 
         public String getAuthor() {
