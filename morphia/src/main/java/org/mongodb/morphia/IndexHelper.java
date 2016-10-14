@@ -101,6 +101,7 @@ final class IndexHelper {
                                                          .weight(text.value())));
     }
 
+    @SuppressWarnings("deprecation")
     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
             LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "

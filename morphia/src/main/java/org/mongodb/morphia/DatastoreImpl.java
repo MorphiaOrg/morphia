@@ -67,7 +67,9 @@ import static java.util.Collections.singletonList;
 /**
  * A generic (type-safe) wrapper around mongodb collections
  *
+ * @deprecated This is an internal implementation of a published API.  No public alternative planned.
  */
+@Deprecated
 @SuppressWarnings("deprecation")
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
@@ -89,7 +91,10 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param morphia     the Morphia instance
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
+     * @deprecated This is not meant to be directly instantiated by end user code.  Use
+     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
+    @Deprecated
     public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
         this(morphia, morphia.getMapper(), mongoClient, dbName);
     }
@@ -101,7 +106,10 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param mapper      an initialised Mapper
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
+     * @deprecated This is not meant to be directly instantiated by end user code.  Use
+     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
+    @Deprecated
     public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
         this(morphia, mapper, mongoClient, mongoClient.getDatabase(dbName));
     }
@@ -120,7 +128,9 @@ public class DatastoreImpl implements AdvancedDatastore {
      *
      * @param database the new database to use for operations
      * @return the new Datastore instance
+     * @deprecated use {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
+    @Deprecated
     public DatastoreImpl copy(final String database) {
         return new DatastoreImpl(morphia, mapper, mongoClient, database);
     }
@@ -282,6 +292,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
         final Query<T> query = createQuery(clazz);
         query.offset(offset);
@@ -453,7 +464,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     /**
      * @param obj the value to search with
      * @return the DBCollection
+     * @deprecated this is an internal method.  no replacement is planned.
      */
+    @Deprecated
     public DBCollection getCollection(final Object obj) {
         if (obj == null) {
             return null;
@@ -556,6 +569,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
                                              final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
 
@@ -584,6 +598,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
                                              final MapReduceCommand baseCommand) {
 
@@ -861,11 +876,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final Class<T> type, final String fields) {
         ensureIndex(type, null, fields, false, false);
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         MappedClass mappedClass = getMapper().getMappedClass(clazz);
@@ -895,11 +912,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final String collection, final Class<T> type, final String fields) {
         ensureIndex(collection, type, null, fields, false, false);
     }
 
     @Override
+    @Deprecated
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
@@ -1432,5 +1451,4 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         return wc;
     }
-
 }

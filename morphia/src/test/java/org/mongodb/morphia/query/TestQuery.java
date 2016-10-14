@@ -452,7 +452,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testExplainPlan() {
         getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
-        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
+        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain(getDs().createQuery(Pic.class).getOptions());
         assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
                                                   ? explainResult.get("n")
                                                   : ((Map) explainResult.get("executionStats")).get("nReturned"));
