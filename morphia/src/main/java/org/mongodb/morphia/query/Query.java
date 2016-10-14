@@ -5,6 +5,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import org.bson.types.CodeWScope;
+import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.aggregation.Sort;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -273,6 +275,14 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
      * @return this
      */
     Query<T> order(Meta sort);
+
+    /**
+     * Sorts based on a specified sort keys (defines return order).
+     *
+     * @param sorts the sort order to apply
+     * @return this
+     */
+    Query<T> order(Sort... sorts);
 
     /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all

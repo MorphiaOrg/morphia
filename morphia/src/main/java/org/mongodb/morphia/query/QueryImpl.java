@@ -12,6 +12,7 @@ import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
+import org.mongodb.morphia.aggregation.Sort;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -473,6 +474,25 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", false, false);
         this.sort = (BasicDBObject) sort.toDatabase();
 
+        return this;
+    }
+    
+    @Override
+    public Query<T> order(Sort... sorts) {
+        if (snapshotted) {
+            throw new QueryException("order cannot be used on a snapshotted query.");
+        }
+        BasicDBObject sortList = new BasicDBObject();
+        for (Sort sort : sorts) {
+        	String s = sort.getField();
+            if (validateName) {
+                final StringBuilder sb = new StringBuilder(s);
+                validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
+                s = sb.toString();
+            }
+            sortList.put(s, sort.getDirection());
+        }
+        this.sort = sortList;
         return this;
     }
 

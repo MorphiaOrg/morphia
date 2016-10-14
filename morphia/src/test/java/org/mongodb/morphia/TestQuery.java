@@ -70,6 +70,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mongodb.morphia.aggregation.Sort.*;
 
 
 /**
@@ -281,6 +282,23 @@ public class TestQuery extends TestBase {
         assertNotNull(r1);
         assertEquals(10, r1.getWidth(), 0);
         assertEquals(10, r1.getHeight(), 0);
+    }
+
+    @Test
+    public void testCompoundSortWithSortBeans() {
+        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        Rectangle r1 = getDs().find(Rectangle.class).order("width,-height").get();
+        Rectangle r2 = getDs().find(Rectangle.class).order(ascending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
+
+        r1 = getDs().find(Rectangle.class).order("-height, -width").get();
+        r2 = getDs().find(Rectangle.class).order(descending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
     }
 
     @Test
