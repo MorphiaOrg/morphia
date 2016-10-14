@@ -6,6 +6,7 @@ import com.mongodb.DBRef;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -125,6 +126,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type to index
      * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
      * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @see #ensureIndexes(String, Class)
      */
     @Deprecated
@@ -144,6 +146,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>              the type to index
      * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
      * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @see #ensureIndexes(String, Class)
      */
     @Deprecated
