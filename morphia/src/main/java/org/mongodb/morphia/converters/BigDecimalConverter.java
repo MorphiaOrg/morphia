@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * This provides a convert to/from BigDecimal in applications using the Decimal128 type introduced in the 3.4.0 release of MongoDB.  This
+ * This provides a conversion to/from BigDecimal in applications using the Decimal128 type introduced in the 3.4.0 release of MongoDB.  This
  * converter also supports loading certain types of values from the database and converting them to BigDecimal.
  *
  * Note:  While this is useful for gradual model migrations, the values will be saved as Decimal128 types when saved back.  This will
