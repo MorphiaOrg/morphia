@@ -191,6 +191,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
         return delete(query, new DeleteOptions().writeConcern(wc));
     }
@@ -286,6 +287,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
         final Query<T> query = createQuery(clazz);
         return query.filter(property, value);
@@ -359,6 +361,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
         return findAndModify(query, operations, new FindAndModifyOptions()
             .returnNew(!oldVersion)
@@ -366,6 +369,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
                                final boolean createIfMissing) {
         return findAndModify(query, operations, new FindAndModifyOptions()

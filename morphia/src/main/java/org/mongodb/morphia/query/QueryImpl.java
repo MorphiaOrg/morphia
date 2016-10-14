@@ -395,6 +395,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public DBCollection getCollection() {
         return dbColl;
     }
@@ -405,6 +406,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public DBObject getFieldsObject() {
         DBObject projection = getOptions().getProjection();
         if (projection == null || projection.keySet().size() == 0) {
@@ -436,6 +438,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();
 
@@ -458,6 +461,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public DBObject getSortObject() {
         DBObject sort = getOptions().getSortDBObject();
         return (sort == null) ? null : new BasicDBObject(sort.toMap());
@@ -617,6 +621,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    @Deprecated
     public Query<T> retrievedFields(final boolean include, final String... list) {
         if (includeFields != null && include != includeFields) {
             throw new IllegalStateException("You cannot mix included and excluded fields together");
