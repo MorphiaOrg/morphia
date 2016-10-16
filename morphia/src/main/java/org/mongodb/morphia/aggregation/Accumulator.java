@@ -51,6 +51,28 @@ public class Accumulator implements AggregationElement {
     }
 
     /**
+     * Defines an accumulator for use in an aggregation pipeline.
+     *
+     * @param operation the accumulator operation
+     * @param field     the field to use
+     * @return an Accumulator
+     */
+    public static Accumulator accumulator(final String operation, final String field) {
+        return new Accumulator(operation, field);
+    }
+
+    /**
+     * Defines an accumulator for use in an aggregation pipeline.
+     *
+     * @param operation the accumulator operation
+     * @param field     the field to use
+     * @return an Accumulator
+     */
+    public static Accumulator accumulator(final String operation, final Object field) {
+        return new Accumulator(operation, field);
+    }
+
+    /**
      * @return the value for this accumulator
      * @deprecated use {@link #getValue()}
      */
