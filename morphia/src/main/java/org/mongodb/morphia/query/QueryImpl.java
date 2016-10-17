@@ -2,7 +2,6 @@ package org.mongodb.morphia.query;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -700,23 +699,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.trace(String.format("Running query(%s) : %s, options: %s,", dbColl.getName(), query, findOptions));
         }
 
-
-        final DBCursor cursor = dbColl.find(query, findOptions.getOptions()
-                                                              .sort(getSortObject())
-                                                              .projection(getFieldsObject()));
-        cursor.setDecoderFactory(ds.getDecoderFact());
-        switch (findOptions.getCursorType()) {
-            case TailableAwait:
-                cursor.addOption(Bytes.QUERYOPTION_AWAITDATA);
-                cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
-                break;
-            case Tailable:
-                cursor.addOption(Bytes.QUERYOPTION_TAILABLE);
-                break;
-            default:
-                break;
-        }
-
         if (options.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
             LOG.warning("Snapshotted query should not have hint/sort.");
         }
@@ -725,7 +707,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.warning("Sorting on tail is not allowed.");
         }
 
-        return cursor;
+        DBCollectionFindOptions options = findOptions.getOptions()
+                                                        .sort(getSortObject())
+                                                        .projection(getFieldsObject());
+        return dbColl.find(query, options)
+                     .setDecoderFactory(ds.getDecoderFact());
     }
 
     @Override
