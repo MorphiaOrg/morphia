@@ -44,6 +44,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.mongodb.morphia.aggregation.Accumulator.accumulator;
 import static org.mongodb.morphia.aggregation.Group.addToSet;
 import static org.mongodb.morphia.aggregation.Group.grouping;
 import static org.mongodb.morphia.aggregation.Group.id;
@@ -80,9 +81,9 @@ public class AggregationTest extends TestBase {
     public void testDateAggregation() {
         AggregationPipeline pipeline = getDs()
             .createAggregation(User.class)
-            .group(id(grouping("month", new Accumulator("$month", "date")),
-                         grouping("year", new Accumulator("$year", "date"))),
-                grouping("count", new Accumulator("$sum", 1)));
+            .group(id(grouping("month", accumulator("$month", "date")),
+                         grouping("year", accumulator("$year", "date"))),
+                grouping("count", accumulator("$sum", 1)));
         final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
         final DBObject id = getDBObject(group, "$group", "_id");
         Assert.assertEquals(new BasicDBObject("$month", "$date"), id.get("month"));
@@ -95,7 +96,7 @@ public class AggregationTest extends TestBase {
     public void testNullGroupId() {
         AggregationPipeline pipeline = getDs()
             .createAggregation(User.class)
-            .group(grouping("count", new Accumulator("$sum", 1)));
+            .group(grouping("count", accumulator("$sum", 1)));
 
         final DBObject group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
         Assert.assertNull(group.get("_id"));
@@ -133,7 +134,7 @@ public class AggregationTest extends TestBase {
                      new Book("Iliad", "Homer", 10));
 
         Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
-                                                   .group("author", grouping("count", new Accumulator("$sum", 1)))
+                                                   .group("author", grouping("count", accumulator("$sum", 1)))
                                                    .sort(Sort.ascending("_id"))
                                                    .aggregate(CountResult.class);
 
@@ -442,11 +443,11 @@ public class AggregationTest extends TestBase {
         AggregationPipeline pipeline =
             getDs().createAggregation(Author.class)
                    .group("subjectHash",
-                          grouping("authors", addToSet("fromAddress.address")),
-                          grouping("messageDataSet", grouping("$addToSet",
-                                                              projection("sentDate", "sentDate"),
-                                                              projection("messageId", "_id"))),
-                          grouping("messageCount", new Accumulator("$sum", 1)))
+                           grouping("authors", addToSet("fromAddress.address")),
+                           grouping("messageDataSet", grouping("$addToSet",
+                                   projection("sentDate", "sentDate"),
+                                   projection("messageId", "_id"))),
+                           grouping("messageCount", accumulator("$sum", 1)))
                    .limit(10)
                    .skip(0);
         List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
@@ -462,7 +463,7 @@ public class AggregationTest extends TestBase {
         AggregationPipeline pipeline = getDs()
             .createAggregation(Book.class)
             .group(grouping("summation",
-                            new Accumulator("$sum", new Accumulator("$add", asList("$amountFromTBInDouble", "$amountFromParentPNLInDouble"))
+                            accumulator("$sum", accumulator("$add", asList("$amountFromTBInDouble", "$amountFromParentPNLInDouble"))
                             )));
 
         DBObject group = (DBObject) ((AggregationPipelineImpl) pipeline).getStages().get(0).get("$group");
