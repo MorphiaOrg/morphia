@@ -1,7 +1,7 @@
 package org.mongodb.morphia.query;
 
 /**
- * Defines a sort stage in an aggregation pipeline
+ * Used for sorting query results or defining a sort stage in an aggregation pipeline
  *
  * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
  */

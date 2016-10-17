@@ -40,7 +40,7 @@ public class Sort extends org.mongodb.morphia.query.Sort {
     public static Sort descending(final String field) {
         return new Sort(field, -1);
     }
-    
+
     /**
      * @return the sort direction
      */

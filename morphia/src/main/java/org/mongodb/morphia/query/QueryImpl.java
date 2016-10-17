@@ -503,7 +503,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return this;
     }
-    
+
     @Override
     public Query<T> order(Sort... sorts) {
         BasicDBObject sortList = new BasicDBObject();

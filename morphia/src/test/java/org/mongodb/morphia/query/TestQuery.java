@@ -317,7 +317,7 @@ public class TestQuery extends TestBase {
         assertEquals(4, results.size());
 
         Rectangle r = null;
-        
+
         r= results.get(0);
         assertNotNull(r);
         assertEquals(6, r.getHeight(), 0);
@@ -343,7 +343,7 @@ public class TestQuery extends TestBase {
         assertEquals(4, results.size());
 
         Rectangle r = null;
-        
+
         r= results.get(0);
         assertNotNull(r);
         assertEquals(10, r.getHeight(), 0);
