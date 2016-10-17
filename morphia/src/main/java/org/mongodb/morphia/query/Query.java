@@ -5,8 +5,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import org.bson.types.CodeWScope;
-import org.mongodb.morphia.aggregation.AggregationPipeline;
-import org.mongodb.morphia.aggregation.Sort;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

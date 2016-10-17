@@ -5,9 +5,7 @@ package org.mongodb.morphia.aggregation;
  *
  * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
  */
-public class Sort {
-    private final String field;
-    private final int direction;
+public class Sort extends org.mongodb.morphia.query.Sort {
 
     /**
      * Creates a sort on a field with a direction.
@@ -20,8 +18,7 @@ public class Sort {
      * @param direction the direction
      */
     public Sort(final String field, final int direction) {
-        this.field = field;
-        this.direction = direction;
+        super(field, direction);
     }
 
     /**
@@ -43,18 +40,11 @@ public class Sort {
     public static Sort descending(final String field) {
         return new Sort(field, -1);
     }
-
+    
     /**
      * @return the sort direction
      */
     public int getDirection() {
-        return direction;
-    }
-
-    /**
-     * @return the sort field
-     */
-    public String getField() {
-        return field;
+        return super.getOrder();
     }
 }
