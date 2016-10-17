@@ -60,6 +60,7 @@ import java.util.Map.Entry;
 
 import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.BasicDBObjectBuilder.start;
+import static com.mongodb.DBCollection.ID_FIELD_NAME;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -677,7 +678,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = getCollection(unwrapped);
 
         // try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, wc, mc);
+        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, new InsertOptions().writeConcern(wc), mc);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
@@ -702,44 +703,50 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        if (entities == null) {
-            return new ArrayList<Key<T>>();
-        }
         Iterator<T> iterator = entities.iterator();
-        if (!iterator.hasNext()) {
-            return new ArrayList<Key<T>>();
-        }
-        return save(entities, getWriteConcern(iterator.next()));
+        return !iterator.hasNext()
+               ? Collections.<Key<T>>emptyList()
+               : save(entities, getWriteConcern(iterator.next()));
     }
 
     @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
+        return save(entities, new InsertOptions().writeConcern(wc));
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final InsertOptions options) {
         final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
         for (final T ent : entities) {
-            savedKeys.add(save(ent, wc));
+            savedKeys.add(save(ent, options));
         }
         return savedKeys;
 
     }
 
     @Override
+    @Deprecated
     public <T> Iterable<Key<T>> save(final T... entities) {
-        final List<Key<T>> savedKeys = new ArrayList<Key<T>>();
-        for (final T ent : entities) {
-            savedKeys.add(save(ent));
-        }
-        return savedKeys;
+        return save(asList(entities), new InsertOptions());
     }
 
     @Override
     public <T> Key<T> save(final T entity) {
-        return save(entity, getWriteConcern(entity));
+        return save(entity, new InsertOptions()
+            .writeConcern(getWriteConcern(entity)));
     }
 
     @Override
+    @Deprecated
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
+        return save(entity, new InsertOptions()
+            .writeConcern(wc));
+    }
+
+    @Override
+    public <T> Key<T> save(final T entity, final InsertOptions options) {
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, wc);
+        return save(getCollection(unwrapped), unwrapped, options);
     }
 
     @Override
@@ -1000,8 +1007,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Key<T> insert(final String collection, final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(collection);
-        return insert(dbColl, unwrapped, getWriteConcern(unwrapped));
+        return insert(getCollection(collection), unwrapped, new InsertOptions()
+            .writeConcern(getWriteConcern(unwrapped)));
+    }
+
+    @Override
+    public <T> Key<T> insert(final String collection, final T entity, final InsertOptions options) {
+        return insert(getCollection(collection), ProxyHelper.unwrap(entity), options);
     }
 
     @Override
@@ -1011,37 +1023,50 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> insert(final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(unwrapped);
-        return insert(dbColl, unwrapped, wc);
+        return insert(entity, new InsertOptions().writeConcern(wc));
     }
 
     @Override
+    public <T> Key<T> insert(final T entity, final InsertOptions options) {
+        final T unwrapped = ProxyHelper.unwrap(entity);
+        return insert(getCollection(unwrapped), unwrapped, options);
+    }
+
+    @Override
+    @Deprecated
     public <T> Iterable<Key<T>> insert(final T... entities) {
-        if (entities.length == 0) {
-            return Collections.emptyList();
-        } else {
-            return insert(asList(entities), getWriteConcern(entities[0]));
-        }
+        return insert(asList(entities));
     }
 
     @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        if (!entities.iterator().hasNext()) {
-            return Collections.emptyList();
-        } else {
-            return insert(getCollection(entities.iterator().next()), entities, wc);
-        }
+        return insert(entities, new InsertOptions().writeConcern(wc));
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final InsertOptions options) {
+        Iterator<T> iterator = entities.iterator();
+        return !iterator.hasNext()
+               ? Collections.<Key<T>>emptyList()
+               : insert(getCollection(iterator.next()), entities, options);
     }
 
     @Override
     public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities) {
-        return insert(collection, entities, null);
+        return insert(collection, entities, new InsertOptions());
     }
 
     @Override
+    @Deprecated
     public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final WriteConcern wc) {
-        return insert(getDB().getCollection(collection), entities, wc);
+        return insert(getDB().getCollection(collection), entities, new InsertOptions()
+            .writeConcern(wc));
+    }
+
+    @Override
+    @Deprecated
+    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final InsertOptions options) {
+        return insert(getDB().getCollection(collection), entities, options);
     }
 
     @Override
@@ -1057,7 +1082,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final String collection, final T entity, final WriteConcern wc) {
-        return save(getCollection(collection), ProxyHelper.unwrap(entity), wc);
+        return save(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOptions().writeConcern(wc));
+    }
+
+    @Override
+    public <T> Key<T> save(final String collection, final T entity, final InsertOptions options) {
+        return save(getCollection(collection), ProxyHelper.unwrap(entity), options);
     }
 
     /**
@@ -1125,7 +1155,8 @@ public class DatastoreImpl implements AdvancedDatastore {
      */
     @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
-        return insert(entities, null);
+        return insert(entities, new InsertOptions()
+            .writeConcern(defConcern));
     }
 
     /**
@@ -1138,9 +1169,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @return the key of entity
      */
     public <T> Key<T> insert(final String collection, final T entity, final WriteConcern wc) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final DBCollection dbColl = getCollection(collection);
-        return insert(dbColl, unwrapped, wc);
+        return insert(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOptions().writeConcern(wc));
     }
 
     protected DBCollection getCollection(final String kind) {
@@ -1155,19 +1184,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.getId(entity);
     }
 
-    protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final WriteConcern wc) {
+    protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final InsertOptions options) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = entityToDBObj(entity, involvedObjects);
-        if (wc == null) {
-            dbColl.insert(dbObj);
-        } else {
-            dbColl.insert(dbObj, wc);
-        }
+        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), options.getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
-    protected <T> Key<T> save(final DBCollection dbColl, final T entity, final WriteConcern wc) {
+    protected <T> Key<T> save(final DBCollection dbColl, final T entity, final InsertOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
         }
@@ -1180,25 +1204,33 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         // involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = entityToDBObj(entity, involvedObjects);
+        final DBObject document = entityToDBObj(entity, involvedObjects);
 
         // try to do an update if there is a @Version field
-        final Object idValue = dbObj.get(Mapper.ID_KEY);
-        WriteResult wr = tryVersionedUpdate(dbColl, entity, dbObj, idValue, wc, mc);
+        final Object idValue = document.get(Mapper.ID_KEY);
+        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, options, mc);
 
         if (wr == null) {
-            if (wc == null) {
-                dbColl.save(dbObj);
-            } else {
-                dbColl.save(dbObj, wc);
-            }
+            saveDocument(dbColl, document, options);
         }
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
+    private WriteResult saveDocument(final DBCollection dbColl, final DBObject document, final InsertOptions options) {
+        if (document.get(ID_FIELD_NAME) == null) {
+            return dbColl.insert(singletonList(document), options.getOptions());
+        } else {
+            return dbColl.update(new BasicDBObject(ID_FIELD_NAME, document.get(ID_FIELD_NAME)), document,
+                          new DBCollectionUpdateOptions()
+                              .bypassDocumentValidation(options.getBypassDocumentValidation())
+                              .writeConcern(options.getWriteConcern())
+                              .upsert(true));
+        }
+    }
+
     private <T> WriteResult tryVersionedUpdate(final DBCollection dbColl, final T entity, final DBObject dbObj, final Object idValue,
-                                                 final WriteConcern wc, final MappedClass mc) {
+                                               final InsertOptions options, final MappedClass mc) {
         WriteResult wr;
         if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
             return null;
@@ -1219,7 +1251,9 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .filter(Mapper.ID_KEY, idValue)
                 .enableValidation()
                 .filter(versionKeyName, oldVersion);
-            final UpdateResults res = update(query, dbObj, false, false, wc);
+            final UpdateResults res = update(query, dbObj, new UpdateOptions()
+                .bypassDocumentValidation(options.getBypassDocumentValidation())
+                .writeConcern(options.getWriteConcern()));
 
             wr = res.getWriteResult();
 
@@ -1228,11 +1262,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                  entity.getClass().getName(), idValue, oldVersion));
             }
         } else {
-            if (wc == null) {
-                wr = dbColl.save(dbObj);
-            } else {
-                wr = dbColl.save(dbObj, wc);
-            }
+            wr = saveDocument(dbColl, dbObj, options);
         }
 
         return wr;
@@ -1257,30 +1287,31 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final WriteConcern wc) {
+    private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final InsertOptions options) {
         if (!entities.iterator().hasNext()) {
             return Collections.emptyList();
         }
 
-        WriteConcern writeConcern = wc;
-        if (writeConcern == null) {
-            writeConcern = getWriteConcern(entities.iterator().next());
-        }
         final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
+        WriteConcern writeConcern = options.getWriteConcern();
         if (morphia.getUseBulkWriteOperations()) {
             BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
             for (final T entity : entities) {
+                if (writeConcern == null) {
+                    writeConcern = getWriteConcern(entity);
+                }
                 bulkWriteOperation.insert(toDbObject(entity, involvedObjects));
             }
             bulkWriteOperation.execute(writeConcern);
         } else {
-            writeConcern = getWriteConcern(entities.iterator().next());
             final List<DBObject> list = new ArrayList<DBObject>();
             for (final T entity : entities) {
+                if (writeConcern == null) {
+                    writeConcern = getWriteConcern(entity);
+                }
                 list.add(toDbObject(entity, involvedObjects));
             }
-            dbColl.insert(writeConcern, list.toArray(new DBObject[list.size()]));
+            dbColl.insert(list, options.getOptions());
         }
 
         return postSaveOperations(entities, involvedObjects, dbColl);
@@ -1396,6 +1427,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     @SuppressWarnings("unchecked")
     private <T> UpdateResults update(final Query<T> query, final DBObject update, final boolean createIfMissing, final boolean multi,
                                      final WriteConcern wc) {
+        return  update(query, update, new UpdateOptions()
+                      .upsert(createIfMissing)
+                      .multi(multi)
+                      .writeConcern(wc));
+    }
+
+    private <T> UpdateResults update(final Query<T> query, final DBObject update, final UpdateOptions options) {
 
         DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
@@ -1430,13 +1468,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                             dbColl.getName(), queryObject, update, multi, createIfMissing));
+                             dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
-        return new UpdateResults(dbColl.update(queryObject, update, new DBCollectionUpdateOptions()
-            .multi(multi)
-            .upsert(createIfMissing)
-            .writeConcern(wc)));
+        return new UpdateResults(dbColl.update(queryObject, update, options.getOptions()));
     }
 
     /**

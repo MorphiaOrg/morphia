@@ -37,12 +37,11 @@ public final class FindAndModifyOptions {
     FindAndModifyOptions copy() {
         FindAndModifyOptions copy = new FindAndModifyOptions();
         copy.bypassDocumentValidation(getBypassDocumentValidation());
+        copy.collation(getCollation());
+        copy.maxTime(getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         copy.projection(getProjection());
         copy.remove(isRemove());
         copy.returnNew(isReturnNew());
-        copy.collation(getCollation());
-        copy.upsert(isUpsert());
-        copy.maxTime(getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         copy.sort(getSort());
         copy.update(getUpdate());
         copy.upsert(isUpsert());
