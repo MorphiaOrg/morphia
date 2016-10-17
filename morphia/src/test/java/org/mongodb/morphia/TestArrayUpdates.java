@@ -45,7 +45,7 @@ public class TestArrayUpdates extends TestBase {
     }
 
     @Test
-    public void testStudents2() {
+    public void testUpdatesWithArrayIndexPosition() {
         getMorphia().map(Student.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
