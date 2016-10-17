@@ -55,7 +55,7 @@ final class QueryValidator {
             for (int i = 0; ; ) {
                 //CHECKSTYLE:ON
                 final String part = parts[i];
-                boolean fieldIsArrayOperator = part.equals("$");
+                boolean fieldIsArrayOperator = part.equals("$") || part.matches("[0-9]+");
 
                 mf = mc.getMappedField(part);
 
