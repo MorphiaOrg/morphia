@@ -48,7 +48,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * Count the total number of values in the result, ignoring limit and offset
      *
      * @return the count
+     * @deprecated use {@link #count()} instead
      */
+    @Deprecated
     long countAll();
 
     /**
@@ -157,7 +159,10 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return an Iterator.
      * @see #tail(boolean)
+     * @deprecated set the CursorType on {@link FindOptions} instead
+     *
      */
+    @Deprecated
     MorphiaIterator<T, T> tail();
 
     /**
@@ -168,6 +173,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param awaitData passes the awaitData to the cursor
      * @return an Iterator.
      * @see Bytes#QUERYOPTION_AWAITDATA
+     * @deprecated set the CursorType on {@link FindOptions} instead. This can be replicated using
+     * {@code findOptions.cursorType (awaitData ? TailableAwait : Tailable)}
      */
+    @Deprecated
     MorphiaIterator<T, T> tail(boolean awaitData);
 }

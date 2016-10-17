@@ -28,7 +28,7 @@ public @interface Indexed {
     IndexOptions options() default @IndexOptions();
 
     /**
-     * Create the index in the background?
+     * Creates the index in the background if true
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -38,7 +38,7 @@ public @interface Indexed {
     /**
      * Tells the unique index to drop duplicates silently when creating; only the first will be kept
      *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     * @deprecated Support for this has been removed from the server.  This value is ignored.
      */
     @Deprecated
     boolean dropDups() default false;
@@ -76,7 +76,10 @@ public @interface Indexed {
     boolean unique() default false;
 
     /**
-     * Indicates the type of the index (ascending, descending); default is ascending
+     * Indicates the type of the index (ascending, descending, geo2d); default is ascending
+     *
+     * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
+    @Deprecated
     IndexDirection value() default IndexDirection.ASC;
 }

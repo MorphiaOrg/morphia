@@ -7,9 +7,14 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
 import org.mongodb.morphia.aggregation.AggregationPipeline;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.query.CountOptions;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -24,7 +29,6 @@ import java.util.Map;
  *
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -101,7 +105,9 @@ public interface Datastore {
      * @param wc    the WriteConcern to use when deleting
      * @param <T>   the type to delete
      * @return results of the delete
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
+    @Deprecated
     <T> WriteResult delete(Query<T> query, WriteConcern wc);
 
     /**
@@ -124,7 +130,7 @@ public interface Datastore {
     <T> WriteResult delete(T entity, WriteConcern wc);
 
     /**
-     * ensure capped DBCollections for {@code Entity}(s)
+     * ensure capped collections for {@code Entity}(s)
      */
     void ensureCaps();
 
@@ -143,7 +149,11 @@ public interface Datastore {
      * @param clazz  the class from which to get the index definitions
      * @param fields the fields to index
      * @param <T>    the type to index
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      */
+    @Deprecated
     <T> void ensureIndex(Class<T> clazz, String fields);
 
     /**
@@ -156,11 +166,19 @@ public interface Datastore {
      * @param unique           true if the index should enforce uniqueness on the fields indexed
      * @param dropDupsOnCreate Support for this has been removed from the server.  This value is ignored.
      * @param <T>              the type to index
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      */
+    @Deprecated
     <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}
+     * Ensures (creating if necessary) the indexes found during class mapping
+     *
+     * @see Indexes
+     * @see Indexed
+     * @see Text
      */
     void ensureIndexes();
 
@@ -168,25 +186,38 @@ public interface Datastore {
      * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)} on the given collection
      * name, possibly in the background
      *
-     * @param background if true, the index will be built in the background.  If false, the method will block until the index is created.
+     * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
+     *                   definition
+     *
+     * @see Indexes
+     * @see Indexed
+     * @see Text
      */
     void ensureIndexes(boolean background);
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}
+     * Ensures (creating if necessary) the indexes found during class mapping
      *
      * @param clazz the class from which to get the index definitions
      * @param <T>   the type to index
+     *
+     * @see Indexes
+     * @see Indexed
+     * @see Text
      */
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)}, possibly in the
-     * background
+     * Ensures (creating if necessary) the indexes found during class mapping
      *
      * @param clazz      the class from which to get the index definitions
-     * @param background if true, the index will be built in the background.  If false, the method will block until the index is created.
+     * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
+     *                   definition
      * @param <T>        the type to index
+     *
+     * @see Indexes
+     * @see Indexed
+     * @see Text
      */
     <T> void ensureIndexes(Class<T> clazz, boolean background);
 
@@ -216,8 +247,10 @@ public interface Datastore {
      * @param value    the value to check for
      * @param <T>      the type to query
      * @param <V>      the type to filter value
+     * @deprecated use {@link FindOptions} when running the query instead
      * @return the query
      */
+    @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value);
 
     /**
@@ -232,7 +265,9 @@ public interface Datastore {
      * @param <T>      the type to query
      * @param <V>      the type to filter value
      * @return the query
+     * @deprecated use {@link FindOptions} when running the query instead
      */
+    @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
 
     /**
@@ -284,7 +319,9 @@ public interface Datastore {
      * @param oldVersion indicated the old version of the Entity should be returned
      * @param <T>        the type to query
      * @return The Entity (the result of the update if oldVersion is false)
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
+    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion);
 
     /**
@@ -296,7 +333,9 @@ public interface Datastore {
      * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
      * @param <T>             the type of the entity
      * @return The Entity (the result of the update if oldVersion is false)
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
+    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion, boolean createIfMissing);
 
     /**
@@ -472,7 +511,9 @@ public interface Datastore {
      * @param finalize    The finalize function, in javascript, as a string; can be null
      * @param scopeFields Each map entry will be a global variable in all the functions; can be null
      * @return counts and stuff
+     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      */
+    @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize,
                                       Map<String, Object> scopeFields, Class<T> outputType);
 
@@ -485,7 +526,9 @@ public interface Datastore {
      * @param outputType  The type of resulting data; inline is not working yet
      * @param baseCommand The base command to fill in and send to the server
      * @return counts and stuff
+     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      */
+    @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, Class<T> outputType, MapReduceCommand baseCommand);
 
     /**
