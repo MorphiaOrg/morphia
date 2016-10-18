@@ -4,6 +4,7 @@ package org.mongodb.morphia.aggregation;
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.Sort;
 
 import java.util.Iterator;
 import java.util.List;

@@ -4,7 +4,9 @@ package org.mongodb.morphia.aggregation;
  * Defines a sort stage in an aggregation pipeline
  *
  * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
+ * @deprecated Use {@link org.mongodb.morphia.query.Sort} instead.
  */
+@Deprecated
 public class Sort extends org.mongodb.morphia.query.Sort {
 
     /**
@@ -26,6 +28,7 @@ public class Sort extends org.mongodb.morphia.query.Sort {
      *
      * @param field the field
      * @return the Sort instance
+     * @deprecated Use {@link org.mongodb.morphia.query.Sort#ascending(String)} instead.
      */
     public static Sort ascending(final String field) {
         return new Sort(field, 1);
@@ -36,6 +39,7 @@ public class Sort extends org.mongodb.morphia.query.Sort {
      *
      * @param field the field
      * @return the Sort instance
+     * @deprecated Use {@link org.mongodb.morphia.query.Sort#descending(String)} instead.
      */
     public static Sort descending(final String field) {
         return new Sort(field, -1);
@@ -43,6 +47,7 @@ public class Sort extends org.mongodb.morphia.query.Sort {
 
     /**
      * @return the sort direction
+     * @deprecated Use {@link org.mongodb.morphia.query.Sort#getOrder()} instead.
      */
     public int getDirection() {
         return super.getOrder();

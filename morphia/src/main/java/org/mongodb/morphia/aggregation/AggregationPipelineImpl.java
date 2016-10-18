@@ -15,6 +15,7 @@ import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.Sort;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -203,7 +204,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline sort(final Sort... sorts) {
         DBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
-            sortList.put(sort.getField(), sort.getDirection());
+            sortList.put(sort.getField(), sort.getOrder());
         }
 
         stages.add(new BasicDBObject("$sort", sortList));
