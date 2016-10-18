@@ -6,7 +6,7 @@ package org.mongodb.morphia.query;
  * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
  */
 public class Sort {
-    private final static String NATURAL = "$natural";
+    private static final String NATURAL = "$natural";
 
     private final String field;
     private final int order;
@@ -72,7 +72,7 @@ public class Sort {
      * <li>1 for ascending order.</li>
      * <li>-1 for descending order.</li>
      * </ul>
-     * 
+     *
      * @return the sort order
      */
     public int getOrder() {

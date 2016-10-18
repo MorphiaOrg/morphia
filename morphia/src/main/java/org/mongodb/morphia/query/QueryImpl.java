@@ -534,10 +534,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public Query<T> order(Sort... sorts) {
+    public Query<T> order(final Sort... sorts) {
         BasicDBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
-        	String s = sort.getField();
+            String s = sort.getField();
             if (validateName) {
                 final StringBuilder sb = new StringBuilder(s);
                 validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
