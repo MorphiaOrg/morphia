@@ -354,7 +354,7 @@ public class TestDatastore extends TestBase {
                                            .field("username").equal("john doe");
         UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
             .inc("loginCount");
-        FacebookUser results = getDs().findAndModify(query, updateOperations);
+        FacebookUser results = getDs().findAndModify(query, updateOperations.isolated());
         assertEquals(0, getDs().find(FacebookUser.class, "id", 1).get().loginCount);
         assertEquals(1, getDs().find(FacebookUser.class, "id", 2).get().loginCount);
         assertEquals(1, results.loginCount);

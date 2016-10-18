@@ -344,11 +344,16 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         updateForVersioning(query, operations);
-        DBObject res = dbColl.findAndModify(query.getQueryObject(), options.copy()
-                                                                           .sort(query.getSortObject())
-                                                                           .projection(query.getFieldsObject())
-                                                                           .update(((UpdateOpsImpl<T>) operations).getOps())
-                                           .getOptions());
+        DBObject queryObject = query.getQueryObject();
+        if (operations.isIsolated()) {
+            queryObject.put("$isolated", true);
+        }
+
+        DBObject res = dbColl.findAndModify(queryObject, options.copy()
+                                                                .sort(query.getSortObject())
+                                                                .projection(query.getFieldsObject())
+                                                                .update(((UpdateOpsImpl<T>) operations).getOps())
+                                                                .getOptions());
 
         return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
