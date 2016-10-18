@@ -166,7 +166,8 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
-        Validation validation = createAnnotationInstance("{ jelly : { $ne : 'rhubarb' } }", level, action);
-        ((DatastoreImpl) getDs()).process(mappedClass, validation);
+        ((DatastoreImpl) getDs()).process(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                              .level(level)
+                                                                              .action(action));
     }
 }
