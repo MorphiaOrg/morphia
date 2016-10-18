@@ -290,6 +290,9 @@ final class IndexHelper {
         if (options.expireAfterSeconds() != -1) {
             indexOptions.expireAfter((long) options.expireAfterSeconds(), TimeUnit.SECONDS);
         }
+        if (!options.partialFilter().equals("")) {
+            indexOptions.partialFilterExpression(Document.parse(options.partialFilter()));
+        }
         if (!options.collation().locale().equals("")) {
             indexOptions.collation(convert(options.collation()));
         }

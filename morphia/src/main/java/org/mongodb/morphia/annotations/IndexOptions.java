@@ -86,5 +86,11 @@ public @interface IndexOptions {
      * Defines the collation to be used for this index
      * @since 1.3
      */
+    String partialFilter() default "";
+
+    /**
+     * Defines the collation to be used for this index
+     * @since 1.3
+     */
     Collation collation() default @Collation(locale = "");
 }
