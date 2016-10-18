@@ -43,5 +43,9 @@
     <Match>
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
+    <Match>
+        <Class name="org.mongodb.morphia.aggregation.Sort"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
+    </Match>
 
 </FindBugsFilter>

@@ -342,6 +342,14 @@ public interface Query<T> extends QueryResults<T>, Cloneable {
     Query<T> order(Meta sort);
 
     /**
+     * Sorts based on a specified sort keys (defines return order).
+     *
+     * @param sorts the sort order to apply
+     * @return this
+     */
+    Query<T> order(Sort... sorts);
+
+    /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
      * be inclusions or exclusions.  You can not include and exclude fields at the same time with the exception of the _id field.  The
      * _id field is always included unless explicitly suppressed.

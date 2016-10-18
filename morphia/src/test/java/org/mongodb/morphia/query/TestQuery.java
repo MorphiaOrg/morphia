@@ -69,6 +69,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mongodb.morphia.query.Sort.ascending;
+import static org.mongodb.morphia.query.Sort.descending;
+import static org.mongodb.morphia.query.Sort.naturalAscending;
+import static org.mongodb.morphia.query.Sort.naturalDescending;
 
 
 /**
@@ -76,14 +80,6 @@ import static org.junit.Assert.fail;
  */
 @SuppressWarnings({"deprecation", "unchecked"})
 public class TestQuery extends TestBase {
-
-    @Test
-    public void maxTime() {
-        Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
-                                                                      .maxTime(15, TimeUnit.MINUTES);
-
-        assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
-    }
 
     @Test
     public void genericMultiKeyValueQueries() {
@@ -105,6 +101,14 @@ public class TestQuery extends TestBase {
 
         assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
         assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+    }
+
+    @Test
+    public void maxTime() {
+        Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
+                                                    .maxTime(15, TimeUnit.MINUTES);
+
+        assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
     }
 
     @Test
@@ -134,6 +138,15 @@ public class TestQuery extends TestBase {
 
         final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, key);
         assertEquals(value.id, byKey.id);
+    }
+
+    @Test
+    public void snapshot() {
+        Query<Photo> query = getDs().createQuery(Photo.class);
+
+        Assert.assertNull(query.getQueryObject().get("$snapshot"));
+        query.enableSnapshotMode();
+        query.get();  // shouldn't throw an exception
     }
 
     @Override
@@ -198,6 +211,31 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testCollations() {
+        checkMinServerVersion(3.4);
+
+        getMorphia().map(ContainsRenamedFields.class);
+        getDs().save(new ContainsRenamedFields("first", "last"),
+                     new ContainsRenamedFields("First", "Last"));
+
+        Query query = getDs().createQuery(ContainsRenamedFields.class)
+                             .field("last_name").equal("last");
+        assertEquals(1, query.asList().size());
+        assertEquals(2, query.asList(new FindOptions()
+                                         .collation(builder()
+                                                        .locale("en")
+                                                        .collationStrength(CollationStrength.SECONDARY)
+                                                        .build()))
+                             .size());
+        assertEquals(1, query.count());
+        assertEquals(2, query.count(new CountOptions()
+                                        .collation(builder()
+                                                       .locale("en")
+                                                       .collationStrength(CollationStrength.SECONDARY)
+                                                       .build())));
+    }
+
+    @Test
     public void testCombinationQuery() {
         getDs().save(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4));
 
@@ -232,6 +270,29 @@ public class TestQuery extends TestBase {
         assertTrue(profileRecord.toString(), expectedComment.equals(commentPre32) || expectedComment.equals(commentPost32));
 
         turnOffProfilingAndDropProfileCollection();
+    }
+
+    @Test
+    public void testComplexElemMatchQuery() {
+        Keyword oscar = new Keyword("Oscar", 42);
+        getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords")
+                          .elemMatch(getDs()
+                                         .createQuery(Keyword.class)
+                                         .filter("keyword = ", "Oscar")
+                                         .filter("score = ", 12))
+                          .get());
+
+        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
+                                                  .field("keywords")
+                                                  .elemMatch(getDs()
+                                                                 .createQuery(Keyword.class)
+                                                                 .filter("score > ", 20)
+                                                                 .filter("score < ", 100))
+                                                  .asList();
+        assertEquals(1, keywords.size());
+        assertEquals(oscar, keywords.get(0).keywords.get(0));
     }
 
     @Test
@@ -288,6 +349,23 @@ public class TestQuery extends TestBase {
         assertNotNull(r1);
         assertEquals(10, r1.getWidth(), 0);
         assertEquals(10, r1.getHeight(), 0);
+    }
+
+    @Test
+    public void testCompoundSortWithSortBeans() {
+        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        Rectangle r1 = getDs().find(Rectangle.class).order("width,-height").get();
+        Rectangle r2 = getDs().find(Rectangle.class).order(ascending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
+
+        r1 = getDs().find(Rectangle.class).order("-height, -width").get();
+        r2 = getDs().find(Rectangle.class).order(descending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
     }
 
     @Test
@@ -365,28 +443,6 @@ public class TestQuery extends TestBase {
                           .hasThisElement(new Keyword("Randy"))
                           .get());
     }
-    @Test
-    public void testComplexElemMatchQuery() {
-        Keyword oscar = new Keyword("Oscar", 42);
-        getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                          .field("keywords")
-                          .elemMatch(getDs()
-                                         .createQuery(Keyword.class)
-                                         .filter("keyword = ", "Oscar")
-                                         .filter("score = ", 12))
-                          .get());
-
-        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
-                                                  .field("keywords")
-                                                  .elemMatch(getDs()
-                                                                 .createQuery(Keyword.class)
-                                                                 .filter("score > ", 20)
-                                                                 .filter("score < ", 100))
-                                                  .asList();
-        assertEquals(1, keywords.size());
-        assertEquals(oscar, keywords.get(0).keywords.get(0));
-    }
 
     @Test
     public void testElemMatchVariants() {
@@ -436,17 +492,6 @@ public class TestQuery extends TestBase {
                                                                                .createQuery(Keyword.class)
                                                                                .field("keyword").equal("Scott"))
                                                                 .asKeyList());
-    }
-
-    private void validate(final List<Key<PhotoWithKeywords>> found, final List<Key<PhotoWithKeywords>> notFound,
-                          final List<Key<PhotoWithKeywords>> keys) {
-        assertEquals(found.size(), keys.size());
-        for (Key<PhotoWithKeywords> key : found) {
-            assertTrue(keys.contains(key));
-        }
-        for (Key<PhotoWithKeywords> key : notFound) {
-            assertFalse(keys.contains(key));
-        }
     }
 
     @Test
@@ -707,6 +752,58 @@ public class TestQuery extends TestBase {
         } catch (ValidationException e) {
             // all good
         }
+    }
+
+    @Test
+    public void testNaturalSortAscending() {
+        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalAscending()).asList();
+
+        assertEquals(4, results.size());
+
+        Rectangle r = null;
+
+        r = results.get(0);
+        assertNotNull(r);
+        assertEquals(6, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+
+        r = results.get(1);
+        assertNotNull(r);
+        assertEquals(3, r.getHeight(), 0);
+        assertEquals(8, r.getWidth(), 0);
+
+        r = results.get(2);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+    }
+
+    @Test
+    public void testNaturalSortDescending() {
+        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalDescending()).asList();
+
+        assertEquals(4, results.size());
+
+        Rectangle r = null;
+
+        r = results.get(0);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(1, r.getWidth(), 0);
+
+        r = results.get(1);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+
+        r = results.get(2);
+        assertNotNull(r);
+        assertEquals(3, r.getHeight(), 0);
+        assertEquals(8, r.getWidth(), 0);
     }
 
     @Test
@@ -1150,41 +1247,6 @@ public class TestQuery extends TestBase {
 
     }
 
-
-    @Test
-    public void testCollations() {
-        checkMinServerVersion(3.4);
-
-        getMorphia().map(ContainsRenamedFields.class);
-        getDs().save(new ContainsRenamedFields("first", "last"),
-                     new ContainsRenamedFields("First", "Last"));
-
-        Query query = getDs().createQuery(ContainsRenamedFields.class)
-                             .field("last_name").equal("last");
-        assertEquals(1, query.asList().size());
-        assertEquals(2, query.asList(new FindOptions()
-                                         .collation(builder()
-                                                        .locale("en")
-                                                        .collationStrength(CollationStrength.SECONDARY)
-                                                        .build()))
-                             .size());
-        assertEquals(1, query.count());
-        assertEquals(2, query.count(new CountOptions()
-                                    .collation(builder()
-                                                        .locale("en")
-                                                        .collationStrength(CollationStrength.SECONDARY)
-                                                        .build())));
-    }
-
-    @Test
-    public void snapshot() {
-        Query<Photo> query = getDs().createQuery(Photo.class);
-
-        Assert.assertNull(query.getQueryObject().get("$snapshot"));
-        query.enableSnapshotMode();
-        query.get();  // shouldn't throw an exception
-    }
-
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
@@ -1193,6 +1255,17 @@ public class TestQuery extends TestBase {
         getDb().command(new BasicDBObject("profile", 0));
         DBCollection profileCollection = getDb().getCollection("system.profile");
         profileCollection.drop();
+    }
+
+    private void validate(final List<Key<PhotoWithKeywords>> found, final List<Key<PhotoWithKeywords>> notFound,
+                          final List<Key<PhotoWithKeywords>> keys) {
+        assertEquals(found.size(), keys.size());
+        for (Key<PhotoWithKeywords> key : found) {
+            assertTrue(keys.contains(key));
+        }
+        for (Key<PhotoWithKeywords> key : notFound) {
+            assertFalse(keys.contains(key));
+        }
     }
 
     @Entity
@@ -1252,6 +1325,11 @@ public class TestQuery extends TestBase {
         }
 
         @Override
+        public int hashCode() {
+            int result = keyword != null ? keyword.hashCode() : 0;
+            result = 31 * result + (score != null ? score.hashCode() : 0);
+            return result;
+        }        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
@@ -1269,12 +1347,7 @@ public class TestQuery extends TestBase {
 
         }
 
-        @Override
-        public int hashCode() {
-            int result = keyword != null ? keyword.hashCode() : 0;
-            result = 31 * result + (score != null ? score.hashCode() : 0);
-            return result;
-        }
+
     }
 
     public static class ContainsPhotoKey {
