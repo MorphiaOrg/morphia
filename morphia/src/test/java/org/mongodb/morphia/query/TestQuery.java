@@ -69,6 +69,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mongodb.morphia.query.Sort.*;
 
 
 /**
@@ -288,6 +289,75 @@ public class TestQuery extends TestBase {
         assertNotNull(r1);
         assertEquals(10, r1.getWidth(), 0);
         assertEquals(10, r1.getHeight(), 0);
+    }
+
+    @Test
+    public void testCompoundSortWithSortBeans() {
+        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        Rectangle r1 = getDs().find(Rectangle.class).order("width,-height").get();
+        Rectangle r2 = getDs().find(Rectangle.class).order(ascending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
+
+        r1 = getDs().find(Rectangle.class).order("-height, -width").get();
+        r2 = getDs().find(Rectangle.class).order(descending("width"), descending("height")).get();
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertEquals(r1.getId(), r2.getId());
+    }
+
+    @Test
+    public void testNaturalSortAscending() {
+        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalAscending("width")).asList();
+
+        assertEquals(4, results.size());
+
+        Rectangle r = null;
+
+        r= results.get(0);
+        assertNotNull(r);
+        assertEquals(6, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+
+        r = results.get(1);
+        assertNotNull(r);
+        assertEquals(3, r.getHeight(), 0);
+        assertEquals(8, r.getWidth(), 0);
+
+        r = results.get(2);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+    }
+
+    @Test
+    public void testNaturalSortDescending() {
+        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalDescending("width")).asList();
+
+        assertEquals(4, results.size());
+
+        Rectangle r = null;
+
+        r= results.get(0);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(1, r.getWidth(), 0);
+
+        r = results.get(1);
+        assertNotNull(r);
+        assertEquals(10, r.getHeight(), 0);
+        assertEquals(10, r.getWidth(), 0);
+
+        r = results.get(2);
+        assertNotNull(r);
+        assertEquals(3, r.getHeight(), 0);
+        assertEquals(8, r.getWidth(), 0);
     }
 
     @Test

@@ -534,6 +534,22 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public Query<T> order(final Sort... sorts) {
+        BasicDBObject sortList = new BasicDBObject();
+        for (Sort sort : sorts) {
+            String s = sort.getField();
+            if (validateName) {
+                final StringBuilder sb = new StringBuilder(s);
+                validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
+                s = sb.toString();
+            }
+            sortList.put(s, sort.getOrder());
+        }
+        getOptions().sort(sortList);
+        return this;
+    }
+
+    @Override
     @Deprecated
     public Query<T> queryNonPrimary() {
         getOptions().readPreference(ReadPreference.secondaryPreferred());
