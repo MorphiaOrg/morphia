@@ -546,7 +546,7 @@ public class AggregationTest extends TestBase {
         }
     }
 
-    @Entity
+    @Entity("counts")
     public static class CountResult {
 
         @Id
