@@ -83,6 +83,7 @@ public class MapperOptions {
      * @return the DatastoreProvider Morphia should use
      * @deprecated unused
      */
+    @Deprecated
     public DatastoreProvider getDatastoreProvider() {
         return datastoreProvider;
     }
@@ -93,6 +94,7 @@ public class MapperOptions {
      * @param datastoreProvider the DatastoreProvider to use
      * @deprecated unused
      */
+    @Deprecated
     public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
         LOG.warning("DatastoreProviders are no longer needed or used.");
         this.datastoreProvider = datastoreProvider;
@@ -185,6 +187,7 @@ public class MapperOptions {
      * @return true if Morphia should ignore transient fields
      * @deprecated this is actually the default and proper behavior.  this setting is redundant
      */
+    @Deprecated
     public boolean isActLikeSerializer() {
         return actLikeSerializer;
     }
@@ -195,6 +198,7 @@ public class MapperOptions {
      * @param actLikeSerializer true if Morphia should ignore transient fields
      * @deprecated this is actually the default and proper behavior.  this setting is redundant
      */
+    @Deprecated
     public void setActLikeSerializer(final boolean actLikeSerializer) {
         this.actLikeSerializer = actLikeSerializer;
     }

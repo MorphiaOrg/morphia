@@ -50,7 +50,7 @@ public class FindOptionsTest {
             .noCursorTimeout(true)
             .oplogReplay(true)
             .partial(true)
-            .readPreference(ReadPreference.secondaryPreferred())
+            .readPreference(ReadPreference.secondaryPreferred(2, TimeUnit.MINUTES))
             .readConcern(ReadConcern.LOCAL)
             .collation(collation).getOptions();
 
@@ -67,7 +67,7 @@ public class FindOptionsTest {
         assertTrue(options.isNoCursorTimeout());
         assertTrue(options.isOplogReplay());
         assertTrue(options.isPartial());
-        assertEquals(ReadPreference.secondaryPreferred(), options.getReadPreference());
+        assertEquals(ReadPreference.secondaryPreferred(2, TimeUnit.MINUTES), options.getReadPreference());
         assertEquals(ReadConcern.LOCAL, options.getReadConcern());
         assertEquals(collation, options.getCollation());
     }

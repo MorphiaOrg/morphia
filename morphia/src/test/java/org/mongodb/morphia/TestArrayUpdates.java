@@ -45,6 +45,33 @@ public class TestArrayUpdates extends TestBase {
     }
 
     @Test
+    public void testUpdatesWithArrayIndexPosition() {
+        getMorphia().map(Student.class);
+        final Datastore datastore = getDs();
+        datastore.ensureIndexes();
+
+        datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
+                                   new Grade(90, singletonMap("name", "Test"))));
+
+        Query<Student> testQuery = datastore.find(Student.class)
+                                            .field("_id").equal(1L)
+                                            .field("grades.data.name").equal("Test");
+        Assert.assertNotNull(testQuery.get());
+
+        // Update the second element. Array indexes are zero-based.
+        UpdateOperations<Student> operations = datastore.createUpdateOperations(Student.class);
+        operations.set("grades.1.data.name", "Makeup Test");
+        datastore.update(testQuery, operations);
+
+        Assert.assertNull(testQuery.get());
+
+        Assert.assertNotNull(datastore.find(Student.class)
+                                      .field("_id").equal(1L)
+                                      .field("grades.data.name").equal("Makeup Test")
+                                      .get());
+    }
+
+    @Test
     public void testUpdates() {
         BatchData theBatch = new BatchData();
         theBatch.files.add(new Files(0, "fileName1", "fileHash1"));

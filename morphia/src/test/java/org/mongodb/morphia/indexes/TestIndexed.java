@@ -175,6 +175,7 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testMultipleIndexedFields() {
         final MappedClass mc = getMorphia().getMapper().getMappedClass(Ad.class);
         getMorphia().map(Ad.class);
