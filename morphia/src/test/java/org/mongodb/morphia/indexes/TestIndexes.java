@@ -22,6 +22,7 @@ import com.mongodb.DBObject;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
+import org.bson.BasicBSONCallback;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
@@ -37,6 +38,7 @@ import org.mongodb.morphia.utils.IndexType;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
+import static org.junit.Assert.assertEquals;
 
 public class TestIndexes extends TestBase {
 
@@ -46,46 +48,48 @@ public class TestIndexes extends TestBase {
         final Datastore datastore = getDs();
         datastore.delete(datastore.createQuery(TestWithIndexOption.class));
 
-        final DBCollection indexOptionColl = getDb().getCollection(TestWithIndexOption.class.getSimpleName());
+        final DBCollection indexOptionColl = getDs().getCollection(TestWithIndexOption.class);
         indexOptionColl.drop();
-        Assert.assertEquals(0, indexOptionColl.getIndexInfo().size());
+        assertEquals(0, indexOptionColl.getIndexInfo().size());
 
-        final DBCollection depIndexColl = getDb().getCollection(TestWithDeprecatedIndex.class.getSimpleName());
+        final DBCollection depIndexColl = getDs().getCollection(TestWithDeprecatedIndex.class);
         depIndexColl.drop();
-        Assert.assertEquals(0, depIndexColl.getIndexInfo().size());
+        assertEquals(0, depIndexColl.getIndexInfo().size());
 
-        final DBCollection hashIndexColl = getDb().getCollection(TestWithHashedIndex.class.getSimpleName());
+        final DBCollection hashIndexColl = getDs().getCollection(TestWithHashedIndex.class);
         hashIndexColl.drop();
-        Assert.assertEquals(0, hashIndexColl.getIndexInfo().size());
+        assertEquals(0, hashIndexColl.getIndexInfo().size());
 
         if (serverIsAtLeastVersion(3.4)) {
             datastore.ensureIndexes(TestWithIndexOption.class, true);
-            Assert.assertEquals(2, indexOptionColl.getIndexInfo().size());
+            assertEquals(2, indexOptionColl.getIndexInfo().size());
             List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
             assertBackground(indexInfo);
             for (DBObject dbObject : indexInfo) {
                 if (dbObject.get("name").equals("collated")) {
+                    assertEquals(BasicDBObject.parse("{ name : { $exists : true } }"),
+                                 dbObject.get("partialFilterExpression"));
                     BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
-                    Assert.assertEquals("en_US", collation.get("locale"));
-                    Assert.assertEquals("upper", collation.get("caseFirst"));
-                    Assert.assertEquals("shifted", collation.get("alternate"));
+                    assertEquals("en_US", collation.get("locale"));
+                    assertEquals("upper", collation.get("caseFirst"));
+                    assertEquals("shifted", collation.get("alternate"));
                     Assert.assertTrue(collation.getBoolean("backwards"));
-                    Assert.assertEquals("upper", collation.get("caseFirst"));
+                    assertEquals("upper", collation.get("caseFirst"));
                     Assert.assertTrue(collation.getBoolean("caseLevel"));
-                    Assert.assertEquals("space", collation.get("maxVariable"));
+                    assertEquals("space", collation.get("maxVariable"));
                     Assert.assertTrue(collation.getBoolean("normalization"));
                     Assert.assertTrue(collation.getBoolean("numericOrdering"));
-                    Assert.assertEquals(5, collation.get("strength"));
+                    assertEquals(5, collation.get("strength"));
                 }
             }
         }
 
         datastore.ensureIndexes(TestWithDeprecatedIndex.class, true);
-        Assert.assertEquals(2, depIndexColl.getIndexInfo().size());
+        assertEquals(2, depIndexColl.getIndexInfo().size());
         assertBackground(depIndexColl.getIndexInfo());
 
         datastore.ensureIndexes(TestWithHashedIndex.class);
-        Assert.assertEquals(2, hashIndexColl.getIndexInfo().size());
+        assertEquals(2, hashIndexColl.getIndexInfo().size());
         assertHashed(hashIndexColl.getIndexInfo());
     }
 
@@ -102,13 +106,14 @@ public class TestIndexes extends TestBase {
         for (final DBObject dbObject : indexInfo) {
             BasicDBObject index = (BasicDBObject) dbObject;
             if (!index.getString("name").equals("_id_")) {
-                Assert.assertEquals(((DBObject) index.get("key")).get("hashedValue"), "hashed");
+                assertEquals(((DBObject) index.get("key")).get("hashedValue"), "hashed");
             }
         }
     }
 
     @Entity(noClassnameStored = true)
     @Indexes({@Index(options = @IndexOptions(name = "collated",
+        partialFilter = "{ name : { $exists : true } }",
         collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
             caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true,
             numericOrdering = true, strength = CollationStrength.IDENTICAL)),
