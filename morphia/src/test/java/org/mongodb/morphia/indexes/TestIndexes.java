@@ -22,7 +22,6 @@ import com.mongodb.DBObject;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
-import org.bson.BasicBSONCallback;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
