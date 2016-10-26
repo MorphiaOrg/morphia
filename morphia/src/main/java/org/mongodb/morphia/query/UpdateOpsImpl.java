@@ -129,6 +129,11 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     }
 
     @Override
+    public UpdateOperations<T> dec(String field, Number value) {
+        return inc(field, value);
+    }
+
+    @Override
     public UpdateOperations<T> disableValidation() {
         validateNames = false;
         validateTypes = false;

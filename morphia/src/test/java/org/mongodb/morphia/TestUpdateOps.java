@@ -261,6 +261,7 @@ public class TestUpdateOps extends TestBase {
 
         final Query<Rectangle> heightOf1 = getDs().find(Rectangle.class, "height", 1D);
         final Query<Rectangle> heightOf2 = getDs().find(Rectangle.class, "height", 2D);
+        final Query<Rectangle> heightOf35 = getDs().find(Rectangle.class, "height", 3.5D);
 
         assertThat(getDs().getCount(heightOf1), is(3L));
         assertThat(getDs().getCount(heightOf2), is(0L));
@@ -275,6 +276,14 @@ public class TestUpdateOps extends TestBase {
         getDs().update(heightOf2, getDs().createUpdateOperations(Rectangle.class).dec("height"));
         assertThat(getDs().getCount(heightOf1), is(3L));
         assertThat(getDs().getCount(heightOf2), is(0L));
+
+        getDs().update(heightOf1, getDs().createUpdateOperations(Rectangle.class).inc("height", 2.5D));
+        assertThat(getDs().getCount(heightOf1), is(0L));
+        assertThat(getDs().getCount(heightOf35), is(3L));
+
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", -2.5D));
+        assertThat(getDs().getCount(heightOf1), is(3L));
+        assertThat(getDs().getCount(heightOf35), is(0L));
 
         getDs().update(getDs().find(Rectangle.class, "height", 1D),
                        getDs().createUpdateOperations(Rectangle.class)
