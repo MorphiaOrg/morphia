@@ -204,9 +204,11 @@ public class Mapper {
      */
     public List<MappedClass> getSubTypes(final MappedClass mc) {
         List<MappedClass> subtypes = new ArrayList<MappedClass>();
-        for (MappedClass mappedClass : getMappedClasses()) {
-            if (mappedClass.isSubType(mc)) {
-                subtypes.add(mappedClass);
+        if (mc != null) {
+            for (MappedClass mappedClass : getMappedClasses()) {
+                if (mappedClass.isSubType(mc)) {
+                    subtypes.add(mappedClass);
+                }
             }
         }
 
@@ -653,11 +655,11 @@ public class Mapper {
         } else if (value instanceof DBObject) {  //pass-through
             mappedValue = value;
         } else {
-            mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf));
+            mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(this, mf, value));
             if (mappedValue instanceof BasicDBList) {
                 final BasicDBList list = (BasicDBList) mappedValue;
                 if (list.size() != 0) {
-                    if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
+                    if (!EmbeddedMapper.shouldSaveClassName(this, mf, extractFirstElement(value))) {
                         for (Object o : list) {
                             if (o instanceof DBObject) {
                                 ((DBObject) o).removeField(CLASS_NAME_FIELDNAME);
@@ -665,7 +667,7 @@ public class Mapper {
                         }
                     }
                 }
-            } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
+            } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(this, mf, value)) {
                 ((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
             }
         }

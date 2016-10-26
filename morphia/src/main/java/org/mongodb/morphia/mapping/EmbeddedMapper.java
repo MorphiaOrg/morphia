@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.utils.IterHelper;
 import org.mongodb.morphia.utils.IterHelper.MapIterCallback;
@@ -18,16 +19,39 @@ import java.util.List;
 import java.util.Map;
 
 class EmbeddedMapper implements CustomMapper {
-    static boolean shouldSaveClassName(final Object rawVal, final Object convertedVal, final MappedField mf) {
-        if (rawVal == null || mf == null) {
+    static boolean shouldSaveClassName(final Mapper mapper, final MappedField mf, final Object rawVal) {
+        MappedClass mappedClass = null;
+        if (mf != null) {
+            mappedClass = mapper.getMappedClass(mf.getSubClass() != null ? mf.getSubClass() : mf.getType());
+        }
+        if (mappedClass == null && rawVal != null && mapper.isMapped(rawVal.getClass())) {
+            mappedClass = mapper.getMappedClass(rawVal.getClass());
+        }
+
+        if (mappedClass != null) {
+            Entity annotation = mappedClass.getEntityAnnotation();
+            if (annotation != null) {
+                return !annotation.noClassnameStored();
+            }
+        }
+        if (rawVal == null) {
             return true;
         }
-        if (mf.isSingleValue()) {
-            return !(mf.getType().equals(rawVal.getClass()) && !(convertedVal instanceof BasicDBList));
+
+        Class type;
+        if (mf != null) {
+            type = mf.getSubClass() != null ? mf.getSubClass() : mf.getType();
+        } else {
+            type = rawVal.getClass();
         }
-        return !(convertedVal != null && convertedVal instanceof DBObject
-                 && !mf.getSubClass().isInterface() && !Modifier.isAbstract(mf.getSubClass().getModifiers())
-                 && mf.getSubClass().equals(rawVal.getClass()));
+
+        boolean hasSubTypes = mapper.getSubTypes(mappedClass).size() != 0;
+        boolean isAbstract = Modifier.isAbstract(type != null ? type.getModifiers() : 0);
+        boolean isEqual = type != null && type.equals(rawVal.getClass());
+
+        return hasSubTypes
+            || isAbstract
+            || !isEqual;
     }
 
     private static boolean isMapOrCollection(final MappedField mf) {
@@ -95,7 +119,7 @@ class EmbeddedMapper implements CustomMapper {
 
             final DBObject dbObj = fieldValue == null ? null : mapper.toDBObject(fieldValue, involvedObjects);
             if (dbObj != null) {
-                if (!shouldSaveClassName(fieldValue, dbObj, mf)) {
+                if (!shouldSaveClassName(mapper, mf, fieldValue)) {
                     dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
                 }
 
@@ -237,7 +261,7 @@ class EmbeddedMapper implements CustomMapper {
                         val = mapper.toDBObject(o, involvedObjects);
                     }
 
-                    if (!shouldSaveClassName(o, val, mf)) {
+                    if (!shouldSaveClassName(mapper, mf, o)) {
                         ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
                     }
 
@@ -273,7 +297,7 @@ class EmbeddedMapper implements CustomMapper {
                         val = mapper.toDBObject(entryVal, involvedObjects);
                     }
 
-                    if (!shouldSaveClassName(entryVal, val, mf)) {
+                    if (!shouldSaveClassName(mapper, mf, entryVal)) {
                         if (val instanceof List) {
                             if (((List) val).get(0) instanceof DBObject) {
                                 List<DBObject> list = (List<DBObject>) val;
