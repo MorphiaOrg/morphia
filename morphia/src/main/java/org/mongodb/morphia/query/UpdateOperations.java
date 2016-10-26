@@ -77,9 +77,19 @@ public interface UpdateOperations<T> {
      *
      * @param field the field to update
      * @return this
-     * @mongodb.driver.manual reference/operator/update/dec/ $dec
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
     UpdateOperations<T> dec(String field);
+
+    /**
+     * decrements the numeric field by value (negatives are allowed)
+     *
+     * @param field the field to update
+     * @param value the value to decrement by
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
+     */
+    UpdateOperations<T> dec(String field, Number value);
 
     /**
      * Turns off validation (for all calls made after)
