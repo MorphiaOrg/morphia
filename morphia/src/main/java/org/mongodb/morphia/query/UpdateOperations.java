@@ -82,7 +82,7 @@ public interface UpdateOperations<T> {
     UpdateOperations<T> dec(String field);
 
     /**
-     * decrements the numeric field by value (negatives are allowed)
+     * decrements the numeric field by value (must be negative)
      *
      * @param field the field to update
      * @param value the value to decrement by
