@@ -130,7 +130,14 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
     @Override
     public UpdateOperations<T> dec(String field, Number value) {
-        return inc(field, value);
+        if ((value instanceof Long) || (value instanceof Integer)) {
+            return inc(field, (value.longValue() * -1));
+        }
+        if ((value instanceof Double) || (value instanceof Float)) {
+            return inc(field, (value.doubleValue() * -1));
+        }
+        throw new IllegalArgumentException(
+                "Currently only the following types are allowed: integer, long, double, float.");
     }
 
     @Override

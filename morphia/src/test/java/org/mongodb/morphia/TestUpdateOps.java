@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -51,6 +52,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mongodb.morphia.logging.MorphiaLoggerFactory.get;
 import static org.mongodb.morphia.query.PushOptions.options;
 
@@ -281,7 +283,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(getDs().getCount(heightOf1), is(0L));
         assertThat(getDs().getCount(heightOf35), is(3L));
 
-        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", -2.5D));
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", 2.5D));
         assertThat(getDs().getCount(heightOf1), is(3L));
         assertThat(getDs().getCount(heightOf35), is(0L));
 
@@ -298,6 +300,16 @@ public class TestUpdateOps extends TestBase {
                        getDs().createUpdateOperations(Rectangle.class).set("height", 2D).set("width", 2D));
         assertThat(getDs().find(Rectangle.class, "width", 1D).get(), is(nullValue()));
         assertThat(getDs().find(Rectangle.class, "width", 2D).get(), is(notNullValue()));
+
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", 1));
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", Long.MAX_VALUE));
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", 1.5f));
+        getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", Double.MAX_VALUE));
+        try {
+            getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class)
+                    .dec("height", new AtomicInteger(1)));
+            fail("Wrong data type not recognized.");
+        } catch (IllegalArgumentException ignore) {}
     }
 
     @Test
