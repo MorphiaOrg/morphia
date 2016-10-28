@@ -3,6 +3,7 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.mongodb.morphia.PathTarget;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 
 
 /**
@@ -25,7 +25,6 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     private final Class<T> clazz;
     private Map<String, Map<String, Object>> ops = new HashMap<String, Map<String, Object>>();
     private boolean validateNames = true;
-    private boolean validateTypes = true;
     private boolean isolated;
 
     /**
@@ -113,12 +112,14 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             throw new QueryException("Values cannot be null or empty.");
         }
 
-        StringBuilder fieldName = new StringBuilder(field);
-        MappedField mf = validate(values, fieldName);
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field);
+        if (!validateNames) {
+            pathTarget.disableValidation();
+        }
 
-        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(mf, null, values));
+        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
         options.update(dbObject);
-        addOperation(UpdateOperator.PUSH, fieldName, dbObject);
+        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), dbObject);
 
         return this;
     }
@@ -143,14 +144,12 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     @Override
     public UpdateOperations<T> disableValidation() {
         validateNames = false;
-        validateTypes = false;
         return this;
     }
 
     @Override
     public UpdateOperations<T> enableValidation() {
         validateNames = true;
-        validateTypes = true;
         return this;
     }
 
@@ -261,6 +260,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     /**
      * @return true if isolated
      */
+    @Override
     public boolean isIsolated() {
         return isolated;
     }
@@ -272,8 +272,11 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         }
 
         Object val = value;
-        StringBuilder fieldName = new StringBuilder(f);
-        MappedField mf = validate(val, fieldName);
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), f);
+        if (!validateNames) {
+            pathTarget.disableValidation();
+        }
+        MappedField mf = pathTarget.getTarget();
 
         if (convert) {
             if (UpdateOperator.PULL_ALL.equals(op) && value instanceof List) {
@@ -288,22 +291,16 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             val = new BasicDBObject(UpdateOperator.EACH.val(), val);
         }
 
-        addOperation(op, fieldName, val);
+        addOperation(op, pathTarget.translatedPath(), val);
     }
 
-    private void addOperation(final UpdateOperator op, final StringBuilder fieldName, final Object val) {
+    private void addOperation(final UpdateOperator op, final String fieldName, final Object val) {
         final String opString = op.val();
 
         if (!ops.containsKey(opString)) {
             ops.put(opString, new LinkedHashMap<String, Object>());
         }
-        ops.get(opString).put(fieldName.toString(), val);
-    }
-
-    private MappedField validate(final Object val, final StringBuilder fieldName) {
-        return validateNames || validateTypes
-               ? validateQuery(clazz, mapper, fieldName, FilterOperator.EQUAL, val, validateNames, validateTypes)
-               : null;
+        ops.get(opString).put(fieldName, val);
     }
 
     protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {
@@ -319,4 +316,5 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
         return list;
     }
+
 }

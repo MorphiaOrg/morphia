@@ -16,6 +16,9 @@
 
 package org.mongodb.morphia.entities;
 
+import org.mongodb.morphia.annotations.Embedded;
+
+@Embedded
 public class EmbeddedType {
     private Long number;
     private String text;
