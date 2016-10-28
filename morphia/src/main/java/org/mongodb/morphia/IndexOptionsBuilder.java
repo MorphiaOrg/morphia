@@ -73,6 +73,11 @@ class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements Ind
     }
 
     @Override
+    public String partialFilter() {
+        return get("partialFilter");
+    }
+
+    @Override
     public Collation collation() {
         return get("collation");
     }
@@ -119,6 +124,11 @@ class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements Ind
 
     IndexOptionsBuilder unique(final boolean unique) {
         put("unique", unique);
+        return this;
+    }
+
+    IndexOptionsBuilder partialFilter(final String partialFilter) {
+        put("partialFilter", partialFilter);
         return this;
     }
 

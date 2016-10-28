@@ -24,6 +24,7 @@ import org.bson.BsonInt32;
 import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Collation;
@@ -305,6 +306,7 @@ public class IndexHelperTest extends TestBase {
                      index.fields()[0]);
 
     }
+
     @Test
     public void normalizeIndexed() {
         Indexed indexed = new IndexedBuilder()
@@ -358,12 +360,62 @@ public class IndexHelperTest extends TestBase {
         indexHelper.createIndex(indexes, mappedClass, index, false);
     }
 
+    @Test
+    public void indexPartialFilters() {
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        Index index = new IndexBuilder()
+            .fields(new FieldBuilder().value("text"))
+            .options(new IndexOptionsBuilder()
+                         .partialFilter("{ name : { $gt : 13 } }"));
+
+        indexHelper.createIndex(collection, mappedClass, index, false);
+        findPartialIndex(BasicDBObject.parse(index.options().partialFilter()));
+    }
+    @Test
+    public void indexedPartialFilters() {
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        Indexed indexed = new IndexedBuilder()
+            .options(new IndexOptionsBuilder()
+                         .partialFilter("{ name : { $gt : 13 } }"));
+
+        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(indexed, "text"), false);
+        findPartialIndex(BasicDBObject.parse(indexed.options().partialFilter()));
+    }
+
+    @Test
+    public void textPartialFilters() {
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
+        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+
+        Text text = new TextBuilder()
+            .value(4)
+            .options(new IndexOptionsBuilder()
+                         .partialFilter("{ name : { $gt : 13 } }"));
+
+        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(text, "text"), false);
+        findPartialIndex(BasicDBObject.parse(text.options().partialFilter()));
+    }
+
     private void checkIndex(final DBObject dbObject) {
         assertTrue((Boolean) dbObject.get("background"));
         assertTrue((Boolean) dbObject.get("unique"));
         assertTrue((Boolean) dbObject.get("sparse"));
         assertEquals(42L, dbObject.get("expireAfterSeconds"));
         assertEquals(new BasicDBObject("name", 1).append("text", -1), dbObject.get("key"));
+    }
+
+    private void findPartialIndex(final BasicDBObject expected) {
+        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
+                                          .getIndexInfo();
+        for (DBObject dbObject : indexInfo) {
+            if (!dbObject.get("name").equals("_id_")) {
+                Assert.assertEquals(expected, dbObject.get("partialFilterExpression"));
+            }
+        }
     }
 
     private Collation collation() {
