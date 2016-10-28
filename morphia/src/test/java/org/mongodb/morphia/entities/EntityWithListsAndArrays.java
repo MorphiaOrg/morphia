@@ -22,6 +22,14 @@ public class EntityWithListsAndArrays {
     private Set<Integer> setOfIntegers;
     private String notAnArrayOrList;
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(final ObjectId id) {
+        this.id = id;
+    }
+
     public List<Integer> getArrayListOfIntegers() {
         return arrayListOfIntegers;
     }
