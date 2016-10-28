@@ -77,9 +77,22 @@ public interface UpdateOperations<T> {
      *
      * @param field the field to update
      * @return this
-     * @mongodb.driver.manual reference/operator/update/dec/ $dec
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
     UpdateOperations<T> dec(String field);
+
+    /**
+     * Decrements the numeric field by value (must be a positive Double,
+     * Float, Long, or Integer).
+     *
+     * @param field the field to update
+     * @param value the value to decrement by
+     * @throws IllegalArgumentException of the value is not an instance of
+     *         Double, Float,Long, or Integer
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/inc/ $inc
+     */
+    UpdateOperations<T> dec(String field, Number value);
 
     /**
      * Turns off validation (for all calls made after)
