@@ -26,6 +26,18 @@ import com.mongodb.WriteConcern;
 public class InsertOptions {
     private com.mongodb.InsertOptions options = new com.mongodb.InsertOptions();
 
+    /**
+     * Create a copy of the options instance.
+     *
+     * @return the copy
+     */
+    public InsertOptions copy() {
+        return new InsertOptions()
+            .bypassDocumentValidation(getBypassDocumentValidation())
+            .continueOnError(isContinueOnError())
+            .writeConcern(getWriteConcern());
+    }
+
     com.mongodb.InsertOptions getOptions() {
         return options;
     }

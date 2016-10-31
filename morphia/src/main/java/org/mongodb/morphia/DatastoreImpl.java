@@ -732,8 +732,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final T entity) {
-        return save(entity, new InsertOptions()
-            .writeConcern(getWriteConcern(entity)));
+        return save(entity, new InsertOptions());
     }
 
     @Override
@@ -746,7 +745,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Key<T> save(final T entity, final InsertOptions options) {
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, options);
+        return save(getCollection(unwrapped), unwrapped, enforceWriteConcern(options, entity));
     }
 
     @Override
@@ -782,7 +781,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations) {
         return update(query, operations, new UpdateOptions()
             .upsert(false)
-            .multi(true));
+            .multi(true)
+            .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
@@ -1186,9 +1186,28 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final InsertOptions options) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), options.getOptions());
+        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity)
+            .getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
+    }
+
+    private <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
+        if (options.getWriteConcern() == null) {
+            return options
+                .copy()
+                .writeConcern(getWriteConcern(entity));
+        }
+        return options;
+    }
+
+    private <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
+        if (options.getWriteConcern() == null) {
+            return options
+                .copy()
+                .writeConcern(getWriteConcern(klass));
+        }
+        return options;
     }
 
     protected <T> Key<T> save(final DBCollection dbColl, final T entity, final InsertOptions options) {
@@ -1208,7 +1227,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         // try to do an update if there is a @Version field
         final Object idValue = document.get(Mapper.ID_KEY);
-        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, options, mc);
+        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, enforceWriteConcern(options, entity), mc);
 
         if (wr == null) {
             saveDocument(dbColl, document, options);
@@ -1293,8 +1312,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        WriteConcern writeConcern = options.getWriteConcern();
         if (morphia.getUseBulkWriteOperations()) {
+            WriteConcern writeConcern = options.getWriteConcern();
             BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
             for (final T entity : entities) {
                 if (writeConcern == null) {
@@ -1305,13 +1324,14 @@ public class DatastoreImpl implements AdvancedDatastore {
             bulkWriteOperation.execute(writeConcern);
         } else {
             final List<DBObject> list = new ArrayList<DBObject>();
+            com.mongodb.InsertOptions insertOptions = options.getOptions();
             for (final T entity : entities) {
-                if (writeConcern == null) {
-                    writeConcern = getWriteConcern(entity);
+                if (options.getWriteConcern() == null) {
+                    insertOptions = enforceWriteConcern(options, entity).getOptions();
                 }
                 list.add(toDbObject(entity, involvedObjects));
             }
-            dbColl.insert(list, options.getOptions());
+            dbColl.insert(list, insertOptions);
         }
 
         return postSaveOperations(entities, involvedObjects, dbColl);
@@ -1421,7 +1441,9 @@ public class DatastoreImpl implements AdvancedDatastore {
                              dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
-        return new UpdateResults(dbColl.update(queryObject, update, options.getOptions()));
+        return new UpdateResults(dbColl.update(queryObject, update,
+                                               enforceWriteConcern(options, query.getEntityClass())
+                                                   .getOptions()));
     }
 
     @SuppressWarnings("unchecked")
@@ -1471,7 +1493,9 @@ public class DatastoreImpl implements AdvancedDatastore {
                              dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
-        return new UpdateResults(dbColl.update(queryObject, update, options.getOptions()));
+        return new UpdateResults(dbColl.update(queryObject, update,
+                                               enforceWriteConcern(options, query.getEntityClass())
+                                                   .getOptions()));
     }
 
     /**

@@ -275,14 +275,13 @@ public interface AdvancedDatastore extends Datastore {
      * @see WriteConcern
      * @deprecated use {@link #insert(Object, InsertOptions)}
      */
-    @Deprecated
     <T> Key<T> insert(T entity, WriteConcern wc);
 
     /**
      * Inserts an entity in to the mapped collection.
      *
      * @param entity  the entity to insert
-     * @param options the options to apply to the save operation
+     * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
      * @return the new key of the inserted entity
      * @since 1.3
@@ -304,7 +303,7 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param collection the collection to update
      * @param entity     the entity to insert
-     * @param options    the options to apply to the save operation
+     * @param options    the options to apply to the insert operation
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
      * @since 1.3
@@ -326,9 +325,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param entities the entities to insert
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @deprecated use {@link #insert(Iterable)} instead
      */
-    @Deprecated
     <T> Iterable<Key<T>> insert(T... entities);
 
     /**
@@ -338,16 +335,14 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc       the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @deprecated use {@link #insert(Iterable, InsertOptions)}
      */
-    @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc);
 
     /**
      * Inserts entities in to the mapped collection.
      *
      * @param entities the entities to insert
-     * @param options  the options to apply to the save operation
+     * @param options  the options to apply to the insert operation
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
      * @since 1.3
@@ -374,9 +369,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type of the entity
      * @return the new keys of the inserted entities
      * @see WriteConcern
-     * @deprecated use {@link #insert(String, Iterable, InsertOptions)} instead
      */
-    @Deprecated
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities, WriteConcern wc);
 
     /**
@@ -384,7 +377,7 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param collection the collection to update
      * @param entities   the entities to insert
-     * @param options    the options to apply to the save operation
+     * @param options    the options to apply to the insert operation
      * @param <T>        the type of the entity
      * @return the new keys of the inserted entities
      * @since 1.3
@@ -405,7 +398,7 @@ public interface AdvancedDatastore extends Datastore {
      * Saves an entity in to the named collection.
      *
      * @param collection the collection to update
-     * @param entity     the entity to insert
+     * @param entity     the entity to save
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
      */
@@ -415,20 +408,18 @@ public interface AdvancedDatastore extends Datastore {
      * Saves an entity in to the named collection.
      *
      * @param collection the collection to update
-     * @param entity     the entity to insert
+     * @param entity     the entity to save
      * @param <T>        the type of the entity
      * @param wc         the WriteConcern to use when inserting
      * @return the new key of the inserted entity
-     * @deprecated use {@link #save(String, Object, InsertOptions)} instead
      */
-    @Deprecated
     <T> Key<T> save(String collection, T entity, WriteConcern wc);
 
     /**
      * Saves an entity in to the named collection.
      *
      * @param collection the collection to update
-     * @param entity     the entity to insert
+     * @param entity     the entity to save
      * @param <T>        the type of the entity
      * @param options the options to apply to the save operation
      * @return the new key of the inserted entity
