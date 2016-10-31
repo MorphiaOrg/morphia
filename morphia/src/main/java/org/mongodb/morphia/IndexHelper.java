@@ -52,6 +52,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.mongodb.morphia.AnnotationBuilder.toMap;
+import static org.mongodb.morphia.internal.MorphiaUtils.join;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 final class IndexHelper {
@@ -64,17 +65,6 @@ final class IndexHelper {
     IndexHelper(final Mapper mapper, final MongoDatabase database) {
         this.mapper = mapper;
         this.database = database;
-    }
-
-    private static String join(final List<String> path, final char delimiter) {
-        StringBuilder builder = new StringBuilder();
-        for (String element : path) {
-            if (builder.length() != 0) {
-                builder.append(delimiter);
-            }
-            builder.append(element);
-        }
-        return builder.toString();
     }
 
     private void calculateWeights(final Index index, final com.mongodb.client.model.IndexOptions indexOptions) {
