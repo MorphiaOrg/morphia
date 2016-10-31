@@ -314,8 +314,8 @@ public interface AdvancedDatastore extends Datastore {
      * Inserts entities in to the mapped collection.
      *
      * @param entities the entities to insert
-     * @param <T>    the type of the entities
-     * @return the new key of the inserted entities
+     * @param <T>      the type of the entities
+     * @return the new keys of the inserted entities
      */
     <T> Iterable<Key<T>> insert(Iterable<T> entities);
 
@@ -373,7 +373,7 @@ public interface AdvancedDatastore extends Datastore {
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities, WriteConcern wc);
 
     /**
-     * Inserts an entity in to the named collection.
+     * Inserts a entities in to the named collection.
      *
      * @param collection the collection to update
      * @param entities   the entities to insert
@@ -409,8 +409,8 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param collection the collection to update
      * @param entity     the entity to save
-     * @param <T>        the type of the entity
      * @param wc         the WriteConcern to use when inserting
+     * @param <T>        the type of the entity
      * @return the new key of the inserted entity
      */
     <T> Key<T> save(String collection, T entity, WriteConcern wc);
@@ -420,8 +420,8 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param collection the collection to update
      * @param entity     the entity to save
+     * @param options    the options to apply to the save operation
      * @param <T>        the type of the entity
-     * @param options the options to apply to the save operation
      * @return the new key of the inserted entity
      */
     <T> Key<T> save(String collection, T entity, InsertOptions options);
