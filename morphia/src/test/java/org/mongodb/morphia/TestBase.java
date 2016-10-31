@@ -22,10 +22,18 @@ public abstract class TestBase {
     private final Datastore ds;
 
     protected TestBase() {
-        mongoClient = new MongoClient(new MongoClientURI(System.getProperty("MONGO_URI", "mongodb://localhost:27017")));
-        db = getMongoClient().getDB(TEST_DB_NAME);
-        database = getMongoClient().getDatabase(TEST_DB_NAME);
-        ds = getMorphia().createDatastore(getMongoClient(), getDb().getName());
+        this(new MongoClient(new MongoClientURI(getMongoURI())));
+    }
+
+    protected TestBase(final MongoClient mongoClient) {
+        this.mongoClient = mongoClient;
+        this.db = getMongoClient().getDB(TEST_DB_NAME);
+        this.database = getMongoClient().getDatabase(TEST_DB_NAME);
+        this.ds = getMorphia().createDatastore(getMongoClient(), getDb().getName());
+    }
+
+    protected static String getMongoURI() {
+        return System.getProperty("MONGO_URI", "mongodb://localhost:27017");
     }
 
     public AdvancedDatastore getAds() {

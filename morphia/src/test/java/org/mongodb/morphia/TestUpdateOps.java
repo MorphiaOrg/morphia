@@ -59,7 +59,7 @@ import static org.mongodb.morphia.query.PushOptions.options;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings("UnusedDeclaration") // Morphia uses the fields
+@SuppressWarnings({"UnusedDeclaration", "deprecation"}) // Morphia uses the fields
 public class TestUpdateOps extends TestBase {
     private static final Logger LOG = get(TestUpdateOps.class);
 

@@ -80,7 +80,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final IndexHelper indexHelper;
     private DB db;
     private Mapper mapper;
-    private WriteConcern defConcern = WriteConcern.ACKNOWLEDGED;
+    private WriteConcern defConcern;
     private DBDecoderFactory decoderFactory;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
@@ -120,6 +120,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mongoClient = mongoClient;
         this.database = database;
         this.db = mongoClient.getDB(database.getName());
+        this.defConcern = mongoClient.getWriteConcern();
         this.indexHelper = new IndexHelper(mapper, database);
     }
 

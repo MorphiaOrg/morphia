@@ -61,6 +61,7 @@ import static org.junit.Assert.assertTrue;
  * @author Scott Hernandez
  */
 //@RunWith(Parameterized.class)
+@SuppressWarnings("deprecation")
 public class TestDatastore extends TestBase {
 
     @Test(expected = UpdateException.class)

@@ -57,6 +57,7 @@ public abstract class LongIdEntity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @PrePersist
     void prePersist() {
         if (myLongId == null) {
