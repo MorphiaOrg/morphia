@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mongodb.morphia;
+package org.mongodb.morphia.internal;
 
 import java.util.List;
 

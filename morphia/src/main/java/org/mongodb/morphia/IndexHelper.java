@@ -52,7 +52,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.mongodb.morphia.AnnotationBuilder.toMap;
-import static org.mongodb.morphia.MorphiaUtils.join;
+import static org.mongodb.morphia.internal.MorphiaUtils.join;
 import static org.mongodb.morphia.utils.IndexType.fromValue;
 
 final class IndexHelper {

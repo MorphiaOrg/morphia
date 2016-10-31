@@ -26,7 +26,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.mongodb.morphia.MorphiaUtils.join;
+import static org.mongodb.morphia.internal.MorphiaUtils.join;
 
 /**
  * This is an internal class and is subject to change or removal.
