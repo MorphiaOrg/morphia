@@ -299,6 +299,7 @@ public class AggregationTest extends TestBase {
                                                        .build();
         Iterator<Author> aggregate = getDs().createAggregation(Book.class)
                                             .group("author", grouping("books", push("title")))
+                                            .sort(Sort.descending("_id"))
                                             .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
