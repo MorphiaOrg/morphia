@@ -80,7 +80,7 @@ public class IndexHelperTest extends TestBase {
                         .type(IndexType.DESC));
         try {
             indexHelper.calculateKeys(mappedClass, index);
-            fail("Validation should have errored on the bad key");
+            fail("Validation should have failed on the bad key");
         } catch (MappingException e) {
             // all good
         }

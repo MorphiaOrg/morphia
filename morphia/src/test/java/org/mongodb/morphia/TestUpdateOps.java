@@ -30,6 +30,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.TestQuery.ContainsPic;
 import org.mongodb.morphia.query.TestQuery.Pic;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Circle;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,6 +90,29 @@ public class TestUpdateOps extends TestBase {
         // then
         assertThat(updateResults.getUpdatedCount(), is(1));
         assertThat(getDs().find(Parent.class, "id", parentId).get().children, hasItem(new Child(childName, updatedLastName)));
+    }
+
+    @Test
+    public void testDisableValidation() {
+        Child child1 = new Child("James", "Rigney");
+
+        validateClassName("children", getDs().createUpdateOperations(Parent.class)
+                                             .removeAll("children", child1), false);
+
+        validateClassName("children", getDs().createUpdateOperations(Parent.class)
+                                             .disableValidation()
+                                             .removeAll("children", child1), false);
+
+        validateClassName("c", getDs().createUpdateOperations(Parent.class)
+                                      .disableValidation()
+                                      .removeAll("c", child1), true);
+    }
+
+    private void validateClassName(final String path, final UpdateOperations<Parent> ops, final boolean expected) {
+        DBObject ops1 = ((UpdateOpsImpl) ops).getOps();
+        Map pull = (Map) ops1.get("$pull");
+        Map children = (Map) pull.get(path);
+        Assert.assertEquals(expected, children.containsKey("className"));
     }
 
     @Test
