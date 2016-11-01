@@ -4,9 +4,16 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand.OutputType;
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationAction;
+import com.mongodb.client.model.ValidationLevel;
+import com.mongodb.client.model.ValidationOptions;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.aggregation.AggregationTest.Book;
@@ -22,6 +29,8 @@ import org.mongodb.morphia.testmodel.Shape;
 
 import java.util.Iterator;
 import java.util.Random;
+
+import static org.junit.Assert.fail;
 
 
 public class TestMapreduce extends TestBase {
@@ -129,6 +138,45 @@ public class TestMapreduce extends TestBase {
         CountResult result = iterator.next();
         Assert.assertEquals("Dante", result.getAuthor());
         Assert.assertEquals(3D, result.getCount(), 0);
+    }
+
+    @Test
+    public void testBypassDocumentValidation() {
+        checkMinServerVersion(3.4);
+        getDs().save(new Book("The Banquet", "Dante", 2),
+                     new Book("Divine Comedy", "Dante", 1),
+                     new Book("Eclogues", "Dante", 2),
+                     new Book("The Odyssey", "Homer", 10),
+                     new Book("Iliad", "Homer", 10));
+
+        Document validator = Document.parse("{ count : { $gt : '10' } }");
+        ValidationOptions validationOptions = new ValidationOptions()
+            .validator(validator)
+            .validationLevel(ValidationLevel.STRICT)
+            .validationAction(ValidationAction.ERROR);
+        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
+        database.getCollection("counts").drop();
+        database.createCollection("counts", new CreateCollectionOptions().validationOptions(validationOptions));
+
+
+        final String map = "function () { emit(this.author, 1); return; }";
+        final String reduce = "function (key, values) { return values.length }";
+
+        MapReduceOptions<CountResult> options = new MapReduceOptions<CountResult>()
+            .query(getDs().createQuery(Book.class))
+            .resultType(CountResult.class)
+            .outputType(OutputType.REPLACE)
+            .map(map)
+            .reduce(reduce);
+        try {
+            getDs().mapReduce(options);
+            fail("Document validation should have complained.");
+        } catch (MongoCommandException e) {
+            // expected
+        }
+
+        getDs().mapReduce(options.bypassDocumentValidation(true));
+        Assert.assertEquals(2, count(getDs().createQuery(CountResult.class).iterator()));
     }
 
     @Entity("mr_results")

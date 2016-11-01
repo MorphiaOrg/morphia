@@ -21,8 +21,13 @@ import com.mongodb.AggregationOptions.OutputMode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationOptions;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,6 +36,7 @@ import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
@@ -42,8 +48,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.mongodb.AggregationOptions.builder;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.fail;
 import static org.mongodb.morphia.aggregation.Accumulator.accumulator;
 import static org.mongodb.morphia.aggregation.Group.addToSet;
 import static org.mongodb.morphia.aggregation.Group.grouping;
@@ -69,12 +77,43 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(1, count(pipeline.aggregate(User.class)));
 
         Assert.assertEquals(2, count(pipeline.aggregate(User.class,
-                                                        AggregationOptions.builder()
+                                                        builder()
                                                                           .collation(Collation.builder()
                                                                                               .locale("en")
                                                                                               .collationStrength(
                                                                                                   CollationStrength.SECONDARY)
                                                                                               .build()).build())));
+    }
+
+    @Test
+    public void testBypassDocumentValidation() {
+        checkMinServerVersion(3.2);
+        getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
+
+        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
+        database.getCollection("out_users").drop();
+        database.createCollection("out_users", new CreateCollectionOptions()
+            .validationOptions(new ValidationOptions()
+                                   .validator(Document.parse("{ age : { gte : 13 } }"))));
+
+        try {
+            getDs()
+                .createAggregation(User.class)
+                .match(getDs().createQuery(User.class).field("name").equal("john doe"))
+                .out("out_users", User.class);
+            fail("Document validation should have complained.");
+        } catch (MongoCommandException e) {
+            // expected
+        }
+
+        getDs()
+            .createAggregation(User.class)
+            .match(getDs().createQuery(User.class).field("name").equal("john doe"))
+            .out("out_users", User.class, builder()
+                .bypassDocumentValidation(true)
+                .build());
+
+        Assert.assertEquals(1, getAds().find("out_users", User.class).count());
     }
 
     @Test
@@ -115,8 +154,8 @@ public class AggregationTest extends TestBase {
                                                      new BasicDBObject("format", "%Y-%m-%d")
                                                          .append("date", "$joined"))));
 
-        Iterator<StringDates> aggregate = pipeline.aggregate(StringDates.class, AggregationOptions
-            .builder()
+        Iterator<StringDates> aggregate = pipeline.aggregate(StringDates.class,
+                                                             builder()
             .outputMode(OutputMode.CURSOR)
             .build());
         while (aggregate.hasNext()) {
@@ -294,7 +333,7 @@ public class AggregationTest extends TestBase {
                      new Book("The Odyssey", "Homer", 10),
                      new Book("Iliad", "Homer", 10));
 
-        AggregationOptions options = AggregationOptions.builder()
+        AggregationOptions options = builder()
                                                        .outputMode(AggregationOptions.OutputMode.CURSOR)
                                                        .build();
         Iterator<Author> aggregate = getDs().createAggregation(Book.class)
@@ -415,7 +454,7 @@ public class AggregationTest extends TestBase {
                     Assert.assertEquals("swimming", user.likes.get(0));
                     break;
                 default:
-                    Assert.fail("Should only find 5 elements");
+                    fail("Should only find 5 elements");
             }
             count++;
         }
@@ -524,12 +563,14 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity("users")
+    @Validation("{ age : { $gte : 13 } }")
     private static final class User {
         @Id
         private ObjectId id;
         private String name;
         private Date joined;
         private List<String> likes;
+        private int age;
 
         private User() {
         }
@@ -546,7 +587,7 @@ public class AggregationTest extends TestBase {
         }
     }
 
-    @Entity
+    @Entity("counts")
     public static class CountResult {
 
         @Id

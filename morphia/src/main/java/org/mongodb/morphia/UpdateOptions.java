@@ -23,16 +23,31 @@ import com.mongodb.client.model.DBCollectionUpdateOptions;
 /**
  * The options to apply when updating documents in the DBCollection
  *
- * @since 1.3
  * @mongodb.driver.manual tutorial/modify-documents/ Updates
  * @mongodb.driver.manual reference/operator/update/ Update Operators
  * @mongodb.driver.manual reference/command/update/ Update Command
+ *
+ * @since 1.3
  */
 public class UpdateOptions {
     private DBCollectionUpdateOptions options = new DBCollectionUpdateOptions();
 
     DBCollectionUpdateOptions getOptions() {
         return options;
+    }
+
+    /**
+     * Create a copy of the options instance.
+     *
+     * @return the copy
+     */
+    public UpdateOptions copy() {
+        return new UpdateOptions()
+            .bypassDocumentValidation(getBypassDocumentValidation())
+            .collation(getCollation())
+            .multi(isMulti())
+            .upsert(isUpsert())
+            .writeConcern(getWriteConcern());
     }
 
     /**

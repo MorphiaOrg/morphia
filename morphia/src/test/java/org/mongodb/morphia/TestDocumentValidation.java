@@ -16,6 +16,7 @@
 
 package org.mongodb.morphia;
 
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcernException;
 import com.mongodb.client.MongoDatabase;
@@ -24,11 +25,14 @@ import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
 import org.bson.Document;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.entities.DocumentValidation;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -39,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -87,13 +92,7 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void overwriteValidation() {
         Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
-        ValidationOptions options = new ValidationOptions()
-            .validator(validator)
-            .validationLevel(ValidationLevel.MODERATE)
-            .validationAction(ValidationAction.ERROR);
-        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
-        database.getCollection("validation").drop();
-        database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
+        MongoDatabase database = addValidation(validator, "validation");
 
         assertEquals(validator, getValidator());
 
@@ -124,6 +123,17 @@ public class TestDocumentValidation extends TestBase {
         }
     }
 
+    MongoDatabase addValidation(final Document validator, final String collectionName) {
+        ValidationOptions options = new ValidationOptions()
+            .validator(validator)
+            .validationLevel(ValidationLevel.MODERATE)
+            .validationAction(ValidationAction.ERROR);
+        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
+        database.getCollection(collectionName).drop();
+        database.createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
+        return database;
+    }
+
     @Test
     public void validationDocuments() {
         Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
@@ -136,6 +146,152 @@ public class TestDocumentValidation extends TestBase {
             }
         }
     }
+
+    @Test
+    public void findAndModify() {
+        getMorphia().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+
+        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class);
+        UpdateOperations<DocumentValidation> updates = getDs().createUpdateOperations(DocumentValidation.class)
+                                                              .set("number", 5);
+        FindAndModifyOptions options = new FindAndModifyOptions()
+            .bypassDocumentValidation(false);
+        try {
+            getDs().findAndModify(query, updates, options);
+            fail("Document validation should have complained");
+        } catch (MongoCommandException e) {
+            // expected
+        }
+
+        options.bypassDocumentValidation(true);
+        getDs().findAndModify(query, updates, options);
+
+        Assert.assertNotNull(query.field("number").equal(5).get());
+    }
+
+    @Test
+    public void update() {
+        getMorphia().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+
+        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class);
+        UpdateOperations<DocumentValidation> updates = getDs().createUpdateOperations(DocumentValidation.class)
+                                                              .set("number", 5);
+        UpdateOptions options = new UpdateOptions()
+            .bypassDocumentValidation(false);
+        try {
+            getDs().update(query, updates, options);
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        options.bypassDocumentValidation(true);
+        getDs().update(query, updates, options);
+
+        Assert.assertNotNull(query.field("number").equal(5).get());
+    }
+
+    @Test
+    public void save() {
+        getMorphia().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        try {
+            getDs().save(new DocumentValidation("Harold", 8, new Date()));
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
+                    .bypassDocumentValidation(true));
+
+        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class)
+                                                 .field("number").equal(8);
+        Assert.assertNotNull(query.get());
+
+        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()));
+        try {
+            getDs().save(list);
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
+
+        Assert.assertFalse(query.field("number").equal(8).asList().isEmpty());
+    }
+
+    @Test
+    public void saveToNewCollection() {
+        getMorphia().map(DocumentValidation.class);
+        final Document validator = Document.parse("{ number : { $gt : 10 } }");
+        String collection = "newdocs";
+        addValidation(validator, collection);
+
+        try {
+            getAds().save(collection, new DocumentValidation("Harold", 8, new Date()));
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        getAds().save(collection, new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
+                    .bypassDocumentValidation(true));
+
+        Query<DocumentValidation> query = getAds().createQuery(collection, DocumentValidation.class)
+                                                 .field("number").equal(8);
+        Assert.assertNotNull(query.get());
+    }
+
+    @Test
+    public void insert() {
+        getMorphia().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        try {
+            getAds().insert(new DocumentValidation("Harold", 8, new Date()));
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        getAds().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
+            .bypassDocumentValidation(true));
+
+        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class)
+                                                 .field("number").equal(8);
+        Assert.assertNotNull(query.get());
+
+        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("John", 8, new Date()),
+                                               new DocumentValidation("Sarah", 8, new Date()),
+                                               new DocumentValidation("Amy", 8, new Date()),
+                                               new DocumentValidation("James", 8, new Date()));
+        try {
+            getAds().insert(list);
+            fail("Document validation should have complained");
+        } catch (WriteConcernException e) {
+            // expected
+        }
+
+        getAds().insert(list, new InsertOptions()
+            .bypassDocumentValidation(true));
+
+        Assert.assertFalse(query.field("number").equal(8).asList().isEmpty());
+    }
+
 
     private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
                                  final ValidationAction action) {
