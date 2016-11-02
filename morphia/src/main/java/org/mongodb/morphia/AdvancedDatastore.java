@@ -20,6 +20,21 @@ import org.mongodb.morphia.query.UpdateOperations;
 public interface AdvancedDatastore extends Datastore {
 
     /**
+     * Returns the DBDecoderFactory used by this Datastore
+     *
+     * @return the decoder factory
+     * @see DBDecoderFactory
+     */
+    DBDecoderFactory getDecoderFact();
+
+    /**
+     * Sets the DBDecoderFactory to use in this Datastore
+     *
+     * @param fact the DBDecoderFactory to use
+     */
+    void setDecoderFact(DBDecoderFactory fact);
+
+    /**
      * Returns an {@link AggregationPipeline} bound to the given collection and class.
      *
      * @param collection the collection to query
@@ -242,21 +257,6 @@ public interface AdvancedDatastore extends Datastore {
     long getCount(String collection);
 
     /**
-     * Returns the DBDecoderFactory used by this Datastore
-     *
-     * @return the decoder factory
-     * @see DBDecoderFactory
-     */
-    DBDecoderFactory getDecoderFact();
-
-    /**
-     * Sets the DBDecoderFactory to use in this Datastore
-     *
-     * @param fact the DBDecoderFactory to use
-     */
-    void setDecoderFact(DBDecoderFactory fact);
-
-    /**
      * Inserts an entity in to the mapped collection.
      *
      * @param entity the entity to insert
@@ -275,6 +275,7 @@ public interface AdvancedDatastore extends Datastore {
      * @see WriteConcern
      * @deprecated use {@link #insert(Object, InsertOptions)}
      */
+    @Deprecated
     <T> Key<T> insert(T entity, WriteConcern wc);
 
     /**
@@ -314,6 +315,17 @@ public interface AdvancedDatastore extends Datastore {
      * Inserts entities in to the mapped collection.
      *
      * @param entities the entities to insert
+     * @param <T>      the type of the entity
+     * @return the new keys of the inserted entities
+     * @deprecated use {@link #insert(Iterable)} instead
+     */
+    @Deprecated
+    <T> Iterable<Key<T>> insert(T... entities);
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
      */
@@ -323,19 +335,12 @@ public interface AdvancedDatastore extends Datastore {
      * Inserts entities in to the mapped collection.
      *
      * @param entities the entities to insert
-     * @param <T>      the type of the entity
-     * @return the new keys of the inserted entities
-     */
-    <T> Iterable<Key<T>> insert(T... entities);
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
      * @param wc       the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
+     * @deprecated use {@link #insert(Iterable, InsertOptions)}
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc);
 
     /**
@@ -369,7 +374,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type of the entity
      * @return the new keys of the inserted entities
      * @see WriteConcern
+     * @deprecated use {@link #insert(String, Iterable, InsertOptions)} instead
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities, WriteConcern wc);
 
     /**
@@ -412,7 +419,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc         the WriteConcern to use when inserting
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
+     * @deprecated use {@link #save(String, Object, InsertOptions)} instead
      */
+    @Deprecated
     <T> Key<T> save(String collection, T entity, WriteConcern wc);
 
     /**

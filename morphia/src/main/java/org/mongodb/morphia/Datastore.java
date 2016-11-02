@@ -575,7 +575,9 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @param wc       the WriteConcern to use
      * @return the keys of the entities
+     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
      */
+    @Deprecated
     <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
 
     /**
@@ -594,7 +596,9 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @return the keys of the entities
+     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
      */
+    @Deprecated
     <T> Iterable<Key<T>> save(T... entities);
 
     /**
@@ -613,7 +617,9 @@ public interface Datastore {
      * @param wc     the WriteConcern to use
      * @param <T>    the type of the entity
      * @return the keys of the entity
+     * @deprecated use {@link #save(Object, InsertOptions)} instead
      */
+    @Deprecated
     <T> Key<T> save(T entity, WriteConcern wc);
 
     /**
