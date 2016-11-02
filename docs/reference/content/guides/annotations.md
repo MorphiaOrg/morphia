@@ -32,6 +32,10 @@ The [`@IndexOptions`]({{< apiref "org/mongodb/morphia/annotations/IndexOptions" 
 definition.  This annotation replaces the fields found directly on the `@Index` annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.
 
+#### Collation
+The [`@Collation`]({{< apiref "org/mongodb/morphia/annotations/Collation" >}}) annotation defines the options to apply to the collation of
+an index definition.
+
 #### Indexed
 [`@Indexed`]({{< apiref "org/mongodb/morphia/annotations/Indexed" >}}), applied to a Java field, marks the field to be indexed by MongoDB.
   This is used for simple, single-field indexes.  As stated above, the `options` value replaces the individual setting values on the

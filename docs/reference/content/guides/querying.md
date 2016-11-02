@@ -148,14 +148,13 @@ srcref "morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java">
 morphia.map(Greeting.class);
 datastore.ensureIndexes();
 
-datastore.save(new Greeting("good morning", "english"));
-datastore.save(new Greeting("good afternoon", "english"));
-datastore.save(new Greeting("good night", "english"));
-datastore.save(new Greeting("good riddance", "english"));
-
-datastore.save(new Greeting("guten Morgen", "german"));
-datastore.save(new Greeting("guten Tag", "german"));
-datastore.save(new Greeting("gute Nacht", "german"));
+datastore.save(new Greeting("good morning", "english"),
+    new Greeting("good afternoon", "english"),
+    new Greeting("good night", "english"),
+    new Greeting("good riddance", "english"),
+    new Greeting("guten Morgen", "german"),
+    new Greeting("guten Tag", "german")),
+    new Greeting("gute Nacht", "german"));
 
 List<Greeting> good = datastore.createQuery(Greeting.class)
                              .search("good")
