@@ -21,7 +21,8 @@ annotations in context, please refer to [TestIndexCollections.java]({{< srcref
 
 The `@Index` documentation can be found [here]({{< apiref "org/mongodb/morphia/annotations/Index" >}}).  There are two pieces to this 
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed 
-in the 2.x series.  These options and more have been conglomerated in the [`@IndexOptions`]({{< apiref "org/mongodb/morphia/annotations/IndexOptions" >}}) annotation.
+in the 2.x series.  These options and more have been conglomerated in the 
+[`@IndexOptions`]({{< apiref "org/mongodb/morphia/annotations/IndexOptions" >}}) annotation.
 
 #### Field
 The [`@Field`]({{< apiref "org/mongodb/morphia/annotations/Field" >}}) annotation defines indexing on a specific document field.  Multiple
@@ -33,19 +34,19 @@ definition.  This annotation replaces the fields found directly on the `@Index` 
 options are consistent across the various index definition approaches.
 
 #### Collation
-The [`@Collation`]({{< apiref "org/mongodb/morphia/annotations/Collation" >}}) annotation defines the options to apply to the collation of
-an index definition.  These collation definitions can significantly affect how documents are matched.  In addition to defining a collation
-as part of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a 
-specific collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of
-course, be faster if it does.  See [`CountOptions`]({{< apiref "org/mongodb/morphia/CountOptions" >}}), 
+The [`@Collation`]({{< apiref "org/mongodb/morphia/annotations/Collation" >}}) annotation defines the 
+[collation]({{< ref "reference/collation/" >}}) options to apply to the index definition.  In addition to defining a collation as part 
+of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a specific 
+collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of course, 
+be faster if it does.  See [`CountOptions`]({{< apiref "org/mongodb/morphia/CountOptions" >}}), 
 [`DeleteOptions`]({{< apiref "org/mongodb/morphia/DeleteOptions" >}}), [`FindOptions`]({{< apiref "org/mongodb/morphia/FindOptions" >}}),
-[`MapReduceOptions`]({{< apiref "org/mongodb/morphia/MapReduceOptions" >}}),
+ [`MapReduceOptions`]({{< apiref "org/mongodb/morphia/MapReduceOptions" >}}),
  and [`FindAndModifyOptions`]({{< apiref "org/mongodb/morphia/FindAndModifyOptions" >}}) for more information.    
 
 #### Indexed
 [`@Indexed`]({{< apiref "org/mongodb/morphia/annotations/Indexed" >}}), applied to a Java field, marks the field to be indexed by MongoDB.
-  This is used for simple, single-field indexes.  As stated above, the `options` value replaces the individual setting values on the
-   `@Indexed` annotation itself.
+This is used for simple, single-field indexes.  As stated above, the `options` value replaces the individual setting values on the
+`@Indexed` annotation itself.
 
 ## Entity Mapping
 Morphia provides a number of annotations providing for the customization of object mapping.
@@ -91,10 +92,9 @@ public class SomeEntity {
 }
 ```
 
-This validation is applied to every insert and update in the mapped collection.  In some cases, it's necessary to bypass this validation. To
- this end, the various operations on [`Datastore`]({{< apiref "org/mongodb/morphia/Datastore" >}}) and 
-[`AdvancedDatastore`]({{< apiref "org/mongodb/morphia/AdvancedDatastore" >}}) take Options classes.  There are varying options to be set on 
-each type of Options class, but `bypassDocumentValidation` disables this check for that particular operation.  See 
+Various operations on [`Datastore`]({{< apiref "org/mongodb/morphia/Datastore" >}}) and 
+[`AdvancedDatastore`]({{< apiref "org/mongodb/morphia/AdvancedDatastore" >}}) can bypass this validation via their Options classes. For 
+these operations, specify the `bypassDocumentValidation` option to disable document validation for a specific operation.  See 
 [`InsertOptions`]({{< apiref "org/mongodb/morphia/InsertOptions" >}}), [`UpdateOptions`]({{< apiref "org/mongodb/morphia/UpdateOptions" >}}),
 [`MapReduceOptions`]({{< apiref "org/mongodb/morphia/MapReduceOptions" >}}),
  and [`FindAndModifyOptions`]({{< apiref "org/mongodb/morphia/FindAndModifyOptions" >}}) for more information.    
