@@ -34,7 +34,13 @@ options are consistent across the various index definition approaches.
 
 #### Collation
 The [`@Collation`]({{< apiref "org/mongodb/morphia/annotations/Collation" >}}) annotation defines the options to apply to the collation of
-an index definition.
+an index definition.  These collation definitions can significantly affect how documents are matched.  In addition to defining a collation
+as part of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a 
+specific collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of
+course, be faster if it does.  See [`CountOptions`]({{< apiref "org/mongodb/morphia/CountOptions" >}}), 
+[`DeleteOptions`]({{< apiref "org/mongodb/morphia/DeleteOptions" >}}), [`FindOptions`]({{< apiref "org/mongodb/morphia/FindOptions" >}}),
+[`MapReduceOptions`]({{< apiref "org/mongodb/morphia/MapReduceOptions" >}}),
+ and [`FindAndModifyOptions`]({{< apiref "org/mongodb/morphia/FindAndModifyOptions" >}}) for more information.    
 
 #### Indexed
 [`@Indexed`]({{< apiref "org/mongodb/morphia/annotations/Indexed" >}}), applied to a Java field, marks the field to be indexed by MongoDB.
@@ -69,6 +75,29 @@ In contrast to `@Reference` where a nested Java reference ends up as a separate 
 [`@Embedded`]({{< apiref "org/mongodb/morphia/annotations/Embedded" >}}) tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.
+
+### Validation
+[`@Validation`]({{< apiref "org/mongodb/morphia/annotations/Validation" >}}) allows for the definition of a 
+[document validation]({{< docsref "core/document-validation/" >}}) schema to applied to all writes to MongoDB.  Validation rules are 
+specified on a per-collection basis using any query operators, with the exception of `$near`, `$nearSphere`, `$text`, and `$where`.  This
+validation definition is done using the MongoDB query syntax as shown here:
+
+```java
+@Validation("{ number : { $gt : 10 } }")
+public class SomeEntity {
+    ...
+    private int number;
+    ...
+}
+```
+
+This validation is applied to every insert and update in the mapped collection.  In some cases, it's necessary to bypass this validation. To
+ this end, the various operations on [`Datastore`]({{< apiref "org/mongodb/morphia/Datastore" >}}) and 
+[`AdvancedDatastore`]({{< apiref "org/mongodb/morphia/AdvancedDatastore" >}}) take Options classes.  There are varying options to be set on 
+each type of Options class, but `bypassDocumentValidation` disables this check for that particular operation.  See 
+[`InsertOptions`]({{< apiref "org/mongodb/morphia/InsertOptions" >}}), [`UpdateOptions`]({{< apiref "org/mongodb/morphia/UpdateOptions" >}}),
+[`MapReduceOptions`]({{< apiref "org/mongodb/morphia/MapReduceOptions" >}}),
+ and [`FindAndModifyOptions`]({{< apiref "org/mongodb/morphia/FindAndModifyOptions" >}}) for more information.    
 
 ### Id
 [`@Id`]({{< apiref "org/mongodb/morphia/annotations/Id" >}}) marks a field in an entity to be the `_id` field in MongoDB.  This 
