@@ -579,6 +579,16 @@ public interface Datastore {
     <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
 
     /**
+     * Saves the entities (Objects) and updates the @Id field, with the WriteConcern
+     *
+     * @param entities the entities to save
+     * @param <T>      the type of the entity
+     * @param options  the options to apply to the save operation
+     * @return the keys of the entities
+     */
+    <T> Iterable<Key<T>> save(Iterable<T> entities, InsertOptions options);
+
+    /**
      * Saves the entities (Objects) and updates the @Id field
      *
      * @param entities the entities to save
@@ -605,6 +615,16 @@ public interface Datastore {
      * @return the keys of the entity
      */
     <T> Key<T> save(T entity, WriteConcern wc);
+
+    /**
+     * Saves an entity (Object) and updates the @Id field
+     *
+     * @param entity  the entity to save
+     * @param options the options to apply to the save operation
+     * @param <T>     the type of the entity
+     * @return the keys of the entity
+     */
+    <T> Key<T> save(T entity, InsertOptions options);
 
     /**
      * Updates an entity with the operations; this is an atomic operation

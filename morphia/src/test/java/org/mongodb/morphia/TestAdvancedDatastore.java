@@ -17,33 +17,76 @@
 package org.mongodb.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.testutil.TestEntity;
 
-import java.util.ArrayList;
-
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 public class TestAdvancedDatastore extends TestBase {
     @Test
-    public void testBulkInsertEmptyIterable() {
-        this.getAds().insert("class_1_collection", new ArrayList<TestEntity>());
+    public void testInsert() {
+        String name = "some_collection";
+        MongoCollection<Document> collection = getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name);
+        this.getAds().insert(name, new TestEntity());
+        Assert.assertEquals(1, collection.count());
+        this.getAds().insert(name, new TestEntity(), new InsertOptions()
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
+        Assert.assertEquals(2, collection.count());
     }
 
     @Test
-    public void testBulkInsertWithoutCollection() {
+    public void testBulkInsert() {
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             WriteConcern.UNACKNOWLEDGED);
-        this.getAds().insert(new ArrayList<TestEntity>(), WriteConcern.UNACKNOWLEDGED);
+                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
+        Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
+        String name = "some_collection";
+        MongoCollection<Document> collection = getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name);
+        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
+        Assert.assertEquals(5, collection.count());
+        collection.drop();
+        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                             WriteConcern.ACKNOWLEDGED);
+        Assert.assertEquals(5, collection.count());
     }
 
     @Test
     public void testBulkInsertWithNullWC() {
-        this.getAds().insert(new ArrayList<TestEntity>(), null);
+        getMorphia().setUseBulkWriteOperations(true);
+        try {
+            this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                                 new InsertOptions());
+            Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
+
+            String name = "some_collection";
+            this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                                 new InsertOptions());
+            Assert.assertEquals(5, getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name).count());
+        } finally {
+            getMorphia().setUseBulkWriteOperations(false);
+        }
     }
 
     @Test
-    public void testBulkInsertEmptyVararg() {
-        this.getAds().insert();
+    public void testInsertEmpty() {
+        this.getAds().insert(emptyList());
+        this.getAds().insert(emptyList(), new InsertOptions()
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
+        this.getAds().insert("some_collection", emptyList(), new InsertOptions()
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
+        getMorphia().setUseBulkWriteOperations(true);
+        try {
+            this.getAds().insert(emptyList());
+            this.getAds().insert(emptyList(), new InsertOptions()
+                .writeConcern(WriteConcern.ACKNOWLEDGED));
+            this.getAds().insert("some_collection", emptyList(), new InsertOptions()
+                .writeConcern(WriteConcern.ACKNOWLEDGED));
+        } finally {
+            getMorphia().setUseBulkWriteOperations(false);
+        }
     }
 }
