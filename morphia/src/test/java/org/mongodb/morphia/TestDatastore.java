@@ -477,6 +477,13 @@ public class TestDatastore extends TestBase {
         assertFalse("Options should not be modified by the datastore", options.isRemove());
     }
 
+    @Test
+    public void testFindAndDeleteWithNoQueryMatch() {
+        assertNull(getDs().findAndDelete(getDs()
+                                             .createQuery(FacebookUser.class)
+                                             .field("username").equal("David S. Pumpkins")));
+    }
+
     private void testFirstDatastore(final Datastore ds1) {
         final FacebookUser user = ds1.find(FacebookUser.class, "id", 1).get();
         Assert.assertNotNull(user);
