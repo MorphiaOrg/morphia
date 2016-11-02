@@ -4,6 +4,7 @@ org.mongodb.morphia.annotations
 org.mongodb.morphia.converters
 org.mongodb.morphia.dao
 org.mongodb.morphia.geo
+org.mongodb.morphia.internal
 org.mongodb.morphia.logging
 org.mongodb.morphia.logging.jdk
 org.mongodb.morphia.mapping
