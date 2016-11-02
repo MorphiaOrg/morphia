@@ -159,7 +159,7 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return an Iterator.
      * @see #tail(boolean)
-     * @deprecated set the CursorType on {@link FindOptions} instead
+     * @deprecated set the CursorType on {@link FindOptions} and use {@link #fetch(FindOptions)} instead
      *
      */
     @Deprecated
@@ -173,7 +173,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param awaitData passes the awaitData to the cursor
      * @return an Iterator.
      * @see Bytes#QUERYOPTION_AWAITDATA
-     * @deprecated set the CursorType on {@link FindOptions} instead. This can be replicated using
+     * @deprecated set the CursorType on {@link FindOptions}  and use {@link #fetch(FindOptions)} instead. This can be replicated using
      * {@code findOptions.cursorType (awaitData ? TailableAwait : Tailable)}
      */
     @Deprecated

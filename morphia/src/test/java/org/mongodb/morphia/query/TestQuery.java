@@ -17,6 +17,7 @@ package org.mongodb.morphia.query;
 
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.BasicDBObject;
+import com.mongodb.CursorType;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -1172,7 +1173,9 @@ public class TestQuery extends TestBase {
             }
         }, 0, 500, TimeUnit.MILLISECONDS);
 
-        final Iterator<CappedPic> tail = query.tail();
+        final Iterator<CappedPic> tail = query
+            .fetch(new FindOptions()
+                  .cursorType(CursorType.Tailable));
         Awaitility
             .await()
             .pollDelay(500, TimeUnit.MILLISECONDS)
