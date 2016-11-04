@@ -1193,7 +1193,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
-    private <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Query<T> query) {
+    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Query<T> query) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
@@ -1202,7 +1202,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return options;
     }
 
-    private <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
+    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
@@ -1211,7 +1211,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return options;
     }
 
-    private <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
+    <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()

@@ -47,6 +47,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import static com.mongodb.ReadPreference.secondaryPreferred;
+import static com.mongodb.WriteConcern.ACKNOWLEDGED;
+import static com.mongodb.WriteConcern.MAJORITY;
 import static com.mongodb.WriteConcern.W2;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -453,6 +455,37 @@ public class TestDatastore extends TestBase {
                                 .collationStrength(CollationStrength.SECONDARY)
                                 .build()))
                                .getN());
+    }
+
+    @Test
+    public void testEnsureWriteConcern() {
+        DatastoreImpl ds = (DatastoreImpl) getDs();
+        Query<FacebookUser> query = ds.createQuery(FacebookUser.class);
+        FacebookUser user = new FacebookUser();
+
+        FindAndModifyOptions findAndModifyOptions = new FindAndModifyOptions();
+        assertNull(findAndModifyOptions.getWriteConcern());
+
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(findAndModifyOptions, query)
+                                     .getWriteConcern());
+        assertEquals(MAJORITY, ds.enforceWriteConcern(findAndModifyOptions.writeConcern(MAJORITY), query)
+                                 .getWriteConcern());
+
+        InsertOptions insertOptions = new InsertOptions();
+        assertNull(insertOptions.getWriteConcern());
+
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(insertOptions, user)
+                                     .getWriteConcern());
+        assertEquals(MAJORITY, ds.enforceWriteConcern(insertOptions.writeConcern(MAJORITY), user)
+                                 .getWriteConcern());
+
+        UpdateOptions updateOptions = new UpdateOptions();
+        assertNull(updateOptions.getWriteConcern());
+
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(updateOptions, FacebookUser.class)
+                                     .getWriteConcern());
+        assertEquals(MAJORITY, ds.enforceWriteConcern(updateOptions.writeConcern(MAJORITY), FacebookUser.class)
+                                 .getWriteConcern());
     }
 
     @Test
