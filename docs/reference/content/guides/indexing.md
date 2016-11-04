@@ -135,6 +135,25 @@ information.
 Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify `true` to create a unique index.
 
+#### partialFilter()
+*Optional*
+
+New in MongoDB 3.2, [partial indexes](https://docs.mongodb.com/v3.2/core/index-partial/) only index the documents in a collection that meet
+ a specified filter expression thereby reducing storage and maintenance costs.  A partial filter is defined using a query as shown here:
+ 
+```java
+@Indexes({@Index(options = @IndexOptions(partialFilter = "{ name : { $exists : true } }"),
+        fields = {@Field(value = "name")})})
+    public static class SomeClass { ... }
+```
+
+#### collation()
+*Optional*
+
+Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
+can be defined using the `collation()` property on `@IndexOptions` and takes an [`@Collation`]({{< ref "guides/annotations.md#collation" >}})
+instance.
+
 ## Field Level Indexes
 
 Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the

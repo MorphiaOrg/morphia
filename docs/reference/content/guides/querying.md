@@ -148,14 +148,13 @@ srcref "morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java">
 morphia.map(Greeting.class);
 datastore.ensureIndexes();
 
-datastore.save(new Greeting("good morning", "english"));
-datastore.save(new Greeting("good afternoon", "english"));
-datastore.save(new Greeting("good night", "english"));
-datastore.save(new Greeting("good riddance", "english"));
-
-datastore.save(new Greeting("guten Morgen", "german"));
-datastore.save(new Greeting("guten Tag", "german"));
-datastore.save(new Greeting("gute Nacht", "german"));
+datastore.save(new Greeting("good morning", "english"),
+    new Greeting("good afternoon", "english"),
+    new Greeting("good night", "english"),
+    new Greeting("good riddance", "english"),
+    new Greeting("guten Morgen", "german"),
+    new Greeting("guten Tag", "german")),
+    new Greeting("gute Nacht", "german"));
 
 List<Greeting> good = datastore.createQuery(Greeting.class)
                              .search("good")
@@ -184,13 +183,15 @@ getDs().save(user);
 
 ContainsRenamedFields found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, "first_name").get();
+    .project("first_name", true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
 found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, "firstName").get();
+    .project("firstName", true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 ```
@@ -199,16 +200,13 @@ As you can see here, we're saving this entity with a first and last name but our
  the returned instance of our type.  It's also worth noting that this project works with both the mapped document field name
  `"first_name"` and the Java field name `"firstName"`.
 
- The boolean value passed in to the first parameter instructs Morphia to either include (`true`) or exclude (`false`) the fields listed.
-   The second parameter is a [`varargs`](https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html) String parameter
-    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both
-    inclusions and exclusions in one query.
+ The boolean value passed in instructs Morphia to either include (`true`) or exclude (`false`) the field.  It is not currently possible to list both inclusions and exclusions in one query.
 
 {{% note class="important" %}}
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database
-  for this entity will be removed.
+  for this entity will be removed.  To save such instances back consider using [`Datastore#merge(T)`]({{< apiref "org/mongodb/morphia/Datastore#merge-T-" >}})
 {{% /note %}}
 
 ### Limiting and Skipping
@@ -218,9 +216,9 @@ for these cases.  An example of these methods in action would look like this:
 
 ```java
 datastore.createQuery(Person.class)
-    .offset(1)
-    .limit(10)
-    .asList()
+    .asList(new FindOptions()
+	    .offset(1)
+	    .limit(10))
 ```
 
 This query will skip the first element and take up to the next 10 items found by the query.  There's a caveat to using skip/limit for
@@ -250,9 +248,11 @@ getDs().ensureCaps();                                                          /
 final Query<CappedPic> query = getDs().createQuery(CappedPic.class);
 final List<CappedPic> found = new ArrayList<CappedPic>();
 
-final Iterator<CappedPic> tail = query.tail();
+final Iterator<CappedPic> tail = query
+	.fetch(new FindOptions()
+		.cursorType(CursorType.Tailable));
 while(found.size() < 10) {
-    found.add(tail.next());                                                    // #2
+	found.add(tail.next());                                                    // #2
 }
 ```
 There are two things to note about this code sample:
@@ -272,15 +272,13 @@ For example:
 
 ```
 DBObject query = BasicDBObjectBuilder.start()
-        .add("albums",
-                        new BasicDBObject("$elemMatch",
-                                new BasicDBObject("$and", new BasicDBObject[] {
-                                    new BasicDBObject("albumId", albumDto.getAlbumId()),
-                                    new BasicDBObject("album",
-                                        new BasicDBObject("$exists", false))
-                })))
-        .get();
+	.add("albums",
+            new BasicDBObject("$elemMatch",
+                    new BasicDBObject("$and", new BasicDBObject[] {
+                        new BasicDBObject("albumId", albumDto.getAlbumId()),
+                        new BasicDBObject("album",
+                            new BasicDBObject("$exists", false))})))
+	.get();
 
-Query<Artist> findQuery = datastore.createQuery(Artist.class, query);
-Artist result = findQuery.get();
+Artist result = datastore.createQuery(Artist.class, query).get();
 ```
