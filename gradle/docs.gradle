@@ -12,6 +12,11 @@ def forceLanding() {
     gitVersion() == 'master' || buildingWith('forceLanding')
 }
 
+task cleanDocs() << {
+    delete {
+        delete 'build', 'classes'
+    }
+}
 
 task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
 
@@ -42,7 +47,7 @@ task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
     }
 }
 
-task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
+task pushDocs(dependsOn : [ 'cleanDocs', 'publishReference', 'publishLanding' ]) << {
     exec {
         workingDir ghPages
         environment System.getenv()

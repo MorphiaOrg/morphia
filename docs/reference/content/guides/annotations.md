@@ -35,7 +35,7 @@ options are consistent across the various index definition approaches.
 
 #### Collation
 The [`@Collation`]({{< apiref "org/mongodb/morphia/annotations/Collation" >}}) annotation defines the 
-[collation]({{< ref "reference/collation/" >}}) options to apply to the index definition.  In addition to defining a collation as part 
+[collation]({{< docsref "reference/collation/" >}}) options to apply to the index definition.  In addition to defining a collation as part 
 of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a specific 
 collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of course, 
 be faster if it does.  See [`CountOptions`]({{< apiref "org/mongodb/morphia/CountOptions" >}}), 
