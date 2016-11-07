@@ -166,8 +166,10 @@ public class Morphia {
 
     /**
      * @return false.  Setting this value has no value functionally or performance-wise.
+     * @deprecated
      * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
      */
+    @Deprecated
     public boolean isUseBulkWriteOperations() {
         return false;
     }
