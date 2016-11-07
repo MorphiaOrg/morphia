@@ -183,7 +183,6 @@ public class Morphia {
      */
     @Deprecated
     public void setUseBulkWriteOperations(final boolean useBulkWriteOperations) {
-        LOG.warning("Setting useBulkWriteOperations has no value functionally or performance-wise.");
     }
 
     /**
