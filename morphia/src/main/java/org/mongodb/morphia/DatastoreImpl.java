@@ -2,7 +2,6 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.BulkWriteOperation;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -1322,27 +1321,15 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        if (morphia.getUseBulkWriteOperations()) {
-            WriteConcern writeConcern = options.getWriteConcern();
-            BulkWriteOperation bulkWriteOperation = dbColl.initializeOrderedBulkOperation();
-            for (final T entity : entities) {
-                if (writeConcern == null) {
-                    writeConcern = getWriteConcern(entity);
-                }
-                bulkWriteOperation.insert(toDbObject(entity, involvedObjects));
+        final List<DBObject> list = new ArrayList<DBObject>();
+        com.mongodb.InsertOptions insertOptions = options.getOptions();
+        for (final T entity : entities) {
+            if (options.getWriteConcern() == null) {
+                insertOptions = enforceWriteConcern(options, entity).getOptions();
             }
-            bulkWriteOperation.execute(writeConcern);
-        } else {
-            final List<DBObject> list = new ArrayList<DBObject>();
-            com.mongodb.InsertOptions insertOptions = options.getOptions();
-            for (final T entity : entities) {
-                if (options.getWriteConcern() == null) {
-                    insertOptions = enforceWriteConcern(options, entity).getOptions();
-                }
-                list.add(toDbObject(entity, involvedObjects));
-            }
-            dbColl.insert(list, insertOptions);
+            list.add(toDbObject(entity, involvedObjects));
         }
+        dbColl.insert(list, insertOptions);
 
         return postSaveOperations(entities, involvedObjects, dbColl);
     }

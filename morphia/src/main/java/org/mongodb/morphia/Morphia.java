@@ -19,6 +19,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.logging.Logger;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
@@ -35,8 +37,8 @@ import java.util.Set;
  * @author Scott Hernandez
  */
 public class Morphia {
+    private static final Logger LOG = MorphiaLoggerFactory.get(Morphia.class);
     private final Mapper mapper;
-    private boolean useBulkWriteOperations = false;
 
     /**
      * Creates a Morphia instance with a default Mapper and an empty class set.
@@ -143,10 +145,13 @@ public class Morphia {
     }
 
     /**
-     * @return true if Morphia should use bulk write operations.  Only useful with MongoDB 2.6+.
+     * @return false.  Setting this value has no value functionally or performance-wise.
+     * @deprecated
+     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
      */
+    @Deprecated
     public boolean getUseBulkWriteOperations() {
-        return useBulkWriteOperations;
+        return false;
     }
 
     /**
@@ -160,19 +165,23 @@ public class Morphia {
     }
 
     /**
-     * @return true if Morphia should use bulk write operations.  Only useful with MongoDB 2.6+.
+     * @return false.  Setting this value has no value functionally or performance-wise.
+     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
      */
     public boolean isUseBulkWriteOperations() {
-        return useBulkWriteOperations;
+        return false;
     }
 
     /**
      * Configures Morphia to use bulk writes.  Only useful with MongoDB 2.6+.
      *
      * @param useBulkWriteOperations true if Morphia should use bulk writes
+     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
+     * @deprecated Setting this value has no value functionally or performance-wise.
      */
+    @Deprecated
     public void setUseBulkWriteOperations(final boolean useBulkWriteOperations) {
-        this.useBulkWriteOperations = useBulkWriteOperations;
+        LOG.warning("Setting useBulkWriteOperations has no value functionally or performance-wise.");
     }
 
     /**

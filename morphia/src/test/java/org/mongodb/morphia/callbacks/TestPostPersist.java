@@ -9,36 +9,22 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PostPersist;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
 
 
 public class TestPostPersist extends TestBase {
 
     @Test
-    public void testBulkTest() {
-        getMorphia().setUseBulkWriteOperations(false);
-        getDs().getDB().dropDatabase();
-
+    public void testBulkLifecycleEvents() {
         TestObject to1 = new TestObject("post value 1");
         TestObject to2 = new TestObject("post value 2");
-        getAds().insert(to1, to2);
+        getAds().insert(asList(to1, to2));
 
-        assertNotNull("normal insert1:", to1.id);
-        assertNotNull("normal insert1:", to1.one);
-        assertNotNull("normal insert2:", to2.id);
-        assertNotNull("normal insert2:", to2.one);
-
-        getMorphia().setUseBulkWriteOperations(true);
-        getDs().getDB().dropDatabase();
-
-        to1 = new TestObject("post value 1");
-        to2 = new TestObject("post value 2");
-        getAds().insert(to1, to2);
-
-        assertNotNull("bulk insert1:", to1.id);
-        assertNotNull("bulk insert1:", to1.one);
-        assertNotNull("bulk insert2:", to2.id);
-        assertNotNull("bulk insert2:", to2.one);
+        assertNotNull(to1.id);
+        assertNotNull(to1.one);
+        assertNotNull(to2.id);
+        assertNotNull(to2.one);
     }
 
     @Test
