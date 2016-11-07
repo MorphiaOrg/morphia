@@ -1009,6 +1009,26 @@ information.</p>
 <p>Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify <code>true</code> to create a unique index.</p>
 
+<h4 id="partialfilter">partialFilter()</h4>
+
+<p><em>Optional</em></p>
+
+<p>New in MongoDB 3.2, <a href="https://docs.mongodb.com/v3.2/core/index-partial/">partial indexes</a> only index the documents in a collection that meet
+ a specified filter expression thereby reducing storage and maintenance costs.  A partial filter is defined using a query as shown here:</p>
+
+<pre><code class="language-java">@Indexes({@Index(options = @IndexOptions(partialFilter = &quot;{ name : { $exists : true } }&quot;),
+        fields = {@Field(value = &quot;name&quot;)})})
+    public static class SomeClass { ... }
+</code></pre>
+
+<h4 id="collation">collation()</h4>
+
+<p><em>Optional</em></p>
+
+<p>Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
+can be defined using the <code>collation()</code> property on <code>@IndexOptions</code> and takes an <a href="/morphia/1.3/guides/annotations/#collation"><code>@Collation</code></a>
+instance.</p>
+
 <h2 id="field-level-indexes">Field Level Indexes</h2>
 
 <p>Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
@@ -1103,6 +1123,8 @@ incorporating a text index but it&rsquo;s important to note there can only be on
 <li><a href="#name">name()</a></li>
 <li><a href="#sparse">sparse()</a></li>
 <li><a href="#unique">unique()</a></li>
+<li><a href="#partialfilter">partialFilter()</a></li>
+<li><a href="#collation">collation()</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#field-level-indexes">Field Level Indexes</a></li>

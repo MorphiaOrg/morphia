@@ -1178,14 +1178,13 @@ desired, by explicitly listing which fields to index.  Once the index is defined
 <pre><code class="language-java">morphia.map(Greeting.class);
 datastore.ensureIndexes();
 
-datastore.save(new Greeting(&quot;good morning&quot;, &quot;english&quot;));
-datastore.save(new Greeting(&quot;good afternoon&quot;, &quot;english&quot;));
-datastore.save(new Greeting(&quot;good night&quot;, &quot;english&quot;));
-datastore.save(new Greeting(&quot;good riddance&quot;, &quot;english&quot;));
-
-datastore.save(new Greeting(&quot;guten Morgen&quot;, &quot;german&quot;));
-datastore.save(new Greeting(&quot;guten Tag&quot;, &quot;german&quot;));
-datastore.save(new Greeting(&quot;gute Nacht&quot;, &quot;german&quot;));
+datastore.save(new Greeting(&quot;good morning&quot;, &quot;english&quot;),
+    new Greeting(&quot;good afternoon&quot;, &quot;english&quot;),
+    new Greeting(&quot;good night&quot;, &quot;english&quot;),
+    new Greeting(&quot;good riddance&quot;, &quot;english&quot;),
+    new Greeting(&quot;guten Morgen&quot;, &quot;german&quot;),
+    new Greeting(&quot;guten Tag&quot;, &quot;german&quot;)),
+    new Greeting(&quot;gute Nacht&quot;, &quot;german&quot;));
 
 List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
                              .search(&quot;good&quot;)
@@ -1214,13 +1213,15 @@ getDs().save(user);
 
 ContainsRenamedFields found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, &quot;first_name&quot;).get();
+    .project(&quot;first_name&quot;, true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
 found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, &quot;firstName&quot;).get();
+    .project(&quot;firstName&quot;, true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 </code></pre>
@@ -1229,17 +1230,14 @@ Assert.assertNull(found.lastName);
  the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
  <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
 
-<p>The boolean value passed in to the first parameter instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the fields listed.
-   The second parameter is a <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> String parameter
-    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both
-    inclusions and exclusions in one query.</p>
+<p>The boolean value passed in instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
 <p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
-  for this entity will be removed.</p>
+  for this entity will be removed.  To save such instances back consider using <a href="/morphia/1.3/javadoc?org/mongodb/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
 
 </div>
 
@@ -1250,9 +1248,9 @@ Assert.assertNull(found.lastName);
 for these cases.  An example of these methods in action would look like this:</p>
 
 <pre><code class="language-java">datastore.createQuery(Person.class)
-    .offset(1)
-    .limit(10)
-    .asList()
+    .asList(new FindOptions()
+	    .offset(1)
+	    .limit(10))
 </code></pre>
 
 <p>This query will skip the first element and take up to the next 10 items found by the query.  There&rsquo;s a caveat to using skip/limit for
@@ -1282,9 +1280,11 @@ getDs().ensureCaps();                                                          /
 final Query&lt;CappedPic&gt; query = getDs().createQuery(CappedPic.class);
 final List&lt;CappedPic&gt; found = new ArrayList&lt;CappedPic&gt;();
 
-final Iterator&lt;CappedPic&gt; tail = query.tail();
+final Iterator&lt;CappedPic&gt; tail = query
+	.fetch(new FindOptions()
+		.cursorType(CursorType.Tailable));
 while(found.size() &lt; 10) {
-    found.add(tail.next());                                                    // #2
+	found.add(tail.next());                                                    // #2
 }
 </code></pre>
 
@@ -1306,17 +1306,15 @@ application.</li>
 <p>For example:</p>
 
 <pre><code>DBObject query = BasicDBObjectBuilder.start()
-        .add(&quot;albums&quot;,
-                        new BasicDBObject(&quot;$elemMatch&quot;,
-                                new BasicDBObject(&quot;$and&quot;, new BasicDBObject[] {
-                                    new BasicDBObject(&quot;albumId&quot;, albumDto.getAlbumId()),
-                                    new BasicDBObject(&quot;album&quot;,
-                                        new BasicDBObject(&quot;$exists&quot;, false))
-                })))
-        .get();
+	.add(&quot;albums&quot;,
+            new BasicDBObject(&quot;$elemMatch&quot;,
+                    new BasicDBObject(&quot;$and&quot;, new BasicDBObject[] {
+                        new BasicDBObject(&quot;albumId&quot;, albumDto.getAlbumId()),
+                        new BasicDBObject(&quot;album&quot;,
+                            new BasicDBObject(&quot;$exists&quot;, false))})))
+	.get();
 
-Query&lt;Artist&gt; findQuery = datastore.createQuery(Artist.class, query);
-Artist result = findQuery.get();
+Artist result = datastore.createQuery(Artist.class, query).get();
 </code></pre>
 
 

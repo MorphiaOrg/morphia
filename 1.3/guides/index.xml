@@ -33,7 +33,8 @@ annotations in context, please refer to &lt;a href=&#34;https://github.com/mongo
 &lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Index.html
 &#34;&gt;here&lt;/a&gt;.  There are two pieces to this
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
-in the 2.x series.  These options and more have been conglomerated in the &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+in the 2.x series.  These options and more have been conglomerated in the
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 &#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation.&lt;/p&gt;
 
 &lt;h4 id=&#34;field&#34;&gt;Field&lt;/h4&gt;
@@ -49,12 +50,30 @@ instances of this annotation may be passed to the &lt;code&gt;@Index&lt;/code&gt
 definition.  This annotation replaces the fields found directly on the &lt;code&gt;@Index&lt;/code&gt; annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.&lt;/p&gt;
 
+&lt;h4 id=&#34;collation&#34;&gt;Collation&lt;/h4&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Collation.html
+&#34;&gt;&lt;code&gt;@Collation&lt;/code&gt;&lt;/a&gt; annotation defines the
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/collation/
+&#34;&gt;collation&lt;/a&gt; options to apply to the index definition.  In addition to defining a collation as part
+of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a specific
+collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of course,
+be faster if it does.  See &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/CountOptions.html
+&#34;&gt;&lt;code&gt;CountOptions&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/DeleteOptions.html
+&#34;&gt;&lt;code&gt;DeleteOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindOptions.html
+&#34;&gt;&lt;code&gt;FindOptions&lt;/code&gt;&lt;/a&gt;,
+ &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/MapReduceOptions.html
+&#34;&gt;&lt;code&gt;MapReduceOptions&lt;/code&gt;&lt;/a&gt;,
+ and &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
+&#34;&gt;&lt;code&gt;FindAndModifyOptions&lt;/code&gt;&lt;/a&gt; for more information.&lt;/p&gt;
+
 &lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Indexed.html
 &#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt;, applied to a Java field, marks the field to be indexed by MongoDB.
-  This is used for simple, single-field indexes.  As stated above, the &lt;code&gt;options&lt;/code&gt; value replaces the individual setting values on the
-   &lt;code&gt;@Indexed&lt;/code&gt; annotation itself.&lt;/p&gt;
+This is used for simple, single-field indexes.  As stated above, the &lt;code&gt;options&lt;/code&gt; value replaces the individual setting values on the
+&lt;code&gt;@Indexed&lt;/code&gt; annotation itself.&lt;/p&gt;
 
 &lt;h2 id=&#34;entity-mapping&#34;&gt;Entity Mapping&lt;/h2&gt;
 
@@ -91,6 +110,36 @@ This will result in only the ID value being stored in the document.&lt;/p&gt;
 &#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.&lt;/p&gt;
+
+&lt;h3 id=&#34;validation&#34;&gt;Validation&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Validation.html
+&#34;&gt;&lt;code&gt;@Validation&lt;/code&gt;&lt;/a&gt; allows for the definition of a
+&lt;a href=&#34;http://docs.mongodb.org/manual/core/document-validation/
+&#34;&gt;document validation&lt;/a&gt; schema to applied to all writes to MongoDB.  Validation rules are
+specified on a per-collection basis using any query operators, with the exception of &lt;code&gt;$near&lt;/code&gt;, &lt;code&gt;$nearSphere&lt;/code&gt;, &lt;code&gt;$text&lt;/code&gt;, and &lt;code&gt;$where&lt;/code&gt;.  This
+validation definition is done using the MongoDB query syntax as shown here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Validation(&amp;quot;{ number : { $gt : 10 } }&amp;quot;)
+public class SomeEntity {
+    ...
+    private int number;
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Various operations on &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/Datastore.html
+&#34;&gt;&lt;code&gt;Datastore&lt;/code&gt;&lt;/a&gt; and
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/AdvancedDatastore.html
+&#34;&gt;&lt;code&gt;AdvancedDatastore&lt;/code&gt;&lt;/a&gt; can bypass this validation via their Options classes. For
+these operations, specify the &lt;code&gt;bypassDocumentValidation&lt;/code&gt; option to disable document validation for a specific operation.  See
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/InsertOptions.html
+&#34;&gt;&lt;code&gt;InsertOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/UpdateOptions.html
+&#34;&gt;&lt;code&gt;UpdateOptions&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/MapReduceOptions.html
+&#34;&gt;&lt;code&gt;MapReduceOptions&lt;/code&gt;&lt;/a&gt;,
+ and &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
+&#34;&gt;&lt;code&gt;FindAndModifyOptions&lt;/code&gt;&lt;/a&gt; for more information.&lt;/p&gt;
 
 &lt;h3 id=&#34;id&#34;&gt;Id&lt;/h3&gt;
 
@@ -481,6 +530,26 @@ information.&lt;/p&gt;
 
 &lt;p&gt;Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
 existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a unique index.&lt;/p&gt;
+
+&lt;h4 id=&#34;partialfilter&#34;&gt;partialFilter()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;New in MongoDB 3.2, &lt;a href=&#34;https://docs.mongodb.com/v3.2/core/index-partial/&#34;&gt;partial indexes&lt;/a&gt; only index the documents in a collection that meet
+ a specified filter expression thereby reducing storage and maintenance costs.  A partial filter is defined using a query as shown here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Indexes({@Index(options = @IndexOptions(partialFilter = &amp;quot;{ name : { $exists : true } }&amp;quot;),
+        fields = {@Field(value = &amp;quot;name&amp;quot;)})})
+    public static class SomeClass { ... }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;collation&#34;&gt;collation()&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
+can be defined using the &lt;code&gt;collation()&lt;/code&gt; property on &lt;code&gt;@IndexOptions&lt;/code&gt; and takes an &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#collation&#34;&gt;&lt;code&gt;@Collation&lt;/code&gt;&lt;/a&gt;
+instance.&lt;/p&gt;
 
 &lt;h2 id=&#34;field-level-indexes&#34;&gt;Field Level Indexes&lt;/h2&gt;
 
@@ -914,14 +983,13 @@ desired, by explicitly listing which fields to index.  Once the index is defined
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;morphia.map(Greeting.class);
 datastore.ensureIndexes();
 
-datastore.save(new Greeting(&amp;quot;good morning&amp;quot;, &amp;quot;english&amp;quot;));
-datastore.save(new Greeting(&amp;quot;good afternoon&amp;quot;, &amp;quot;english&amp;quot;));
-datastore.save(new Greeting(&amp;quot;good night&amp;quot;, &amp;quot;english&amp;quot;));
-datastore.save(new Greeting(&amp;quot;good riddance&amp;quot;, &amp;quot;english&amp;quot;));
-
-datastore.save(new Greeting(&amp;quot;guten Morgen&amp;quot;, &amp;quot;german&amp;quot;));
-datastore.save(new Greeting(&amp;quot;guten Tag&amp;quot;, &amp;quot;german&amp;quot;));
-datastore.save(new Greeting(&amp;quot;gute Nacht&amp;quot;, &amp;quot;german&amp;quot;));
+datastore.save(new Greeting(&amp;quot;good morning&amp;quot;, &amp;quot;english&amp;quot;),
+    new Greeting(&amp;quot;good afternoon&amp;quot;, &amp;quot;english&amp;quot;),
+    new Greeting(&amp;quot;good night&amp;quot;, &amp;quot;english&amp;quot;),
+    new Greeting(&amp;quot;good riddance&amp;quot;, &amp;quot;english&amp;quot;),
+    new Greeting(&amp;quot;guten Morgen&amp;quot;, &amp;quot;german&amp;quot;),
+    new Greeting(&amp;quot;guten Tag&amp;quot;, &amp;quot;german&amp;quot;)),
+    new Greeting(&amp;quot;gute Nacht&amp;quot;, &amp;quot;german&amp;quot;));
 
 List&amp;lt;Greeting&amp;gt; good = datastore.createQuery(Greeting.class)
                              .search(&amp;quot;good&amp;quot;)
@@ -950,13 +1018,15 @@ getDs().save(user);
 
 ContainsRenamedFields found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, &amp;quot;first_name&amp;quot;).get();
+    .project(&amp;quot;first_name&amp;quot;, true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
 found = getDs()
     .find(ContainsRenamedFields.class)
-    .retrievedFields(true, &amp;quot;firstName&amp;quot;).get();
+    .project(&amp;quot;firstName&amp;quot;, true)
+    .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 &lt;/code&gt;&lt;/pre&gt;
@@ -965,17 +1035,14 @@ Assert.assertNull(found.lastName);
  the returned instance of our type.  It&amp;rsquo;s also worth noting that this project works with both the mapped document field name
  &lt;code&gt;&amp;quot;first_name&amp;quot;&lt;/code&gt; and the Java field name &lt;code&gt;&amp;quot;firstName&amp;quot;&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;The boolean value passed in to the first parameter instructs Morphia to either include (&lt;code&gt;true&lt;/code&gt;) or exclude (&lt;code&gt;false&lt;/code&gt;) the fields listed.
-   The second parameter is a &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html&#34;&gt;&lt;code&gt;varargs&lt;/code&gt;&lt;/a&gt; String parameter
-    defining which fields are to be either included or excluded in the query results.  It is not currently possible to list both
-    inclusions and exclusions in one query.&lt;/p&gt;
+&lt;p&gt;The boolean value passed in instructs Morphia to either include (&lt;code&gt;true&lt;/code&gt;) or exclude (&lt;code&gt;false&lt;/code&gt;) the field.  It is not currently possible to list both inclusions and exclusions in one query.&lt;/p&gt;
 
 &lt;div class=&#34;admonition important&#34;&gt;
 &lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
 &lt;p&gt;While projections can be a nice performance win in some cases, it&amp;rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if &lt;code&gt;found&lt;/code&gt; is saved back to MongoDB, the &lt;code&gt;last_name&lt;/code&gt; field that currently exists in the database
-  for this entity will be removed.&lt;/p&gt;
+  for this entity will be removed.  To save such instances back consider using &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/Datastore#merge-T-.html&#34;&gt;&lt;code&gt;Datastore#merge(T)&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;/div&gt;
 
@@ -986,9 +1053,9 @@ Assert.assertNull(found.lastName);
 for these cases.  An example of these methods in action would look like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;datastore.createQuery(Person.class)
-    .offset(1)
-    .limit(10)
-    .asList()
+    .asList(new FindOptions()
+	    .offset(1)
+	    .limit(10))
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This query will skip the first element and take up to the next 10 items found by the query.  There&amp;rsquo;s a caveat to using skip/limit for
@@ -1018,9 +1085,11 @@ getDs().ensureCaps();                                                          /
 final Query&amp;lt;CappedPic&amp;gt; query = getDs().createQuery(CappedPic.class);
 final List&amp;lt;CappedPic&amp;gt; found = new ArrayList&amp;lt;CappedPic&amp;gt;();
 
-final Iterator&amp;lt;CappedPic&amp;gt; tail = query.tail();
+final Iterator&amp;lt;CappedPic&amp;gt; tail = query
+	.fetch(new FindOptions()
+		.cursorType(CursorType.Tailable));
 while(found.size() &amp;lt; 10) {
-    found.add(tail.next());                                                    // #2
+	found.add(tail.next());                                                    // #2
 }
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -1042,17 +1111,15 @@ application.&lt;/li&gt;
 &lt;p&gt;For example:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;DBObject query = BasicDBObjectBuilder.start()
-        .add(&amp;quot;albums&amp;quot;,
-                        new BasicDBObject(&amp;quot;$elemMatch&amp;quot;,
-                                new BasicDBObject(&amp;quot;$and&amp;quot;, new BasicDBObject[] {
-                                    new BasicDBObject(&amp;quot;albumId&amp;quot;, albumDto.getAlbumId()),
-                                    new BasicDBObject(&amp;quot;album&amp;quot;,
-                                        new BasicDBObject(&amp;quot;$exists&amp;quot;, false))
-                })))
-        .get();
+	.add(&amp;quot;albums&amp;quot;,
+            new BasicDBObject(&amp;quot;$elemMatch&amp;quot;,
+                    new BasicDBObject(&amp;quot;$and&amp;quot;, new BasicDBObject[] {
+                        new BasicDBObject(&amp;quot;albumId&amp;quot;, albumDto.getAlbumId()),
+                        new BasicDBObject(&amp;quot;album&amp;quot;,
+                            new BasicDBObject(&amp;quot;$exists&amp;quot;, false))})))
+	.get();
 
-Query&amp;lt;Artist&amp;gt; findQuery = datastore.createQuery(Artist.class, query);
-Artist result = findQuery.get();
+Artist result = datastore.createQuery(Artist.class, query).get();
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
