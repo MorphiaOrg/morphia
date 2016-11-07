@@ -184,7 +184,7 @@ public class Mapper {
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
             final Throwable t = new Throwable();
-            LOG.error("Somebody passed in a null dbObject; bad client!", t);
+            LOG.error("A null reference was passed in for the dbObject", t);
             return null;
         }
 

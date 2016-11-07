@@ -320,17 +320,17 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        FindAndModifyOptions copy = options.copy()
-                                           .projection(query.getFieldsObject())
-                                           .sort(query.getSortObject())
-                                           .returnNew(false)
-                                           .upsert(false)
-                                           .remove(true);
+        FindAndModifyOptions copy = enforceWriteConcern(options, query)
+            .copy()
+            .projection(query.getFieldsObject())
+            .sort(query.getSortObject())
+            .returnNew(false)
+            .upsert(false)
+            .remove(true);
 
         final DBObject result = dbColl.findAndModify(query.getQueryObject(), copy.getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
-
+        return result == null ? null : mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
     }
 
     @Override
@@ -1193,7 +1193,16 @@ public class DatastoreImpl implements AdvancedDatastore {
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
-    private <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
+    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Query<T> query) {
+        if (options.getWriteConcern() == null) {
+            return options
+                .copy()
+                .writeConcern(getWriteConcern(query.getEntityClass()));
+        }
+        return options;
+    }
+
+    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
@@ -1202,7 +1211,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return options;
     }
 
-    private <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
+    <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
