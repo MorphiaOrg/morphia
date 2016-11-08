@@ -1252,6 +1252,21 @@ public class TestQuery extends TestBase {
 
     }
 
+    @Test
+    public void testMultipleConstraintsOnOneField() {
+        getMorphia().map(ContainsPic.class);
+        getDs().ensureIndexes();
+        Query<ContainsPic> query = getDs().createQuery(ContainsPic.class);
+        query.field("size").greaterThanOrEq(10);
+        query.field("size").lessThan(100);
+
+        Map<String, Object> explain = query.explain();
+        Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
+        Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
+        Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        assertEquals("IXSCAN", inputStage.get("stage"));
+    }
+
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
@@ -1334,7 +1349,9 @@ public class TestQuery extends TestBase {
             int result = keyword != null ? keyword.hashCode() : 0;
             result = 31 * result + (score != null ? score.hashCode() : 0);
             return result;
-        }        @Override
+        }
+
+        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
@@ -1383,6 +1400,10 @@ public class TestQuery extends TestBase {
         private Pic pic;
         @Reference(lazy = true)
         private Pic lazyPic;
+        @Reference(lazy = true)
+        private PicWithObjectId lazyObjectIdPic;
+        @Indexed
+        private int size;
 
         public ObjectId getId() {
             return id;
@@ -1415,6 +1436,29 @@ public class TestQuery extends TestBase {
         public void setPic(final Pic pic) {
             this.pic = pic;
         }
+
+        public PicWithObjectId getLazyObjectIdPic() {
+            return lazyObjectIdPic;
+        }
+
+        public void setLazyObjectIdPic(final PicWithObjectId lazyObjectIdPic) {
+            this.lazyObjectIdPic = lazyObjectIdPic;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(final int size) {
+            this.size = size;
+        }
+    }
+
+    @Entity
+    public static class PicWithObjectId {
+        @Id
+        private ObjectId id;
+        private String name;
     }
 
     @Entity
