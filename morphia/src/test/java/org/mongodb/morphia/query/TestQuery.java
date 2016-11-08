@@ -47,7 +47,6 @@ import org.mongodb.morphia.testmodel.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +59,7 @@ import java.util.regex.Pattern;
 import static com.mongodb.client.model.Collation.builder;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -308,6 +308,8 @@ public class TestQuery extends TestBase {
         getDs().save(object);
 
         assertNotNull(getDs().find(UsesCustomIdObject.class, "_id.type", "banker").get());
+
+        assertNotNull(getDs().createQuery(UsesCustomIdObject.class).field("_id").hasAnyOf(singletonList(cId)).get());
     }
 
     @Test
@@ -1275,7 +1277,7 @@ public class TestQuery extends TestBase {
     public static class Photo {
         @Id
         private ObjectId id;
-        private List<String> keywords = Collections.singletonList("amazing");
+        private List<String> keywords = singletonList("amazing");
 
         public Photo() {
         }
