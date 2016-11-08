@@ -56,19 +56,14 @@ public class TestAdvancedDatastore extends TestBase {
 
     @Test
     public void testBulkInsertWithNullWC() {
-        getMorphia().setUseBulkWriteOperations(true);
-        try {
-            this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                                 new InsertOptions());
-            Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
+        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                             new InsertOptions());
+        Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
 
-            String name = "some_collection";
-            this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                                 new InsertOptions());
-            Assert.assertEquals(5, getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name).count());
-        } finally {
-            getMorphia().setUseBulkWriteOperations(false);
-        }
+        String name = "some_collection";
+        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+                             new InsertOptions());
+        Assert.assertEquals(5, getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name).count());
     }
 
     @Test
@@ -78,15 +73,5 @@ public class TestAdvancedDatastore extends TestBase {
             .writeConcern(WriteConcern.ACKNOWLEDGED));
         this.getAds().insert("some_collection", emptyList(), new InsertOptions()
             .writeConcern(WriteConcern.ACKNOWLEDGED));
-        getMorphia().setUseBulkWriteOperations(true);
-        try {
-            this.getAds().insert(emptyList());
-            this.getAds().insert(emptyList(), new InsertOptions()
-                .writeConcern(WriteConcern.ACKNOWLEDGED));
-            this.getAds().insert("some_collection", emptyList(), new InsertOptions()
-                .writeConcern(WriteConcern.ACKNOWLEDGED));
-        } finally {
-            getMorphia().setUseBulkWriteOperations(false);
-        }
     }
 }
