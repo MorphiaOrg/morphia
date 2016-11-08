@@ -39,6 +39,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
@@ -1467,6 +1468,7 @@ public class TestQuery extends TestBase {
         @Id
         private ObjectId id;
         private String name;
+        private boolean prePersist = false;
 
         public Pic() {
         }
@@ -1489,6 +1491,19 @@ public class TestQuery extends TestBase {
 
         public void setName(final String name) {
             this.name = name;
+        }
+
+        public boolean isPrePersist() {
+            return prePersist;
+        }
+
+        public void setPrePersist(final boolean prePersist) {
+            this.prePersist = prePersist;
+        }
+
+        @PrePersist
+        public void tweak() {
+            prePersist = true;
         }
     }
 

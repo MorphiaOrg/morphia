@@ -9,6 +9,9 @@ import org.mongodb.morphia.query.TestQuery.ContainsPic;
 import org.mongodb.morphia.query.TestQuery.Pic;
 import org.mongodb.morphia.query.TestQuery.PicWithObjectId;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 
 public class TestQueriesOnReferences extends TestBase {
     @Test
@@ -78,6 +81,23 @@ public class TestQueriesOnReferences extends TestBase {
                                         .get();
         Assert.assertNotNull(object);
 
+    }
+
+    @Test
+    public void testLifeCycleEventsOnParameters() throws Exception {
+
+        final ContainsPic cpk = new ContainsPic();
+        final Pic p = new Pic("some pic");
+        getDs().save(p);
+        cpk.setPic(p);
+        getDs().save(cpk);
+
+        Pic queryPic = new Pic("some pic");
+        queryPic.setId(p.getId());
+        Query query = getDs().createQuery(ContainsPic.class)
+                           .field("pic").equal(queryPic);
+        assertFalse(queryPic.isPrePersist());
+        assertNotNull(query.get());
     }
 
     @Test
