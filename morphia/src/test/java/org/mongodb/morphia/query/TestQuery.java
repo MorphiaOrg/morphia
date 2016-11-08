@@ -1269,6 +1269,26 @@ public class TestQuery extends TestBase {
         assertEquals("IXSCAN", inputStage.get("stage"));
     }
 
+    @Test
+    public void testNoLifeCycleEventsOnParameters() throws Exception {
+        final ContainsPic cpk = new ContainsPic();
+        final Pic p = new Pic("some pic");
+        getDs().save(p);
+        cpk.setPic(p);
+        getDs().save(cpk);
+
+        Pic queryPic = new Pic("some pic");
+        queryPic.setId(p.getId());
+        Query query = getDs().createQuery(ContainsPic.class)
+                           .field("pic").equal(queryPic);
+        assertFalse(queryPic.isPrePersist());
+        assertNotNull(query.get());
+
+        getDs().createQuery(ContainsPic.class)
+                       .field("pic").hasThisElement(queryPic);
+        assertFalse(queryPic.isPrePersist());
+    }
+
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
