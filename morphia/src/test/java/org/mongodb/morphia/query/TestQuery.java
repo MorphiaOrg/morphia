@@ -1254,6 +1254,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
+        serverIsAtLeastVersion(3.0);
         getMorphia().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().createQuery(ContainsPic.class);
