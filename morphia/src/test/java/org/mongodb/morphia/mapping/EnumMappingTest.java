@@ -98,12 +98,11 @@ public class EnumMappingTest extends TestBase {
 
         getDs().save(new ContainsEnum());
         Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).field("foo").equal(Foo.BAR)
-                                      .countAll());
+                                      .count());
         Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).filter("foo", Foo.BAR)
-                                      .countAll());
-        Assert.assertEquals(1,
-                            getDs().createQuery(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
-                                   .countAll());
+                                      .count());
+        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
+                                      .count());
     }
 
     enum Foo {

@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 
 /**
  * @author josephpachod
@@ -33,7 +35,7 @@ public class LazyInEmbeddedTest extends TestBase {
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
 
-        getDs().save(otherEntity, containerWithRefInField);
+        getDs().save(asList(otherEntity, containerWithRefInField));
 
         otherEntity = getDs().get(otherEntity);
         containerWithRefInField = getDs().get(containerWithRefInField);
@@ -64,7 +66,7 @@ public class LazyInEmbeddedTest extends TestBase {
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();
 
-        getDs().save(otherEntity, containerWithRefInList);
+        getDs().save(asList(otherEntity, containerWithRefInList));
 
         otherEntity = getDs().get(otherEntity);
         containerWithRefInList = getDs().get(containerWithRefInList);
@@ -75,7 +77,7 @@ public class LazyInEmbeddedTest extends TestBase {
         embedWithRef.otherEntity = otherEntity;
         containerWithRefInList.embedWithRef.add(embedWithRef);
 
-        getDs().save(otherEntity, containerWithRefInList);
+        getDs().save(asList(otherEntity, containerWithRefInList));
 
         containerWithRefInList = getDs().get(containerWithRefInList);
         Assert.assertNotNull(containerWithRefInList);
@@ -99,7 +101,7 @@ public class LazyInEmbeddedTest extends TestBase {
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
 
-        getDs().save(otherEntity, containerWithRefInField);
+        getDs().save(asList(otherEntity, containerWithRefInField));
 
         otherEntity = getDs().get(otherEntity);
         final ContainerWithRefInField reload = getDs().get(containerWithRefInField);
@@ -130,7 +132,7 @@ public class LazyInEmbeddedTest extends TestBase {
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();
 
-        getDs().save(otherEntity, containerWithRefInList);
+        getDs().save(asList(otherEntity, containerWithRefInList));
 
         otherEntity = getDs().get(otherEntity);
         final ContainerWithRefList reload = getDs().get(containerWithRefInList);
@@ -141,7 +143,7 @@ public class LazyInEmbeddedTest extends TestBase {
         embedWithRef.otherEntity = otherEntity;
         reload.embedWithRef.add(embedWithRef);
 
-        getDs().save(otherEntity, reload);
+        getDs().save(asList(otherEntity, reload));
 
         getDs().get(reload);
 

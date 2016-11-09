@@ -11,7 +11,6 @@ import org.bson.BSONObject;
 import org.bson.Document;
 import org.bson.types.CodeWScope;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.logging.Logger;
@@ -43,7 +42,7 @@ import static org.mongodb.morphia.query.QueryValidator.validateQuery;
 @SuppressWarnings("deprecation")
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
-    private final DatastoreImpl ds;
+    private final org.mongodb.morphia.DatastoreImpl ds;
     private final DBCollection dbColl;
     private final Class<T> clazz;
     private EntityCache cache;
@@ -72,7 +71,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         setQuery(this);
         this.clazz = clazz;
-        this.ds = ((DatastoreImpl) ds);
+        this.ds = ((org.mongodb.morphia.DatastoreImpl) ds);
         dbColl = coll;
         cache = this.ds.getMapper().createEntityCache();
 
@@ -712,7 +711,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     /**
      * @return the Datastore
      */
-    public DatastoreImpl getDatastore() {
+    public org.mongodb.morphia.DatastoreImpl getDatastore() {
         return ds;
     }
 
@@ -753,7 +752,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.trace(String.format("Running query(%s) : %s, options: %s,", dbColl.getName(), query, findOptions));
         }
 
-        if (options.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
+        if (findOptions.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
             LOG.warning("Snapshotted query should not have hint/sort.");
         }
 
@@ -761,10 +760,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.warning("Sorting on tail is not allowed.");
         }
 
-        DBCollectionFindOptions options = findOptions.getOptions()
-                                                        .sort(getSortObject())
-                                                        .projection(getFieldsObject());
-        return dbColl.find(query, options)
+        return dbColl.find(query, findOptions.getOptions()
+                                             .copy()
+                                             .sort(getSortObject())
+                                             .projection(getFieldsObject()))
                      .setDecoderFactory(ds.getDecoderFact());
     }
 

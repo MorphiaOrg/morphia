@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.dao.DAO;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.TestQuery.Photo;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -125,8 +126,15 @@ public class TestDAO extends TestBase {
         final List<Hotel> allHotels = hotelDAO.find().asList();
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.createQuery().offset(1).limit(10).asList().size());
-        assertEquals(1, hotelDAO.createQuery().limit(1).asList().size());
+        assertEquals(1, hotelDAO.createQuery()
+                                .asList(new FindOptions()
+                                            .skip(1)
+                                            .limit(10))
+                                .size());
+        assertEquals(1, hotelDAO.createQuery()
+                                .asList(new FindOptions()
+                                            .limit(1))
+                                .size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
@@ -206,8 +214,15 @@ public class TestDAO extends TestBase {
 
         assertEquals(hilton.getId(), hotelDAO.findOneId(getDs().createQuery(Hotel.class).field("stars").equal(4)).getId());
 
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().offset(1).limit(10)).asList().size());
-        assertEquals(1, hotelDAO.find(hotelDAO.createQuery().limit(1)).asList().size());
+        assertEquals(1, hotelDAO.createQuery()
+                                .asList(new FindOptions()
+                                            .skip(1)
+                                            .limit(10))
+                                .size());
+        assertEquals(1, hotelDAO.createQuery()
+                                .asList(new FindOptions()
+                                            .limit(1))
+                                .size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 

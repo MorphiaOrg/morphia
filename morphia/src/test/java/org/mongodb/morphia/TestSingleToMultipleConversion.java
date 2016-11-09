@@ -19,7 +19,7 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().delete(getDs().createQuery(HasSingleString.class));
         getDs().save(new HasSingleString());
         Assert.assertNotNull(getDs().find(HasSingleString.class).get());
-        Assert.assertEquals(1, getDs().find(HasSingleString.class).countAll());
+        Assert.assertEquals(1, getDs().find(HasSingleString.class).count());
         final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).get();
         Assert.assertNotNull(hms);
         Assert.assertNotNull(hms.strings);
@@ -35,7 +35,7 @@ public class TestSingleToMultipleConversion extends TestBase {
     public void testEmbeddedType() throws Exception {
         getDs().save(new HasEmbeddedStringy());
         Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).get());
-        Assert.assertEquals(1, getDs().find(HasEmbeddedStringy.class).countAll());
+        Assert.assertEquals(1, getDs().find(HasEmbeddedStringy.class).count());
         final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).get();
         Assert.assertNotNull(has);
         Assert.assertNotNull(has.hss);

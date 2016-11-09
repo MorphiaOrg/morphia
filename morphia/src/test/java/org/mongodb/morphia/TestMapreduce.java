@@ -30,6 +30,7 @@ import org.mongodb.morphia.testmodel.Shape;
 import java.util.Iterator;
 import java.util.Random;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 
 
@@ -107,11 +108,11 @@ public class TestMapreduce extends TestBase {
     @Test
     public void testCollation() {
         checkMinServerVersion(3.4);
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         final String map = "function () { emit(this.author, 1); return; }";
         final String reduce = "function (key, values) { return values.length }";
@@ -143,11 +144,11 @@ public class TestMapreduce extends TestBase {
     @Test
     public void testBypassDocumentValidation() {
         checkMinServerVersion(3.4);
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         Document validator = Document.parse("{ count : { $gt : '10' } }");
         ValidationOptions validationOptions = new ValidationOptions()

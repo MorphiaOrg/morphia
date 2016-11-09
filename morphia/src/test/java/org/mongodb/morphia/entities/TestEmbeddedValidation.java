@@ -103,7 +103,7 @@ public class TestEmbeddedValidation extends TestBase {
             .set("listEmbeddedType.$.number", 0);
         getDs().update(query, operations);
 
-        Assert.assertEquals(0, query.countAll());
+        Assert.assertEquals(0, query.count());
 
         fortyTwo.setNumber(0L);
         query = getDs().createQuery(EntityWithListsAndArrays.class)

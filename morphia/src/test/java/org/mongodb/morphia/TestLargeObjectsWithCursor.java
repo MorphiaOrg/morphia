@@ -31,7 +31,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
     @Test
     public void testWithManyElementsInCollection() throws Exception {
         Query<E> query = getDs().createQuery(E.class);
-        final long countAll = query.countAll();
+        final long countAll = query.count();
         query = getDs().createQuery(E.class);
         final List<E> list = query.asList();
         Assert.assertEquals(documentsNb, countAll);

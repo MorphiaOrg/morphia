@@ -13,6 +13,8 @@ import org.mongodb.morphia.utils.IndexType;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class TestTextSearching extends TestBase {
     @Override
     @Before
@@ -75,11 +77,11 @@ public class TestTextSearching extends TestBase {
         getMorphia().map(Book.class);
         getDs().ensureIndexes();
 
-        getDs().save(new Book("The Banquet", "Dante"),
-                     new Book("Divine Comedy", "Dante"),
-                     new Book("Eclogues", "Dante"),
-                     new Book("The Odyssey", "Homer"),
-                     new Book("Iliad", "Homer"));
+        getDs().save(asList(new Book("The Banquet", "Dante"),
+                            new Book("Divine Comedy", "Dante"),
+                            new Book("Eclogues", "Dante"),
+                            new Book("The Odyssey", "Homer"),
+                            new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().createQuery(Book.class)
                                   .search("Dante Comedy").project(Meta.textScore("score"))
@@ -94,11 +96,11 @@ public class TestTextSearching extends TestBase {
         getMorphia().map(Book.class);
         getDs().ensureIndexes();
 
-        getDs().save(new Book("The Banquet", "Dante"),
-                     new Book("Divine Comedy", "Dante"),
-                     new Book("Eclogues", "Dante"),
-                     new Book("The Odyssey", "Homer"),
-                     new Book("Iliad", "Homer"));
+        getDs().save(asList(new Book("The Banquet", "Dante"),
+                            new Book("Divine Comedy", "Dante"),
+                            new Book("Eclogues", "Dante"),
+                            new Book("The Odyssey", "Homer"),
+                            new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().createQuery(Book.class)
                                   .search("Dante").project(Meta.textScore())
@@ -113,11 +115,11 @@ public class TestTextSearching extends TestBase {
         getMorphia().map(Book.class);
         getDs().ensureIndexes();
 
-        getDs().save(new Book("The Banquet", "Dante"),
-                     new Book("Divine Comedy", "Dante"),
-                     new Book("Eclogues", "Dante"),
-                     new Book("The Odyssey", "Homer"),
-                     new Book("Iliad", "Homer"));
+        getDs().save(asList(new Book("The Banquet", "Dante"),
+                            new Book("Divine Comedy", "Dante"),
+                            new Book("Eclogues", "Dante"),
+                            new Book("The Odyssey", "Homer"),
+                            new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().createQuery(Book.class)
                                   .search("Dante").project(Meta.textScore("score"))

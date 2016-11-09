@@ -32,7 +32,7 @@ import static org.mongodb.morphia.aggregation.Group.id;
 import static org.mongodb.morphia.aggregation.Group.last;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.projection;
-import static org.mongodb.morphia.aggregation.Sort.ascending;
+import static org.mongodb.morphia.query.Sort.ascending;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -100,6 +100,7 @@ public class ZipCodeDataSetTest extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("Duplicates")
     public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();

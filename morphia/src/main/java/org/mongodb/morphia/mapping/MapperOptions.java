@@ -7,8 +7,6 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
-import org.mongodb.morphia.mapping.lazy.DatastoreProvider;
-
 
 /**
  * Options to control mapping behavior.
@@ -35,7 +33,7 @@ public class MapperOptions {
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
-    private DatastoreProvider datastoreProvider = null;
+    private org.mongodb.morphia.mapping.lazy.DatastoreProvider datastoreProvider = null;
 
     /**
      * Creates a default options instance.
@@ -61,6 +59,7 @@ public class MapperOptions {
         setDefaultMapper(options.getDefaultMapper());
         setReferenceMapper(options.getReferenceMapper());
         setValueMapper(options.getValueMapper());
+        setDatastoreProvider(options.getDatastoreProvider());
     }
 
     /**
@@ -84,7 +83,7 @@ public class MapperOptions {
      * @deprecated unused
      */
     @Deprecated
-    public DatastoreProvider getDatastoreProvider() {
+    public org.mongodb.morphia.mapping.lazy.DatastoreProvider getDatastoreProvider() {
         return datastoreProvider;
     }
 
@@ -95,7 +94,7 @@ public class MapperOptions {
      * @deprecated unused
      */
     @Deprecated
-    public void setDatastoreProvider(final DatastoreProvider datastoreProvider) {
+    public void setDatastoreProvider(final org.mongodb.morphia.mapping.lazy.DatastoreProvider datastoreProvider) {
         LOG.warning("DatastoreProviders are no longer needed or used.");
         this.datastoreProvider = datastoreProvider;
     }

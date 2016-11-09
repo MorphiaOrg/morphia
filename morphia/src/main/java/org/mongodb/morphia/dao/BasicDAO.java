@@ -5,7 +5,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.query.Query;
@@ -34,7 +33,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     /**
      * @deprecated please use the getter for this field
      */
-    protected DatastoreImpl ds;
+    protected org.mongodb.morphia.DatastoreImpl ds;
     //CHECKSTYLE:ON
 
     /**
@@ -57,7 +56,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @param ds          the Datastore which gives access to the MongoDB instance for this DAO
      */
     public BasicDAO(final Class<T> entityClass, final Datastore ds) {
-        this.ds = (DatastoreImpl) ds;
+        this.ds = (org.mongodb.morphia.DatastoreImpl) ds;
         initType(entityClass);
     }
 
@@ -78,7 +77,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @SuppressWarnings("unchecked")
     protected BasicDAO(final Datastore ds) {
-        this.ds = (DatastoreImpl) ds;
+        this.ds = (org.mongodb.morphia.DatastoreImpl) ds;
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
 
@@ -245,7 +244,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     /**
      * @return the Datastore used by this DAO
      */
-    public DatastoreImpl getDs() {
+    public org.mongodb.morphia.DatastoreImpl getDs() {
         return ds;
     }
 
@@ -258,7 +257,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     }
 
     protected void initDS(final MongoClient mongoClient, final Morphia mor, final String db) {
-        ds = (DatastoreImpl) mor.createDatastore(mongoClient, db);
+        ds = (org.mongodb.morphia.DatastoreImpl) mor.createDatastore(mongoClient, db);
     }
 
     protected void initType(final Class<T> type) {

@@ -7,7 +7,6 @@ import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.geo.GeometryShapeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -24,6 +23,7 @@ import java.util.List;
 /**
  * Implementation of an AggregationPipeline.
  */
+@SuppressWarnings("deprecation")
 public class AggregationPipelineImpl implements AggregationPipeline {
     private static final Logger LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
 
@@ -31,7 +31,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     private final Class source;
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
-    private final DatastoreImpl datastore;
+    private final org.mongodb.morphia.DatastoreImpl datastore;
     private boolean firstStage = false;
 
     /**
@@ -41,7 +41,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param collection the database collection on which to operate
      * @param source    the source type to aggregate
      */
-    public AggregationPipelineImpl(final DatastoreImpl datastore, final DBCollection collection, final Class source) {
+    public AggregationPipelineImpl(final org.mongodb.morphia.DatastoreImpl datastore, final DBCollection collection, final Class source) {
         this.datastore = datastore;
         this.collection = collection;
         mapper = datastore.getMapper();

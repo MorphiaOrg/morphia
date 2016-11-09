@@ -15,11 +15,6 @@ import org.mongodb.morphia.query.Query;
 
 import java.util.Iterator;
 
-import static org.mongodb.morphia.MapreduceType.INLINE;
-import static org.mongodb.morphia.MapreduceType.MERGE;
-import static org.mongodb.morphia.MapreduceType.REDUCE;
-import static org.mongodb.morphia.MapreduceType.REPLACE;
-
 /**
  * Stores the results of a map reduce operation
  *
@@ -104,15 +99,14 @@ public class MapreduceResults<T> implements Iterable<T> {
      */
     @Deprecated
     public MapreduceType getType() {
-        switch (outputType) {
-            case REDUCE:
-                return REDUCE;
-            case MERGE:
-                return MERGE;
-            case INLINE:
-                return INLINE;
-            default:
-                return REPLACE;
+        if (outputType == OutputType.REDUCE) {
+            return MapreduceType.REDUCE;
+        } else if (outputType == OutputType.MERGE) {
+            return MapreduceType.MERGE;
+        } else if (outputType == OutputType.INLINE) {
+            return MapreduceType.INLINE;
+        } else {
+            return MapreduceType.REPLACE;
         }
 
     }

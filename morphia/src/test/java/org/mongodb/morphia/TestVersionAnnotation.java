@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -194,9 +195,9 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testVersionedInserts() {
-        Versioned[] versioneds = {new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned()};
-        getAds().insert(versioneds);
-        for (Versioned versioned : versioneds) {
+        List<Versioned> list = asList(new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned());
+        getAds().insert(list);
+        for (Versioned versioned : list) {
             assertNotNull(versioned.getVersion());
         }
     }

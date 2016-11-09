@@ -7,34 +7,36 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestMapping.BaseEntity;
 import org.mongodb.morphia.annotations.Entity;
 
+import static java.util.Arrays.asList;
+
 
 public class TestStringPatternQueries extends TestBase {
     @Test
     public void testContains() throws Exception {
 
-        getDs().save(new E("xBA"), new E("xa"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba"));
+        getDs().save(asList(new E("xBA"), new E("xa"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba")));
 
-        Assert.assertEquals(3, getDs().createQuery(E.class).field("name").contains("b").countAll());
-        Assert.assertEquals(5, getDs().createQuery(E.class).field("name").containsIgnoreCase("b").countAll());
+        Assert.assertEquals(3, getDs().createQuery(E.class).field("name").contains("b").count());
+        Assert.assertEquals(5, getDs().createQuery(E.class).field("name").containsIgnoreCase("b").count());
     }
 
     @Test
     public void testEndsWith() throws Exception {
 
-        getDs().save(new E("bxA"), new E("xba"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba"));
+        getDs().save(asList(new E("bxA"), new E("xba"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba")));
 
-        Assert.assertEquals(2, getDs().createQuery(E.class).field("name").endsWith("b").countAll());
-        Assert.assertEquals(3, getDs().createQuery(E.class).field("name").endsWithIgnoreCase("b").countAll());
+        Assert.assertEquals(2, getDs().createQuery(E.class).field("name").endsWith("b").count());
+        Assert.assertEquals(3, getDs().createQuery(E.class).field("name").endsWithIgnoreCase("b").count());
     }
 
     @Test
     public void testStartsWith() throws Exception {
 
-        getDs().save(new E("A"), new E("a"), new E("Ab"), new E("ab"), new E("c"));
+        getDs().save(asList(new E("A"), new E("a"), new E("Ab"), new E("ab"), new E("c")));
 
-        Assert.assertEquals(2, getDs().createQuery(E.class).field("name").startsWith("a").countAll());
-        Assert.assertEquals(4, getDs().createQuery(E.class).field("name").startsWithIgnoreCase("a").countAll());
-        Assert.assertEquals(4, getDs().createQuery(E.class).field("name").startsWithIgnoreCase("A").countAll());
+        Assert.assertEquals(2, getDs().createQuery(E.class).field("name").startsWith("a").count());
+        Assert.assertEquals(4, getDs().createQuery(E.class).field("name").startsWithIgnoreCase("a").count());
+        Assert.assertEquals(4, getDs().createQuery(E.class).field("name").startsWithIgnoreCase("A").count());
     }
 
     @Entity

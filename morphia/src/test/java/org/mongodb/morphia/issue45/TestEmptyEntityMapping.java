@@ -22,7 +22,7 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(a);
         Assert.assertNotNull(a.b);
 
-        a = getDs().find(A.class, "_id", a.getId()).get();
+        a = getDs().createQuery(A.class).filter("_id", a.getId()).get();
         Assert.assertNull(a.b);
     }
 

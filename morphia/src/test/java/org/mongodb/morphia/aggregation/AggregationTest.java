@@ -44,6 +44,7 @@ import org.mongodb.morphia.query.Query;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -62,13 +63,14 @@ import static org.mongodb.morphia.aggregation.Projection.divide;
 import static org.mongodb.morphia.aggregation.Projection.expression;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
+import static org.mongodb.morphia.query.Sort.ascending;
 
 public class AggregationTest extends TestBase {
 
     @Test
     public void testCollation() {
         checkMinServerVersion(3.4);
-        getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
+        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
         Query query = getDs().createQuery(User.class).field("name").equal("john doe");
         AggregationPipeline pipeline = getDs()
@@ -78,17 +80,17 @@ public class AggregationTest extends TestBase {
 
         Assert.assertEquals(2, count(pipeline.aggregate(User.class,
                                                         builder()
-                                                                          .collation(Collation.builder()
-                                                                                              .locale("en")
-                                                                                              .collationStrength(
-                                                                                                  CollationStrength.SECONDARY)
-                                                                                              .build()).build())));
+                                                            .collation(Collation.builder()
+                                                                                .locale("en")
+                                                                                .collationStrength(
+                                                                                    CollationStrength.SECONDARY)
+                                                                                .build()).build())));
     }
 
     @Test
     public void testBypassDocumentValidation() {
         checkMinServerVersion(3.2);
-        getDs().save(new User("john doe", new Date()), new User("John Doe", new Date()));
+        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
         MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
         database.getCollection("out_users").drop();
@@ -166,15 +168,15 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testGenericAccumulatorUsage() {
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
                                                    .group("author", grouping("count", accumulator("$sum", 1)))
-                                                   .sort(Sort.ascending("_id"))
+                                                   .sort(ascending("_id"))
                                                    .aggregate(CountResult.class);
 
         CountResult result1 = aggregation.next();
@@ -278,11 +280,11 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testLimit() {
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         Iterator<Book> aggregate = getDs().createAggregation(Book.class)
                                           .limit(2)
@@ -301,9 +303,9 @@ public class AggregationTest extends TestBase {
     @Test
     public void testLookup() {
         checkMinServerVersion(3.2);
-        getDs().save(new Order(1, "abc", 12, 2),
-                     new Order(2, "jkl", 20, 1),
-                     new Order(3));
+        getDs().save(asList(new Order(1, "abc", 12, 2),
+                            new Order(2, "jkl", 20, 1),
+                            new Order(3)));
         List<Inventory> inventories = asList(new Inventory(1, "abc", "product 1", 120),
                                              new Inventory(2, "def", "product 2", 80),
                                              new Inventory(3, "ijk", "product 3", 60),
@@ -327,15 +329,15 @@ public class AggregationTest extends TestBase {
     @Test
     public void testOut() {
         checkMinServerVersion(2.6);
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         AggregationOptions options = builder()
-                                                       .outputMode(AggregationOptions.OutputMode.CURSOR)
-                                                       .build();
+            .outputMode(AggregationOptions.OutputMode.CURSOR)
+            .build();
         Iterator<Author> aggregate = getDs().createAggregation(Book.class)
                                             .group("author", grouping("books", push("title")))
                                             .out(Author.class, options);
@@ -354,11 +356,11 @@ public class AggregationTest extends TestBase {
     @Test
     public void testOutNamedCollection() {
         checkMinServerVersion(2.6);
-        getDs().save(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
-                     new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
-                     new Book("Eclogues", "Dante", 2, "Italian", ""),
-                     new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
-                     new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel"));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
+                            new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
+                            new Book("Eclogues", "Dante", 2, "Italian", ""),
+                            new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
+                            new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel")));
 
         getDs().createAggregation(Book.class)
                .match(getDs().getQueryFactory().createQuery(getDs())
@@ -375,20 +377,19 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testProjection() {
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
                                                     .group("author", grouping("copies", sum("copies")))
                                                     .project(projection("_id").suppress(),
                                                              projection("author", "_id"),
                                                              projection("copies", divide(projection("copies"), 5)))
-                                                    .sort(Sort.ascending("author"));
+                                                    .sort(ascending("author"));
         Iterator<Book> aggregate = pipeline.aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
@@ -398,17 +399,17 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(stages.get(0), obj("$group", obj("_id", "$author").append("copies", obj("$sum", "$copies"))));
         Assert.assertEquals(stages.get(1), obj("$project", obj("_id", 0)
             .append("author", "$_id")
-            .append("copies", obj("$divide", asList("$copies", 5)))));
+            .append("copies", obj("$divide", Arrays.<Object>asList("$copies", 5)))));
 
     }
 
     @Test
     public void testSkip() {
-        getDs().save(new Book("The Banquet", "Dante", 2),
-                     new Book("Divine Comedy", "Dante", 1),
-                     new Book("Eclogues", "Dante", 2),
-                     new Book("The Odyssey", "Homer", 10),
-                     new Book("Iliad", "Homer", 10));
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
 
         Book book = getDs().createAggregation(Book.class)
                            .skip(2)
@@ -421,8 +422,8 @@ public class AggregationTest extends TestBase {
     @Test
     public void testUnwind() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        getDs().save(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
-                     new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"));
+        getDs().save(asList(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
+                            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming")));
 
         Iterator<User> aggregate = getDs().createAggregation(User.class)
                                           .project(projection("_id").suppress(), projection("name"), projection("joined"),

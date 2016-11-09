@@ -34,14 +34,9 @@ import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -53,23 +48,6 @@ public class TestDocumentValidation extends TestBase {
     @Before
     public void versionCheck() {
         checkMinServerVersion(3.2);
-    }
-
-    private static Validation createAnnotationInstance(final String validator, final ValidationLevel level, final ValidationAction action) {
-        final Map<String, Object> values = new HashMap<String, Object>();
-
-        values.put("value", validator);
-        values.put("level", level);
-        values.put("action", action);
-
-        InvocationHandler handler = new InvocationHandler() {
-            @Override
-            public Object invoke(final Object proxy, final Method method, final Object[] args)
-                throws Throwable {
-                return values.get(method.getName());
-            }
-        };
-        return (Validation) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), new Class[]{Validation.class}, handler);
     }
 
     @Test
@@ -123,7 +101,7 @@ public class TestDocumentValidation extends TestBase {
         }
     }
 
-    MongoDatabase addValidation(final Document validator, final String collectionName) {
+    private MongoDatabase addValidation(final Document validator, final String collectionName) {
         ValidationOptions options = new ValidationOptions()
             .validator(validator)
             .validationLevel(ValidationLevel.MODERATE)
@@ -321,6 +299,7 @@ public class TestDocumentValidation extends TestBase {
         return (Document) getValidation().get("validator");
     }
 
+    @SuppressWarnings("deprecation")
     private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
         ((DatastoreImpl) getDs()).process(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
                                                                               .level(level)

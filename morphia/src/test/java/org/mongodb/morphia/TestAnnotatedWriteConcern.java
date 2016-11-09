@@ -15,11 +15,13 @@
 package org.mongodb.morphia;
 
 
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.WriteConcern;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
+import static com.mongodb.WriteConcern.ACKNOWLEDGED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -32,10 +34,32 @@ public class TestAnnotatedWriteConcern extends TestBase {
 
     @Test
     public void defaultWriteConcern() throws Exception {
+        writeDuplicates();
+    }
+
+    @Test
+    public void noWriteConcern() throws Exception {
+        getDs().setDefaultWriteConcern(WriteConcern.UNACKNOWLEDGED);
+        writeDuplicates();
+    }
+
+    private void writeDuplicates() {
+        try {
+            getAds().insert(new Simple("simple"));
+            getAds().insert(new Simple("simple"));
+            fail("Duplicate Exception was not raised!");
+        } catch (DuplicateKeyException e) {
+            assertEquals(1L, getDs().getCount(Simple.class));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void safeWriteConcernOld() throws Exception {
         boolean failed = false;
         try {
-            getAds().insert(new Simple("simple"), getDs().getDefaultWriteConcern());
-            getAds().insert(new Simple("simple"), getDs().getDefaultWriteConcern());
+            getAds().insert(new Simple("simple"));
+            getAds().insert(new Simple("simple"), ACKNOWLEDGED);
         } catch (Exception e) {
             failed = true;
         }
@@ -44,23 +68,12 @@ public class TestAnnotatedWriteConcern extends TestBase {
     }
 
     @Test
-    public void noneWriteConcern() throws Exception {
-        getDs().setDefaultWriteConcern(WriteConcern.UNACKNOWLEDGED);
-        try {
-            getAds().insert(new Simple("simple"));
-            getAds().insert(new Simple("simple"));
-            fail("Duplicate Exception was not raised!");
-        } catch (Exception e) {
-            assertEquals(1L, getDs().getCount(Simple.class));
-        }
-    }
-
-    @Test
     public void safeWriteConcern() throws Exception {
         boolean failed = false;
         try {
             getAds().insert(new Simple("simple"));
-            getAds().insert(new Simple("simple"), WriteConcern.ACKNOWLEDGED);
+            getAds().insert(new Simple("simple"), new InsertOptions()
+                            .writeConcern(ACKNOWLEDGED));
         } catch (Exception e) {
             failed = true;
         }

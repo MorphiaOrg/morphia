@@ -14,6 +14,7 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.mapping.cache.EntityCache;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 
 import java.util.ArrayList;
@@ -184,7 +185,9 @@ public class TestAsListPerf extends TestBase {
                 final Address address = new Address(i);
                 getDs().save(address);
             }
-            getDs().find(Address.class).filter("name", "random").limit(-1).fetch();
+            getDs().find(Address.class).filter("name", "random")
+                   .fetch(new FindOptions()
+                              .limit(-1));
         }
     }
 
