@@ -20,7 +20,7 @@ public class TestTypeCriteria extends TestBase {
 
         getMorphia().map(Class1.class);
 
-        Query<Class1> query = getDs().createQuery(Class1.class);
+        Query<Class1> query = getDs().find(Class1.class);
         query.criteria("first_name").type(Type.STRING);
         Assert.assertTrue(query.asList().size() > 0);
     }

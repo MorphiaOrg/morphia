@@ -12,7 +12,7 @@ public class QueryImplCloneTest extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testQueryCloneOld() throws Exception {
-        final Query q = getDs().createQuery(E1.class)
+        final Query q = getDs().find(E1.class)
                                .field("i")
                                .equal(5)
                                .limit(5)
@@ -29,7 +29,7 @@ public class QueryImplCloneTest extends TestBase {
 
     @Test
     public void testQueryClone() throws Exception {
-        final Query q = getDs().createQuery(E1.class)
+        final Query q = getDs().find(E1.class)
                                .field("i")
                                .equal(5)
                                .filter("a", "value_a")

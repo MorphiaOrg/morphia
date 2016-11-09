@@ -25,7 +25,7 @@ public class TestEmbedLoop extends TestBase {
         Assert.assertSame(a, a.b.a);
 
         getDs().save(a);
-        a = getDs().createQuery(A.class).filter("_id", a.getId()).get();
+        a = getDs().find(A.class).filter("_id", a.getId()).get();
         Assert.assertSame(a, a.b.a);
     }
 

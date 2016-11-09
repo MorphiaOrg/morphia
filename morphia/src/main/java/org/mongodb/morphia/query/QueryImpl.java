@@ -556,7 +556,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     @Deprecated
     public Query<T> queryPrimaryOnly() {
         getOptions().readPreference(ReadPreference.primary());

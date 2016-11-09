@@ -5,8 +5,10 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -29,10 +31,12 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     /**
      * @deprecated please use the getter for this field
      */
+    @Deprecated
     protected Class<T> entityClazz;
     /**
      * @deprecated please use the getter for this field
      */
+    @Deprecated
     protected org.mongodb.morphia.DatastoreImpl ds;
     //CHECKSTYLE:ON
 
@@ -88,7 +92,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public long count(final String key, final Object value) {
-        return count(ds.find(entityClazz, key, value));
+        return count(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
@@ -98,7 +102,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Query<T> createQuery() {
-        return ds.createQuery(entityClazz);
+        return ds.find(entityClazz);
     }
 
     @Override
@@ -133,12 +137,12 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public boolean exists(final String key, final Object value) {
-        return exists(ds.find(entityClazz, key, value));
+        return exists(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
     public boolean exists(final Query<T> query) {
-        return query.limit(1).get() != null;
+        return query.get(new FindOptions().limit(1)) != null;
     }
 
     @Override
@@ -160,7 +164,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     @Override
     @SuppressWarnings("unchecked")
     public List<K> findIds(final String key, final Object value) {
-        return (List<K>) keysToIds(ds.find(entityClazz, key, value).asKeyList());
+        return (List<K>) keysToIds(ds.find(entityClazz).filter(key, value).asKeyList());
     }
 
     @Override
@@ -171,7 +175,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public T findOne(final String key, final Object value) {
-        return ds.find(entityClazz, key, value).get();
+        return ds.find(entityClazz).filter(key, value).get();
     }
 
     /* (non-Javadoc)
@@ -189,7 +193,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Key<T> findOneId(final String key, final Object value) {
-        return findOneId(ds.find(entityClazz, key, value));
+        return findOneId(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
@@ -228,7 +232,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Key<T> save(final T entity, final WriteConcern wc) {
-        return ds.save(entity, wc);
+        return ds.save(entity, new InsertOptions().writeConcern(wc));
     }
 
     @Override

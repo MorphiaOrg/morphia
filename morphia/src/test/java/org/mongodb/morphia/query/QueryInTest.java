@@ -31,7 +31,7 @@ public class QueryInTest extends TestBase {
 
     @Test
     public void testAddEmpty() {
-        Query<Data> query = getDs().createQuery(Data.class);
+        Query<Data> query = getDs().find(Data.class);
         List<ObjectId> memberships = new ArrayList<ObjectId>();
 
         query.or(
@@ -56,11 +56,11 @@ public class QueryInTest extends TestBase {
         has.entity = b;
         getDs().save(has);
 
-        Query<HasIdOnly> q = getDs().createQuery(HasIdOnly.class);
+        Query<HasIdOnly> q = getDs().find(HasIdOnly.class);
         q.criteria("list").in(Arrays.asList(b));
         Assert.assertEquals(1, q.asList().size());
 
-        q = getDs().createQuery(HasIdOnly.class);
+        q = getDs().find(HasIdOnly.class);
         q.criteria("entity").equal(b.getId());
         Assert.assertEquals(1, q.asList().size());
     }
@@ -92,7 +92,7 @@ public class QueryInTest extends TestBase {
         getDs().save(hr.refs);
         getDs().save(hr);
 
-        Query<HasRefs> query = getDs().createQuery(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
+        Query<HasRefs> query = getDs().find(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
         final List<HasRefs> res = query.asList();
         Assert.assertEquals(1, res.size());
     }
@@ -129,7 +129,7 @@ public class QueryInTest extends TestBase {
 
         getDs().save(hr);
 
-        Query<HasRef> query = getDs().createQuery(HasRef.class).field("ref").in(refs);
+        Query<HasRef> query = getDs().find(HasRef.class).field("ref").in(refs);
         try {
             Assert.assertEquals(1, query.asList().size());
         } catch (MongoException e) {
@@ -149,7 +149,7 @@ public class QueryInTest extends TestBase {
         final HasRefs hr = new HasRefs();
         getDs().save(hr);
 
-        final Query<HasRefs> q = getDs().createQuery(HasRefs.class);
+        final Query<HasRefs> q = getDs().find(HasRefs.class);
         q.field("refs").doesNotExist();
         final List<HasRefs> found = q.asList();
         Assert.assertNotNull(found);

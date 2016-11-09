@@ -132,7 +132,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
-        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class);
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOperations<DocumentValidation> updates = getDs().createUpdateOperations(DocumentValidation.class)
                                                               .set("number", 5);
         FindAndModifyOptions options = new FindAndModifyOptions()
@@ -157,7 +157,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
-        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class);
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOperations<DocumentValidation> updates = getDs().createUpdateOperations(DocumentValidation.class)
                                                               .set("number", 5);
         UpdateOptions options = new UpdateOptions()
@@ -190,7 +190,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
                     .bypassDocumentValidation(true));
 
-        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class)
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
         Assert.assertNotNull(query.get());
 
@@ -248,7 +248,7 @@ public class TestDocumentValidation extends TestBase {
         getAds().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
             .bypassDocumentValidation(true));
 
-        Query<DocumentValidation> query = getDs().createQuery(DocumentValidation.class)
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
         Assert.assertNotNull(query.get());
 

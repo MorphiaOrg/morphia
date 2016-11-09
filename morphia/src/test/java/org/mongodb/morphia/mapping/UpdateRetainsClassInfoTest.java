@@ -27,7 +27,7 @@ public class UpdateRetainsClassInfoTest extends TestBase {
 
         getDs().save(x);
 
-        final Query<X> query = getDs().createQuery(X.class);
+        final Query<X> query = getDs().find(X.class);
         final UpdateOperations<X> update = getDs().createUpdateOperations(X.class);
         update.set("map.k2", e2);
 

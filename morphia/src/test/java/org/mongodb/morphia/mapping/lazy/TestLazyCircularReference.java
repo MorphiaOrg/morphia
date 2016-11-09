@@ -25,7 +25,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         getDs().save(asList(root, first, second));
 
-        RootEntity rootEntity = getDs().createQuery(RootEntity.class).get();
+        RootEntity rootEntity = getDs().find(RootEntity.class).get();
         Assert.assertEquals(first.getId(), rootEntity.getR().getId());
         Assert.assertEquals(second.getId(), rootEntity.getSecondReference().getId());
         Assert.assertEquals(root.getId(), rootEntity.getR().getParent().getId());

@@ -39,9 +39,9 @@ public class EnumSetTest extends TestBase {
         Assert.assertFalse(n.out.contains(NastyEnum.C));
         Assert.assertFalse(n.out.contains(NastyEnum.D));
 
-        Query<NastyEnumEntity> q = getDs().createQuery(NastyEnumEntity.class).filter("in", NastyEnum.C);
+        Query<NastyEnumEntity> q = getDs().find(NastyEnumEntity.class).filter("in", NastyEnum.C);
         Assert.assertEquals(1, q.count());
-        q = getDs().createQuery(NastyEnumEntity.class).filter("out", NastyEnum.C);
+        q = getDs().find(NastyEnumEntity.class).filter("out", NastyEnum.C);
         Assert.assertEquals(0, q.count());
 
     }

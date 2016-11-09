@@ -77,7 +77,7 @@ public class TestEmbeddedValidation extends TestBase {
         Datastore ds = getDs();
         ds.save(parentType);
 
-        Query<ParentType> query = ds.createQuery(ParentType.class)
+        Query<ParentType> query = ds.find(ParentType.class)
                                     .disableValidation()
                                     .field("embedded.flag").equal(true);
 
@@ -91,7 +91,7 @@ public class TestEmbeddedValidation extends TestBase {
         entity.setListEmbeddedType(asList(fortyTwo, new EmbeddedType(1L, "one")));
         getDs().save(entity);
 
-        Query<EntityWithListsAndArrays> query = getDs().createQuery(EntityWithListsAndArrays.class)
+        Query<EntityWithListsAndArrays> query = getDs().find(EntityWithListsAndArrays.class)
                                                           .field("listEmbeddedType.number").equal(42L);
         List<EntityWithListsAndArrays> list = query.asList();
 
@@ -106,7 +106,7 @@ public class TestEmbeddedValidation extends TestBase {
         Assert.assertEquals(0, query.count());
 
         fortyTwo.setNumber(0L);
-        query = getDs().createQuery(EntityWithListsAndArrays.class)
+        query = getDs().find(EntityWithListsAndArrays.class)
                        .field("listEmbeddedType.number").equal(0);
         list = query.asList();
 

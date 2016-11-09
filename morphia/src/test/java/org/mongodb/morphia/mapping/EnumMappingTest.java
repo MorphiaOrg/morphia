@@ -97,11 +97,11 @@ public class EnumMappingTest extends TestBase {
         getMorphia().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());
-        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).field("foo").equal(Foo.BAR)
+        Assert.assertEquals(1, getDs().find(ContainsEnum.class).field("foo").equal(Foo.BAR)
                                       .count());
-        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).filter("foo", Foo.BAR)
+        Assert.assertEquals(1, getDs().find(ContainsEnum.class).filter("foo", Foo.BAR)
                                       .count());
-        Assert.assertEquals(1, getDs().createQuery(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
+        Assert.assertEquals(1, getDs().find(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
                                       .count());
     }
 

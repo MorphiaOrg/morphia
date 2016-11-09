@@ -41,7 +41,7 @@ public class TestTextSearching extends TestBase {
         getDs().save(new Greeting("buenas tardes", "spanish"));
         getDs().save(new Greeting("buenos noches", "spanish"));
 
-        List<Greeting> good = getDs().createQuery(Greeting.class)
+        List<Greeting> good = getDs().find(Greeting.class)
                                      .search("good")
                                      .order("_id")
                                      .asList();
@@ -51,7 +51,7 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good night", good.get(2).value);
         Assert.assertEquals("good riddance", good.get(3).value);
 
-        good = getDs().createQuery(Greeting.class)
+        good = getDs().find(Greeting.class)
                       .search("good", "english")
                       .order("_id")
                       .asList();
@@ -61,13 +61,13 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good night", good.get(2).value);
         Assert.assertEquals("good riddance", good.get(3).value);
 
-        Assert.assertEquals(1, getDs().createQuery(Greeting.class)
+        Assert.assertEquals(1, getDs().find(Greeting.class)
                                       .search("riddance")
                                       .asList().size());
-        Assert.assertEquals(1, getDs().createQuery(Greeting.class)
+        Assert.assertEquals(1, getDs().find(Greeting.class)
                                       .search("noches", "spanish")
                                       .asList().size());
-        Assert.assertEquals(1, getDs().createQuery(Greeting.class)
+        Assert.assertEquals(1, getDs().find(Greeting.class)
                                       .search("Tag")
                                       .asList().size());
     }
@@ -83,7 +83,7 @@ public class TestTextSearching extends TestBase {
                             new Book("The Odyssey", "Homer"),
                             new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().createQuery(Book.class)
+        List<Book> books = getDs().find(Book.class)
                                   .search("Dante Comedy").project(Meta.textScore("score"))
                                   .order(Meta.textScore("score"))
                                   .asList();
@@ -102,7 +102,7 @@ public class TestTextSearching extends TestBase {
                             new Book("The Odyssey", "Homer"),
                             new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().createQuery(Book.class)
+        List<Book> books = getDs().find(Book.class)
                                   .search("Dante").project(Meta.textScore())
                                   .order(Meta.textScore())
                                   .asList();
@@ -121,7 +121,7 @@ public class TestTextSearching extends TestBase {
                             new Book("The Odyssey", "Homer"),
                             new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().createQuery(Book.class)
+        List<Book> books = getDs().find(Book.class)
                                   .search("Dante").project(Meta.textScore("score"))
                                   .order(Meta.textScore("score"))
                                   .asList();

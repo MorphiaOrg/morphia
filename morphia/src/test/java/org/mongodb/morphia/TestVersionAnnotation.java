@@ -56,7 +56,7 @@ public class TestVersionAnnotation extends TestBase {
         Assert.assertEquals("Value 2", entity.getName());
         Assert.assertEquals(2, entity.getVersion().longValue());
 
-        Query<Versioned> query = datastore.createQuery(Versioned.class);
+        Query<Versioned> query = datastore.find(Versioned.class);
         query.filter("id", entity.getId());
         UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
         ops.set("name", "Value 3");
@@ -142,7 +142,7 @@ public class TestVersionAnnotation extends TestBase {
         assertEquals(new Long(1), version1.getVersion());
         assertEquals(0, version1.getCount());
 
-        Query<Versioned> query = getDs().createQuery(Versioned.class);
+        Query<Versioned> query = getDs().find(Versioned.class);
         query.field("_id").equal(version1.getId());
         UpdateOperations<Versioned> up = getDs().createUpdateOperations(Versioned.class).inc("count");
 
@@ -209,13 +209,13 @@ public class TestVersionAnnotation extends TestBase {
         Versioned entity = new Versioned();
         entity.setName("Value 1");
 
-        Query<Versioned> query = datastore.createQuery(Versioned.class);
+        Query<Versioned> query = datastore.find(Versioned.class);
         query.filter("name", "Value 1");
         UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
         ops.set("name", "Value 3");
         datastore.update(query, ops, true);
 
-        entity = datastore.createQuery(Versioned.class).get();
+        entity = datastore.find(Versioned.class).get();
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(1, entity.getVersion().longValue());
     }

@@ -68,7 +68,7 @@ public class ReferenceTest extends ProxyTestBase {
         container.singleRef = ref;
         getDs().save(container);
 
-        Assert.assertNotNull(getDs().createQuery(Container.class).filter("singleRef", ref).get());
+        Assert.assertNotNull(getDs().find(Container.class).filter("singleRef", ref).get());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(ref);
         final Container container = new Container(singletonList(ref));
         getDs().save(container);
-        final Query<Container> query = getDs().createQuery(Container.class)
+        final Query<Container> query = getDs().find(Container.class)
                                               // .disableValidation()
                                               .field("singleRef").equal(ref);
         Assert.assertNotNull(query.get());
@@ -183,7 +183,7 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
-        MorphiaKeyIterator<Complex> keys = getDs().createQuery(Complex.class).fetchKeys();
+        MorphiaKeyIterator<Complex> keys = getDs().find(Complex.class).fetchKeys();
         assertTrue(keys.hasNext());
         assertEquals(list.get(0).getId(), keys.next().getId());
         assertEquals(list.get(1).getId(), keys.next().getId());
@@ -198,7 +198,7 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
-        Iterator<Complex> keys = getDs().createQuery(Complex.class).fetchEmptyEntities();
+        Iterator<Complex> keys = getDs().find(Complex.class).fetchEmptyEntities();
         assertTrue(keys.hasNext());
         assertEquals(list.get(0).getId(), keys.next().getId());
         assertEquals(list.get(1).getId(), keys.next().getId());

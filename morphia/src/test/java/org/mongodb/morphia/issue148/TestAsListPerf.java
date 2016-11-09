@@ -149,7 +149,7 @@ public class TestAsListPerf extends TestBase {
     }
 
     public double morphiaQueryAndMorphiaConverter(final int nbOfHits) {
-        final Query<Address> query = getDs().createQuery(Address.class).
+        final Query<Address> query = getDs().find(Address.class).
                                                                            order("name");
         final long start = System.nanoTime();
         final List<Address> resultList = query.asList();

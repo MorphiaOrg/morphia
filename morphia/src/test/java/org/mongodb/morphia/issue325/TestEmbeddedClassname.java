@@ -27,7 +27,7 @@ public class TestEmbeddedClassname extends TestBase {
         r.singleA = new A();
         ds.save(r);
 
-        ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new A()));
+        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new A()));
         r = ds.get(Root.class, "id");
         DBObject aRaw = r.singleA.raw;
 
@@ -39,7 +39,7 @@ public class TestEmbeddedClassname extends TestBase {
         Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
 
         // Test that bList does not contain the class name of the subclass
-        ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).addToSet("bList", new B()));
+        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("bList", new B()));
         r = ds.get(Root.class, "id");
 
         aRaw = r.aList.get(0).raw;
@@ -48,13 +48,13 @@ public class TestEmbeddedClassname extends TestBase {
         DBObject bRaw = r.bList.get(0).getRaw();
         Assert.assertFalse(bRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
 
-        ds.delete(ds.createQuery(Root.class));
+        ds.delete(ds.find(Root.class));
 
         //test saving an B in aList, and it should have the classname.
         Root entity = new Root();
         entity.singleA = new B();
         ds.save(entity);
-        ds.update(ds.createQuery(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new B()));
+        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new B()));
         r = ds.get(Root.class, "id");
 
         // test that singleA.raw *does* contain the classname because we stored a subclass there

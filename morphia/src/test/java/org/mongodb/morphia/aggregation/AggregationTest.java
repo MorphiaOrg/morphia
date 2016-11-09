@@ -72,7 +72,7 @@ public class AggregationTest extends TestBase {
         checkMinServerVersion(3.4);
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
-        Query query = getDs().createQuery(User.class).field("name").equal("john doe");
+        Query query = getDs().find(User.class).field("name").equal("john doe");
         AggregationPipeline pipeline = getDs()
             .createAggregation(User.class)
             .match(query);
@@ -101,7 +101,7 @@ public class AggregationTest extends TestBase {
         try {
             getDs()
                 .createAggregation(User.class)
-                .match(getDs().createQuery(User.class).field("name").equal("john doe"))
+                .match(getDs().find(User.class).field("name").equal("john doe"))
                 .out("out_users", User.class);
             fail("Document validation should have complained.");
         } catch (MongoCommandException e) {
@@ -110,7 +110,7 @@ public class AggregationTest extends TestBase {
 
         getDs()
             .createAggregation(User.class)
-            .match(getDs().createQuery(User.class).field("name").equal("john doe"))
+            .match(getDs().find(User.class).field("name").equal("john doe"))
             .out("out_users", User.class, builder()
                 .bypassDocumentValidation(true)
                 .build());
@@ -465,7 +465,7 @@ public class AggregationTest extends TestBase {
     public void testUserPreferencesPipeline() {
         final AggregationPipeline pipeline = getDs().createAggregation(Book.class)  /* the class is irrelevant for this test */
                                                     .group("state", Group.grouping("total_pop", sum("pop")))
-                                                    .match(getDs().createQuery(Book.class)
+                                                    .match(getDs().find(Book.class)
                                                                   .disableValidation()
                                                                   .field("total_pop").greaterThanOrEq(10000000));
         DBObject group = obj("$group", obj("_id", "$state")

@@ -36,18 +36,22 @@ import static org.junit.Assert.fail;
 
 public class TestMapreduce extends TestBase {
 
-    @SuppressWarnings("deprecation")
     @Test(expected = MongoException.class)
     public void testBadMR() throws Exception {
         final String map = "function () { if(this['radius']) { doEmit('circle', {count:1}); return; } emit('rect', {count:1}); }";
         final String reduce = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} "
                               + "return { count : total }; }";
 
-        getDs().mapReduce(MapreduceType.REPLACE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
+        getDs().mapReduce(new MapReduceOptions<ResultEntity>()
+                              .resultType(ResultEntity.class)
+                              .outputType(OutputType.REPLACE)
+                              .query(getAds().find(Shape.class))
+                              .map(map)
+                              .reduce(reduce));
     }
 
-    @SuppressWarnings("deprecation")
     @Test
+    @SuppressWarnings("deprecation")
     public void testOldMapReduce() throws Exception {
         final Random rnd = new Random();
 
@@ -61,19 +65,18 @@ public class TestMapreduce extends TestBase {
                               + "return { count : total }; }";
 
         final MapreduceResults<ResultEntity> mrRes =
-            getDs().mapReduce(MapreduceType.REPLACE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
+            getDs().mapReduce(MapreduceType.REPLACE, getAds().find(Shape.class), map, reduce, null, null, ResultEntity.class);
         Assert.assertEquals(2, mrRes.createQuery().countAll());
         Assert.assertEquals(100, mrRes.createQuery().get().getValue().count, 0);
 
 
         final MapreduceResults<ResultEntity> inline =
-            getDs().mapReduce(MapreduceType.INLINE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
+            getDs().mapReduce(MapreduceType.INLINE, getAds().find(Shape.class), map, reduce, null, null, ResultEntity.class);
         final Iterator<ResultEntity> iterator = inline.iterator();
         Assert.assertEquals(2, count(iterator));
         Assert.assertEquals(100, inline.iterator().next().getValue().count, 0);
     }
 
-    @SuppressWarnings("deprecation")
     @Test
     public void testMapReduce() throws Exception {
         final Random rnd = new Random();
@@ -90,7 +93,7 @@ public class TestMapreduce extends TestBase {
         final MapreduceResults<ResultEntity> mrRes =
             getDs().mapReduce(new MapReduceOptions<ResultEntity>()
                                   .outputType(OutputType.REPLACE)
-                                  .query(getAds().createQuery(Shape.class))
+                                  .query(getAds().find(Shape.class))
                                   .map(map)
                                   .reduce(reduce)
                                   .resultType(ResultEntity.class));
@@ -99,7 +102,10 @@ public class TestMapreduce extends TestBase {
 
 
         final MapreduceResults<ResultEntity> inline =
-            getDs().mapReduce(MapreduceType.INLINE, getAds().createQuery(Shape.class), map, reduce, null, null, ResultEntity.class);
+            getDs().mapReduce(new MapReduceOptions<ResultEntity>()
+                                  .outputType(OutputType.INLINE)
+                                  .query(getAds().find(Shape.class)).map(map).reduce(reduce)
+                                  .resultType(ResultEntity.class));
         final Iterator<ResultEntity> iterator = inline.iterator();
         Assert.assertEquals(2, count(iterator));
         Assert.assertEquals(100, inline.iterator().next().getValue().count, 0);
@@ -117,7 +123,7 @@ public class TestMapreduce extends TestBase {
         final String map = "function () { emit(this.author, 1); return; }";
         final String reduce = "function (key, values) { return values.length }";
 
-        Query<Book> query = getAds().createQuery(Book.class)
+        Query<Book> query = getAds().find(Book.class)
             .field("author").equal("dante");
         MapReduceOptions<CountResult> options = new MapReduceOptions<CountResult>()
             .resultType(CountResult.class)
@@ -164,7 +170,7 @@ public class TestMapreduce extends TestBase {
         final String reduce = "function (key, values) { return values.length }";
 
         MapReduceOptions<CountResult> options = new MapReduceOptions<CountResult>()
-            .query(getDs().createQuery(Book.class))
+            .query(getDs().find(Book.class))
             .resultType(CountResult.class)
             .outputType(OutputType.REPLACE)
             .map(map)
@@ -177,7 +183,7 @@ public class TestMapreduce extends TestBase {
         }
 
         getDs().mapReduce(options.bypassDocumentValidation(true));
-        Assert.assertEquals(2, count(getDs().createQuery(CountResult.class).iterator()));
+        Assert.assertEquals(2, count(getDs().find(CountResult.class).iterator()));
     }
 
     @Entity("mr_results")

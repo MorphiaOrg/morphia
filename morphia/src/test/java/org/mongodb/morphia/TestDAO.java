@@ -70,7 +70,7 @@ public class TestDAO extends TestBase {
         getDs().save(new Photo());
         hotelDAO.save(grand);
 
-        assertTrue(hotelDAO.exists(getDs().createQuery(Hotel.class).field("address").exists()));
+        assertTrue(hotelDAO.exists(getDs().find(Hotel.class).field("address").exists()));
 
         assertFalse(hotelDAO.exists("name", "Hotel California"));
     }
@@ -204,7 +204,7 @@ public class TestDAO extends TestBase {
         assertEquals(1, names.size());
         assertEquals(hilton.getId(), names.get(0));
 
-        List<ObjectId> stars = hotelDAO.findIds(getDs().createQuery(Hotel.class).field("stars").equal(4));
+        List<ObjectId> stars = hotelDAO.findIds(getDs().find(Hotel.class).field("stars").equal(4));
         assertEquals(1, stars.size());
         assertEquals(hilton.getId(), stars.get(0));
 
@@ -212,7 +212,7 @@ public class TestDAO extends TestBase {
 
         assertEquals(hilton.getId(), hotelDAO.findOneId("name", hilton.getName()).getId());
 
-        assertEquals(hilton.getId(), hotelDAO.findOneId(getDs().createQuery(Hotel.class).field("stars").equal(4)).getId());
+        assertEquals(hilton.getId(), hotelDAO.findOneId(getDs().find(Hotel.class).field("stars").equal(4)).getId());
 
         assertEquals(1, hotelDAO.createQuery()
                                 .asList(new FindOptions()

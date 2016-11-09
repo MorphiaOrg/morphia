@@ -34,7 +34,7 @@ public class MapReduceOptionsTest extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void mapReduceCommand() {
-        Query<FacebookUser> query = getDs().createQuery(FacebookUser.class);
+        Query<FacebookUser> query = getDs().find(FacebookUser.class);
         MapReduceOptions<FacebookUser> options = new MapReduceOptions<FacebookUser>()
             .bypassDocumentValidation(true)
             .collation(Collation.builder().locale("en").build())
