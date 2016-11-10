@@ -59,7 +59,6 @@ public class MapperOptions {
         setDefaultMapper(options.getDefaultMapper());
         setReferenceMapper(options.getReferenceMapper());
         setValueMapper(options.getValueMapper());
-        setDatastoreProvider(options.getDatastoreProvider());
     }
 
     /**
