@@ -33,7 +33,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, Object)} instead
+     * @deprecated use {@link #push(String, Object)} if addDups is false or {@link #addToSet(String, Object)} instead
      */
     @Deprecated
     UpdateOperations<T> add(String field, Object value, boolean addDups);

@@ -61,15 +61,15 @@ public class Java8EntityTest extends TestBase {
                          localDateTime.plus(i, DAYS),
                          localTime.plus(i, ChronoUnit.HOURS));
         }
-        Assert.assertEquals(2L, getDs().createQuery(Java8Entity.class).field("instant").lessThanOrEq(instant.plus(1, DAYS)).countAll());
-        Assert.assertEquals(1L, getDs().createQuery(Java8Entity.class).field("localDate").equal(localDate.plus(1, DAYS)).countAll());
-        Assert.assertEquals(0L, getDs().createQuery(Java8Entity.class).field("localDate").equal(localDate.minus(1, DAYS)).countAll());
-        Assert.assertEquals(9L, getDs().createQuery(Java8Entity.class).field("localDateTime")
-                                       .notEqual(localDateTime.plus(6, DAYS)).countAll());
+        Assert.assertEquals(2L, getDs().find(Java8Entity.class).field("instant").lessThanOrEq(instant.plus(1, DAYS)).count());
+        Assert.assertEquals(1L, getDs().find(Java8Entity.class).field("localDate").equal(localDate.plus(1, DAYS)).count());
+        Assert.assertEquals(0L, getDs().find(Java8Entity.class).field("localDate").equal(localDate.minus(1, DAYS)).count());
+        Assert.assertEquals(9L, getDs().find(Java8Entity.class).field("localDateTime")
+                                       .notEqual(localDateTime.plus(6, DAYS)).count());
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {
-        Java8Entity actual = datastore.createQuery(Java8Entity.class).field(field).equal(value).get();
+        Java8Entity actual = datastore.find(Java8Entity.class).field(field).equal(value).get();
         Assert.assertEquals(entity, actual);
     }
 

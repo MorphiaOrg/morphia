@@ -45,7 +45,7 @@ public class TestIndexes extends TestBase {
     public void testIndexes() {
 
         final Datastore datastore = getDs();
-        datastore.delete(datastore.createQuery(TestWithIndexOption.class));
+        datastore.delete(datastore.find(TestWithIndexOption.class));
 
         final DBCollection indexOptionColl = getDs().getCollection(TestWithIndexOption.class);
         indexOptionColl.drop();

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -41,8 +42,8 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("JD", 26), "Dorian"),
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         List<Complex> lazyList = asList(new Complex(new ChildId("Bippity", 67), "Boppity"),
-                                    new Complex(new ChildId("Cinder", 22), "Ella"),
-                                    new Complex(new ChildId("Prince", 29), "Charming"));
+                                        new Complex(new ChildId("Cinder", 22), "Ella"),
+                                        new Complex(new ChildId("Prince", 29), "Charming"));
 
         ComplexParent parent = new ComplexParent();
         parent.complex = complex;
@@ -67,12 +68,12 @@ public class ReferenceTest extends ProxyTestBase {
         container.singleRef = ref;
         getDs().save(container);
 
-        Assert.assertNotNull(getDs().find(Container.class, "singleRef", ref).get());
+        Assert.assertNotNull(getDs().find(Container.class).filter("singleRef", ref).get());
     }
 
     @Test
     public void testIdOnlyReferences() {
-        final Ref[] refs = new Ref[]{new Ref("foo"), new Ref("bar"), new Ref("baz")};
+        final List<Ref> refs = asList(new Ref("foo"), new Ref("bar"), new Ref("baz"));
         final Container c = new Container(refs);
 
         // test that we can save it
@@ -103,18 +104,18 @@ public class ReferenceTest extends ProxyTestBase {
         // ensure that we can retrieve it
         final Container retrieved = getDs().getByKey(Container.class, key);
 
-        assertEquals(refs[0], retrieved.getSingleRef());
+        assertEquals(refs.get(0), retrieved.getSingleRef());
         if (testDependencyFullFilled()) {
             assertIsProxy(retrieved.getLazySingleRef());
         }
-        assertEquals(refs[0], unwrap(retrieved.getLazySingleRef()));
+        assertEquals(refs.get(0), unwrap(retrieved.getLazySingleRef()));
 
         final List<Ref> expectedRefList = new ArrayList<Ref>();
         final Map<Integer, Ref> expectedRefMap = new LinkedHashMap<Integer, Ref>();
 
-        for (int i = 0; i < refs.length; i++) {
-            expectedRefList.add(refs[i]);
-            expectedRefMap.put(i, refs[i]);
+        for (int i = 0; i < refs.size(); i++) {
+            expectedRefList.add(refs.get(i));
+            expectedRefMap.put(i, refs.get(i));
         }
 
         assertEquals(expectedRefList, retrieved.getCollectionRef());
@@ -147,10 +148,10 @@ public class ReferenceTest extends ProxyTestBase {
     public void testReferenceQueryWithoutValidation() {
         Ref ref = new Ref("no validation");
         getDs().save(ref);
-        final Container container = new Container(ref);
+        final Container container = new Container(singletonList(ref));
         getDs().save(container);
-        final Query<Container> query = getDs().createQuery(Container.class)
-                                              //                                             .disableValidation()
+        final Query<Container> query = getDs().find(Container.class)
+                                               .disableValidation()
                                               .field("singleRef").equal(ref);
         Assert.assertNotNull(query.get());
     }
@@ -182,7 +183,7 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
-        MorphiaKeyIterator<Complex> keys = getDs().createQuery(Complex.class).fetchKeys();
+        MorphiaKeyIterator<Complex> keys = getDs().find(Complex.class).fetchKeys();
         assertTrue(keys.hasNext());
         assertEquals(list.get(0).getId(), keys.next().getId());
         assertEquals(list.get(1).getId(), keys.next().getId());
@@ -197,7 +198,7 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
-        Iterator<Complex> keys = getDs().createQuery(Complex.class).fetchEmptyEntities();
+        Iterator<Complex> keys = getDs().find(Complex.class).fetchEmptyEntities();
         assertTrue(keys.hasNext());
         assertEquals(list.get(0).getId(), keys.next().getId());
         assertEquals(list.get(1).getId(), keys.next().getId());
@@ -240,17 +241,17 @@ public class ReferenceTest extends ProxyTestBase {
         public Container() {
         }
 
-        public Container(final Ref... refs) {
-            singleRef = refs[0];
-            lazySingleRef = refs[0];
-            collectionRef = asList(refs);
-            lazyCollectionRef = asList(refs);
+        public Container(final List<Ref> refs) {
+            singleRef = refs.get(0);
+            lazySingleRef = refs.get(0);
+            collectionRef = refs;
+            lazyCollectionRef = refs;
             mapRef = new LinkedHashMap<Integer, Ref>();
             lazyMapRef = new LinkedHashMap<Integer, Ref>();
 
-            for (int i = 0; i < refs.length; i++) {
-                mapRef.put(i, refs[i]);
-                lazyMapRef.put(i, refs[i]);
+            for (int i = 0; i < refs.size(); i++) {
+                mapRef.put(i, refs.get(i));
+                lazyMapRef.put(i, refs.get(i));
             }
         }
 

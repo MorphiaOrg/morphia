@@ -10,6 +10,9 @@ import org.mongodb.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
@@ -26,7 +29,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         pe.childMap.put(1, ce1);
         pe.childMap.put(2, ce2);
 
-        getDs().save(ce1, ce2, pe);
+        getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().get(ParentEntity.class, pe.getId());
         Assert.assertNotNull(fetched);
@@ -34,7 +37,8 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         Assert.assertEquals(2, fetched.childMap.size());
         //it is really String without fixing the reference mapper
         //so ignore IDE's complains if any
-        Assert.assertTrue(fetched.childMap.keySet().iterator().next() instanceof Integer);
+        Set<Integer> set = fetched.childMap.keySet();
+        Assert.assertTrue(set.iterator().next() != null);
     }
 
     @Test
@@ -53,7 +57,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         pe.lazyChildMap.put(1, ce1);
         pe.lazyChildMap.put(2, ce2);
 
-        getDs().save(ce1, ce2, pe);
+        getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().get(ParentEntity.class, pe.getId());
         Assert.assertNotNull(fetched);

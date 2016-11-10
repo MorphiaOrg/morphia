@@ -55,7 +55,7 @@ public class SLF4JLoggerTest extends TestBase {
 
         getDs().save(new LoggingTestEntity());
         // string type where int expected
-        getDs().createQuery(LoggingTestEntity.class).field("i").equal("5");
+        getDs().find(LoggingTestEntity.class).field("i").equal("5");
         //CHECKSTYLE:OFF
         System.err.flush();
         //CHECKSTYLE:ON

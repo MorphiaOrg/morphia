@@ -19,6 +19,8 @@ import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import java.io.Serializable;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 
 /**
  * Tests mapper functions; this is tied to some of the internals.
@@ -45,7 +47,7 @@ public class TestMapper extends TestBase {
         HoldsMultipleA holder = new HoldsMultipleA();
         holder.a1 = a;
         holder.a2 = a;
-        getDs().save(a, holder);
+        getDs().save(asList(a, holder));
         holder = getDs().get(HoldsMultipleA.class, holder.id);
         Assert.assertEquals(1, A.loadCount);
         Assert.assertTrue(holder.a1 == holder.a2);
@@ -64,7 +66,7 @@ public class TestMapper extends TestBase {
         holder.a1 = a;
         holder.a2 = a;
         holder.a3 = a;
-        getDs().save(a, holder);
+        getDs().save(asList(a, holder));
         Assert.assertEquals(0, A.loadCount);
         holder = getDs().get(HoldsMultipleALazily.class, holder.id);
         Assert.assertNotNull(holder.a2);

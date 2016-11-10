@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
@@ -22,6 +22,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
+import com.mongodb.ReadPreference;
 import com.mongodb.client.model.CollationStrength;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
@@ -80,7 +81,7 @@ import static org.mongodb.morphia.query.Sort.naturalDescending;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings({"deprecation", "unchecked"})
+@SuppressWarnings("unchecked")
 public class TestQuery extends TestBase {
 
     @Test
@@ -92,22 +93,31 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        final Query<GenericKeyValue> query = getDs().createQuery(GenericKeyValue.class).field("key").hasAnyOf(keys);
+        final Query<GenericKeyValue> query = getDs().find(GenericKeyValue.class).field("key").hasAnyOf(keys);
         Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
         assertEquals(query.get().id, value.id);
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void maxScan() {
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
-        assertEquals(2, getDs().createQuery(Pic.class).maxScan(2).asList().size());
-        assertEquals(4, getDs().createQuery(Pic.class).asList().size());
+        assertEquals(2, getDs().find(Pic.class)
+                               .maxScan(2)
+                               .asList()
+                               .size());
+        assertEquals(2, getDs().find(Pic.class)
+                               .asList(new FindOptions()
+                                           .modifier("$maxScan", 2))
+                               .size());
+        assertEquals(4, getDs().find(Pic.class).asList().size());
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void maxTime() {
-        Query<ContainsRenamedFields> query = getDs().createQuery(ContainsRenamedFields.class)
+        Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class)
                                                     .maxTime(15, TimeUnit.MINUTES);
 
         assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
@@ -122,7 +132,7 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        final Query<KeyValue> query = getDs().createQuery(KeyValue.class).field("key").hasAnyOf(keys);
+        final Query<KeyValue> query = getDs().find(KeyValue.class).field("key").hasAnyOf(keys);
         Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
         assertEquals(query.get().id, value.id);
     }
@@ -131,7 +141,7 @@ public class TestQuery extends TestBase {
     public void referenceKeys() {
         final ReferenceKey key1 = new ReferenceKey("key1");
 
-        getDs().save(key1, new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+        getDs().save(asList(key1, new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         final ReferenceKeyValue value = new ReferenceKeyValue();
         value.id = key1;
@@ -143,12 +153,52 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void snapshot() {
-        Query<Photo> query = getDs().createQuery(Photo.class);
+    @SuppressWarnings("deprecation")
+    public void oldReadPreference() {
+        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
+                                                           .queryNonPrimary();
+        Assert.assertEquals(ReadPreference.secondaryPreferred(), query.getOptions().getReadPreference());
+        query.queryPrimaryOnly();
+        Assert.assertEquals(ReadPreference.primary(), query.getOptions().getReadPreference());
+    }
 
-        Assert.assertNull(query.getQueryObject().get("$snapshot"));
-        query.enableSnapshotMode();
-        query.get();  // shouldn't throw an exception
+    @Test
+    @SuppressWarnings("deprecation")
+    public void batchSize() {
+        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
+                                                           .batchSize(42);
+        Assert.assertEquals(42, query.getBatchSize());
+        Assert.assertEquals(42, query.getOptions().getBatchSize());
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void cursorTimeOut() {
+        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
+                                                           .enableCursorTimeout();
+        Assert.assertFalse(query.getOptions().isNoCursorTimeout());
+
+        query.disableCursorTimeout();
+        Assert.assertTrue(query.getOptions().isNoCursorTimeout());
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void snapshotOld() {
+        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
+                                                           .enableSnapshotMode();
+        Assert.assertTrue(query.getOptions().getModifiers().containsField("$snapshot"));
+        query.get();
+
+        query.disableSnapshotMode();
+        Assert.assertFalse(query.getOptions().getModifiers().containsField("$snapshot"));
+    }
+
+    @Test
+    public void snapshot() {
+        getDs().find(Photo.class)
+               .get(new FindOptions()
+                        .modifier("$snapshot", true));
     }
 
     @Override
@@ -159,8 +209,9 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testAliasedFieldSort() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+    @SuppressWarnings("deprecation")
+    public void testAliasedFieldSortOld() {
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class).limit(1).order("w").get();
         assertNotNull(r1);
@@ -172,41 +223,60 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testCaseVariants() {
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+    public void testAliasedFieldSort() {
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        assertEquals(0, getDs().createQuery(Pic.class)
+        Rectangle r1 = getDs().find(Rectangle.class)
+                              .order("w")
+                              .get(new FindOptions()
+                                       .limit(1));
+        assertNotNull(r1);
+        assertEquals(1, r1.getWidth(), 0);
+
+        r1 = getDs().find(Rectangle.class)
+                    .order("-w")
+                    .get(new FindOptions()
+                             .limit(1));
+        assertNotNull(r1);
+        assertEquals(10, r1.getWidth(), 0);
+    }
+
+    @Test
+    public void testCaseVariants() {
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
+
+        assertEquals(0, getDs().find(Pic.class)
                                .field("name").contains("PIC")
                                .asList()
                                .size());
-        assertEquals(4, getDs().createQuery(Pic.class)
+        assertEquals(4, getDs().find(Pic.class)
                                .field("name").containsIgnoreCase("PIC")
                                .asList()
                                .size());
 
-        assertEquals(0, getDs().createQuery(Pic.class)
+        assertEquals(0, getDs().find(Pic.class)
                                .field("name").equal("PIC1")
                                .asList()
                                .size());
-        assertEquals(1, getDs().createQuery(Pic.class)
+        assertEquals(1, getDs().find(Pic.class)
                                .field("name").equalIgnoreCase("PIC1")
                                .asList()
                                .size());
 
-        assertEquals(0, getDs().createQuery(Pic.class)
+        assertEquals(0, getDs().find(Pic.class)
                                .field("name").endsWith("C1")
                                .asList()
                                .size());
-        assertEquals(1, getDs().createQuery(Pic.class)
+        assertEquals(1, getDs().find(Pic.class)
                                .field("name").endsWithIgnoreCase("C1")
                                .asList()
                                .size());
 
-        assertEquals(0, getDs().createQuery(Pic.class)
+        assertEquals(0, getDs().find(Pic.class)
                                .field("name").startsWith("PIC")
                                .asList()
                                .size());
-        assertEquals(4, getDs().createQuery(Pic.class)
+        assertEquals(4, getDs().find(Pic.class)
                                .field("name").startsWithIgnoreCase("PIC")
                                .asList()
                                .size());
@@ -217,10 +287,10 @@ public class TestQuery extends TestBase {
         checkMinServerVersion(3.4);
 
         getMorphia().map(ContainsRenamedFields.class);
-        getDs().save(new ContainsRenamedFields("first", "last"),
-                     new ContainsRenamedFields("First", "Last"));
+        getDs().save(asList(new ContainsRenamedFields("first", "last"),
+                            new ContainsRenamedFields("First", "Last")));
 
-        Query query = getDs().createQuery(ContainsRenamedFields.class)
+        Query query = getDs().find(ContainsRenamedFields.class)
                              .field("last_name").equal("last");
         assertEquals(1, query.asList().size());
         assertEquals(2, query.asList(new FindOptions()
@@ -239,29 +309,52 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCombinationQuery() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
-        Query<Rectangle> q = getDs().createQuery(Rectangle.class);
+        Query<Rectangle> q = getDs().find(Rectangle.class);
         q.and(q.criteria("width").equal(10), q.criteria("height").equal(1));
         assertEquals(1, getDs().getCount(q));
 
-        q = getDs().createQuery(Rectangle.class);
+        q = getDs().find(Rectangle.class);
         q.or(q.criteria("width").equal(10), q.criteria("height").equal(10));
         assertEquals(3, getDs().getCount(q));
 
-        q = getDs().createQuery(Rectangle.class);
+        q = getDs().find(Rectangle.class);
         q.or(q.criteria("width").equal(10), q.and(q.criteria("width").equal(5), q.criteria("height").equal(8)));
         assertEquals(3, getDs().getCount(q));
     }
 
     @Test
-    public void testCommentsShowUpInLogs() {
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+    @SuppressWarnings("deprecation")
+    public void testCommentsShowUpInLogsOld() {
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         getDb().command(new BasicDBObject("profile", 2));
         String expectedComment = "test comment";
 
-        getDs().createQuery(Pic.class).comment(expectedComment).asList();
+        getDs().find(Pic.class).comment(expectedComment).asList();
+
+        DBCollection profileCollection = getDb().getCollection("system.profile");
+        assertNotEquals(0, profileCollection.count());
+        DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
+                                                               .append("ns", getDs().getCollection(Pic.class).getFullName()));
+        final Object commentPre32 = ((DBObject) profileRecord.get("query")).get("$comment");
+        final Object commentPost32 = ((DBObject) profileRecord.get("query")).get("comment");
+        assertTrue(profileRecord.toString(), expectedComment.equals(commentPre32) || expectedComment.equals(commentPost32));
+
+        turnOffProfilingAndDropProfileCollection();
+    }
+
+    @Test
+    public void testCommentsShowUpInLogs() {
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
+
+        getDb().command(new BasicDBObject("profile", 2));
+        String expectedComment = "test comment";
+
+        getDs().find(Pic.class)
+               .asList(new FindOptions()
+                           .modifier("$comment", expectedComment));
 
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
@@ -281,7 +374,7 @@ public class TestQuery extends TestBase {
         assertNull(getDs().find(PhotoWithKeywords.class)
                           .field("keywords")
                           .elemMatch(getDs()
-                                         .createQuery(Keyword.class)
+                                         .find(Keyword.class)
                                          .filter("keyword = ", "Oscar")
                                          .filter("score = ", 12))
                           .get());
@@ -289,7 +382,7 @@ public class TestQuery extends TestBase {
         List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
                                                   .field("keywords")
                                                   .elemMatch(getDs()
-                                                                 .createQuery(Keyword.class)
+                                                                 .find(Keyword.class)
                                                                  .filter("score > ", 20)
                                                                  .filter("score < ", 100))
                                                   .asList();
@@ -308,9 +401,9 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class, "_id.type", "banker").get());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).filter("_id.type", "banker").get());
 
-        assertNotNull(getDs().createQuery(UsesCustomIdObject.class).field("_id").hasAnyOf(singletonList(cId)).get());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).field("_id").hasAnyOf(singletonList(cId)).get());
     }
 
     @Test
@@ -324,17 +417,17 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class, "_id.t", "banker").get());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).filter("_id.t", "banker").get());
     }
 
     @Test
     public void testComplexRangeQuery() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
-        assertEquals(2, getDs().getCount(getDs().createQuery(Rectangle.class)
+        assertEquals(2, getDs().getCount(getDs().find(Rectangle.class)
                                                 .filter("height >", 3)
                                                 .filter("height <", 8)));
-        assertEquals(1, getDs().getCount(getDs().createQuery(Rectangle.class)
+        assertEquals(1, getDs().getCount(getDs().find(Rectangle.class)
                                                 .filter("height >", 3)
                                                 .filter("height <", 8)
                                                 .filter("width", 10)));
@@ -342,7 +435,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCompoundSort() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class).order("width,-height").get();
         assertNotNull(r1);
@@ -357,7 +450,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCompoundSortWithSortBeans() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class).order("width,-height").get();
         Rectangle r2 = getDs().find(Rectangle.class).order(ascending("width"), descending("height")).get();
@@ -373,9 +466,10 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testCorrectQueryForNotWithSizeEqIssue514() {
         Query<PhotoWithKeywords> query = getAds()
-            .createQuery(PhotoWithKeywords.class)
+            .find(PhotoWithKeywords.class)
             .field("keywords").not().sizeEq(3);
 
         assertEquals(new BasicDBObject("keywords", new BasicDBObject("$not", new BasicDBObject("$size", 3))), query.getQueryObject());
@@ -391,46 +485,51 @@ public class TestQuery extends TestBase {
         final BasicDBObject orQuery = new BasicDBObject("$or", orList);
 
         Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class, orQuery);
-        assertEquals(1, q.countAll());
+        assertEquals(1, q.count());
 
-        q = getAds().createQuery(PhotoWithKeywords.class).disableValidation().filter("$or", orList);
-        assertEquals(1, q.countAll());
+        q = getAds().find(PhotoWithKeywords.class).disableValidation().filter("$or", orList);
+        assertEquals(1, q.count());
     }
 
     @Test
     public void testDeepQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "california").get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "not").get());
     }
 
     @Test
     public void testDeepQueryWithBadArgs() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", 1).get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california".getBytes()).get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", null).get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", 1).get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "california".getBytes()).get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", null).get());
     }
 
     @Test
     public void testDeepQueryWithRenamedFields() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "california").get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", "not").get());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "california").get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "not").get());
     }
 
     @Test
     public void testDeleteQuery() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10, 10));
+        getDs().save(asList(new Rectangle(1, 10),
+                            new Rectangle(1, 10),
+                            new Rectangle(1, 10),
+                            new Rectangle(10, 10),
+                            new Rectangle(10, 10)));
 
         assertEquals(5, getDs().getCount(Rectangle.class));
-        getDs().delete(getDs().find(Rectangle.class, "height", 1D));
+        getDs().delete(getDs().find(Rectangle.class).filter("height", 1D));
         assertEquals(2, getDs().getCount(Rectangle.class));
     }
 
     @Test
-    public void testElemMatchQuery() {
-        getDs().save(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah"));
+    @SuppressWarnings("deprecation")
+    public void testElemMatchQueryOld() {
+        getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
                              .field("keywords")
                              .hasThisElement(new Keyword("Scott"))
@@ -449,13 +548,25 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testElemMatchQuery() {
+        getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .field("keywords").elemMatch(getDs().find(Keyword.class).filter("keyword", "Scott"))
+                             .get());
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords").elemMatch(getDs().find(Keyword.class).filter("keyword", "Randy"))
+                          .get());
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
     public void testElemMatchVariants() {
         final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
         final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
         final PhotoWithKeywords pwk4 = new PhotoWithKeywords(new Keyword("Scott", 14));
 
-        Iterator<Key<PhotoWithKeywords>> iterator = getDs().save(pwk1, pwk2, pwk3, pwk4).iterator();
+        Iterator<Key<PhotoWithKeywords>> iterator = getDs().save(asList(pwk1, pwk2, pwk3, pwk4)).iterator();
         Key<PhotoWithKeywords> key1 = iterator.next();
         Key<PhotoWithKeywords> key2 = iterator.next();
         Key<PhotoWithKeywords> key3 = iterator.next();
@@ -469,21 +580,21 @@ public class TestQuery extends TestBase {
         validate(asList(key3, key4), asList(key1, key2), getDs().find(PhotoWithKeywords.class)
                                                                 .field("keywords")
                                                                 .elemMatch(getDs()
-                                                                               .createQuery(Keyword.class)
+                                                                               .find(Keyword.class)
                                                                                .field("keyword").equal("Scott"))
                                                                 .asKeyList());
 
-        validate(asList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords")
-                                                                .hasThisElement(new Keyword(14))
-                                                                .asKeyList());
+        validate(singletonList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
+                                                                       .field("keywords")
+                                                                       .hasThisElement(new Keyword(14))
+                                                                       .asKeyList());
 
-        validate(asList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords")
-                                                                .elemMatch(getDs()
-                                                                               .createQuery(Keyword.class)
-                                                                               .field("score").equal(14))
-                                                                .asKeyList());
+        validate(singletonList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
+                                                                       .field("keywords")
+                                                                       .elemMatch(getDs()
+                                                                                      .find(Keyword.class)
+                                                                                      .field("score").equal(14))
+                                                                       .asKeyList());
 
         validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
                                                                 .field("keywords")
@@ -493,15 +604,15 @@ public class TestQuery extends TestBase {
         validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
                                                                 .field("keywords").not()
                                                                 .elemMatch(getDs()
-                                                                               .createQuery(Keyword.class)
+                                                                               .find(Keyword.class)
                                                                                .field("keyword").equal("Scott"))
                                                                 .asKeyList());
     }
 
     @Test
     public void testExplainPlan() {
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
-        Map<String, Object> explainResult = getDs().createQuery(Pic.class).explain();
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
+        Map<String, Object> explainResult = getDs().find(Pic.class).explain();
         assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
                                                   ? explainResult.get("n")
                                                   : ((Map) explainResult.get("executionStats")).get("nReturned"));
@@ -512,9 +623,9 @@ public class TestQuery extends TestBase {
         PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
         PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
         PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(pwk1, pwk2, pwk3);
+        getDs().save(asList(pwk1, pwk2, pwk3));
 
-        MorphiaIterator<PhotoWithKeywords, PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchEmptyEntities();
+        MorphiaIterator<PhotoWithKeywords, PhotoWithKeywords> keys = getDs().find(PhotoWithKeywords.class).fetchEmptyEntities();
         assertTrue(keys.hasNext());
         assertEquals(pwk1.id, keys.next().id);
         assertEquals(pwk2.id, keys.next().id);
@@ -526,9 +637,9 @@ public class TestQuery extends TestBase {
         PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
         PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
         PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(pwk1, pwk2, pwk3);
+        getDs().save(asList(pwk1, pwk2, pwk3));
 
-        MorphiaKeyIterator<PhotoWithKeywords> keys = getDs().createQuery(PhotoWithKeywords.class).fetchKeys();
+        MorphiaKeyIterator<PhotoWithKeywords> keys = getDs().find(PhotoWithKeywords.class).fetchKeys();
         assertTrue(keys.hasNext());
         assertEquals(pwk1.id, keys.next().getId());
         assertEquals(pwk2.id, keys.next().getId());
@@ -536,27 +647,29 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testFluentAndOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
         q.and(
             q.or(q.criteria("keywords.keyword").equal("scott")),
             q.or(q.criteria("keywords.keyword").equal("hernandez")));
 
-        assertEquals(1, q.countAll());
+        assertEquals(1, q.count());
         assertTrue(q.getQueryObject().containsField("$and"));
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testFluentAndQuery1() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
         q.and(q.criteria("keywords.keyword").hasThisOne("scott"),
               q.criteria("keywords.keyword").hasAnyOf(asList("scott", "hernandez")));
 
-        assertEquals(1, q.countAll());
+        assertEquals(1, q.count());
         assertTrue(q.getQueryObject().containsField("$and"));
 
     }
@@ -566,10 +679,10 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
         query.criteria("keywords.keyword").not().startsWith("ralph");
 
-        assertEquals(1, query.countAll());
+        assertEquals(1, query.count());
     }
 
     @Test
@@ -577,17 +690,17 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
         q.or(
             q.criteria("keywords.keyword").equal("scott"),
             q.criteria("keywords.keyword").equal("ralph"));
 
-        assertEquals(1, q.countAll());
+        assertEquals(1, q.count());
     }
 
     @Test
     public void testGetByKeysHetero() {
-        final Iterable<Key<Object>> keys = getDs().save(new FacebookUser(1, "scott"), new Rectangle(1, 1));
+        final Iterable<Key<Object>> keys = getDs().save(asList(new FacebookUser(1, "scott"), new Rectangle(1, 1)));
         final List<Object> entities = getDs().getByKeys(keys);
         assertNotNull(entities);
         assertEquals(2, entities.size());
@@ -608,14 +721,14 @@ public class TestQuery extends TestBase {
     public void testIdFieldNameQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        assertNotNull(getDs().find(PhotoWithKeywords.class, "id !=", "scott").get());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter("id !=", "scott").get());
     }
 
     @Test
     public void testIdRangeQuery() {
-        getDs().save(new HasIntId(1), new HasIntId(11), new HasIntId(12));
-        assertEquals(2, getDs().find(HasIntId.class).filter("_id >", 5).filter("_id <", 20).countAll());
-        assertEquals(1, getDs().find(HasIntId.class).field("_id").greaterThan(0).field("_id").lessThan(11).countAll());
+        getDs().save(asList(new HasIntId(1), new HasIntId(11), new HasIntId(12)));
+        assertEquals(2, getDs().find(HasIntId.class).filter("_id >", 5).filter("_id <", 20).count());
+        assertEquals(1, getDs().find(HasIntId.class).field("_id").greaterThan(0).field("_id").lessThan(11).count());
     }
 
     @Test
@@ -630,7 +743,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testInQueryWithObjects() {
-        getDs().save(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah"));
+        getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
 
         final Query<PhotoWithKeywords> query = getDs()
             .find(PhotoWithKeywords.class)
@@ -649,7 +762,7 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser2 = new FacebookUser(2, "tom");
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(fbUser1, fbUser2, fbUser3, fbUser4);
+        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
@@ -680,7 +793,7 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser2 = new FacebookUser(2, "tom");
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(fbUser1, fbUser2, fbUser3, fbUser4);
+        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
@@ -760,13 +873,13 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNaturalSortAscending() {
-        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+        getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         List<Rectangle> results = getDs().find(Rectangle.class).order(naturalAscending()).asList();
 
         assertEquals(4, results.size());
 
-        Rectangle r = null;
+        Rectangle r;
 
         r = results.get(0);
         assertNotNull(r);
@@ -786,13 +899,13 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNaturalSortDescending() {
-        getDs().save(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1));
+        getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         List<Rectangle> results = getDs().find(Rectangle.class).order(naturalDescending()).asList();
 
         assertEquals(4, results.size());
 
-        Rectangle r = null;
+        Rectangle r;
 
         r = results.get(0);
         assertNotNull(r);
@@ -811,14 +924,15 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testNegativeBatchSize() {
+    @SuppressWarnings("deprecation")
+    public void testNegativeBatchSizeOld() {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
-        getDs().save(new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("1", "2"),
-                     new PhotoWithKeywords("3", "4"),
-                     new PhotoWithKeywords("5", "6"));
+        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("1", "2"),
+                            new PhotoWithKeywords("3", "4"),
+                            new PhotoWithKeywords("5", "6")));
         assertEquals(2, getDs().find(PhotoWithKeywords.class)
                                .batchSize(-2)
                                .asList()
@@ -826,18 +940,34 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testNegativeBatchSize() {
+        getDs().delete(getDs().find(PhotoWithKeywords.class));
+        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("1", "2"),
+                            new PhotoWithKeywords("3", "4"),
+                            new PhotoWithKeywords("5", "6")));
+        assertEquals(2, getDs().find(PhotoWithKeywords.class)
+                               .asList(new FindOptions()
+                                           .batchSize(-2))
+                               .size());
+    }
+
+    @Test
     public void testNonSnapshottedQuery() {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
-        getDs().save(new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"));
+        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez")));
         final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class)
-                                                      .enableSnapshotMode()
-                                                      .batchSize(2)
-                                                      .iterator();
-        getDs().save(new PhotoWithKeywords("1", "2"),
-                     new PhotoWithKeywords("3", "4"),
-                     new PhotoWithKeywords("5", "6"));
+                                                      .fetch(new FindOptions()
+                                                                 .modifier("$snapshot", true)
+                                                                 .batchSize(2)
+                                                            );
+        getDs().save(asList(new PhotoWithKeywords("1", "2"),
+                            new PhotoWithKeywords("3", "4"),
+                            new PhotoWithKeywords("5", "6")));
 
         assertNotNull(it.next());
         assertNotNull(it.next());
@@ -850,7 +980,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonexistentFindGet() {
-        assertNull(getDs().find(Hotel.class, "_id", -1).get());
+        assertNull(getDs().find(Hotel.class).filter("_id", -1).get());
     }
 
     @Test
@@ -859,15 +989,17 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testNotGeneratesCorrectQueryForGreaterThan() {
-        final Query<Keyword> query = getDs().createQuery(Keyword.class);
+        final Query<Keyword> query = getDs().find(Keyword.class);
         query.criteria("score").not().greaterThan(7);
         assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))), query.getQueryObject());
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testNotGeneratesCorrectQueryForRegex() {
-        final Query<PhotoWithKeywords> query = getAds().createQuery(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
         query.criteria("keywords.keyword").not().startsWith("ralph");
         DBObject queryObject = query.getQueryObject();
         BasicDBObject expected = new BasicDBObject("keywords.keyword",
@@ -876,6 +1008,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testProject() {
         getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
@@ -955,11 +1088,15 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testQueryCount() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(1, 10), new Rectangle(10, 10), new Rectangle(10, 10));
+        getDs().save(asList(new Rectangle(1, 10),
+                            new Rectangle(1, 10),
+                            new Rectangle(1, 10),
+                            new Rectangle(10, 10),
+                            new Rectangle(10, 10)));
 
-        assertEquals(3, getDs().getCount(getDs().find(Rectangle.class, "height", 1D)));
-        assertEquals(2, getDs().getCount(getDs().find(Rectangle.class, "height", 10D)));
-        assertEquals(5, getDs().getCount(getDs().find(Rectangle.class, "width", 10D)));
+        assertEquals(3, getDs().getCount(getDs().find(Rectangle.class).filter("height", 1D)));
+        assertEquals(2, getDs().getCount(getDs().find(Rectangle.class).filter("height", 10D)));
+        assertEquals(5, getDs().getCount(getDs().find(Rectangle.class).filter("width", 10D)));
 
     }
 
@@ -972,7 +1109,7 @@ public class TestQuery extends TestBase {
 
         getDs().save(cpk);
 
-        assertEquals(1, getDs().createQuery(ContainsPic.class)
+        assertEquals(1, getDs().find(ContainsPic.class)
                                .field("lazyPic").equal(p)
                                .asList()
                                .size());
@@ -988,12 +1125,12 @@ public class TestQuery extends TestBase {
 
         getDs().save(cpk);
 
-        final Query<ContainsPic> query = getDs().createQuery(ContainsPic.class);
+        final Query<ContainsPic> query = getDs().find(ContainsPic.class);
 
         assertEquals(1, query.field("pic").equal(p).asList().size());
 
         try {
-            getDs().find(ContainsPic.class, "pic.name", "foo").get();
+            getDs().find(ContainsPic.class).filter("pic.name", "foo").get();
             assertNull("query validation should have thrown an exception");
         } catch (ValidationException e) {
             assertTrue(e.getMessage().contains("Cannot use dot-"));
@@ -1002,12 +1139,12 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRangeQuery() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
-        assertEquals(4, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height >", 3)));
-        assertEquals(3, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height >", 3).filter("height <", 10)));
-        assertEquals(1, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height >", 9).filter("width <", 5)));
-        assertEquals(3, getDs().getCount(getDs().createQuery(Rectangle.class).filter("height <", 7)));
+        assertEquals(4, getDs().getCount(getDs().find(Rectangle.class).filter("height >", 3)));
+        assertEquals(3, getDs().getCount(getDs().find(Rectangle.class).filter("height >", 3).filter("height <", 10)));
+        assertEquals(1, getDs().getCount(getDs().find(Rectangle.class).filter("height >", 9).filter("width <", 5)));
+        assertEquals(3, getDs().getCount(getDs().find(Rectangle.class).filter("height <", 7)));
     }
 
     @Test(expected = ValidationException.class)
@@ -1017,11 +1154,11 @@ public class TestQuery extends TestBase {
         cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
-        assertNotNull(getDs().find(ContainsPhotoKey.class, "photo", p).get());
-        assertNotNull(getDs().find(ContainsPhotoKey.class, "photo", cpk.photo).get());
-        assertNull(getDs().find(ContainsPhotoKey.class, "photo", 1).get());
+        assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", p).get());
+        assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", cpk.photo).get());
+        assertNull(getDs().find(ContainsPhotoKey.class).filter("photo", 1).get());
 
-        getDs().find(ContainsPhotoKey.class, "photo.keywords", "foo").get();
+        getDs().find(ContainsPhotoKey.class).filter("photo.keywords", "foo").get();
     }
 
     @Test
@@ -1029,7 +1166,7 @@ public class TestQuery extends TestBase {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         final Pattern p = Pattern.compile("(?i)caLifornia");
         assertNotNull(getDs().find(PhotoWithKeywords.class).disableValidation().filter("keywords.keyword", p).get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", Pattern.compile("blah")).get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", Pattern.compile("blah")).get());
     }
 
     @Test
@@ -1039,7 +1176,7 @@ public class TestQuery extends TestBase {
                              .disableValidation()
                              .filter("keywords.keyword", Pattern.compile("california"))
                              .get());
-        assertNull(getDs().find(PhotoWithKeywords.class, "keywords.keyword", Pattern.compile("blah")).get());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", Pattern.compile("blah")).get());
     }
 
     @Test
@@ -1086,15 +1223,16 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testReturnOnlyIndexedFields() {
-        getDs().save(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4"));
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
         getDs().ensureIndex(Pic.class, "name");
 
         // When
         // find a document by using a search on the field in the index
 
         // Then
-        Pic foundItem = getDs().createQuery(Pic.class)
+        Pic foundItem = getDs().find(Pic.class)
                                .returnKey()
                                .field("name").equal("pic2")
                                .get();
@@ -1105,7 +1243,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSimpleSort() {
-        getDs().save(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
+        getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class)
                               .order("width")
@@ -1121,8 +1259,9 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testSizeEqQuery() {
-        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), getDs().createQuery(PhotoWithKeywords.class)
+        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), getDs().find(PhotoWithKeywords.class)
                                                                                           .field("keywords")
                                                                                           .sizeEq(3).getQueryObject());
     }
@@ -1130,16 +1269,17 @@ public class TestQuery extends TestBase {
     @Test
     public void testSnapshottedQuery() {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
-        getDs().save(new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"),
-                     new PhotoWithKeywords("scott", "hernandez"));
-        final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class, "keywords.keyword", "scott")
-                                                      .enableSnapshotMode()
-                                                      .batchSize(2)
-                                                      .iterator();
-        getDs().save(new PhotoWithKeywords("1", "2"),
-                     new PhotoWithKeywords("3", "4"),
-                     new PhotoWithKeywords("5", "6"));
+        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez"),
+                            new PhotoWithKeywords("scott", "hernandez")));
+        final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class)
+                                                      .filter("keywords.keyword", "scott")
+                                                      .fetch(new FindOptions()
+                                                                 .modifier("$snapshot", true)
+                                                                 .batchSize(2));
+        getDs().save(asList(new PhotoWithKeywords("1", "2"),
+                            new PhotoWithKeywords("3", "4"),
+                            new PhotoWithKeywords("5", "6")));
 
         assertNotNull(it.next());
         assertNotNull(it.next());
@@ -1163,11 +1303,11 @@ public class TestQuery extends TestBase {
     public void testTailableCursors() {
         getMorphia().map(CappedPic.class);
         getDs().ensureCaps();
-        final Query<CappedPic> query = getDs().createQuery(CappedPic.class);
+        final Query<CappedPic> query = getDs().find(CappedPic.class);
         final List<CappedPic> found = new ArrayList<CappedPic>();
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-        assertEquals(0, query.countAll());
+        assertEquals(0, query.count());
 
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -1193,16 +1333,17 @@ public class TestQuery extends TestBase {
                 }
             });
         executorService.shutdownNow();
-        Assert.assertTrue(query.countAll() >= 10);
+        Assert.assertTrue(query.count() >= 10);
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testThatElemMatchQueriesOnlyChecksRequiredFields() {
         final PhotoWithKeywords pwk1 = new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
         final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
         pwk2.keywords.add(new Keyword("Scott", 14));
 
-        getDs().save(pwk1, pwk2);
+        getDs().save(asList(pwk1, pwk2));
 
         // In this case, we only want to match on the keyword field, not the
         // score field, which shouldn't be included in the elemMatch query.
@@ -1212,14 +1353,21 @@ public class TestQuery extends TestBase {
 
         // NOT:
         // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
-        Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
-                                                .field("keywords")
-                                                .hasThisElement(new Keyword("Scott"));
-        final PhotoWithKeywords pwkScott = query.get();
-        assertNotNull(pwkScott);
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .field("keywords")
+                             .hasThisElement(new Keyword("Scott")).get());
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .field("keywords").elemMatch(getDs().find(Keyword.class)
+                                                                 .filter("keyword", "Scott"))
+                             .get());
 
-        final PhotoWithKeywords pwkBad = getDs().find(PhotoWithKeywords.class).field("keywords").hasThisElement(new Keyword("Randy")).get();
-        assertNull(pwkBad);
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords").hasThisElement(new Keyword("Randy"))
+                          .get());
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords").elemMatch(getDs().find(Keyword.class)
+                                                              .filter("keyword", "Randy"))
+                          .get());
     }
 
     @Test
@@ -1258,7 +1406,7 @@ public class TestQuery extends TestBase {
         checkMinServerVersion(3.0);
         getMorphia().map(ContainsPic.class);
         getDs().ensureIndexes();
-        Query<ContainsPic> query = getDs().createQuery(ContainsPic.class);
+        Query<ContainsPic> query = getDs().find(ContainsPic.class);
         query.field("size").greaterThanOrEq(10);
         query.field("size").lessThan(100);
 
@@ -1270,6 +1418,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testNoLifeCycleEventsOnParameters() throws Exception {
         final ContainsPic cpk = new ContainsPic();
         final Pic p = new Pic("some pic");
@@ -1279,12 +1428,12 @@ public class TestQuery extends TestBase {
 
         Pic queryPic = new Pic("some pic");
         queryPic.setId(p.getId());
-        Query query = getDs().createQuery(ContainsPic.class)
+        Query query = getDs().find(ContainsPic.class)
                            .field("pic").equal(queryPic);
         assertFalse(queryPic.isPrePersist());
         assertNotNull(query.get());
 
-        getDs().createQuery(ContainsPic.class)
+        getDs().find(ContainsPic.class)
                        .field("pic").hasThisElement(queryPic);
         assertFalse(queryPic.isPrePersist());
     }

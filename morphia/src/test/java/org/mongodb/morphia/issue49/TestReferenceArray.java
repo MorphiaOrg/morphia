@@ -6,6 +6,8 @@ import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import static java.util.Arrays.asList;
+
 
 public class TestReferenceArray extends TestBase {
 
@@ -18,7 +20,7 @@ public class TestReferenceArray extends TestBase {
         a.bs[0] = b1;
         a.bs[1] = b2;
 
-        getDs().save(b2, b1, a);
+        getDs().save(asList(b2, b1, a));
 
         getDs().get(a);
     }

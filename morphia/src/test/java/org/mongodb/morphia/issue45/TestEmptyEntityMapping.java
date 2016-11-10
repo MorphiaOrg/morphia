@@ -22,7 +22,7 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(a);
         Assert.assertNotNull(a.b);
 
-        a = getDs().find(A.class, "_id", a.getId()).get();
+        a = getDs().find(A.class).filter("_id", a.getId()).get();
         Assert.assertNull(a.b);
     }
 
@@ -36,7 +36,7 @@ public class TestEmptyEntityMapping extends TestBase {
         Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0).get());
         Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0).get());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist().get());
-        getDs().delete(getDs().createQuery(User.class));
+        getDs().delete(getDs().find(User.class));
 
         u = new User();
         u.setFullName("User Name");

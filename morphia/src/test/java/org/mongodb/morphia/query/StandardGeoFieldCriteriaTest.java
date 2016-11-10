@@ -16,7 +16,7 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         int maxDistanceMeters = 13;
         double latitude = 3.2;
         double longitude = 5.7;
-        QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
+        QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
@@ -46,7 +46,7 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         // given
         double latitude = 3.2;
         double longitude = 5.7;
-        QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().createQuery(Object.class);
+        QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
 
         StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()

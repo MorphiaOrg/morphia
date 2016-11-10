@@ -22,7 +22,6 @@ import java.util.List;
 import static org.mongodb.morphia.utils.IndexType.DESC;
 
 
-@SuppressWarnings("deprecation")
 public class TestIndexCollections extends TestBase {
 
     @Test
@@ -55,6 +54,7 @@ public class TestIndexCollections extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testSingleFieldIndex() {
         AdvancedDatastore ads = getAds();
         DB db = getDb();

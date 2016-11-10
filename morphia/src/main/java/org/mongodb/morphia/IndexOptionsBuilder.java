@@ -21,6 +21,7 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 
+@SuppressWarnings("deprecation")
 class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
     @Override
     public Class<IndexOptions> annotationType() {
