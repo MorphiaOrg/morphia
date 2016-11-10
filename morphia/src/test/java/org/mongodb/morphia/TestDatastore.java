@@ -570,6 +570,7 @@ public class TestDatastore extends TestBase {
         ensureEntityWriteConcern();
     }
 
+    @SuppressWarnings("deprecation")
     private void ensureEntityWriteConcern() {
         DatastoreImpl datastore = (DatastoreImpl) getAds();
         assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new InsertOptions(), new Simple(""))
