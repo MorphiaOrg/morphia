@@ -173,7 +173,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new QueryException("Delete does not allow sort/offset/limit query options.");
         }
 
-        return dbColl.remove(query.getQueryObject(), options.getOptions());
+        return dbColl.remove(query.getQueryObject(), enforceWriteConcern(options, query.getEntityClass()).getOptions());
     }
 
     @Override
@@ -319,7 +319,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        FindAndModifyOptions copy = enforceWriteConcern(options, query)
+        FindAndModifyOptions copy = enforceWriteConcern(options, query.getEntityClass())
             .copy()
             .projection(query.getFieldsObject())
             .sort(query.getSortObject())
@@ -744,8 +744,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final T entity, final InsertOptions options) {
+        if (entity == null) {
+            throw new UpdateException("Can not persist a null entity");
+        }
+
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, enforceWriteConcern(options, entity));
+        return save(getCollection(unwrapped), unwrapped, enforceWriteConcern(options, entity.getClass()));
     }
 
     @Override
@@ -1186,31 +1190,40 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final InsertOptions options) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity)
+        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity.getClass())
             .getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
-    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Query<T> query) {
+    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
-                .writeConcern(getWriteConcern(query.getEntityClass()));
+                .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
 
-    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
+    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
-                .writeConcern(getWriteConcern(entity));
+                .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
 
     <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
+        if (options.getWriteConcern() == null) {
+            return options
+                .copy()
+                .writeConcern(getWriteConcern(klass));
+        }
+        return options;
+    }
+
+    <T> DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
@@ -1236,7 +1249,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         // try to do an update if there is a @Version field
         final Object idValue = document.get(Mapper.ID_KEY);
-        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, enforceWriteConcern(options, entity), mc);
+        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, enforceWriteConcern(options, entity.getClass()), mc);
 
         if (wr == null) {
             saveDocument(dbColl, document, options);
@@ -1325,7 +1338,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         com.mongodb.InsertOptions insertOptions = options.getOptions();
         for (final T entity : entities) {
             if (options.getWriteConcern() == null) {
-                insertOptions = enforceWriteConcern(options, entity).getOptions();
+                insertOptions = enforceWriteConcern(options, entity.getClass()).getOptions();
             }
             list.add(toDbObject(entity, involvedObjects));
         }

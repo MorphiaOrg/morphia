@@ -30,6 +30,22 @@ public final class DeleteOptions {
     private final DBCollectionRemoveOptions options = new DBCollectionRemoveOptions();
 
     /**
+     * Copies this instance to a new one.
+     *
+     * @return the new instance
+     */
+    public DeleteOptions copy() {
+        DeleteOptions deleteOptions = new DeleteOptions()
+            .writeConcern(getWriteConcern());
+
+        if (getCollation() != null) {
+            deleteOptions.collation(Collation.builder(getCollation()).build());
+        }
+
+        return deleteOptions;
+    }
+
+    /**
      * Returns the collation options
      *
      * @return the collation options
