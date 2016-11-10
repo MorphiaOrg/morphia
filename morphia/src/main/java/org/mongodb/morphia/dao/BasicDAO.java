@@ -25,16 +25,16 @@ import java.util.List;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
     //CHECKSTYLE:OFF
     /**
-     * @deprecated please use the getter for this field
+     * @deprecated use {@link #getEntityClass()}
      */
     @Deprecated
     protected Class<T> entityClazz;
     /**
-     * @deprecated please use the getter for this field
+     * @deprecated use {@link #getDatastore()}
      */
     @Deprecated
     protected org.mongodb.morphia.DatastoreImpl ds;
@@ -247,7 +247,9 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     /**
      * @return the Datastore used by this DAO
+     * @deprecated use {@link #getDatastore()}
      */
+    @Deprecated
     public org.mongodb.morphia.DatastoreImpl getDs() {
         return ds;
     }
@@ -256,6 +258,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @return the entity class
      * @deprecated use {@link #getEntityClass()} instead
      */
+    @Deprecated
     public Class<T> getEntityClazz() {
         return entityClazz;
     }

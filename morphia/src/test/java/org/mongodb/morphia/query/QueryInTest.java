@@ -98,22 +98,6 @@ public class QueryInTest extends TestBase {
     }
 
     @Test
-    public void testInQuery2() throws Exception {
-        final Doc doc = new Doc();
-        doc.id = 1;
-        getDs().save(doc);
-
-        // this works
-        getDs().find(Doc.class).field("_id").equal(1).asList();
-
-        final List<Long> idList = new ArrayList<Long>();
-        idList.add(1L);
-        // this causes an NPE
-        getDs().find(Doc.class).field("_id").in(idList).asList();
-
-    }
-
-    @Test
     public void testInQueryByKey() throws Exception {
         checkMinServerVersion(2.5);
         final HasRef hr = new HasRef();

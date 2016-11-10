@@ -100,7 +100,6 @@ public class ZipCodeDataSetTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("Duplicates")
     public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();

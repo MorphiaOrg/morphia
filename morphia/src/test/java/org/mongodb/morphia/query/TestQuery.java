@@ -924,6 +924,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testNegativeBatchSizeOld() {
         getDs().delete(getDs().find(PhotoWithKeywords.class));
         getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
@@ -933,8 +934,8 @@ public class TestQuery extends TestBase {
                             new PhotoWithKeywords("3", "4"),
                             new PhotoWithKeywords("5", "6")));
         assertEquals(2, getDs().find(PhotoWithKeywords.class)
-                               .asList(new FindOptions()
-                                           .batchSize(-2))
+                               .batchSize(-2)
+                               .asList()
                                .size());
     }
 

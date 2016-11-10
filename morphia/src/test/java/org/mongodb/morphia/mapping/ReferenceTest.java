@@ -151,7 +151,7 @@ public class ReferenceTest extends ProxyTestBase {
         final Container container = new Container(singletonList(ref));
         getDs().save(container);
         final Query<Container> query = getDs().find(Container.class)
-                                              // .disableValidation()
+                                               .disableValidation()
                                               .field("singleRef").equal(ref);
         Assert.assertNotNull(query.get());
     }

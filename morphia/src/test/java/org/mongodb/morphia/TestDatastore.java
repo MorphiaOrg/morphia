@@ -15,6 +15,7 @@ package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
@@ -373,8 +374,8 @@ public class TestDatastore extends TestBase {
         assertEquals(2, getDs().find(FacebookUser.class).filter("id", 2).get().loginCount);
     }
 
-    @SuppressWarnings("deprecation")
     @Test
+    @SuppressWarnings("deprecation")
     public void testFindAndModifyOld() {
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
@@ -559,6 +560,24 @@ public class TestDatastore extends TestBase {
                                      .getWriteConcern());
         assertEquals(MAJORITY, ds.enforceWriteConcern(updateOptions.writeConcern(MAJORITY), FacebookUser.class)
                                  .getWriteConcern());
+    }
+
+    @Test
+    public void entityWriteConcern() throws Exception {
+        ensureEntityWriteConcern();
+
+        getDs().setDefaultWriteConcern(WriteConcern.UNACKNOWLEDGED);
+        ensureEntityWriteConcern();
+    }
+
+    private void ensureEntityWriteConcern() {
+        DatastoreImpl datastore = (DatastoreImpl) getAds();
+        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new InsertOptions(), new Simple(""))
+                                            .getWriteConcern());
+        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new UpdateOptions(), Simple.class)
+                                            .getWriteConcern());
+        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new FindAndModifyOptions(), getDs().find(Simple.class))
+                                            .getWriteConcern());
     }
 
     @Test
@@ -800,6 +819,20 @@ public class TestDatastore extends TestBase {
 
         public List<Key<FacebookUser>> getUsers() {
             return users;
+        }
+    }
+
+    @Entity(concern = "ACKNOWLEDGED")
+    static class Simple {
+        @Id
+        private String id;
+
+        public Simple(final String id) {
+            this();
+            this.id = id;
+        }
+
+        private Simple() {
         }
     }
 

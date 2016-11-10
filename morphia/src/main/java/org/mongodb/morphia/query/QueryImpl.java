@@ -709,7 +709,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     /**
      * @return the Datastore
+     * @deprecated this is an internal method that exposes an internal type and will likely go away soon
      */
+    @Deprecated
     public org.mongodb.morphia.DatastoreImpl getDatastore() {
         return ds;
     }

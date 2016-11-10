@@ -63,8 +63,8 @@ public class TestMaxMin extends TestBase {
             .id);
     }
 
-    @SuppressWarnings("deprecation")
     @Test
+    @SuppressWarnings("deprecation")
     public void testMaxCompoundIndex() {
         final IndexedEntity a1 = new IndexedEntity("a");
         final IndexedEntity a2 = new IndexedEntity("a");
