@@ -178,12 +178,22 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
-        return delete(clazz, id, getWriteConcern(clazz));
+        return delete(clazz, id, new DeleteOptions().writeConcern(getWriteConcern(clazz)));
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final DeleteOptions options) {
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), options);
     }
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
         return delete(find(clazz).filter(Mapper.ID_KEY + " in", ids));
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids, final DeleteOptions options) {
+        return delete(find(clazz).filter(Mapper.ID_KEY + " in", ids), options);
     }
 
     @Override
@@ -202,17 +212,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(entity, getWriteConcern(entity));
     }
 
+    /**
+     * Deletes the given entity (by @Id), with the WriteConcern
+     *
+     * @param entity  the entity to delete
+     * @param options the options to use when deleting
+     * @return results of the delete
+     */
     @Override
-    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
+    public <T> WriteResult delete(final T entity, final DeleteOptions options) {
         final T wrapped = ProxyHelper.unwrap(entity);
         if (wrapped instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
         try {
-            return delete(wrapped.getClass(), mapper.getId(wrapped), wc);
+            return delete(wrapped.getClass(), mapper.getId(wrapped), options);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    @Deprecated
+    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
+        return delete(entity, new DeleteOptions().writeConcern(wc));
     }
 
     @Override
@@ -886,8 +909,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final DeleteOptions options) {
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), options);
+    }
+
+    @Override
+    @Deprecated
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), new DeleteOptions().writeConcern(wc));
     }
 
     @Override
@@ -1103,9 +1132,11 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the key
      * @return results of the delete
+     * @deprecated use {@link #delete(Class, Object, DeleteOptions)}
      */
+    @Deprecated
     public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), new DeleteOptions().writeConcern(wc));
     }
 
     /**

@@ -460,8 +460,6 @@ public class TestDatastore extends TestBase {
     @Test
     public void testEnforceWriteConcern() {
         DatastoreImpl ds = (DatastoreImpl) getDs();
-        Query<FacebookUser> query = ds.createQuery(FacebookUser.class);
-        FacebookUser user = new FacebookUser();
 
         FindAndModifyOptions findAndModifyOptions = new FindAndModifyOptions();
         assertNull(findAndModifyOptions.getWriteConcern());

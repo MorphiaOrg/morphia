@@ -68,6 +68,18 @@ public interface Datastore {
     <T, V> WriteResult delete(Class<T> clazz, V id);
 
     /**
+     * Deletes the given entity (by id)
+     *
+     * @param clazz the type to delete
+     * @param id    the ID of the entity to delete
+     * @param options the options to use when deleting
+     * @param <T>   the type to delete
+     * @param <V>   the type of the id
+     * @return results of the delete
+     */
+    <T, V> WriteResult delete(Class<T> clazz, V id, DeleteOptions options);
+
+    /**
      * Deletes the given entities (by id)
      *
      * @param clazz the type to delete
@@ -77,6 +89,18 @@ public interface Datastore {
      * @return results of the delete
      */
     <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids);
+
+    /**
+     * Deletes the given entities (by id)
+     *
+     * @param clazz the type to delete
+     * @param ids   the IDs of the entity to delete
+     * @param options the options to use when deleting
+     * @param <T>   the type to delete
+     * @param <V>   the type of the id
+     * @return results of the delete
+     */
+    <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids, DeleteOptions options);
 
     /**
      * Deletes entities based on the query
@@ -122,11 +146,23 @@ public interface Datastore {
     /**
      * Deletes the given entity (by @Id), with the WriteConcern
      *
+     * @param entity  the entity to delete
+     * @param options the options to use when deleting
+     * @param <T>     the type to delete
+     * @return results of the delete
+     */
+    <T> WriteResult delete(T entity, DeleteOptions options);
+
+    /**
+     * Deletes the given entity (by @Id), with the WriteConcern
+     *
      * @param entity the entity to delete
      * @param wc     the WriteConcern to use when deleting
      * @param <T>    the type to delete
      * @return results of the delete
+     * @deprecated use {@link #delete(Query, DeleteOptions)}
      */
+    @Deprecated
     <T> WriteResult delete(T entity, WriteConcern wc);
 
     /**
