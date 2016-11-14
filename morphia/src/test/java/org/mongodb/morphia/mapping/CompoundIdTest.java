@@ -3,7 +3,6 @@ package org.mongodb.morphia.mapping;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.AdvancedDatastore;
 import org.mongodb.morphia.TestBase;
@@ -58,7 +57,6 @@ public class CompoundIdTest extends TestBase {
     }
 
     @Test
-    @Ignore("https://github.com/mongodb/morphia/issues/675")
     public void testReference() {
         getMorphia().map(CompoundIdEntity.class, CompoundId.class);
         getDs().getCollection(CompoundIdEntity.class).drop();
