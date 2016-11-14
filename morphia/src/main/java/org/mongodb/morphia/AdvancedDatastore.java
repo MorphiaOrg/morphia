@@ -128,6 +128,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>     the entity type
      * @param <V>     is the type of the ID, for example ObjectId
      * @return the result of this delete operation.
+     * @since 1.3
      */
     <T, V> WriteResult delete(String kind, Class<T> clazz, V id, DeleteOptions options);
 

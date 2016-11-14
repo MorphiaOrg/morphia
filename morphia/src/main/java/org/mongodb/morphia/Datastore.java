@@ -76,6 +76,7 @@ public interface Datastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the id
      * @return results of the delete
+     * @since 1.3
      */
     <T, V> WriteResult delete(Class<T> clazz, V id, DeleteOptions options);
 
@@ -99,6 +100,7 @@ public interface Datastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the id
      * @return results of the delete
+     * @since 1.3
      */
     <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids, DeleteOptions options);
 
@@ -150,6 +152,7 @@ public interface Datastore {
      * @param options the options to use when deleting
      * @param <T>     the type to delete
      * @return results of the delete
+     * @since 1.3
      */
     <T> WriteResult delete(T entity, DeleteOptions options);
 
