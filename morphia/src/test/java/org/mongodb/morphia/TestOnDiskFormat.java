@@ -20,18 +20,25 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.entities.EmbeddedType;
 import org.mongodb.morphia.entities.EntityWithListsAndArrays;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.TreeSet;
 
 import static com.mongodb.BasicDBObject.parse;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
+import static org.mongodb.morphia.converters.DefaultConverters.JAVA_8;
 
+@SuppressWarnings("Since15")
 public class TestOnDiskFormat extends TestBase {
     @Test
     public void listsAndArrays() {
+        Assume.assumeTrue("This test requires Java 8", JAVA_8);
         EntityWithListsAndArrays entity = new EntityWithListsAndArrays();
         entity.setId(new ObjectId("581354ef5265cc2229ab72f2"));
         entity.setArrayOfStrings(new String[]{"first", "2nd", "third"});
@@ -46,12 +53,12 @@ public class TestOnDiskFormat extends TestBase {
         DBCollection collection = getDs().getCollection(EntityWithListsAndArrays.class);
         DBObject dbObject = collection.findOne();
 
-        String json = "{ \"_id\" : { \"$oid\" : \"581354ef5265cc2229ab72f2\" }, \"className\" : \"org.mongodb"
-            + ".morphia.entities.EntityWithListsAndArrays\", \"arrayOfStrings\" : [\"first\", "
-            + "\"2nd\", \"third\"], \"arrayOfInts\" : [1, 2, 3, 4, 5], \"listOfStrings\" "
-            + ": [\"How\", \"does\", \"this\", \"look?\"], \"listEmbeddedType\" : [{ "
-            + "\"number\" : { \"$numberLong\" : \"42\" }, \"text\" : \"Douglas Adams\" }, { \"number\" : { \"$numberLong\" : \"1\" }, "
-            + "\"text\" : \"Love\" }], \"setOfIntegers\" : [1, 2, 3], \"notAnArrayOrList\" : \"So special\" }";
-        Assert.assertEquals(parse(json), dbObject);
+        Assert.assertEquals(parse(readFully("/EntityWithListsAndArrays.json")), dbObject);
+    }
+
+    private String readFully(final String name) {
+        return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(name)))
+            .lines()
+            .collect(joining("\n"));
     }
 }

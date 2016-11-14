@@ -1,0 +1,44 @@
+{
+  "_id": {
+    "$oid": "581354ef5265cc2229ab72f2"
+  },
+  "className": "org.mongodb.morphia.entities.EntityWithListsAndArrays",
+  "arrayOfStrings": [
+    "first",
+    "2nd",
+    "third"
+  ],
+  "arrayOfInts": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "listOfStrings": [
+    "How",
+    "does",
+    "this",
+    "look?"
+  ],
+  "listEmbeddedType": [
+    {
+      "number": {
+        "$numberLong": "42"
+      },
+      "text": "Douglas Adams"
+    },
+    {
+      "number": {
+        "$numberLong": "1"
+      },
+      "text": "Love"
+    }
+  ],
+  "setOfIntegers": [
+    1,
+    2,
+    3
+  ],
+  "notAnArrayOrList": "So special"
+}
