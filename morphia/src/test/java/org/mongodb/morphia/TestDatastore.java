@@ -458,25 +458,23 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testEnsureWriteConcern() {
+    public void testEnforceWriteConcern() {
         DatastoreImpl ds = (DatastoreImpl) getDs();
-        Query<FacebookUser> query = ds.createQuery(FacebookUser.class);
-        FacebookUser user = new FacebookUser();
 
         FindAndModifyOptions findAndModifyOptions = new FindAndModifyOptions();
         assertNull(findAndModifyOptions.getWriteConcern());
 
-        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(findAndModifyOptions, query)
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(findAndModifyOptions, FacebookUser.class)
                                      .getWriteConcern());
-        assertEquals(MAJORITY, ds.enforceWriteConcern(findAndModifyOptions.writeConcern(MAJORITY), query)
+        assertEquals(MAJORITY, ds.enforceWriteConcern(findAndModifyOptions.writeConcern(MAJORITY), FacebookUser.class)
                                  .getWriteConcern());
 
         InsertOptions insertOptions = new InsertOptions();
         assertNull(insertOptions.getWriteConcern());
 
-        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(insertOptions, user)
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(insertOptions, FacebookUser.class)
                                      .getWriteConcern());
-        assertEquals(MAJORITY, ds.enforceWriteConcern(insertOptions.writeConcern(MAJORITY), user)
+        assertEquals(MAJORITY, ds.enforceWriteConcern(insertOptions.writeConcern(MAJORITY), FacebookUser.class)
                                  .getWriteConcern());
 
         UpdateOptions updateOptions = new UpdateOptions();
@@ -485,6 +483,14 @@ public class TestDatastore extends TestBase {
         assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(updateOptions, FacebookUser.class)
                                      .getWriteConcern());
         assertEquals(MAJORITY, ds.enforceWriteConcern(updateOptions.writeConcern(MAJORITY), FacebookUser.class)
+                                 .getWriteConcern());
+
+        DeleteOptions deleteOptions = new DeleteOptions();
+        assertNull(deleteOptions.getWriteConcern());
+
+        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(deleteOptions, FacebookUser.class)
+                                     .getWriteConcern());
+        assertEquals(MAJORITY, ds.enforceWriteConcern(deleteOptions.writeConcern(MAJORITY), FacebookUser.class)
                                  .getWriteConcern());
     }
 

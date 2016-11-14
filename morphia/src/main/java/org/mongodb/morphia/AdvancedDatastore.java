@@ -121,6 +121,23 @@ public interface AdvancedDatastore extends Datastore {
      * kind}),
      * this method will delete any entity with the given {@code id}, regardless of its type.
      *
+     * @param kind    the collection name
+     * @param clazz   the Class of the entity to delete
+     * @param id      the value of the ID
+     * @param options the options to use when deleting
+     * @param <T>     the entity type
+     * @param <V>     is the type of the ID, for example ObjectId
+     * @return the result of this delete operation.
+     */
+    <T, V> WriteResult delete(String kind, Class<T> clazz, V id, DeleteOptions options);
+
+    /**
+     * Deletes an entity of the given type T, with the given {@code id}, from the collection with the name in the {@code kind} param.
+     * Validates the {@code id}, checking it's the correct type for an ID for entities of type {@code T}. The entity type {@code clazz} is
+     * used only for validation, not for filtering, therefore if you have entities of different types in the same collection ({@code
+     * kind}),
+     * this method will delete any entity with the given {@code id}, regardless of its type.
+     *
      * @param kind  the collection name
      * @param clazz the Class of the entity to delete
      * @param id    the value of the ID
@@ -128,7 +145,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>   the entity type
      * @param <V>   is the type of the ID, for example ObjectId
      * @return the result of this delete operation.
+     * @deprecated use {@link #delete(Class, Object, DeleteOptions)}
      */
+    @Deprecated
     <T, V> WriteResult delete(String kind, Class<T> clazz, V id, WriteConcern wc);
 
     /**

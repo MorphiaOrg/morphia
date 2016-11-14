@@ -173,17 +173,27 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new QueryException("Delete does not allow sort/offset/limit query options.");
         }
 
-        return dbColl.remove(query.getQueryObject(), options.getOptions());
+        return dbColl.remove(query.getQueryObject(), enforceWriteConcern(options, query.getEntityClass()).getOptions());
     }
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
-        return delete(clazz, id, getWriteConcern(clazz));
+        return delete(clazz, id, new DeleteOptions().writeConcern(getWriteConcern(clazz)));
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final DeleteOptions options) {
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), options);
     }
 
     @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
         return delete(find(clazz).filter(Mapper.ID_KEY + " in", ids));
+    }
+
+    @Override
+    public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids, final DeleteOptions options) {
+        return delete(find(clazz).filter(Mapper.ID_KEY + " in", ids), options);
     }
 
     @Override
@@ -202,17 +212,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(entity, getWriteConcern(entity));
     }
 
+    /**
+     * Deletes the given entity (by @Id), with the WriteConcern
+     *
+     * @param entity  the entity to delete
+     * @param options the options to use when deleting
+     * @return results of the delete
+     */
     @Override
-    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
+    public <T> WriteResult delete(final T entity, final DeleteOptions options) {
         final T wrapped = ProxyHelper.unwrap(entity);
         if (wrapped instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
         try {
-            return delete(wrapped.getClass(), mapper.getId(wrapped), wc);
+            return delete(wrapped.getClass(), mapper.getId(wrapped), options);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    @Deprecated
+    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
+        return delete(entity, new DeleteOptions().writeConcern(wc));
     }
 
     @Override
@@ -319,7 +342,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        FindAndModifyOptions copy = enforceWriteConcern(options, query)
+        FindAndModifyOptions copy = enforceWriteConcern(options, query.getEntityClass())
             .copy()
             .projection(query.getFieldsObject())
             .sort(query.getSortObject())
@@ -744,8 +767,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final T entity, final InsertOptions options) {
+        if (entity == null) {
+            throw new UpdateException("Can not persist a null entity");
+        }
+
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, enforceWriteConcern(options, entity));
+        return save(getCollection(unwrapped), unwrapped, enforceWriteConcern(options, entity.getClass()));
     }
 
     @Override
@@ -882,8 +909,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final DeleteOptions options) {
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), options);
+    }
+
+    @Override
+    @Deprecated
     public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(find(kind, clazz).filter(Mapper.ID_KEY, id), new DeleteOptions().writeConcern(wc));
     }
 
     @Override
@@ -1099,9 +1132,11 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the key
      * @return results of the delete
+     * @deprecated use {@link #delete(Class, Object, DeleteOptions)}
      */
+    @Deprecated
     public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), wc);
+        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), new DeleteOptions().writeConcern(wc));
     }
 
     /**
@@ -1186,31 +1221,40 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final InsertOptions options) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity)
+        dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity.getClass())
             .getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl).get(0);
     }
 
-    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Query<T> query) {
+    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
-                .writeConcern(getWriteConcern(query.getEntityClass()));
+                .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
 
-    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final T entity) {
+    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
-                .writeConcern(getWriteConcern(entity));
+                .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
 
     <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
+        if (options.getWriteConcern() == null) {
+            return options
+                .copy()
+                .writeConcern(getWriteConcern(klass));
+        }
+        return options;
+    }
+
+    <T> DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                 .copy()
@@ -1236,7 +1280,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         // try to do an update if there is a @Version field
         final Object idValue = document.get(Mapper.ID_KEY);
-        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, enforceWriteConcern(options, entity), mc);
+        WriteResult wr = tryVersionedUpdate(dbColl, entity, document, idValue, enforceWriteConcern(options, entity.getClass()), mc);
 
         if (wr == null) {
             saveDocument(dbColl, document, options);
@@ -1325,7 +1369,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         com.mongodb.InsertOptions insertOptions = options.getOptions();
         for (final T entity : entities) {
             if (options.getWriteConcern() == null) {
-                insertOptions = enforceWriteConcern(options, entity).getOptions();
+                insertOptions = enforceWriteConcern(options, entity.getClass()).getOptions();
             }
             list.add(toDbObject(entity, involvedObjects));
         }
