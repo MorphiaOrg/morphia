@@ -19,11 +19,14 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.QueryImpl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -40,6 +43,30 @@ import static org.mongodb.morphia.converters.DefaultConverters.JAVA_8;
 
 @SuppressWarnings("Since15")
 public class TestSerializedFormat extends TestBase {
+    @Test
+    @SuppressWarnings("deprecation")
+    @Ignore("queries on entities that aren't references still serialize as if they were")
+    public void testQueryFormat() {
+        Query<ReferenceType> query = getDs().find(ReferenceType.class)
+                                            .field("selfReference").equal(new ReferenceType(1, "blah"))
+                                            .field("referenceType").equal(new ReferenceType(2, "far"))
+                                            .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
+                                            .field("embeddedList").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                    .filter("number", 3).filter("text", "strikes"))
+
+                                            .field("map.bar").equal(new EmbeddedReferenceType(1, "chance"))
+
+                                            .field("mixedTypeList").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                     .filter("number", 3).filter("text", "strikes"))
+                                            .field("mixedTypeMap.foo").equal(new ReferenceType(3, "strikes"))
+                                            .field("mixedTypeMap.bar").equal(new EmbeddedReferenceType(3, "strikes"))
+
+                                            .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
+                                            .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
+
+        Assert.assertEquals(BasicDBObject.parse(readFully("/QueryStructure.json")), ((QueryImpl) query).getQueryObject());
+    }
+
     @Test
     public void testSavedEntityFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
@@ -100,7 +127,10 @@ public class TestSerializedFormat extends TestBase {
 @Entity("ondisk")
 class ReferenceType {
     @Id
-    private int id;
+    private Integer id;
+    private ReferenceType referenceType;
+    private EmbeddedReferenceType embeddedType;
+
     private String string;
     private EmbeddedReferenceType[] embeddedArray;
     private Set<EmbeddedReferenceType> embeddedSet;

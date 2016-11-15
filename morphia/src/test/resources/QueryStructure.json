@@ -1,0 +1,48 @@
+{
+  "selfReference": {
+    "$ref": "ondisk",
+    "$id": 1
+  },
+  "referenceType": {
+    "_id": 2,
+    "string": "far"
+  },
+  "embeddedType": {
+    "number": 3,
+    "text": "strikes"
+  },
+  "embeddedList": {
+    "$elemMatch": {
+      "number": 3,
+      "text": "strikes"
+    }
+  },
+  "map.bar": {
+    "number": 1,
+    "text": "chance"
+  },
+  "mixedTypeList": {
+    "$elemMatch": {
+      "number": 3,
+      "text": "strikes"
+    }
+  },
+  "mixedTypeMap.foo": {
+    "className": "org.mongodb.morphia.ReferenceType",
+    "_id": 3,
+    "string": "strikes"
+  },
+  "mixedTypeMap.bar": {
+    "className": "org.mongodb.morphia.EmbeddedReferenceType",
+    "number": 3,
+    "text": "strikes"
+  },
+  "referenceMap.foo": {
+    "_id": 1,
+    "string": "chance"
+  },
+  "referenceMap.bar": {
+    "number": 1,
+    "text": "chance"
+  }
+}
