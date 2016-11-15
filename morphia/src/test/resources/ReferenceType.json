@@ -1,0 +1,228 @@
+{
+  "_id": 1,
+  "className": "org.mongodb.morphia.ReferenceType",
+  "embeddedArray": [
+    {
+      "number": 42,
+      "text": "Douglas Adams"
+    },
+    {
+      "number": 1,
+      "text": "Love"
+    }
+  ],
+  "embeddedSet": [
+    {
+      "number": 1,
+      "text": "Love"
+    },
+    {
+      "number": 42,
+      "text": "Douglas Adams"
+    }
+  ],
+  "embeddedList": [
+    {
+      "number": 42,
+      "text": "Douglas Adams"
+    },
+    {
+      "number": 1,
+      "text": "Love"
+    }
+  ],
+  "map": {
+    "first": {
+      "number": 42,
+      "text": "Douglas Adams"
+    },
+    "second": {
+      "number": 1,
+      "text": "Love"
+    }
+  },
+  "mapOfList": {
+    "first": [
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 42,
+        "text": "Douglas Adams"
+      },
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 1,
+        "text": "Love"
+      }
+    ],
+    "second": [
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 1,
+        "text": "Love"
+      },
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 42,
+        "text": "Douglas Adams"
+      }
+    ]
+  },
+  "mapOfSet": {
+    "first": [
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 1,
+        "text": "Love"
+      },
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 42,
+        "text": "Douglas Adams"
+      }
+    ],
+    "second": [
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 1,
+        "text": "Love"
+      },
+      {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 42,
+        "text": "Douglas Adams"
+      }
+    ]
+  },
+  "selfReference": {
+    "$ref": "ondisk",
+    "$id": 1
+  },
+  "idOnly": 1,
+  "referenceArray": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "referenceSet": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "referenceList": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "referenceMap": {
+    "first": {
+      "_id": 2,
+      "string": "text 2"
+    },
+    "second": {
+      "_id": 3,
+      "string": "text 3"
+    }
+  },
+  "referenceMapOfList": {
+    "first": [
+      {
+        "className": "org.mongodb.morphia.ReferenceType",
+        "_id": 2,
+        "string": "text 2"
+      },
+      {
+        "className": "org.mongodb.morphia.ReferenceType",
+        "_id": 3,
+        "string": "text 3"
+      }
+    ],
+    "second": [
+      {
+        "className": "org.mongodb.morphia.ReferenceType",
+        "_id": 3,
+        "string": "text 3"
+      }
+    ]
+  },
+  "mixedTypeArray": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "mixedTypeSet": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "mixedTypeList": [
+    {
+      "_id": 2,
+      "string": "text 2"
+    },
+    {
+      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "_id": 3,
+      "string": "text 3"
+    }
+  ],
+  "mixedTypeMap": {
+    "first": {
+      "className": "org.mongodb.morphia.ReferenceType",
+      "_id": 2,
+      "string": "text 2"
+    },
+    "second": {
+      "className": "org.mongodb.morphia.ClassNameReferenceType",
+      "_id": 3,
+      "string": "text 3"
+    }
+  },
+  "mixedTypeMapOfList": {
+    "first": [
+      {
+        "className": "org.mongodb.morphia.ReferenceType",
+        "_id": 2,
+        "string": "text 2"
+      },
+      {
+        "className": "org.mongodb.morphia.ClassNameReferenceType",
+        "_id": 3,
+        "string": "text 3"
+      }
+    ],
+    "second": [
+      {
+        "className": "org.mongodb.morphia.ClassNameReferenceType",
+        "_id": 3,
+        "string": "text 3"
+      }
+    ]
+  }
+}
