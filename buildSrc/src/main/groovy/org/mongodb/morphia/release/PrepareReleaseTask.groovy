@@ -9,7 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 // requires you to populate github.credentials.username & github.credentials.password in ~/.gradle/gradle.properties
-// uses http://wiki.eclipse.org/JGit/ 
+// uses http://wiki.eclipse.org/JGit/
 class PrepareReleaseTask extends DefaultTask {
 
     PrepareReleaseTask (){
@@ -32,7 +32,8 @@ class PrepareReleaseTask extends DefaultTask {
                .setMessage("Release ${releaseVersion}")
                .call()
         } catch (JGitInternalException e) {
-            if (e.getMessage().equals('No changes')) {
+            if (e.getMessage() == 'No changes') {
+                getLog().warn "Version ${releaseVersion} already found in gradle.properties.  Skipping update and tag."
                 // we probably already committed this file, we're done
                 // this is not an elegant way to make this idempotent, but it does work
                 return
@@ -47,13 +48,7 @@ class PrepareReleaseTask extends DefaultTask {
            .call()
 
         getLog().info 'Pushing changes using the credentials stored in ~/.gradle/gradle.properties'
-        String username = project.property("github.credentials.username")
-        String password = project.property("github.credentials.password")
 
-        git.push()
-           .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
-           .call()
-        
         project.version = releaseVersion
         project.subprojects { subproject ->
             subproject.version = releaseVersion

@@ -23,13 +23,6 @@ class UpdateToNextVersionTask extends DefaultTask {
            .setOnly(buildFile.name)
            .setMessage("Updated to next development version: ${newVersion}")
            .call()
-
-        String username = project.property("github.credentials.username")
-        String password = project.property("github.credentials.password")
-
-        git.push()
-           .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
-           .call()
     }
 
     static incrementToNextVersion(String old) {
