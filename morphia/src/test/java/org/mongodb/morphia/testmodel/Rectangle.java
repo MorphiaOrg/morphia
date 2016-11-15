@@ -18,6 +18,8 @@ package org.mongodb.morphia.testmodel;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import static java.lang.String.format;
+
 
 /**
  * @author Olafur Gauti Gudmundsson
@@ -47,5 +49,39 @@ public class Rectangle extends TestEntity implements Shape {
 
     public double getWidth() {
         return width;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Rectangle)) {
+            return false;
+        }
+
+        final Rectangle rectangle = (Rectangle) o;
+
+        if (Double.compare(rectangle.getHeight(), getHeight()) != 0) {
+            return false;
+        }
+        return Double.compare(rectangle.getWidth(), getWidth()) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getHeight());
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getWidth());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return format("Rectangle{height=%s, width=%s}", height, width);
     }
 }
