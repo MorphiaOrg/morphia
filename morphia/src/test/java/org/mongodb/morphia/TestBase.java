@@ -12,7 +12,7 @@ import org.junit.Before;
 
 import java.util.Iterator;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "WeakerAccess"})
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
@@ -73,10 +73,6 @@ public abstract class TestBase {
     public void tearDown() {
         cleanup();
         getMongoClient().close();
-    }
-
-    protected void checkMaxServerVersion(final double version) {
-        Assume.assumeTrue(serverIsAtMostVersion(version));
     }
 
     protected void checkMinServerVersion(final double version) {

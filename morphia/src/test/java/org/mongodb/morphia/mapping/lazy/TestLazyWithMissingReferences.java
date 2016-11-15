@@ -19,7 +19,7 @@ public class TestLazyWithMissingReferences extends TestBase {
 
         getDs().save(source); // does not fail due to pre-initialized Ids
 
-        getDs().createQuery(Source.class).asList();
+        getDs().find(Source.class).asList();
     }
 
     @Test(expected = LazyReferenceFetchingException.class)
@@ -28,7 +28,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         e.setLazy(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        Assert.assertNull(getDs().createQuery(Source.class).get().getLazy());
+        Assert.assertNull(getDs().find(Source.class).get().getLazy());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         getDs().save(e); // does not fail due to pre-initialized Ids
 
         try {
-            getDs().createQuery(Source.class).get().getIgnoreMissing().foo();
+            getDs().find(Source.class).get().getIgnoreMissing().foo();
         } catch (RuntimeException re) {
             Assert.assertEquals("Cannot dispatch method foo", re.getMessage());
         }

@@ -8,6 +8,8 @@ import org.mongodb.morphia.testutil.TestEntity;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -18,7 +20,7 @@ public class TestGetByKeys extends TestBase {
         final A a1 = new A();
         final A a2 = new A();
 
-        final Iterable<Key<A>> keys = getDs().save(a1, a2);
+        final Iterable<Key<A>> keys = getDs().save(asList(a1, a2));
 
         final List<A> reloaded = getDs().getByKeys(keys);
 

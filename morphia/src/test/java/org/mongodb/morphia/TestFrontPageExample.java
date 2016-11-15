@@ -57,13 +57,6 @@ public class TestFrontPageExample extends TestBase {
         final Employee scottsBoss = getDs().find(Employee.class).filter("underlings", key).get(); // get Scott's boss
         Assert.assertNotNull(scottsBoss);
         Assert.assertEquals(boss.id, scottsBoss.id);
-
-        for (final Employee e : getDs().find(Employee.class, "manager", boss)) {
-            print();
-        }
-    }
-
-    private void print() {
     }
 
     @Entity("employees")

@@ -24,6 +24,7 @@ class StandardGeoFieldCriteria extends FieldCriteria {
         this.crs = crs;
     }
 
+    @SuppressWarnings("deprecation")
     StandardGeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator, final Geometry value,
                              final Integer maxDistanceMeters) {
         super(query, field, operator, value);

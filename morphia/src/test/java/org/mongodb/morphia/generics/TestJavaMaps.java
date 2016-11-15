@@ -33,14 +33,14 @@ public class TestJavaMaps extends TestBase {
 
     private void empties() {
         Datastore ds = getDs();
-        ds.delete(ds.createQuery(Employee.class));
+        ds.delete(ds.find(Employee.class));
         Employee employee = new Employee();
         HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
         byteMap.put("b", (byte) 1);
         employee.byteMap = byteMap;
         ds.save(employee);
 
-        Employee loaded = ds.createQuery(Employee.class).get();
+        Employee loaded = ds.find(Employee.class).get();
 
         assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
         assertNull(loaded.floatMap);
@@ -56,7 +56,7 @@ public class TestJavaMaps extends TestBase {
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
         getDs().save(model);
-        TestEmptyModel model2 = getDs().createQuery(TestEmptyModel.class).filter("id", model.id).get();
+        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id).get();
         Assert.assertNull(model.wrapped.others);
         Assert.assertNull(model2.wrapped.others);
     }

@@ -19,7 +19,6 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -72,9 +71,8 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
     }
 
     //remove any MappedField specified in @IgnoreFields on the class.
-    void processIgnoreFieldsAnnotations() {
-        final DatastoreImpl dsi = (DatastoreImpl) getDs();
-        for (final MappedClass mc : dsi.getMapper().getMappedClasses()) {
+    private void processIgnoreFieldsAnnotations() {
+        for (final MappedClass mc : getMorphia().getMapper().getMappedClasses()) {
             final IgnoreFields ignores = (IgnoreFields) mc.getAnnotation(IgnoreFields.class);
             if (ignores != null) {
                 for (final String field : ignores.value().split(",")) {

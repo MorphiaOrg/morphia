@@ -3,6 +3,7 @@ package org.mongodb.morphia.issue173;
 import com.mongodb.WriteConcern;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.testutil.TestEntity;
@@ -16,7 +17,8 @@ public class TestCalendar extends TestBase {
         getMorphia().map(A.class);
         final A a = new A();
         a.c = Calendar.getInstance();
-        getDs().save(a, WriteConcern.ACKNOWLEDGED);
+        getDs().save(a, new InsertOptions()
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
         // occasionally failed, so i suspected a race cond.
         final A loaded = getDs().find(A.class).get();
         Assert.assertNotNull(loaded.c);

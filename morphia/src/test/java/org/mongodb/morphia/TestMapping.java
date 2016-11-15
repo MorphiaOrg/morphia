@@ -58,6 +58,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -278,7 +279,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalFieldNotPersisted() throws Exception {
-        ((DatastoreImpl) getDs()).getMapper().getOptions().setIgnoreFinals(true);
+        getMorphia().getMapper().getOptions().setIgnoreFinals(true);
         getMorphia().map(ContainsFinalField.class);
         final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
         final ContainsFinalField loaded = getDs().get(ContainsFinalField.class, savedKey.getId());
@@ -337,9 +338,9 @@ public class TestMapping extends TestBase {
         assertEquals(1, mapLoaded.values.get(1).size());
 
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.2").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().count());
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
     }
 
     @Test
@@ -358,9 +359,9 @@ public class TestMapping extends TestBase {
         assertNotNull(mapLoaded.values.get(2));
 
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.2").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().count());
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
     }
 
     @Test
@@ -391,22 +392,21 @@ public class TestMapping extends TestBase {
         assertEquals(1, (int) cilLoaded.intList.get(0));
     }
 
-    @SuppressWarnings("deprecation")
     @Test
     public void testLongArrayMapping() throws Exception {
         getMorphia().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
         ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).get();
-        assertEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
-        assertEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
+        assertArrayEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
+        assertArrayEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
 
         final ContainsLongAndStringArray array = new ContainsLongAndStringArray();
         array.strings = new String[]{"a", "B", "c"};
         array.longs = new Long[]{4L, 5L, 4L};
         final Key<ContainsLongAndStringArray> k1 = getDs().save(array);
         loaded = getDs().getByKey(ContainsLongAndStringArray.class, k1);
-        assertEquals(loaded.longs, array.longs);
-        assertEquals(loaded.strings, array.strings);
+        assertArrayEquals(loaded.longs, array.longs);
+        assertArrayEquals(loaded.strings, array.strings);
 
         assertNotNull(loaded.id);
     }
@@ -504,9 +504,9 @@ public class TestMapping extends TestBase {
         assertNotNull(mapLoaded.values.get(o2));
 
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.111111111111111111111111").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.111111111111111111111111").doesNotExist().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.111111111111111111111111").doesNotExist().count());
         assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().countAll());
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
     }
 
     @Test

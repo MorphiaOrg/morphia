@@ -10,7 +10,7 @@ public class KnownFieldsTest extends TestBase {
 
     @Test
     public void testKnownFields() {
-        Assert.assertNotNull(getDs().createQuery(A.class).retrieveKnownFields());
+        Assert.assertNotNull(getDs().find(A.class).retrieveKnownFields());
     }
 
     private static class A {

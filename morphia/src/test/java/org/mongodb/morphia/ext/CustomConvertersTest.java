@@ -71,7 +71,7 @@ public class CustomConvertersTest extends TestBase {
         final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
         Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
 
-        final EntityWithListsAndArrays loaded = getDs().createQuery(EntityWithListsAndArrays.class).get();
+        final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).get();
         Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
     }
 

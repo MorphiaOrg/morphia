@@ -57,12 +57,11 @@ public abstract class LongIdEntity {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @PrePersist
     void prePersist() {
         if (myLongId == null) {
             final String collName = ds.getCollection(getClass()).getName();
-            final Query<StoredId> q = ds.find(StoredId.class, "_id", collName);
+            final Query<StoredId> q = ds.find(StoredId.class).filter("_id", collName);
             final UpdateOperations<StoredId> uOps = ds.createUpdateOperations(StoredId.class).inc("value");
             StoredId newId = ds.findAndModify(q, uOps);
             if (newId == null) {

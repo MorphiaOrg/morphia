@@ -33,7 +33,7 @@ public class NestedMapsAndListsTest extends TestBase {
         list.list.add(asList("123", "456"));
         getDs().save(list);
 
-        ListOfList listOfList = getDs().createQuery(ListOfList.class).get();
+        ListOfList listOfList = getDs().find(ListOfList.class).get();
         Assert.assertEquals(list, listOfList);
     }
 
@@ -45,7 +45,7 @@ public class NestedMapsAndListsTest extends TestBase {
         list.list.add(asList(new Person("Crosby"), new Person("Stills"), new Person("Nash")));
         getDs().save(list);
 
-        ListListPerson result = getDs().createQuery(ListListPerson.class).get();
+        ListListPerson result = getDs().find(ListListPerson.class).get();
         Assert.assertEquals(list, result);
     }
 
@@ -63,7 +63,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
         getDs().save(entity);
 
-        ListOfMap object = getDs().createQuery(ListOfMap.class).get();
+        ListOfMap object = getDs().find(ListOfMap.class).get();
         Assert.assertNotNull(object);
         Assert.assertEquals(entity, object);
     }
@@ -77,7 +77,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
         getDs().save(listMap);
 
-        Assert.assertEquals(listMap, getDs().createQuery(ListMapPerson.class).get());
+        Assert.assertEquals(listMap, getDs().find(ListMapPerson.class).get());
     }
 
     @Test

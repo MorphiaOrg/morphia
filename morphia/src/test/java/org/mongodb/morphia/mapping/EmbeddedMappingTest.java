@@ -49,7 +49,7 @@ public class EmbeddedMappingTest extends TestBase {
         entry.delta = new Delta<String>(before, after);
         getDs().save(entry);
 
-        final AuditEntry fetched = getDs().createQuery(AuditEntry.class)
+        final AuditEntry fetched = getDs().find(AuditEntry.class)
                                           .filter("id = ", entry.id)
                                           .get();
 
@@ -73,21 +73,21 @@ public class EmbeddedMappingTest extends TestBase {
 
         WithNested found;
         try {
-            getDs().createQuery(WithNested.class)
+            getDs().find(WithNested.class)
                    .field("nested.field").equal("nested value")
                    .get();
             Assert.fail("Querying against an interface should fail validation");
         } catch (ValidationException ignore) {
             // all good
         }
-        found = getDs().createQuery(WithNested.class)
+        found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field").equal("nested value")
                        .get();
         Assert.assertNotNull(found);
         Assert.assertEquals(nested, found);
 
-        found = getDs().createQuery(WithNested.class)
+        found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field.fails").equal("nested value")
                        .get();

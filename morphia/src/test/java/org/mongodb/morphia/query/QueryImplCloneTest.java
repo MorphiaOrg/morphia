@@ -10,8 +10,9 @@ import org.mongodb.morphia.annotations.Id;
 public class QueryImplCloneTest extends TestBase {
 
     @Test
-    public void testQueryClone() throws Exception {
-        final Query q = getDs().createQuery(E1.class)
+    @SuppressWarnings("deprecation")
+    public void testQueryCloneOld() throws Exception {
+        final Query q = getDs().find(E1.class)
                                .field("i")
                                .equal(5)
                                .limit(5)
@@ -21,6 +22,18 @@ public class QueryImplCloneTest extends TestBase {
                                .batchSize(10)
                                .disableCursorTimeout()
                                .hintIndex("a")
+                               .order("a");
+        q.disableValidation().filter("foo", "bar");
+        Assert.assertEquals(q, q.cloneQuery());
+    }
+
+    @Test
+    public void testQueryClone() throws Exception {
+        final Query q = getDs().find(E1.class)
+                               .field("i")
+                               .equal(5)
+                               .filter("a", "value_a")
+                               .filter("b", "value_b")
                                .order("a");
         q.disableValidation().filter("foo", "bar");
         Assert.assertEquals(q, q.cloneQuery());

@@ -39,8 +39,8 @@ public class QueryFactoryTest extends TestBase {
 
         getDs().setQueryFactory(queryFactory);
 
-        final Query<String> query = getDs().createQuery(String.class);
-        final Query<String> other = getDs().createQuery(String.class);
+        final Query<String> query = getDs().find(String.class);
+        final Query<String> other = getDs().find(String.class);
 
         Assert.assertNotSame(other, query);
         Assert.assertEquals(2, counter.get());

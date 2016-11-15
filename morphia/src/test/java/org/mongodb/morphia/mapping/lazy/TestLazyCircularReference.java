@@ -7,6 +7,8 @@ import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.testutil.TestEntity;
 
+import static java.util.Arrays.asList;
+
 public class TestLazyCircularReference extends ProxyTestBase {
 
     @Test
@@ -15,15 +17,15 @@ public class TestLazyCircularReference extends ProxyTestBase {
         ReferencedEntity first = new ReferencedEntity();
         ReferencedEntity second = new ReferencedEntity();
 
-        getDs().save(root, first, second);
+        getDs().save(asList(root, first, second));
         root.r = first;
         root.secondReference = second;
         first.parent = root;
         second.parent = root;
 
-        getDs().save(root, first, second);
+        getDs().save(asList(root, first, second));
 
-        RootEntity rootEntity = getDs().createQuery(RootEntity.class).get();
+        RootEntity rootEntity = getDs().find(RootEntity.class).get();
         Assert.assertEquals(first.getId(), rootEntity.getR().getId());
         Assert.assertEquals(second.getId(), rootEntity.getSecondReference().getId());
         Assert.assertEquals(root.getId(), rootEntity.getR().getParent().getId());

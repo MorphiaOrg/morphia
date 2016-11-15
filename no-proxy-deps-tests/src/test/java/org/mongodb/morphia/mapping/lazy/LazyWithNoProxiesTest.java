@@ -11,6 +11,8 @@ import org.mongodb.morphia.testutil.TestEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 
 public class LazyWithNoProxiesTest extends ProxyTestBase {
     @Test
@@ -28,7 +30,7 @@ public class LazyWithNoProxiesTest extends ProxyTestBase {
         }
         entity.otherEntity = otherEntity1;
 
-        getDs().save(otherEntity1, entity);
+        getDs().save(asList(otherEntity1, entity));
 
         OtherEntity loadedOther = getDs().get(otherEntity1);
         EmbedWithRef loadedEntity = getDs().get(entity);

@@ -1496,6 +1496,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                       .writeConcern(wc));
     }
 
+    @SuppressWarnings("unchecked")
     private <T> UpdateResults update(final Query<T> query, final DBObject update, final UpdateOptions options) {
 
         DBCollection dbColl = query.getCollection();

@@ -17,7 +17,7 @@ public class TestQueryParams extends TestBase {
 
     @Before
     public void createQ() {
-        e = getDs().createQuery(E.class).field("_id");
+        e = getDs().find(E.class).field("_id");
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
@@ -37,7 +37,7 @@ public class TestQueryParams extends TestBase {
 
     @Test(expected = Assert.AssertionFailedException.class)
     public void testHasAllOfEmptyList() {
-        final Query<E> q = getDs().createQuery(E.class);
+        final Query<E> q = getDs().find(E.class);
         q.field("_id").hasAllOf(Collections.emptyList());
     }
 
@@ -68,7 +68,7 @@ public class TestQueryParams extends TestBase {
 
     @Test(expected = Assert.AssertionFailedException.class)
     public void testNoneOfEmptyList() {
-        final Query<E> q = getDs().createQuery(E.class);
+        final Query<E> q = getDs().find(E.class);
         q.field("_id").hasNoneOf(Collections.emptyList());
     }
 

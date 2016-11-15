@@ -53,22 +53,22 @@ public final class QuickTour {
 
         datastore.save(elmer);
 
-        Query<Employee> query = datastore.createQuery(Employee.class);
+        Query<Employee> query = datastore.find(Employee.class);
         final List<Employee> employees = query.asList();
 
         Assert.assertEquals(3, employees.size());
 
-        List<Employee> underpaid = datastore.createQuery(Employee.class)
+        List<Employee> underpaid = datastore.find(Employee.class)
                                             .filter("salary <=", 30000)
                                             .asList();
         Assert.assertEquals(1, underpaid.size());
 
-        underpaid = datastore.createQuery(Employee.class)
+        underpaid = datastore.find(Employee.class)
                              .field("salary").lessThanOrEq(30000)
                              .asList();
         Assert.assertEquals(1, underpaid.size());
 
-        final Query<Employee> underPaidQuery = datastore.createQuery(Employee.class)
+        final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter("salary <=", 30000);
         final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperations(Employee.class)
                                                                      .inc("salary", 10000);
@@ -77,7 +77,7 @@ public final class QuickTour {
 
         Assert.assertEquals(1, results.getUpdatedCount());
 
-        final Query<Employee> overPaidQuery = datastore.createQuery(Employee.class)
+        final Query<Employee> overPaidQuery = datastore.find(Employee.class)
                                                        .filter("salary >", 100000);
         datastore.delete(overPaidQuery);
     }

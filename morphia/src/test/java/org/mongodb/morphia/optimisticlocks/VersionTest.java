@@ -106,7 +106,7 @@ public class VersionTest extends TestBase {
         Datastore ds = getDs();
         ds.save(initial);
 
-        Query<ALongPrimitive> query = ds.createQuery(ALongPrimitive.class)
+        Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
                                      .field("id").equal(initial.getId());
         UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
                                                     .set("text", "some new value");
@@ -121,7 +121,7 @@ public class VersionTest extends TestBase {
         Datastore ds = getDs();
         ds.save(initial);
 
-        Query<ALongPrimitive> query = ds.createQuery(ALongPrimitive.class)
+        Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
                                      .field("id").equal(initial.getId());
         UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
                                                     .set("text", "some new value");

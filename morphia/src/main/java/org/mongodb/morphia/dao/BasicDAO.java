@@ -5,9 +5,10 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -24,17 +25,19 @@ import java.util.List;
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
     //CHECKSTYLE:OFF
     /**
-     * @deprecated please use the getter for this field
+     * @deprecated use {@link #getEntityClass()}
      */
+    @Deprecated
     protected Class<T> entityClazz;
     /**
-     * @deprecated please use the getter for this field
+     * @deprecated use {@link #getDatastore()}
      */
-    protected DatastoreImpl ds;
+    @Deprecated
+    protected org.mongodb.morphia.DatastoreImpl ds;
     //CHECKSTYLE:ON
 
     /**
@@ -57,7 +60,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @param ds          the Datastore which gives access to the MongoDB instance for this DAO
      */
     public BasicDAO(final Class<T> entityClass, final Datastore ds) {
-        this.ds = (DatastoreImpl) ds;
+        this.ds = (org.mongodb.morphia.DatastoreImpl) ds;
         initType(entityClass);
     }
 
@@ -78,7 +81,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @SuppressWarnings("unchecked")
     protected BasicDAO(final Datastore ds) {
-        this.ds = (DatastoreImpl) ds;
+        this.ds = (org.mongodb.morphia.DatastoreImpl) ds;
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
 
@@ -89,7 +92,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public long count(final String key, final Object value) {
-        return count(ds.find(entityClazz, key, value));
+        return count(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
@@ -99,7 +102,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Query<T> createQuery() {
-        return ds.createQuery(entityClazz);
+        return ds.find(entityClazz);
     }
 
     @Override
@@ -134,12 +137,12 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public boolean exists(final String key, final Object value) {
-        return exists(ds.find(entityClazz, key, value));
+        return exists(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
     public boolean exists(final Query<T> query) {
-        return query.limit(1).get() != null;
+        return query.get(new FindOptions().limit(1)) != null;
     }
 
     @Override
@@ -161,7 +164,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     @Override
     @SuppressWarnings("unchecked")
     public List<K> findIds(final String key, final Object value) {
-        return (List<K>) keysToIds(ds.find(entityClazz, key, value).asKeyList());
+        return (List<K>) keysToIds(ds.find(entityClazz).filter(key, value).asKeyList());
     }
 
     @Override
@@ -172,7 +175,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public T findOne(final String key, final Object value) {
-        return ds.find(entityClazz, key, value).get();
+        return ds.find(entityClazz).filter(key, value).get();
     }
 
     /* (non-Javadoc)
@@ -190,7 +193,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Key<T> findOneId(final String key, final Object value) {
-        return findOneId(ds.find(entityClazz, key, value));
+        return findOneId(ds.find(entityClazz).filter(key, value));
     }
 
     @Override
@@ -229,7 +232,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Key<T> save(final T entity, final WriteConcern wc) {
-        return ds.save(entity, wc);
+        return ds.save(entity, new InsertOptions().writeConcern(wc));
     }
 
     @Override
@@ -244,8 +247,10 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     /**
      * @return the Datastore used by this DAO
+     * @deprecated use {@link #getDatastore()}
      */
-    public DatastoreImpl getDs() {
+    @Deprecated
+    public org.mongodb.morphia.DatastoreImpl getDs() {
         return ds;
     }
 
@@ -253,12 +258,13 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @return the entity class
      * @deprecated use {@link #getEntityClass()} instead
      */
+    @Deprecated
     public Class<T> getEntityClazz() {
         return entityClazz;
     }
 
     protected void initDS(final MongoClient mongoClient, final Morphia mor, final String db) {
-        ds = (DatastoreImpl) mor.createDatastore(mongoClient, db);
+        ds = (org.mongodb.morphia.DatastoreImpl) mor.createDatastore(mongoClient, db);
     }
 
     protected void initType(final Class<T> type) {

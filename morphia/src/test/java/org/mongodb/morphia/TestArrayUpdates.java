@@ -88,19 +88,19 @@ public class TestArrayUpdates extends TestBase {
         UpdateOperations<BatchData> updateOperations = getDs().createUpdateOperations(BatchData.class)
                                                               .set("files.$.fileHash", "new hash");
 
-        getDs().update(getDs().createQuery(BatchData.class)
+        getDs().update(getDs().find(BatchData.class)
                               .filter("_id", id)
                               .filter("files.fileName", "fileName1"),
                        updateOperations);
 
-        BatchData data = getDs().createQuery(BatchData.class)
+        BatchData data = getDs().find(BatchData.class)
                                 .filter("_id", id)
                                 .get();
 
         Assert.assertEquals("new hash", data.files.get(0).fileHash);
         Assert.assertEquals("fileHash2", data.files.get(1).fileHash);
 
-        data = getDs().createQuery(BatchData.class)
+        data = getDs().find(BatchData.class)
                       .filter("_id", id2)
                       .get();
 
