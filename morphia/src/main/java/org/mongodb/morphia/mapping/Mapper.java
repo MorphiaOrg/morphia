@@ -642,12 +642,6 @@ public class Mapper {
                                                   ? keyToId(key)
                                                   : keyToDBRef(key);
                                 }
-                        /*
-                                                    if (mappedValue == value) {
-                                                        throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " +
-                                                        value);
-                                                    }
-                        */
                             }
                         } else if (mf.getType().equals(Key.class)) {
                             mappedValue = keyToDBRef(valueIsIdType
@@ -660,7 +654,6 @@ public class Mapper {
                     }
 
                     if (mappedValue == value) {
-                        //                        mappedValue = getConverters().getEncoder(mappedValue, mf).encode(mappedValue, mf);
                         mappedValue = toMongoObject(value, false);
                     }
                 }

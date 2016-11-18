@@ -19,7 +19,6 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
