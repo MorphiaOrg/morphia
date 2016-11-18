@@ -12,7 +12,6 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.query.MorphiaIterator;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.Sort;
 
@@ -79,7 +78,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collectionName, mapper.createEntityCache());
+        return datastore.getIteratorFactory().createIterator(datastore, cursor, mapper, target, collectionName, mapper.createEntityCache());
     }
 
     @Override

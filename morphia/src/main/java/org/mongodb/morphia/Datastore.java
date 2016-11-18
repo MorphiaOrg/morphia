@@ -15,6 +15,7 @@ import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.query.CountOptions;
 import org.mongodb.morphia.query.FindOptions;
+import org.mongodb.morphia.query.IteratorFactory;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryFactory;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -527,6 +528,20 @@ public interface Datastore {
      * @see QueryFactory
      */
     void setQueryFactory(QueryFactory queryFactory);
+
+    /**
+     * @return the current {@link IteratorFactory}.
+     * @see IteratorFactory
+     */
+    IteratorFactory getIteratorFactory();
+
+    /**
+     * Replaces the current {@link IteratorFactory} with the given value.
+     *
+     * @param iteratorFactory the IteratorFactory to use
+     * @see IteratorFactory
+     */
+    void setIteratorFactory(IteratorFactory queryFactory);
 
     /**
      * Runs a map/reduce job at the server
