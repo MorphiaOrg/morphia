@@ -19,7 +19,6 @@ package org.mongodb.morphia;
 import com.mongodb.BasicDBObject;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -45,7 +44,6 @@ import static org.mongodb.morphia.converters.DefaultConverters.JAVA_8;
 public class TestSerializedFormat extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
-    @Ignore("queries on entities that aren't references still serialize as if they were")
     public void testQueryFormat() {
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
                                             .field("selfReference").equal(new ReferenceType(1, "blah"))
