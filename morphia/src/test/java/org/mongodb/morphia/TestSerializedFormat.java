@@ -45,6 +45,7 @@ public class TestSerializedFormat extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testQueryFormat() {
+        Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
                                             .field("selfReference").equal(new ReferenceType(1, "blah"))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
