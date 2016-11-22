@@ -604,6 +604,10 @@ public class Mapper {
      */
     @SuppressWarnings("deprecation")
     public Object toMongoObject(final MappedField mf, final MappedClass mc, final Object value) {
+        if (value == null) {
+            return null;
+        }
+
         Object mappedValue = value;
 
         if (value instanceof Query) {
@@ -623,22 +627,34 @@ public class Mapper {
                         }
                     }
                 } else {
-                    Key<?> key = null;
-                    if (value != null) {
-                        key = (value instanceof Key) ? (Key<?>) value : getKey(value);
-                    }
-                    if (key == null) {
-                        mappedValue = toMongoObject(value, false);
-                    } else {
-                        if (mf != null) {
-                            final Reference refAnn = mf.getAnnotation(Reference.class);
-                            mappedValue = refAnn != null && refAnn.idOnly()
-                                          ? keyToId(key)
-                                          : keyToDBRef(key);
+                    if (mf != null) {
+                        Reference refAnn = mf.getAnnotation(Reference.class);
+                        Class<?> idType = null;
+                        if (!mf.getType().equals(Key.class) && isMapped(mf.getType())) {
+                            idType = getMappedClass(mf.getType()).getMappedIdField().getType();
+                        }
+                        boolean valueIsIdType = mappedValue.getClass().equals(idType);
+                        if (refAnn != null) {
+                            if (!valueIsIdType) {
+                                Key<?> key = value instanceof Key ? (Key<?>) value : getKey(value);
+                                if (key != null) {
+                                    mappedValue = refAnn.idOnly()
+                                                  ? keyToId(key)
+                                                  : keyToDBRef(key);
+                                }
+                            }
+                        } else if (mf.getType().equals(Key.class)) {
+                            mappedValue = keyToDBRef(valueIsIdType
+                                          ? createKey(mf.getSubClass(), value)
+                                          : value instanceof Key ? (Key<?>) value : getKey(value));
                             if (mappedValue == value) {
-                                throw new ValidationException("cannot map to @Reference/Key<T>/DBRef field: " + value);
+                                throw new ValidationException("cannot map to Key<T> field: " + value);
                             }
                         }
+                    }
+
+                    if (mappedValue == value) {
+                        mappedValue = toMongoObject(value, false);
                     }
                 }
             } catch (Exception e) {

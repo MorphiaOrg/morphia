@@ -91,7 +91,7 @@ final class QueryValidator {
                                                              + " validating - %s", part, mc.getClazz().getName(), prop));
                     }
 
-                    if (mf == null && mc.isInterface()) {
+                    if (mf == null && (mc.isInterface() || !validateNames)) {
                         break;
                     } else if (mf == null) {
                         throw new ValidationException(format("The field '%s' could not be found in '%s'", prop, mc.getClazz().getName()));

@@ -1448,6 +1448,33 @@ public class TestQuery extends TestBase {
 
     }
 
+    @Test
+    public void testQueryUnmappedData() throws Exception {
+        getMorphia().map(Class1.class);
+        getDs().ensureIndexes(true);
+
+        getDs().getDB().getCollection("user").save(
+            new BasicDBObject()
+                .append("@class", Class1.class.getName())
+                .append("value1", "foo")
+                .append("someMap", new BasicDBObject("someKey", "value")));
+
+        Query<Class1> query = getDs().createQuery(Class1.class);
+        query.disableValidation().criteria("someMap.someKey").equal("value");
+        Class1 retrievedValue = query.get();
+        Assert.assertNotNull(retrievedValue);
+        Assert.assertEquals("foo", retrievedValue.value1);
+    }
+
+    @Entity(value = "user", noClassnameStored = true)
+    public static class Class1 {
+        @Id
+        private ObjectId id;
+
+        private String value1;
+
+    }
+
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
