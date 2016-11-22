@@ -7,6 +7,8 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
+import org.mongodb.morphia.mapping.validation.ClassConstraintFactory;
+import org.mongodb.morphia.mapping.validation.DefaultClassConstraintFactory;
 
 /**
  * Options to control mapping behavior.
@@ -34,6 +36,7 @@ public class MapperOptions {
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
     private org.mongodb.morphia.mapping.lazy.DatastoreProvider datastoreProvider = null;
+    private ClassConstraintFactory constraintFactory = new DefaultClassConstraintFactory();
 
     /**
      * Creates a default options instance.
@@ -294,5 +297,23 @@ public class MapperOptions {
      */
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
+    }
+
+    /**
+     * Controls the construction of a list of constraints for validating fields.
+     *
+     * @return
+     */
+    public ClassConstraintFactory getConstraintFactory() {
+        return constraintFactory;
+    }
+
+    /**
+     * Controls the construction of a list of constraints for validating fields.
+     *
+     * @return
+     */
+    public void setConstraintFactory(final ClassConstraintFactory constraintFactory) {
+        this.constraintFactory = constraintFactory;
     }
 }
