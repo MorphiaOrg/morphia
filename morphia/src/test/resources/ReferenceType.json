@@ -1,6 +1,15 @@
 {
   "_id": 1,
   "className": "org.mongodb.morphia.ReferenceType",
+  "referenceType": {
+    "_id": 42,
+    "string": "reference"
+  },
+  "embeddedType": {
+    "number": 18,
+    "text": "embedded"
+  },
+  "string": "I'm a field value",
   "embeddedArray": [
     {
       "number": 42,
@@ -165,7 +174,7 @@
       "string": "text 2"
     },
     {
-      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "className": "org.mongodb.morphia.ClassNameReferenceType",
       "_id": 3,
       "string": "text 3"
     }
@@ -176,7 +185,7 @@
       "string": "text 2"
     },
     {
-      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "className": "org.mongodb.morphia.ClassNameReferenceType",
       "_id": 3,
       "string": "text 3"
     }
@@ -187,7 +196,7 @@
       "string": "text 2"
     },
     {
-      "className" : "org.mongodb.morphia.ClassNameReferenceType" ,
+      "className": "org.mongodb.morphia.ClassNameReferenceType",
       "_id": 3,
       "string": "text 3"
     }

@@ -17,6 +17,8 @@
 package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryImpl;
 
@@ -38,6 +41,7 @@ import java.util.TreeMap;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertTrue;
 import static org.mongodb.morphia.converters.DefaultConverters.JAVA_8;
 
 @SuppressWarnings("Since15")
@@ -47,30 +51,67 @@ public class TestSerializedFormat extends TestBase {
     public void testQueryFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("selfReference").equal(new ReferenceType(1, "blah"))
+                                            .field("id").equal(new ObjectId(0, 0, (short) 0, 0))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
+
+                                            .field("string").equal("some value")
+
+                                            .field("embeddedArray").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                    .filter("number", 3).filter("text", "strikes"))
+                                            .field("embeddedSet").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                    .filter("number", 3).filter("text", "strikes"))
                                             .field("embeddedList").elemMatch(getDs().find(EmbeddedReferenceType.class)
                                                                                     .filter("number", 3).filter("text", "strikes"))
 
                                             .field("map.bar").equal(new EmbeddedReferenceType(1, "chance"))
+                                            .field("mapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
+                                            .field("mapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                     .filter("number", 1)
+                                                                                     .filter("text", "chance"))
+
+                                            .field("selfReference").equal(new ReferenceType(1, "blah"))
 
                                             .field("mixedTypeList").elemMatch(getDs().find(EmbeddedReferenceType.class)
                                                                                      .filter("number", 3).filter("text", "strikes"))
+                                            .field("mixedTypeList").in(singletonList(new EmbeddedReferenceType(1, "chance")))
                                             .field("mixedTypeMap.foo").equal(new ReferenceType(3, "strikes"))
                                             .field("mixedTypeMap.bar").equal(new EmbeddedReferenceType(3, "strikes"))
+                                            .field("mixedTypeMapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
+                                            .field("mixedTypeMapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
+                                                                                              .filter("number", 3)
+                                                                                              .filter("text", "strikes"))
 
                                             .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
-        Assert.assertEquals(BasicDBObject.parse(readFully("/QueryStructure.json")), ((QueryImpl) query).getQueryObject());
+        DBObject dbObject = ((QueryImpl) query).getQueryObject();
+        Assert.assertEquals(BasicDBObject.parse(readFully("/QueryStructure.json")), dbObject);
+    }
+
+    private void verifyCoverage(final DBObject dbObject) {
+        for (MappedField field : getMorphia().getMapper().getMappedClass(ReferenceType.class).getPersistenceFields()) {
+            String name = field.getNameToStore();
+            boolean found = dbObject.containsField(name);
+            if (!found) {
+                for (String s : dbObject.keySet()) {
+                    found |= s.startsWith(name + ".");
+
+                }
+            }
+            assertTrue("Not found in dbObject: " + name, found);
+        }
     }
 
     @Test
     public void testSavedEntityFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
-        ReferenceType entity = new ReferenceType();
-        entity.setId(1);
+
+        ReferenceType entity = new ReferenceType(1, "I'm a field value");
+
+        entity.setReferenceType(new ReferenceType(42, "reference"));
+        entity.setEmbeddedType(new EmbeddedReferenceType(18, "embedded"));
+
         entity.setEmbeddedSet(new HashSet<EmbeddedReferenceType>(asList(new EmbeddedReferenceType(42, "Douglas Adams"),
                                                                         new EmbeddedReferenceType(1, "Love"))));
         entity.setEmbeddedList(asList(new EmbeddedReferenceType(42, "Douglas Adams"), new EmbeddedReferenceType(1, "Love")));
@@ -112,8 +153,9 @@ public class TestSerializedFormat extends TestBase {
 
         getDs().save(entity);
 
-        Assert.assertEquals(BasicDBObject.parse(readFully("/ReferenceType.json")),
-                            getDs().getCollection(ReferenceType.class).findOne());
+        DBObject dbObject = getDs().getCollection(ReferenceType.class).findOne();
+        Assert.assertEquals(BasicDBObject.parse(readFully("/ReferenceType.json")), dbObject);
+        verifyCoverage(dbObject);
     }
 
     private String readFully(final String name) {
@@ -123,6 +165,7 @@ public class TestSerializedFormat extends TestBase {
     }
 }
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 @Entity("ondisk")
 class ReferenceType {
     @Id
@@ -158,9 +201,24 @@ class ReferenceType {
     }
 
     public ReferenceType(final int id, final String string) {
-
         this.id = id;
         this.string = string;
+    }
+
+    public ReferenceType getReferenceType() {
+        return referenceType;
+    }
+
+    public void setReferenceType(final ReferenceType referenceType) {
+        this.referenceType = referenceType;
+    }
+
+    public EmbeddedReferenceType getEmbeddedType() {
+        return embeddedType;
+    }
+
+    public void setEmbeddedType(final EmbeddedReferenceType embeddedType) {
+        this.embeddedType = embeddedType;
     }
 
     public EmbeddedReferenceType[] getEmbeddedArray() {
@@ -340,7 +398,7 @@ class ReferenceType {
 
         final ReferenceType that = (ReferenceType) o;
 
-        if (id != that.id) {
+        if (!id.equals(that.id)) {
             return false;
         }
         if (string != null ? !string.equals(that.string) : that.string != null) {
@@ -391,6 +449,7 @@ class ReferenceType {
 }
 
 @Entity
+@SuppressWarnings("unused")
 class ClassNameReferenceType extends ReferenceType {
     public ClassNameReferenceType() {
     }
@@ -401,6 +460,7 @@ class ClassNameReferenceType extends ReferenceType {
 }
 
 @Embedded
+@SuppressWarnings({"unused", "WeakerAccess"})
 class EmbeddedReferenceType {
     private Integer number;
     private String text;
