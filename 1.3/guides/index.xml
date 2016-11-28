@@ -639,7 +639,7 @@ On top of that, you need to tell JRebel about the Plugin. In order to do that, a
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
     &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
     &amp;lt;artifactId&amp;gt;morphia-jrebel-plug&amp;lt;/artifactId&amp;gt;
-    &amp;lt;version&amp;gt;1.2.1&amp;lt;/version&amp;gt;
+    &amp;lt;version&amp;gt;1.3.0&amp;lt;/version&amp;gt;
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
@@ -1435,7 +1435,7 @@ just adding it to the classpath.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
     &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
     &amp;lt;artifactId&amp;gt;morphia-validation&amp;lt;/artifactId&amp;gt;
-    &amp;lt;version&amp;gt;1.2.1&amp;lt;/version&amp;gt;
+    &amp;lt;version&amp;gt;1.3.0&amp;lt;/version&amp;gt;
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
