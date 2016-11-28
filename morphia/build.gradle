@@ -7,12 +7,12 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.mongodb:mongo-java-driver:3.4.0-rc1'
+    compile "org.mongodb:mongo-java-driver:${driverVersion}"
     compile 'com.thoughtworks.proxytoys:proxytoys:1.0'
     compile 'cglib:cglib-nodep:2.2.2', optional
-    testCompile 'org.zeroturnaround:zt-exec:1.5'
-    testCompile 'com.jayway.awaitility:awaitility:1.5.0'
-    testCompile 'org.skyscreamer:jsonassert:1.2.3'
+    testCompile "org.zeroturnaround:zt-exec:${ztExecVersion}"
+    testCompile "com.jayway.awaitility:awaitility:${awaitilityVersion}"
+    testCompile "org.skyscreamer:jsonassert:${jsonAssertVersion}"
 }
 
 clirr {
