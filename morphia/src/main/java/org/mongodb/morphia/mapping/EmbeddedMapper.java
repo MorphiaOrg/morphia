@@ -188,7 +188,7 @@ class EmbeddedMapper implements CustomMapper {
                         }
                     }
 
-                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), k, mf);
+                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), mapper.getOptions().getMapKeySanitizer().unsanitizeMapKey(k), mf);
                     map.put(objKey, newEntity);
                 }
             });
@@ -289,7 +289,7 @@ class EmbeddedMapper implements CustomMapper {
                     }
                 }
 
-                final String strKey = mapper.getConverters().encode(entry.getKey()).toString();
+                final String strKey = mapper.getOptions().getMapKeySanitizer().sanitizeMapKey(mapper.getConverters().encode(entry.getKey()).toString());
                 values.put(strKey, val);
             }
 

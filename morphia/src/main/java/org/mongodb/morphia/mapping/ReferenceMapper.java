@@ -179,7 +179,7 @@ class ReferenceMapper implements CustomMapper {
                 @Override
                 public void eval(final Object k, final Object val) {
 
-                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), k, mf);
+                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), mapper.getOptions().getMapKeySanitizer().unsanitizeMapKey(k), mf);
 
                     if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
                         final ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
@@ -261,7 +261,7 @@ class ReferenceMapper implements CustomMapper {
                 }
             } else {
                 for (final Map.Entry<Object, Object> entry : map.entrySet()) {
-                    final String strKey = mapper.getConverters().encode(entry.getKey()).toString();
+                    final String strKey = mapper.getOptions().getMapKeySanitizer().sanitizeMapKey(mapper.getConverters().encode(entry.getKey()).toString());
                     values.put(strKey, refAnn.idOnly()
                                        ? mapper.keyToId(getKey(entry.getValue(), mapper))
                                        : mapper.keyToDBRef(getKey(entry.getValue(), mapper)));
