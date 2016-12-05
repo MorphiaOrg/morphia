@@ -111,7 +111,7 @@ public class PathTarget {
             if (field != null) {
                 if (!field.isMap()) {
                     translate(field.getNameToStore());
-                } else {
+                } else if(hasNext()) {
                     next();  // consume the map key segment
                 }
             } else {
