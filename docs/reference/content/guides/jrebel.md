@@ -42,6 +42,6 @@ If you use Maven to manage your project, you can reference the Extension as a de
 <dependency>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-jrebel-plug</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0-SNAPSHOT</version>
 </dependency>
 ```

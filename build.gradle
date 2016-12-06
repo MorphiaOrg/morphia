@@ -1,5 +1,4 @@
 ext.configDir = new File(rootDir, 'config')
-ext.slf4jVersion = '1.7.5'
 ext.git = find('git')
 ext.majorVersion = major(version)
 
