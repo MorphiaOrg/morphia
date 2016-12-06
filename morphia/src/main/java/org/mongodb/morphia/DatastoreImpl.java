@@ -1522,10 +1522,26 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
             if (queryObject.get(versionMF.getNameToStore()) == null) {
-                if (!update.containsField("$inc")) {
-                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+                if (update.containsField(versionMF.getNameToStore())) {
+                    Number n = (Number) update.get(versionMF.getNameToStore());
+                    update.put(versionMF.getNameToStore(), n != null ? n.longValue() + 1 : 1);
                 } else {
-                    ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                    boolean isAtomicUpdate = true;
+                    for (String key : update.keySet()) {
+                        if (!key.startsWith("$")) {
+                            isAtomicUpdate = false;
+                            break;
+                        }
+                    }
+                    if (isAtomicUpdate) {
+                        if (!update.containsField("$inc")) {
+                            update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+                        } else {
+                            ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                        }
+                    } else {
+                        update.put(versionMF.getNameToStore(), 1);
+                    }
                 }
             }
         }

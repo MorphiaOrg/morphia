@@ -134,6 +134,36 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
+    public void testEntityUpdateWithoutUpdateOps() {
+        final Datastore datastore = getDs();
+
+        Versioned entity = new Versioned();
+        entity.setName("Value 1");
+
+        datastore.updateFirst(
+            datastore.createQuery(Versioned.class).field("name").equal("Value 1"),
+            entity,
+            true
+        );
+
+        Versioned found1 = datastore.createQuery(Versioned.class).field("name").equal("Value 1").get();
+        assertEquals("Value 1", found1.getName());
+        assertEquals(1L, found1.getVersion().longValue());
+
+        found1.setName("Value 2");
+        datastore.updateFirst(
+            datastore.createQuery(Versioned.class).field("name").equal("Value 1"),
+            found1,
+            true
+        );
+
+        Versioned found2 = datastore.createQuery(Versioned.class).field("name").equal("Value 2").get();
+        assertEquals("Value 2", found2.getName());
+        assertEquals(2L, found2.getVersion().longValue());
+
+    }
+
+    @Test
     public void testIncVersionNotOverridingOtherInc() {
         final Versioned version1 = new Versioned();
         version1.setCount(0);
