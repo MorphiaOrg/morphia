@@ -17,10 +17,11 @@
 package org.mongodb.morphia.converters;
 
 import org.junit.Assert;
+import org.mongodb.morphia.TestBase;
 
 import static java.lang.String.format;
 
-class ConverterTest<F, T> {
+class ConverterTest<F, T> extends TestBase {
     private TypeConverter converter;
 
     ConverterTest(final TypeConverter converter) {
