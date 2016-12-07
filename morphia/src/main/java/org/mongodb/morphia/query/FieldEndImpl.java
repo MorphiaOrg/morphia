@@ -18,11 +18,12 @@ import static org.mongodb.morphia.query.FilterOperator.GEO_WITHIN;
 import static org.mongodb.morphia.query.FilterOperator.INTERSECTS;
 
 /**
- * Represents a document field in a query and presents the operations available to querying against that field.
+ * Represents a document field in a query and presents the operations available to querying against that field.  This is an internal
+ * class and subject to change without notice.
  *
  * @param <T> the type of the CriteriaContainer
  */
-class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
+public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
 
     private final QueryImpl<?> query;
