@@ -148,12 +148,33 @@ public class MappedClass {
         }
     }
 
+    /**
+     * This is an internal method subject to change without notice.
+     *
+     * @return the parent class of this type if there is one null otherwise
+     *
+     * @since 1.3
+     */
+    public MappedClass getSuperClass() {
+        return superClass;
+    }
+
 
     /**
      * @return true if the MappedClass is an interface
      */
     public boolean isInterface() {
         return clazz.isInterface();
+    }
+
+    /**
+     * This is an internal method subject to change without notice.
+     *
+     * @return true if the MappedClass is abstract
+     * @since 1.3
+     */
+    public boolean isAbstract() {
+        return Modifier.isAbstract(clazz.getModifiers());
     }
 
     /**
