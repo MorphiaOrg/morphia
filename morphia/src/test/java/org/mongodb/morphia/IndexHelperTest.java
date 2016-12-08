@@ -17,7 +17,6 @@
 package org.mongodb.morphia;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
 import org.bson.BsonDocument;
@@ -37,7 +36,6 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.Mapper;
@@ -118,6 +116,7 @@ public class IndexHelperTest extends TestBase {
         indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class), false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
+        assertEquals("Should have 6 indexes", 6, indexInfo.size());
         for (DBObject dbObject : indexInfo) {
             String name = dbObject.get("name").toString();
             if (name.equals("latitude_1")) {
@@ -479,7 +478,7 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Indexes(@Index(fields = @Field("indexName")))
-    private static abstract class AbstractParent {
+    private abstract static class AbstractParent {
         @Id
         private ObjectId id;
         private double indexName;
