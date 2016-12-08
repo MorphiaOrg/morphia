@@ -36,9 +36,9 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Text;
 import org.mongodb.morphia.mapping.MappedClass;
+import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.utils.IndexDirection;
 import org.mongodb.morphia.utils.IndexType;
@@ -64,7 +64,7 @@ public class IndexHelperTest extends TestBase {
 
     @Before
     public void before() {
-        getMorphia().map(IndexedClass.class, NestedClass.class, NestedClassImpl.class);
+        getMorphia().map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
     }
 
     @Test
@@ -109,13 +109,14 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void createIndex() {
         checkMinServerVersion(3.4);
-        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        String collectionName = getDs().getCollection(IndexedClass.class).getName();
+        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        Mapper mapper = getMorphia().getMapper();
 
-        indexHelper.createIndex(collection, mappedClass, false);
+        indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class), false);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
-        assertEquals("Should have 5 indexes", 5, indexInfo.size());
+        assertEquals("Should have 6 indexes", 6, indexInfo.size());
         for (DBObject dbObject : indexInfo) {
             String name = dbObject.get("name").toString();
             if (name.equals("latitude_1")) {
@@ -129,13 +130,19 @@ public class IndexHelperTest extends TestBase {
                 assertEquals(parse("{ 'nest.name' : 1} "), dbObject.get("key"));
             } else if (name.equals("searchme")) {
                 assertEquals(parse("{ 'text' : 10 }"), dbObject.get("weights"));
+            } else if (name.equals("indexName_1")) {
+                assertEquals(parse("{'indexName': 1 }"), dbObject.get("key"));
             } else {
                 if (!"_id_".equals(dbObject.get("name"))) {
                     throw new MappingException("Found an index I wasn't expecting:  " + dbObject);
                 }
             }
-
         }
+
+        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getName());
+        indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class), false);
+        indexInfo = getDs().getCollection(AbstractParent.class).getIndexInfo();
+        assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());
 
     }
 
@@ -143,8 +150,7 @@ public class IndexHelperTest extends TestBase {
     public void findField() {
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 
-        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("indexName")));
-        assertEquals("name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("name")));
+        assertEquals("indexName", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("indexName")));
         assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nested", "name")));
         assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "name")));
 
@@ -254,7 +260,7 @@ public class IndexHelperTest extends TestBase {
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
         for (DBObject dbObject : indexInfo) {
-            if (dbObject.get("name").equals("index_name")) {
+            if (dbObject.get("name").equals("index_indexName")) {
                 checkIndex(dbObject);
             }
         }
@@ -454,13 +460,9 @@ public class IndexHelperTest extends TestBase {
 
     @Entity("indexes")
     @Indexes(@Index(fields = @Field("latitude")))
-    private static class IndexedClass {
-        @Id
-        private ObjectId id;
+    private static class IndexedClass extends AbstractParent {
         @Text(value = 10, options = @IndexOptions(name = "searchme"))
         private String text;
-        @Property("name")
-        private double indexName;
         private double latitude;
         @Embedded("nest")
         private NestedClass nested;
@@ -473,5 +475,12 @@ public class IndexHelperTest extends TestBase {
     private static class NestedClassImpl implements NestedClass {
         @Indexed
         private String name;
+    }
+
+    @Indexes(@Index(fields = @Field("indexName")))
+    private abstract static class AbstractParent {
+        @Id
+        private ObjectId id;
+        private double indexName;
     }
 }
