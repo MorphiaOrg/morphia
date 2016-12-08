@@ -10,13 +10,13 @@ public class Versioned {
     @Version
     private Long version;
     private String name;
-    private int count = 0;
+    private Integer count;
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(final int count) {
+    public void setCount(final Integer count) {
         this.count = count;
     }
 

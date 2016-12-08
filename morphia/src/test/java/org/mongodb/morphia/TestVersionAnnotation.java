@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestVersionAnnotation extends TestBase {
 
@@ -134,13 +135,47 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
+    public void testEntityUpdateWithoutUpdateOps() {
+        final Datastore datastore = getDs();
+
+        Versioned original = new Versioned();
+        original.setName("Value 1");
+        original.setCount(42);
+        getDs().save(original);
+
+        Versioned found = datastore.find(Versioned.class).field("name").equal("Value 1").get();
+        assertEquals("Value 1", found.getName());
+        assertEquals(1L, found.getVersion().longValue());
+
+        Versioned update = new Versioned();
+        update.setName("Value 2");
+
+        datastore.updateFirst(
+            datastore.find(Versioned.class).field("name").equal("Value 1"),
+            update,
+            true
+        );
+
+        Versioned found2 = datastore.find(Versioned.class).field("name").equal("Value 2").get();
+        assertNotNull(found);
+        assertEquals(2L, found2.getVersion().longValue());
+        assertEquals(original.getCount(), found2.getCount());
+
+        try {
+            getDs().save(original);
+            fail("Should get a ConcurrentModificationException");
+        } catch (ConcurrentModificationException ignored) {
+        }
+    }
+
+    @Test
     public void testIncVersionNotOverridingOtherInc() {
         final Versioned version1 = new Versioned();
         version1.setCount(0);
         getDs().save(version1);
 
         assertEquals(new Long(1), version1.getVersion());
-        assertEquals(0, version1.getCount());
+        Assert.assertEquals(Integer.valueOf(0), version1.getCount());
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.field("_id").equal(version1.getId());
@@ -151,7 +186,7 @@ public class TestVersionAnnotation extends TestBase {
         final Versioned version2 = getDs().get(Versioned.class, version1.getId());
 
         assertEquals(new Long(2), version2.getVersion());
-        assertEquals(1, version2.getCount());
+        assertEquals(Integer.valueOf(1), version2.getCount());
     }
 
     @Test(expected = ConcurrentModificationException.class)

@@ -705,7 +705,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter(Mapper.ID_KEY, id);
-            wr = update(query, new BasicDBObject("$set", dbObj), false, false, wc).getWriteResult();
+            wr = update(query, new BasicDBObject("$set", dbObj), new UpdateOptions().writeConcern(wc))
+                .getWriteResult();
         }
 
         final UpdateResults res = new UpdateResults(wr);
@@ -850,14 +851,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
 
-        final UpdateResults res = update(query, dbObj, createIfMissing, false, getWriteConcern(entity));
-
-        // update _id field
-        if (res.getInsertedCount() > 0) {
-            dbObj.put(Mapper.ID_KEY, res.getNewId());
-        }
+        final UpdateResults res = update(query, mapper.toDBObject(entity, involvedObjects),
+                                         new UpdateOptions()
+                                             .upsert(createIfMissing)
+                                             .writeConcern(getWriteConcern(entity)));
 
         postSaveOperations(singletonList(entity), involvedObjects, getCollection(entity), false);
         return res;
@@ -1488,18 +1486,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> UpdateResults update(final Query<T> query, final DBObject update, final boolean createIfMissing, final boolean multi,
-                                     final WriteConcern wc) {
-        return  update(query, update, new UpdateOptions()
-                      .upsert(createIfMissing)
-                      .multi(multi)
-                      .writeConcern(wc));
-    }
-
-    @SuppressWarnings("unchecked")
     private <T> UpdateResults update(final Query<T> query, final DBObject update, final UpdateOptions options) {
 
         DBCollection dbColl = query.getCollection();
+        DBObject operations = update;
         // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
@@ -1520,24 +1510,37 @@ public class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
         if (!fields.isEmpty()) {
-            final MappedField versionMF = fields.get(0);
-            if (queryObject.get(versionMF.getNameToStore()) == null) {
-                if (!update.containsField("$inc")) {
-                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+            if (!hasDollarOperators(operations)) {
+                operations = new BasicDBObject("$set", operations);
+            }
+            DBObject set = (DBObject) operations.get("$set");
+            String name = fields.get(0).getNameToStore();
+            if (set != null && set.get(name) == null) {
+                if (!operations.containsField("$inc")) {
+                    operations.put("$inc", new BasicDBObject(name, 1));
                 } else {
-                    ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                    ((Map<String, Object>) (operations.get("$inc"))).put(name, 1);
                 }
             }
         }
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                             dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
+                             dbColl.getName(), queryObject, operations, options.isMulti(), options.isUpsert()));
         }
 
-        return new UpdateResults(dbColl.update(queryObject, update,
+        return new UpdateResults(dbColl.update(queryObject, operations,
                                                enforceWriteConcern(options, query.getEntityClass())
                                                    .getOptions()));
+    }
+
+    private boolean hasDollarOperators(final DBObject update) {
+        for (final String key : update.keySet()) {
+            if (key.startsWith("$")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
