@@ -19,6 +19,7 @@ package org.mongodb.morphia.converters;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -33,6 +34,11 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
 
     public BigDecimalConverterTest() {
         super(new BigDecimalConverter());
+    }
+
+    @Before
+    public void serverCheck() {
+        checkMinServerVersion(3.4);
     }
 
     @Test
