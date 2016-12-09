@@ -966,8 +966,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
-            LOG.warning("Support for this has been removed from the server.  Please set this value to false and "
-                                           + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
 
         indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz),
