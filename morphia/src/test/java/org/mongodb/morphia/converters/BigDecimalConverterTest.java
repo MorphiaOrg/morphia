@@ -17,8 +17,11 @@
 package org.mongodb.morphia.converters;
 
 import org.bson.types.Decimal128;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -80,4 +83,60 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
         compare(BigDecimal.class, new BigDecimal(-0));
     }
 
+    @Test
+    public void testEntity() {
+        Foo foo = new Foo();
+        foo.setNumber(new BigDecimal("0.92348237942346239"));
+        getDs().save(foo);
+
+        assertEquals(foo, getDs().find(Foo.class).get());
+    }
+
+    @Entity
+    private static class Foo {
+
+        @Id
+        private ObjectId id;
+        private BigDecimal number;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public BigDecimal getNumber() {
+            return number;
+        }
+
+        public void setNumber(final BigDecimal number) {
+            this.number = number;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Foo)) {
+                return false;
+            }
+
+            final Foo foo = (Foo) o;
+
+            if (getId() != null ? !getId().equals(foo.getId()) : foo.getId() != null) {
+                return false;
+            }
+            return getNumber() != null ? getNumber().equals(foo.getNumber()) : foo.getNumber() == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getNumber() != null ? getNumber().hashCode() : 0);
+            return result;
+        }
+    }
 }
