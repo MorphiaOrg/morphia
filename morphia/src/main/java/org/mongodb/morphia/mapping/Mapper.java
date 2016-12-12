@@ -747,7 +747,8 @@ public class Mapper {
 
     private Object getDBRefs(final MappedField field, final Iterable value) {
         final List<Object> refs = new ArrayList<Object>();
-        boolean idOnly = field.getAnnotation(Reference.class).idOnly();
+        Reference annotation = field.getAnnotation(Reference.class);
+        boolean idOnly = annotation != null && annotation.idOnly();
         for (final Object o : value) {
             Key<?> key = (o instanceof Key) ? (Key<?>) o : getKey(o);
             refs.add(idOnly ? key.getId() : keyToDBRef(key));

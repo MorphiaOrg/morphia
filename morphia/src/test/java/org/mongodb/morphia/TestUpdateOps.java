@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -559,6 +560,33 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+       public void testUpdateKeyList() throws Exception {
+           final ContainsPicKey cpk = new ContainsPicKey();
+           cpk.name = "cpk one";
+
+           Datastore ds = getDs();
+           ds.save(cpk);
+
+           final Pic pic = new Pic();
+           pic.setName("fist again");
+           final Key<Pic> picKey = ds.save(pic);
+
+           cpk.keys = singletonList(picKey);
+
+           //test with Key<Pic>
+           final UpdateResults res = ds.updateFirst(ds.find(ContainsPicKey.class).filter("name", cpk.name),
+                                                    ds.createUpdateOperations(ContainsPicKey.class).set("keys", cpk.keys));
+
+           assertThat(res.getUpdatedCount(), is(1));
+
+           //test reading the object.
+           final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).get();
+           assertThat(cpk2, is(notNullValue()));
+           assertThat(cpk.name, is(cpk2.name));
+           assertThat(cpk2.keys, hasItem(picKey));
+       }
+
+    @Test
     public void testUpdateRef() throws Exception {
         final ContainsPic cp = new ContainsPic();
         cp.setName("cp one");
@@ -662,6 +690,7 @@ public class TestUpdateOps extends TestBase {
         private ObjectId id;
         private String name = "test";
         private Key<Pic> pic;
+        private List<Key<Pic>> keys;
     }
 
     @Entity(noClassnameStored = true)
