@@ -779,6 +779,8 @@ public interface Datastore {
      * updates the first entity found using the entity as a template, if nothing is found insert the update as an entity if
      * "createIfMissing" is true.
      *
+     * If the entity is a versioned entity, an UnsupportedOperationException is thrown.
+     *
      * @param query           the query used to match the documents to update
      * @param entity          the entity whose state will be used as an update template for any matching documents
      * @param createIfMissing if true, a document will be created if none can be found that match the query

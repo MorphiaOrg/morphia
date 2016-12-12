@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestVersionAnnotation extends TestBase {
 
@@ -131,6 +132,33 @@ public class TestVersionAnnotation extends TestBase {
         entity = datastore.get(Versioned.class, entity.getId());
         Assert.assertEquals("Value 4", entity.getName());
         Assert.assertEquals(4, entity.getVersion().longValue());
+    }
+
+    @Test
+    public void testUpdateFirst() {
+        final Datastore datastore = getDs();
+
+        Versioned original = new Versioned();
+        original.setName("Value 1");
+        original.setCount(42);
+        getDs().save(original);
+
+        Versioned update = new Versioned();
+        update.setName("Value 2");
+
+        Query<Versioned> query = datastore.find(Versioned.class).field("name").equal("Value 1");
+        try {
+            datastore.updateFirst(
+                query,
+                update, true);
+            fail("This call should have been rejected");
+        } catch (UnsupportedOperationException ignored) {
+        }
+
+        datastore.updateFirst(
+            query,
+            datastore.createUpdateOperations(Versioned.class).inc("count"), true);
+        assertEquals(43, query.get().getCount());
     }
 
     @Test

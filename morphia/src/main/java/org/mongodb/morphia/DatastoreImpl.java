@@ -849,6 +849,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
+        if (getMapper().getMappedClass(entity).getMappedVersionField() != null) {
+            throw new UnsupportedOperationException("updateFirst() is not supported with versioned entities");
+        }
+
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
 
@@ -1521,7 +1525,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
-            if (queryObject.get(versionMF.getNameToStore()) == null) {
+            if (update.get(versionMF.getNameToStore()) == null) {
                 if (!update.containsField("$inc")) {
                     update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
                 } else {
