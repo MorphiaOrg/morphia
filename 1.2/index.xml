@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Morphia</title>
-    <link>/morphia/1.2/</link>
+    <link>/morphia/1.2/index.xml</link>
     <description>Recent content on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>

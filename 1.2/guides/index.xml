@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Guides on Morphia</title>
-    <link>/morphia/1.2/guides/</link>
-    <description>Recent content in Guides on Morphia</description>
+    <title>Guides-rsses on Morphia</title>
+    <link>/morphia/1.2/guides/index.xml</link>
+    <description>Recent content in Guides-rsses on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
