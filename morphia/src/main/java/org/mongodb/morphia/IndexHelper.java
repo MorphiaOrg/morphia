@@ -104,8 +104,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
-            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                            + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         final Map<String, Object> newOptions = extractOptions(indexed.options());
         if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
@@ -274,8 +273,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
-            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                            + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
             .background(options.background() || background)
