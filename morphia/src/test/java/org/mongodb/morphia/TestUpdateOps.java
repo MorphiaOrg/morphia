@@ -33,11 +33,14 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateOpsImpl;
 import org.mongodb.morphia.query.UpdateResults;
 import org.mongodb.morphia.query.ValidationException;
+import org.mongodb.morphia.testmodel.Article;
 import org.mongodb.morphia.testmodel.Circle;
 import org.mongodb.morphia.testmodel.Rectangle;
+import org.mongodb.morphia.testmodel.Translation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -655,23 +658,31 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testSetUnset() throws Exception {
-        final Key<Circle> key = getDs().save(new Circle(1));
+        Datastore ds = getDs();
+        final Key<Circle> key = ds.save(new Circle(1));
 
-        UpdateResults res = getDs().updateFirst(getDs().find(Circle.class).filter("radius", 1D),
-                                                getDs().createUpdateOperations(Circle.class).set("radius", 2D));
+        assertUpdated(ds.updateFirst(ds.find(Circle.class).filter("radius", 1D),
+                                     ds.createUpdateOperations(Circle.class).set("radius", 2D)), 1);
 
-        assertUpdated(res, 1);
-
-        final Circle c = getDs().getByKey(Circle.class, key);
-        assertThat(c.getRadius(), is(2D));
+        assertThat(ds.getByKey(Circle.class, key).getRadius(), is(2D));
 
 
-        res = getDs().updateFirst(getDs().find(Circle.class).filter("radius", 2D),
-                                  getDs().createUpdateOperations(Circle.class).unset("radius"));
-        assertUpdated(res, 1);
+        assertUpdated(ds.updateFirst(ds.find(Circle.class).filter("radius", 2D),
+                                     ds.createUpdateOperations(Circle.class).unset("radius")), 1);
 
-        final Circle c2 = getDs().getByKey(Circle.class, key);
-        assertThat(c2.getRadius(), is(0D));
+        assertThat(ds.getByKey(Circle.class, key).getRadius(), is(0D));
+
+        Article article = new Article();
+
+        ds.save(article);
+
+        ds.update(ds.find(Article.class),
+                  ds.createUpdateOperations(Article.class)
+                 .set("translations", new HashMap<String, Translation>()));
+
+        ds.update(ds.find(Article.class),
+                  ds.createUpdateOperations(Article.class)
+                 .unset("translations"));
     }
 
     @Test
