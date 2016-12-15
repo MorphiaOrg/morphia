@@ -813,6 +813,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
         return update(query, operations, new UpdateOptions()
             .upsert(createIfMissing)
@@ -820,6 +821,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                     final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
@@ -829,17 +831,28 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
         return update(query, operations, new UpdateOptions());
     }
 
     @Override
+    @Deprecated
+    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
+        return update(query, operations, options.copy()
+                                                .multi(false));
+    }
+
+    @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, new UpdateOptions().upsert(createIfMissing));
+        return update(query, operations, new UpdateOptions()
+            .upsert(createIfMissing));
 
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                          final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
@@ -848,6 +861,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
         if (getMapper().getMappedClass(entity).getMappedVersionField() != null) {
             throw new UnsupportedOperationException("updateFirst() is not supported with versioned entities");
