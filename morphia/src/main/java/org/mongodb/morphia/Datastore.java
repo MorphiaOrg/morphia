@@ -759,19 +759,6 @@ public interface Datastore {
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations);
 
     /**
-     * Updates the first entity found with the operations; this is an atomic operation
-     *
-     * @param query      the query used to match the document to update
-     * @param operations the update operations to perform
-     * @param options    the options to apply to the update
-     * @param <T>        the type of the entity
-     * @return the results of the update
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with multi set to false (the default value)
-     */
-    @Deprecated
-    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, UpdateOptions options);
-
-    /**
      * Updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true.
      *
      * @param query           the query used to match the documents to update
