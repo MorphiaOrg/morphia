@@ -8,6 +8,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.UpdateOptions;
 import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
@@ -242,7 +243,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops) {
-        return ds.updateFirst(query, ops);
+        return ds.update(query, ops, new UpdateOptions());
     }
 
     /**

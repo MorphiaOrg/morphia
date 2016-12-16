@@ -801,7 +801,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (clazz == null) {
             clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
         }
-        return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), operations);
+        return update(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), operations, new UpdateOptions());
     }
 
     @Override
@@ -834,13 +834,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
         return update(query, operations, new UpdateOptions());
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
-        return update(query, operations, options.copy()
-                                                .multi(false));
     }
 
     @Override
