@@ -52,7 +52,7 @@
     &amp;lt;dependency&amp;gt;
         &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
         &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt;
-        &amp;lt;version&amp;gt;1.3.0-SNAPSHOT&amp;lt;/version&amp;gt;
+        &amp;lt;version&amp;gt;1.3.0&amp;lt;/version&amp;gt;
     &amp;lt;/dependency&amp;gt;
 &amp;lt;/dependencies&amp;gt;
 
@@ -61,14 +61,14 @@
 &lt;section class=&#34;gradle hidden&#34;&gt;
 &lt;pre&gt;&lt;code&gt;
   dependencies {
-      compile &#39;org.mongodb.morphia:morphia:1.3.0-SNAPSHOT&#39;
+      compile &#39;org.mongodb.morphia:morphia:1.3.0&#39;
   }
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/section&gt;
 &lt;section class=&#34;downloadInfo&#34;&gt;
 &lt;p class=&#34;small&#34;&gt;You can also download the jars
-  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.3.0-SNAPSHOT&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+  &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia/1.3.0&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
   from sonatype.&lt;/a&gt;
 &lt;/p&gt;
 
@@ -92,7 +92,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/&#34;&gt;documentation&lt;/a&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.java&lt;/code&gt; example code
-that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
+that can be found with the &lt;a href=&#34;https://github.com/mongodb/morphia/blob/1.3.x/morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java
 &#34;&gt;Morphia source&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;setting-up-morphia&#34;&gt;Setting up Morphia&lt;/h2&gt;
