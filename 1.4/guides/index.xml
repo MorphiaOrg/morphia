@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Guides-rsses on Morphia</title>
-    <link>/morphia/1.3/guides/index.xml</link>
+    <link>/morphia/1.4/guides/index.xml</link>
     <description>Recent content in Guides-rsses on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
-    <atom:link href="/morphia/1.3/guides/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/morphia/1.4/guides/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Annotations</title>
-      <link>/morphia/1.3/guides/annotations/</link>
+      <link>/morphia/1.4/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/annotations/</guid>
+      <guid>/morphia/1.4/guides/annotations/</guid>
       <description>
 
 &lt;h1 id=&#34;annotations&#34;&gt;Annotations&lt;/h1&gt;
@@ -30,47 +30,47 @@ annotations in context, please refer to &lt;a href=&#34;https://github.com/mongo
 
 &lt;h3 id=&#34;index&#34;&gt;Index&lt;/h3&gt;
 
-&lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Index.html
+&lt;p&gt;The &lt;code&gt;@Index&lt;/code&gt; documentation can be found &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Index.html
 &#34;&gt;here&lt;/a&gt;.  There are two pieces to this
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed
 in the 2.x series.  These options and more have been conglomerated in the
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 &#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation.&lt;/p&gt;
 
 &lt;h4 id=&#34;field&#34;&gt;Field&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Field.html
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Field.html
 &#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation defines indexing on a specific document field.  Multiple
 instances of this annotation may be passed to the &lt;code&gt;@Index&lt;/code&gt; annotation to define a compound index on multiple fields.&lt;/p&gt;
 
 &lt;h4 id=&#34;indexoptions&#34;&gt;IndexOptions&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/IndexOptions.html
 &#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt; annotation defines the options to apply to an index
 definition.  This annotation replaces the fields found directly on the &lt;code&gt;@Index&lt;/code&gt; annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.&lt;/p&gt;
 
 &lt;h4 id=&#34;collation&#34;&gt;Collation&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Collation.html
+&lt;p&gt;The &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Collation.html
 &#34;&gt;&lt;code&gt;@Collation&lt;/code&gt;&lt;/a&gt; annotation defines the
 &lt;a href=&#34;http://docs.mongodb.org/manual/reference/collation/
 &#34;&gt;collation&lt;/a&gt; options to apply to the index definition.  In addition to defining a collation as part
 of an index, a collation can be specified as part of a query as well.  The Options classes provide facilities for specifying a specific
 collation to be used for any given operation.  This collation does not have to match the one defined on the index but will, of course,
-be faster if it does.  See &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/CountOptions.html
+be faster if it does.  See &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/CountOptions.html
 &#34;&gt;&lt;code&gt;CountOptions&lt;/code&gt;&lt;/a&gt;,
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/DeleteOptions.html
-&#34;&gt;&lt;code&gt;DeleteOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindOptions.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/DeleteOptions.html
+&#34;&gt;&lt;code&gt;DeleteOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/FindOptions.html
 &#34;&gt;&lt;code&gt;FindOptions&lt;/code&gt;&lt;/a&gt;,
- &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/MapReduceOptions.html
+ &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/MapReduceOptions.html
 &#34;&gt;&lt;code&gt;MapReduceOptions&lt;/code&gt;&lt;/a&gt;,
- and &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
+ and &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
 &#34;&gt;&lt;code&gt;FindAndModifyOptions&lt;/code&gt;&lt;/a&gt; for more information.&lt;/p&gt;
 
 &lt;h4 id=&#34;indexed&#34;&gt;Indexed&lt;/h4&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Indexed.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Indexed.html
 &#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt;, applied to a Java field, marks the field to be indexed by MongoDB.
 This is used for simple, single-field indexes.  As stated above, the &lt;code&gt;options&lt;/code&gt; value replaces the individual setting values on the
 &lt;code&gt;@Indexed&lt;/code&gt; annotation itself.&lt;/p&gt;
@@ -81,7 +81,7 @@ This is used for simple, single-field indexes.  As stated above, the &lt;code&gt
 
 &lt;h3 id=&#34;entity&#34;&gt;Entity&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Entity.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Entity.html
 &#34;&gt;&lt;code&gt;@Entity&lt;/code&gt;&lt;/a&gt; marks entities to be stored directly in a collection. This annotation
 is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
 collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
@@ -89,7 +89,7 @@ references and embedding.&lt;/p&gt;
 
 &lt;h3 id=&#34;reference&#34;&gt;Reference&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Reference.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Reference.html
 &#34;&gt;&lt;code&gt;@Reference&lt;/code&gt;&lt;/a&gt; marks a field as a reference to a document stored in another
 collection and is linked (by a &lt;code&gt;DBRef&lt;/code&gt; field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
 via an &lt;code&gt;@Reference&lt;/code&gt; field must have already have a non-null &lt;code&gt;@Id&lt;/code&gt; value in the referenced entity. This can be done by either saving the
@@ -106,14 +106,14 @@ This will result in only the ID value being stored in the document.&lt;/p&gt;
 &lt;h3 id=&#34;embedded&#34;&gt;Embedded&lt;/h3&gt;
 
 &lt;p&gt;In contrast to &lt;code&gt;@Reference&lt;/code&gt; where a nested Java reference ends up as a separate document in a collection,
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Embedded.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Embedded.html
 &#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.&lt;/p&gt;
 
 &lt;h3 id=&#34;validation&#34;&gt;Validation&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Validation.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Validation.html
 &#34;&gt;&lt;code&gt;@Validation&lt;/code&gt;&lt;/a&gt; allows for the definition of a
 &lt;a href=&#34;http://docs.mongodb.org/manual/core/document-validation/
 &#34;&gt;document validation&lt;/a&gt; schema to applied to all writes to MongoDB.  Validation rules are
@@ -128,54 +128,54 @@ public class SomeEntity {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Various operations on &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/Datastore.html
+&lt;p&gt;Various operations on &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/Datastore.html
 &#34;&gt;&lt;code&gt;Datastore&lt;/code&gt;&lt;/a&gt; and
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/AdvancedDatastore.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/AdvancedDatastore.html
 &#34;&gt;&lt;code&gt;AdvancedDatastore&lt;/code&gt;&lt;/a&gt; can bypass this validation via their Options classes. For
 these operations, specify the &lt;code&gt;bypassDocumentValidation&lt;/code&gt; option to disable document validation for a specific operation.  See
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/InsertOptions.html
-&#34;&gt;&lt;code&gt;InsertOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/UpdateOptions.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/InsertOptions.html
+&#34;&gt;&lt;code&gt;InsertOptions&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/UpdateOptions.html
 &#34;&gt;&lt;code&gt;UpdateOptions&lt;/code&gt;&lt;/a&gt;,
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/MapReduceOptions.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/MapReduceOptions.html
 &#34;&gt;&lt;code&gt;MapReduceOptions&lt;/code&gt;&lt;/a&gt;,
- and &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
+ and &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/FindAndModifyOptions.html
 &#34;&gt;&lt;code&gt;FindAndModifyOptions&lt;/code&gt;&lt;/a&gt; for more information.&lt;/p&gt;
 
 &lt;h3 id=&#34;id&#34;&gt;Id&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Id.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Id.html
 &#34;&gt;&lt;code&gt;@Id&lt;/code&gt;&lt;/a&gt; marks a field in an entity to be the &lt;code&gt;_id&lt;/code&gt; field in MongoDB.  This
 annotation is required on all top level entities regardless of the presence of an &lt;code&gt;@Entity&lt;/code&gt; annotation.  If a class is marked with
 &lt;code&gt;@Embedded&lt;/code&gt; this annotation is not required since embedded documents are not required to have _id fields.&lt;/p&gt;
 
 &lt;h3 id=&#34;property&#34;&gt;Property&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Property.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Property.html
 &#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; is an optional annotation instructing Morphia to persist the
 field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
 overridden by passing a String with the new name to the annotation.&lt;/p&gt;
 
 &lt;h3 id=&#34;transient&#34;&gt;Transient&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Transient.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Transient.html
 &#34;&gt;&lt;code&gt;@Transient&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when converting an
 entity to a document.  The Java keyword &lt;code&gt;transient&lt;/code&gt; can also be used instead.&lt;/p&gt;
 
 &lt;h3 id=&#34;serialized&#34;&gt;Serialized&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Serialized.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Serialized.html
 &#34;&gt;&lt;code&gt;@Serialized&lt;/code&gt;&lt;/a&gt; instructs Morphia to serialize this field using JDK
 serialization.  The field&amp;rsquo;s value gets converted to a &lt;code&gt;byte[]&lt;/code&gt; and passed to MongoDB.&lt;/p&gt;
 
 &lt;h3 id=&#34;notsaved&#34;&gt;NotSaved&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/NotSaved.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/NotSaved.html
 &#34;&gt;&lt;code&gt;@NotSaved&lt;/code&gt;&lt;/a&gt; instructs Morphia to ignore this field when saving but will
  still be loaded from the database when the entity is read.&lt;/p&gt;
 
 &lt;h3 id=&#34;alsoload&#34;&gt;AlsoLoad&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/AlsoLoad.html
 &#34;&gt;&lt;code&gt;@AlsoLoad&lt;/code&gt;&lt;/a&gt; instructs Morphia to look for a field under different names than
 the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
 this annotation to tell Morphia what older names to try if the current one fails.  It is an error to have values under both the old and
@@ -185,7 +185,7 @@ renamed.&lt;/p&gt;
 
 &lt;h3 id=&#34;version&#34;&gt;Version&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/annotations/Version.html
+&lt;p&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/annotations/Version.html
 &#34;&gt;&lt;code&gt;@Version&lt;/code&gt;&lt;/a&gt; marks a field in an entity to control optimistic locking. If the
 versions change in the database while modifying an entity (including deletes) a &lt;code&gt;ConcurrentModificationException&lt;/code&gt; will be thrown. This
 field will be automatically managed for you &amp;ndash; there is no need to set a value and you should not do so.  If another name beside the Java
@@ -243,10 +243,10 @@ class BankAccountWatcher{
     
     <item>
       <title>Reference Guides</title>
-      <link>/morphia/1.3/guides/</link>
+      <link>/morphia/1.4/guides/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/</guid>
+      <guid>/morphia/1.4/guides/</guid>
       <description>
 
 &lt;h2 id=&#34;reference-guides&#34;&gt;Reference Guides&lt;/h2&gt;
@@ -254,29 +254,29 @@ class BankAccountWatcher{
 &lt;h3 id=&#34;core-guides&#34;&gt;Core Guides&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/updating/&#34;&gt;Updating&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/lifeCycleMethods/&#34;&gt;Life Cycle Methods&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/querying/&#34;&gt;Querying&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/updating/&#34;&gt;Updating&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/aggregation/&#34;&gt;Aggregation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/&#34;&gt;Annotations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/indexing/&#34;&gt;Indexing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/lifeCycleMethods/&#34;&gt;Life Cycle Methods&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;extension-guides&#34;&gt;Extension Guides&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/jrebel/&#34;&gt;JRebel Support&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/validationExtension/&#34;&gt;Validation Extension&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/jrebel/&#34;&gt;JRebel Support&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/validationExtension/&#34;&gt;Validation Extension&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
       <title>Aggregation</title>
-      <link>/morphia/1.3/guides/aggregation/</link>
+      <link>/morphia/1.4/guides/aggregation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/aggregation/</guid>
+      <guid>/morphia/1.4/guides/aggregation/</guid>
       <description>
 
 &lt;h1 id=&#34;aggregation&#34;&gt;Aggregation&lt;/h1&gt;
@@ -365,17 +365,17 @@ results for later retrieval.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;out()&lt;/code&gt; has several variants.  In this example, we&amp;rsquo;re passing in &lt;code&gt;Author.class&lt;/code&gt; which tells Morphia that we want to map each document
 returned to an instance of &lt;code&gt;Author&lt;/code&gt;.  Because we&amp;rsquo;re using &lt;code&gt;out()&lt;/code&gt; instead of &lt;code&gt;aggregate()&lt;/code&gt;, Morphia will use the mapped collection for
 &lt;code&gt;Author&lt;/code&gt; as the output collection for the pipeline.  If you&amp;rsquo;d like to use an alternate collection but still return a cursor of &lt;code&gt;Author&lt;/code&gt;
-instances, you can use &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
+instances, you can use &lt;a href=&#34;/morphia/1.4/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
 .lang.String-java.lang.Class-com.mongodb.AggregationOptions-&#34;&gt;&lt;code&gt;out(String,Class,AggregationOptions)&lt;/code&gt;&lt;/a&gt; instead.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Indexing</title>
-      <link>/morphia/1.3/guides/indexing/</link>
+      <link>/morphia/1.4/guides/indexing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/indexing/</guid>
+      <guid>/morphia/1.4/guides/indexing/</guid>
       <description>
 
 &lt;h1 id=&#34;indexing&#34;&gt;Indexing&lt;/h1&gt;
@@ -393,8 +393,8 @@ an entity&amp;rsquo;s source.  In addition to the familiar ascending/descending 
 
 &lt;h2 id=&#34;class-level-indexes&#34;&gt;Class Level Indexes&lt;/h2&gt;
 
-&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexes&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
-annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#index&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
+&lt;p&gt;Class level indexing begins with the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#indexes&#34;&gt;&lt;code&gt;@Indexes&lt;/code&gt;&lt;/a&gt; annotation.  This is a container
+annotation whose sole purpose is to hold a number of &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#index&#34;&gt;&lt;code&gt;@Index&lt;/code&gt;&lt;/a&gt; annotations.  This annotation
 has two primary components to cover here:  &lt;code&gt;fields&lt;/code&gt; and &lt;code&gt;options&lt;/code&gt;.  An index definition would take the following form:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;@Entity
@@ -415,14 +415,14 @@ public class IndexExample {
 
 &lt;h3 id=&#34;fields&#34;&gt;Fields&lt;/h3&gt;
 
-&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
+&lt;p&gt;The fields to use in an index definition are defined with the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt; annotation. An
 arbitrary number of &lt;code&gt;@Field&lt;/code&gt;s can be given but at least one must be present.&lt;/p&gt;
 
 &lt;h4 id=&#34;value&#34;&gt;value()&lt;/h4&gt;
 
 &lt;p&gt;Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#property&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
- &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#embedded&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
+name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#property&#34;&gt;&lt;code&gt;@Property&lt;/code&gt;&lt;/a&gt; or
+ &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#embedded&#34;&gt;&lt;code&gt;@Embedded&lt;/code&gt;&lt;/a&gt; annotations.  For most index types, this value is validated by default.  An
   exception is made for &lt;a href=&#34;#text-indexing&#34;&gt;text indexes&lt;/a&gt; as discussed below.&lt;/p&gt;
 
 &lt;h4 id=&#34;type&#34;&gt;type()&lt;/h4&gt;
@@ -431,7 +431,7 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;p&gt;Indicates the &amp;ldquo;type&amp;rdquo; of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;See &lt;a href=&#34;/morphia/1.4/javadoc/org/mongodb/morphia/utils/IndexType.html&#34;&gt;IndexType&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;weight&#34;&gt;weight()&lt;/h4&gt;
 
@@ -441,7 +441,7 @@ name as defined in the class&amp;rsquo;s mapping via, e.g.,  the &lt;a href=&#34
 
 &lt;h3 id=&#34;index-options&#34;&gt;Index Options&lt;/h3&gt;
 
-&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexoptions&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
+&lt;p&gt;Options for an index are defined on the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#indexoptions&#34;&gt;&lt;code&gt;@IndexOptions&lt;/code&gt;&lt;/a&gt;.  More complete coverage can
 be found in the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 &#34;&gt;manual&lt;/a&gt; but we&amp;rsquo;ll provide some basic coverage
 here as well.&lt;/p&gt;
@@ -548,14 +548,14 @@ existing value in the index.  Specify &lt;code&gt;true&lt;/code&gt; to create a 
 &lt;p&gt;&lt;em&gt;Optional&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
-can be defined using the &lt;code&gt;collation()&lt;/code&gt; property on &lt;code&gt;@IndexOptions&lt;/code&gt; and takes an &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#collation&#34;&gt;&lt;code&gt;@Collation&lt;/code&gt;&lt;/a&gt;
+can be defined using the &lt;code&gt;collation()&lt;/code&gt; property on &lt;code&gt;@IndexOptions&lt;/code&gt; and takes an &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#collation&#34;&gt;&lt;code&gt;@Collation&lt;/code&gt;&lt;/a&gt;
 instance.&lt;/p&gt;
 
 &lt;h2 id=&#34;field-level-indexes&#34;&gt;Field Level Indexes&lt;/h2&gt;
 
 &lt;p&gt;Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#indexed&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#indexed&#34;&gt;&lt;code&gt;@Indexed&lt;/code&gt;&lt;/a&gt; annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/#field&#34;&gt;&lt;code&gt;@Field&lt;/code&gt;&lt;/a&gt;
 annotations are unnecessary.  The options for the index are the same as defined &lt;a href=&#34;#options&#34;&gt;above&lt;/a&gt;.  A field level index
 definition would look like this:&lt;/p&gt;
 
@@ -597,10 +597,10 @@ incorporating a text index but it&amp;rsquo;s important to note there can only b
     
     <item>
       <title>JRebel</title>
-      <link>/morphia/1.3/guides/jrebel/</link>
+      <link>/morphia/1.4/guides/jrebel/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/jrebel/</guid>
+      <guid>/morphia/1.4/guides/jrebel/</guid>
       <description>
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
@@ -639,7 +639,7 @@ On top of that, you need to tell JRebel about the Plugin. In order to do that, a
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
     &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
     &amp;lt;artifactId&amp;gt;morphia-jrebel-plug&amp;lt;/artifactId&amp;gt;
-    &amp;lt;version&amp;gt;1.3.0-SNAPSHOT&amp;lt;/version&amp;gt;
+    &amp;lt;version&amp;gt;1.4.0-SNAPSHOT&amp;lt;/version&amp;gt;
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
@@ -647,10 +647,10 @@ On top of that, you need to tell JRebel about the Plugin. In order to do that, a
     
     <item>
       <title>Life Cycle Methods</title>
-      <link>/morphia/1.3/guides/lifeCycleMethods/</link>
+      <link>/morphia/1.4/guides/lifeCycleMethods/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/lifeCycleMethods/</guid>
+      <guid>/morphia/1.4/guides/lifeCycleMethods/</guid>
       <description>
 
 &lt;h1 id=&#34;life-cycle-methods&#34;&gt;Life Cycle Methods&lt;/h1&gt;
@@ -668,7 +668,7 @@ add/remove/change values)&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;@PostLoad&lt;/code&gt; - Called after populating the entity with the values from the document&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;See the &lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/annotations/&#34;&gt;annotations guide&lt;/a&gt; for a full list of the annotations supported.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/annotations/&#34;&gt;annotations guide&lt;/a&gt; for a full list of the annotations supported.&lt;/p&gt;
 
 &lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
 
@@ -727,10 +727,10 @@ class DigitalSigner {
     
     <item>
       <title>Querying</title>
-      <link>/morphia/1.3/guides/querying/</link>
+      <link>/morphia/1.4/guides/querying/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/querying/</guid>
+      <guid>/morphia/1.4/guides/querying/</guid>
       <description>
 
 &lt;h1 id=&#34;querying&#34;&gt;Querying&lt;/h1&gt;
@@ -1042,7 +1042,7 @@ Assert.assertNull(found.lastName);
 &lt;p&gt;While projections can be a nice performance win in some cases, it&amp;rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if &lt;code&gt;found&lt;/code&gt; is saved back to MongoDB, the &lt;code&gt;last_name&lt;/code&gt; field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/Datastore#merge-T-.html&#34;&gt;&lt;code&gt;Datastore#merge(T)&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+  for this entity will be removed.  To save such instances back consider using &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/Datastore#merge-T-.html&#34;&gt;&lt;code&gt;Datastore#merge(T)&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;/div&gt;
 
@@ -1064,7 +1064,7 @@ pagination, however.  See the &lt;a href=&#34;http://docs.mongodb.org/manual/ref
 
 &lt;h3 id=&#34;ordering&#34;&gt;Ordering&lt;/h3&gt;
 
-&lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.3/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
+&lt;p&gt;Ordering the results of a query is done via &lt;a href=&#34;/morphia/1.4/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-&#34;&gt;&lt;code&gt;Query.order(String)&lt;/code&gt;&lt;/a&gt;
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
  for a particular field simply prefix that field with a &lt;code&gt;-&lt;/code&gt;.  For example, to sort by age (youngest to oldest) and then income (highest
  to lowest), you would use this:&lt;/p&gt;
@@ -1096,7 +1096,7 @@ while(found.size() &amp;lt; 10) {
 &lt;p&gt;There are two things to note about this code sample:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.3/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
+&lt;li&gt;This tells Morphia to make sure that any entity &lt;a href=&#34;/morphia/1.4/guides/annotations/#entity&#34;&gt;configured&lt;/a&gt; to use a capped collection has its collection
 created correctly.  If the collection already exists and is not capped, you will have to manually &lt;a href=&#34;http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 &#34;&gt;update&lt;/a&gt; your collection to be a capped collection.&lt;/li&gt;
 &lt;li&gt;Since this &lt;code&gt;Iterator&lt;/code&gt; is backed by a tailable cursor, &lt;code&gt;hasNext()&lt;/code&gt; and &lt;code&gt;next()&lt;/code&gt; will block until a new item is found.  In this
@@ -1126,10 +1126,10 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     
     <item>
       <title>Updating</title>
-      <link>/morphia/1.3/guides/updating/</link>
+      <link>/morphia/1.4/guides/updating/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/updating/</guid>
+      <guid>/morphia/1.4/guides/updating/</guid>
       <description>
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
@@ -1138,10 +1138,10 @@ Artist result = datastore.createQuery(Artist.class, query).get();
 
 &lt;h1 id=&#34;updating-on-the-server&#34;&gt;Updating (on the server)&lt;/h1&gt;
 
-&lt;p&gt;The update method on &lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/Datastore.html
+&lt;p&gt;The update method on &lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/Datastore.html
 &#34;&gt;&lt;code&gt;Datastore&lt;/code&gt;&lt;/a&gt; is used to issue a command to the server to change
 existing documents.  The effects of the update command are defined via
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/query/UpdateOperations.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/query/UpdateOperations.html
 &#34;&gt;&lt;code&gt;UpdateOperations&lt;/code&gt;&lt;/a&gt; methods.&lt;/p&gt;
 
 &lt;h2 id=&#34;the-field-expression&#34;&gt;The Field Expression&lt;/h2&gt;
@@ -1256,7 +1256,7 @@ datastore.update(updateQuery, ops);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;code&gt;push()&lt;/code&gt; and &lt;code&gt;addToSet()&lt;/code&gt; can take either single values or a &lt;code&gt;List&lt;/code&gt; of values.  The &lt;code&gt;push()&lt;/code&gt; methods can also optionally take a
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/javadoc?org/mongodb/morphia/query/PushOptions.html
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/javadoc?org/mongodb/morphia/query/PushOptions.html
 &#34;&gt;&lt;code&gt;PushOptions&lt;/code&gt;&lt;/a&gt; instance allowing for tweaking how the values are added to the
 list.  See &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
 &#34;&gt;the manual&lt;/a&gt; for more information about the various modifiers
@@ -1378,10 +1378,10 @@ datastore
     
     <item>
       <title>Validation Extension</title>
-      <link>/morphia/1.3/guides/validationExtension/</link>
+      <link>/morphia/1.4/guides/validationExtension/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/1.3/guides/validationExtension/</guid>
+      <guid>/morphia/1.4/guides/validationExtension/</guid>
       <description>
 
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
@@ -1414,7 +1414,7 @@ public class Userlike {
 &lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
 
 &lt;p&gt;This is a lightweight wrapper around the JSR 303 API. It installs a simple global entity interceptor which listens to all
-&lt;a href=&#34;/morphia/1.3/morphia/1.3/guides/lifeCycleMethods/&#34;&gt;life cycle methods&lt;/a&gt; needed for validation. You can use any implementation of JSR 303 by
+&lt;a href=&#34;/morphia/1.4/morphia/1.4/guides/lifeCycleMethods/&#34;&gt;life cycle methods&lt;/a&gt; needed for validation. You can use any implementation of JSR 303 by
 just adding it to the classpath.&lt;/p&gt;
 
 &lt;p&gt;You can look at the code &lt;a href=&#34;https://github.com/mongodb/morphia/blob/master/validation/src/main/java/org/mongodb/morphia/ValidationExtension.java
@@ -1435,7 +1435,7 @@ just adding it to the classpath.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;dependency&amp;gt;
     &amp;lt;groupId&amp;gt;org.mongodb.morphia&amp;lt;/groupId&amp;gt;
     &amp;lt;artifactId&amp;gt;morphia-validation&amp;lt;/artifactId&amp;gt;
-    &amp;lt;version&amp;gt;1.3.0-SNAPSHOT&amp;lt;/version&amp;gt;
+    &amp;lt;version&amp;gt;1.4.0-SNAPSHOT&amp;lt;/version&amp;gt;
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 </description>

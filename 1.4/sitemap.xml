@@ -2,71 +2,71 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>/morphia/1.3/</loc>
+    <loc>/morphia/1.4/</loc>
     <lastmod>2015-03-18T16:56:14+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/issues-help/</loc>
+    <loc>/morphia/1.4/issues-help/</loc>
     <lastmod>2015-03-18T16:56:14+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/annotations/</loc>
+    <loc>/morphia/1.4/guides/annotations/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/getting-started/</loc>
+    <loc>/morphia/1.4/getting-started/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/getting-started/installation-guide/</loc>
+    <loc>/morphia/1.4/getting-started/installation-guide/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/</loc>
+    <loc>/morphia/1.4/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/getting-started/quick-tour/</loc>
+    <loc>/morphia/1.4/getting-started/quick-tour/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/</loc>
+    <loc>/morphia/1.4/guides/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/aggregation/</loc>
+    <loc>/morphia/1.4/guides/aggregation/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/indexing/</loc>
+    <loc>/morphia/1.4/guides/indexing/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/jrebel/</loc>
+    <loc>/morphia/1.4/guides/jrebel/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/lifeCycleMethods/</loc>
+    <loc>/morphia/1.4/guides/lifeCycleMethods/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/querying/</loc>
+    <loc>/morphia/1.4/guides/querying/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/updating/</loc>
+    <loc>/morphia/1.4/guides/updating/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.3/guides/validationExtension/</loc>
+    <loc>/morphia/1.4/guides/validationExtension/</loc>
   </url>
   
 </urlset>
