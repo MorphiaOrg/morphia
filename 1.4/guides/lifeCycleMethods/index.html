@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="/morphia/1.3/img/favicon.png">
+
+    <title>Life Cycle Methods</title>
+
+    <link rel="stylesheet" href="/morphia/1.3/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/highlight/styles/idea.css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/java.css" type="text/css" />
+
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="/morphia/1.3/../">
+        <img src="/morphia/1.3/img/logo-mongodb-header.png", alt="MongoDB.org" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
+              University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="/morphia/1.3">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="/morphia/1.3/../">Morphia</a>
+          <a class="version pull-right" href="/morphia/1.3">1.3-SNAPSHOT</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/morphia/1.3/getting-started/" class="">
+      <i class='fa fa-road'></i>
+      <span>Getting Started</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/getting-started/installation-guide/">
+        <i class='fa'></i>
+        Installation Guide
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/getting-started/quick-tour/">
+        <i class='fa'></i>
+        Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/morphia/1.3/guides/" class="">
+      <i class='fa fa-book'></i>
+      <span>Reference Guides</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/annotations/">
+        <i class='fa fa-file-text-o'></i>
+        Annotations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/indexing/">
+        <i class='fa fa-file-text-o'></i>
+        Indexing
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/jrebel/">
+        <i class='fa fa-file-text-o'></i>
+        JRebel
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/lifeCycleMethods/">
+        <i class='fa fa-file-text-o'></i>
+        Life Cycle Methods
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/querying/">
+        <i class='fa fa-file-text-o'></i>
+        Querying
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/updating/">
+        <i class='fa fa-file-text-o'></i>
+        Updating
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/validationExtension/">
+        <i class='fa fa-file-text-o'></i>
+        Validation Extension
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.3/javadoc">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.3/issues-help/">
+        <i class='fa fa-life-ring'></i>
+        Issues &amp; Help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/morphia">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+<div class="option-popup closed hidden" id="optionsVersionsPopup">
+<div class="option-header">
+  <i class="fa fa-gear"></i>
+  <span>OPTIONS</span>
+  <i class="fa fa-angle-up pull-right"></i>
+</div>
+<div class="option-body">
+  <ul>
+      
+      <li>
+        <label>Version</label>
+        <div class="btn-group btn-group-xs pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Select Version <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
+          </ul>
+        </div>
+      </li>
+
+   
+
+
+    
+
+  </ul>
+</div>
+</div>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/guides/lifeCycleMethods.md" target="_blank" title="Edit guides/lifeCycleMethods.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/morphia/1.3/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
+  <li>Life Cycle Methods</li>
+</ul>
+</div>
+
+
+
+
+<h1 id="life-cycle-methods">Life Cycle Methods</h1>
+
+<p>There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save)
+, and Pre/Post-Load.</p>
+
+<ul>
+<li><code>@PrePersist</code> - Called before save, it can return a <code>DBObject</code> in place of an empty one.</li>
+<li><code>@PreSave</code> - Called right before <code>DBCollection.save()</code> is called. Changes made to the entity will not be persisted; the <code>DBObject</code> can
+be passed as an argument (you can add/remove/change values)</li>
+<li><code>@PostPersist</code> - Called after the save call to the database</li>
+<li><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can
+add/remove/change values)</li>
+<li><code>@PostLoad</code> - Called after populating the entity with the values from the document</li>
+</ul>
+
+<p>See the <a href="/morphia/1.3/guides/annotations/">annotations guide</a> for a full list of the annotations supported.</p>
+
+<h2 id="examples">Examples</h2>
+
+<p><a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63">Here</a> is a one of the test classes.</p>
+
+<p>All parameters and return values are options in your implemented methods.</p>
+
+<h3 id="example">Example</h3>
+
+<p>Here is a simple example of an entity that always saves the Date it was last updated.  Alternatively, the resulting serialized form can
+be passed back in just prior to sending the document to the database.</p>
+
+<pre><code class="language-java">class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+
+  @PrePersist
+  public void trackUpdate() {
+    lastUpdated = new Date();
+  }
+
+  @PrePersist
+  public void prePersist(final DBObject dbObj) {
+    // perform operations on serialized form of the entity
+  }
+}
+</code></pre>
+
+<h3 id="entitylisteners">EntityListeners</h3>
+
+<p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.  For example&rsquo;s
+ sake, let&rsquo;s assume there&rsquo;s a need to digitally sign all documents before storing it in the database.</p>
+
+<pre><code class="language-java">@EntityListeners(DigitalSigner.class)
+public class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+}
+
+class DigitalSigner {
+  @PrePersist
+  void prePersist(final Object entity, final DBObject dbObject) {
+     dbObject.put(&quot;signature&quot;, sign(dbObject));
+  }
+
+}
+</code></pre>
+
+<h2 id="no-delete-support">No Delete Support</h2>
+
+<p>Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.</p>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.3/guides/jrebel/">
+      <i class="fa fa-long-arrow-left"> </i> JRebel
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/morphia/1.3/guides/querying/">
+    Querying <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#life-cycle-methods">Life Cycle Methods</a>
+<ul>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#example">Example</a></li>
+<li><a href="#entitylisteners">EntityListeners</a></li>
+</ul></li>
+<li><a href="#no-delete-support">No Delete Support</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "/morphia/1.3",
+   VERSION:     "1.3-SNAPSHOT",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="/morphia/1.3/js/jquery.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/bootstrap.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/navbar.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/scripts.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/java.js"></script>
+
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+

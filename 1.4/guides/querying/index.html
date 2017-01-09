@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="/morphia/1.3/img/favicon.png">
+
+    <title>Querying</title>
+
+    <link rel="stylesheet" href="/morphia/1.3/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/highlight/styles/idea.css" />
+<link rel="stylesheet" href="/morphia/1.3/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
+<link rel="stylesheet" href="/morphia/1.3/css/java.css" type="text/css" />
+
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="/morphia/1.3/../">
+        <img src="/morphia/1.3/img/logo-mongodb-header.png", alt="MongoDB.org" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
+              University</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="/morphia/1.3">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="/morphia/1.3/../">Morphia</a>
+          <a class="version pull-right" href="/morphia/1.3">1.3-SNAPSHOT</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+    
+    
+      
+    
+  
+  
+
+
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+    
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/morphia/1.3/getting-started/" class="">
+      <i class='fa fa-road'></i>
+      <span>Getting Started</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/getting-started/installation-guide/">
+        <i class='fa'></i>
+        Installation Guide
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/getting-started/quick-tour/">
+        <i class='fa'></i>
+        Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+<li class="toctree-l1  current">
+  <a href="/morphia/1.3/guides/" class="">
+      <i class='fa fa-book'></i>
+      <span>Reference Guides</span>
+      <span class="menu-arrow fa fa-angle-down"></span>
+  </a>
+    <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/aggregation/">
+        <i class='fa fa-file-text-o'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/annotations/">
+        <i class='fa fa-file-text-o'></i>
+        Annotations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/indexing/">
+        <i class='fa fa-file-text-o'></i>
+        Indexing
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/jrebel/">
+        <i class='fa fa-file-text-o'></i>
+        JRebel
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/lifeCycleMethods/">
+        <i class='fa fa-file-text-o'></i>
+        Life Cycle Methods
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/querying/">
+        <i class='fa fa-file-text-o'></i>
+        Querying
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/updating/">
+        <i class='fa fa-file-text-o'></i>
+        Updating
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/morphia/1.3/guides/validationExtension/">
+        <i class='fa fa-file-text-o'></i>
+        Validation Extension
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.3/javadoc">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/morphia/1.3/issues-help/">
+        <i class='fa fa-life-ring'></i>
+        Issues &amp; Help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/morphia">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+<div class="option-popup closed hidden" id="optionsVersionsPopup">
+<div class="option-header">
+  <i class="fa fa-gear"></i>
+  <span>OPTIONS</span>
+  <i class="fa fa-angle-up pull-right"></i>
+</div>
+<div class="option-body">
+  <ul>
+      
+      <li>
+        <label>Version</label>
+        <div class="btn-group btn-group-xs pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Select Version <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
+          </ul>
+        </div>
+      </li>
+
+   
+
+
+    
+
+  </ul>
+</div>
+</div>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/morphia/blob/master/docs/reference/content/guides/querying.md" target="_blank" title="Edit guides/querying.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  <li><a href="/morphia/1.3/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
+  <li>Querying</li>
+</ul>
+</div>
+
+
+
+
+<h1 id="querying">Querying</h1>
+
+<p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
+ to provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
+the type of your entity.</p>
+
+<h2 id="creating-a-query">Creating a Query</h2>
+
+<p>The <code>Datastore</code> is the key class when using Morphia.  Virtually all operations begin with the <code>Datastore</code>.  To create the <code>Query</code>, we
+invoke the following code:</p>
+
+<pre><code class="language-java">Query&lt;Product&gt; query = datastore.createQuery(Product.class);
+</code></pre>
+
+<p><code>createQuery()</code> returns an instance of <code>Query</code> with which we can build a query.</p>
+
+<h3 id="filter"><code>filter()</code></h3>
+
+<p>The first method of interest is <code>filter()</code>.  This method takes two values: a condition string and a value.  The <code>value</code> parameter is, of
+course, the value to use when applying the <code>condition</code> clause.  The <code>condition</code> parameter is a bit more complicated.  At its simplest,
+the condition is just a field name.  In this case, the condition is assumed to be an <a href="http://docs.mongodb.org/manual/reference/operator/query/eq/
+">equality</a> check.  There is a slightly more complicated variant, however.</p>
+
+<p>The <code>condition</code> value can also contain an operator.  For example, to compare a numeric field against a value, you might write something
+like this:</p>
+
+<pre><code class="language-java">query.filter(&quot;price &gt;=&quot;, 1000);
+</code></pre>
+
+<p>In this case, we&rsquo;re instructing Morphia to add a filter using <a href="http://docs.mongodb.org/manual/reference/operator/query/gte/
+">$gte</a>.  This would result
+ in a query that looks like this:</p>
+
+<pre><code class="language-javascript">{ price: { $gte: 1000 } }
+</code></pre>
+
+<p>The list of supported filter operations can be found in the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
+">FilterOperator</a> class.</p>
+
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Alias</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>$center</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$centerSphere</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$box</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$eq</td>
+<td>=, ==</td>
+</tr>
+
+<tr>
+<td>$ne</td>
+<td>!=, &lt;&gt;</td>
+</tr>
+
+<tr>
+<td>$gt</td>
+<td>&gt;</td>
+</tr>
+
+<tr>
+<td>$gte</td>
+<td>&gt;=</td>
+</tr>
+
+<tr>
+<td>$lt</td>
+<td>&lt;</td>
+</tr>
+
+<tr>
+<td>$lte</td>
+<td>&lt;=</td>
+</tr>
+
+<tr>
+<td>$exists</td>
+<td>exists</td>
+</tr>
+
+<tr>
+<td>$type</td>
+<td>type</td>
+</tr>
+
+<tr>
+<td>$not</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$mod</td>
+<td>mod</td>
+</tr>
+
+<tr>
+<td>$size</td>
+<td>size</td>
+</tr>
+
+<tr>
+<td>$in</td>
+<td>in</td>
+</tr>
+
+<tr>
+<td>$nin</td>
+<td>nin</td>
+</tr>
+
+<tr>
+<td>$all</td>
+<td>all</td>
+</tr>
+
+<tr>
+<td>$elemMatch</td>
+<td>elem, elemMatch</td>
+</tr>
+
+<tr>
+<td>$where</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$near</td>
+<td>near</td>
+</tr>
+
+<tr>
+<td>$nearSphere</td>
+<td></td>
+</tr>
+
+<tr>
+<td>$within (deprecated replaced by $geoWithin)</td>
+<td>within</td>
+</tr>
+
+<tr>
+<td>$geoNear</td>
+<td>geoNear</td>
+</tr>
+
+<tr>
+<td>$geoWithin</td>
+<td>geoWithin</td>
+</tr>
+
+<tr>
+<td>$geoIntersects</td>
+<td>geoIntersects</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each filter operator can either be referenced by its MongoDB &ldquo;dollar operator&rdquo; or by the aliases listed afterward.  For example, with
+ the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use
+ either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
+
+<h3 id="field"><code>field()</code></h3>
+
+<p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
+returns an instance of a <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
+">class</a> providing methods with which
+ to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
+ <code>filter()</code> can be.  To perform the same query as above, you&rsquo;d write this:</p>
+
+<pre><code class="language-java">query.field(&quot;price&quot;).greaterThanOrEq(1000);
+</code></pre>
+
+<p>This results in the exact same query as the <code>filter()</code> version but has the advantage that any typo in the operation name (method in this
+case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.</p>
+
+<div class="admonition note">
+<h5 class="admonition-title">Note</h5>
+<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+<code>@Property</code> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+result in an error.</p>
+
+</div>
+
+
+<h2 id="complex-queries">Complex Queries</h2>
+
+<p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <code>and()</code> and <code>or()</code> to build up more
+complex queries.  An <code>and</code> query might look something like this:</p>
+
+<pre><code class="language-java">q.and(
+    q.criteria(&quot;width&quot;).equal(10),
+    q.criteria(&quot;height&quot;).equal(1)
+);
+</code></pre>
+
+<p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.  For these clauses we use the <code>criteria()</code>
+method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a <a href="https://docs.oracle
+.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.
+ If all you need is an <code>and</code> clause, you don&rsquo;t need an explicit call to <code>and()</code>:</p>
+
+<pre><code class="language-java">datastore.createQuery(UserLocation.class)
+    .field(&quot;x&quot;).lessThan(5)
+    .field(&quot;y&quot;).greaterThan(4)
+    .field(&quot;z&quot;).greaterThan(10);
+</code></pre>
+
+<p>This generates an implicit <code>and</code> across the field comparisons.</p>
+
+<h2 id="text-searching">Text Searching</h2>
+
+<p>Morphia also supports MongoDB&rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
+have a <a href="http://docs.mongodb.org/manual//core/index-text/
+">text index</a> defined first.  Using Morphia that definition would look like this:</p>
+
+<pre><code class="language-java">@Indexes(@Index(fields = @Field(value = &quot;$**&quot;, type = IndexType.TEXT)))
+public static class Greeting {
+    @Id
+    private ObjectId id;
+    private String value;
+    private String language;
+
+    ...
+}
+</code></pre>
+
+<p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
+">test</a> does:</p>
+
+<pre><code class="language-java">morphia.map(Greeting.class);
+datastore.ensureIndexes();
+
+datastore.save(new Greeting(&quot;good morning&quot;, &quot;english&quot;),
+    new Greeting(&quot;good afternoon&quot;, &quot;english&quot;),
+    new Greeting(&quot;good night&quot;, &quot;english&quot;),
+    new Greeting(&quot;good riddance&quot;, &quot;english&quot;),
+    new Greeting(&quot;guten Morgen&quot;, &quot;german&quot;),
+    new Greeting(&quot;guten Tag&quot;, &quot;german&quot;)),
+    new Greeting(&quot;gute Nacht&quot;, &quot;german&quot;));
+
+List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
+                             .search(&quot;good&quot;)
+                             .order(&quot;_id&quot;)
+                             .asList();
+Assert.assertEquals(4, good.size());
+</code></pre>
+
+<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
+&ldquo;good&rdquo; in any document.  We created four such documents and our query returns exactly those four.</p>
+
+<h2 id="other-query-options">Other Query Options</h2>
+
+<p>There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
+the query results in different ways.</p>
+
+<h3 id="projections">Projections</h3>
+
+<p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+">Projections</a> allow you to return only a subset of the fields in a
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+">unit tests</a>, this is an example of this feature in action:</p>
+
+<pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
+getDs().save(user);
+
+ContainsRenamedFields found = getDs()
+    .find(ContainsRenamedFields.class)
+    .project(&quot;first_name&quot;, true)
+    .get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);
+
+found = getDs()
+    .find(ContainsRenamedFields.class)
+    .project(&quot;firstName&quot;, true)
+    .get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);
+</code></pre>
+
+<p>As you can see here, we&rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
+ the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
+ <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
+
+<p>The boolean value passed in instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
+
+<div class="admonition important">
+<h5 class="admonition-title">important</h5>
+<p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
+ MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
+  saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
+  for this entity will be removed.  To save such instances back consider using <a href="/morphia/1.3/javadoc?org/mongodb/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
+
+</div>
+
+
+<h3 id="limiting-and-skipping">Limiting and Skipping</h3>
+
+<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
+for these cases.  An example of these methods in action would look like this:</p>
+
+<pre><code class="language-java">datastore.createQuery(Person.class)
+    .asList(new FindOptions()
+	    .offset(1)
+	    .limit(10))
+</code></pre>
+
+<p>This query will skip the first element and take up to the next 10 items found by the query.  There&rsquo;s a caveat to using skip/limit for
+pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip
+">skip</a> documentation for more detail.</p>
+
+<h3 id="ordering">Ordering</h3>
+
+<p>Ordering the results of a query is done via <a href="/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-"><code>Query.order(String)</code></a>
+.  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
+ for a particular field simply prefix that field with a <code>-</code>.  For example, to sort by age (youngest to oldest) and then income (highest
+ to lowest), you would use this:</p>
+
+<pre><code class="language-java">query.order(&quot;age,-income&quot;);
+</code></pre>
+
+<h3 id="tailable-cursors">Tailable Cursors</h3>
+
+<p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
+">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
+are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+
+<pre><code class="language-java">getMorphia().map(CappedPic.class);
+getDs().ensureCaps();                                                          // #1
+final Query&lt;CappedPic&gt; query = getDs().createQuery(CappedPic.class);
+final List&lt;CappedPic&gt; found = new ArrayList&lt;CappedPic&gt;();
+
+final Iterator&lt;CappedPic&gt; tail = query
+	.fetch(new FindOptions()
+		.cursorType(CursorType.Tailable));
+while(found.size() &lt; 10) {
+	found.add(tail.next());                                                    // #2
+}
+</code></pre>
+
+<p>There are two things to note about this code sample:</p>
+
+<ol>
+<li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
+created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
+">update</a> your collection to be a capped collection.</li>
+<li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
+version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
+application.</li>
+</ol>
+
+<h3 id="raw-querying">Raw Querying</h3>
+
+<p>You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.</p>
+
+<p>For example:</p>
+
+<pre><code>DBObject query = BasicDBObjectBuilder.start()
+	.add(&quot;albums&quot;,
+            new BasicDBObject(&quot;$elemMatch&quot;,
+                    new BasicDBObject(&quot;$and&quot;, new BasicDBObject[] {
+                        new BasicDBObject(&quot;albumId&quot;, albumDto.getAlbumId()),
+                        new BasicDBObject(&quot;album&quot;,
+                            new BasicDBObject(&quot;$exists&quot;, false))})))
+	.get();
+
+Artist result = datastore.createQuery(Artist.class, query).get();
+</code></pre>
+
+
+
+
+
+
+<div id="btnv">
+  
+  <div class="pull-left">
+  <a class="navigation prev" href="/morphia/1.3/guides/lifeCycleMethods/">
+      <i class="fa fa-long-arrow-left"> </i> Life Cycle Methods
+  </a>
+  </div>
+  
+  
+  <div class="pull-right">
+  <a class="navigation next" href="/morphia/1.3/guides/updating/">
+    Updating <i class="fa fa-long-arrow-right"> </i>
+  </a>
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#querying">Querying</a>
+<ul>
+<li><a href="#creating-a-query">Creating a Query</a>
+<ul>
+<li><a href="#filter"><code>filter()</code></a></li>
+<li><a href="#field"><code>field()</code></a></li>
+</ul></li>
+<li><a href="#complex-queries">Complex Queries</a></li>
+<li><a href="#text-searching">Text Searching</a></li>
+<li><a href="#other-query-options">Other Query Options</a>
+<ul>
+<li><a href="#projections">Projections</a></li>
+<li><a href="#limiting-and-skipping">Limiting and Skipping</a></li>
+<li><a href="#ordering">Ordering</a></li>
+<li><a href="#tailable-cursors">Tailable Cursors</a></li>
+<li><a href="#raw-querying">Raw Querying</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "/morphia/1.3",
+   VERSION:     "1.3-SNAPSHOT",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="/morphia/1.3/js/jquery.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/bootstrap.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/navbar.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/scripts.js"></script>
+<script type="text/javascript" src="/morphia/1.3/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/morphia/1.3/js/java.js"></script>
+
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+
