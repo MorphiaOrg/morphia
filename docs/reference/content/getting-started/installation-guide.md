@@ -14,4 +14,4 @@ The recommended way to get started using Morphia in your project is with a depen
 
 {{< distroPicker >}}
 
-{{< install version="1.3.0" >}}
+{{< install version="1.3.1" >}}
