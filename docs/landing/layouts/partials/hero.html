@@ -10,7 +10,7 @@
       <p>
         {{ range where $.Site.Data.releases.versions "version" $.Site.Data.releases.current  }}{{ $.Scratch.Set "qs.currentReleasedVersion" . }}{{end }}
         {{$currentReleasedVersion := $.Scratch.Get "qs.currentReleasedVersion"}}
-      <a id="latest" href="1.2"
+      <a id="latest" href="1.3"
          class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
       </p>
 

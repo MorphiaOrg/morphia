@@ -53,6 +53,6 @@ If you use Maven to manage your project, you can reference Morphia as a dependen
 <dependency>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-validation</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
 </dependency>
 ```
