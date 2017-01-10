@@ -725,7 +725,9 @@ public interface Datastore {
      * @param createIfMissing if true, a document will be created if none can be found that match the query
      * @param <T>             the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
+    @Deprecated
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing);
 
     /**
@@ -739,7 +741,9 @@ public interface Datastore {
      * @param wc              the WriteConcern to use
      * @param <T>             the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
+    @Deprecated
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing, WriteConcern wc);
 
     /**
@@ -749,7 +753,9 @@ public interface Datastore {
      * @param operations the update operations to perform
      * @param <T>        the type of the entity
      * @return the results of the update
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with multi set to false (the default value)
      */
+    @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations);
 
     /**
@@ -760,7 +766,9 @@ public interface Datastore {
      * @param createIfMissing if true, a document will be created if none can be found that match the query
      * @param <T>             the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
+    @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing);
 
     /**
@@ -772,7 +780,9 @@ public interface Datastore {
      * @param wc              the WriteConcern to use
      * @param <T>             the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
+    @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing, WriteConcern wc);
 
     /**
@@ -786,6 +796,8 @@ public interface Datastore {
      * @param createIfMissing if true, a document will be created if none can be found that match the query
      * @param <T>             the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link #find(Class)} and {@link #save(Object)} directly
      */
+    @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
 }

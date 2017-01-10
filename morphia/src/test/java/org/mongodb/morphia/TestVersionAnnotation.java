@@ -135,6 +135,7 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testUpdateFirst() {
         final Datastore datastore = getDs();
 
@@ -174,7 +175,7 @@ public class TestVersionAnnotation extends TestBase {
         query.field("_id").equal(version1.getId());
         UpdateOperations<Versioned> up = getDs().createUpdateOperations(Versioned.class).inc("count");
 
-        getDs().updateFirst(query, up, true);
+        getDs().update(query, up, new UpdateOptions().upsert(true));
 
         final Versioned version2 = getDs().get(Versioned.class, version1.getId());
 
@@ -241,7 +242,7 @@ public class TestVersionAnnotation extends TestBase {
         query.filter("name", "Value 1");
         UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
         ops.set("name", "Value 3");
-        datastore.update(query, ops, true);
+        datastore.update(query, ops, new UpdateOptions().upsert(true));
 
         entity = datastore.find(Versioned.class).get();
         Assert.assertEquals("Value 3", entity.getName());
