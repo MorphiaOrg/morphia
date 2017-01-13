@@ -104,8 +104,12 @@ public class PathTargetTest extends TestBase {
         MappedClass mappedClass = mapper.getMappedClass(Student.class);
 
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "grades.$.data.name");
-        Assert.assertEquals("grades.$.data.name", pathTarget.translatedPath());
+        Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(Grade.class).getMappedFieldByJavaField("data"), pathTarget.getTarget());
+
+        pathTarget = new PathTarget(mapper, mappedClass, "grades.$.d.name");
+        Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
+        Assert.assertEquals(mapper.getMappedClass(Grade.class).getMappedField("d"), pathTarget.getTarget());
 
         pathTarget = new PathTarget(mapper, mapper.getMappedClass(Article.class), "translations");
         Assert.assertEquals("translations", pathTarget.translatedPath());
