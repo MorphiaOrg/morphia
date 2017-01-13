@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
@@ -169,6 +170,7 @@ public class TestArrayUpdates extends TestBase {
     public static class Grade {
         private int marks;
 
+        @Property("d")
         private Map<String, String> data;
 
         public Grade() {

@@ -114,12 +114,9 @@ public class PathTarget {
             field = resolveField(segment);
 
             if (field != null) {
-                if (!field.isMap()) {
-                    translate(field.getNameToStore());
-                } else {
-                    if (hasNext()) {
-                        next();  // consume the map key segment
-                    }
+                translate(field.getNameToStore());
+                if (field.isMap() && hasNext()) {
+                    next();  // consume the map key segment
                 }
             } else {
                 if (validateNames) {
