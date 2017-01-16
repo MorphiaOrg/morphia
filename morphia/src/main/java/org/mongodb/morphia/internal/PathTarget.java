@@ -107,7 +107,7 @@ public class PathTarget {
 
             if (segment.equals("$") || segment.matches("[0-9]+")) {  // array operator
                 if (!hasNext()) {
-                    throw new ValidationException("The given path is invalid: " + path);
+                    return;
                 }
                 segment = next();
             }

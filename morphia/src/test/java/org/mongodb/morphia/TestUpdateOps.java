@@ -52,6 +52,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -595,6 +596,25 @@ public class TestUpdateOps extends TestBase {
             getDs().find(DumbColl.class).field("opaqueId").equalIgnoreCase("ID"),
             getAds().createUpdateOperations(DumbColl.class)
                 .removeAll("fromArray", new DumbArrayElement("something")));
+    }
+
+    @Test
+    public void testElemMatchUpdate() {
+        // setUp
+        Object id = getDs().save(new ContainsIntArray()).getId();
+        assertThat(getDs().get(ContainsIntArray.class, id).values, arrayContaining(1, 2, 3));
+
+        // do patch
+        Query<ContainsIntArray> q = getDs().createQuery(ContainsIntArray.class)
+                .filter("id", id)
+                .filter("values", 2);
+
+        UpdateOperations<ContainsIntArray> ops = getDs().createUpdateOperations(ContainsIntArray.class)
+                .set("values.$", 5);
+        getDs().update(q, ops);
+
+        // expected
+        assertThat(getDs().get(ContainsIntArray.class, id).values, arrayContaining(1, 5, 3));
     }
 
     @Test
