@@ -31,10 +31,9 @@ import org.mongodb.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import org.mongodb.morphia.mapping.EmbeddedMappingTest.WithNested;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.query.ValidationException;
 import org.mongodb.morphia.testmodel.Article;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 public class PathTargetTest extends TestBase {
 
@@ -83,18 +82,8 @@ public class PathTargetTest extends TestBase {
         Assert.assertEquals("listEmbeddedType.1.number", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(EmbeddedType.class).getMappedFieldByJavaField("number"), pathTarget.getTarget());
 
-        try {
-            new PathTarget(mapper, mappedClass, "listEmbeddedType.$").translatedPath();
-            fail("The dangling $ should have failed.");
-        } catch (ValidationException ignored) {
-
-        }
-
-        try {
-            new PathTarget(mapper, mappedClass, "listEmbeddedType.1").translatedPath();
-            fail("The dangling 1 should have failed.");
-        } catch (ValidationException ignored) {
-        }
+        assertEquals("listEmbeddedType.$", new PathTarget(mapper, mappedClass, "listEmbeddedType.$").translatedPath());
+        assertEquals("listEmbeddedType.1", new PathTarget(mapper, mappedClass, "listEmbeddedType.1").translatedPath());
     }
 
     @Test
