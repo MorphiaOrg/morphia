@@ -38,7 +38,7 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
      * @param field        the field to consider
      * @param target       the CriteriaContainer
      */
-    FieldEndImpl(final QueryImpl<?> query, final String field, final T target) {
+    public FieldEndImpl(final QueryImpl<?> query, final String field, final T target) {
         this.query = query;
         this.field = field;
         this.target = target;
