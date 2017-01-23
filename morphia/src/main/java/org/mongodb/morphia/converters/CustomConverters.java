@@ -19,6 +19,7 @@ public class CustomConverters extends Converters {
      *
      * @param mapper the Mapper to use
      */
+    @Deprecated
     public CustomConverters(final Mapper mapper) {
         super(mapper);
         defaultConverters = new DefaultConverters(mapper);

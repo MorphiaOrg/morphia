@@ -72,6 +72,7 @@ import static org.mongodb.morphia.utils.ReflectionUtils.isPropertyType;
  * @author Scott Hernandez
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
+@Deprecated
 public class Mapper {
     /**
      * The @{@link org.mongodb.morphia.annotations.Id} field name that is stored with mongodb.

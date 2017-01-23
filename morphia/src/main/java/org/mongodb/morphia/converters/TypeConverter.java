@@ -26,7 +26,7 @@ public abstract class TypeConverter {
      * @param fromDBObject the DBObject to use when populating the new instance
      * @return the new instance
      */
-    public final Object decode(final Class targetClass, final Object fromDBObject) {
+    public Object decode(final Class targetClass, final Object fromDBObject) {
         return decode(targetClass, fromDBObject, null);
     }
 
@@ -39,8 +39,12 @@ public abstract class TypeConverter {
      * @param fromDBObject      the DBObject to use when populating the new instance
      * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding
      * @return the new instance
+     * @deprecated this method will be unavailable in the new mapping code.  use {@link #decode(Class, Object)} instead
      */
-    public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
+    @Deprecated
+    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+        return fromDBObject;
+    }
 
     /**
      * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
@@ -48,7 +52,7 @@ public abstract class TypeConverter {
      * @param value The object to encode
      * @return the encoded version of the object
      */
-    public final Object encode(final Object value) {
+    public Object encode(final Object value) {
         return encode(value, null);
     }
 
@@ -58,7 +62,9 @@ public abstract class TypeConverter {
      * @param value             The object to encode
      * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding
      * @return the encoded version of the object
+     * @deprecated this method will be unavailable in the new mapping code.  use {@link #encode(Object)} instead
      */
+    @Deprecated
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         return value; // as a default impl
     }
@@ -109,7 +115,9 @@ public abstract class TypeConverter {
 
     /**
      * checks if the class is supported for this converter.
+     * @deprecated this method will be unavailable in the new mapping code
      */
+    @Deprecated
     protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
         return false;
     }
@@ -162,7 +170,9 @@ public abstract class TypeConverter {
 
     /**
      * checks if the MappedField is supported for this converter.
+     * @deprecated this method will be unavailable in the new mapping code
      */
+    @Deprecated
     final boolean canHandle(final MappedField mf) {
         return isSupported(mf.getType(), mf);
     }

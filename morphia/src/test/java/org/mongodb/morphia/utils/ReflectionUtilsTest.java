@@ -1,6 +1,7 @@
 package org.mongodb.morphia.utils;
 
 import org.junit.Test;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Field;

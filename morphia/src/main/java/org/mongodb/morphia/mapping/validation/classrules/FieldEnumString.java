@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
+@Deprecated
 public class FieldEnumString {
     private final String display;
 
@@ -18,6 +19,7 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
+    @Deprecated
     public FieldEnumString(final MappedField... fields) {
         this(Arrays.asList(fields));
     }
@@ -27,6 +29,7 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
+    @Deprecated
     public FieldEnumString(final List<MappedField> fields) {
         final StringBuilder sb = new StringBuilder(128);
         for (final MappedField mappedField : fields) {

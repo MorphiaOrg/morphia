@@ -153,7 +153,7 @@ public class CustomConvertersTest extends TestBase {
                 return null;
             }
             final IntegerConverter intConverter = new IntegerConverter();
-            final Integer i = (Integer) intConverter.decode(targetClass, fromDBObject, optionalExtraInfo);
+            final Integer i = (Integer) intConverter.decode(targetClass, fromDBObject);
             return (char) i.intValue();
         }
 
@@ -259,6 +259,8 @@ public class CustomConvertersTest extends TestBase {
             protected ValueObject create(final Long source) {
                 return new ValueObject(source);
             }            @Override
+
+            @Deprecated
             protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
                 return c.isAssignableFrom(ValueObject.class);
             }

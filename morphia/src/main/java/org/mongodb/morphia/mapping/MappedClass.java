@@ -65,6 +65,7 @@ import static java.util.Arrays.asList;
  *
  * @author Scott Hernandez
  */
+@Deprecated
 public class MappedClass {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappedClass.class);
     /**
@@ -155,6 +156,7 @@ public class MappedClass {
      *
      * @since 1.3
      */
+    @Deprecated
     public MappedClass getSuperClass() {
         return superClass;
     }

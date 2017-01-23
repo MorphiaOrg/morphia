@@ -21,6 +21,7 @@ public abstract class FieldConstraint implements ClassConstraint {
         }
     }
 
+    @Deprecated
     protected abstract void check(final Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve);
 
 }

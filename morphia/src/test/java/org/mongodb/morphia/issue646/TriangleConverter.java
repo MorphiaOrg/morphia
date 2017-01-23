@@ -2,7 +2,6 @@ package org.mongodb.morphia.issue646;
 
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.MappedField;
 
 public class TriangleConverter extends TypeConverter implements SimpleValueConverter {
 
@@ -11,7 +10,7 @@ public class TriangleConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+    public Object decode(final Class targetClass, final Object fromDBObject) {
         if (fromDBObject == null) {
             return null;
         }
@@ -25,7 +24,7 @@ public class TriangleConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+    public Object encode(final Object value) {
         if (value == null) {
             return null;
         }

@@ -42,7 +42,10 @@ public class Morphia {
 
     /**
      * Creates a Morphia instance with a default Mapper and an empty class set.
+     *
+     * @deprecated use {@link #Morphia(Set)} directly
      */
+    @Deprecated
     public Morphia() {
         this(new Mapper(), Collections.<Class>emptySet());
     }
@@ -52,7 +55,9 @@ public class Morphia {
      *
      * @param mapper       the Mapper to use
      * @param classesToMap the classes to map
+     * @deprecated use {@link #Morphia(Set)} directly
      */
+    @Deprecated
     public Morphia(final Mapper mapper, final Set<Class> classesToMap) {
         this.mapper = mapper;
         for (final Class c : classesToMap) {
@@ -64,7 +69,9 @@ public class Morphia {
      * Creates a Morphia instance with the given Mapper
      *
      * @param mapper the Mapper to use
+     * @deprecated use {@link #Morphia(Set)} directly
      */
+    @Deprecated
     public Morphia(final Mapper mapper) {
         this(mapper, Collections.<Class>emptySet());
     }
@@ -113,6 +120,7 @@ public class Morphia {
      * @param dbObject    the object state to use
      * @return the newly created and populated entity
      */
+    @Deprecated
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject) {
         return fromDBObject(datastore, entityClass, dbObject, mapper.createEntityCache());
     }
@@ -128,6 +136,7 @@ public class Morphia {
      * @param cache       the EntityCache to use to prevent multiple loads of the same entities over and over
      * @return the newly created and populated entity
      */
+    @Deprecated
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
@@ -142,6 +151,7 @@ public class Morphia {
     /**
      * @return the mapper used by this instance of Morphia
      */
+    @Deprecated
     public Mapper getMapper() {
         return mapper;
     }
@@ -162,6 +172,7 @@ public class Morphia {
      * @param entityClass the class we want to check
      * @return true if the class is mapped, else false
      */
+    @Deprecated
     public boolean isMapped(final Class entityClass) {
         return mapper.isMapped(entityClass);
     }
@@ -280,6 +291,7 @@ public class Morphia {
      * @param entity the entity to convert
      * @return the DBObject
      */
+    @Deprecated
     public DBObject toDBObject(final Object entity) {
         try {
             return mapper.toDBObject(entity);

@@ -51,6 +51,7 @@ public class PathTarget {
      * @param root root
      * @param path path
      */
+    @Deprecated
     public PathTarget(final Mapper mapper, final MappedClass root, final String path) {
         this.root = root;
         segments = asList(path.split("\\."));
