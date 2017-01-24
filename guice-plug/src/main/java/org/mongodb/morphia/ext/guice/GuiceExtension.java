@@ -9,7 +9,9 @@ import org.mongodb.morphia.utils.Assert;
 
 /**
  * @author us@thomas-daily.de
+ * @deprecated support for ObjectFactory is being discontinued in 2.0
  */
+@Deprecated
 public class GuiceExtension {
 
     /**
