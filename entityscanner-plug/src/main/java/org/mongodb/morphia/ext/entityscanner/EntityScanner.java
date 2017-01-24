@@ -22,7 +22,10 @@ import java.util.Set;
  * Provides a scanner to find entities according to a given predicate
  *
  * @author us@thomas-daily.de
+ *
+ * @deprecated this class is vestigial and incomplete.  no replacement is planned.
  */
+@Deprecated
 public class EntityScanner {
 
     /**
