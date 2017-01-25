@@ -114,7 +114,7 @@ public interface AggregationPipeline {
     AggregationPipeline limit(int count);
 
     /**
-     * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
+     * Performs a left outer join to an unsharded collection in the same database to filter in documents from the "joined" collection for
      * processing. The $lookup stage does an equality match between a field from the input documents with a field from the documents of the
      * “joined” collection.  To each input document, the $lookup stage adds a new array field whose elements are the matching documents
      * from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
