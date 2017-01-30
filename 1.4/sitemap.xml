@@ -2,11 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>/morphia/1.4/</loc>
-    <lastmod>2015-03-18T16:56:14+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/morphia/1.4/issues-help/</loc>
     <lastmod>2015-03-18T16:56:14+00:00</lastmod>
   </url>
@@ -46,6 +41,18 @@
   </url>
   
   <url>
+    <loc>/morphia/1.4/getting-started/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.4/guides/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/morphia/1.4/guides/indexing/</loc>
   </url>
   
@@ -55,6 +62,12 @@
   
   <url>
     <loc>/morphia/1.4/guides/lifeCycleMethods/</loc>
+  </url>
+  
+  <url>
+    <loc>/morphia/1.4/</loc>
+    <lastmod>2015-03-18T16:56:14+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
