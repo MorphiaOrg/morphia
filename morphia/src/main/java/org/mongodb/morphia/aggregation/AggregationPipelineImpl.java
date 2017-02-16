@@ -242,21 +242,21 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         } else if (projection.getSource() != null) {
             return new BasicDBObject(target, projection.getSource());
         } else if (projection.getArguments() != null) {
-        	DBObject args = toExpressionArgs(projection.getArguments());
+            DBObject args = toExpressionArgs(projection.getArguments());
             if (target == null) {
-            	// Unwrap for single-argument expressions
-            	if (args instanceof List<?> && ((List<?>) args).size() == 1) {
-            		Object firstArg = ((List<?>) args).get(0);
-            		if (firstArg instanceof DBObject) {
-            			return (DBObject) firstArg;
-            		}
-            	}
+                // Unwrap for single-argument expressions
+                if (args instanceof List<?> && ((List<?>) args).size() == 1) {
+                    Object firstArg = ((List<?>) args).get(0);
+                    if (firstArg instanceof DBObject) {
+                        return (DBObject) firstArg;
+                    }
+                }
                 return args;
             } else {
-            	// Unwrap for single-argument expressions
-            	if (args instanceof List<?> && ((List<?>) args).size() == 1) {
-            		return new BasicDBObject(target, ((List<?>) args).get(0));
-            	}
+                // Unwrap for single-argument expressions
+                if (args instanceof List<?> && ((List<?>) args).size() == 1) {
+                    return new BasicDBObject(target, ((List<?>) args).get(0));
+                }
                 return new BasicDBObject(target, args);
             }
         } else {

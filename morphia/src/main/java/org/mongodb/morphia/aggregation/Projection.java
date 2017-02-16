@@ -142,7 +142,7 @@ public final class  Projection {
 
     /**
      * Counts and returns the total the number of items in an array
-     * 
+     *
      * @param expression The argument for $size can be any expression as long as it resolves to an array.
      * @return the projection
      * @mongodb.driver.manual reference/operator/aggregation/size $size
