@@ -60,6 +60,7 @@ import static org.mongodb.morphia.aggregation.Group.id;
 import static org.mongodb.morphia.aggregation.Group.push;
 import static org.mongodb.morphia.aggregation.Group.sum;
 import static org.mongodb.morphia.aggregation.Projection.divide;
+import static org.mongodb.morphia.aggregation.Projection.size;
 import static org.mongodb.morphia.aggregation.Projection.expression;
 import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
@@ -401,6 +402,32 @@ public class AggregationTest extends TestBase {
             .append("author", "$_id")
             .append("copies", obj("$divide", Arrays.<Object>asList("$copies", 5)))));
 
+    }
+
+    @Test
+    public void testSizeProjection() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+                            new Book("Divine Comedy", "Dante", 1),
+                            new Book("Eclogues", "Dante", 2),
+                            new Book("The Odyssey", "Homer", 10),
+                            new Book("Iliad", "Homer", 10)));
+
+        final AggregationPipeline pipeline = getDs().createAggregation(Book.class)
+                                                    .group("author", grouping("titles", addToSet("title")))
+                                                    .project(projection("_id").suppress(),
+                                                             projection("author", "_id"),
+                                                             projection("copies", size(projection("titles"))))
+                                                    .sort(ascending("author"));
+        Iterator<Book> aggregate = pipeline.aggregate(Book.class);
+        Book book = aggregate.next();
+        Assert.assertEquals("Dante", book.author);
+        Assert.assertEquals(3, book.copies.intValue());
+
+        final List<DBObject> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Assert.assertEquals(stages.get(0), obj("$group", obj("_id", "$author").append("titles", obj("$addToSet", "$title"))));
+        Assert.assertEquals(stages.get(1), obj("$project", obj("_id", 0)
+            .append("author", "$_id")
+            .append("copies", obj("$size", "$titles"))));
     }
 
     @Test
