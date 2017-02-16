@@ -223,7 +223,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param projection the project to apply
      * @return the DBObject
      */
-    @SuppressWarnings("unchecked")
     private DBObject toDBObject(final Projection projection) {
         String target;
         if (firstStage) {
@@ -243,10 +242,22 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         } else if (projection.getSource() != null) {
             return new BasicDBObject(target, projection.getSource());
         } else if (projection.getArguments() != null) {
+        	DBObject args = toExpressionArgs(projection.getArguments());
             if (target == null) {
-                return toExpressionArgs(projection.getArguments());
+            	// Unwrap for single-argument expressions
+            	if (args instanceof List<?> && ((List<?>) args).size() == 1) {
+            		Object firstArg = ((List<?>) args).get(0);
+            		if (firstArg instanceof DBObject) {
+            			return (DBObject) firstArg;
+            		}
+            	}
+                return args;
             } else {
-                return new BasicDBObject(target, toExpressionArgs(projection.getArguments()));
+            	// Unwrap for single-argument expressions
+            	if (args instanceof List<?> && ((List<?>) args).size() == 1) {
+            		return new BasicDBObject(target, ((List<?>) args).get(0));
+            	}
+                return new BasicDBObject(target, args);
             }
         } else {
             return new BasicDBObject(target, projection.isSuppressed() ? 0 : 1);
@@ -293,7 +304,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
                 result.add(arg);
             }
         }
-        return result.size() == 1 ? (DBObject) result.get(0) : result;
+        return result;
     }
 
     @Override
