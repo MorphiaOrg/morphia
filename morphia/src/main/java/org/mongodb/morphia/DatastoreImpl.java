@@ -9,6 +9,7 @@ import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.DefaultDBDecoder;
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
@@ -1327,7 +1328,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         dbObj.put(versionKeyName, newVersion);
         //        mfVersion.setFieldValue(entity, newVersion);
 
-        if (idValue != null && newVersion != 1) {
+        if (idValue != null && newVersion == 1) {
+            try {
+                wr = dbColl.insert(singletonList(dbObj), options.getOptions());
+            } catch (DuplicateKeyException e) {
+                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
+                                                                 entity.getClass().getName(), idValue));
+            }
+        } else if (idValue != null) {
             final Query<?> query = find(dbColl.getName(), entity.getClass())
                 .disableValidation()
                 .filter(Mapper.ID_KEY, idValue)
