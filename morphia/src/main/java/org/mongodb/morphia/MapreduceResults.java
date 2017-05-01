@@ -150,7 +150,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return outputType == OutputType.INLINE ? getInlineResults() : createQuery().fetch().iterator();
+        return outputType == OutputType.INLINE ? getInlineResults() : createQuery().fetch();
     }
 
     /**

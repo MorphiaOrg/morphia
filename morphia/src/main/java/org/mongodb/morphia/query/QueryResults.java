@@ -4,6 +4,7 @@ package org.mongodb.morphia.query;
 import com.mongodb.Bytes;
 import org.mongodb.morphia.Key;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -76,7 +77,7 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return an Iterator of the results
      */
-    MorphiaIterator<T, T> fetch();
+    Iterator<T> fetch();
 
     /**
      * Execute the query and get the results.  This method is provided for orthogonality; Query.fetch().iterator() is identical to
@@ -86,7 +87,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @return an Iterator of the results
      * @since 1.3
      */
-    MorphiaIterator<T, T> fetch(FindOptions options);
+    Iterator<T> fetch(FindOptions options);
 
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
@@ -94,7 +95,7 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return an Iterator of the empty entities
      */
-    MorphiaIterator<T, T> fetchEmptyEntities();
+    Iterator<T> fetchEmptyEntities();
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
      * data).
@@ -103,7 +104,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @return an Iterator of the empty entities
      * @since 1.3
      */
-    MorphiaIterator<T, T> fetchEmptyEntities(FindOptions options);
+    Iterator<T> fetchEmptyEntities(FindOptions options);
 
     /**
      * Execute the query and get the keys for the objects.
@@ -111,7 +112,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @return the Key Iterator
      * @see #fetchEmptyEntities
      */
-    MorphiaKeyIterator<T> fetchKeys();
+    Iterator<Key<T>> fetchKeys();
     /**
      * Execute the query and get the keys for the objects.
      *
@@ -120,7 +121,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @see #fetchEmptyEntities
      * @since 1.3
      */
-    MorphiaKeyIterator<T> fetchKeys(FindOptions options);
+    Iterator<Key<T>> fetchKeys(FindOptions options);
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
@@ -163,7 +164,7 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      */
     @Deprecated
-    MorphiaIterator<T, T> tail();
+    Iterator<T> tail();
 
     /**
      * Returns an tailing iterator over a set of elements of type T. If awaitData is true, this iterator blocks on hasNext() until new data
@@ -177,5 +178,5 @@ public interface QueryResults<T> extends Iterable<T> {
      * {@code findOptions.cursorType (awaitData ? TailableAwait : Tailable)}
      */
     @Deprecated
-    MorphiaIterator<T, T> tail(boolean awaitData);
+    Iterator<T> tail(boolean awaitData);
 }
