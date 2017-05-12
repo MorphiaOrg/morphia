@@ -17,6 +17,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -69,6 +70,39 @@ import static org.mongodb.morphia.query.PushOptions.options;
 @SuppressWarnings("UnusedDeclaration")
 public class TestUpdateOps extends TestBase {
     private static final Logger LOG = get(TestUpdateOps.class);
+
+    @Test
+    public void testUpdateMapWithFieldNameAnnotation() {
+        // given
+        ObjectId id = new ObjectId();
+        Payload payload = new Payload();
+        payload.id = id;
+        payload.content.put("key", "value");
+
+        getDs().save(payload);
+        // when
+        Query<Payload> query = getDs().find(Payload.class)
+                .filter("_id", id);
+
+        UpdateOperations<Payload> updateOps = getDs().createUpdateOperations(Payload.class)
+                .set("content.key", "newValue");
+
+        UpdateResults updateResults = getDs().update(query, updateOps);
+
+        // then
+        assertThat(updateResults.getUpdatedCount(), is(1));
+        assertThat(getDs().find(Payload.class)
+                .filter("id", id)
+                .get().content.get("key"), Matchers.equalTo("newValue"));
+    }
+
+    private static final class Payload {
+        @Id
+        private ObjectId id;
+
+        @Embedded("c")
+        private final Map<String, String> content = new HashMap<String, String>();
+    }
 
     @Test
     public void shouldUpdateAnArrayElement() {
