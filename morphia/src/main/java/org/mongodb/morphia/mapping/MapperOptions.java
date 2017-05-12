@@ -34,6 +34,7 @@ public class MapperOptions {
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
     private org.mongodb.morphia.mapping.lazy.DatastoreProvider datastoreProvider = null;
+    private MapKeySanitizer mapKeySanitizer = new DefaultMapKeySanitizer();
 
     /**
      * Creates a default options instance.
@@ -295,4 +296,13 @@ public class MapperOptions {
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
     }
+
+    public MapKeySanitizer getMapKeySanitizer() {
+        return mapKeySanitizer;
+    }
+
+    public void setMapKeySanitizer(final MapKeySanitizer mapKeySanitizer) {
+        this.mapKeySanitizer = mapKeySanitizer;
+    }
+
 }
