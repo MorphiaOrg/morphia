@@ -37,7 +37,9 @@ import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxyHelper;
 import org.mongodb.morphia.query.CountOptions;
+import org.mongodb.morphia.query.DefaultIteratorFactory;
 import org.mongodb.morphia.query.DefaultQueryFactory;
+import org.mongodb.morphia.query.IteratorFactory;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryException;
 import org.mongodb.morphia.query.QueryFactory;
@@ -84,6 +86,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     private DBDecoderFactory decoderFactory;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
+
+    private volatile IteratorFactory iteratorFactory = new DefaultIteratorFactory();
 
     /**
      * Create a new DatastoreImpl
@@ -575,6 +579,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void setQueryFactory(final QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
+    }
+
+    @Override
+    public IteratorFactory getIteratorFactory() {
+        return iteratorFactory;
+    }
+
+    @Override
+    public void setIteratorFactory(final IteratorFactory iteratorFactory) {
+        this.iteratorFactory = iteratorFactory;
     }
 
     @Override
