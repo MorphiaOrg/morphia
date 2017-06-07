@@ -1358,7 +1358,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId());
+        return find(key.getCollection(), key.getType()).filter(Mapper.ID_KEY, key.getId()).limit(1);
     }
 
     private EntityCache createCache() {
