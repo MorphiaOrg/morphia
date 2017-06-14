@@ -59,6 +59,7 @@ public class DefaultConverters extends Converters {
         addConverter(new ObjectIdConverter());
         addConverter(new TimestampConverter());
         addConverter(new BigDecimalConverter());
+        addConverter(new CurrencyConverter());
 
         // Converters for Geo entities
         addConverter(new GeometryShapeConverter.PointConverter());
