@@ -10,7 +10,9 @@ import java.util.Set;
 
 /**
  * The ObjectFactory is used by morphia to create instances of classes which can be customized to fit a particular applications needs.
+ * @deprecated this functionality will be handled by the new mapping code in 2.0
  */
+@Deprecated
 public interface ObjectFactory {
     /**
      * Creates an instance of the given class.
