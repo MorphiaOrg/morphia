@@ -36,10 +36,7 @@ import static org.junit.Assert.assertNotNull;
 public class TestEmbeddedArrayIndexes extends TestBase {
     @Test
     public void testParamEntity() throws Exception {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(A.class);
-        assertNotNull(mc);
-
-        assertEquals(1, mc.getAnnotations(Indexes.class).size());
+        getMorphia().map(A.class);
 
         getDs().ensureIndexes(A.class);
         final DBCollection coll = getDs().getCollection(A.class);

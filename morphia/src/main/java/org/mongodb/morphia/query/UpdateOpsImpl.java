@@ -308,6 +308,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         return this;
     }
 
+    @Deprecated
     protected List<Object> toDBObjList(final MappedField mf, final List<?> values) {
         final List<Object> list = new ArrayList<Object>(values.size());
         for (final Object obj : values) {

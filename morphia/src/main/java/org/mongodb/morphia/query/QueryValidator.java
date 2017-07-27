@@ -64,7 +64,7 @@ final class QueryValidator {
                     mf = mc.getMappedFieldByJavaField(part);
                     if (validateNames && mf == null) {
                         throw new ValidationException(format("The field '%s' could not be found in '%s' while validating - %s; if "
-                                                             + "you wish to continue please disable validation.", part,
+                                                                 + "you wish to continue please disable validation.", part,
                                                              mc.getClazz().getName(), prop
                                                             ));
                     }
@@ -88,7 +88,7 @@ final class QueryValidator {
                     //catch people trying to search/update into @Reference/@Serialized fields
                     if (validateNames && !canQueryPast(mf)) {
                         throw new ValidationException(format("Cannot use dot-notation past '%s' in '%s'; found while"
-                                                             + " validating - %s", part, mc.getClazz().getName(), prop));
+                                                                 + " validating - %s", part, mc.getClazz().getName(), prop));
                     }
 
                     if (mf == null && (mc.isInterface() || !validateNames)) {
@@ -122,7 +122,7 @@ final class QueryValidator {
 
                     if (LOG.isWarningEnabled()) {
                         LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
-                                           + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
+                                               + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
                                            mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()
                                           ));
                         typeValidationFailures.addAll(subclassValidationFailures);

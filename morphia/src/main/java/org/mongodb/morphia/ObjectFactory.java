@@ -40,7 +40,9 @@ public interface ObjectFactory {
      * @param mf     the MappedField to consult when creating the instance
      * @param dbObj  the state to populate the new instance with
      * @return the new instance
+     * @deprecated the new mapping code will take care of this
      */
+    @Deprecated
     Object createInstance(Mapper mapper, MappedField mf, DBObject dbObj);
 
     /**
@@ -48,7 +50,9 @@ public interface ObjectFactory {
      *
      * @param mf the MappedField containing any metadata that might define the type of the List to create
      * @return the List
+     * @deprecated the new mapping code will take care of this
      */
+    @Deprecated
     List createList(MappedField mf);
 
     /**
@@ -56,7 +60,9 @@ public interface ObjectFactory {
      *
      * @param mf the MappedField containing any metadata that might define the type of the Map to create
      * @return the Map
+     * @deprecated the new mapping code will take care of this
      */
+    @Deprecated
     Map createMap(MappedField mf);
 
     /**
@@ -64,6 +70,8 @@ public interface ObjectFactory {
      *
      * @param mf the MappedField containing any metadata that might define the type of the Set to create
      * @return the Set
+     * @deprecated the new mapping code will take care of this
      */
+    @Deprecated
     Set createSet(MappedField mf);
 }

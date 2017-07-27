@@ -22,6 +22,7 @@ public abstract class OperationValidator implements Validator {
      *                           not change.
      * @return true if validation was applied, false if this validation doesn't apply to this operator.
      */
+    @Deprecated
     public boolean apply(final MappedField mappedField, final FilterOperator operator, final Object value,
                          final List<ValidationFailure> validationFailures) {
         if (getOperator().equals(operator)) {
@@ -46,6 +47,7 @@ public abstract class OperationValidator implements Validator {
      * @param value              the query value, to apply the operator to. This should not be null.
      * @param validationFailures the list to add any new {@code ValidationFailures} to. If validation passed this list will not change.
      */
+    @Deprecated
     protected abstract void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures);
 
 }

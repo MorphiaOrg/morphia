@@ -15,6 +15,7 @@ import java.util.Set;
  * This is a MappedField facade that allows us to convert and collect values to be gathered back in to a Map or Collection, e.g., rather
  * than directly on a mapped entity.  This are not mapped directly to a field on a class like MappedFields are.
  */
+@Deprecated
 public class EphemeralMappedField extends MappedField {
     private ParameterizedType pType;
     private Object value;
@@ -27,6 +28,7 @@ public class EphemeralMappedField extends MappedField {
      * @param mf     the parent MappedField
      * @param mapper the Mapper to use
      */
+    @Deprecated
     public EphemeralMappedField(final ParameterizedType t, final MappedField mf, final Mapper mapper) {
         super(mf.getField(), t, mapper);
         parent = mf;
@@ -46,6 +48,7 @@ public class EphemeralMappedField extends MappedField {
      * @param mf     the parent MappedField
      * @param mapper the Mapper to use
      */
+    @Deprecated
     public EphemeralMappedField(final Type t, final MappedField mf, final Mapper mapper) {
         super(mf.getField(), t, mapper);
         parent = mf;

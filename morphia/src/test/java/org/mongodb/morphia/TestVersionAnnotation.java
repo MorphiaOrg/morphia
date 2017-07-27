@@ -70,30 +70,18 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        Morphia morphia = getMorphia().mapPackage("org.mongodb.morphia.entities.version");
+        getMorphia().mapPackage("org.mongodb.morphia.entities.version");
 
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(2));
-        List<Class<?>> list = new ArrayList<Class<?>>();
-        for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getClazz());
-        }
-        assertTrue(list.contains(VersionedChildEntity.class));
-        assertTrue(list.contains(AbstractVersionedBase.class));
+        assertTrue(getMorphia().getMapper().isMapped(VersionedChildEntity.class));
+        assertTrue(getMorphia().getMapper().isMapped(AbstractVersionedBase.class));
     }
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        Morphia morphia = getMorphia().map(VersionedChildEntity.class);
+        getMorphia().map(VersionedChildEntity.class);
 
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(2));
-        List<Class<?>> list = new ArrayList<Class<?>>();
-        for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getClazz());
-        }
-        assertTrue(list.contains(VersionedChildEntity.class));
-        assertTrue(list.contains(AbstractVersionedBase.class));
+        assertTrue(getMorphia().getMapper().isMapped(VersionedChildEntity.class));
+        assertTrue(getMorphia().getMapper().isMapped(AbstractVersionedBase.class));
     }
 
     @Test

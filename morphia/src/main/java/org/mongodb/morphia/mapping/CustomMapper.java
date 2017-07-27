@@ -13,6 +13,7 @@ import java.util.Map;
  *
  * @author skot
  */
+@Deprecated
 public interface CustomMapper {
     /**
      * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
@@ -24,6 +25,7 @@ public interface CustomMapper {
      * @param cache     the EntityCache to use to prevent multiple loads of the same entities over and over
      * @param mapper    the Mapper to use
      */
+    @Deprecated
     void fromDBObject(final Datastore datastore, DBObject dbObject, MappedField mf, Object entity, EntityCache cache, Mapper mapper);
 
     /**
@@ -37,5 +39,6 @@ public interface CustomMapper {
      * @param involvedObjects a Map of objects already seen
      * @param mapper          the Mapper to use
      */
+    @Deprecated
     void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects, Mapper mapper);
 }

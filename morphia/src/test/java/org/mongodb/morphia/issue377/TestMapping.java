@@ -78,15 +78,7 @@ public class TestMapping extends TestBase {
         user.id = 1;
         user.userObject = new SerializableObject();
 
-        MappedClass mc = new MappedClass(User.class, mapper);
-        MappedField mf = mc.getMappedField("userObject");
-
-        // when
-        Object dbValue = mapper.toMongoObject(mf, null, user.userObject);
-        Class<byte[]> byteArrayClass = byte[].class;
-
-        // then
-        assertThat(dbValue, is(instanceOf(byteArrayClass)));
+        assertThat(mapper.toDBObject(user).get("userObject"), is(instanceOf(byte[].class)));
     }
 
     @Test
@@ -100,15 +92,7 @@ public class TestMapping extends TestBase {
         list.add("value");
         user.list = list;
 
-        MappedClass mc = new MappedClass(ListEntity.class, mapper);
-        MappedField mf = mc.getMappedField("list");
-
-        // when
-        Object dbValue = mapper.toMongoObject(mf, null, user.list);
-        Class<byte[]> byteArrayClass = byte[].class;
-
-        // then
-        assertThat(dbValue, is(instanceOf(byteArrayClass)));
+        assertThat(mapper.toDBObject(user).get("list"), is(instanceOf(byte[].class)));
     }
 
     @Entity

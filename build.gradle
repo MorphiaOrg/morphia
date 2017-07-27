@@ -105,7 +105,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
         options.encoding = 'ISO-8859-1'
         options.fork = true
         options.debug = true
-        options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-Xlint:-options']
+        options.compilerArgs = ['-Xlint:unchecked', '-Xlint:-deprecation', '-Xlint:-options']
     }
 
     tasks.withType(Test) {
@@ -145,6 +145,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
         options.author = true
         options.version = true
+        options.use = true
         options.tagletPath project(':util').sourceSets.main.output.classesDir
         options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
@@ -153,6 +154,8 @@ configure(subprojects.findAll { it.name != 'util' }) {
         options.encoding = 'UTF-8'
         options.charSet 'UTF-8'
         options.docEncoding 'UTF-8'
+        options.addStringOption("-J-Xlint:-deprecation")
+
     }
 }
 

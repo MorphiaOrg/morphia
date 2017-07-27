@@ -1,6 +1,5 @@
 package org.mongodb.morphia.mapping.validation;
 
-
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.MappedField;
 
@@ -24,6 +23,7 @@ public class ConstraintViolation {
      * @param validator the constraint failed
      * @param message   the message for the failure
      */
+    @Deprecated
     public ConstraintViolation(final Level level, final MappedClass clazz, final MappedField field,
                                final Class<? extends ClassConstraint> validator, final String message) {
         this(level, clazz, validator, message);
@@ -38,6 +38,7 @@ public class ConstraintViolation {
      * @param validator the constraint failed
      * @param message   the message for the failure
      */
+    @Deprecated
     public ConstraintViolation(final Level level, final MappedClass clazz, final Class<? extends ClassConstraint> validator,
                                final String message) {
         this.level = level;

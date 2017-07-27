@@ -18,5 +18,6 @@ public interface ClassConstraint {
      * @param ve     the set of violations
      * @param mapper the Mapper to use for validation
      */
+    @Deprecated
     void check(final Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve);
 }

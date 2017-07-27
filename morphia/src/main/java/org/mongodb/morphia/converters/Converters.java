@@ -33,6 +33,7 @@ public abstract class Converters {
      *
      * @param mapper the Mapper to use
      */
+    @Deprecated
     public Converters(final Mapper mapper) {
         this.mapper = mapper;
     }
@@ -77,6 +78,7 @@ public abstract class Converters {
      * @param mf           the MappedField that contains the metadata useful for decoding
      * @return the new instance
      */
+    @Deprecated
     public Object decode(final Class c, final Object fromDBObject, final MappedField mf) {
         Class toDecode = c;
         if (toDecode == null) {
@@ -117,6 +119,7 @@ public abstract class Converters {
      * @param mf           the MappedField containing the metadata to use when decoding in to a field
      * @param targetEntity then entity to hold the state from the database
      */
+    @Deprecated
     public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
         final Object object = mf.getDbObjectValue(dbObj);
         if (object != null) {
@@ -135,6 +138,7 @@ public abstract class Converters {
      * @param field the field to check with
      * @return true if there is a converter for the type of the field
      */
+    @Deprecated
     public boolean hasDbObjectConverter(final MappedField field) {
         final TypeConverter converter = getEncoder(field);
         return converter != null && !(converter instanceof IdentityConverter) && !(converter instanceof SimpleValueConverter);
@@ -181,6 +185,7 @@ public abstract class Converters {
      * @return true if there is a SimpleValueConverter for the type represented by c
      * @see SimpleValueConverter
      */
+    @Deprecated
     public boolean hasSimpleValueConverter(final MappedField c) {
         return (getEncoder(c) instanceof SimpleValueConverter);
     }
@@ -225,6 +230,7 @@ public abstract class Converters {
      * @param dbObj            the DBObject to populate
      * @param opts             the options to apply
      */
+    @Deprecated
     public void toDBObject(final Object containingObject, final MappedField mf, final DBObject dbObj, final MapperOptions opts) {
         final Object fieldValue = mf.getFieldValue(containingObject);
         final TypeConverter enc = getEncoder(fieldValue, mf);
@@ -253,6 +259,7 @@ public abstract class Converters {
         return null;
     }
 
+    @Deprecated
     protected TypeConverter getEncoder(final Object val, final MappedField mf) {
 
         List<TypeConverter> tcs = null;

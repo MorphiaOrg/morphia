@@ -72,6 +72,7 @@ public class MappingValidator {
      * @param classes the MappedClasses to validate
      * @param mapper the Mapper to use for validation
      */
+    @Deprecated
     public void validate(final Mapper mapper, final List<MappedClass> classes) {
         final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
 

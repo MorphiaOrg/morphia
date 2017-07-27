@@ -29,6 +29,7 @@ import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.TestDatastore.FacebookUser;
