@@ -582,41 +582,41 @@ public class TestQuery extends TestBase {
         Key<PhotoWithKeywords> key3 = iterator.next();
         Key<PhotoWithKeywords> key4 = iterator.next();
 
-        validate(asList(key3, key4), asList(key1, key2), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords")
-                                                                .hasThisElement(new Keyword("Scott"))
-                                                                .asKeyList());
+        assertEquals(asList(key3, key4), getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords")
+                                                .hasThisElement(new Keyword("Scott"))
+                                                .asKeyList());
 
-        validate(asList(key3, key4), asList(key1, key2), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords")
-                                                                .elemMatch(getDs()
-                                                                               .find(Keyword.class)
-                                                                               .field("keyword").equal("Scott"))
-                                                                .asKeyList());
+        assertEquals(asList(key3, key4), getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords")
+                                                .elemMatch(getDs()
+                                                               .find(Keyword.class)
+                                                               .field("keyword").equal("Scott"))
+                                                .asKeyList());
 
-        validate(singletonList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
-                                                                       .field("keywords")
-                                                                       .hasThisElement(new Keyword(14))
-                                                                       .asKeyList());
+        assertEquals(singletonList(key4), getDs().find(PhotoWithKeywords.class)
+                                                 .field("keywords")
+                                                 .hasThisElement(new Keyword(14))
+                                                 .asKeyList());
 
-        validate(singletonList(key4), asList(key1, key2, key3), getDs().find(PhotoWithKeywords.class)
-                                                                       .field("keywords")
-                                                                       .elemMatch(getDs()
-                                                                                      .find(Keyword.class)
-                                                                                      .field("score").equal(14))
-                                                                       .asKeyList());
+        assertEquals(singletonList(key4), getDs().find(PhotoWithKeywords.class)
+                                                 .field("keywords")
+                                                 .elemMatch(getDs()
+                                                                .find(Keyword.class)
+                                                                .field("score").equal(14))
+                                                 .asKeyList());
 
-        validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords")
-                                                                .doesNotHaveThisElement(new Keyword("Scott"))
-                                                                .asKeyList());
+        assertEquals(asList(key1, key2), getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords")
+                                                .doesNotHaveThisElement(new Keyword("Scott"))
+                                                .asKeyList());
 
-        validate(asList(key1, key2), asList(key3, key4), getDs().find(PhotoWithKeywords.class)
-                                                                .field("keywords").not()
-                                                                .elemMatch(getDs()
-                                                                               .find(Keyword.class)
-                                                                               .field("keyword").equal("Scott"))
-                                                                .asKeyList());
+        assertEquals(asList(key1, key2), getDs().find(PhotoWithKeywords.class)
+                                                .field("keywords").not()
+                                                .elemMatch(getDs()
+                                                               .find(Keyword.class)
+                                                               .field("keyword").equal("Scott"))
+                                                .asKeyList());
     }
 
     @Test
@@ -1483,17 +1483,6 @@ public class TestQuery extends TestBase {
         getDb().command(new BasicDBObject("profile", 0));
         DBCollection profileCollection = getDb().getCollection("system.profile");
         profileCollection.drop();
-    }
-
-    private void validate(final List<Key<PhotoWithKeywords>> found, final List<Key<PhotoWithKeywords>> notFound,
-                          final List<Key<PhotoWithKeywords>> keys) {
-        assertEquals(found.size(), keys.size());
-        for (Key<PhotoWithKeywords> key : found) {
-            assertTrue(keys.contains(key));
-        }
-        for (Key<PhotoWithKeywords> key : notFound) {
-            assertFalse(keys.contains(key));
-        }
     }
 
     @Entity

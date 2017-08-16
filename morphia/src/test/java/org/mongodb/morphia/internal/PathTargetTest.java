@@ -31,6 +31,9 @@ import org.mongodb.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import org.mongodb.morphia.mapping.EmbeddedMappingTest.WithNested;
 import org.mongodb.morphia.mapping.MappedClass;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.testmodel.Article;
+
+import static org.junit.Assert.assertEquals;
 
 public class PathTargetTest extends TestBase {
 
@@ -78,17 +81,27 @@ public class PathTargetTest extends TestBase {
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "listEmbeddedType.1.number");
         Assert.assertEquals("listEmbeddedType.1.number", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(EmbeddedType.class).getMappedFieldByJavaField("number"), pathTarget.getTarget());
+
+        assertEquals("listEmbeddedType.$", new PathTarget(mapper, mappedClass, "listEmbeddedType.$").translatedPath());
+        assertEquals("listEmbeddedType.1", new PathTarget(mapper, mappedClass, "listEmbeddedType.1").translatedPath());
     }
 
     @Test
     public void maps() {
-        getMorphia().map(Student.class);
+        getMorphia().map(Student.class, Article.class);
         Mapper mapper = getMorphia().getMapper();
         MappedClass mappedClass = mapper.getMappedClass(Student.class);
 
-        final PathTarget pathTarget = new PathTarget(mapper, mappedClass, "grades.$.data.name");
-        Assert.assertEquals("grades.$.data.name", pathTarget.translatedPath());
+        PathTarget pathTarget = new PathTarget(mapper, mappedClass, "grades.$.data.name");
+        Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(Grade.class).getMappedFieldByJavaField("data"), pathTarget.getTarget());
+
+        pathTarget = new PathTarget(mapper, mappedClass, "grades.$.d.name");
+        Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
+        Assert.assertEquals(mapper.getMappedClass(Grade.class).getMappedField("d"), pathTarget.getTarget());
+
+        pathTarget = new PathTarget(mapper, mapper.getMappedClass(Article.class), "translations");
+        Assert.assertEquals("translations", pathTarget.translatedPath());
     }
 
     @Test

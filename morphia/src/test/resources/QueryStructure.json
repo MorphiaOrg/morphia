@@ -1,48 +1,143 @@
 {
-  "selfReference": {
-    "$ref": "ondisk",
-    "$id": 1
-  },
-  "referenceType": {
-    "_id": 2,
-    "string": "far"
-  },
-  "embeddedType": {
-    "number": 3,
-    "text": "strikes"
-  },
-  "embeddedList": {
-    "$elemMatch": {
-      "number": 3,
-      "text": "strikes"
+  "$and": [
+    {
+      "_id": {
+        "$oid": "000000000000000000000000"
+      }
+    },
+    {
+      "referenceType": {
+        "_id": 2,
+        "string": "far"
+      }
+    },
+    {
+      "embeddedType": {
+        "number": 3,
+        "text": "strikes"
+      }
+    },
+    {
+      "string": "some value"
+    },
+    {
+      "embeddedArray": {
+        "$elemMatch": {
+          "number": 3,
+          "text": "strikes"
+        }
+      }
+    },
+    {
+      "embeddedSet": {
+        "$elemMatch": {
+          "number": 3,
+          "text": "strikes"
+        }
+      }
+    },
+    {
+      "embeddedList": {
+        "$elemMatch": {
+          "number": 3,
+          "text": "strikes"
+        }
+      }
+    },
+    {
+      "map.bar": {
+        "number": 1,
+        "text": "chance"
+      }
+    },
+    {
+      "mapOfList.bar": {
+        "$in": [
+          {
+            "className": "org.mongodb.morphia.EmbeddedReferenceType",
+            "number": 1,
+            "text": "chance"
+          }
+        ]
+      }
+    },
+    {
+      "mapOfList.foo": {
+        "$elemMatch": {
+          "number": 1,
+          "text": "chance"
+        }
+      }
+    },
+    {
+      "selfReference": {
+        "$ref": "ondisk",
+        "$id": 1
+      }
+    },
+    {
+      "mixedTypeList": {
+        "$elemMatch": {
+          "number": 3,
+          "text": "strikes"
+        }
+      }
+    },
+    {
+      "mixedTypeList": {
+        "$in": [
+          {
+            "className": "org.mongodb.morphia.EmbeddedReferenceType",
+            "number": 1,
+            "text": "chance"
+          }
+        ]
+      }
+    },
+    {
+      "mixedTypeMap.foo": {
+        "className": "org.mongodb.morphia.ReferenceType",
+        "_id": 3,
+        "string": "strikes"
+      }
+    },
+    {
+      "mixedTypeMap.bar": {
+        "className": "org.mongodb.morphia.EmbeddedReferenceType",
+        "number": 3,
+        "text": "strikes"
+      }
+    },
+    {
+      "mixedTypeMapOfList.bar": {
+        "$in": [
+          {
+            "className": "org.mongodb.morphia.EmbeddedReferenceType",
+            "number": 1,
+            "text": "chance"
+          }
+        ]
+      }
+    },
+    {
+      "mixedTypeMapOfList.foo": {
+        "$elemMatch": {
+          "number": 3,
+          "text": "strikes"
+        }
+      }
+    },
+    {
+      "referenceMap.foo": {
+        "_id": 1,
+        "string": "chance"
+      }
+    },
+    {
+      "referenceMap.bar": {
+        "number": 1,
+        "text": "chance"
+      }
     }
-  },
-  "map.bar": {
-    "number": 1,
-    "text": "chance"
-  },
-  "mixedTypeList": {
-    "$elemMatch": {
-      "number": 3,
-      "text": "strikes"
-    }
-  },
-  "mixedTypeMap.foo": {
-    "className": "org.mongodb.morphia.ReferenceType",
-    "_id": 3,
-    "string": "strikes"
-  },
-  "mixedTypeMap.bar": {
-    "className": "org.mongodb.morphia.EmbeddedReferenceType",
-    "number": 3,
-    "text": "strikes"
-  },
-  "referenceMap.foo": {
-    "_id": 1,
-    "string": "chance"
-  },
-  "referenceMap.bar": {
-    "number": 1,
-    "text": "chance"
-  }
+  ]
 }

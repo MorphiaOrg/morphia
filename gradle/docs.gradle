@@ -1,3 +1,5 @@
+import org.gradle.tooling.BuildException
+
 def urlVersion = version.split('\\.')[0..1].join('.')
 def ghPages = file("build/gh-pages")
 
@@ -100,21 +102,21 @@ task reference(dependsOn: ':morphia:javadoc') << {
     ])
 
     update('docs/reference/content/guides/jrebel.md', [
-            ['    <version>###</version>', "    <version>${latest}</version>"]
+            ['    <version>', "    <version>${latest}</version>"]
     ])
 
     update('docs/reference/content/guides/validationExtension.md', [
-            ['    <version>###</version>', "    <version>${latest}</version>"]
+            ['    <version>', "    <version>${latest}</version>"]
     ])
 
     update('docs/reference/config.toml', [
-            [ 'baseurl = "', "baseurl = \"/morphia/${urlVersion}\""],
-            [ 'latest = "', "latest = \"${latest}\""]
+            ['baseurl = "', "baseurl = \"/morphia/${urlVersion}\""]
     ])
 
     update('docs/reference/data/mongodb.toml', [
             ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
-            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
+            ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
+            ['coreApiUrl = "', "coreApiUrl = \"http://api.mongodb.org/java/${major(driverVersion)}/\""]
     ])
 }
 
@@ -171,13 +173,20 @@ task clonePages << {
 
 def update(input, replacements) {
     def temp = input + '.temp'
+    def replaced = 0
     file(temp).withWriter { w ->
         file(input).eachLine { line ->
             replacements.forEach { replacement ->
-                if (line.startsWith(replacement[0])) line = replacement[1]
+                if (line.startsWith(replacement[0])) {
+                    line = replacement[1]
+                    replaced++
+                }
             }
             w << line + '\n'
         }
+    }
+    if (replaced != replacements.size) {
+        throw new BuildException("Found an unmatched file update for ${input}:  ${replacements}".toString(), null)
     }
     file(temp).renameTo(file(input))
 }

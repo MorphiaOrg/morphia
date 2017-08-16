@@ -801,7 +801,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (clazz == null) {
             clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
         }
-        return updateFirst(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), operations);
+        return update(createQuery(clazz).disableValidation().filter(Mapper.ID_KEY, key.getId()), operations, new UpdateOptions());
     }
 
     @Override
@@ -813,6 +813,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
         return update(query, operations, new UpdateOptions()
             .upsert(createIfMissing)
@@ -820,6 +821,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                     final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
@@ -829,17 +831,21 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
         return update(query, operations, new UpdateOptions());
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, new UpdateOptions().upsert(createIfMissing));
+        return update(query, operations, new UpdateOptions()
+            .upsert(createIfMissing));
 
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                          final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
@@ -848,7 +854,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
+        if (getMapper().getMappedClass(entity).getMappedVersionField() != null) {
+            throw new UnsupportedOperationException("updateFirst() is not supported with versioned entities");
+        }
+
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
 
@@ -966,8 +977,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
-            LOG.warning("Support for this has been removed from the server.  Please set this value to false and "
-                                           + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
 
         indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz),
@@ -1521,7 +1531,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
-            if (queryObject.get(versionMF.getNameToStore()) == null) {
+            if (update.get(versionMF.getNameToStore()) == null) {
                 if (!update.containsField("$inc")) {
                     update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
                 } else {

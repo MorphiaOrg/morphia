@@ -104,8 +104,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
-            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                            + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         final Map<String, Object> newOptions = extractOptions(indexed.options());
         if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
@@ -189,29 +188,33 @@ final class IndexHelper {
 
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {
         List<Index> list = new ArrayList<Index>();
-        final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
-        if (annotations != null) {
-            for (final Indexes indexes : annotations) {
-                for (final Index index : indexes.value()) {
-                    Index updated = index;
-                    if (index.fields().length == 0) {
-                        LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                               + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                        updated = new IndexBuilder()
-                            .migrate(index);
-                    }
-                    List<Field> fields = new ArrayList<Field>();
-                    for (Field field : updated.fields()) {
-                        fields.add(new FieldBuilder()
-                                       .value(findField(mc, index.options(), asList(field.value().split("\\."))))
-                                       .type(field.type())
-                                       .weight(field.weight()));
-                    }
+        if (mc != null) {
+            final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
+            if (annotations != null) {
+                for (final Indexes indexes : annotations) {
+                    for (final Index index : indexes.value()) {
+                        Index updated = index;
+                        if (index.fields().length == 0) {
+                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
+                                                   + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
+                            updated = new IndexBuilder()
+                                .migrate(index);
+                        }
+                        List<Field> fields = new ArrayList<Field>();
+                        for (Field field : updated.fields()) {
+                            fields.add(new FieldBuilder()
+                                           .value(findField(mc, index.options(), asList(field.value().split("\\."))))
+                                           .type(field.type())
+                                           .weight(field.weight()));
+                        }
 
-                    list.add(replaceFields(updated, fields));
+                        list.add(replaceFields(updated, fields));
+                    }
                 }
             }
+            list.addAll(collectTopLevelIndexes(mc.getSuperClass()));
         }
+
         return list;
     }
 
@@ -270,8 +273,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
-            LOG.warning("dropDups value is no longer supported by the server.  Please set this value to false and "
-                            + "validate your system behaves as expected.");
+            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
             .background(options.background() || background)
@@ -359,8 +361,10 @@ final class IndexHelper {
     }
 
     void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
-        for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-            createIndex(collection, mc, index, background);
+        if (!mc.isInterface() && !mc.isAbstract()) {
+            for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+                createIndex(collection, mc, index, background);
+            }
         }
     }
 
