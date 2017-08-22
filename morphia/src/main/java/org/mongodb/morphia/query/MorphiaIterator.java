@@ -1,6 +1,7 @@
 package org.mongodb.morphia.query;
 
 
+import com.mongodb.Cursor;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.Datastore;
@@ -70,10 +71,10 @@ public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     }
 
     /**
-     * @return the underlying DBCursor
+     * @return the underlying Cursor
      */
-    public DBCursor getCursor() {
-        return (DBCursor) wrapped;
+    public Cursor getCursor() {
+        return (Cursor) wrapped;
     }
 
     /**
