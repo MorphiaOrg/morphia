@@ -25,7 +25,10 @@ has two primary components to cover here:  `fields` and `options`.  An index def
 @Entity
 @Indexes({
     @Index(fields = @Field("field2", type = DESC)),
-    @Index(fields = @Field("field3", options = @IndexOptions(name = "indexing_test")))
+    @Index(
+      fields = @Field("field3"),
+      options = @IndexOptions(name = "indexing_test")
+    )
 })
 public class IndexExample {
     @Id
