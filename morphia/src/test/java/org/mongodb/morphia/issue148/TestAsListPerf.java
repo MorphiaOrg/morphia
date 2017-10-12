@@ -111,7 +111,7 @@ public class TestAsListPerf extends TestBase {
                          morphiaQueryThreadsResult.getAverageTime()));
     }
 
-    public double driverQueryAndMorphiaConverter(final int nbOfHits) {
+    private double driverQueryAndMorphiaConverter(final int nbOfHits) {
         final long start = System.nanoTime();
         final List<DBObject> list = getDs().getDB().getCollection("Address")
                                            .find()
@@ -148,7 +148,7 @@ public class TestAsListPerf extends TestBase {
 
     }
 
-    public double morphiaQueryAndMorphiaConverter(final int nbOfHits) {
+    private double morphiaQueryAndMorphiaConverter(final int nbOfHits) {
         final Query<Address> query = getDs().find(Address.class).
                                                                            order("name");
         final long start = System.nanoTime();
@@ -200,11 +200,11 @@ public class TestAsListPerf extends TestBase {
 
         private final Vector<Double> results;
 
-        public Result(final int nbOfHits) {
+        Result(final int nbOfHits) {
             results = new Vector<Double>(nbOfHits);
         }
 
-        public double getAverageTime() {
+        double getAverageTime() {
             Double total = 0d;
             for (final Double duration : results) {
                 total += duration;
@@ -227,11 +227,11 @@ public class TestAsListPerf extends TestBase {
         private int zip = 94114;
         private Date added = new Date();
 
-        public Address() {
+        Address() {
 
         }
 
-        public Address(final int i) {
+        Address(final int i) {
             parity = i % 2 == 0 ? 1 : 0;
             name += i;
             street += i;
@@ -245,7 +245,7 @@ public class TestAsListPerf extends TestBase {
         private final Result result;
         private final int nbOfHits;
 
-        public MorphiaQueryThread(final Result result, final int nbOfHits) {
+        MorphiaQueryThread(final Result result, final int nbOfHits) {
             this.result = result;
             this.nbOfHits = nbOfHits;
         }
@@ -261,7 +261,7 @@ public class TestAsListPerf extends TestBase {
         private final Result result;
         private final int nbOfHits;
 
-        public MongoQueryThread(final Result result, final int nbOfHits) {
+        MongoQueryThread(final Result result, final int nbOfHits) {
             this.result = result;
             this.nbOfHits = nbOfHits;
         }

@@ -53,7 +53,6 @@ public class DefaultEntityCache implements EntityCache {
             if (LazyFeatureDependencies.testDependencyFullFilled()) {
                 final Object proxy = proxyMap.get(k);
                 if (proxy != null) {
-                    ProxyHelper.isFetched(proxy);
                     stats.incHits();
                     return (T) ProxyHelper.unwrap(proxy);
                 }

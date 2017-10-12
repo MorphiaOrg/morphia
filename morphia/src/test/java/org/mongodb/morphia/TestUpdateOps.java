@@ -993,7 +993,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Embedded
-    @Entity(noClassnameStored = true)
     public static class EntityLog {
         private Date receivedTs;
         private String value;

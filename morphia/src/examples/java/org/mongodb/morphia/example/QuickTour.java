@@ -97,10 +97,10 @@ class Employee {
     @Property("wage")
     private Double salary;
 
-    public Employee() {
+    Employee() {
     }
 
-    public Employee(final String name, final Double salary) {
+    Employee(final String name, final Double salary) {
         this.name = name;
         this.salary = salary;
     }

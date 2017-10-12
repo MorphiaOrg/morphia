@@ -69,17 +69,17 @@ public class KeyMappingTest extends TestBase {
 
         private String name;
 
-        public User() {
+        User() {
         }
 
-        public User(final String name, final Key<Channel> favoriteChannels,
+        User(final String name, final Key<Channel> favoriteChannels,
                     final List<Key<Channel>> followedChannels) {
             this.name = name;
             this.favoriteChannels = favoriteChannels;
             this.followedChannels = followedChannels;
         }
 
-        public User(final String name) {
+        User(final String name) {
             this.name = name;
         }
     }
@@ -91,11 +91,11 @@ public class KeyMappingTest extends TestBase {
         private ObjectId id;
         private String name;
 
-        public Channel() {
+        Channel() {
 
         }
 
-        public Channel(final String name) {
+        Channel(final String name) {
             this.name = name;
         }
     }

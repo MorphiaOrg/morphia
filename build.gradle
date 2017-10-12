@@ -1,4 +1,8 @@
-ext.configDir = new File(rootDir, 'config')
+import org.kordamp.gradle.clirr.ClirrReportTask
+
+import static java.util.stream.Collectors.toList
+
+ext.rootConfig = new File(rootDir, 'config')
 ext.git = find('git')
 ext.majorVersion = major(version)
 
@@ -27,7 +31,7 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '4.2.1'
 }
 
 configure(subprojects.findAll { it.name != 'util' }) {
@@ -57,20 +61,14 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
     project.archivesBaseName = "morphia-${project.name}"
 
-    task listDependencies << {
-        configurations.compile.each { File file -> println file }
-    }
-
     task testCoverage(dependsOn: check)
 
     checkstyle {
-        toolVersion = "6.7"
-        configFile = new File("$configDir/checkstyle.xml")
+        configDir = rootConfig
     }
 
     findbugs {
-        excludeFilter = new File("$configDir/findbugs-exclude.xml")
-        toolVersion = '3.0.0'
+        excludeFilter = new File("$rootConfig/findbugs-exclude.xml")
         sourceSets = [sourceSets.main]
     }
 
@@ -141,12 +139,15 @@ configure(subprojects.findAll { it.name != 'util' }) {
     javadoc {
         exclude "**/internal/**"
 
-        dependsOn project(':util').compileJava //We need taglets to be compiled
+        dependsOn project.project(':util').compileJava //We need taglets to be compiled
 
         options.author = true
         options.version = true
-        options.tagletPath project(':util').sourceSets.main.output.classesDir
-        options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
+        options.tagletPath project.project(":util").sourceSets.main.output.files
+                                   .stream()
+                                   .map { file(it) }
+                                   .collect(toList())
+        options.setTaglets(['taglets.ManualTaglet', 'taglets.ServerReleaseTaglet'])
         options.links 'http://docs.oracle.com/javase/6/docs/api/'
         options.links 'http://api.mongodb.org/java/3.0/'
         title "Morphia ${majorVersion} API"
@@ -156,9 +157,11 @@ configure(subprojects.findAll { it.name != 'util' }) {
     }
 }
 
-task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {
-    dependsOn = subprojects.tasks.clirr
-    reports = files((subprojects.findAll { it.clirr.enabled == true }).tasks.clirr.xmlReport)
+task clirrRootReport(type: ClirrReportTask) {
+    doLast {
+        dependsOn = subprojects.tasks.clirr
+        reports = files((subprojects.findAll { it.clirr.enabled == true }).tasks.clirr.xmlReport)
+    }
 }
 
 def buildingWith(n) {

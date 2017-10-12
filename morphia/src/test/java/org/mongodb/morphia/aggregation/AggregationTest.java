@@ -525,7 +525,7 @@ public class AggregationTest extends TestBase {
         return current;
     }
 
-    static class StringDates {
+    private static class StringDates {
         @Id
         private ObjectId id;
         private String string;
@@ -615,14 +615,14 @@ public class AggregationTest extends TestBase {
         @Embedded()
         private List<Inventory> inventoryDocs;
 
-        public Order() {
+        private Order() {
         }
 
-        public Order(final int id) {
+        Order(final int id) {
             this.id = id;
         }
 
-        public Order(final int id, final String item, final int price, final int quantity) {
+        Order(final int id, final String item, final int price, final int quantity) {
             this.id = id;
             this.item = item;
             this.price = price;
@@ -714,17 +714,17 @@ public class AggregationTest extends TestBase {
         public Inventory() {
         }
 
-        public Inventory(final int id) {
+        Inventory(final int id) {
             this.id = id;
         }
 
-        public Inventory(final int id, final String sku, final String description) {
+        Inventory(final int id, final String sku, final String description) {
             this.id = id;
             this.sku = sku;
             this.description = description;
         }
 
-        public Inventory(final int id, final String sku, final String description, final int instock) {
+        Inventory(final int id, final String sku, final String description, final int instock) {
             this.id = id;
             this.sku = sku;
             this.description = description;

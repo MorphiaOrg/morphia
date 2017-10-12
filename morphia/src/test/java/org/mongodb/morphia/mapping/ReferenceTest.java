@@ -238,10 +238,10 @@ public class ReferenceTest extends ProxyTestBase {
         private LinkedHashMap<Integer, Ref> lazyMapRef;
 
         /* required by morphia */
-        public Container() {
+        Container() {
         }
 
-        public Container(final List<Ref> refs) {
+        Container(final List<Ref> refs) {
             singleRef = refs.get(0);
             lazySingleRef = refs.get(0);
             collectionRef = refs;
@@ -292,7 +292,7 @@ public class ReferenceTest extends ProxyTestBase {
         public Ref() {
         }
 
-        public Ref(final String id) {
+        Ref(final String id) {
             this.id = id;
         }
 
@@ -326,14 +326,14 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Entity(value = "children", noClassnameStored = true)
-    public static class Child {
+    static class Child {
         @Id
         private ObjectId id;
 
     }
 
     @Entity(value = "parents", noClassnameStored = true)
-    public static class Parent {
+    private static class Parent {
 
         @Id
         private ObjectId id;
@@ -363,7 +363,7 @@ public class ReferenceTest extends ProxyTestBase {
             this.id = id;
         }
 
-        public Complex getComplex() {
+        Complex getComplex() {
             return complex;
         }
 
@@ -379,7 +379,7 @@ public class ReferenceTest extends ProxyTestBase {
             this.list = list;
         }
 
-        public List<Complex> getLazyList() {
+        List<Complex> getLazyList() {
             return lazyList;
         }
 
@@ -429,10 +429,10 @@ public class ReferenceTest extends ProxyTestBase {
 
         private String value;
 
-        public Complex() {
+        Complex() {
         }
 
-        public Complex(final ChildId id, final String value) {
+        Complex(final ChildId id, final String value) {
             this.id = id;
             this.value = value;
         }
@@ -484,15 +484,15 @@ public class ReferenceTest extends ProxyTestBase {
         private String name;
         private int age;
 
-        public ChildId() {
+        ChildId() {
         }
 
-        public ChildId(final String name, final int age) {
+        ChildId(final String name, final int age) {
             this.name = name;
             this.age = age;
         }
 
-        public int getAge() {
+        int getAge() {
             return age;
         }
 

@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConstructorArgs {
     /**
-     * The fields to use
+     * @return The fields to use
      */
     String[] value();
 }

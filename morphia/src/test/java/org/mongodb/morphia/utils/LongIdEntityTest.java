@@ -27,7 +27,7 @@ public class LongIdEntityTest extends TestBase {
             super(null);
         }
 
-        public MyEntity(final Datastore ds) {
+        MyEntity(final Datastore ds) {
             super(ds);
         }
     }

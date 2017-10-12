@@ -252,7 +252,7 @@ public class TestGeoQueries extends TestBase {
         private Place() {
         }
 
-        public Place(final String name, final double[] loc) {
+        Place(final String name, final double[] loc) {
             this.name = name;
             this.loc = loc;
         }

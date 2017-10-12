@@ -313,10 +313,10 @@ public class NestedMapsAndListsTest extends TestBase {
 
         private String name;
 
-        public Person() {
+        Person() {
         }
 
-        public Person(final String name) {
+        Person(final String name) {
             this.name = name;
         }
 
@@ -372,7 +372,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
         private Map<String, ArrayList<String>> data = new HashMap<String, ArrayList<String>>();
 
-        public MapOfListString() {
+        MapOfListString() {
         }
 
     }

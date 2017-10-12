@@ -38,12 +38,12 @@ import java.lang.annotation.Target;
 public @interface Property {
 
     /**
-     * Specify the concrete class to instantiate.
+     * @return the concrete class to instantiate.
      */
     Class<?> concreteClass() default Object.class;
 
     /**
-     * Sets the field name to use in the document.  Defaults to the java field name.
+     * @return the field name to use in the document.  Defaults to the java field name.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }

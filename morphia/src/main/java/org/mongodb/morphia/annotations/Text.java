@@ -17,12 +17,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface Text {
     /**
-     * Options to apply to the index
+     * @return Options to apply to the index
      */
     IndexOptions options() default @IndexOptions;
 
     /**
-     * Weight of the field. If a weight is omitted from this item, the weight is assumed to the database default.
+     * @return Weight of the field. If a weight is omitted from this item, the weight is assumed to the database default.
      */
     int value() default -1;
 }

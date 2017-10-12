@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Indexes {
     /**
-     * The index definitions for this entity
+     * @return The index definitions for this entity
      */
     Index[] value();
 }

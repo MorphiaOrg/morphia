@@ -1467,7 +1467,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity(value = "user", noClassnameStored = true)
-    public static class Class1 {
+    private static class Class1 {
         @Id
         private ObjectId id;
 
@@ -1494,7 +1494,7 @@ public class TestQuery extends TestBase {
         public Photo() {
         }
 
-        public Photo(final List<String> keywords) {
+        Photo(final List<String> keywords) {
             this.keywords = keywords;
         }
     }
@@ -1505,17 +1505,17 @@ public class TestQuery extends TestBase {
         @Embedded
         private List<Keyword> keywords = new ArrayList<Keyword>();
 
-        public PhotoWithKeywords() {
+        PhotoWithKeywords() {
         }
 
-        public PhotoWithKeywords(final String... words) {
+        PhotoWithKeywords(final String... words) {
             keywords = new ArrayList<Keyword>(words.length);
             for (final String word : words) {
                 keywords.add(new Keyword(word));
             }
         }
 
-        public PhotoWithKeywords(final Keyword... keyword) {
+        PhotoWithKeywords(final Keyword... keyword) {
             keywords.addAll(asList(keyword));
         }
     }
@@ -1528,16 +1528,16 @@ public class TestQuery extends TestBase {
         protected Keyword() {
         }
 
-        public Keyword(final String k) {
+        Keyword(final String k) {
             this.keyword = k;
         }
 
-        public Keyword(final String k, final Integer score) {
+        Keyword(final String k, final Integer score) {
             this.keyword = k;
             this.score = score;
         }
 
-        public Keyword(final Integer score) {
+        Keyword(final Integer score) {
             this.score = score;
         }
 
@@ -1568,7 +1568,7 @@ public class TestQuery extends TestBase {
 
     }
 
-    public static class ContainsPhotoKey {
+    private static class ContainsPhotoKey {
         @Id
         private ObjectId id;
         private Key<Photo> photo;
@@ -1667,7 +1667,7 @@ public class TestQuery extends TestBase {
         public Pic() {
         }
 
-        public Pic(final String name) {
+        Pic(final String name) {
             this.name = name;
         }
 
@@ -1687,7 +1687,7 @@ public class TestQuery extends TestBase {
             this.name = name;
         }
 
-        public boolean isPrePersist() {
+        boolean isPrePersist() {
             return prePersist;
         }
 
@@ -1706,7 +1706,7 @@ public class TestQuery extends TestBase {
         public CappedPic() {
         }
 
-        public CappedPic(final String name) {
+        CappedPic(final String name) {
             super(name);
         }
     }
@@ -1723,14 +1723,14 @@ public class TestQuery extends TestBase {
         public ContainsRenamedFields() {
         }
 
-        public ContainsRenamedFields(final String firstName, final String lastName) {
+        ContainsRenamedFields(final String firstName, final String lastName) {
             this.firstName = firstName;
             this.lastName = lastName;
         }
     }
 
     @Entity
-    static class KeyValue {
+    private static class KeyValue {
         @Id
         private ObjectId id;
         /**
@@ -1746,7 +1746,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity
-    static class GenericKeyValue<T> {
+    private static class GenericKeyValue<T> {
 
         @Id
         private ObjectId id;
@@ -1759,7 +1759,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity
-    static class ReferenceKeyValue {
+    private static class ReferenceKeyValue {
         @Id
         private ReferenceKey id;
         /**
@@ -1822,10 +1822,10 @@ public class TestQuery extends TestBase {
         private String name;
         private int[] scalars;
 
-        public IntVector() {
+        IntVector() {
         }
 
-        public IntVector(final int... scalars) {
+        IntVector(final int... scalars) {
             this.scalars = scalars;
         }
     }
@@ -1862,8 +1862,8 @@ public class TestQuery extends TestBase {
         }
     }
 
-    void compareLists(final List<Rectangle> list, final Query<Rectangle> query1, final Query<Rectangle> query2,
-                      final Comparator<Rectangle> comparator) {
+    private void compareLists(final List<Rectangle> list, final Query<Rectangle> query1, final Query<Rectangle> query2,
+                              final Comparator<Rectangle> comparator) {
         Collections.sort(list, comparator);
         assertEquals(query1.asList(), list);
         assertEquals(query2.asList(), list);

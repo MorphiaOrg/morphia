@@ -138,7 +138,7 @@ public class TestTextSearching extends TestBase {
         private String value;
         private String language;
 
-        public Greeting() {
+        Greeting() {
         }
 
         private Greeting(final String value, final String language) {
@@ -154,7 +154,7 @@ public class TestTextSearching extends TestBase {
         private String title;
         private String author;
 
-        public Book() {
+        Book() {
         }
 
         private Book(final String title, final String author) {

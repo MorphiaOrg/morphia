@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Version {
     /**
-     * Sets the field name to use in the document.  Defaults to the java field name.
+     * @return the field name to use in the document.  Defaults to the java field name.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }

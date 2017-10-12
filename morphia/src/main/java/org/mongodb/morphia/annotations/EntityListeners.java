@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface EntityListeners {
     /**
-     * The listeners to use for this entity
+     * @return The listeners to use for this entity
      */
     Class<?>[] value();
 }

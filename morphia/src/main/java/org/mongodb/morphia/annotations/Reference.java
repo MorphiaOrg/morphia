@@ -35,29 +35,29 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Reference {
     /**
-     * Specify the concrete class to instantiate.
+     * @return the concrete class to instantiate.
      *
      * @deprecated unimplemented
      */
     @Deprecated Class<?> concreteClass() default Object.class;
 
     /**
-     * Specifies whether only _id should be stored versus storing a DBRef
+     * @return whether only _id should be stored versus storing a DBRef
      */
     boolean idOnly() default false;
 
     /**
-     * Ignore any reference that don't resolve (aren't in mongodb)
+     * @return if true, Ignore any reference that don't resolve (aren't in mongodb)
      */
     boolean ignoreMissing() default false;
 
     /**
-     * Create a proxy around the reference which will be resolved on the first method call.
+     * @return if true, Create a proxy around the reference which will be resolved on the first method call.
      */
     boolean lazy() default false;
 
     /**
-     * The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
+     * @return The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }

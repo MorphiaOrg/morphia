@@ -36,12 +36,12 @@ import java.lang.annotation.Target;
 public @interface Embedded {
 
     /**
-     * Specify the concrete class to instantiate.
+     * @return the concrete class to instantiate.
      */
     Class<?> concreteClass() default Object.class;
 
     /**
-     * The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
+     * @return The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }

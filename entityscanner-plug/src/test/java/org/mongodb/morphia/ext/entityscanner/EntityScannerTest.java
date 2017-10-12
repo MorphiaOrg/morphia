@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author us@thomas-daily.de
  */
+@SuppressWarnings("deprecation")
 public class EntityScannerTest {
     @Test
     public void testScanning() throws Exception {

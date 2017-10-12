@@ -35,12 +35,12 @@ import java.lang.annotation.Target;
 public @interface Serialized {
 
     /**
-     * When true, compression is disabled on the resulting byte[]
+     * @return When true, compression is disabled on the resulting byte[]
      */
     boolean disableCompression() default false;
 
     /**
-     * Sets the field name to use in the document.  Defaults to the java field name.
+     * @return the field name to use in the document.  Defaults to the java field name.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }
