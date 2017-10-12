@@ -23,12 +23,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface Indexed {
     /**
-     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
+     * @return Options to apply to the index. Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
      */
     IndexOptions options() default @IndexOptions();
 
     /**
-     * Creates the index in the background if true
+     * @return if true, creates the index in the background if true
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -36,7 +36,7 @@ public @interface Indexed {
     boolean background() default false;
 
     /**
-     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
+     * @return if true, tells the unique index to drop duplicates silently when creating; only the first will be kept
      *
      * @deprecated Support for this has been removed from the server.  This value is ignored.
      */
@@ -44,7 +44,7 @@ public @interface Indexed {
     boolean dropDups() default false;
 
     /**
-     * defines the time to live for documents in the collection
+     * @return the time to live for documents in the collection
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -52,7 +52,7 @@ public @interface Indexed {
     int expireAfterSeconds() default -1;
 
     /**
-     * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
+     * @return The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -60,7 +60,7 @@ public @interface Indexed {
     String name() default "";
 
     /**
-     * Create the index with the sparse option
+     * @return if true, create the index with the sparse option
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -68,7 +68,7 @@ public @interface Indexed {
     boolean sparse() default false;
 
     /**
-     * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
+     * @return if true, creates the index as a unique value index; inserting duplicates values in this field will cause errors
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */
@@ -76,7 +76,7 @@ public @interface Indexed {
     boolean unique() default false;
 
     /**
-     * Indicates the type of the index (ascending, descending, geo2d); default is ascending
+     * @return the type of the index (ascending, descending, geo2d); default is ascending
      *
      * @deprecated use the {@link IndexOptions} found in {@link #options()}
      */

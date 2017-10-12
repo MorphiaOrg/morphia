@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface AlsoLoad {
     /**
-     * An array of alternative fields to load should the primary field name be missing in a document.
+     * @return An array of alternative fields to load should the primary field name be missing in a document.
      */
     String[] value();
 }

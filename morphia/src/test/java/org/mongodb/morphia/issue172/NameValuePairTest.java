@@ -36,7 +36,7 @@ public class NameValuePairTest extends TestBase {
         private final T2 value;
         private final T1 name;
 
-        public NameValuePair(final T1 name, final T2 value) {
+        NameValuePair(final T1 name, final T2 value) {
             this.name = name;
             this.value = value;
         }

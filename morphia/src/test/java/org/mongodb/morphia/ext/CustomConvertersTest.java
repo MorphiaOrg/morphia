@@ -1,14 +1,14 @@
-/**
- * Copyright (C) 2010 Olafur Gauti Gudmundsson
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
+/*
+  Copyright (C) 2010 Olafur Gauti Gudmundsson
+  <p/>
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+  obtain a copy of the License at
+  <p/>
+  http://www.apache.org/licenses/LICENSE-2.0
+  <p/>
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+  and limitations under the License.
  */
 
 
@@ -143,7 +143,7 @@ public class CustomConvertersTest extends TestBase {
     }
 
     static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
-        public CharacterToByteConverter() {
+        CharacterToByteConverter() {
             super(Character.class, char.class);
         }
 
@@ -165,7 +165,7 @@ public class CustomConvertersTest extends TestBase {
     }
 
     @Converters(CharacterToByteConverter.class)
-    static class CharEntity {
+    private static class CharEntity {
         private final Character c = 'a';
         @Id
         private ObjectId id = new ObjectId();
@@ -185,10 +185,10 @@ public class CustomConvertersTest extends TestBase {
         @Embedded
         private ValueObject valueObject;
 
-        public MyEntity() {
+        MyEntity() {
         }
 
-        public MyEntity(final Long id, final ValueObject valueObject) {
+        MyEntity(final Long id, final ValueObject valueObject) {
             this.id = id;
             this.valueObject = valueObject;
         }
@@ -239,24 +239,24 @@ public class CustomConvertersTest extends TestBase {
 
         private long value;
 
-        public ValueObject() {
+        ValueObject() {
         }
 
-        public ValueObject(final long value) {
+        ValueObject(final long value) {
             this.value = value;
         }
 
         static class BConverter extends TypeConverter implements SimpleValueConverter {
 
-            public BConverter() {
+            BConverter() {
                 this(ValueObject.class);
             }
 
-            public BConverter(final Class<? extends ValueObject> clazz) {
+            BConverter(final Class<? extends ValueObject> clazz) {
                 super(clazz);
             }
 
-            protected ValueObject create(final Long source) {
+            ValueObject create(final Long source) {
                 return new ValueObject(source);
             }            @Override
             protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
@@ -316,7 +316,7 @@ public class CustomConvertersTest extends TestBase {
 
     @Entity
     @Converters(MimeTypeConverter.class)
-    public static class MimeTyped {
+    private static class MimeTyped {
         @Id
         private ObjectId id;
         private String name;

@@ -40,7 +40,7 @@ public class TestCapped extends TestBase {
         private CurrentStatus() {
         }
 
-        public CurrentStatus(final String msg) {
+        CurrentStatus(final String msg) {
             message = msg;
         }
     }

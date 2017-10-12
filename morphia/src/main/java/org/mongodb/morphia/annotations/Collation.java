@@ -27,59 +27,57 @@ import com.mongodb.client.model.CollationStrength;
  */
 public @interface Collation {
     /**
-     * Sets the backwards value
+     * Causes secondary differences to be considered in reverse order, as it is done in the French language
      *
-     * <p>Causes secondary differences to be considered in reverse order, as it is done in the French language</p>
+     * @return  the backwards value
      */
     boolean backwards() default false;
 
     /**
-     * Sets the case level value
+     * Turns on case sensitivity
      *
-     * <p>Turns on case sensitivity</p>
+     * @return the case level value
      */
     boolean caseLevel() default false;
 
     /**
-     * Sets the locale
+     * @return the locale
      *
      * @see <a href="http://userguide.icu-project.org/locale">ICU User Guide - Locale</a>
      */
     String locale();
 
     /**
-     * Sets the normalization value
-     *
-     * <p>If true, normalizes text into Unicode NFD.</p>
+     * @return the normalization value.  If true, normalizes text into Unicode NFD.
      */
     boolean normalization() default false;
 
     /**
-     * Sets the numeric ordering.  if true will order numbers based on numerical order and not collation order
+     * @return  the numeric ordering.  if true will order numbers based on numerical order and not collation order
      */
     boolean numericOrdering() default false;
 
     /**
-     * Sets the alternate
+     * Controls whether spaces and punctuation are considered base characters
      *
-     * <p>Controls whether spaces and punctuation are considered base characters</p>
+     * @return the alternate
      */
     CollationAlternate alternate() default CollationAlternate.NON_IGNORABLE;
 
     /**
-     * Sets the collation case first value
+     * Determines if Uppercase or lowercase values should come first
      *
-     * <p>Determines if Uppercase or lowercase values should come first</p>
+     * @return the collation case first value
      */
     CollationCaseFirst caseFirst() default CollationCaseFirst.OFF;
 
     /**
-     * Sets the maxVariable
+     * @return the maxVariable
      */
     CollationMaxVariable maxVariable() default CollationMaxVariable.PUNCT;
 
     /**
-     * Sets the collation strength
+     * @return the collation strength
      */
     CollationStrength strength() default CollationStrength.TERTIARY;
 }

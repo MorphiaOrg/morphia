@@ -39,28 +39,28 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Entity {
     /**
-     * The capped collection configuration options
+     * @return The capped collection configuration options
      */
     CappedAt cap() default @CappedAt(0);
 
     /**
-     * The default write concern to use when dealing with this entity
+     * @return The default write concern to use when dealing with this entity
      */
     String concern() default "";
 
     /**
-     * When true, instructs Morphia to not include when serializing an entity to mongodb.
+     * @return When true, instructs Morphia to not include when serializing an entity to mongodb.
      */
     //@Deprecated //to be replaced. This is a temp hack until polymorphism and discriminators are implemented
     boolean noClassnameStored() default false;
 
     /**
-     * set slaveOk for queries for this Entity.
+     * @return slaveOk for queries for this Entity.
      */
     boolean queryNonPrimary() default false;
 
     /**
-     * Sets the collection name to for this entity.  Defaults to the class's simple name
+     * @return the collection name to for this entity.  Defaults to the class's simple name
      *
      * @see Class#getSimpleName()
      */

@@ -137,7 +137,7 @@ public class Shape {
         private final Point center;
         private final double radius;
 
-        public Center(final String geometry, final Point center, final double radius) {
+        Center(final String geometry, final Point center, final double radius) {
             super(geometry);
             this.center = center;
             this.radius = radius;

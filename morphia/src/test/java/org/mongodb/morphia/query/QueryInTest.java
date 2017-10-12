@@ -141,11 +141,11 @@ public class QueryInTest extends TestBase {
     }
 
     @Entity("data")
-    private static class Data {
+    private static final class Data {
         private ObjectId id;
         private Set<ObjectId> otherIds;
 
-        public Data() {
+        private Data() {
             otherIds = new HashSet<ObjectId>();
         }
     }
@@ -170,16 +170,16 @@ public class QueryInTest extends TestBase {
     private static class ReferencedEntity extends TestEntity {
         private String foo;
 
-        public ReferencedEntity() {
+        ReferencedEntity() {
         }
 
-        public ReferencedEntity(final String s) {
+        ReferencedEntity(final String s) {
             foo = s;
         }
     }
 
     @Entity(value = "as", noClassnameStored = true)
-    public static class HasIdOnly {
+    private static class HasIdOnly {
         @Id
         private ObjectId id;
         private String name;

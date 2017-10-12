@@ -28,7 +28,6 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.QueryImpl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -85,7 +84,7 @@ public class TestSerializedFormat extends TestBase {
                                             .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
-        DBObject dbObject = ((QueryImpl) query).getQueryObject();
+        DBObject dbObject = query.getQueryObject();
         Assert.assertEquals(BasicDBObject.parse(readFully("/QueryStructure.json")), dbObject);
     }
 
@@ -197,10 +196,10 @@ class ReferenceType {
     private Map<String, ? super ReferenceType> mixedTypeMap = new TreeMap<String, ReferenceType>();
     private Map<String, List<? extends ReferenceType>> mixedTypeMapOfList = new TreeMap<String, List<? extends ReferenceType>>();
 
-    public ReferenceType() {
+    protected ReferenceType() {
     }
 
-    public ReferenceType(final int id, final String string) {
+    protected ReferenceType(final int id, final String string) {
         this.id = id;
         this.string = string;
     }
@@ -451,10 +450,10 @@ class ReferenceType {
 @Entity
 @SuppressWarnings("unused")
 class ClassNameReferenceType extends ReferenceType {
-    public ClassNameReferenceType() {
+    ClassNameReferenceType() {
     }
 
-    public ClassNameReferenceType(final int id, final String string) {
+    ClassNameReferenceType(final int id, final String string) {
         super(id, string);
     }
 }
@@ -465,12 +464,12 @@ class EmbeddedReferenceType {
     private Integer number;
     private String text;
 
-    public EmbeddedReferenceType(final int number, final String text) {
+    EmbeddedReferenceType(final int number, final String text) {
         this.number = number;
         this.text = text;
     }
 
-    public EmbeddedReferenceType() {
+    EmbeddedReferenceType() {
     }
 
     @Override

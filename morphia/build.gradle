@@ -20,7 +20,7 @@ dependencies {
 }
 
 clirr {
-    excludeFilter = new File("$configDir/clirr-exclude.yml")
+    excludeFilter = new File("$rootConfig/clirr-exclude.yml")
     baseline = ['org.mongodb.morphia:morphia:1.2.0'].join(':')
     failOnErrors = false
 }

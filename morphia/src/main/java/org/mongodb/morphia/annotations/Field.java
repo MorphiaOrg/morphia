@@ -37,19 +37,19 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 public @interface Field {
     /**
-     * "Direction" of the indexing.  Defaults to {@link IndexType#ASC}.
+     * @return "Direction" of the indexing.  Defaults to {@link IndexType#ASC}.
      *
      * @see IndexType
      */
     IndexType type() default IndexType.ASC;
 
     /**
-     * Field name to index
+     * @return Field name to index
      */
     String value();
 
     /**
-     * The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexType#TEXT}
+     * @return The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexType#TEXT}
      */
     int weight() default -1;
 }

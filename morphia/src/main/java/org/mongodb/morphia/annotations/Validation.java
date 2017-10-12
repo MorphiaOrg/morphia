@@ -43,7 +43,7 @@ import static com.mongodb.client.model.ValidationLevel.STRICT;
 @Target({ElementType.TYPE})
 public @interface Validation {
     /**
-     * Defines the query used to validate documents in a collection.  This query is not validated so care must be taken to ensure
+     * @return the query used to validate documents in a collection.  This query is not validated so care must be taken to ensure
      * document field names and types are correct.
      *
      * @mongodb.driver.manual core/document-validation/
@@ -51,13 +51,13 @@ public @interface Validation {
     String value();
 
     /**
-     * Determines how strictly MongoDB applies the validation rules to existing documents during an insert or update.
+     * @return how strictly MongoDB should apply the validation rules to existing documents during an insert or update.
      * @see ValidationLevel
      */
     ValidationLevel level() default STRICT;
 
     /**
-     * Determines how strictly MongoDB applies the validation rules to existing documents during an insert or update.
+     * @return how strictly MongoDB should apply the validation rules to existing documents during an insert or update.
      * @see ValidationAction
      */
     ValidationAction action() default ERROR;

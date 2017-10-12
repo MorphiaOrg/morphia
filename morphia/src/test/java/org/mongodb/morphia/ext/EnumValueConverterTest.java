@@ -36,7 +36,7 @@ public class EnumValueConverterTest extends TestBase {
 
     private static class AEnumConverter extends TypeConverter implements SimpleValueConverter {
 
-        public AEnumConverter() {
+        AEnumConverter() {
             super(AEnum.class);
         }
 

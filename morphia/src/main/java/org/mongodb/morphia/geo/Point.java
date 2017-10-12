@@ -1,7 +1,6 @@
 package org.mongodb.morphia.geo;
 
 import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
  * @see org.mongodb.morphia.geo.GeoJson#point(double, double)
  */
 @Embedded
-@Entity(noClassnameStored = true)
 public class Point implements Geometry {
     private final List<Double> coordinates = new ArrayList<Double>();
 

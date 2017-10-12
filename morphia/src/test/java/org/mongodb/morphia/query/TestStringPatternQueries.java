@@ -43,7 +43,7 @@ public class TestStringPatternQueries extends TestBase {
     static class E extends BaseEntity {
         private final String name;
 
-        public E(final String name) {
+        E(final String name) {
             this.name = name;
         }
 

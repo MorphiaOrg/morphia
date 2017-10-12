@@ -1,6 +1,6 @@
 sourceSets {
     main {
-        output.classesDir '../morphia/build/classes/test'
+        java.outputDir = project.project(":util").sourceSets.test.output.files[0]
     }
 }
 dependencies {

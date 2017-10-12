@@ -164,7 +164,7 @@ public class GuiceTest extends TestBase {
         private Foo foo;
 
         @Inject
-        public MyList(final Foo foo) {
+        MyList(final Foo foo) {
             this.foo = foo;
         }
     }

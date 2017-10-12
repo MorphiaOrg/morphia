@@ -16,9 +16,9 @@ class NonFinalizingHotSwappingInvoker<T> extends HotSwappingInvoker<T> {
 
     private static final long serialVersionUID = 1L;
 
-    public NonFinalizingHotSwappingInvoker(final Class<?>[] types, final ProxyFactory proxyFactory,
-                                           final ObjectReference<Object> delegateReference,
-                                           final DelegationMode delegationMode) {
+    NonFinalizingHotSwappingInvoker(final Class<?>[] types, final ProxyFactory proxyFactory,
+                                    final ObjectReference<Object> delegateReference,
+                                    final DelegationMode delegationMode) {
         super(types, proxyFactory, delegateReference, delegationMode);
     }
 

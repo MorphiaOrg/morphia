@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Converters {
     /**
-     * The Converters to apply to a field.
+     * @return The Converters to apply to a field.
      */
     Class<? extends TypeConverter>[] value();
 }

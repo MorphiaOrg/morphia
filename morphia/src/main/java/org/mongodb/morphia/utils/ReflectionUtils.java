@@ -153,7 +153,7 @@ public final class ReflectionUtils {
      */
     public static boolean isIntegerType(final Class type) {
         return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
-                                    byte.class).contains(type);
+            byte.class).contains(type);
     }
 
     /**
@@ -491,17 +491,18 @@ public final class ReflectionUtils {
     public static Set<Class<?>> getClasses(final String packageName) throws IOException, ClassNotFoundException {
         return getClasses(packageName, false);
     }
+
     /**
      * Returns the classes in a package
      *
-     * @param packageName       the package to scan
+     * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
      * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getClasses(final String packageName, final boolean mapSubPackages) throws IOException,
-            ClassNotFoundException {
+                                                                                                          ClassNotFoundException {
         final ClassLoader loader = Thread.currentThread()
                                          .getContextClassLoader();
         return getClasses(loader, packageName, mapSubPackages);
@@ -523,15 +524,15 @@ public final class ReflectionUtils {
     /**
      * Returns the classes in a package
      *
-     * @param loader      the ClassLoader to use
-     * @param packageName the package to scan
+     * @param loader         the ClassLoader to use
+     * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
      * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
      */
-    public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages) throws
-            IOException, ClassNotFoundException {
+    public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+        throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final String path = packageName.replace('.', '/');
         final Enumeration<URL> resources = loader.getResources(path);
@@ -584,16 +585,17 @@ public final class ReflectionUtils {
     /**
      * Returns the classes in a package found in a jar
      *
-     * @param loader      the ClassLoader to use
-     * @param jar         the jar to scan
-     * @param packageName the package to scan
+     * @param loader         the ClassLoader to use
+     * @param jar            the jar to scan
+     * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
      * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName, final boolean
-        mapSubPackages) throws IOException, ClassNotFoundException {
+                                                                                                                         mapSubPackages)
+        throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
         try {
@@ -634,15 +636,15 @@ public final class ReflectionUtils {
     /**
      * Returns the classes in a package found in a directory
      *
-     * @param loader      the ClassLoader to use
-     * @param directory   the directory to scan
-     * @param packageName the package to scan
+     * @param loader         the ClassLoader to use
+     * @param directory      the directory to scan
+     * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName,
-                                                            final boolean mapSubPackages) throws ClassNotFoundException {
+                                                 final boolean mapSubPackages) throws ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         if (directory.exists()) {
             for (final String file : getFileNames(directory, packageName, mapSubPackages)) {
@@ -658,11 +660,14 @@ public final class ReflectionUtils {
 
     private static Set<String> getFileNames(final File directory, final String packageName, final boolean mapSubPackages) {
         Set<String> fileNames = new HashSet<String>();
-        for (File file: directory.listFiles()) {
-            if (file.isFile()) {
-                fileNames.add(packageName + '.' + file.getName());
-            } else if (mapSubPackages){
-                fileNames.addAll(getFileNames(file, packageName + '.' + file.getName(), true));
+        final File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    fileNames.add(packageName + '.' + file.getName());
+                } else if (mapSubPackages) {
+                    fileNames.addAll(getFileNames(file, packageName + '.' + file.getName(), true));
+                }
             }
         }
         return fileNames;

@@ -88,7 +88,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
         static class NonNullValidationException extends RuntimeException {
 
-            public NonNullValidationException(final MappedField mf) {
+            NonNullValidationException(final MappedField mf) {
                 super("NonNull field is null " + mf.getFullName());
             }
 
