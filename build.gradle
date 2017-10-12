@@ -136,7 +136,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
     javadoc {
         exclude "**/internal/**"
 
-        dependsOn project.project(':util').compileJava //We need taglets to be compiled
+        dependsOn project(':util').compileJava //We need taglets to be compiled
 
         options.author = true
         options.version = true
