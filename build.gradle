@@ -154,6 +154,10 @@ configure(subprojects.findAll { it.name != 'util' }) {
     }
 }
 
+def buildingWith(n) {
+    project.hasProperty(n)
+}
+
 def major(fullVersion) {
     fullVersion.split('\\.').dropRight(1).join('.') +
         (gitVersion() == 'master' && fullVersion.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
