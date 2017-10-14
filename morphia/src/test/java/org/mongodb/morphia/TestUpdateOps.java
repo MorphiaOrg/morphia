@@ -244,6 +244,12 @@ public class TestUpdateOps extends TestBase {
                                             .addToSet("values", asList(4, 5))),
                       1);
         assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
+
+        assertUpdated(getDs().update(getDs().find(ContainsIntArray.class),
+                getDs().createUpdateOperations(ContainsIntArray.class)
+                        .addToSet("values", new HashSet<Integer>(asList(10, 11)))),
+                1);
+        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
     }
 
     @Test
