@@ -134,6 +134,15 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testSampleStage() {
+        AggregationPipeline pipeline = getDs()
+            .createAggregation(User.class)
+            .sample(1);
+        final DBObject sample = ((AggregationPipelineImpl) pipeline).getStages().get(0);
+        Assert.assertEquals(new BasicDBObject("size", 1), sample.get("$sample"));
+    }
+
+    @Test
     public void testNullGroupId() {
         AggregationPipeline pipeline = getDs()
             .createAggregation(User.class)
