@@ -341,9 +341,7 @@ public class TestQuery extends TestBase {
         assertNotEquals(0, profileCollection.count());
         DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
                                                                .append("ns", getDs().getCollection(Pic.class).getFullName()));
-        final Object commentPre32 = ((DBObject) profileRecord.get("query")).get("$comment");
-        final Object commentPost32 = ((DBObject) profileRecord.get("query")).get("comment");
-        assertTrue(profileRecord.toString(), expectedComment.equals(commentPre32) || expectedComment.equals(commentPost32));
+        assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
 
         turnOffProfilingAndDropProfileCollection();
     }
@@ -362,9 +360,7 @@ public class TestQuery extends TestBase {
         assertNotEquals(0, profileCollection.count());
         DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
                                                                .append("ns", getDs().getCollection(Pic.class).getFullName()));
-        final Object commentPre32 = ((DBObject) profileRecord.get("query")).get("$comment");
-        final Object commentPost32 = ((DBObject) profileRecord.get("query")).get("comment");
-        assertTrue(profileRecord.toString(), expectedComment.equals(commentPre32) || expectedComment.equals(commentPost32));
+        assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
 
         turnOffProfilingAndDropProfileCollection();
     }
@@ -1867,5 +1863,23 @@ public class TestQuery extends TestBase {
         Collections.sort(list, comparator);
         assertEquals(query1.asList(), list);
         assertEquals(query2.asList(), list);
+    }
+
+    private String getCommentFromProfileRecord(final DBObject profileRecord) {
+        if (profileRecord.containsField("command")) {
+            DBObject commandDocument = ((DBObject) profileRecord.get("command"));
+            if (commandDocument.containsField("comment")) {
+                return (String) commandDocument.get("comment");
+            }
+        }
+        if (profileRecord.containsField("query")) {
+            DBObject queryDocument = ((DBObject) profileRecord.get("query"));
+            if (queryDocument.containsField("comment")) {
+                return (String) queryDocument.get("comment");
+            } else if (queryDocument.containsField("$comment")) {
+                return (String) queryDocument.get("$comment");
+            }
+        }
+        return null;
     }
 }
