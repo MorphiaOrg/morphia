@@ -24,7 +24,7 @@ has two primary components to cover here:  `fields` and `options`.  An index def
 ```java
 @Entity
 @Indexes({
-    @Index(fields = @Field("field2", type = DESC)),
+    @Index(fields = @Field(value = "field2", type = DESC)),
     @Index(
       fields = @Field("field3"),
       options = @IndexOptions(name = "indexing_test")
