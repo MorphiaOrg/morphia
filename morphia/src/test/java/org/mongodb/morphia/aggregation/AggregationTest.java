@@ -17,7 +17,6 @@
 package org.mongodb.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
-import com.mongodb.AggregationOptions.OutputMode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -158,7 +157,6 @@ public class AggregationTest extends TestBase {
 
         Iterator<StringDates> aggregate = pipeline.aggregate(StringDates.class,
                                                              builder()
-            .outputMode(OutputMode.CURSOR)
             .build());
         while (aggregate.hasNext()) {
             StringDates next = aggregate.next();
@@ -336,7 +334,6 @@ public class AggregationTest extends TestBase {
                             new Book("Iliad", "Homer", 10)));
 
         AggregationOptions options = builder()
-            .outputMode(AggregationOptions.OutputMode.CURSOR)
             .build();
         Iterator<Author> aggregate = getDs().createAggregation(Book.class)
                                             .group("author", grouping("books", push("title")))

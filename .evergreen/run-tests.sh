@@ -33,6 +33,5 @@ export JAVA_HOME="/opt/java/jdk8"
 ./gradlew --info classes testClasses
 
 echo "Running tests with ${JDK}"
-JAVA_HOME="/opt/java/${JDK}"
 ./gradlew -version
-./gradlew -DMONGO_URI=${MONGODB_URI} --stacktrace --info -x classes -x testClasses --rerun-tasks test
+./gradlew -PjdkHome=/opt/java/${JDK} -DMONGO_URI=${MONGODB_URI} --stacktrace --info -x classes -x testClasses --rerun-tasks test
