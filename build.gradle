@@ -140,7 +140,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
 
         options.author = true
         options.version = true
-        options.tagletPath project.project(":util").sourceSets.main.output.files
+        options.tagletPath project(":util").sourceSets.main.output.files
                                    .stream()
                                    .map { file(it) }
                                    .collect(toList())
