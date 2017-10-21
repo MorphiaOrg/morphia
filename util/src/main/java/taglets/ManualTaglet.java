@@ -49,7 +49,7 @@ public class ManualTaglet extends DocTaglet {
 
     @Override
     protected String getBaseDocURI() {
-        return "http://docs.mongodb.org/manual/";
+        return "http://docs.mongodb.org/manual";
     }
 
 }
