@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static org.mongodb.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static org.mongodb.morphia.testutil.IndexMatcher.hasIndexNamed;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.utils.IndexDirection;
 
 import com.mongodb.DBObject;
 
@@ -27,10 +29,11 @@ public class EnsureIndexesTest extends TestBase {
 
         // then
         List<DBObject> indexInfo = getDs().getCollection(Company.class).getIndexInfo();
-        assertEquals(3, indexInfo.size());
+        assertEquals(4, indexInfo.size());
         assertThat(indexInfo, hasIndexNamed("_id_"));
-        assertThat(indexInfo, hasIndexNamed("employees.employeeId_1"));
+        assertThat(indexInfo, hasIndexNamed("employees.birthday_-1"));
         assertThat(indexInfo, hasIndexNamed("employees.fullName_1"));
+        assertThat(indexInfo, hasIndexNamed("employees.employeeId_1"));
     }
 
     @Test
@@ -43,14 +46,21 @@ public class EnsureIndexesTest extends TestBase {
 
         // then
         List<DBObject> indexInfo = getDs().getCollection(Contract.class).getIndexInfo();
-        assertEquals(2, indexInfo.size());
+        assertEquals(3, indexInfo.size());
         assertThat(indexInfo, hasIndexNamed("_id_"));
+        assertThat(indexInfo, hasIndexNamed("person.birthday_-1"));
         assertThat(indexInfo, hasIndexNamed("person.fullName_1"));
         assertThat(indexInfo, doesNotHaveIndexNamed("person.employeeId_1"));
     }
 
     @Embedded
-    public static class Person {
+    public static class LivingBeing {
+        @Indexed(IndexDirection.DESC)
+        public Date birthday;
+    }
+
+    @Embedded
+    public static class Person extends LivingBeing {
         @Indexed
         public String fullName;
     }

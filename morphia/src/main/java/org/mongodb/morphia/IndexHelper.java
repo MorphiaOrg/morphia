@@ -164,7 +164,9 @@ final class IndexHelper {
                 List<MappedClass> classes = new ArrayList<MappedClass>();
                 MappedClass mappedClass = mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass());
                 classes.add(mappedClass);
-                classes.addAll(mapper.getSubTypes(mappedClass));
+                if (mappedClass.isInterface() || mappedClass.isAbstract()) {
+                    classes.addAll(mapper.getSubTypes(mappedClass));
+                }
                 for (MappedClass aClass : classes) {
                     for (Index index : collectIndexes(aClass, parents)) {
                         List<Field> fields = new ArrayList<Field>();
