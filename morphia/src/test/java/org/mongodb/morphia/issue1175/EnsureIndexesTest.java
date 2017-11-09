@@ -56,36 +56,36 @@ public class EnsureIndexesTest extends TestBase {
     @Embedded
     public static class LivingBeing {
         @Indexed(IndexDirection.DESC)
-        public Date birthday;
+        private Date birthday;
     }
 
     @Embedded
     public static class Person extends LivingBeing {
         @Indexed
-        public String fullName;
+        private String fullName;
     }
 
     @Embedded
     public static class Employee extends Person {
         @Indexed
-        public Long employeeId;
-        public String title;
+        private Long employeeId;
+        private String title;
     }
 
     @Entity
     public static class Contract {
         @Id
-        public Long contractId;
-        public Long companyId;
+        private Long contractId;
+        private Long companyId;
         @Embedded
-        public Person person;
+        private Person person;
     }
 
     @Entity
     public static class Company {
         @Id
-        public Long companyId;
+        private Long companyId;
         @Embedded
-        public List<Employee> employees;
+        private List<Employee> employees;
     }
 }
