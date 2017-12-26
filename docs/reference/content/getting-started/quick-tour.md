@@ -159,7 +159,7 @@ underpaid = datastore.createQuery(Employee.class)
 ```
 
 The `field()` method here is used to filter on the named field and returns an instance of an interface with a number of methods to build 
-a query.  This approach is helpful is compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
+a query.  This approach is helpful if compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
  query building can be done quite safely.
  
  
