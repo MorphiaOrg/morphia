@@ -180,7 +180,7 @@ the Java field, Morphia can use either form and will validate against either nam
 ## Updates
 
 Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set 
-of update operations.  In this example, we'll find all the underpaid employees and give them raise of 10000.  The first step is to create
+of update operations.  In this example, we'll find all the underpaid employees and give them a raise of 10000.  The first step is to create
  the query to find all the underpaid employees.  This is one we've already seen:
  
 ```java
