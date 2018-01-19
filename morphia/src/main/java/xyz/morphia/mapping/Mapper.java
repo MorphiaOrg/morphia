@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,8 @@ public class Mapper {
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
     private final xyz.morphia.converters.Converters converters;
     private MapperOptions opts = new MapperOptions();
+
+    private final IdentityHashMap<MappedField, CustomMapper> mapperCache = new IdentityHashMap<MappedField, CustomMapper>();
 
     /**
      * Creates a Mapper with the given options.
@@ -839,16 +842,28 @@ public class Mapper {
 
     private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
                                  final DBObject dbObject) {
+        CustomMapper selectedMapper = mapperCache.get(mf);
+        if (selectedMapper == null) {
+            selectedMapper = selectMapper(mf);
+            mapperCache.put(mf, selectedMapper);
+        }
+
+        selectedMapper.fromDBObject(datastore, dbObject, mf, entity, cache, this);
+    }
+
+    private CustomMapper selectMapper(final MappedField mf) {
+        CustomMapper mapper;
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
             || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
-            opts.getValueMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
+            mapper = opts.getValueMapper();
         } else if (mf.hasAnnotation(Embedded.class)) {
-            opts.getEmbeddedMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
+            mapper = opts.getEmbeddedMapper();
         } else if (mf.hasAnnotation(Reference.class)) {
-            opts.getReferenceMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
+            mapper = opts.getReferenceMapper();
         } else {
-            opts.getDefaultMapper().fromDBObject(datastore, dbObject, mf, entity, cache, this);
+            mapper = opts.getDefaultMapper();
         }
+        return mapper;
     }
 
     private void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,

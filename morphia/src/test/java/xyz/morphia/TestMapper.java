@@ -1,8 +1,11 @@
 package xyz.morphia;
 
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
@@ -28,12 +31,13 @@ import static java.util.Arrays.asList;
  * @author scotthernandez
  */
 public class TestMapper extends TestBase {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestMapper.class);
+
     @Test
     public void serializableId() throws Exception {
         final CustomId cId = new CustomId();
         cId.id = new ObjectId();
         cId.type = "banker";
-
         final UsesCustomIdObject object = new UsesCustomIdObject();
         object.id = cId;
         object.text = "hllo";
@@ -228,5 +232,90 @@ public class TestMapper extends TestBase {
             this.text = text;
         }
     }
+
+    @Test
+    @Ignore
+    public void testMapperPerformance() {
+        Morphia morphia = getMorphia();
+        Mapper mapper = morphia.getMapper();
+        mapper.addMappedClass(Container.class);
+        Datastore ds = morphia.createDatastore(getMongoClient(), "testDB");
+
+        int listSize = 100;
+        int iterations = 100000;
+
+        // create the DbObject
+        BasicDBList aus = new BasicDBList();
+        for (int i = 0; i < listSize; i++) {
+            BasicDBObject au = new BasicDBObject("id", i);
+            au.put("name", "john doe");
+            aus.add(au);
+        }
+        BasicDBObject p = new BasicDBObject("values", aus);
+
+        EntityCache entityCache = mapper.getOptions().getCacheFactory().createCache();
+
+        long total = 0;
+        for (int i = 0; i < iterations; i++) {
+            long start = System.nanoTime();
+            morphia.fromDBObject(ds, Container.class, p, entityCache);
+            long stop = System.nanoTime();
+
+            long delta = stop - start;
+            total = total + delta;
+            if (i % 10000 == 0) {
+                LOGGER.warn("Mapping " + i + " took " + delta + " ns");
+            }
+        }
+
+        double totalMs = ((double) total) / 1000000;
+        LOGGER.warn("Morphia creation took total " + (totalMs) + " ms, avg: " + (totalMs / iterations));
+    }
+
+    private static class Customer {
+        private int id;
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+    }
+
+    private static class Container {
+        @Embedded
+        private List<Customer> values;
+        @Id
+        private ObjectId id;
+
+        public List<Customer> getValues() {
+            return values;
+        }
+
+        public void setValues(final List<Customer> values) {
+            this.values = values;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+    }
+
+
 
 }
