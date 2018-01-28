@@ -4,8 +4,8 @@ package org.mongodb.morphia.mapping;
 import com.mongodb.DBObject;
 import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.ConstructorArgs;
-import org.mongodb.morphia.logging.Logger;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+import org.mongodb.morphia.mapping.classinfo.ClassInfoPersister;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -23,25 +22,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultCreator implements ObjectFactory {
 
-    private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
-
-    private Map<String, Class> classNameCache = new ConcurrentHashMap<String, Class>();
-
-    private MapperOptions options = null;
+    private final ClassInfoPersister classInfoPersister;
 
     /**
      * Creates a new DefaultCreator with no options
      */
     public DefaultCreator() {
+        classInfoPersister = new DefaultClassInfoPersister();
     }
 
     /**
      * Creates a new DefaultCreator with options
      *
-     * @param options the options to apply
+     * @param classInfoPersister the strategy for getting class info out of data
      */
-    public DefaultCreator(final MapperOptions options) {
-        this.options = options;
+    public DefaultCreator(final ClassInfoPersister classInfoPersister) {
+        this.classInfoPersister = classInfoPersister;
     }
 
     private static <T> Constructor<T> getNoArgsConstructor(final Class<T> type) {
@@ -84,17 +80,14 @@ public class DefaultCreator implements ObjectFactory {
 
     @Override
     public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
-        Class<T> c = getClass(dbObj);
-        if (c == null) {
-            c = clazz;
-        }
-        return createInstance(c);
+        Class<T> c = classInfoPersister.getClass(dbObj, clazz);
+        return createInstance(c != null ? c : clazz);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
-        Class c = getClass(dbObj);
+        Class c = classInfoPersister.getClass(dbObj, mf.getType());
         if (c == null) {
             c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
             if (c.equals(Object.class)) {
@@ -149,41 +142,17 @@ public class DefaultCreator implements ObjectFactory {
     /**
      * @return the cache of classnames
      */
+    @Deprecated
     public Map<String, Class> getClassNameCache() {
-        HashMap<String, Class> copy = new HashMap<String, Class>();
-        copy.putAll(classNameCache);
-        return copy;
+        if (classInfoPersister instanceof DefaultClassInfoPersister) {
+            return ((DefaultClassInfoPersister) classInfoPersister).getClassCache();
+        }
+        return new HashMap<String, Class>();
     }
 
+    @Deprecated
     protected ClassLoader getClassLoaderForClass() {
         return Thread.currentThread().getContextClassLoader();
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Class<T> getClass(final DBObject dbObj) {
-        // see if there is a className value
-        Class c = null;
-        if (dbObj.containsField(Mapper.CLASS_NAME_FIELDNAME)) {
-            final String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
-            // try to Class.forName(className) as defined in the dbObject first,
-            // otherwise return the entityClass
-            try {
-                if (options != null && options.isCacheClassLookups()) {
-                    c = classNameCache.get(className);
-                    if (c == null) {
-                        c = Class.forName(className, true, getClassLoaderForClass());
-                        classNameCache.put(className, c);
-                    }
-                } else {
-                    c = Class.forName(className, true, getClassLoaderForClass());
-                }
-            } catch (ClassNotFoundException e) {
-                if (LOG.isWarningEnabled()) {
-                    LOG.warning("Class not found defined in dbObj: ", e);
-                }
-            }
-        }
-        return c;
     }
 
     /**

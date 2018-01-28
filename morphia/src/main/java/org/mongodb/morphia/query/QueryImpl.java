@@ -417,7 +417,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final BasicDBObject fieldsFilter = copy(projection);
 
         if (includeFields && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
-            fieldsFilter.put(Mapper.CLASS_NAME_FIELDNAME, 1);
+            ds.getMapper().getOptions().getClassInfoPersister().addClassInfoToProjection(fieldsFilter, clazz);
         }
 
         return fieldsFilter;

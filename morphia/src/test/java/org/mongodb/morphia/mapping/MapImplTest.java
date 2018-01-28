@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mongodb.morphia.TestBase;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values")).get(
                                                                                                  "first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME);
         assertTrue(!hasF);
     }
 
@@ -55,7 +56,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values")).get(
                                                                                                  "second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME);
         assertTrue("className should not be here.", !hasF);
     }
 
@@ -74,7 +75,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values"))
                                                       .get("second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME);
         assertTrue("className should be here.", hasF);
     }
 
@@ -91,7 +92,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values"))
                                                       .get("first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
+        final boolean hasF = goo.containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME);
         assertTrue(hasF);
     }
 

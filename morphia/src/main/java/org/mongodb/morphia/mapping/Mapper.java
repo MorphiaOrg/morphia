@@ -35,6 +35,7 @@ import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.EntityCache;
+import org.mongodb.morphia.mapping.classinfo.ClassInfoPersister;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -81,11 +82,6 @@ public class Mapper {
      * Special name that can never be used. Used as default for some fields to indicate default state.
      */
     public static final String IGNORED_FIELDNAME = ".";
-    /**
-     * Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to
-     * support polymorphism
-     */
-    public static final String CLASS_NAME_FIELDNAME = "className";
     private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
     /**
      * Set of classes that registered by this mapper
@@ -175,11 +171,11 @@ public class Mapper {
      *
      * @param <T>         the type of the entity
      * @param datastore   the Datastore to use when fetching this reference
-     * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the DBObject
+     * @param entityClass The type to return, or use; can be overridden by the @see Mapper.DEFAULT_DISCRIMINATOR_FIELD_NAME in the DBObject
      * @param dbObject    the DBObject containing the document from mongodb
      * @param cache       the EntityCache to use
      * @return the new entity
-     * @see Mapper#CLASS_NAME_FIELDNAME
+     * @see ClassInfoPersister
      */
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
@@ -222,14 +218,14 @@ public class Mapper {
      * @return the entity
      */
     <T> T fromDBObject(final Datastore datastore, final DBObject dbObject) {
-        if (dbObject.containsField(CLASS_NAME_FIELDNAME)) {
-            T entity = opts.getObjectFactory().createInstance(null, dbObject);
+        Class<? extends T> clazz = opts.getClassInfoPersister().getClass(dbObject); // no known hint to provide
+        if (clazz != null) {
+            T entity = opts.getObjectFactory().createInstance(clazz);
             entity = fromDb(datastore, dbObject, entity, createEntityCache());
 
             return entity;
         } else {
-            throw new MappingException(format("The DBOBbject does not contain a %s key.  Determining entity type is impossible.",
-                                              CLASS_NAME_FIELDNAME));
+            throw new MappingException(format("%s cannot determine the class", opts.getClassInfoPersister()));
         }
     }
 
@@ -571,23 +567,23 @@ public class Mapper {
 
     /**
      * /**
-     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a DBObject. Special data may be added to keep track of the class type.
      *
      * @param entity The POJO
      * @return the DBObject
-     * @see Mapper#CLASS_NAME_FIELDNAME
+     * @see ClassInfoPersister
      */
     public DBObject toDBObject(final Object entity) {
         return toDBObject(entity, null);
     }
 
     /**
-     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a DBObject. Special data may be added to keep track of the class type.
      *
      * @param entity          The POJO
      * @param involvedObjects A Map of (already converted) POJOs
      * @return the DBObject
-     * @see Mapper#CLASS_NAME_FIELDNAME
+     * @see ClassInfoPersister
      */
     public DBObject toDBObject(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return toDBObject(entity, involvedObjects, true);
@@ -677,13 +673,13 @@ public class Mapper {
                     if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
                         for (Object o : list) {
                             if (o instanceof DBObject) {
-                                ((DBObject) o).removeField(CLASS_NAME_FIELDNAME);
+                                opts.getClassInfoPersister().removeClassInfo((DBObject) o);
                             }
                         }
                     }
                 }
             } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
-                ((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
+                opts.getClassInfoPersister().removeClassInfo((DBObject) mappedValue);
             }
         }
 
@@ -928,7 +924,7 @@ public class Mapper {
             if (isSingleValue && !isPropertyType(type)) {
                 final DBObject dbObj = toDBObject(newObj);
                 if (!includeClassName) {
-                    dbObj.removeField(CLASS_NAME_FIELDNAME);
+                    opts.getClassInfoPersister().removeClassInfo(dbObj);
                 }
                 return dbObj;
             } else if (newObj instanceof DBObject) {
@@ -970,7 +966,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored()) {
-            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
+            opts.getClassInfoPersister().addClassInfo(entity, dbObject, mc.getClazz());
         }
 
         if (lifecycle) {

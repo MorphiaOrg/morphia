@@ -43,7 +43,7 @@ import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.PrePersist;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 import org.mongodb.morphia.testmodel.Hotel;
 import org.mongodb.morphia.testmodel.Rectangle;
 
@@ -1082,7 +1082,7 @@ public class TestQuery extends TestBase {
             .project("_id", true)
             .project("first_name", true)
             .getFieldsObject();
-        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        assertNull(fields.get(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME));
     }
 
     @Test
@@ -1262,7 +1262,7 @@ public class TestQuery extends TestBase {
         DBObject fields = getDs()
             .find(ContainsRenamedFields.class)
             .retrievedFields(true, "_id", "first_name").getFieldsObject();
-        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        assertNull(fields.get(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME));
     }
 
     @Test

@@ -442,7 +442,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         Object id = key.getId();
         if (id instanceof DBObject) {
-            ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+            mapper.getOptions().getClassInfoPersister().removeClassInfo((DBObject) id);
         }
         return get(clazz, id);
     }

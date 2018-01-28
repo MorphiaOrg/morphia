@@ -1,6 +1,7 @@
 package org.mongodb.morphia;
 
 import com.mongodb.DBObject;
+import org.mongodb.morphia.mapping.classinfo.ClassInfoPersister;
 import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
 
@@ -22,8 +23,8 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz);
 
     /**
-     * Creates an instance of the class defined in the {@link Mapper#CLASS_NAME_FIELDNAME} field in the dbObject passed in.  If that field
-     * is missing, the given Class is used instead.
+     * Creates an instance of the class as determined by the {@link ClassInfoPersister}.
+     * If the discriminator fails, the given Class is used instead.
      *
      * @param clazz type class to instantiate
      * @param dbObj the state to populate the new instance with
@@ -33,8 +34,9 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz, DBObject dbObj);
 
     /**
-     * Creates an instance of the class defined in the {@link Mapper#CLASS_NAME_FIELDNAME} field in the dbObject passed in.  If that field
-     * is missing, morphia attempts to the MappedField to determine which concrete class to instantiate.
+     * Creates an instance of the class defined as determined by the {@link ClassInfoPersister}.
+     * If the discriminator fails, morphia attempts to use the MappedField to determine which concrete class to
+     * instantiate.
      *
      * @param mapper the Mapper to use
      * @param mf     the MappedField to consult when creating the instance

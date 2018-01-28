@@ -29,10 +29,10 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.mapping.DefaultCreator;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MappingException;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 import org.mongodb.morphia.testmodel.Address;
 import org.mongodb.morphia.testmodel.Article;
 import org.mongodb.morphia.testmodel.Circle;
@@ -141,20 +141,24 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testBasicMapping() throws Exception {
         performBasicMappingTest();
-        final DefaultCreator objectFactory = (DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory();
-        assertTrue(objectFactory.getClassNameCache().isEmpty());
+        final DefaultClassInfoPersister classDiscriminator = (DefaultClassInfoPersister) getMorphia()
+                .getMapper().getOptions().getClassInfoPersister();
+        assertTrue(classDiscriminator.getClassCache().isEmpty());
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testBasicMappingWithCachedClasses() throws Exception {
         getMorphia().getMapper().getOptions().setCacheClassLookups(true);
         try {
             performBasicMappingTest();
-            final DefaultCreator objectFactory = (DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory();
-            assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
-            assertTrue(objectFactory.getClassNameCache().containsKey(TravelAgency.class.getName()));
+            final DefaultClassInfoPersister classDiscriminator = (DefaultClassInfoPersister) getMorphia()
+                    .getMapper().getOptions().getClassInfoPersister();
+            assertTrue(classDiscriminator.getClassCache().containsKey(Hotel.class.getName()));
+            assertTrue(classDiscriminator.getClassCache().containsKey(TravelAgency.class.getName()));
         } finally {
             getMorphia().getMapper().getOptions().setCacheClassLookups(false);
         }
@@ -214,7 +218,8 @@ public class TestMapping extends TestBase {
         cea.res = new RenamedEmbedded[]{new RenamedEmbedded()};
 
         final DBObject dbObj = getMorphia().toDBObject(cea);
-        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0))
+                .containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME));
     }
 
     @Test
@@ -243,7 +248,7 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final DBObject dbObj = getMorphia().toDBObject(cee);
-        assertTrue(!((DBObject) dbObj.get("cil")).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) dbObj.get("cil")).containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME));
     }
 
     @Test
@@ -665,7 +670,8 @@ public class TestMapping extends TestBase {
         borg.setAddress(address);
 
         BasicDBObject hotelDbObj = (BasicDBObject) getMorphia().toDBObject(borg);
-        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)));
+        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0))
+                .containsField(DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME)));
 
 
         hotels.save(hotelDbObj);

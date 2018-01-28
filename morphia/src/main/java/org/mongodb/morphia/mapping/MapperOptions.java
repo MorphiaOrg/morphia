@@ -7,6 +7,8 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCacheFactory;
 import org.mongodb.morphia.mapping.cache.EntityCacheFactory;
+import org.mongodb.morphia.mapping.classinfo.ClassInfoPersister;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 
 /**
  * Options to control mapping behavior.
@@ -25,9 +27,9 @@ public class MapperOptions {
     private boolean storeNulls;
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
-    private boolean cacheClassLookups = false;
     private boolean mapSubPackages = false;
-    private ObjectFactory objectFactory = new DefaultCreator(this);
+    private ClassInfoPersister classInfoPersister = new DefaultClassInfoPersister();
+    private ObjectFactory objectFactory = new DefaultCreator(classInfoPersister);
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
     private CustomMapper defaultMapper = embeddedMapper;
@@ -59,6 +61,7 @@ public class MapperOptions {
         setDefaultMapper(options.getDefaultMapper());
         setReferenceMapper(options.getReferenceMapper());
         setValueMapper(options.getValueMapper());
+        setClassInfoPersister(options.getClassInfoPersister());
     }
 
     /**
@@ -205,7 +208,7 @@ public class MapperOptions {
      * @return true if Morphia should cache name -> Class lookups
      */
     public boolean isCacheClassLookups() {
-        return cacheClassLookups;
+        return classInfoPersister.isCaching();
     }
 
     /**
@@ -214,7 +217,7 @@ public class MapperOptions {
      * @param cacheClassLookups true if the lookup results should be cached
      */
     public void setCacheClassLookups(final boolean cacheClassLookups) {
-        this.cacheClassLookups = cacheClassLookups;
+        classInfoPersister.setCaching(cacheClassLookups);
     }
 
     /**
@@ -294,5 +297,19 @@ public class MapperOptions {
      */
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
+    }
+
+    /**
+     * @return the selected class info persister strategy
+     */
+    public ClassInfoPersister getClassInfoPersister() {
+        return classInfoPersister;
+    }
+
+    /**
+     * @param classInfoPersister the class info persister strategy to use
+     */
+    public void setClassInfoPersister(final ClassInfoPersister classInfoPersister) {
+        this.classInfoPersister = classInfoPersister;
     }
 }

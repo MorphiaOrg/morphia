@@ -98,7 +98,7 @@ class EmbeddedMapper implements CustomMapper {
             final DBObject dbObj = fieldValue == null ? null : mapper.toDBObject(fieldValue, involvedObjects);
             if (dbObj != null) {
                 if (!shouldSaveClassName(fieldValue, dbObj, mf)) {
-                    dbObj.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                    mapper.getOptions().getClassInfoPersister().removeClassInfo(dbObj);
                 }
 
                 if (!dbObj.keySet().isEmpty() || mapper.getOptions().isStoreEmpties()) {
@@ -240,7 +240,7 @@ class EmbeddedMapper implements CustomMapper {
                     }
 
                     if (!shouldSaveClassName(o, val, mf)) {
-                        ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
+                        mapper.getOptions().getClassInfoPersister().removeClassInfo((DBObject) val);
                     }
 
                     values.add(val);
@@ -280,11 +280,11 @@ class EmbeddedMapper implements CustomMapper {
                             if (((List) val).get(0) instanceof DBObject) {
                                 List<DBObject> list = (List<DBObject>) val;
                                 for (DBObject o : list) {
-                                    o.removeField(Mapper.CLASS_NAME_FIELDNAME);
+                                    mapper.getOptions().getClassInfoPersister().removeClassInfo(o);
                                 }
                             }
                         } else {
-                            ((DBObject) val).removeField(Mapper.CLASS_NAME_FIELDNAME);
+                            mapper.getOptions().getClassInfoPersister().removeClassInfo((DBObject) val);
                         }
                     }
                 }
