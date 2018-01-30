@@ -36,6 +36,7 @@ import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.mapping.classinfo.ClassInfoPersister;
+import org.mongodb.morphia.mapping.classinfo.DefaultClassInfoPersister;
 import org.mongodb.morphia.mapping.lazy.LazyFeatureDependencies;
 import org.mongodb.morphia.mapping.lazy.LazyProxyFactory;
 import org.mongodb.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -82,6 +83,13 @@ public class Mapper {
      * Special name that can never be used. Used as default for some fields to indicate default state.
      */
     public static final String IGNORED_FIELDNAME = ".";
+
+    /**
+     * See {@link DefaultClassInfoPersister#DEFAULT_DISCRIMINATOR_FIELD_NAME}
+     */
+    @Deprecated
+    public static final String CLASS_NAME_FIELDNAME = DefaultClassInfoPersister.DEFAULT_DISCRIMINATOR_FIELD_NAME;
+
     private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
     /**
      * Set of classes that registered by this mapper

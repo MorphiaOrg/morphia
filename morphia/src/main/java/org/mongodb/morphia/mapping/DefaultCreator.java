@@ -28,7 +28,14 @@ public class DefaultCreator implements ObjectFactory {
      * Creates a new DefaultCreator with no options
      */
     public DefaultCreator() {
-        classInfoPersister = new DefaultClassInfoPersister();
+        this(new DefaultClassInfoPersister());
+    }
+
+    /**
+     * @param mapperOptions the options to use
+     */
+    public DefaultCreator(final MapperOptions mapperOptions) {
+        this(mapperOptions.getClassInfoPersister());
     }
 
     /**
