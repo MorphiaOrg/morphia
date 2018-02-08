@@ -26,6 +26,8 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -324,6 +326,47 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(inventories.get(5), lookups.get(2).inventoryDocs.get(1));
     }
 
+    /**
+     * Test data pulled from
+     * https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#specify-multiple-join-conditions-with-lookup
+     */
+    @Test
+    public void testLookupSubQuery() {
+        checkMinServerVersion(3.6);
+        getDs().save(asList(new Order(1, "almonds", 12, 2),
+            new Order(2, "pecans", 20, 1),
+            new Order(3, "cookies", 10, 60),
+            new Order(4)));
+
+        List<Warehouse> warehouses = asList(new Warehouse(1, "almonds", "A", 120),
+            new Warehouse(2, "pecans", "A", 80),
+            new Warehouse(3, "almonds", "B", 60),
+            new Warehouse(4, "cookies", "B", 40),
+            new Warehouse(5, "cookies", "A", 80),
+            new Warehouse(6));
+        getDs().save(warehouses);
+
+        BasicDBObject let = new BasicDBObject("order_item", "$item").append("order_qty", "$ordered");
+        AggregationPipeline innerPipeline = getDs().createAggregation(Warehouse.class)
+            .match(getDs().getQueryFactory().createQuery(getDs())
+                .field("$stock_item").equal("$$order_item")
+                .field("$order_qty").greaterThan("$instock"))
+            .project(projection("stock_item").suppress(), projection("_id").suppress());
+
+        getDs().createAggregation(Order.class)
+            .lookup("warehouses", let, innerPipeline, "stockdata")
+            .out("lookups", Order.class);
+
+        List<Order> lookups = getAds().createQuery("lookups", Order.class)
+            .order("_id")
+            .asList();
+
+        Assert.assertEquals(warehouses.get(0), lookups.get(0).stockdata.get(0));
+        Assert.assertEquals(warehouses.get(2), lookups.get(0).stockdata.get(1));
+        Assert.assertEquals(warehouses.get(1), lookups.get(1).stockdata.get(0));
+        Assert.assertEquals(warehouses.get(4), lookups.get(2).stockdata.get(0));
+    }
+
     @Test
     public void testOut() {
         checkMinServerVersion(2.6);
@@ -611,6 +654,8 @@ public class AggregationTest extends TestBase {
         private int quantity;
         @Embedded()
         private List<Inventory> inventoryDocs;
+        @Embedded()
+        private List<Warehouse> stockdata;
 
         private Order() {
         }
@@ -632,6 +677,14 @@ public class AggregationTest extends TestBase {
 
         public void setInventoryDocs(final List<Inventory> inventoryDocs) {
             this.inventoryDocs = inventoryDocs;
+        }
+
+        public List<Warehouse> getStockData() {
+            return stockdata;
+        }
+
+        public void setStockData(final List<Warehouse> stockdata) {
+            this.stockdata = stockdata;
         }
 
         public String getItem() {
@@ -789,6 +842,101 @@ public class AggregationTest extends TestBase {
             int result = id;
             result = 31 * result + (sku != null ? sku.hashCode() : 0);
             result = 31 * result + (description != null ? description.hashCode() : 0);
+            result = 31 * result + instock;
+            return result;
+        }
+    }
+
+    @Entity(value = "warehouses", noClassnameStored = true)
+    public static class Warehouse {
+        @Id
+        private int id;
+        private String stock_item;
+        private String warehouse;
+        private int instock;
+
+
+        public Warehouse() {
+        }
+
+        Warehouse(final int id) {
+            this.id = id;
+        }
+
+        Warehouse(final int id, final String stock_item, final String warehouse) {
+            this.id = id;
+            this.stock_item = stock_item;
+            this.warehouse = warehouse;
+        }
+
+        Warehouse(final int id, final String stock_item, final String warehouse, final int instock) {
+            this.id = id;
+            this.stock_item = stock_item;
+            this.warehouse = warehouse;
+            this.instock = instock;
+        }
+
+        public String getStockItem() {
+            return stock_item;
+        }
+
+        public void setDescription(final String stock_item) {
+            this.stock_item = stock_item;
+        }
+
+        public int getInstock() {
+            return instock;
+        }
+
+        public void setInstock(final int instock) {
+            this.instock = instock;
+        }
+
+        public String getWarehouse() {
+            return warehouse;
+        }
+
+        public void setWarehouse(final String warehouse) {
+            this.warehouse = warehouse;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Inventory)) {
+                return false;
+            }
+
+            final Warehouse warehouse = (Warehouse) o;
+
+            if (id != warehouse.id) {
+                return false;
+            }
+            if (instock != warehouse.instock) {
+                return false;
+            }
+            if (stock_item != null ? !stock_item.equals(warehouse.stock_item) : warehouse.stock_item != null) {
+                return false;
+            }
+            return this.warehouse != null ? this.warehouse.equals(warehouse.warehouse) : warehouse.warehouse == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id;
+            result = 31 * result + (stock_item != null ? stock_item.hashCode() : 0);
+            result = 31 * result + (warehouse != null ? warehouse.hashCode() : 0);
             result = 31 * result + instock;
             return result;
         }

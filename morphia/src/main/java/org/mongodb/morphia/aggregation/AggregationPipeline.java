@@ -2,6 +2,7 @@ package org.mongodb.morphia.aggregation;
 
 
 import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
 import com.mongodb.ReadPreference;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.Sort;
@@ -128,6 +129,10 @@ public interface AggregationPipeline {
      * @since 1.2
      */
     AggregationPipeline lookup(String from, String localField, String foreignField, String as);
+
+    // TODO: I am unsure about the interface, especially with the let parameter type.
+    // TODO Documentation
+    AggregationPipeline lookup(String from, BasicDBObject let, AggregationPipeline pipeline, String as);
 
     /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard

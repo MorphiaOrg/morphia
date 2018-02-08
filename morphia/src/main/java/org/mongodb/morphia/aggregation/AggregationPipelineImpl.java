@@ -156,6 +156,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         return this;
     }
 
+    // TODO: I am unsure about the interface, especially with the let parameter type.
+    public AggregationPipeline lookup(final String from, final BasicDBObject let, final AggregationPipeline pipeline, final String as) {
+        stages.add(new BasicDBObject("$lookup", new BasicDBObject("from", from)
+            .append("let", let)
+            .append("pipeline", ((AggregationPipelineImpl) pipeline).getStages())
+            .append("as", as)));
+        return this;
+    }
+
     @Override
     public AggregationPipeline match(final Query query) {
         stages.add(new BasicDBObject("$match", query.getQueryObject()));
