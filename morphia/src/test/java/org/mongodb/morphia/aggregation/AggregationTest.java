@@ -335,23 +335,24 @@ public class AggregationTest extends TestBase {
         checkMinServerVersion(3.6);
         getDs().save(asList(new Order(1, "almonds", 12, 2),
             new Order(2, "pecans", 20, 1),
-            new Order(3, "cookies", 10, 60),
-            new Order(4)));
+            new Order(3, "cookies", 10, 60)));
 
         List<Warehouse> warehouses = asList(new Warehouse(1, "almonds", "A", 120),
             new Warehouse(2, "pecans", "A", 80),
             new Warehouse(3, "almonds", "B", 60),
             new Warehouse(4, "cookies", "B", 40),
-            new Warehouse(5, "cookies", "A", 80),
-            new Warehouse(6));
+            new Warehouse(5, "cookies", "A", 80));
         getDs().save(warehouses);
 
-        BasicDBObject let = new BasicDBObject("order_item", "$item").append("order_qty", "$ordered");
+        BasicDBObject let = obj("order_item", "$item").append("order_qty", "$quantity");
+        BasicDBObject condition1 = obj("$eq", asList("$stock_item", "$$order_item"));
+        BasicDBObject condition2 = obj("$gte", asList("$instock", "$$order_qty"));
         AggregationPipeline innerPipeline = getDs().createAggregation(Warehouse.class)
             .match(getDs().getQueryFactory().createQuery(getDs())
-                .field("$stock_item").equal("$$order_item")
-                .field("$order_qty").greaterThan("$instock"))
-            .project(projection("stock_item").suppress(), projection("_id").suppress());
+                .criteria("$expr").equal(obj("$and", asList(condition1, condition2)))
+                .getQuery())
+            //.project(projection("stock_item").suppress(), projection("_id").suppress())
+            ;
 
         getDs().createAggregation(Order.class)
             .lookup("warehouses", let, innerPipeline, "stockdata")
@@ -365,6 +366,7 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(warehouses.get(2), lookups.get(0).stockdata.get(1));
         Assert.assertEquals(warehouses.get(1), lookups.get(1).stockdata.get(0));
         Assert.assertEquals(warehouses.get(4), lookups.get(2).stockdata.get(0));
+        Assert.assertEquals(1, lookups.get(2).stockdata.size());
     }
 
     @Test
@@ -913,7 +915,7 @@ public class AggregationTest extends TestBase {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof Inventory)) {
+            if (!(o instanceof Warehouse)) {
                 return false;
             }
 
@@ -939,6 +941,16 @@ public class AggregationTest extends TestBase {
             result = 31 * result + (warehouse != null ? warehouse.hashCode() : 0);
             result = 31 * result + instock;
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Warehouse{" +
+                "id=" + id +
+                ", stock_item='" + stock_item + '\'' +
+                ", warehouse='" + warehouse + '\'' +
+                ", instock=" + instock +
+                '}';
         }
     }
 }
