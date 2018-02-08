@@ -26,7 +26,6 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -345,14 +344,12 @@ public class AggregationTest extends TestBase {
         getDs().save(warehouses);
 
         BasicDBObject let = obj("order_item", "$item").append("order_qty", "$quantity");
-        BasicDBObject condition1 = obj("$eq", asList("$stock_item", "$$order_item"));
+        BasicDBObject condition1 = obj("$eq", asList("$stockItem", "$$order_item"));
         BasicDBObject condition2 = obj("$gte", asList("$instock", "$$order_qty"));
         AggregationPipeline innerPipeline = getDs().createAggregation(Warehouse.class)
             .match(getDs().getQueryFactory().createQuery(getDs())
                 .criteria("$expr").equal(obj("$and", asList(condition1, condition2)))
-                .getQuery())
-            //.project(projection("stock_item").suppress(), projection("_id").suppress())
-            ;
+                .getQuery());
 
         getDs().createAggregation(Order.class)
             .lookup("warehouses", let, innerPipeline, "stockdata")
@@ -853,7 +850,7 @@ public class AggregationTest extends TestBase {
     public static class Warehouse {
         @Id
         private int id;
-        private String stock_item;
+        private String stockItem;
         private String warehouse;
         private int instock;
 
@@ -865,25 +862,25 @@ public class AggregationTest extends TestBase {
             this.id = id;
         }
 
-        Warehouse(final int id, final String stock_item, final String warehouse) {
+        Warehouse(final int id, final String stockItem, final String warehouse) {
             this.id = id;
-            this.stock_item = stock_item;
+            this.stockItem = stockItem;
             this.warehouse = warehouse;
         }
 
-        Warehouse(final int id, final String stock_item, final String warehouse, final int instock) {
+        Warehouse(final int id, final String stockItem, final String warehouse, final int instock) {
             this.id = id;
-            this.stock_item = stock_item;
+            this.stockItem = stockItem;
             this.warehouse = warehouse;
             this.instock = instock;
         }
 
         public String getStockItem() {
-            return stock_item;
+            return stockItem;
         }
 
-        public void setDescription(final String stock_item) {
-            this.stock_item = stock_item;
+        public void setStockItem(final String stockItem) {
+            this.stockItem = stockItem;
         }
 
         public int getInstock() {
@@ -927,7 +924,7 @@ public class AggregationTest extends TestBase {
             if (instock != warehouse.instock) {
                 return false;
             }
-            if (stock_item != null ? !stock_item.equals(warehouse.stock_item) : warehouse.stock_item != null) {
+            if (stockItem != null ? !stockItem.equals(warehouse.stockItem) : warehouse.stockItem != null) {
                 return false;
             }
             return this.warehouse != null ? this.warehouse.equals(warehouse.warehouse) : warehouse.warehouse == null;
@@ -937,7 +934,7 @@ public class AggregationTest extends TestBase {
         @Override
         public int hashCode() {
             int result = id;
-            result = 31 * result + (stock_item != null ? stock_item.hashCode() : 0);
+            result = 31 * result + (stockItem != null ? stockItem.hashCode() : 0);
             result = 31 * result + (warehouse != null ? warehouse.hashCode() : 0);
             result = 31 * result + instock;
             return result;
@@ -945,12 +942,12 @@ public class AggregationTest extends TestBase {
 
         @Override
         public String toString() {
-            return "Warehouse{" +
-                "id=" + id +
-                ", stock_item='" + stock_item + '\'' +
-                ", warehouse='" + warehouse + '\'' +
-                ", instock=" + instock +
-                '}';
+            return "Warehouse{"
+                + "id=" + id
+                + ", stockItem='" + stockItem + '\''
+                + ", warehouse='" + warehouse + '\''
+                + ", instock=" + instock
+                + '}';
         }
     }
 }

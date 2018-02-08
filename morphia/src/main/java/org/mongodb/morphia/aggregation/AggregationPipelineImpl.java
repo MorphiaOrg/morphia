@@ -162,7 +162,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             .append("pipeline", ((AggregationPipelineImpl) pipeline).getStages())
             .append("as", as);
 
-        if(let != null) {
+        if (let != null) {
             parameters.append("let", let);
         }
 
