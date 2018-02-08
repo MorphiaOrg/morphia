@@ -130,8 +130,20 @@ public interface AggregationPipeline {
      */
     AggregationPipeline lookup(String from, String localField, String foreignField, String as);
 
-    // TODO: I am unsure about the interface, especially with the let parameter type.
-    // TODO Documentation
+    /**
+     * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
+     * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
+     * “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
+     *
+     * @param from     Specifies the collection in the same database to perform the join with. The from collection cannot be sharded.
+     * @param let      Optional. Specifies variables to use in the pipeline field stages. Use the variable expressions to access the
+     *                 fields from the documents input to the $lookup stage.
+     * @param pipeline Specifies the pipeline to run on the joined collection.
+     * @param as       Specifies the name of the new array field to add to the input documents.
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
+     * @since 1.4
+     */
     AggregationPipeline lookup(String from, BasicDBObject let, AggregationPipeline pipeline, String as);
 
     /**
