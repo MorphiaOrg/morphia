@@ -217,7 +217,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     @Override
     public UpdateOperations<T> set(final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Value cannot be null.");
+            throw new QueryException("Value for field [" + field + "] cannot be null.");
         }
 
         add(UpdateOperator.SET, field, value, true);
