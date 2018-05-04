@@ -16,26 +16,16 @@
 
 package org.mongodb.morphia.aggregation;
 
-import com.mongodb.AggregationOptions;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoCommandException;
+import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.CollationStrength;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.ValidationOptions;
+import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.annotations.AlsoLoad;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Validation;
+import org.mongodb.morphia.annotations.*;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
@@ -53,14 +43,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.mongodb.morphia.aggregation.Accumulator.accumulator;
-import static org.mongodb.morphia.aggregation.Group.addToSet;
-import static org.mongodb.morphia.aggregation.Group.grouping;
-import static org.mongodb.morphia.aggregation.Group.id;
-import static org.mongodb.morphia.aggregation.Group.push;
-import static org.mongodb.morphia.aggregation.Group.sum;
-import static org.mongodb.morphia.aggregation.Projection.divide;
-import static org.mongodb.morphia.aggregation.Projection.expression;
-import static org.mongodb.morphia.aggregation.Projection.projection;
+import static org.mongodb.morphia.aggregation.Group.*;
+import static org.mongodb.morphia.aggregation.Projection.*;
 import static org.mongodb.morphia.geo.GeoJson.point;
 import static org.mongodb.morphia.query.Sort.ascending;
 
@@ -420,7 +404,8 @@ public class AggregationTest extends TestBase {
     public void testUnwind() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         getDs().save(asList(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
-                            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming")));
+                            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"),
+                            new User("john", format.parse("2012-07-02"))));
 
         Iterator<User> aggregate = getDs().createAggregation(User.class)
                                           .project(projection("_id").suppress(), projection("name"), projection("joined"),
@@ -453,6 +438,45 @@ public class AggregationTest extends TestBase {
                     break;
                 default:
                     fail("Should only find 5 elements");
+            }
+            count++;
+        }
+
+        aggregate = getDs().createAggregation(User.class)
+                           .project(projection("_id").suppress(), projection("name"), projection("joined"),
+                                    projection("likes"))
+                           .unwind("likes", new UnwindOptions().preserveNullAndEmptyArrays(true))
+                           .aggregate(User.class);
+        count = 0;
+        while (aggregate.hasNext()) {
+            User user = aggregate.next();
+            switch (count) {
+                case 0:
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
+                    break;
+                case 1:
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("racquetball", user.likes.get(0));
+                    break;
+                case 2:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("tennis", user.likes.get(0));
+                    break;
+                case 3:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
+                    break;
+                case 4:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("swimming", user.likes.get(0));
+                    break;
+                case 5:
+                    Assert.assertEquals("john", user.name);
+                    Assert.assertNull(user.likes);
+                    break;
+                default:
+                    fail("Should only find 6 elements");
             }
             count++;
         }

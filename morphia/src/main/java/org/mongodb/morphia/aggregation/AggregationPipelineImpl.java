@@ -7,6 +7,7 @@ import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.model.UnwindOptions;
 import org.mongodb.morphia.geo.GeometryShapeConverter;
 import org.mongodb.morphia.logging.Logger;
 import org.mongodb.morphia.logging.MorphiaLoggerFactory;
@@ -214,6 +215,18 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline unwind(final String field) {
         stages.add(new BasicDBObject("$unwind", "$" + field));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline unwind(String field, UnwindOptions options) {
+        BasicDBObject unwindOptions = new BasicDBObject("path", "$" + field)
+                .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
+        String includeArrayIndex;
+        if ((includeArrayIndex = options.getIncludeArrayIndex()) != null) {
+            unwindOptions.append("includeArrayIndex", includeArrayIndex);
+        }
+        stages.add(new BasicDBObject("$unwind", unwindOptions));
         return this;
     }
 
