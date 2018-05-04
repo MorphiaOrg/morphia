@@ -16,16 +16,27 @@
 
 package org.mongodb.morphia.aggregation;
 
-import com.mongodb.*;
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoCommandException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.*;
+import com.mongodb.client.model.UnwindOptions;
+import com.mongodb.client.model.CollationStrength;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationOptions;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mongodb.morphia.TestBase;
-import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.annotations.AlsoLoad;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Validation;
 import org.mongodb.morphia.geo.City;
 import org.mongodb.morphia.geo.PlaceWithLegacyCoords;
 import org.mongodb.morphia.geo.Point;
@@ -43,8 +54,14 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.mongodb.morphia.aggregation.Accumulator.accumulator;
-import static org.mongodb.morphia.aggregation.Group.*;
-import static org.mongodb.morphia.aggregation.Projection.*;
+import static org.mongodb.morphia.aggregation.Group.addToSet;
+import static org.mongodb.morphia.aggregation.Group.grouping;
+import static org.mongodb.morphia.aggregation.Group.id;
+import static org.mongodb.morphia.aggregation.Group.push;
+import static org.mongodb.morphia.aggregation.Group.sum;
+import static org.mongodb.morphia.aggregation.Projection.divide;
+import static org.mongodb.morphia.aggregation.Projection.expression;
+import static org.mongodb.morphia.aggregation.Projection.projection;
 import static org.mongodb.morphia.geo.GeoJson.point;
 import static org.mongodb.morphia.query.Sort.ascending;
 

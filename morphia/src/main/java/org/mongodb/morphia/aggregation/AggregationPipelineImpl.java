@@ -219,11 +219,11 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline unwind(String field, UnwindOptions options) {
+    public AggregationPipeline unwind(final String field, final UnwindOptions options) {
         BasicDBObject unwindOptions = new BasicDBObject("path", "$" + field)
                 .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
-        String includeArrayIndex;
-        if ((includeArrayIndex = options.getIncludeArrayIndex()) != null) {
+        String includeArrayIndex = options.getIncludeArrayIndex();
+        if (includeArrayIndex != null) {
             unwindOptions.append("includeArrayIndex", includeArrayIndex);
         }
         stages.add(new BasicDBObject("$unwind", unwindOptions));
