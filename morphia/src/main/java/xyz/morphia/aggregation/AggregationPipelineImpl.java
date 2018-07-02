@@ -38,9 +38,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     /**
      * Creates an AggregationPipeline
      *
-     * @param datastore the datastore to use
+     * @param datastore  the datastore to use
      * @param collection the database collection on which to operate
-     * @param source    the source type to aggregate
+     * @param source     the source type to aggregate
      */
     public AggregationPipelineImpl(final xyz.morphia.DatastoreImpl datastore, final DBCollection collection, final Class source) {
         this.datastore = datastore;
@@ -50,8 +50,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     /**
-     * Returns the internal list of stages for this pipeline.  This is an internal method intended only for testing and validation.  Use
-     * at your own risk.
+     * Returns the internal list of stages for this pipeline.  This is an internal method intended
+     * only for testing and validation.  Use at your own risk.
      *
      * @return the list of stages
      */
@@ -70,12 +70,14 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options, final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options,
+                                     final ReadPreference readPreference) {
         return aggregate(datastore.getCollection(target).getName(), target, options, readPreference);
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target, final AggregationOptions options,
+    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target,
+                                     final AggregationOptions options,
                                      final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
@@ -149,7 +151,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline lookup(final String from, final String localField, final String foreignField, final String as) {
+    public AggregationPipeline lookup(final String from, final String localField,
+                                      final String foreignField, final String as) {
         stages.add(new BasicDBObject("$lookup", new BasicDBObject("from", from)
             .append("localField", localField)
             .append("foreignField", foreignField)
@@ -185,7 +188,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public <U> Iterator<U> out(final String collectionName, final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target,
+                               final AggregationOptions options) {
         stages.add(new BasicDBObject("$out", collectionName));
         return aggregate(target, options);
     }
@@ -233,6 +237,47 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             unwindOptions.append("includeArrayIndex", includeArrayIndex);
         }
         stages.add(new BasicDBObject("$unwind", unwindOptions));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline sortByCount(final String field) {
+        stages.add(new BasicDBObject("$sortByCount", "$" + field));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline bucket(final String field, final List<?> boundaries) {
+        return this.bucket(field, boundaries, new BucketOptions());
+    }
+
+    @Override
+    public AggregationPipeline bucket(final String field, final List<?> boundaries, final BucketOptions options) {
+        if (boundaries == null || boundaries.size() < 2) {
+            throw new RuntimeException("Boundaries list should be presented and has at least 2 elements");
+        }
+        DBObject dbObject = options.toDBObject();
+        dbObject.put("groupBy", "$" + field);
+        dbObject.put("boundaries", boundaries);
+        stages.add(new BasicDBObject("$bucket", dbObject));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline bucketAuto(final String field, final int bucketCount) {
+        return this.bucketAuto(field, bucketCount, new BucketAutoOptions());
+    }
+
+    @Override
+    public AggregationPipeline bucketAuto(final String field, final int bucketCount, final BucketAutoOptions options) {
+
+        if (bucketCount < 1) {
+            throw new RuntimeException("bucket count should be more than 0");
+        }
+        DBObject dbObject = options.toDBObject();
+        dbObject.put("groupBy", "$" + field);
+        dbObject.put("buckets", bucketCount);
+        stages.add(new BasicDBObject("$bucketAuto", dbObject));
         return this;
     }
 
@@ -314,7 +359,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         for (Object arg : args) {
             if (arg instanceof Projection) {
                 Projection projection = (Projection) arg;
-                if (projection.getArguments() != null || projection.getProjections() != null || projection.getSource() != null) {
+                if (projection.getArguments() != null || projection.getProjections() != null
+                    || projection.getSource() != null) {
                     result.add(toDBObject(projection));
                 } else {
                     result.add("$" + projection.getTarget());
