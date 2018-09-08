@@ -1,17 +1,21 @@
 language: java
-jdk:
-- oraclejdk8
 
 notifications:
   email:
     recipients:
-    - justin.lee@mongodb.com
+    - jlee@antwerkz.com
     on_success: change
     on_failure: always
 
+jdk:
+  - oraclejdk8
+  - openjdk9
+  - openjdk10
 env:
-  matrix:
-    - MONGODB=3.4.0-rc0
+  - MONGODB=3.4.0
+  - MONGODB=3.6.0
+  - MONGODB=4.0.0
+
 
 before_script:
   - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz -O /tmp/mongodb.tgz
