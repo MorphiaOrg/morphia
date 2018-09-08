@@ -9,8 +9,6 @@ notifications:
 
 jdk:
   - oraclejdk8
-  - openjdk9
-  - openjdk10
 env:
   - MONGODB=3.4.0
   - MONGODB=3.6.0
