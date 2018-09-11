@@ -28,6 +28,7 @@ import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.TestBase;
@@ -186,6 +187,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void snapshot() {
+        Assume.assumeTrue(serverIsAtMostVersion(3.6));
         getDs().find(Photo.class)
                .get(new FindOptions()
                         .modifier("$snapshot", true));
@@ -194,6 +196,7 @@ public class TestQuery extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void snapshotOld() {
+        Assume.assumeTrue(serverIsAtMostVersion(3.6));
         QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
                                                            .enableSnapshotMode();
         Assert.assertTrue(query.getOptions().getModifiers().containsField("$snapshot"));
@@ -999,6 +1002,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonSnapshottedQuery() {
+        Assume.assumeTrue(serverIsAtMostVersion(3.6));
         getDs().delete(getDs().find(PhotoWithKeywords.class));
         getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
                             new PhotoWithKeywords("scott", "hernandez"),
@@ -1311,6 +1315,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSnapshottedQuery() {
+        Assume.assumeTrue(serverIsAtMostVersion(3.6));
         getDs().delete(getDs().find(PhotoWithKeywords.class));
         getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
                             new PhotoWithKeywords("scott", "hernandez"),
