@@ -53,11 +53,11 @@ configure(subprojects - project(':util')) {
         project {
             name = 'Morphia'
             description = 'Java Object Document Mapper for MongoDB'
-            url 'https://github.com/mongodb/morphia.git'
+            url 'https://github.com/MorphiaOrg/morphia.git'
 
             scm {
-                url 'https://github.com/mongodb/morphia.git'
-                connection 'scm:git:https://github.com/mongodb/morphia.git'
+                url 'https://github.com/MorphiaOrg/morphia.git'
+                connection 'scm:git:https://github.com/MorphiaOrg/morphia.git'
             }
 
             licenses {

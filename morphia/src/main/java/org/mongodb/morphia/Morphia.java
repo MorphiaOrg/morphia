@@ -149,7 +149,7 @@ public class Morphia {
     /**
      * @return false.  Setting this value has no value functionally or performance-wise.
      * @deprecated
-     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
+     * @see <a href="https://github.com/MorphiaOrg/morphia/issues/1052">Issue #1052</a>
      */
     @Deprecated
     public boolean getUseBulkWriteOperations() {
@@ -169,7 +169,7 @@ public class Morphia {
     /**
      * @return false.  Setting this value has no value functionally or performance-wise.
      * @deprecated
-     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
+     * @see <a href="https://github.com/MorphiaOrg/morphia/issues/1052">Issue #1052</a>
      */
     @Deprecated
     public boolean isUseBulkWriteOperations() {
@@ -180,7 +180,7 @@ public class Morphia {
      * Configures Morphia to use bulk writes.  Only useful with MongoDB 2.6+.
      *
      * @param useBulkWriteOperations true if Morphia should use bulk writes
-     * @see <a href="https://github.com/mongodb/morphia/issues/1052">Issue #1052</a>
+     * @see <a href="https://github.com/MorphiaOrg/morphia/issues/1052">Issue #1052</a>
      * @deprecated Setting this value has no value functionally or performance-wise.
      */
     @Deprecated

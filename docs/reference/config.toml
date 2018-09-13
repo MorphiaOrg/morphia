@@ -16,4 +16,4 @@ canonifyurls = false
     pre = "<i class='fa fa-github'></i>"
     weight = 100
     identifier = "githubLink"
-    url = "https://github.com/mongodb/morphia"
+    url = "https://github.com/MorphiaOrg/morphia"

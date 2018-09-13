@@ -146,7 +146,7 @@ There are various annotations which can be used to register callbacks on certain
 - `@PostPersist` - Called after the save call to the datastore
 
 ### Examples
-[This](https://github.com/mongodb/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is one of the test
+[This](https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is one of the test
 classes.
 
 All parameters and return values are optional in your implemented methods.

@@ -114,12 +114,12 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/index.html\n\n" +
         "### Issues Resolved\n" +
         "#### ENHANCEMENTS\n" +
-        "* [Issue 620](https://github.com/mongodb/morphia/pull/620): Moved around a chunk of tests\n" +
-        "* [Issue 609](https://github.com/mongodb/morphia/issues/609): Support ID generator so users can specify the behaviour when an ID" +
+        "* [Issue 620](https://github.com/MorphiaOrg/morphia/pull/620): Moved around a chunk of tests\n" +
+        "* [Issue 609](https://github.com/MorphiaOrg/morphia/issues/609): Support ID generator so users can specify the behaviour when an ID" +
         " is not supplied\n" +
         "\n" +
         "#### BUGS\n" +
-        "* [Issue 599](https://github.com/mongodb/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
+        "* [Issue 599](https://github.com/MorphiaOrg/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
     }
 
     @Ignore('Functional')
@@ -136,7 +136,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         task.draftReleaseNotes();
 
         //not a great test, there are no assertions.  It's a fully functional test, so go to
-        // https://github.com/mongodb/morphia/releases
+        // https://github.com/MorphiaOrg/morphia/releases
         //to see if the draft release notes have been posted with the text, the issues, and the jars for the release
     }
 

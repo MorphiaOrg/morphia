@@ -19,7 +19,7 @@ encountered a bug, the mailing list is the place to start.
 ## Bugs / Feature Requests
 
 If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
- [github](https://github.com/mongodb/morphia/issues). Please provide as much information as possible (including version numbers) about the 
+ [github](https://github.com/MorphiaOrg/morphia/issues). Please provide as much information as possible (including version numbers) about the 
  issue type and how to reproduce it.
 
 If you’ve identified a security vulnerability in a driver or any other
@@ -33,7 +33,7 @@ codebase. Please ensure that any pull requests include documentation, tests and 
 To get started check out the source and work on a branch:
 
 ```bash
-$ git clone https://github.com/mongodb/morphia.git
+$ git clone https://github.com/MorphiaOrg/morphia.git
 $ cd morphia
 $ git checkout -b myNewFeature
 ```
