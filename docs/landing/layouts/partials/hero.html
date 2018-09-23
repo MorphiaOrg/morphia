@@ -1,21 +1,21 @@
 <div id="hero" class="jumbotron">
-  <div class="container">
-  <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-6">
-      <h2>Morphia</h2>
-      <p>
-        The Java Object Document Mapper for MongoDB
-      </p>
-      <p>
-        {{ range where $.Site.Data.releases.versions "version" $.Site.Data.releases.current  }}{{ $.Scratch.Set "qs.currentReleasedVersion" . }}{{end }}
-        {{$currentReleasedVersion := $.Scratch.Get "qs.currentReleasedVersion"}}
-      <a id="latest" href="1.3"
-         class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
-      </p>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 logo">
+                <p>&nbsp;</p>
+                <a href="{{.Site.BaseURL}}">
+                    <img src="{{.Site.BaseURL}}/s/img/logo.png", alt="Morphia"/>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h2>Morphia</h2>
+                <p>
+                    The JVM Object Document Mapper for MongoDB
+                </p>
+                <p>
+                    <a id="latest" href="1.3" class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-2" id="mongodbJVMlogo"></div>
-  </div>
-  </div>
 </div>

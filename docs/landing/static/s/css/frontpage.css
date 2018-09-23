@@ -2,12 +2,11 @@ body {
   font-family: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
-  color: #494747;
+  color: #004042;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   background-color: #f3f4eb;
-  color: #4c3a2c;
-  padding-top: 50px;
+  /*padding-top: 50px;*/
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -30,6 +29,9 @@ dt {
   font-size: 18px;
 }
 
+.logo {
+    vertical-align: middle;
+}
 /* Header styles */
 
 #header-db {
@@ -40,7 +42,7 @@ dt {
     left: 0;
     width: 100%;
     font-size: 31px;
-    background-color: #3b291f;
+    background-color: #006264;
     color: white;
     margin: 0;
     padding: 0;
@@ -81,7 +83,7 @@ div.gsc-control-cse-en, div.gsc-control-cse { padding: 0 !important; }
 form.gsc-search-box {
     background-color: rgba(255,255,255,0.3);
     border-radius: 6px;
-    border: 1px solid #3b2920;
+    border: 1px solid #006264;
 }
 
 .gsc-search-box.gsc-search-box-tools .gsc-search-box .gsc-input {
@@ -219,7 +221,7 @@ input.gsc-search-button[title], input.gsc-search-button:hover[title], input.gsc-
 /* Hero Styles */
 
 #hero {
-  background-color: #666;
+  background-color: #004042;
   color: #f3f4eb;
   border-bottom: 1px solid #313030;
   padding: 12px 0px;
@@ -260,8 +262,8 @@ input.gsc-search-button[title], input.gsc-search-button:hover[title], input.gsc-
 }
 
 .btn-dark {
-  border: 2px solid #3b291f;
-  background-color: #3b291f;
+  border: 2px solid #006264;
+  background-color: #006264;
   color: white;
   border-radius: 0;
 }
@@ -291,7 +293,7 @@ input.gsc-search-button[title], input.gsc-search-button:hover[title], input.gsc-
 }
 
 #releases table {
-  border: 1px solid #3b291f;
+  border: 1px solid #006264;
   border-collapse: initial;
   margin-bottom: 0px;
 }
@@ -308,7 +310,7 @@ input.gsc-search-button[title], input.gsc-search-button:hover[title], input.gsc-
 
 /* Download widget */
 #downloadWidget {
-  border: 1px solid #3b291f;
+  border: 1px solid #006264;
 }
 
 #downloadWidget .downloadForm {
@@ -321,7 +323,7 @@ input.gsc-search-button[title], input.gsc-search-button:hover[title], input.gsc-
 }
 
 #downloadWidget .description {
-  border-top: 1px solid #3b291f;
+  border-top: 1px solid #006264;
   padding: 10px;
   background-color: #666;
   color: #f3f4eb;

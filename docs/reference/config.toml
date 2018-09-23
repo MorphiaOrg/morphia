@@ -1,19 +1,23 @@
 baseurl = "/morphia/1.4"
 languageCode = "en-us"
 title = "Morphia"
-theme = "mongodb"
+theme = "hugo-theme-learn"
 canonifyurls = false
 
-[[menu.main]]
-    name = "API Documentation"
-    pre = "<i class='fa fa-file-text-o'></i>"
-    weight = 80
-    identifier = "apiDocs"
-    url = "/javadoc"
+[params]
+    disableBreadcrumb = true
+    disableNextPrev = true
 
 [[menu.main]]
-    name = "Source Code"
-    pre = "<i class='fa fa-github'></i>"
-    weight = 100
-    identifier = "githubLink"
-    url = "https://github.com/MorphiaOrg/morphia"
+
+[[Languages.en.menu.shortcuts]]
+name = "<i class='fab fa-fw fa-github'></i> Source Code"
+identifier = "githubLink"
+url = "https://github.com/MorphiaOrg/morphia"
+weight = 10
+
+[[Languages.en.menu.shortcuts]]
+name = "<i class='fas fa-book'></i> API Documentation"
+weight = 9
+identifier = "apiDocs"
+url = "/javadoc"

@@ -185,5 +185,5 @@ def find(executable) {
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
-apply from: 'gradle/release-process.gradle'
+//apply from: 'gradle/release-process.gradle'
 apply from: 'gradle/docs.gradle'
