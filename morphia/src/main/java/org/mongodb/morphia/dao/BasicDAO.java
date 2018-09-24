@@ -199,7 +199,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public Key<T> findOneId(final Query<T> query) {
-        Iterator<Key<T>> keys = query.fetchKeys().iterator();
+        Iterator<Key<T>> keys = query.fetchKeys();
         return keys.hasNext() ? keys.next() : null;
     }
 

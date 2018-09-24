@@ -21,6 +21,7 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -79,8 +80,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
             getOptions().readPreference(this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                       ? ReadPreference.secondaryPreferred()
-                       : null);
+                    ? ReadPreference.secondaryPreferred()
+                    : null);
         }
     }
 
@@ -123,13 +124,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public List<Key<T>> asKeyList(final FindOptions options) {
         final List<Key<T>> results = new ArrayList<Key<T>>();
-        MorphiaKeyIterator<T> keys = fetchKeys(options);
-        try {
-            for (final Key<T> key : keys) {
-                results.add(key);
-            }
-        } finally {
-            keys.close();
+        Iterator<Key<T>> iterator = fetchKeys(options);
+        while (iterator.hasNext()) {
+            Key<T> key = iterator.next();
+            results.add(key);
         }
         return results;
     }
@@ -142,19 +140,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public List<T> asList(final FindOptions options) {
         final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = fetch(options);
-        try {
-            for (final T ent : iter) {
-                results.add(ent);
-            }
-        } finally {
-            iter.close();
+        final Iterator<T> iterator = fetch(options);
+
+        while (iterator.hasNext()) {
+            T value = iterator.next();
+            results.add(value);
         }
 
+
         if (LOG.isTraceEnabled()) {
-            LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
-                             dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats(),
-                             getQueryObject()));
+            LOG.trace(format("asList: %s \t %d entities, cache: %s %n\t for %s",
+                    dbColl.getName(), results.size(), cache.stats(), getQueryObject()));
         }
 
         return results;
@@ -181,27 +177,27 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MorphiaIterator<T, T> fetch() {
+    public Iterator<T> fetch() {
         return fetch(getOptions());
     }
 
     @Override
-    public MorphiaIterator<T, T> fetch(final FindOptions options) {
+    public Iterator<T> fetch(final FindOptions options) {
         final DBCursor cursor = prepareCursor(options);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
         }
 
-        return new MorphiaIterator<T, T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
+        return new MorphiaIterator<T, T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName(), cache).iterator();
     }
 
     @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities() {
+    public Iterator<T> fetchEmptyEntities() {
         return fetchEmptyEntities(getOptions());
     }
 
     @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities(final FindOptions options) {
+    public Iterator<T> fetchEmptyEntities(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
         cloned.includeFields = true;
@@ -209,17 +205,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MorphiaKeyIterator<T> fetchKeys() {
+    public Iterator<Key<T>> fetchKeys() {
         return fetchKeys(getOptions());
     }
 
     @Override
-    public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
+    public Iterator<Key<T>> fetchKeys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
         cloned.includeFields = true;
 
-        return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
+        return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName()).iterator();
     }
 
     @Override
@@ -229,14 +225,10 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public T get(final FindOptions options) {
-        final MorphiaIterator<T, T> it = fetch(options
-                                                   .copy()
-                                                   .limit(1));
-        try {
-            return (it.hasNext()) ? it.next() : null;
-        } finally {
-            it.close();
-        }
+        final Iterator<T> it = fetch(options
+                .copy()
+                .limit(1));
+        return (it.hasNext()) ? it.next() : null;
     }
 
     @Override
@@ -246,26 +238,25 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Key<T> getKey(final FindOptions options) {
-        final MorphiaIterator<T, Key<T>> it = fetchKeys(options
-                                                            .copy()
-                                                            .limit(1));
+        final Iterator<Key<T>> it = fetchKeys(options
+                .copy()
+                .limit(1));
         Key<T> key = (it.hasNext()) ? it.next() : null;
-        it.close();
         return key;
     }
 
     @Override
     @Deprecated
-    public MorphiaIterator<T, T> tail() {
+    public Iterator<T> tail() {
         return tail(true);
     }
 
     @Override
     @Deprecated
-    public MorphiaIterator<T, T> tail(final boolean awaitData) {
+    public Iterator<T> tail(final boolean awaitData) {
         return fetch(getOptions()
-                         .copy()
-                         .cursorType(awaitData ? TailableAwait : Tailable));
+                .copy()
+                .cursorType(awaitData ? TailableAwait : Tailable));
     }
 
     @Override
@@ -666,7 +657,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     public Query<T> search(final String search, final String language) {
 
         final BasicDBObject op = new BasicDBObject("$search", search)
-                                     .append("$language", language);
+                .append("$language", language);
 
         this.criteria("$text").equal(op);
 
@@ -731,7 +722,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MorphiaIterator<T, T> iterator() {
+    public Iterator<T> iterator() {
         return fetch();
     }
 
@@ -762,17 +753,17 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
 
         return dbColl.find(query, findOptions.getOptions()
-                                             .copy()
-                                             .sort(getSortObject())
-                                             .projection(getFieldsObject()))
-                     .setDecoderFactory(ds.getDecoderFact());
+                .copy()
+                .sort(getSortObject())
+                .projection(getFieldsObject()))
+                .setDecoderFactory(ds.getDecoderFact());
     }
 
     @Override
     public String toString() {
         return String.format("{ query: %s %s }", getQueryObject(), getOptions().getProjection() == null
-                                                                   ? ""
-                                                                   : ", projection: " + getFieldsObject());
+                ? ""
+                : ", projection: " + getFieldsObject());
     }
 
     /**
@@ -864,11 +855,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             return false;
         }
         if (dbOptions.getReadPreference() != null ? !dbOptions.getReadPreference().equals(that.getReadPreference())
-                                                  : that.getReadPreference() != null) {
+                : that.getReadPreference() != null) {
             return false;
         }
         if (dbOptions.getReadConcern() != null ? !dbOptions.getReadConcern().equals(that.getReadConcern())
-                                               : that.getReadConcern() != null) {
+                : that.getReadConcern() != null) {
             return false;
         }
         return dbOptions.getCollation() != null ? dbOptions.getCollation().equals(that.getCollation()) : that.getCollation() == null;
