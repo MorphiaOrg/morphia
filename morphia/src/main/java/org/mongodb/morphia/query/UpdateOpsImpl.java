@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static org.mongodb.morphia.utils.ReflectionUtils.iterToList;
 
 
 /**
@@ -89,6 +90,11 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
         add(UpdateOperator.ADD_TO_SET_EACH, field, values, true);
         return this;
+    }
+
+    @Override
+    public UpdateOperations<T> addToSet(final String field, final Iterable<?> values) {
+        return addToSet(field, iterToList(values));
     }
 
     @Override

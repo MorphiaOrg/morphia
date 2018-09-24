@@ -73,6 +73,16 @@ public interface UpdateOperations<T> {
     UpdateOperations<T> addToSet(String field, List<?> values);
 
     /**
+     * adds the values to an array field if they doesn't already exist in the array
+     *
+     * @param field  the field to update
+     * @param values the values to add
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
+     */
+    UpdateOperations<T> addToSet(String field, Iterable<?> values);
+
+    /**
      * Decrements the numeric field by 1
      *
      * @param field the field to update
