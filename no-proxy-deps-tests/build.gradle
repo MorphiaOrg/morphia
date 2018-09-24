@@ -1,6 +1,6 @@
 sourceSets {
     main {
-        java.outputDir = project.project(":morphia").sourceSets.test.output.files[0]
+        java.outputDir = project(":morphia").sourceSets.test.output.files[0]
     }
 }
 
