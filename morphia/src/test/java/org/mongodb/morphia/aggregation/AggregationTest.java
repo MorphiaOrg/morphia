@@ -23,6 +23,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
@@ -420,7 +421,8 @@ public class AggregationTest extends TestBase {
     public void testUnwind() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         getDs().save(asList(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
-                            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming")));
+                            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"),
+                            new User("john", format.parse("2012-07-02"))));
 
         Iterator<User> aggregate = getDs().createAggregation(User.class)
                                           .project(projection("_id").suppress(), projection("name"), projection("joined"),
@@ -453,6 +455,45 @@ public class AggregationTest extends TestBase {
                     break;
                 default:
                     fail("Should only find 5 elements");
+            }
+            count++;
+        }
+
+        aggregate = getDs().createAggregation(User.class)
+                           .project(projection("_id").suppress(), projection("name"), projection("joined"),
+                                    projection("likes"))
+                           .unwind("likes", new UnwindOptions().preserveNullAndEmptyArrays(true))
+                           .aggregate(User.class);
+        count = 0;
+        while (aggregate.hasNext()) {
+            User user = aggregate.next();
+            switch (count) {
+                case 0:
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
+                    break;
+                case 1:
+                    Assert.assertEquals("jane", user.name);
+                    Assert.assertEquals("racquetball", user.likes.get(0));
+                    break;
+                case 2:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("tennis", user.likes.get(0));
+                    break;
+                case 3:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("golf", user.likes.get(0));
+                    break;
+                case 4:
+                    Assert.assertEquals("joe", user.name);
+                    Assert.assertEquals("swimming", user.likes.get(0));
+                    break;
+                case 5:
+                    Assert.assertEquals("john", user.name);
+                    Assert.assertNull(user.likes);
+                    break;
+                default:
+                    fail("Should only find 6 elements");
             }
             count++;
         }
