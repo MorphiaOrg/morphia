@@ -164,6 +164,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
+    public AggregationPipeline sample(final int sampleSize) {
+        stages.add(new BasicDBObject("$sample", new BasicDBObject("size", sampleSize)));
+        return this;
+    }
+
+    @Override
     public <U> Iterator<U> out(final Class<U> target) {
         return out(datastore.getCollection(target).getName(), target);
     }

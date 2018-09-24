@@ -141,6 +141,14 @@ public interface AggregationPipeline {
     AggregationPipeline match(Query query);
 
     /**
+     * Randomly selects the specified number of documents from the previous pipeline stage.
+     * @param sampleSize the number of documents to select
+     * @return this
+     * @monggodb.driver.manual reference/operator/aggregation/match $sample
+     */
+    AggregationPipeline sample(int sampleSize);
+
+    /**
      * Places the output of the aggregation in the collection mapped by the target type using the default options as defined in {@link
      * AggregationOptions}.
      *
