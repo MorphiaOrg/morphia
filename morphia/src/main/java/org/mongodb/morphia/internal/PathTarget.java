@@ -107,7 +107,7 @@ public class PathTarget {
 
             if (segment.equals("$") || segment.matches("[0-9]+")) {  // array operator
                 if (!hasNext()) {
-                    return;
+                    break;
                 }
                 segment = next();
             }
