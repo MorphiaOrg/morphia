@@ -124,7 +124,7 @@ task reference(dependsOn: ':morphia:javadoc') {
                 ['baseurl = "', "baseurl = \"/morphia/${urlVersion}\""]
         ])
 
-        update('docs/reference/data/mongodb.toml', [
+        update('docs/reference/data/morphia.toml', [
                 ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
                 ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
                 ['coreApiUrl = "', "coreApiUrl = \"http://api.mongodb.org/java/${major(driverVersion)}/\""]

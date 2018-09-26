@@ -16,7 +16,7 @@ There are various annotations which can be used to register callbacks on certain
 add/remove/change values)
 - __@PostLoad__ - Called after populating the entity with the values from the document
 
-See the [annotations guide]({{< relref "guides/annotations.md" >}}) for a full list of the annotations supported.
+See the [annotations guide]({{< relref "/guides/annotations.md" >}}) for a full list of the annotations supported.
 
 ## Examples
 [Here](https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is a one of the test classes.

@@ -34,7 +34,7 @@ public class Userlike {
 ## Implementation
 
 This is a lightweight wrapper around the JSR 303 API. It installs a simple global entity interceptor which listens to all 
-[life cycle methods]({{< relref "guides/lifeCycleMethods.md" >}}) needed for validation. You can use any implementation of JSR 303 by
+[life cycle methods]({{< relref "/guides/lifeCycleMethods.md" >}}) needed for validation. You can use any implementation of JSR 303 by
 just adding it to the classpath.
 
 You can look at the code [here]({{< srcref "validation/src/main/java/org/mongodb/morphia/ValidationExtension.java" >}}).
@@ -51,6 +51,6 @@ If you use Maven to manage your project, you can reference Morphia as a dependen
 <dependency>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-validation</artifactId>
-    <version>1.3.2</version>
+    <version>1.4.0-SNAPSHOT</version>
 </dependency>
 ```
