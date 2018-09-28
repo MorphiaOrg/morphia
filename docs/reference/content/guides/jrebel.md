@@ -5,8 +5,6 @@ title = "JRebel"
   pre = "<i class='fa fa-file-text-o'></i>"
 +++
 
-# Introduction
-
 This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.
 
 ## Prerequisites
@@ -26,7 +24,7 @@ If you´re using Eclipse with the JRebel Plugin this can be skipped and instead 
 - add the plugin jar, OK
 - Choose custom, add key "rebel.morphia" with value of "true"
 
-# Using
+## Using
 Register the Extension to your Morphia instance
 
 ```java
@@ -42,6 +40,6 @@ If you use Maven to manage your project, you can reference the Extension as a de
 <dependency>
     <groupId>org.mongodb.morphia</groupId>
     <artifactId>morphia-jrebel-plug</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
 </dependency>
 ```

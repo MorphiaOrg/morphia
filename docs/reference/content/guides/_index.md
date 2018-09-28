@@ -7,9 +7,7 @@ title = "Reference Guides"
   pre = "<i class='fa fa-book'></i>"
 +++
 
-## Reference Guides
-
-### Core Guides
+## Core Guides
 * [Querying]({{< ref "guides/querying.md" >}})
 * [Updating]({{< ref "guides/updating.md" >}})
 * [Aggregation]({{< ref "guides/aggregation.md" >}})
@@ -17,6 +15,6 @@ title = "Reference Guides"
 * [Indexing]({{< ref "guides/indexing.md" >}})
 * [Life Cycle Methods]({{< ref "guides/lifeCycleMethods.md" >}})
 
-### Extension Guides
+## Extension Guides
 * [JRebel Support]({{< ref "guides/jrebel.md" >}})
 * [Validation Extension]({{< ref "guides/validationExtension.md" >}})
