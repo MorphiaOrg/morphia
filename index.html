@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.18.1" />
+	<meta name="generator" content="Hugo 0.48" />
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -18,56 +18,34 @@
 <link rel="stylesheet" href="/morphia//s/lib/bootstrap-select/bootstrap-select.min.css" type="text/css" />
 <link rel="stylesheet" href="/morphia//s/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
 <link rel="stylesheet" href="/morphia//s/css/frontpage.css" type="text/css" />
-
   </head>
 
   <body>
   
-  <header id="header-db" class="row" role="navigation">
-  <div class="header-content">
-    
-    <div class="logo pull-left">
-      <a href="/morphia/">
-        <img src="/morphia//s/img/logo-mongodb-header.png", alt="MongoDB.org" />
-      </a>
-    </div>
-    
-    <div>
-    <div class="nav-items pull-right">
-        <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
-            University</a>
-        <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
-        <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
-        <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
-        <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
-    </div>
-</div>
-
-  </div>
-</header>
-
+  
   
 
   <div id="hero" class="jumbotron">
-  <div class="container">
-  <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-6">
-      <h2>Morphia</h2>
-      <p>
-        The Java Object Document Mapper for MongoDB
-      </p>
-      <p>
-        
-        
-      <a id="latest" href="1.3"
-         class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
-      </p>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 logo">
+                <p>&nbsp;</p>
+                <a href="/morphia/">
+                    <img src="/morphia//s/img/logo.png" , alt="Morphia"/>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h2>Morphia</h2>
+                <p>
+                    The JVM Object Document Mapper for MongoDB
+                </p>
+                <p>
+                    <a id="latest" href="1.3"
+                       class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-2" id="mongodbJVMlogo"></div>
-  </div>
-  </div>
 </div>
 
 
@@ -123,13 +101,7 @@
         <option value="1">1.2.2</option>
         
         
-        <option value="2">1.1.1</option>
-        
-        
-        <option value="3">1.0.1</option>
-        
-        
-        <option value="4">1.4.0-SNAPSHOT</option>
+        <option value="2">1.4.0-SNAPSHOT</option>
         
         
       </select>
@@ -224,64 +196,6 @@
           &lt;dependency&gt;
               &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
               &lt;artifactId&gt;morphia&lt;/artifactId&gt;
-              &lt;version&gt;1.1.1&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-2" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'org.mongodb.morphia:morphia:1.1.1'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-3" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
-              &lt;version&gt;1.0.1&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-3" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'org.mongodb.morphia:morphia:1.0.1'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-4" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
               &lt;version&gt;1.4.0-SNAPSHOT&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -298,7 +212,7 @@
 
       </code></pre>
       </div>
-      <div id="gradle-4" class="download hidden">
+      <div id="gradle-2" class="download hidden">
       <pre><code>
         dependencies {
             compile 'org.mongodb.morphia:morphia:1.4.0-SNAPSHOT'
@@ -339,16 +253,6 @@
       </tr>
     
       <tr>
-        <th class="">1.1.1</th>
-        <td class=""><a href="./1.1" class="reference">Reference</a> &#124; <a href="./1.1/javadoc">API</a></td>
-      </tr>
-    
-      <tr>
-        <th class="">1.0.1</th>
-        <td class=""><a href="./1.0" class="reference">Reference</a> &#124; <a href="./1.0/javadoc">API</a></td>
-      </tr>
-    
-      <tr>
         <th class="development">1.4.0-SNAPSHOT</th>
         <td class="development"><a href="./1.4" class="reference">Reference</a> &#124; <a href="./1.4/javadoc">API</a></td>
       </tr>
@@ -358,17 +262,7 @@
 </section>
 
 
-        <section id="universityPromo">
-<h3><span>MongoDB University</span></h3>
-
-<h4>M101J: MongoDB for Java Developers</h4>
-<p>Learn everything you need to know to get started building a MongoDB-based app. From basic installation, JSON, schema design, querying, insertion of data, indexing and working with the Java driver.
-</p>
-<p>
-<a href="https://university.mongodb.com/courses/M101J/about" target="_blank" class="btn btn-success btn-mongo">Learn More</a>
-</p>
-</section>
-
+        
      </div>
     </div>
   </div>
@@ -380,10 +274,7 @@
       <div class="col-md-12">
         <div class="footer">
   <div class="copyright">
-    <p>Copyright © 2015 <a class="smalltext" href="http://www.mongodb.com">MongoDB, Inc</a>.
-      Licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/ ">Creative Commons</a>.
-      MongoDB, Mongo, and the leaf logo are registered trademarks of MongoDB, Inc.
-      </p>
+
   </div>
 </div>
 
