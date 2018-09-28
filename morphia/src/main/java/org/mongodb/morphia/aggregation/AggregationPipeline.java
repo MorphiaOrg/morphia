@@ -144,7 +144,7 @@ public interface AggregationPipeline {
      * Randomly selects the specified number of documents from the previous pipeline stage.
      * @param sampleSize the number of documents to select
      * @return this
-     * @monggodb.driver.manual reference/operator/aggregation/match $sample
+     * @mongodb.driver.manual reference/operator/aggregation/match $sample
      */
     AggregationPipeline sample(int sampleSize);
 
