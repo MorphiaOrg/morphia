@@ -82,7 +82,7 @@ task landing {
         }
 
         update('docs/landing/layouts/partials/hero.html', [
-                ['                    <a id="latest" ', "      <a id=\"latest\" href=\"${major(latest_release)}\""]
+                ['                    <a id="latest" ', "                    <a id=\"latest\" href=\"${major(latest_release)}\""]
         ])
 
         exec {
