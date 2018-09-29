@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <url>
-    <loc>/morphia/1.2/</loc>
-    <lastmod>2015-03-18T16:56:14+00:00</lastmod>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
     <loc>/morphia/1.2/issues-help/</loc>
@@ -46,6 +42,11 @@
   </url>
   
   <url>
+    <loc>/morphia/1.2/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/morphia/1.2/guides/indexing/</loc>
   </url>
   
@@ -54,7 +55,7 @@
   </url>
   
   <url>
-    <loc>/morphia/1.2/guides/lifeCycleMethods/</loc>
+    <loc>/morphia/1.2/guides/lifecyclemethods/</loc>
   </url>
   
   <url>
@@ -62,11 +63,16 @@
   </url>
   
   <url>
+    <loc>/morphia/1.2/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/morphia/1.2/guides/updating/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.2/guides/validationExtension/</loc>
+    <loc>/morphia/1.2/guides/validationextension/</loc>
   </url>
   
 </urlset>

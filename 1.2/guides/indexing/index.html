@@ -1,862 +1,495 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js csstransforms3d">
   <head>
     <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
-<meta name="keyword" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.48" />
+    <meta name="description" content="">
 
-    <link rel="shortcut icon" href="/morphia/1.2/img/favicon.png">
 
-    <title>Indexing</title>
+    <link rel="shortcut icon" href="/morphia/1.2/images/favicon.png" type="image/x-icon" />
+<link rel="icon" href="/morphia/1.2/images/favicon.png" type="image/x-icon" />
+    <title>Indexing :: Morphia</title>
 
-    <link rel="stylesheet" href="/morphia/1.2/lib/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="/morphia/1.2/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="/morphia/1.2/css/mongodb-docs.css" type="text/css" />
-<link rel="stylesheet" href="/morphia/1.2/css/overrides.css" type="text/css" />
-<link rel="stylesheet" href="/morphia/1.2/lib/highlight/styles/idea.css" />
-<link rel="stylesheet" href="/morphia/1.2/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
-<link rel="stylesheet" href="/morphia/1.2/css/java.css" type="text/css" />
+    
+    <link href="/morphia/1.2/css/nucleus.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/fontawesome-all.min.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/hybrid.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/featherlight.min.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/perfect-scrollbar.min.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/auto-complete.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/theme.css?1538191731" rel="stylesheet">
+    <link href="/morphia/1.2/css/hugo-theme.css?1538191731" rel="stylesheet">
+    
 
+    <script src="/morphia/1.2/js/jquery-2.x.min.js?1538191731"></script>
+
+    <style type="text/css">
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    <link href="/morphia/1.2/css/java.css" rel="stylesheet">
+<link href="/morphia/1.2/css/theme-green.css" rel="stylesheet">
+
+<style>
+    :root {
+        --MAIN-TEXT-color:#004042;  
+        --MAIN-TITLES-TEXT-color: #004042;  
+        --MAIN-LINK-color:#006cbc;  
+        --MAIN-LINK-HOVER-color:#3f6d2c;  
+        --MAIN-ANCHOR-color: #599a3e;  
+
+        --MENU-HEADER-BG-color:#004042;  
+        --MENU-HEADER-BORDER-color:#6ca439;  
+
+        --MENU-SEARCH-BG-color:#006264;  
+        --MENU-SEARCH-BOX-color: #84c767;  
+        --MENU-SEARCH-BOX-ICONS-color: #c7f7c4;  
+
+        --MENU-SECTIONS-ACTIVE-BG-color:#1b211c;  
+        --MENU-SECTIONS-BG-color:#222723;  
+        --MENU-SECTIONS-LINK-color: #ccc;  
+        --MENU-SECTIONS-LINK-HOVER-color: #e6e6e6;   
+        --MENU-SECTION-ACTIVE-CATEGORY-color: #777;  
+        --MENU-SECTION-ACTIVE-CATEGORY-BG-color: #f3f4eb;  
+
+        --MENU-VISITED-color: #599a3e;  
+        --MENU-SECTION-HR-color: #18211c;  
+    }
+
+    body {
+        background-color: var(--MENU-SECTION-ACTIVE-CATEGORY-BG-color);
+        padding-top: 0;
+    }
+
+    h1 {
+        color: var(--MAIN-TITLES-TEXT-color) !important;
+    }
+
+    strong {
+        color: var(--MAIN-TITLES-TEXT-color) !important;
+    }
+
+    #top-bar-sticky-wrapper {
+        visibility: hidden !important;
+        min-height: 0;
+    }
+
+</style>
 
   </head>
+  <body class="" data-url="/morphia/1.2/guides/indexing/">
+    <nav id="sidebar" class="">
 
-  <body>
-  
-  <section id="container" class="">
-      
-      <header id="header-db" class="row" role="navigation">
-  <div class="header-content">
-    <div class="toggle-nav pull-left">
-        <i class="fa fa-bars"></i>
-        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="/morphia/1.2">
+    <img src="/morphia/1.2/images/logo.png" alt="Morphia Logo"/>
+</a>
     </div>
     
-    <div class="logo pull-left">
-      <a href="/morphia/1.2/../">
-        <img src="/morphia/1.2/img/logo-mongodb-header.png", alt="MongoDB.org" />
-      </a>
-    </div>
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="text" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-close"></i></span>
+</div>
+
+<script type="text/javascript" src="/morphia/1.2/js/lunr.min.js?1538191731"></script>
+<script type="text/javascript" src="/morphia/1.2/js/auto-complete.js?1538191731"></script>
+<script type="text/javascript">
     
-    <div>
-<div class="nav-items pull-right">
-  <a href="https://university.mongodb.com" data-toggle="tooltip" data-placement="bottom" title="Free Online Classes">MongoDB
-              University</a>
-  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
-  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
-  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
-  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
-  <div id="search">
-<form method="get" action="//www.google.com/search" target="_blank">
-    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
-    <input type="hidden" name="site" value="/morphia/1.2">
-    <input type="hidden" name="q" value="">
-    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
-</form>
-</div>
+        var baseurl = '\/morphia\/1.2';
+    
+</script>
+<script type="text/javascript" src="/morphia/1.2/js/search.js?1538191731"></script>
 
-</div>
-</div>
-
+    
   </div>
-</header>
 
-      
-
-      
-<aside id="sidebar" class="sidebar">
-    <div class="ssidebar nav-collapse">
-      <div class="ssidebarwrapper">
-        <h3>
-          <a class="index-link" href="/morphia/1.2/../">Morphia</a>
-          <a class="version pull-right" href="/morphia/1.2">1.2</a>
-        </h3>
+    <div class="highlightable">
+    <ul class="topics">
 
         
-        <ul class="sidebar-menu">
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
           
           
 
+
+ 
+  
+    
+    <li data-nav-id="/morphia/1.2/getting-started/" title="Getting Started" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/morphia/1.2/getting-started/">
+          Getting Started
           
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
           
             
             
 
 
-
-
-
-
-
-
-
+ 
   
     
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-    
-      
-    
-  
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-  
-    
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-        
-          
-        
-      
-    
-      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-    
-    
-    
-      
-    
-  
-  
-
-
-        
-      
-    
-      
-      
-        
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-  
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-  
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-  
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-  
-
-
-          
-
-          
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<li class="toctree-l1 ">
-  <a href="/morphia/1.2/getting-started/" class="">
-      <i class='fa fa-road'></i>
-      <span>Getting Started</span>
-      <span class="menu-arrow fa fa-angle-right"></span>
-  </a>
-    <ul >
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/getting-started/installation-guide/">
-        <i class='fa'></i>
+      <li data-nav-id="/morphia/1.2/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
+        <a href="/morphia/1.2/getting-started/installation-guide/">
         Installation Guide
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/getting-started/quick-tour/">
-        <i class='fa'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/getting-started/quick-tour/" title="Quick Tour" class="dd-item ">
+        <a href="/morphia/1.2/getting-started/quick-tour/">
         Quick Tour
-    </a>
-  </li>
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
 
 
+ 
+  
+    
+    <li data-nav-id="/morphia/1.2/guides/" title="Reference Guides" class="dd-item 
+        parent
         
         
-    </ul>
-  </li>
-
-
+        ">
+      <a href="/morphia/1.2/guides/">
+          Reference Guides
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
           
             
             
 
 
-
-
-
-
-
-
-
-
-
-
-
+ 
   
-
-
-
-
-<li class="toctree-l1  current">
-  <a href="/morphia/1.2/guides/" class="">
-      <i class='fa fa-book'></i>
-      <span>Reference Guides</span>
-      <span class="menu-arrow fa fa-angle-down"></span>
-  </a>
-    <ul  class="current">
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/aggregation/">
-        <i class='fa fa-file-text-o'></i>
-        Aggregation
-    </a>
-  </li>
-
-
-        
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/annotations/">
-        <i class='fa fa-file-text-o'></i>
+    
+      <li data-nav-id="/morphia/1.2/guides/annotations/" title="Annotations" class="dd-item ">
+        <a href="/morphia/1.2/guides/annotations/">
         Annotations
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
+        </a>
+    </li>
+     
   
+ 
+
+            
+          
+            
+            
 
 
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/aggregation/" title="Aggregation" class="dd-item ">
+        <a href="/morphia/1.2/guides/aggregation/">
+        Aggregation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/indexing/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/indexing/" title="Indexing" class="dd-item active">
+        <a href="/morphia/1.2/guides/indexing/">
         Indexing
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/jrebel/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/jrebel/" title="JRebel" class="dd-item ">
+        <a href="/morphia/1.2/guides/jrebel/">
         JRebel
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/lifeCycleMethods/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
+        <a href="/morphia/1.2/guides/lifecyclemethods/">
         Life Cycle Methods
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/querying/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/querying/" title="Querying" class="dd-item ">
+        <a href="/morphia/1.2/guides/querying/">
         Querying
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/updating/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/updating/" title="Updating" class="dd-item ">
+        <a href="/morphia/1.2/guides/updating/">
         Updating
-    </a>
-  </li>
-
-
         
-        
-        
-        
-        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l2">
-    <a href="/morphia/1.2/guides/validationExtension/">
-        <i class='fa fa-file-text-o'></i>
+ 
+  
+    
+      <li data-nav-id="/morphia/1.2/guides/validationextension/" title="Validation Extension" class="dd-item ">
+        <a href="/morphia/1.2/guides/validationextension/">
         Validation Extension
-    </a>
-  </li>
-
-
         
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
         
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+         
     </ul>
-  </li>
 
-
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
           
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l1">
-    <a href="/morphia/1.2/javadoc">
-        <i class='fa fa-file-text-o'></i>
-        API Documentation
-    </a>
-  </li>
-
-
+              <li> 
+                  <a class="padding" href="/morphia/1.2/javadoc"><i class='fas fa-book'></i> API Documentation</a>
+              </li>
           
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l1">
-    <a href="/morphia/1.2/issues-help/">
-        <i class='fa fa-life-ring'></i>
-        Issues &amp; Help
-    </a>
-  </li>
-
-
-          
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <li class="toctree-l1">
-    <a href="https://github.com/mongodb/morphia">
-        <i class='fa fa-github'></i>
-        Source Code
-    </a>
-  </li>
-
-
+              <li> 
+                  <a class="padding" href="https://github.com/MorphiaOrg/morphia"><i class='fab fa-fw fa-github'></i> Source Code</a>
+              </li>
           
         </ul>
-        
-    </div>
-  </div>
-  
-</aside>
-
-<div class="option-popup closed hidden" id="optionsVersionsPopup">
-<div class="option-header">
-  <i class="fa fa-gear"></i>
-  <span>OPTIONS</span>
-  <i class="fa fa-angle-up pull-right"></i>
-</div>
-<div class="option-body">
-  <ul>
-      
-      <li>
-        <label>Version</label>
-        <div class="btn-group btn-group-xs pull-right">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            Select Version <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
-          </ul>
-        </div>
-      </li>
-
-   
-
-
+      </section>
     
 
-  </ul>
-</div>
-</div>
-
-
-
+    
+    <section id="footer">
       
-      <section id="main-content" class="content">
-          <section class="main-column pull-left">
-            <div class="document">
-              <div class="documentwrapper">
-                <div class="bodywrapper">
-                  <div class="body">
-
-
-   
-<a class="edit-link" href="https://github.com/mongodb/morphia/blob/1.2.x/docs/reference/content/guides/indexing.md" target="_blank" title="Edit guides/indexing.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+    </section>
+  </div>
+</nav>
 
 
 
 
 
-
-
-
-
-
-<div class="bc">
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/morphia/1.2/'>Morphia</a> > <a href='/morphia/1.2/guides/'>Reference Guides</a> > Indexing
+          
+         
+          
+         
+          
+           
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
 <ul>
-  
-  
-  
-  
-  
-  <li><a href="/morphia/1.2/guides/">Reference Guides</a> <i class="fa fa-angle-right"></i></li>
-  <li>Indexing</li>
+<li>
+<ul>
+<li><a href="#class-level-indexes">Class Level Indexes</a>
+<ul>
+<li><a href="#fields">Fields</a>
+<ul>
+<li><a href="#value">value()</a></li>
+<li><a href="#type">type()</a></li>
+<li><a href="#weight">weight()</a></li>
+</ul></li>
+<li><a href="#index-options">Index Options</a>
+<ul>
+<li><a href="#background">background()</a></li>
+<li><a href="#disablevalidation">disableValidation()</a></li>
+<li><a href="#dropdups">dropDups()</a></li>
+<li><a href="#expireafterseconds">expireAfterSeconds()</a></li>
+<li><a href="#language">language()</a></li>
+<li><a href="#languageoverride">languageOverride()</a></li>
+<li><a href="#name">name()</a></li>
+<li><a href="#sparse">sparse()</a></li>
+<li><a href="#unique">unique()</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#field-level-indexes">Field Level Indexes</a></li>
+<li><a href="#text-indexing">Text Indexing</a></li>
+</ul></li>
 </ul>
+</nav>
+    </div>
 </div>
 
+                
+              </div>
+            </div>
+            
+
+        
+        <div id="body-inner">
+          
+            <h1>Indexing</h1>
+          
+
+        
 
 
 
-<h1 id="indexing">Indexing</h1>
 
 <p>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
 an entity&rsquo;s source.  In addition to the familiar ascending/descending index types, Morphia and MongoDB support <a href="http://docs.mongodb.org/manual/core/index-ttl/
@@ -871,9 +504,9 @@ an entity&rsquo;s source.  In addition to the familiar ascending/descending inde
 
 <h2 id="class-level-indexes">Class Level Indexes</h2>
 
-<p>Class level indexing begins with the <a href="/morphia/1.2/guides/annotations/#indexes"><code>@Indexes</code></a> annotation.  This is a container
-annotation whose sole purpose is to hold a number of <a href="/morphia/1.2/guides/annotations/#index"><code>@Index</code></a> annotations.  This annotation
-has two primary components to cover here:  <code>fields</code> and <code>options</code>.  An index definition would take the following form:</p>
+<p>Class level indexing begins with the <a href="/morphia/1.2/guides/annotations/#indexes"><strong>@Indexes</strong></a> annotation.  This is a container
+annotation whose sole purpose is to hold a number of <a href="/morphia/1.2/guides/annotations/#index"><strong>@Index</strong></a> annotations.  This annotation
+has two primary components to cover here:  <strong>fields</strong> and <strong>options</strong>.  An index definition would take the following form:</p>
 
 <pre><code class="language-java">@Entity
 @Indexes({
@@ -893,14 +526,14 @@ public class IndexExample {
 
 <h3 id="fields">Fields</h3>
 
-<p>The fields to use in an index definition are defined with the <a href="/morphia/1.2/guides/annotations/#field"><code>@Field</code></a> annotation. An
-arbitrary number of <code>@Field</code>s can be given but at least one must be present.</p>
+<p>The fields to use in an index definition are defined with the <a href="/morphia/1.2/guides/annotations/#field"><strong>@Field</strong></a> annotation. An
+arbitrary number of <strong>@Field</strong>s can be given but at least one must be present.</p>
 
 <h4 id="value">value()</h4>
 
 <p>Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.2/guides/annotations/#property"><code>@Property</code></a> or
- <a href="/morphia/1.2/guides/annotations/#embedded"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
+name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.2/guides/annotations/#property"><strong>@Property</strong></a> or
+ <a href="/morphia/1.2/guides/annotations/#embedded"><strong>@Embedded</strong></a> annotations.  For most index types, this value is validated by default.  An
   exception is made for <a href="#text-indexing">text indexes</a> as discussed below.</p>
 
 <h4 id="type">type()</h4>
@@ -915,11 +548,11 @@ name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1
 
 <p><em>Optional</em></p>
 
-<p>Specifies the weight to use when creating a text index.  This value only makes sense when direction is <code>IndexType.TEXT</code>.</p>
+<p>Specifies the weight to use when creating a text index.  This value only makes sense when direction is <strong>IndexType.TEXT</strong>.</p>
 
 <h3 id="index-options">Index Options</h3>
 
-<p>Options for an index are defined on the <a href="/morphia/1.2/guides/annotations/#indexoptions"><code>@IndexOptions</code></a>.  More complete coverage can
+<p>Options for an index are defined on the <a href="/morphia/1.2/guides/annotations/#indexoptions"><strong>@IndexOptions</strong></a>.  More complete coverage can
 be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 ">manual</a> but we&rsquo;ll provide some basic coverage
 here as well.</p>
@@ -939,21 +572,19 @@ MongoDB database remains available during the index building operation.  The Mon
 <p><em>Default: false</em></p>
 
 <p>When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
-mapped document names.  Setting this to <code>true</code> disables this validation.</p>
+mapped document names.  Setting this to <strong>true</strong> disables this validation.</p>
 
 <h4 id="dropdups">dropDups()</h4>
 
 <p><em>Default: false</em></p>
 
-<p>When defining a <a href="#unique">unique</a> index, if there are duplicate values found, the index creation will.  Setting this value to
-true will instruct MongoDB to drop the documents with duplicate values.</p>
+<p>When defining a <a href="#unique">unique</a> index, if there are duplicate values found, the index creation will.  Setting this value to true will instruct MongoDB to drop the documents with duplicate values.</p>
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
 <p>As of MongoDB version 3.0, the dropDups option is no longer available.</p>
 
 </div>
-
 
 <h4 id="expireafterseconds">expireAfterSeconds()</h4>
 
@@ -997,7 +628,7 @@ the sort order.</p>
 
 <p><em>Default: false</em></p>
 
-<p>If <code>true</code>, the index only references documents with the specified field. These indexes use less space but behave differently in
+<p>If <strong>true</strong>, the index only references documents with the specified field. These indexes use less space but behave differently in
 some situations (particularly sorts).  See <a href="http://docs.mongodb.org/manual/core/index-sparse/
 ">Sparse Indexes</a> for more
 information.</p>
@@ -1007,13 +638,13 @@ information.</p>
 <p><em>Default: false</em></p>
 
 <p>Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
-existing value in the index.  Specify <code>true</code> to create a unique index.</p>
+existing value in the index.  Specify <strong>true</strong> to create a unique index.</p>
 
 <h2 id="field-level-indexes">Field Level Indexes</h2>
 
 <p>Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-<a href="/morphia/1.2/guides/annotations/#indexed"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the <a href="/morphia/1.2/guides/annotations/#field"><code>@Field</code></a>
+<a href="/morphia/1.2/guides/annotations/#indexed"><strong>@Indexed</strong></a> annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the <a href="/morphia/1.2/guides/annotations/#field"><strong>@Field</strong></a>
 annotations are unnecessary.  The options for the index are the same as defined <a href="#options">above</a>.  A field level index
 definition would look like this:</p>
 
@@ -1034,7 +665,7 @@ the <a href="http://docs.mongodb.org/manual/core/index-text/
 ">manual</a> but there are a few Morphia specific details to cover.  Indexed field names are validated
 by default but validation is disabled when an index is defined using MongoDB&rsquo;s
 <a href="http://docs.mongodb.org/manual/core/index-text/#text-index-wildcard
-"><code>$**</code></a> syntax.  This special instruction tells MongoDB to create a text index on
+"><strong>$**</strong></a> syntax.  This special instruction tells MongoDB to create a text index on
 all fields with string content in a document.  A <a href="http://docs.mongodb.org/manual/core/index-text/#compound-index
 ">compound index</a> can be created
 incorporating a text index but it&rsquo;s important to note there can only be one text index on a collection.</p>
@@ -1051,120 +682,278 @@ incorporating a text index but it&rsquo;s important to note there can only be on
 </div>
 
 
+<footer class=" footline" >
+	
+</footer>
 
 
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+        
+        
 
 
+        
+            <a class="nav nav-prev" href="/morphia/1.2/guides/aggregation/" title="Aggregation"> <i class="fas fa-chevron-left"></i></a>
+        
+        
+            <a class="nav nav-next" href="/morphia/1.2/guides/jrebel/" title="JRebel" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+        
+    </div>
 
-<div id="btnv">
-  
-  <div class="pull-left">
-  <a class="navigation prev" href="/morphia/1.2/guides/annotations/">
-      <i class="fa fa-long-arrow-left"> </i> Annotations
-  </a>
-  </div>
-  
-  
-  <div class="pull-right">
-  <a class="navigation next" href="/morphia/1.2/guides/jrebel/">
-    JRebel <i class="fa fa-long-arrow-right"> </i>
-  </a>
-  
-</div>
-</div>
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/morphia/1.2/js/clipboard.min.js?1538191731"></script>
+    <script src="/morphia/1.2/js/perfect-scrollbar.min.js?1538191731"></script>
+    <script src="/morphia/1.2/js/perfect-scrollbar.jquery.min.js?1538191731"></script>
+    <script src="/morphia/1.2/js/jquery.sticky.js?1538191731"></script>
+    <script src="/morphia/1.2/js/featherlight.min.js?1538191731"></script>
+    <script src="/morphia/1.2/js/html5shiv-printshiv.min.js?1538191731"></script>
+    <script src="/morphia/1.2/js/highlight.pack.js?1538191731"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/morphia/1.2/js/modernizr.custom.71422.js?1538191731"></script>
+    <script src="/morphia/1.2/js/learn.js?1538191731"></script>
+    <script src="/morphia/1.2/js/hugo-learn.js?1538191731"></script>
 
+    <link href="/morphia/1.2/mermaid/mermaid.css?1538191731" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.2/mermaid/mermaid.js?1538191731"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    
 
-</div>
-<div class="right-column">
-<div class="wrapper">
-  
-  <div class="toc">
-    <span class="toc-header">On this page</span>
-    <nav id="TableOfContents">
-<ul>
-<li><a href="#indexing">Indexing</a>
-<ul>
-<li><a href="#class-level-indexes">Class Level Indexes</a>
-<ul>
-<li><a href="#fields">Fields</a>
-<ul>
-<li><a href="#value">value()</a></li>
-<li><a href="#type">type()</a></li>
-<li><a href="#weight">weight()</a></li>
-</ul></li>
-<li><a href="#index-options">Index Options</a>
-<ul>
-<li><a href="#background">background()</a></li>
-<li><a href="#disablevalidation">disableValidation()</a></li>
-<li><a href="#dropdups">dropDups()</a></li>
-<li><a href="#expireafterseconds">expireAfterSeconds()</a></li>
-<li><a href="#language">language()</a></li>
-<li><a href="#languageoverride">languageOverride()</a></li>
-<li><a href="#name">name()</a></li>
-<li><a href="#sparse">sparse()</a></li>
-<li><a href="#unique">unique()</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#field-level-indexes">Field Level Indexes</a></li>
-<li><a href="#text-indexing">Text Indexing</a></li>
-</ul></li>
-</ul>
-</nav>
-  </div>
-  
-</div>
-</div>
-
-</div>
-</div>
-</div>
-</section>
-</section>
-
-</section>
-
-
-<script type="text/javascript">
-  var DOCUMENTATION_OPTIONS = {
-   URL_ROOT:    "/morphia/1.2",
-   VERSION:     "1.2",
-   COLLAPSE_INDEX: false,
-   FILE_SUFFIX: '.html',
-   HAS_SOURCE:  true
-  };
-</script>
-<script type="text/javascript" src="/morphia/1.2/js/jquery.js"></script>
-<script type="text/javascript" src="/morphia/1.2/lib/bootstrap.js"></script>
-<script type="text/javascript" src="/morphia/1.2/js/navbar.js"></script>
-<script type="text/javascript" src="/morphia/1.2/lib/highlight/highlight.pack.js"></script>
-<script type="text/javascript" src="/morphia/1.2/js/scripts.js"></script>
-<script type="text/javascript" src="/morphia/1.2/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
-<script type="text/javascript" src="/morphia/1.2/js/java.js"></script>
-
-
-
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
-{'gtm.start': new Date().getTime(),event:'gtm.js'}
-);var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
-
-
-<script type="text/javascript">
-var _elqQ = _elqQ || [];
-_elqQ.push(['elqSetSiteId', '413370795']);
-_elqQ.push(['elqTrackPageView']);
-(function () {
-function async_load()
-{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
-if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
-else if (window.attachEvent) window.attachEvent('onload', async_load);
-})();
-</script>
-
-</body>
+  </body>
 </html>
 
