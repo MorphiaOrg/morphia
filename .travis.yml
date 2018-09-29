@@ -13,6 +13,10 @@ env:
   - MONGODB=3.4.0
   - MONGODB=3.6.0
   - MONGODB=4.0.0
+  - DRIVER=3.8.2
+  - DRIVER=3.7.1
+  - DRIVER=3.6.4
+  - DRIVER=3.4.3
 
 
 before_script:
@@ -21,5 +25,5 @@ before_script:
   - mkdir /tmp/data
   - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
-install: ./gradlew -q jar --stacktrace
-script: ./gradlew check --stacktrace
+install: ./gradlew -q jar --stacktrace -P${DRIVER}
+script: ./gradlew check --stacktrace -P${DRIVER}
