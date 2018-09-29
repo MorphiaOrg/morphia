@@ -5,15 +5,13 @@ title = "Updating"
   pre = "<i class='fa fa-file-text-o'></i>"
 +++
 
-# Introduction
-
 There are two basic ways to update your data: insert/save a whole Entity or issue an update operation. 
 
-# Updating (on the server)
+## Updating (on the server)
 
-The update method on [`Datastore`]({{< apiref "org/mongodb/morphia/Datastore" >}}) is used to issue a command to the server to change 
+The update method on [Datastore]({{< apiref "org/mongodb/morphia/Datastore" >}}) is used to issue a command to the server to change 
 existing documents.  The effects of the update command are defined via 
-[`UpdateOperations`]({{< apiref "org/mongodb/morphia/query/UpdateOperations" >}}) methods.
+[UpdateOperations]({{< apiref "org/mongodb/morphia/query/UpdateOperations" >}}) methods.
 
 ## The Field Expression
 
@@ -80,7 +78,7 @@ UpdateOperations ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-After this update, the name of the hotel would be `null` when the entity is loaded.
+After this update, the name of the hotel would be __null__ when the entity is loaded.
 
 ### inc()/dec()
 
@@ -114,7 +112,7 @@ datastore.update(updateQuery, ops);
 
 ### add()/addAll()
 
-`add()` is used to add a value to an array field:
+__add()__ is used to add a value to an array field:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -122,8 +120,8 @@ ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-This will issue a `$addToSet` operation adding `11` to the list.  This will prevent duplicate values in this field.  If duplicate values are
-desired, use the overloaded `add()` that takes a boolean instead:
+This will issue a __$addToSet__ operation adding __11__ to the list.  This will prevent duplicate values in this field.  If duplicate values are
+desired, use the overloaded __add()__ that takes a boolean instead:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -131,10 +129,10 @@ ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-`addAll()` takes a `List` of values and behaves similarly.
+__addAll()__ takes a __List__ of values and behaves similarly.
 
 ### removeFirst()/removeLast()/removeAll()
-To remove values from a list, use `removeFirst()`, `removeLast()`, or `removeAll()`:
+To remove values from a list, use __removeFirst()__, __removeLast()__, or __removeAll()__:
 ```java
 //given roomNumbers = [ 1, 2, 3 ]
 ops = datastore
@@ -231,7 +229,7 @@ ops = datastore
 
 ## createIfMissing (overload parameter)
 
-All of the update methods on `Datastore` are overloaded and accept a `createIfMissing` parameter
+All of the update methods on __Datastore__ are overloaded and accept a __createIfMissing__ parameter
 
 ```java
 ops = datastore

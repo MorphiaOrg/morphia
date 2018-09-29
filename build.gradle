@@ -1,7 +1,8 @@
 ext.configDir = new File(rootDir, 'config')
 ext.slf4jVersion = '1.7.5'
 ext.git = find('git')
-ext.majorVersion = version.split('\\.').dropRight(1).join('.') + ( gitVersion() == 'master' ? '-SNAPSHOT' : '')
+ext.majorVersion = major(version)
+
 ext.latest = gitVersion() == 'master' ? version : latest_release
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -139,6 +140,11 @@ def buildingWith(n) {
     project.hasProperty(n)
 }
 
+def major(fullVersion) {
+    fullVersion.split('\\.').dropRight(1).join('.') +
+        (gitVersion() == 'master' && fullVersion.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
+}
+
 def gitVersion() {
     def stdOut = new ByteArrayOutputStream()
     exec {
@@ -151,13 +157,13 @@ def gitVersion() {
 }
 
 def find(executable) {
-    def list = ['/usr/local/bin/', 'usr/bin/']
+    def list = ['/usr/local/bin/', '/usr/bin/']
     list.findResult {
         def exec = file(it + executable)
         if(exec.exists()) {
             exec.absolutePath
         }
-    }
+    } ?: executable
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'

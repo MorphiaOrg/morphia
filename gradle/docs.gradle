@@ -1,175 +1,210 @@
+import org.gradle.tooling.BuildException
+
 def urlVersion = version.split('\\.')[0..1].join('.')
-def formalVersion = version.split('\\.').dropRight(1).join('.') + ( version.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 def ghPages = file("build/gh-pages")
 
 ext.hugo = find('hugo')
 
-task showExecutables << {
+task showExecutables { doLast {
     println "hugo = $hugo"
     println "git = $git"
-}
+} }
 
 def forceLanding() {
     gitVersion() == 'master' || buildingWith('forceLanding')
 }
 
-
-task publishReference(dependsOn : [ 'reference', 'clonePages']) << {
-
-    def referencePage = new File(ghPages, urlVersion)
-    referencePage.mkdirs()
-    copy {
-        from 'docs/reference/public'
-        into referencePage
-    }
-    exec {
-        workingDir referencePage
-        commandLine git
-        args("add", ".")
+task cleanDocs() {
+    doLast {
+        delete {
+            delete 'build', 'classes'
+        }
     }
 }
 
-task publishLanding(dependsOn : [ 'landing', 'clonePages']) << {
-    ghPages.mkdirs()
-    copy {
-        from 'docs/landing/public'
-        into ghPages
-    }
-    exec {
-        workingDir ghPages
-        environment System.getenv()
-        commandLine git
-        args("add", ".")
+task publishReference(dependsOn: ['reference', 'clonePages']) {
+    doLast {
+
+        def referencePage = new File(ghPages, urlVersion)
+        referencePage.mkdirs()
+        copy {
+            from 'docs/reference/public'
+            into referencePage
+        }
+        exec {
+            workingDir referencePage
+            commandLine git
+            args("add", ".")
+        }
     }
 }
 
-task pushDocs(dependsOn : [ 'publishReference', 'publishLanding' ]) << {
-    exec {
-        workingDir ghPages
-        environment System.getenv()
-        commandLine git
-        ignoreExitValue true
-        args("commit", "-a", "-m", "pushing docs updates")
+task publishLanding(dependsOn: ['landing', 'clonePages']) {
+    doLast {
+        ghPages.mkdirs()
+        copy {
+            from 'docs/landing/public'
+            into ghPages
+        }
+        exec {
+            workingDir ghPages
+            environment System.getenv()
+            commandLine git
+            args("add", ".")
+        }
     }
-    exec {
-        workingDir ghPages
-        environment System.getenv()
-        commandLine git
-        args("push")
-    }
-
 }
 
-task landing << {
-    def file = file('docs/landing/data/releases.toml')
-    if (!file.text.contains(latest_release)) {
-        throw new TaskExecutionException(it, new Exception("Latest release not listed in $file"))
-    }
+task pushDocs(dependsOn: ['cleanDocs', 'publishReference', 'publishLanding']) {
+    doLast {
+        exec {
+            workingDir ghPages
+            environment System.getenv()
+            commandLine git
+            ignoreExitValue true
+            args("commit", "-a", "-m", "pushing docs updates")
+        }
+        exec {
+            workingDir ghPages
+            environment System.getenv()
+            commandLine git
+            args("push")
+        }
 
-    exec {
-        workingDir 'docs/landing'
-        environment System.getenv()
-        commandLine hugo
+    }
+}
+
+task landing {
+    doLast {
+        def file = file('docs/landing/data/releases.toml')
+        if (!file.text.contains(latest_release)) {
+            throw new TaskExecutionException(it, new Exception("Latest release not listed in $file"))
+        }
+
+        update('docs/landing/layouts/partials/hero.html', [
+                ['                    <a id="latest" ', "                    <a id=\"latest\" href=\"${major(latest_release)}\""]
+        ])
+
+        exec {
+            workingDir 'docs/landing'
+            environment System.getenv()
+            commandLine hugo
+        }
     }
 }
 
 landing.onlyIf { forceLanding() }
 publishLanding.onlyIf { forceLanding() }
 
-task reference(dependsOn: ':morphia:javadoc') << {
-    exec {
-        workingDir 'docs/reference'
-        environment System.getenv()
-        commandLine hugo
-    }
-    copy {
-        from 'morphia/build/docs'
-        into 'docs/reference/public'
-    }
+task reference(dependsOn: ':morphia:javadoc') {
+    doLast {
+        exec {
+            workingDir 'docs/reference'
+            environment System.getenv()
+            commandLine hugo
+        }
+        copy {
+            from 'morphia/build/docs'
+            into 'docs/reference/public'
+        }
 
-    update('docs/reference/content/getting-started/installation-guide.md', [
-            [ '{{< install version', "{{< install version=\"${latest}\" >}}"]
-    ])
+        update('docs/reference/content/getting-started/installation-guide.md', [
+                ['{{< install version', "{{< install version=\"${latest}\" >}}"]
+        ])
 
-    update('docs/reference/content/guides/jrebel.md', [
-            ['    <version>###</version>', "    <version>${latest}</version>"]
-    ])
+        update('docs/reference/content/guides/jrebel.md', [
+                ['    <version>', "    <version>${latest}</version>"]
+        ])
 
-    update('docs/reference/content/guides/validationExtension.md', [
-            ['    <version>###</version>', "    <version>${latest}</version>"]
-    ])
+        update('docs/reference/content/guides/validationExtension.md', [
+                ['    <version>', "    <version>${latest}</version>"]
+        ])
 
-    update('docs/reference/config.toml', [
-            [ 'baseurl = "', "baseurl = \"/morphia/${urlVersion}\""],
-            [ 'latest = "', "latest = \"${latest}\""]
-    ])
+        update('docs/reference/config.toml', [
+                ['baseurl = "', "baseurl = \"/morphia/${urlVersion}\""]
+        ])
 
-    update('docs/reference/data/mongodb.toml', [
-            ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
-            ['currentVersion = "', "currentVersion = \"${majorVersion}\""]
-    ])
-}
-
-task viewLanding(dependsOn: 'landing') << {
-    exec {
-        workingDir 'docs/landing'
-        environment System.getenv()
-        commandLine hugo
-        args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+        update('docs/reference/data/morphia.toml', [
+                ['githubBranch = "', "githubBranch = \"${gitVersion()}\""],
+                ['currentVersion = "', "currentVersion = \"${majorVersion}\""],
+                ['coreApiUrl = "', "coreApiUrl = \"http://api.mongodb.org/java/${major(driverVersion)}/\""]
+        ])
     }
 }
 
-task viewReference(dependsOn: 'reference') << {
-    exec {
-        workingDir 'docs/reference'
-        environment System.getenv()
-        commandLine hugo
-        args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+task viewLanding(dependsOn: 'landing') {
+    doLast {
+        exec {
+            workingDir 'docs/landing'
+            environment System.getenv()
+            commandLine hugo
+            args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+        }
     }
 }
 
-task clonePages << {
-    def pages = new File("build/gh-pages")
-    if (!pages.exists()) {
-        def stream = new ByteArrayOutputStream()
-
+task viewReference(dependsOn: 'reference') {
+    doLast {
         exec {
-            workingDir rootDir
+            workingDir 'docs/reference'
             environment System.getenv()
-            commandLine git
-            args("config", "--get", "remote.origin.url")
-            standardOutput = stream
+            commandLine hugo
+            args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
         }
+    }
+}
 
-        def url = new String(stream.toByteArray()).trim()
-        new File("build").mkdirs()
-        exec {
-            workingDir 'build'
-            environment System.getenv()
-            commandLine git
-            args("clone", url, "-b", "gh-pages", "gh-pages")
-        }
-    } else {
-        println "${pages} already exists.  skipping clone."
-        exec {
-            workingDir 'build/gh-pages'
-            environment System.getenv()
-            commandLine git
-            args("pull")
-        }
+task clonePages {
+    doLast {
+        def pages = new File("build/gh-pages")
+        if (!pages.exists()) {
+            def stream = new ByteArrayOutputStream()
 
+            exec {
+                workingDir rootDir
+                environment System.getenv()
+                commandLine git
+                args("config", "--get", "remote.origin.url")
+                standardOutput = stream
+            }
+
+            def url = new String(stream.toByteArray()).trim()
+            new File("build").mkdirs()
+            exec {
+                workingDir 'build'
+                environment System.getenv()
+                commandLine git
+                args("clone", url, "-b", "gh-pages", "gh-pages")
+            }
+        } else {
+            println "${pages} already exists.  skipping clone."
+            exec {
+                workingDir 'build/gh-pages'
+                environment System.getenv()
+                commandLine git
+                args("pull")
+            }
+
+        }
     }
 }
 
 def update(input, replacements) {
     def temp = input + '.temp'
+    def replaced = 0
     file(temp).withWriter { w ->
         file(input).eachLine { line ->
             replacements.forEach { replacement ->
-                if (line.startsWith(replacement[0])) line = replacement[1]
+                if (line.startsWith(replacement[0])) {
+                    line = replacement[1]
+                    replaced++
+                }
             }
             w << line + '\n'
         }
+    }
+    if (replaced != replacements.size) {
+        throw new BuildException("Found an unmatched file update for ${input}:  ${replacements}".toString(), null)
     }
     file(temp).renameTo(file(input))
 }
