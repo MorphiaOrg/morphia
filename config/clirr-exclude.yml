@@ -1,0 +1,8 @@
+---
+differenceTypes: []
+
+packages:
+- org.slf4j.*
+- com.mongodb.*
+
+members:

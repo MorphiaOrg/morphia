@@ -6,6 +6,8 @@ ext.majorVersion = major(version)
 
 ext.latest = gitVersion() == 'master' ? version : latest_release
 
+ext.configDir = new File(rootDir, 'config')
+
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
@@ -23,6 +25,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.2'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:1.12.+'
     }
 }
@@ -131,7 +134,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
         maxHeapSize = "512m"
     }
 
-    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'findbugsMain']) {}
+    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'findbugsMain', ':morphia:clirr']) {}
 
     javadoc {
         exclude "**/internal/**"
