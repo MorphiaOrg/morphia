@@ -61,7 +61,9 @@ public abstract class TestBase {
     }
 
     public boolean isReplicaSet() {
-        return runIsMaster().get("setName") != null;
+        final CommandResult commandResult = runIsMaster();
+        System.out.println("commandResult = " + commandResult);
+        return commandResult.get("setName") != null;
     }
 
     @Before
