@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.PostLoad;
@@ -17,6 +18,10 @@ import xyz.morphia.mapping.EmbeddedMappingTest.Nested;
 import xyz.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.Mapper;
+import xyz.morphia.mapping.cache.EntityCache;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 
 import java.io.Serializable;

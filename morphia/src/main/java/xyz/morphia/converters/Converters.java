@@ -32,7 +32,6 @@ public abstract class Converters {
     private final Map<Class, TypeConverter> classConverterCache = new HashMap<Class, TypeConverter>();
     private final Map<MappedField, TypeConverter> mfConverterCache = new HashMap<MappedField, TypeConverter>();
 
-    //
     private static final TypeConverter CONVERTER_CACHE_NULL_PLACEHOLDER = new TypeConverter() {
         @Override
         public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {

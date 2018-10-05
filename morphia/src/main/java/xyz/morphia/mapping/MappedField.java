@@ -103,8 +103,8 @@ public class MappedField {
     private boolean isCollection; // indicated if the collection is a list)
     private Type genericType;
 
-    private final String nameToStore; // the field name in the db.
-    private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
+    private String nameToStore; // the field name in the db.
+    private List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
 
     MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
         f.setAccessible(true);
@@ -113,9 +113,7 @@ public class MappedField {
         realType = field.getType();
         genericType = field.getGenericType();
         discover(mapper);
-
-        nameToStore = getMappedFieldName();
-        loadNames = inferLoadNames();
+        discoverNames();
     }
 
     /**
@@ -129,7 +127,10 @@ public class MappedField {
         this.field = field;
         genericType = type;
         discoverType(mapper);
+        discoverNames();
+    }
 
+    private void discoverNames() {
         nameToStore = getMappedFieldName();
         loadNames = inferLoadNames();
     }
@@ -150,7 +151,7 @@ public class MappedField {
      */
     public void addAnnotation(final Class<? extends Annotation> clazz) {
         if (field.isAnnotationPresent(clazz)) {
-            foundAnnotations.put(clazz, field.getAnnotation(clazz));
+            addAnnotation(clazz, field.getAnnotation(clazz));
         }
     }
 
@@ -162,6 +163,7 @@ public class MappedField {
      */
     public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
         foundAnnotations.put(clazz, ann);
+        discoverNames();
     }
 
     /**
@@ -178,7 +180,7 @@ public class MappedField {
      * @return the annotations found while mapping
      */
     public Map<Class<? extends Annotation>, Annotation> getAnnotations() {
-        return foundAnnotations;
+        return Collections.unmodifiableMap(foundAnnotations);
     }
 
     /**
@@ -433,7 +435,9 @@ public class MappedField {
      * @return ann the annotation
      */
     public Annotation putAnnotation(final Annotation ann) {
-        return foundAnnotations.put(ann.getClass(), ann);
+        Annotation put = foundAnnotations.put(ann.getClass(), ann);
+        discoverNames();
+        return put;
     }
 
     /**

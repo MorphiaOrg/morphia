@@ -372,7 +372,7 @@ public class MappedClass {
     public List<MappedField> getFieldsAnnotatedWith(final Class<? extends Annotation> clazz) {
         final List<MappedField> results = new ArrayList<MappedField>();
         for (final MappedField mf : persistenceFields) {
-            if (mf.getAnnotations().containsKey(clazz)) {
+            if (mf.hasAnnotation(clazz)) {
                 results.add(mf);
             }
         }
