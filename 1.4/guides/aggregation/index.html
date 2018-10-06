@@ -12,17 +12,17 @@
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/morphia/1.4/css/nucleus.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/fontawesome-all.min.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/hybrid.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/featherlight.min.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/perfect-scrollbar.min.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/auto-complete.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/theme.css?1538361544" rel="stylesheet">
-    <link href="/morphia/1.4/css/hugo-theme.css?1538361544" rel="stylesheet">
+    <link href="/morphia/1.4/css/nucleus.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/fontawesome-all.min.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/hybrid.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/featherlight.min.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/perfect-scrollbar.min.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/auto-complete.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/theme.css?1538798181" rel="stylesheet">
+    <link href="/morphia/1.4/css/hugo-theme.css?1538798181" rel="stylesheet">
     
 
-    <script src="/morphia/1.4/js/jquery-2.x.min.js?1538361544"></script>
+    <script src="/morphia/1.4/js/jquery-2.x.min.js?1538798181"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -98,14 +98,14 @@
     <span data-search-clear=""><i class="fas fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/morphia/1.4/js/lunr.min.js?1538361544"></script>
-<script type="text/javascript" src="/morphia/1.4/js/auto-complete.js?1538361544"></script>
+<script type="text/javascript" src="/morphia/1.4/js/lunr.min.js?1538798181"></script>
+<script type="text/javascript" src="/morphia/1.4/js/auto-complete.js?1538798181"></script>
 <script type="text/javascript">
     
         var baseurl = '\/morphia\/1.4';
     
 </script>
-<script type="text/javascript" src="/morphia/1.4/js/search.js?1538361544"></script>
+<script type="text/javascript" src="/morphia/1.4/js/search.js?1538798181"></script>
 
     
   </div>
@@ -482,7 +482,7 @@ convert your data from one form to another.  This guide will not go in to the de
  MongoDB <a href="http://docs.mongodb.org/manual/aggregation
 ">documentation</a> has extensive tutorials on such details.  Rather, this
  guide will
- focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/aggregation/AggregationTest.java
+ focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/aggregation/AggregationTest.java
 ">tests</a> in Morphia itself.</p>
 
 <p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <strong>Datastore</strong>:</p>
@@ -558,7 +558,7 @@ results for later retrieval.</p>
 <p><strong>out()</strong> has several variants.  In this example, we&rsquo;re passing in <strong>Author.class</strong> which tells Morphia that we want to map each document
 returned to an instance of <strong>Author</strong>.  Because we&rsquo;re using <strong>out()</strong> instead of <strong>aggregate()</strong>, Morphia will use the mapped collection for
 <strong>Author</strong> as the output collection for the pipeline.  If you&rsquo;d like to use an alternate collection but still return a cursor of <strong>Author</strong>
-instances, you can use <a href="/javadoc/org/mongodb/morphia/aggregation/AggregationPipeline.html#out-java
+instances, you can use <a href="/javadoc/xyz/morphia/aggregation/AggregationPipeline.html#out-java
 .lang.String-java.lang.Class-com.mongodb.AggregationOptions-"><strong>out(String,Class,AggregationOptions)</strong></a> instead.</p>
 
 
@@ -815,20 +815,20 @@ instances, you can use <a href="/javadoc/org/mongodb/morphia/aggregation/Aggrega
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.4/js/clipboard.min.js?1538361544"></script>
-    <script src="/morphia/1.4/js/perfect-scrollbar.min.js?1538361544"></script>
-    <script src="/morphia/1.4/js/perfect-scrollbar.jquery.min.js?1538361544"></script>
-    <script src="/morphia/1.4/js/jquery.sticky.js?1538361544"></script>
-    <script src="/morphia/1.4/js/featherlight.min.js?1538361544"></script>
-    <script src="/morphia/1.4/js/html5shiv-printshiv.min.js?1538361544"></script>
-    <script src="/morphia/1.4/js/highlight.pack.js?1538361544"></script>
+    <script src="/morphia/1.4/js/clipboard.min.js?1538798181"></script>
+    <script src="/morphia/1.4/js/perfect-scrollbar.min.js?1538798181"></script>
+    <script src="/morphia/1.4/js/perfect-scrollbar.jquery.min.js?1538798181"></script>
+    <script src="/morphia/1.4/js/jquery.sticky.js?1538798181"></script>
+    <script src="/morphia/1.4/js/featherlight.min.js?1538798181"></script>
+    <script src="/morphia/1.4/js/html5shiv-printshiv.min.js?1538798181"></script>
+    <script src="/morphia/1.4/js/highlight.pack.js?1538798181"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.4/js/modernizr.custom.71422.js?1538361544"></script>
-    <script src="/morphia/1.4/js/learn.js?1538361544"></script>
-    <script src="/morphia/1.4/js/hugo-learn.js?1538361544"></script>
+    <script src="/morphia/1.4/js/modernizr.custom.71422.js?1538798181"></script>
+    <script src="/morphia/1.4/js/learn.js?1538798181"></script>
+    <script src="/morphia/1.4/js/hugo-learn.js?1538798181"></script>
 
-    <link href="/morphia/1.4/mermaid/mermaid.css?1538361544" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.4/mermaid/mermaid.js?1538361544"></script>
+    <link href="/morphia/1.4/mermaid/mermaid.css?1538798181" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.4/mermaid/mermaid.js?1538798181"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
