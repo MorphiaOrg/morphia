@@ -37,7 +37,7 @@ Index The @Index documentation can be found here. There are two pieces to this a
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/morphia/2.0/guides/indexing/</guid>
-      <description>Indexing Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. In addition to the familiar ascending/descending index types, Morphia and MongoDB support TTL, text, and geospatial indexes. When defining text indexes there are certain restrictions which will be covered below. Full details for all these types are available in the manual.
+      <description>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. In addition to the familiar ascending/descending index types, Morphia and MongoDB support TTL, text, and geospatial indexes. When defining text indexes there are certain restrictions which will be covered below. Full details for all these types are available in the manual.
 There are two ways to define indexes: at the class level and at the field level.</description>
     </item>
     

@@ -12,17 +12,17 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/morphia/2.0/css/nucleus.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/fontawesome-all.min.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/hybrid.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/featherlight.min.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/perfect-scrollbar.min.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/auto-complete.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/theme.css?1538361997" rel="stylesheet">
-    <link href="/morphia/2.0/css/hugo-theme.css?1538361997" rel="stylesheet">
+    <link href="/morphia/2.0/css/nucleus.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/fontawesome-all.min.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/hybrid.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/featherlight.min.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/perfect-scrollbar.min.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/auto-complete.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/theme.css?1538797985" rel="stylesheet">
+    <link href="/morphia/2.0/css/hugo-theme.css?1538797985" rel="stylesheet">
     
 
-    <script src="/morphia/2.0/js/jquery-2.x.min.js?1538361997"></script>
+    <script src="/morphia/2.0/js/jquery-2.x.min.js?1538797985"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -98,14 +98,14 @@
     <span data-search-clear=""><i class="fas fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/morphia/2.0/js/lunr.min.js?1538361997"></script>
-<script type="text/javascript" src="/morphia/2.0/js/auto-complete.js?1538361997"></script>
+<script type="text/javascript" src="/morphia/2.0/js/lunr.min.js?1538797985"></script>
+<script; type="text/javascript"; src="/morphia/2.0/;js/auto-complete.js;?1538797985"></script>
 <script type="text/javascript">
     
         var baseurl = '\/morphia\/2.0';
     
 </script>
-<script type="text/javascript" src="/morphia/2.0/js/search.js?1538361997"></script>
+<script type="text/javascript" src="/morphia/2.0/js/search.js?1538797985"></script>
 
     
   </div>
@@ -432,11 +432,11 @@
           
             <a href='/morphia/2.0/'>Morphia</a> > <a href='/morphia/2.0/guides/'>Reference Guides</a> > Querying
           
-         
+        
           
-         
+        
           
-           
+        
                   </span>
                 </div>
                 
@@ -517,7 +517,7 @@ like this:</p>
 <pre><code class="language-javascript">{ price: { $gte: 1000 } }
 </code></pre>
 
-<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/main/java/org/mongodb/morphia/query/FilterOperator.java
+<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/main/java/xyz/morphia/query/FilterOperator.java
 ">FilterOperator</a> class.</p>
 
 <table>
@@ -663,7 +663,7 @@ like this:</p>
 <h3 id="field"><strong>field()</strong></h3>
 
 <p>For those who would prefer more compile time validation of their queries, there is <strong>field()</strong>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/main/java/org/mongodb/morphia/query/FieldEnd.java
+returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/main/java/xyz/morphia/query/FieldEnd.java
 ">class</a> providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  <strong>filter()</strong> can be.  To perform the same query as above, you&rsquo;d write this:</p>
@@ -724,7 +724,7 @@ public static class Greeting {
 </code></pre>
 
 <p>The <strong>$**</strong> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/org/mongodb/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/xyz/morphia/query/TestTextSearching.java
 ">test</a> does:</p>
 
 <pre><code class="language-java">morphia.map(Greeting.class);
@@ -757,7 +757,7 @@ the query results in different ways.</p>
 
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/xyz/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 
 <pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
@@ -789,7 +789,7 @@ Assert.assertNull(found.lastName);
 <p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if <strong>found</strong> is saved back to MongoDB, the <strong>last_name</strong> field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using <a href="/morphia/2.0/javadoc?org/mongodb/morphia/Datastore#merge-T-.html"><strong>Datastore#merge(T)</strong></a></p>
+  for this entity will be removed.  To save such instances back consider using <a href="/morphia/2.0/javadoc?xyz/morphia/Datastore#merge-T-.html"><strong>Datastore#merge(T)</strong></a></p>
 
 </div>
 
@@ -810,7 +810,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 
 <h3 id="ordering">Ordering</h3>
 
-<p>Ordering the results of a query is done via <a href="/javadoc/org/mongodb/morphia/query/Query.html#order-java.lang.String-"><strong>Query.order(String)</strong></a>
+<p>Ordering the results of a query is done via <a href="/javadoc/xyz/morphia/query/Query.html#order-java.lang.String-"><strong>Query.order(String)</strong></a>
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
  for a particular field simply prefix that field with a <strong>-</strong>.  For example, to sort by age (youngest to oldest) and then income (highest
  to lowest), you would use this:</p>
@@ -823,7 +823,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/org/mongodb/morphia/TestQuery.java
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/mapper/morphia/src/test/java/xyz/morphia/TestQuery.java
 ">unit tests</a> in the <strong>testTailableCursors()</strong> test:</p>
 
 <pre><code class="language-java">getMorphia().map(CappedPic.class);
@@ -1120,20 +1120,20 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/2.0/js/clipboard.min.js?1538361997"></script>
-    <script src="/morphia/2.0/js/perfect-scrollbar.min.js?1538361997"></script>
-    <script src="/morphia/2.0/js/perfect-scrollbar.jquery.min.js?1538361997"></script>
-    <script src="/morphia/2.0/js/jquery.sticky.js?1538361997"></script>
-    <script src="/morphia/2.0/js/featherlight.min.js?1538361997"></script>
-    <script src="/morphia/2.0/js/html5shiv-printshiv.min.js?1538361997"></script>
-    <script src="/morphia/2.0/js/highlight.pack.js?1538361997"></script>
+    <script src="/morphia/2.0/js/clipboard.min.js?1538797985"></script>
+    <script; src="/morphia/2.0/;js/perfect-scrollbar.min.js;?1538797985"></script>
+    <script src="/morphia/2.0/js/perfect-scrollbar.jquery.min.js?1538797985"></script>
+    <script; src="/morphia/2.0/;js/jquery.sticky.js;?1538797985"></script>
+    <script src="/morphia/2.0/js/featherlight.min.js?1538797985"></script>
+    <script; src="/morphia/2.0/;js/html5shiv-printshiv.min.js;?1538797985"></script>
+    <script src="/morphia/2.0/js/highlight.pack.js?1538797985"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/2.0/js/modernizr.custom.71422.js?1538361997"></script>
-    <script src="/morphia/2.0/js/learn.js?1538361997"></script>
-    <script src="/morphia/2.0/js/hugo-learn.js?1538361997"></script>
+    <script src="/morphia/2.0/js/modernizr.custom.71422.js?1538797985"></script>
+    <script; src="/morphia/2.0/;js/learn.js;?1538797985"></script>
+    <script src="/morphia/2.0/js/hugo-learn.js?1538797985"></script>
 
-    <link href="/morphia/2.0/mermaid/mermaid.css?1538361997" type="text/css" rel="stylesheet" />
-    <script src="/morphia/2.0/mermaid/mermaid.js?1538361997"></script>
+    <link; href="/morphia/2.0/;mermaid/mermaid.css;?1538797985"; type="text/css"; rel="stylesheet" />
+    <script; src="/morphia/2.0/;mermaid/mermaid.js;?1538797985"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
