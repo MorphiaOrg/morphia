@@ -71,7 +71,7 @@ configure(subprojects - project(':util')) {
             developers {
                 developer {
                     name 'Various'
-                    organization = 'MongoDB'
+                    organization = 'MorphiaOrg'
                 }
             }
         }

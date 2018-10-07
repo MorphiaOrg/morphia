@@ -29,7 +29,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         def milestoneNumber = task.getMilestoneNumber(repository, 'post-1.0', GHIssueState.OPEN)
@@ -45,7 +45,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         GHMilestone milestone = task.getMilestoneNumber(repository, '0.108', GHIssueState.OPEN)
@@ -60,7 +60,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         def milestoneNumber = task.getMilestoneNumber(repository, '0.108', CLOSED)
@@ -75,7 +75,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
         GHMilestone release108Milestone = repository.getMilestone(9)
 
         when:
@@ -92,7 +92,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
         def releaseVersion = 'post-1.0'
 
         // add some arbitrary (real) issues to see them populated in the release notes
@@ -111,7 +111,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         "### Downloads\n" +
         "Below and on maven central.\n\n" +
         "### Docs\n" +
-        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/index.html\n\n" +
+        "https://rawgithub.com/wiki/MorphiaOrg/morphia/javadoc/post-1.0/index.html\n\n" +
         "### Issues Resolved\n" +
         "#### ENHANCEMENTS\n" +
         "* [Issue 620](https://github.com/MorphiaOrg/morphia/pull/620): Moved around a chunk of tests\n" +
@@ -130,7 +130,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         task.releaseVersion = '0.108'
         task.expectedMilestoneState = CLOSED
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         expect:
         task.draftReleaseNotes();
