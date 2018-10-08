@@ -44,7 +44,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
     apply plugin: 'optional-base'
     apply plugin: 'maven'
 
-    group = 'xyz.morphia.morphia'
+    group = 'xyz.morphia'
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
 
@@ -189,5 +189,5 @@ def find(executable) {
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
-//apply from: 'gradle/release-process.gradle'
+apply from: 'gradle/release-process.gradle'
 apply from: 'gradle/docs.gradle'
