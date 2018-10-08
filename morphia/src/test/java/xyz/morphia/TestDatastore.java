@@ -20,6 +20,7 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.EntityListeners;
@@ -155,6 +156,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     @SuppressWarnings("deprecation")
+    @Ignore
     public void testExistsWhenSecondaryPreferredOld() throws Exception {
         if (isReplicaSet()) {
             final Key<FacebookUser> key = getDs().save(new FacebookUser(System.currentTimeMillis(), "user 1"), W2);
@@ -163,6 +165,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    @Ignore
     public void testExistsWhenSecondaryPreferred() throws Exception {
         if (isReplicaSet()) {
             final Key<FacebookUser> key = getDs().save(new FacebookUser(System.currentTimeMillis(), "user 1"),
