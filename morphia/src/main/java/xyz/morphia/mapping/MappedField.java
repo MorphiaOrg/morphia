@@ -49,6 +49,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,9 @@ public class MappedField {
     private boolean isCollection; // indicated if the collection is a list)
     private Type genericType;
 
+    private String nameToStore; // the field name in the db.
+    private List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
+
     MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
         f.setAccessible(true);
         field = f;
@@ -109,6 +113,7 @@ public class MappedField {
         realType = field.getType();
         genericType = field.getGenericType();
         discover(mapper);
+        discoverNames();
     }
 
     /**
@@ -122,6 +127,12 @@ public class MappedField {
         this.field = field;
         genericType = type;
         discoverType(mapper);
+        discoverNames();
+    }
+
+    private void discoverNames() {
+        nameToStore = getMappedFieldName();
+        loadNames = inferLoadNames();
     }
 
     /**
@@ -140,7 +151,7 @@ public class MappedField {
      */
     public void addAnnotation(final Class<? extends Annotation> clazz) {
         if (field.isAnnotationPresent(clazz)) {
-            foundAnnotations.put(clazz, field.getAnnotation(clazz));
+            addAnnotation(clazz, field.getAnnotation(clazz));
         }
     }
 
@@ -152,6 +163,7 @@ public class MappedField {
      */
     public void addAnnotation(final Class<? extends Annotation> clazz, final Annotation ann) {
         foundAnnotations.put(clazz, ann);
+        discoverNames();
     }
 
     /**
@@ -168,7 +180,7 @@ public class MappedField {
      * @return the annotations found while mapping
      */
     public Map<Class<? extends Annotation>, Annotation> getAnnotations() {
-        return foundAnnotations;
+        return Collections.unmodifiableMap(foundAnnotations);
     }
 
     /**
@@ -277,15 +289,19 @@ public class MappedField {
      * @return the name of the field's (key)name for mongodb, in order of loading.
      */
     public List<String> getLoadNames() {
-        final List<String> names = new ArrayList<String>();
-        names.add(getMappedFieldName());
+        return loadNames;
+    }
 
+    protected List<String> inferLoadNames() {
         final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);
         if (al != null && al.value() != null && al.value().length > 0) {
+            final List<String> names = new ArrayList<String>();
+            names.add(getMappedFieldName());
             names.addAll(asList(al.value()));
+            return names;
+        } else {
+            return Collections.singletonList(getMappedFieldName());
         }
-
-        return names;
     }
 
     /**
@@ -301,7 +317,7 @@ public class MappedField {
      * @return the name of the field's (key)name for mongodb
      */
     public String getNameToStore() {
-        return getMappedFieldName();
+        return nameToStore;
     }
 
     /**
@@ -419,7 +435,9 @@ public class MappedField {
      * @return ann the annotation
      */
     public Annotation putAnnotation(final Annotation ann) {
-        return foundAnnotations.put(ann.getClass(), ann);
+        Annotation put = foundAnnotations.put(ann.getClass(), ann);
+        discoverNames();
+        return put;
     }
 
     /**
@@ -439,7 +457,7 @@ public class MappedField {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(getMappedFieldName()).append(" (");
+        sb.append(getNameToStore()).append(" (");
         sb.append(" type:").append(realType.getSimpleName()).append(",");
 
         if (isSingleValue()) {
