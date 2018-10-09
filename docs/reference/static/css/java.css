@@ -2,6 +2,7 @@
   margin-top: -24px;
   font-size: 13px;
 }
+
 .downloadInfo p {
   margin: 0px;
 }
@@ -45,4 +46,9 @@ div.body p.centered {
 
 .maven pre code {
     padding: 0em;
+}
+
+#version-tag {
+    display: block;
+    font-size: larger;
 }
