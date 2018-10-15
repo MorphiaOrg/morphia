@@ -9,16 +9,19 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.PostLoad;
 import xyz.morphia.annotations.PostPersist;
 import xyz.morphia.annotations.Transient;
+import xyz.morphia.query.FindOptions;
 
 
 public class TestMultipleCallbacksPerMethod extends TestBase {
     @Test
-    public void testMultipleCallbackAnnotation() throws Exception {
+    public void testMultipleCallbackAnnotation() {
         final SomeEntity entity = new SomeEntity();
         Assert.assertFalse(entity.isPersistent());
         getDs().save(entity);
         Assert.assertTrue(entity.isPersistent());
-        final SomeEntity reloaded = getDs().find(SomeEntity.class).filter("id", entity.getId()).get();
+        final SomeEntity reloaded = getDs().find(SomeEntity.class).filter("id", entity.getId())
+                                           .find(new FindOptions().limit(1))
+                                           .tryNext();
         Assert.assertTrue(reloaded.isPersistent());
     }
 

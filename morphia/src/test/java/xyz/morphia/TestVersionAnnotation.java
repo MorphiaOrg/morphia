@@ -19,6 +19,7 @@ import xyz.morphia.entities.version.AbstractVersionedBase;
 import xyz.morphia.entities.version.Versioned;
 import xyz.morphia.entities.version.VersionedChildEntity;
 import xyz.morphia.mapping.MappedClass;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 
@@ -159,7 +160,7 @@ public class TestVersionAnnotation extends TestBase {
         datastore.updateFirst(
             query,
             datastore.createUpdateOperations(Versioned.class).inc("count"), true);
-        assertEquals(43, query.get().getCount());
+        assertEquals(43, query.find(new FindOptions().limit(1)).tryNext().getCount());
     }
 
     @Test
@@ -244,7 +245,7 @@ public class TestVersionAnnotation extends TestBase {
         ops.set("name", "Value 3");
         datastore.update(query, ops, new UpdateOptions().upsert(true));
 
-        entity = datastore.find(Versioned.class).get();
+        entity = datastore.find(Versioned.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(1, entity.getVersion().longValue());
     }

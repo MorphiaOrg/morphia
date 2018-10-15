@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import org.bson.BSONObject;
 import org.bson.Document;
@@ -19,6 +20,8 @@ import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.cache.EntityCache;
+import xyz.morphia.query.internal.MorphiaCursor;
+import xyz.morphia.query.internal.MorphiaKeyCursor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import static com.mongodb.CursorType.NonTailable;
 import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
-import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static xyz.morphia.query.QueryValidator.validateQuery;
 
@@ -79,8 +81,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
             getOptions().readPreference(this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                       ? ReadPreference.secondaryPreferred()
-                       : null);
+                                        ? ReadPreference.secondaryPreferred()
+                                        : null);
         }
     }
 
@@ -92,7 +94,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * @param mapper   the Mapper to use
      * @param validate true if the results should be validated
      * @return the DBObject
+     * @deprecated this is an internal method and will be removed in the next version
      */
+    @Deprecated
     public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
         BasicDBObject ret = new BasicDBObject();
         final String[] parts = str.split(",");
@@ -116,22 +120,27 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public MongoCursor<Key<T>> keys() {
+        return keys(new FindOptions());
+    }
+
+    @Override
+    public MongoCursor<Key<T>> keys(final FindOptions options) {
+        QueryImpl<T> cloned = cloneQuery();
+        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
+        cloned.includeFields = true;
+
+        return new MorphiaKeyCursor<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
+    }
+
+    @Override
     public List<Key<T>> asKeyList() {
         return asKeyList(getOptions());
     }
 
     @Override
     public List<Key<T>> asKeyList(final FindOptions options) {
-        final List<Key<T>> results = new ArrayList<Key<T>>();
-        MorphiaKeyIterator<T> keys = fetchKeys(options);
-        try {
-            for (final Key<T> key : keys) {
-                results.add(key);
-            }
-        } finally {
-            keys.close();
-        }
-        return results;
+        return toList(keys(options));
     }
 
     @Override
@@ -141,22 +150,18 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public List<T> asList(final FindOptions options) {
-        final List<T> results = new ArrayList<T>();
-        final MorphiaIterator<T, T> iter = fetch(options);
+        return toList(find(options));
+    }
+
+    private static <E> List<E> toList(final MongoCursor<E> cursor) {
+        final List<E> results = new ArrayList<E>();
         try {
-            for (final T ent : iter) {
-                results.add(ent);
+            while (cursor.hasNext()) {
+                results.add(cursor.next());
             }
         } finally {
-            iter.close();
+            cursor.close();
         }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("asList: %s \t %d entities, iterator time: driver %d ms, mapper %d ms %n\t cache: %s %n\t for %s",
-                             dbColl.getName(), results.size(), iter.getDriverTime(), iter.getMapperTime(), cache.stats(),
-                             getQueryObject()));
-        }
-
         return results;
     }
 
@@ -196,6 +201,16 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
+    public MongoCursor<T> find() {
+        return find(getOptions());
+    }
+
+    @Override
+    public MongoCursor<T> find(final FindOptions options) {
+        return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
+    }
+
+    @Override
     public MorphiaIterator<T, T> fetchEmptyEntities() {
         return fetchEmptyEntities(getOptions());
     }
@@ -229,11 +244,9 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public T get(final FindOptions options) {
-        final MorphiaIterator<T, T> it = fetch(options
-                                                   .copy()
-                                                   .limit(1));
+        final MongoCursor<T> it = find(options.copy().limit(1));
         try {
-            return (it.hasNext()) ? it.next() : null;
+            return it.tryNext();
         } finally {
             it.close();
         }
@@ -246,12 +259,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Key<T> getKey(final FindOptions options) {
-        final MorphiaIterator<T, Key<T>> it = fetchKeys(options
-                                                            .copy()
-                                                            .limit(1));
-        Key<T> key = (it.hasNext()) ? it.next() : null;
-        it.close();
-        return key;
+        final MongoCursor<Key<T>> it = keys(options.copy().limit(1));
+        try {
+            return it.tryNext();
+        } finally {
+            it.close();
+        }
     }
 
     @Override
@@ -569,7 +582,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         for (final MappedField mf : mc.getPersistenceFields()) {
             fields.add(mf.getNameToStore());
         }
-        retrievedFields(true, fields.toArray(new String[fields.size()]));
+        retrievedFields(true, fields.toArray(new String[0]));
         return this;
     }
 

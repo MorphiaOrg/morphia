@@ -6,12 +6,13 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Property;
 import xyz.morphia.mapping.MappedField;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 public class CustomConverterDefaultTest extends TestBase {
 
     @Test
-    public void testConversion() throws Exception {
+    public void testConversion() {
         final FooConverter fc = new FooConverter();
         getMorphia().getMapper().getConverters().addConverter(fc);
         getMorphia().map(E.class);
@@ -21,7 +22,7 @@ public class CustomConverterDefaultTest extends TestBase {
 
         Assert.assertTrue(fc.didConversion());
 
-        e = getDs().find(E.class).get();
+        e = getDs().find(E.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(e.foo);
         Assert.assertEquals("test", e.foo.string);
     }

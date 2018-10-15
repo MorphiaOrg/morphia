@@ -9,6 +9,7 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Converters;
 import xyz.morphia.mapping.MappedField;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertThat;
 public class CustomConverterInEmbedTest extends TestBase {
 
     @Test
-    public void testConversionInList() throws Exception {
+    public void testConversionInList() {
         final FooConverter fc = new FooConverter();
         getMorphia().getMapper().getConverters().addConverter(fc);
         final E1 e = new E1();
@@ -36,7 +37,7 @@ public class CustomConverterInEmbedTest extends TestBase {
     }
 
     @Test
-    public void testConversionInMap() throws Exception {
+    public void testConversionInMap() {
         final FooConverter fc = new FooConverter();
         getMorphia().getMapper().getConverters().addConverter(fc);
         E2 e = new E2();
@@ -45,7 +46,9 @@ public class CustomConverterInEmbedTest extends TestBase {
 
         Assert.assertTrue(fc.didConversion());
 
-        e = getDs().find(E2.class).get();
+        e = getDs().find(E2.class)
+                   .find(new FindOptions().limit(1))
+                   .next();
         Assert.assertNotNull(e.foo);
         Assert.assertFalse(e.foo.isEmpty());
         Assert.assertTrue(e.foo.containsKey("bar"));
@@ -53,7 +56,7 @@ public class CustomConverterInEmbedTest extends TestBase {
     }
 
     @Test
-    public void testEmbeddedComplexArrayType() throws Exception {
+    public void testEmbeddedComplexArrayType() {
         ArrayBar bar = new ArrayBar();
         bar.foo = new ArrayFoo("firstValue", "secondValue");
         getDs().save(bar);
@@ -66,7 +69,7 @@ public class CustomConverterInEmbedTest extends TestBase {
     }
 
     @Test
-    public void testEmbeddedComplexType() throws Exception {
+    public void testEmbeddedComplexType() {
         ComplexBar bar = new ComplexBar();
         bar.foo = new ComplexFoo("firstValue", "secondValue");
         getDs().save(bar);

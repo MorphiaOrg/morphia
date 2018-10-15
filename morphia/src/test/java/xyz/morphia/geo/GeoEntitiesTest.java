@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.junit.Test;
 import xyz.morphia.TestBase;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.JSONMatcher;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -62,7 +63,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(allTheThings);
 
         // when
-        AllTheThings found = getDs().find(AllTheThings.class).field("name").equal(name).get();
+        AllTheThings found = getDs().find(AllTheThings.class).field("name").equal(name).find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -76,7 +77,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(route);
 
         // when
-        Route found = getDs().find(Route.class).field("name").equal("My Route").get();
+        Route found = getDs().find(Route.class).field("name").equal("My Route").find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -95,7 +96,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(paths);
 
         // when
-        Paths found = getDs().find(Paths.class).field("name").equal(name).get();
+        Paths found = getDs().find(Paths.class).field("name").equal(name).find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -110,7 +111,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(stores);
 
         // when
-        Stores found = getDs().find(Stores.class).field("name").equal(name).get();
+        Stores found = getDs().find(Stores.class).field("name").equal(name).find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -129,7 +130,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(regions);
 
         // when
-        Regions found = getDs().find(Regions.class).field("name").equal(name).get();
+        Regions found = getDs().find(Regions.class).field("name").equal(name).find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -147,7 +148,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(area);
 
         // when
-        Area found = getDs().find(Area.class).field("name").equal(polygonName).get();
+        Area found = getDs().find(Area.class).field("name").equal(polygonName).find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -161,7 +162,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(city);
 
         // when
-        City found = getDs().find(City.class).field("name").equal("New City").get();
+        City found = getDs().find(City.class).field("name").equal("New City").find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -175,7 +176,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(area);
 
         // when
-        Area found = getDs().find(Area.class).field("name").equal("The Area").get();
+        Area found = getDs().find(Area.class).field("name").equal("The Area").find(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));

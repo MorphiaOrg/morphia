@@ -8,6 +8,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.PreSave;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,14 +20,14 @@ import java.util.Map;
  */
 public class EnumMappingTest extends TestBase {
     @Test
-    public void getMapOfEnum() throws Exception {
+    public void getMapOfEnum() {
         Class1 entity = new Class1();
         entity.getMap().put("key", Foo.BAR);
         getDs().save(entity);
 
         getMorphia().map(Class1.class);
 
-        entity = getDs().find(Class1.class).get();
+        entity = getDs().find(Class1.class).find(new FindOptions().limit(1)).tryNext();
         final Map<String, Foo> map = entity.getMap();
         Foo b = map.get("key");
         Assert.assertNotNull(b);
@@ -91,7 +92,7 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Test
-    public void testEnumMapping() throws Exception {
+    public void testEnumMapping() {
         getDs().getDB().dropDatabase();
 
         getMorphia().map(ContainsEnum.class);

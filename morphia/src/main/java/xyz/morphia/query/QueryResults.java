@@ -2,6 +2,7 @@ package xyz.morphia.query;
 
 
 import com.mongodb.Bytes;
+import com.mongodb.client.MongoCursor;
 import xyz.morphia.Key;
 
 import java.util.List;
@@ -16,15 +17,10 @@ public interface QueryResults<T> extends Iterable<T> {
      * Execute the query and get the results (as a {@code List<Key<T>>})  This method is provided as a convenience;
      *
      * @return returns a List of the keys of the documents returned by a query
+     * @deprecated use {@link #keys()}
      */
+    @Deprecated
     List<Key<T>> asKeyList();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @return returns a List of the documents returned by a query
-     */
-    List<T> asList();
 
     /**
      * Execute the query and get the results (as a {@code List<Key<T>>})  This method is provided as a convenience;
@@ -32,8 +28,35 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return returns a List of the keys of the documents returned by a query
      * @since 1.3
+     * @deprecated use {@link #keys(FindOptions)}
      */
+    @Deprecated
     List<Key<T>> asKeyList(FindOptions options);
+
+    /**
+     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
+     *
+     * @return the keys of the documents returned by this query
+     */
+    MongoCursor<Key<T>> keys();
+
+    /**
+     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
+     *
+     * @param options the options to apply to the find operation
+     * @return the keys of the documents returned by this query
+     * @since 1.4
+     */
+    MongoCursor<Key<T>> keys(FindOptions options);
+
+    /**
+     * Execute the query and get the results.
+     *
+     * @return returns a List of the documents returned by a query
+     * @deprecated use {@link #find(FindOptions)}
+     */
+    @Deprecated
+    List<T> asList();
 
     /**
      * Execute the query and get the results.
@@ -41,7 +64,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return returns a List of the documents returned by a query
      * @since 1.3
+     * @deprecated use {@link #find(FindOptions)}
      */
+    @Deprecated
     List<T> asList(FindOptions options);
 
     /**
@@ -75,7 +100,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * Query.iterator().
      *
      * @return an Iterator of the results
+     * @deprecated use {@link #find(FindOptions)} instead
      */
+    @Deprecated
     MorphiaIterator<T, T> fetch();
 
     /**
@@ -85,16 +112,40 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return an Iterator of the results
      * @since 1.3
+     * @deprecated use {@link #find(FindOptions)} instead
      */
+    @Deprecated
     MorphiaIterator<T, T> fetch(FindOptions options);
+
+    /**
+     * Execute the query and get the results.  This method is provided for orthogonality; {@link Query#find()#iterator()} is identical to
+     * {@link Query#iterator()}.
+     *
+     * @return an Iterator of the results
+     * @since 1.4
+     */
+    MongoCursor<T> find();
+
+    /**
+     * Execute the query and get the results.  This method is provided for orthogonality; Query.find().iterator() is identical to
+     * Query.iterator().
+     *
+     * @param options the options to apply to the find operation
+     * @return an Iterator of the results
+     * @since 1.4
+     */
+    MongoCursor<T> find(FindOptions options);
 
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
      * data).
      *
      * @return an Iterator of the empty entities
+     * @deprecated use {@link #keys()} instead
      */
+    @Deprecated
     MorphiaIterator<T, T> fetchEmptyEntities();
+
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
      * data).
@@ -102,7 +153,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return an Iterator of the empty entities
      * @since 1.3
+     * @deprecated use {@link #keys(FindOptions)} instead
      */
+    @Deprecated
     MorphiaIterator<T, T> fetchEmptyEntities(FindOptions options);
 
     /**
@@ -110,23 +163,29 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return the Key Iterator
      * @see #fetchEmptyEntities
+     * @deprecated use {@link #keys()}
      */
+    @Deprecated
     MorphiaKeyIterator<T> fetchKeys();
+
     /**
      * Execute the query and get the keys for the objects.
      *
      * @param options the options to apply to the find operation
      * @return the Key Iterator
-     * @see #fetchEmptyEntities
      * @since 1.3
+     * @deprecated use {@link #keys(FindOptions)}
      */
+    @Deprecated
     MorphiaKeyIterator<T> fetchKeys(FindOptions options);
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
      *
      * @return the only instance in the result, or null if the result set is empty.
+     * @deprecated use {@link #find()} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
      */
+    @Deprecated
     T get();
 
     /**
@@ -135,14 +194,18 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return the only instance in the result, or null if the result set is empty.
      * @since 1.3
+     * @deprecated use {@link #find()} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
      */
+    @Deprecated
     T get(FindOptions options);
 
     /**
      * Get the key of the first entity in the result set.  Obeys the {@link Query} offset value.
      *
      * @return the key of the first instance in the result, or null if the result set is empty.
+     * @deprecated use {@link #find()} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
      */
+    @Deprecated
     Key<T> getKey();
 
     /**
@@ -151,7 +214,9 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param options the options to apply to the find operation
      * @return the key of the first instance in the result, or null if the result set is empty.
      * @since 1.3
+     * @deprecated use {@link #find(FindOptions)} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
      */
+    @Deprecated
     Key<T> getKey(FindOptions options);
 
     /**
@@ -159,8 +224,7 @@ public interface QueryResults<T> extends Iterable<T> {
      *
      * @return an Iterator.
      * @see #tail(boolean)
-     * @deprecated set the CursorType on {@link FindOptions} and use {@link #fetch(FindOptions)} instead
-     *
+     * @deprecated set the CursorType on {@link FindOptions} and use {@link #find(FindOptions)} instead
      */
     @Deprecated
     MorphiaIterator<T, T> tail();
@@ -173,7 +237,7 @@ public interface QueryResults<T> extends Iterable<T> {
      * @param awaitData passes the awaitData to the cursor
      * @return an Iterator.
      * @see Bytes#QUERYOPTION_AWAITDATA
-     * @deprecated set the CursorType on {@link FindOptions}  and use {@link #fetch(FindOptions)} instead. This can be replicated using
+     * @deprecated set the CursorType on {@link FindOptions}  and use {@link #find(FindOptions)} instead. This can be replicated using
      * {@code findOptions.cursorType (awaitData ? TailableAwait : Tailable)}
      */
     @Deprecated

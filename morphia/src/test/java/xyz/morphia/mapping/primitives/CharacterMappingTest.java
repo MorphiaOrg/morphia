@@ -9,6 +9,7 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.mapping.MappingException;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +132,7 @@ public class CharacterMappingTest extends TestBase {
         final DBCollection collection = getDs().getCollection(Characters.class);
         collection.insert(new BasicDBObject(field, value));
 
-        return getDs().find(Characters.class).get();
+        return getDs().find(Characters.class).find(new FindOptions().limit(1)).tryNext();
     }
 
     public static class Characters {

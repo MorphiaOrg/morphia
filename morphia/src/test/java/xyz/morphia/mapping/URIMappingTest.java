@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class URIMappingTest extends TestBase {
 
         entity.uri = testURI;
         getDs().save(entity);
-        final ContainsURI loaded = getDs().find(ContainsURI.class).get();
+        final ContainsURI loaded = getDs().find(ContainsURI.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(loaded.uri);
         Assert.assertEquals(testURI, loaded.uri);
 
@@ -37,7 +38,7 @@ public class URIMappingTest extends TestBase {
 
         entity.uris.put(testURI, "first");
         getDs().save(entity);
-        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).get();
+        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(loaded.uris);
         Assert.assertEquals(1, loaded.uris.size());
         Assert.assertEquals(testURI, loaded.uris.keySet().iterator().next());

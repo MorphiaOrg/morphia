@@ -10,6 +10,7 @@ import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Serialized;
 import xyz.morphia.mapping.validation.ConstraintViolationException;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class EmbeddedAndSerializableTest extends TestBase {
         }
         getDs().save(project);
 
-        Project project1 = getDs().find(Project.class).get();
+        Project project1 = getDs().find(Project.class).find(new FindOptions().limit(1)).tryNext();
 
         final List<Period> periods = project1.periods;
         for (int i = 0; i < periods.size(); i++) {

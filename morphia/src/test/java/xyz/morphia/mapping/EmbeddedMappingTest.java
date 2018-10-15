@@ -28,6 +28,7 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Index;
 import xyz.morphia.annotations.IndexOptions;
 import xyz.morphia.annotations.Indexes;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.ValidationException;
 
 import java.util.HashMap;
@@ -51,7 +52,8 @@ public class EmbeddedMappingTest extends TestBase {
 
         final AuditEntry fetched = getDs().find(AuditEntry.class)
                                           .filter("id = ", entry.id)
-                                          .get();
+                                          .find(new FindOptions().limit(1))
+                                          .next();
 
         Assert.assertEquals(entry, fetched);
     }
@@ -75,7 +77,8 @@ public class EmbeddedMappingTest extends TestBase {
         try {
             getDs().find(WithNested.class)
                    .field("nested.field").equal("nested value")
-                   .get();
+                   .find(new FindOptions().limit(1))
+                   .next();
             Assert.fail("Querying against an interface should fail validation");
         } catch (ValidationException ignore) {
             // all good
@@ -83,14 +86,16 @@ public class EmbeddedMappingTest extends TestBase {
         found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field").equal("nested value")
-                       .get();
+                       .find(new FindOptions().limit(1))
+                       .next();
         Assert.assertNotNull(found);
         Assert.assertEquals(nested, found);
 
         found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field.fails").equal("nested value")
-                       .get();
+                       .find(new FindOptions().limit(1))
+                       .tryNext();
         Assert.assertNull(found);
     }
 

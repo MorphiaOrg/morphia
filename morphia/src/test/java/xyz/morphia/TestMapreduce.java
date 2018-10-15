@@ -22,6 +22,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.PreLoad;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.testmodel.Circle;
 import xyz.morphia.testmodel.Rectangle;
@@ -37,7 +38,7 @@ import static org.junit.Assert.fail;
 public class TestMapreduce extends TestBase {
 
     @Test(expected = MongoException.class)
-    public void testBadMR() throws Exception {
+    public void testBadMR() {
         final String map = "function () { if(this['radius']) { doEmit('circle', {count:1}); return; } emit('rect', {count:1}); }";
         final String reduce = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} "
                               + "return { count : total }; }";
@@ -52,7 +53,7 @@ public class TestMapreduce extends TestBase {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void testOldMapReduce() throws Exception {
+    public void testOldMapReduce() {
         final Random rnd = new Random();
 
         //create 100 circles and rectangles
@@ -67,7 +68,10 @@ public class TestMapreduce extends TestBase {
         final MapreduceResults<ResultEntity> mrRes =
             getDs().mapReduce(MapreduceType.REPLACE, getAds().find(Shape.class), map, reduce, null, null, ResultEntity.class);
         Assert.assertEquals(2, mrRes.createQuery().countAll());
-        Assert.assertEquals(100, mrRes.createQuery().get().getValue().count, 0);
+        Assert.assertEquals(100, mrRes.createQuery()
+                                      .find(new FindOptions().limit(1))
+                                      .tryNext()
+                                      .getValue().count, 0);
 
 
         final MapreduceResults<ResultEntity> inline =
@@ -78,7 +82,7 @@ public class TestMapreduce extends TestBase {
     }
 
     @Test
-    public void testMapReduce() throws Exception {
+    public void testMapReduce() {
         final Random rnd = new Random();
 
         //create 100 circles and rectangles
@@ -98,7 +102,10 @@ public class TestMapreduce extends TestBase {
                                   .reduce(reduce)
                                   .resultType(ResultEntity.class));
         Assert.assertEquals(2, mrRes.createQuery().count());
-        Assert.assertEquals(100, mrRes.createQuery().get().getValue().count, 0);
+        Assert.assertEquals(100, mrRes.createQuery()
+                                      .find(new FindOptions().limit(1))
+                                      .tryNext()
+                                      .getValue().count, 0);
 
 
         final MapreduceResults<ResultEntity> inline =

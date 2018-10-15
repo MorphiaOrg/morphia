@@ -24,6 +24,7 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
+import xyz.morphia.query.FindOptions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -47,7 +48,9 @@ public class NewAnnotationTest extends TestBase {
 
         getDs().save(u);
 
-        final User uScott = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase()).get();
+        final User uScott = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase())
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
         Assert.assertNotNull(uScott);
     }
 

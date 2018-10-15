@@ -31,6 +31,7 @@ import org.junit.Test;
 import xyz.morphia.annotations.Validation;
 import xyz.morphia.entities.DocumentValidation;
 import xyz.morphia.mapping.MappedClass;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 
@@ -147,7 +148,9 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         getDs().findAndModify(query, updates, options);
 
-        Assert.assertNotNull(query.field("number").equal(5).get());
+        Assert.assertNotNull(query.field("number").equal(5)
+                                  .find(new FindOptions().limit(1))
+                                  .next());
     }
 
     @Test
@@ -172,7 +175,9 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         getDs().update(query, updates, options);
 
-        Assert.assertNotNull(query.field("number").equal(5).get());
+        Assert.assertNotNull(query.field("number").equal(5)
+                                  .find(new FindOptions().limit(1))
+                                  .tryNext());
     }
 
     @Test
@@ -192,7 +197,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
-        Assert.assertNotNull(query.get());
+        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                                                new DocumentValidation("Harold", 8, new Date()),
@@ -230,7 +235,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getAds().createQuery(collection, DocumentValidation.class)
                                                  .field("number").equal(8);
-        Assert.assertNotNull(query.get());
+        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -250,7 +255,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
-        Assert.assertNotNull(query.get());
+        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                                                new DocumentValidation("John", 8, new Date()),

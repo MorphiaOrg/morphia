@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Reference;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import static java.util.Arrays.asList;
@@ -25,7 +26,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         getDs().save(asList(root, first, second));
 
-        RootEntity rootEntity = getDs().find(RootEntity.class).get();
+        RootEntity rootEntity = getDs().find(RootEntity.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(first.getId(), rootEntity.getR().getId());
         Assert.assertEquals(second.getId(), rootEntity.getSecondReference().getId());
         Assert.assertEquals(root.getId(), rootEntity.getR().getParent().getId());

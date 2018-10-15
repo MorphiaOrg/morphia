@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.Date;
@@ -51,7 +52,7 @@ public class TestStoringMapWithDateKey extends TestBase {
         expectedUser.addValue(new Date(), 10d);
 
         getDs().save(expectedUser);
-        Assert.assertNotNull(getDs().find(User.class).get());
+        Assert.assertNotNull(getDs().find(User.class).find(new FindOptions().limit(1)).tryNext());
     }
 }
 

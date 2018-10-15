@@ -7,22 +7,26 @@ import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Transient;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
+@SuppressWarnings("unused")
 public class TestEmptyEntityMapping extends TestBase {
     @Test
-    public void testEmptyEmbeddedNotNullAfterReload() throws Exception {
+    public void testEmptyEmbeddedNotNullAfterReload() {
         A a = new A();
         a.b = new B();
 
         getDs().save(a);
         Assert.assertNotNull(a.b);
 
-        a = getDs().find(A.class).filter("_id", a.getId()).get();
+        a = getDs().find(A.class).filter("_id", a.getId())
+                   .find(new FindOptions().limit(1))
+                   .tryNext();
         Assert.assertNull(a.b);
     }
 
@@ -33,9 +37,15 @@ public class TestEmptyEntityMapping extends TestBase {
         u.setUserId("USERID");
         getDs().save(u);
 
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0).get());
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist().get());
+        Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0)
+                                                              .find(new FindOptions().limit(1))
+                                                              .tryNext());
+        Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0)
+                                                              .find(new FindOptions().limit(1))
+                                                              .tryNext());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist()
+                                                             .find(new FindOptions().limit(1))
+                                                             .next());
         getDs().delete(getDs().find(User.class));
 
         u = new User();
@@ -44,9 +54,15 @@ public class TestEmptyEntityMapping extends TestBase {
         u.getRights().add(Rights.ADMIN);
         getDs().save(u);
 
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1).get());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists().get());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1)
+                                                             .find(new FindOptions().limit(1))
+                                                             .next());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1)
+                                                             .find(new FindOptions().limit(1))
+                                                             .next());
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists()
+                                                             .find(new FindOptions().limit(1))
+                                                             .next());
     }
 
 
@@ -78,10 +94,10 @@ public class TestEmptyEntityMapping extends TestBase {
     @Entity
     public static class User extends TestEntity {
 
-        private String userId = null;
-        private String fullName = null;
+        private String userId;
+        private String fullName;
         @Embedded
-        private UserType userType = null;
+        private UserType userType;
         @Embedded
         private Set<Rights> rights = new HashSet<Rights>();
         @Embedded

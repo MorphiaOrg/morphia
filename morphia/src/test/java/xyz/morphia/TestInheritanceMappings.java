@@ -21,6 +21,7 @@ import org.junit.Test;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.mapping.validation.ConstraintViolationException;
+import xyz.morphia.query.FindOptions;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class TestInheritanceMappings extends TestBase {
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void testMapEntity() throws Exception {
+    public void testMapEntity() {
         getMorphia().map(MapLike.class);
         MapLike m = new MapLike();
         m.put("Name", "Scott");
@@ -56,7 +57,9 @@ public class TestInheritanceMappings extends TestBase {
         assertNotNull(m.id);
         assertEquals(1, getDs().getCount(MapLike.class));
 
-        m = getDs().find(MapLike.class).get();
+        m = getDs().find(MapLike.class)
+                   .find(new FindOptions().limit(1))
+                   .next();
         assertNotNull(m.id);
         assertTrue(m.containsKey("Name"));
         assertEquals("Scott", m.get("Name"));
@@ -64,7 +67,7 @@ public class TestInheritanceMappings extends TestBase {
     }
 
     @Test
-    public void testParamEntity() throws Exception {
+    public void testParamEntity() {
         getMorphia().map(ParameterizedEntity.class);
         ParameterizedEntity c = new ParameterizedEntity();
         c.setId("foo");
@@ -83,7 +86,7 @@ public class TestInheritanceMappings extends TestBase {
     }
 
     @Test
-    public void testParamIdEntity() throws Exception {
+    public void testParamIdEntity() {
         getMorphia().map(ParameterizedIdEntity.class);
         ParameterizedIdEntity c = new ParameterizedIdEntity();
         c.setId("foo");
@@ -96,7 +99,7 @@ public class TestInheritanceMappings extends TestBase {
     }
 
     @Test
-    public void testParamIdEntity2() throws Exception {
+    public void testParamIdEntity2() {
         getMorphia().map(ParameterizedIdEntity2.class);
         ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
         c.setId("foo");
@@ -109,7 +112,7 @@ public class TestInheritanceMappings extends TestBase {
     }
 
     @Test
-    public void testSuperclassEntity() throws Exception {
+    public void testSuperclassEntity() {
         final Car c = new Car();
         getDs().save(c);
         assertNotNull(c.getId());

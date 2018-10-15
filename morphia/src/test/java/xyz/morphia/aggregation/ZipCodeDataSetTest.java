@@ -1,18 +1,18 @@
 package xyz.morphia.aggregation;
 
 import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCursor;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+import org.zeroturnaround.exec.ProcessExecutor;
 import xyz.morphia.TestBase;
 import xyz.morphia.aggregation.zipcode.City;
 import xyz.morphia.aggregation.zipcode.Population;
 import xyz.morphia.aggregation.zipcode.State;
 import xyz.morphia.logging.Logger;
 import xyz.morphia.logging.MorphiaLoggerFactory;
-import xyz.morphia.query.MorphiaIterator;
 import xyz.morphia.query.Query;
-import org.zeroturnaround.exec.ProcessExecutor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -61,7 +60,7 @@ public class ZipCodeDataSetTest extends TestBase {
         AggregationPipeline pipeline = getDs().createAggregation(City.class)
                                               .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
                                               .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate(pipeline.aggregate(Population.class), "MN", 5372);
+        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "MN", 5372);
     }
 
     public void installSampleData() throws IOException, TimeoutException, InterruptedException {
@@ -95,8 +94,8 @@ public class ZipCodeDataSetTest extends TestBase {
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
 
-        validate(pipeline.aggregate(Population.class), "CA", 29754890);
-        validate(pipeline.aggregate(Population.class), "OH", 10846517);
+        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "CA", 29754890);
+        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "OH", 10846517);
     }
 
     @Test
@@ -125,11 +124,11 @@ public class ZipCodeDataSetTest extends TestBase {
                                                                   projection("name", "smallestCity"),
                                                                   projection("pop", "smallestPop")));
 
-        Iterator<State> iterator = pipeline.aggregate(State.class);
+        MongoCursor<State> cursor = (MongoCursor<State>) pipeline.aggregate(State.class);
         try {
             Map<String, State> states = new HashMap<String, State>();
-            while (iterator.hasNext()) {
-                State state = iterator.next();
+            while (cursor.hasNext()) {
+                State state = cursor.next();
                 states.put(state.getState(), state);
             }
 
@@ -141,8 +140,7 @@ public class ZipCodeDataSetTest extends TestBase {
             Assert.assertEquals("ZEONA", state.getSmallest().getName());
             Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
         } finally {
-
-            ((MorphiaIterator) iterator).close();
+            cursor.close();
         }
     }
 
@@ -162,11 +160,11 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    private void validate(final Iterator<Population> iterator, final String state, final long value) {
+    private void validate(final MongoCursor<Population> cursor, final String state, final long value) {
         boolean found = false;
         try {
-            while (iterator.hasNext()) {
-                Population population = iterator.next();
+            while (cursor.hasNext()) {
+                Population population = cursor.next();
 
                 if (population.getState().equals(state)) {
                     found = true;
@@ -176,7 +174,7 @@ public class ZipCodeDataSetTest extends TestBase {
             }
             Assert.assertTrue("Should have found " + state, found);
         } finally {
-            ((MorphiaIterator) iterator).close();
+            cursor.close();
         }
     }
 

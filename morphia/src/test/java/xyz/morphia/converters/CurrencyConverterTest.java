@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -68,7 +69,9 @@ public class CurrencyConverterTest extends ConverterTest<Currency, String> {
         foo.setCurrency(Currency.getInstance("USD"));
         getDs().save(foo);
 
-        assertEquals(foo, getDs().find(Foo.class).get());
+        assertEquals(foo, getDs().find(Foo.class)
+                                 .find(new FindOptions().limit(1))
+                                 .next());
     }
 
     @Entity

@@ -4,6 +4,7 @@ package xyz.morphia;
 import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.mapping.MappingException;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.TestQuery.ContainsPic;
 import xyz.morphia.query.TestQuery.Pic;
@@ -21,10 +22,12 @@ public class TestQueriesOnReferences extends TestBase {
 
         Assert.assertNotNull(getDs().find(ContainsPic.class)
                                     .field("pic").exists()
-                                    .project("pic", true).get());
+                                    .project("pic", true).find(new FindOptions().limit(1))
+                                    .tryNext());
         Assert.assertNull(getDs().find(ContainsPic.class)
                                  .field("pic").doesNotExist()
-                                 .project("pic", true).get());
+                                 .project("pic", true).find(new FindOptions().limit(1))
+                                 .tryNext());
     }
 
     @Test(expected = MappingException.class)
@@ -41,7 +44,7 @@ public class TestQueriesOnReferences extends TestBase {
     }
 
     @Test
-    public void testQueryOverLazyReference() throws Exception {
+    public void testQueryOverLazyReference() {
 
         final ContainsPic cpk = new ContainsPic();
         final Pic p = new Pic();
@@ -55,16 +58,18 @@ public class TestQueriesOnReferences extends TestBase {
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         Assert.assertNotNull(query.field("lazyPic")
                                   .equal(p)
-                                  .get());
+                                  .find(new FindOptions().limit(1))
+                                  .tryNext());
 
         query = getDs().find(ContainsPic.class);
         Assert.assertNotNull(query.field("lazyObjectIdPic")
                                   .equal(withObjectId)
-                                  .get());
+                                  .find(new FindOptions().limit(1))
+                                  .tryNext());
     }
 
     @Test
-    public void testQueryOverReference() throws Exception {
+    public void testQueryOverReference() {
 
         final ContainsPic cpk = new ContainsPic();
         final Pic p = new Pic();
@@ -75,7 +80,8 @@ public class TestQueriesOnReferences extends TestBase {
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
         final ContainsPic object = query.field("pic")
                                         .equal(p)
-                                        .get();
+                                        .find(new FindOptions().limit(1))
+                                        .tryNext();
         Assert.assertNotNull(object);
 
     }
@@ -90,10 +96,13 @@ public class TestQueriesOnReferences extends TestBase {
 
         ContainsPic containsPic = getDs().find(ContainsPic.class)
                                          .field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
-                                         .get();
+                                         .find(new FindOptions().limit(1))
+                                         .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
 
-        containsPic = getDs().find(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId())).get();
+        containsPic = getDs().find(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
+                             .find(new FindOptions().limit(1))
+                             .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
     }
 }

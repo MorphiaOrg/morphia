@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.Datastore;
 import xyz.morphia.TestBase;
+import xyz.morphia.query.FindOptions;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -69,7 +70,7 @@ public class Java8EntityTest extends TestBase {
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {
-        Java8Entity actual = datastore.find(Java8Entity.class).field(field).equal(value).get();
+        Java8Entity actual = datastore.find(Java8Entity.class).field(field).equal(value).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity, actual);
     }
 

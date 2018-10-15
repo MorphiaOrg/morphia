@@ -2,6 +2,7 @@ package xyz.morphia.geo;
 
 import org.junit.Test;
 import xyz.morphia.TestBase;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Shape;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertThat;
  */
 public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
-    public void shouldNotReturnAnyPointsIfNothingInsideCircle() throws Exception {
+    public void shouldNotReturnAnyPointsIfNothingInsideCircle() {
         // given
         checkMinServerVersion(2.4);
 
@@ -33,13 +34,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.center(new Shape.Point(2, 2), 0.5))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(nullValue()));
     }
 
     @Test
-    public void shouldNotReturnAnyValuesWhenTheQueryBoxDoesNotContainAnyPoints() throws Exception {
+    public void shouldNotReturnAnyValuesWhenTheQueryBoxDoesNotContainAnyPoints() {
         // given
         checkMinServerVersion(2.4);
 
@@ -51,13 +53,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(0.5, 0.5)))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(nullValue()));
     }
 
     @Test
-    public void shouldNotReturnAnyValuesWhenTheQueryPolygonDoesNotContainAnyPoints() throws Exception {
+    public void shouldNotReturnAnyValuesWhenTheQueryPolygonDoesNotContainAnyPoints() {
         // given
         checkMinServerVersion(2.4);
 
@@ -72,13 +75,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
                                                                          new Shape.Point(0, 5),
                                                                          new Shape.Point(2, 3),
                                                                          new Shape.Point(1, 0)))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(nullValue()));
     }
 
     @Test
-    public void shouldReturnAPointThatIsFullyWithinQueryPolygon() throws Exception {
+    public void shouldReturnAPointThatIsFullyWithinQueryPolygon() {
         // given
         checkMinServerVersion(2.4);
 
@@ -93,13 +97,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
                                                                          new Shape.Point(0, 5),
                                                                          new Shape.Point(2, 3),
                                                                          new Shape.Point(1, 0)))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(expectedPoint));
     }
 
     @Test
-    public void shouldReturnOnlyThePointsWithinTheGivenCircle() throws Exception {
+    public void shouldReturnOnlyThePointsWithinTheGivenCircle() {
         // given
         checkMinServerVersion(2.4);
 
@@ -121,7 +126,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     }
 
     @Test
-    public void shouldReturnPointOnBoundaryOfQueryCircle() throws Exception {
+    public void shouldReturnPointOnBoundaryOfQueryCircle() {
         // given
         checkMinServerVersion(2.4);
 
@@ -133,13 +138,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.center(new Shape.Point(0, 1), 1))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(expectedPoint));
     }
 
     @Test
-    public void shouldReturnPointOnBoundaryOfQueryCircleWithSphericalGeometry() throws Exception {
+    public void shouldReturnPointOnBoundaryOfQueryCircleWithSphericalGeometry() {
         // given
         checkMinServerVersion(2.4);
 
@@ -151,13 +157,14 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.centerSphere(new Shape.Point(0, 1), 1))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(expectedPoint));
     }
 
     @Test
-    public void shouldReturnPointThatIsFullyInsideTheQueryBox() throws Exception {
+    public void shouldReturnPointThatIsFullyInsideTheQueryBox() {
         // given
         checkMinServerVersion(2.4);
 
@@ -169,7 +176,8 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(2, 2)))
-                                                   .get();
+                                                   .find(new FindOptions().limit(1))
+                                                   .tryNext();
         // then
         assertThat(found, is(expectedPoint));
     }

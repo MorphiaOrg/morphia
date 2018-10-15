@@ -24,6 +24,7 @@ import xyz.morphia.Datastore;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.util.List;
 
@@ -42,7 +43,9 @@ public class TestJavaLists extends TestBase {
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
         getDs().save(model);
-        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id).get();
+        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
+                                       .find(new FindOptions().limit(1))
+                                       .next();
         assertNull(model.wrapped.others);
         assertNull(model2.wrapped.others);
     }
@@ -75,7 +78,9 @@ public class TestJavaLists extends TestBase {
         employee.byteList = asList((byte) 1, (byte) 2);
         ds.save(employee);
 
-        Employee loaded = ds.find(Employee.class).get();
+        Employee loaded = ds.find(Employee.class)
+                            .find(new FindOptions().limit(1))
+                            .next();
 
         assertEquals(employee.byteList, loaded.byteList);
         assertNull(loaded.floatList);

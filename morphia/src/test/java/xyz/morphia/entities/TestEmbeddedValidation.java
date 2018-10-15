@@ -24,6 +24,7 @@ import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.dao.BasicDAO;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 
@@ -40,7 +41,7 @@ public class TestEmbeddedValidation extends TestBase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testCreateEntityWithBasicDBList() throws Exception {
+    public void testCreateEntityWithBasicDBList() {
         getMorphia().map(TestEntity.class);
         BasicDAO<TestEntity, ObjectId> dao = new BasicDAO<TestEntity, ObjectId>(TestEntity.class, getDs());
         TestEntity entity = new TestEntity();
@@ -62,7 +63,7 @@ public class TestEmbeddedValidation extends TestBase {
         query.disableValidation();
         query.criteria("data.data.id").equal("123");
 
-        assertNotNull(query.get());
+        assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TestEmbeddedValidation extends TestBase {
                                     .disableValidation()
                                     .field("embedded.flag").equal(true);
 
-        Assert.assertEquals(parentType, query.get());
+        Assert.assertEquals(parentType, query.find(new FindOptions().limit(1)).tryNext());
     }
 
     @Test

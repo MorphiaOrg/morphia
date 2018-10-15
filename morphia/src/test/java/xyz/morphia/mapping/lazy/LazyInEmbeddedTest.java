@@ -8,6 +8,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Property;
 import xyz.morphia.annotations.Reference;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.testutil.TestEntity;
 
@@ -23,7 +24,7 @@ import static java.util.Arrays.asList;
  */
 public class LazyInEmbeddedTest extends TestBase {
     @Test
-    public void testLoadingOfRefInField() throws Exception {
+    public void testLoadingOfRefInField() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -54,7 +55,7 @@ public class LazyInEmbeddedTest extends TestBase {
     }
 
     @Test
-    public void testLoadingOfRefInList() throws Exception {
+    public void testLoadingOfRefInList() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -83,13 +84,13 @@ public class LazyInEmbeddedTest extends TestBase {
         Assert.assertNotNull(containerWithRefInList);
 
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.get();
+        containerWithRefInList = createQuery.find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(containerWithRefInList);
 
     }
 
     @Test
-    public void testLoadingOfRefThroughInheritanceInField() throws Exception {
+    public void testLoadingOfRefThroughInheritanceInField() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -120,7 +121,7 @@ public class LazyInEmbeddedTest extends TestBase {
     }
 
     @Test
-    public void testLoadingOfRefThroughInheritanceInList() throws Exception {
+    public void testLoadingOfRefThroughInheritanceInList() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -150,7 +151,7 @@ public class LazyInEmbeddedTest extends TestBase {
         containerWithRefInList = getDs().get(reload);
         Assert.assertNotNull(containerWithRefInList);
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.get();
+        containerWithRefInList = createQuery.find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(containerWithRefInList);
 
     }

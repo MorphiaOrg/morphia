@@ -7,6 +7,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Property;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 
@@ -31,18 +32,21 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> testQuery = datastore.find(Student.class)
                                             .field("_id").equal(1L)
                                             .field("grades.data.name").equal("Test");
-        Assert.assertNotNull(testQuery.get());
+        Assert.assertNotNull(testQuery.find(new FindOptions().limit(1))
+                                      .tryNext());
 
         UpdateOperations<Student> operations = datastore.createUpdateOperations(Student.class);
         operations.set("grades.$.data.name", "Makeup Test");
         datastore.update(testQuery, operations);
 
-        Assert.assertNull(testQuery.get());
+        Assert.assertNull(testQuery.find(new FindOptions().limit(1))
+                                   .tryNext());
 
         Assert.assertNotNull(datastore.find(Student.class)
                                       .field("_id").equal(1L)
                                       .field("grades.data.name").equal("Makeup Test")
-                                      .get());
+                                      .find(new FindOptions().limit(1))
+                                      .tryNext());
     }
 
     @Test
@@ -57,19 +61,22 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> testQuery = datastore.find(Student.class)
                                             .field("_id").equal(1L)
                                             .field("grades.data.name").equal("Test");
-        Assert.assertNotNull(testQuery.get());
+        Assert.assertNotNull(testQuery.find(new FindOptions().limit(1))
+                                      .tryNext());
 
         // Update the second element. Array indexes are zero-based.
         UpdateOperations<Student> operations = datastore.createUpdateOperations(Student.class);
         operations.set("grades.1.data.name", "Makeup Test");
         datastore.update(testQuery, operations);
 
-        Assert.assertNull(testQuery.get());
+        Assert.assertNull(testQuery.find(new FindOptions().limit(1))
+                                   .tryNext());
 
         Assert.assertNotNull(datastore.find(Student.class)
                                       .field("_id").equal(1L)
                                       .field("grades.data.name").equal("Makeup Test")
-                                      .get());
+                                      .find(new FindOptions().limit(1))
+                                      .tryNext());
     }
 
     @Test
@@ -96,14 +103,16 @@ public class TestArrayUpdates extends TestBase {
 
         BatchData data = getDs().find(BatchData.class)
                                 .filter("_id", id)
-                                .get();
+                                .find(new FindOptions().limit(1))
+                                .tryNext();
 
         Assert.assertEquals("new hash", data.files.get(0).fileHash);
         Assert.assertEquals("fileHash2", data.files.get(1).fileHash);
 
         data = getDs().find(BatchData.class)
                       .filter("_id", id2)
-                      .get();
+                      .find(new FindOptions().limit(1))
+                      .tryNext();
 
         Assert.assertEquals("fileHash3", data.files.get(0).fileHash);
         Assert.assertEquals("fileHash4", data.files.get(1).fileHash);

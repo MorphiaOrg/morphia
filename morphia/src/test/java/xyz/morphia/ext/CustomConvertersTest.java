@@ -35,6 +35,7 @@ import xyz.morphia.converters.SimpleValueConverter;
 import xyz.morphia.converters.TypeConverter;
 import xyz.morphia.entities.EntityWithListsAndArrays;
 import xyz.morphia.mapping.MappedField;
+import xyz.morphia.query.FindOptions;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -71,12 +72,12 @@ public class CustomConvertersTest extends TestBase {
         final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
         Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
 
-        final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).get();
+        final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
     }
 
     @Test
-    public void mimeType() throws UnknownHostException, MimeTypeParseException {
+    public void mimeType() throws MimeTypeParseException {
         getMorphia().map(MimeTyped.class);
         getDs().ensureIndexes();
         MimeTyped entity = new MimeTyped();
@@ -107,7 +108,7 @@ public class CustomConvertersTest extends TestBase {
         assertThat(dbObj.getInt("c"), is((int) 'a'));
 
         // then check CharEntity can be decoded from the database
-        final CharEntity ce = getDs().find(CharEntity.class).get();
+        final CharEntity ce = getDs().find(CharEntity.class).find(new FindOptions().limit(1)).tryNext();
         assertThat(ce.c, is(notNullValue()));
         assertThat(ce.c.charValue(), is('a'));
     }

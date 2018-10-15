@@ -25,6 +25,7 @@ import xyz.morphia.annotations.NotSaved;
 import xyz.morphia.annotations.Property;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Transient;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.UpdateResults;
 
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ public class TestFrontPageExample extends TestBase {
 
         getDs().save(new Employee("Mister", "GOD", null, 0));
 
-        final Employee boss = getDs().find(Employee.class).field("manager").equal(null).get(); // get an employee without a manager
+        final Employee boss = getDs().find(Employee.class).field("manager").equal(null)
+            .find(new FindOptions().limit(1))
+            .next(); // get an employee without a manager
         Assert.assertNotNull(boss);
         final Key<Employee> key = getDs().save(new Employee("Scott", "Hernandez", getDs().getKey(boss), 150 * 1000));
         Assert.assertNotNull(key);
@@ -54,7 +57,9 @@ public class TestFrontPageExample extends TestBase {
         Assert.assertTrue("Should update existing document", res.getUpdatedExisting());
         Assert.assertEquals("Should update one document", 1, res.getUpdatedCount());
 
-        final Employee scottsBoss = getDs().find(Employee.class).filter("underlings", key).get(); // get Scott's boss
+        final Employee scottsBoss = getDs().find(Employee.class).filter("underlings", key)
+                                           .find(new FindOptions().limit(1))
+                                           .next(); // get Scott's boss
         Assert.assertNotNull(scottsBoss);
         Assert.assertEquals(boss.id, scottsBoss.id);
     }

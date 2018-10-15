@@ -10,20 +10,23 @@ import xyz.morphia.annotations.PostLoad;
 import xyz.morphia.annotations.PostPersist;
 import xyz.morphia.annotations.PreLoad;
 import xyz.morphia.annotations.PrePersist;
+import xyz.morphia.query.FindOptions;
 
 
 public class TestMultipleCallbackMethods extends TestBase {
     private static int loading;
 
     @Test
-    public void testMultipleCallbackAnnotation() throws Exception {
+    public void testMultipleCallbackAnnotation() {
         final SomeEntity entity = new SomeEntity();
         getDs().save(entity);
 
         Assert.assertEquals(4, entity.getFoo());
         Assert.assertEquals(0, loading);
 
-        final SomeEntity someEntity = getDs().find(SomeEntity.class).filter("_id", entity.getId()).get();
+        final SomeEntity someEntity = getDs().find(SomeEntity.class).filter("_id", entity.getId())
+                                             .find(new FindOptions().limit(1))
+                                             .next();
 
         Assert.assertEquals(4, entity.getFoo());
 

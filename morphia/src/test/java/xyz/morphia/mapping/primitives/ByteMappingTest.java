@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,11 +20,11 @@ public class ByteMappingTest extends TestBase {
         final String data = "{ \"primitiveArray\": BinData(0, "
                             + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
         getDb().eval("db.Bytes.insert(" + data + ")");
-        final Bytes loaded = getDs().find(Bytes.class).get();
+        final Bytes loaded = getDs().find(Bytes.class).find(new FindOptions().limit(1)).tryNext();
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMorphia().map(Bytes.class);
         final Bytes ent = new Bytes();
         ent.listWrapperArray.add(new Byte[]{1, 2});

@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -95,7 +96,9 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
         foo.setNumber(new BigDecimal("0.92348237942346239"));
         getDs().save(foo);
 
-        assertEquals(foo, getDs().find(Foo.class).get());
+        assertEquals(foo, getDs().find(Foo.class)
+                                 .find(new FindOptions().limit(1))
+                                 .next());
     }
 
     @Entity

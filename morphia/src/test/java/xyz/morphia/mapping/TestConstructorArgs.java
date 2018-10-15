@@ -21,6 +21,7 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.ConstructorArgs;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 
 /**
@@ -29,12 +30,12 @@ import xyz.morphia.annotations.Id;
 public class TestConstructorArgs extends TestBase {
 
     @Test
-    public void testBasic() throws Exception {
+    public void testBasic() {
         Normal n = new Normal();
         final ObjectId acId = n.ac.id;
 
         getDs().save(n);
-        n = getDs().find(Normal.class).get();
+        n = getDs().find(Normal.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(n);
         Assert.assertNotNull(n.ac);
         Assert.assertEquals(acId, n.ac.id);

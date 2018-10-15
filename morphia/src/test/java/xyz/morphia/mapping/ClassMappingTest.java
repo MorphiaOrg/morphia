@@ -7,6 +7,7 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Property;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,11 +26,11 @@ public class ClassMappingTest extends TestBase {
         e.testClass2 = LinkedList.class;
         getDs().save(e);
 
-        Assert.assertNull(getDs().find(E.class).field("testClass2").equal(ArrayList.class).get());
+        Assert.assertNull(getDs().find(E.class).field("testClass2").equal(ArrayList.class).find(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         E e = new E();
 
         e.testClass = LinkedList.class;
@@ -40,7 +41,7 @@ public class ClassMappingTest extends TestBase {
     }
 
     @Test
-    public void testMappingWithoutAnnotation() throws Exception {
+    public void testMappingWithoutAnnotation() {
         E e = new E();
 
         e.testClass2 = LinkedList.class;

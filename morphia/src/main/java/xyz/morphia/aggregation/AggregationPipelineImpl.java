@@ -13,9 +13,9 @@ import xyz.morphia.logging.Logger;
 import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
-import xyz.morphia.query.MorphiaIterator;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.Sort;
+import xyz.morphia.query.internal.MorphiaCursor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -80,7 +80,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaIterator<U, U>(datastore, cursor, mapper, target, collectionName, mapper.createEntityCache());
+        return new MorphiaCursor<U>(datastore, cursor, mapper, target, mapper.createEntityCache());
     }
 
     @Override

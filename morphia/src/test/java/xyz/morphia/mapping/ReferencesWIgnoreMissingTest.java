@@ -8,6 +8,7 @@ import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Reference;
+import xyz.morphia.query.FindOptions;
 
 import java.util.List;
 
@@ -17,13 +18,13 @@ import java.util.List;
  */
 public class ReferencesWIgnoreMissingTest extends TestBase {
     @Test
-    public void testMissingReference() throws Exception {
+    public void testMissingReference() {
         final Container c = new Container();
         c.refs = new StringHolder[]{new StringHolder(), new StringHolder()};
         getDs().save(c);
         getDs().save(c.refs[0]);
 
-        Container reloadedContainer = getDs().find(Container.class).get();
+        Container reloadedContainer = getDs().find(Container.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(reloadedContainer);
         Assert.assertNotNull(reloadedContainer.refs);
         Assert.assertEquals(1, reloadedContainer.refs.length);

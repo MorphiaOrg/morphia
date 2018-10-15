@@ -21,8 +21,14 @@ public class SortByIdTest extends TestBase {
         getDs().save(a2);
         getDs().save(a3);
 
-        Assert.assertEquals("last id", a3.id, getDs().find(A.class).order("-id").get().id);
-        Assert.assertEquals("last id", a3.id, getDs().find(A.class).disableValidation().order("-_id").get().id);
+        Assert.assertEquals("last id", a3.id, getDs().find(A.class).order("-id")
+                                                     .find(new FindOptions().limit(1))
+                                                     .next()
+                                                  .id);
+        Assert.assertEquals("last id", a3.id, getDs().find(A.class).disableValidation().order("-_id")
+                                                     .find(new FindOptions().limit(1))
+                                                     .next()
+                                                  .id);
     }
 
     @Entity("A")

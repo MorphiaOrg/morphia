@@ -12,6 +12,7 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Version;
 import xyz.morphia.dao.BasicDAO;
+import xyz.morphia.query.FindOptions;
 
 import java.io.Serializable;
 
@@ -19,7 +20,7 @@ import java.io.Serializable;
 public class CompoundIdTest extends TestBase {
 
     @Test
-    public void testDelete() throws Exception {
+    public void testDelete() {
         final CompoundIdEntity entity = new CompoundIdEntity();
         entity.id = new CompoundId("test");
 
@@ -31,13 +32,15 @@ public class CompoundIdTest extends TestBase {
     public void testFetchKey() {
         getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
         BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
-        ConfigEntry entry = innerDAO.find().get();
+        ConfigEntry entry = innerDAO.find()
+                                    .find(new FindOptions().limit(1))
+                                    .next();
         entry.setValue("something");
         innerDAO.save(entry);
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         CompoundIdEntity entity = new CompoundIdEntity();
         entity.id = new CompoundId("test");
 
@@ -48,7 +51,7 @@ public class CompoundIdTest extends TestBase {
     }
 
     @Test
-    public void testOtherDelete() throws Exception {
+    public void testOtherDelete() {
         final CompoundIdEntity entity = new CompoundIdEntity();
         entity.id = new CompoundId("test");
 

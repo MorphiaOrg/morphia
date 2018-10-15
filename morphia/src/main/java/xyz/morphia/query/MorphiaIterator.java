@@ -3,6 +3,7 @@ package xyz.morphia.query;
 
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.MongoCursor;
 import xyz.morphia.Datastore;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.cache.EntityCache;
@@ -16,7 +17,9 @@ import java.util.NoSuchElementException;
  * @param <V> the type of the values returned
  * @author Scott Hernandez
  * @see MorphiaKeyIterator
+ * @deprecated this is being replaced by {@link MongoCursor}
  */
+@Deprecated
 public class MorphiaIterator<T, V> implements Iterable<V>, Iterator<V> {
     private final Iterator<DBObject> wrapped;
     private final Mapper mapper;

@@ -9,6 +9,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Property;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +34,7 @@ public class NestedMapsAndListsTest extends TestBase {
         list.list.add(asList("123", "456"));
         getDs().save(list);
 
-        ListOfList listOfList = getDs().find(ListOfList.class).get();
+        ListOfList listOfList = getDs().find(ListOfList.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(list, listOfList);
     }
 
@@ -45,7 +46,7 @@ public class NestedMapsAndListsTest extends TestBase {
         list.list.add(asList(new Person("Crosby"), new Person("Stills"), new Person("Nash")));
         getDs().save(list);
 
-        ListListPerson result = getDs().find(ListListPerson.class).get();
+        ListListPerson result = getDs().find(ListListPerson.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(list, result);
     }
 
@@ -63,7 +64,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
         getDs().save(entity);
 
-        ListOfMap object = getDs().find(ListOfMap.class).get();
+        ListOfMap object = getDs().find(ListOfMap.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(object);
         Assert.assertEquals(entity, object);
     }
@@ -77,7 +78,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
         getDs().save(listMap);
 
-        Assert.assertEquals(listMap, getDs().find(ListMapPerson.class).get());
+        Assert.assertEquals(listMap, getDs().find(ListMapPerson.class).find(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -87,7 +88,7 @@ public class NestedMapsAndListsTest extends TestBase {
         map.mol.put("entry2", Collections.singletonList("val2"));
 
         getDs().save(map);
-        map = getDs().find(HashMapOfList.class).get();
+        map = getDs().find(HashMapOfList.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(map.mol);
         Assert.assertNotNull(map.mol.get("entry1"));
         Assert.assertNotNull(map.mol.get("entry1").get(0));
@@ -122,7 +123,7 @@ public class NestedMapsAndListsTest extends TestBase {
         mapMap.mol.put("r2", Collections.singletonList(mapOfMap));
 
         getDs().save(mapMap);
-        mapMap = getDs().find(HashMapOfListOfMapMap.class).get();
+        mapMap = getDs().find(HashMapOfListOfMapMap.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(mapMap.mol);
         Assert.assertNotNull(mapMap.mol.get("r1"));
         Assert.assertNotNull(mapMap.mol.get("r1").get(0));
@@ -142,7 +143,7 @@ public class NestedMapsAndListsTest extends TestBase {
         map.put("peer", "lame");
 
         getDs().save(mapOfMap);
-        mapOfMap = getDs().find(HashMapOfMap.class).get();
+        mapOfMap = getDs().find(HashMapOfMap.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(mapOfMap.mom);
         Assert.assertNotNull(mapOfMap.mom.get("root"));
         Assert.assertNotNull(mapOfMap.mom.get("root").get("deep"));

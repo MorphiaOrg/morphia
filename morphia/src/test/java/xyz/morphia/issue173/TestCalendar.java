@@ -6,6 +6,7 @@ import org.junit.Test;
 import xyz.morphia.InsertOptions;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Converters;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.Calendar;
@@ -20,7 +21,9 @@ public class TestCalendar extends TestBase {
         getDs().save(a, new InsertOptions()
             .writeConcern(WriteConcern.ACKNOWLEDGED));
         // occasionally failed, so i suspected a race cond.
-        final A loaded = getDs().find(A.class).get();
+        final A loaded = getDs().find(A.class)
+                                .find(new FindOptions().limit(1))
+                                .tryNext();
         Assert.assertNotNull(loaded.c);
         Assert.assertEquals(a.c, loaded.c);
     }

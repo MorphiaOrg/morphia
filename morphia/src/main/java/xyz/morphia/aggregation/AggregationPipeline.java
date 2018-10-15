@@ -20,6 +20,9 @@ public interface AggregationPipeline {
      * Executes the pipeline and aggregates the output in to the type mapped by the target type using the default options as defined in
      * {@link AggregationOptions}.
      *
+     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * resource management.</b>
+     *
      * @param target The class to use when iterating over the results
      * @param <U>    type of the results
      * @return an iterator of the computed results
@@ -28,6 +31,9 @@ public interface AggregationPipeline {
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
+     *
+     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * resource management.</b>
      *
      * @param target  The class to use when iterating over the results
      * @param options The options to apply to this aggregation
@@ -39,6 +45,9 @@ public interface AggregationPipeline {
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
      *
+     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * resource management.</b>
+     *
      * @param target         The class to use when iterating over the results
      * @param options        The options to apply to this aggregation
      * @param readPreference The read preference to apply to this pipeline
@@ -49,6 +58,9 @@ public interface AggregationPipeline {
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
+     *
+     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * resource management.</b>
      *
      * @param collectionName The collection in which to store the results of the aggregation overriding the mapped value in target
      * @param target         The class to use when iterating over the results

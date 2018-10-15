@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BooleanMappingTest extends TestBase {
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMorphia().map(Booleans.class);
         final Booleans ent = new Booleans();
         ent.booleans.add(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE});

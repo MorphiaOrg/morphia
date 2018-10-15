@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 
@@ -34,7 +35,9 @@ public class UpdateRetainsClassInfoTest extends TestBase {
         getDs().update(query, update);
 
         // fails due to type now missing
-        getDs().find(X.class).get();
+        getDs().find(X.class)
+               .find(new FindOptions().limit(1))
+               .next();
     }
 
     public abstract static class E {

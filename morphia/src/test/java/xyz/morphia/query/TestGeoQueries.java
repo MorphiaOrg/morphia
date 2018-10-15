@@ -1,8 +1,7 @@
 package xyz.morphia.query;
 
 
-import com.mongodb.MongoException;
-import com.mongodb.MongoInternalException;
+import com.mongodb.MongoQueryException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,7 +22,7 @@ public class TestGeoQueries extends TestBase {
     }
 
     @Test
-    public void testGeoWithinBox() throws Exception {
+    public void testGeoWithinBox() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -31,12 +30,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.box(new Point(0, 0), new Point(2, 2)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testGeoWithinOutsideBox() throws Exception {
+    public void testGeoWithinOutsideBox() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -44,12 +44,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
         Assert.assertNull(found);
     }
 
     @Test
-    public void testGeoWithinPolygon() throws Exception {
+    public void testGeoWithinPolygon() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{0, 1});
@@ -57,12 +58,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testGeoWithinPolygon2() throws Exception {
+    public void testGeoWithinPolygon2() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{10, 1});
@@ -70,12 +72,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
         Assert.assertNull(found);
     }
 
     @Test
-    public void testGeoWithinRadius() throws Exception {
+    public void testGeoWithinRadius() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -83,12 +86,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.center(new Point(0, 1), 1.1))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testGeoWithinRadius2() throws Exception {
+    public void testGeoWithinRadius2() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -96,12 +100,14 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.center(new Point(0.5, 0.5), 0.77))
-                                   .get();
+
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testGeoWithinRadiusSphere() throws Exception {
+    public void testGeoWithinRadiusSphere() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -109,12 +115,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.centerSphere(new Point(0, 1), 1))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testNear() throws Exception {
+    public void testNear() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -122,12 +129,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .near(0, 0)
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testNearMaxDistance() throws Exception {
+    public void testNearMaxDistance() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -135,36 +143,32 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .near(0, 0, 1.5)
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
         final Place notFound = getDs().find(Place.class)
                                       .field("loc")
                                       .near(0, 0, 1)
-                                      .get();
+                                      .find(new FindOptions().limit(1))
+                                      .tryNext();
         Assert.assertNull(notFound);
     }
 
-    @Test
-    public void testNearNoIndex() throws Exception {
+    @Test(expected = MongoQueryException.class)
+    public void testNearNoIndex() {
         checkMinServerVersion(2.4);
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
-        Place found = null;
-        try {
-            found = getDs().find(Place.class)
-                           .field("loc")
-                           .near(0, 0)
-                           .get();
-            Assert.assertFalse(true);
-        } catch (MongoInternalException e) {
-            Assert.assertNull(found);
-        } catch (MongoException e) {
-            Assert.assertNull(found);
-        }
+        Place found = getDs().find(Place.class)
+                             .field("loc")
+                             .near(0, 0)
+                             .find(new FindOptions().limit(1))
+                             .tryNext();
+        Assert.assertNull(found);
     }
 
     @Test
-    public void testWithinBox() throws Exception {
+    public void testWithinBox() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -172,12 +176,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.box(new Point(0, 0), new Point(2, 2)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testWithinOutsideBox() throws Exception {
+    public void testWithinOutsideBox() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -185,12 +190,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
         Assert.assertNull(found);
     }
 
     @Test
-    public void testWithinOutsideRadius() throws Exception {
+    public void testWithinOutsideRadius() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -198,12 +204,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.center(new Point(2, 2), .4))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
         Assert.assertNull(found);
     }
 
     @Test
-    public void testWithinRadius() throws Exception {
+    public void testWithinRadius() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -211,12 +218,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.center(new Point(0, 1), 1.1))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testWithinRadius2() throws Exception {
+    public void testWithinRadius2() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -224,12 +232,13 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.center(new Point(0.5, 0.5), 0.77))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 
     @Test
-    public void testWithinRadiusSphere() throws Exception {
+    public void testWithinRadiusSphere() {
         checkMinServerVersion(2.4);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
@@ -237,7 +246,8 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                                    .field("loc")
                                    .within(Shape.centerSphere(new Point(0, 1), 1))
-                                   .get();
+                                   .find(new FindOptions().limit(1))
+                                   .next();
         Assert.assertNotNull(found);
     }
 

@@ -8,6 +8,7 @@ import xyz.morphia.Key;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,19 @@ public class KeyMappingTest extends TestBase {
         insertData();
 
         final Datastore datastore = getDs();
-        User user = datastore.find(User.class).get();
+        User user = datastore.find(User.class).find(new FindOptions().limit(1)).tryNext();
         List<Key<Channel>> followedChannels = user.followedChannels;
 
-        Channel channel = datastore.find(Channel.class).filter("name", "Sport channel").get();
+        Channel channel = datastore.find(Channel.class).filter("name", "Sport channel")
+                                   .find(new FindOptions().limit(1))
+                                   .tryNext();
 
         Key<Channel> key = datastore.getKey(channel);
         Assert.assertTrue(followedChannels.contains(key));
     }
 
     @Test
-    public void testKeyComparisons() throws Exception {
+    public void testKeyComparisons() {
         final User user = new User("Luke Skywalker");
         getDs().save(user);
         final Key<User> k1 = new Key<User>(User.class, "User", user.id);

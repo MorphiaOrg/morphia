@@ -24,6 +24,7 @@ import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
+import xyz.morphia.query.FindOptions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -51,7 +52,9 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
         u.ignored = "test";
         getDs().save(u);
 
-        final User uLoaded = getDs().find(User.class).get();
+        final User uLoaded = getDs().find(User.class)
+                                    .find(new FindOptions().limit(1))
+                                    .next();
         Assert.assertEquals("never, never", uLoaded.ignored);
     }
 

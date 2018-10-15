@@ -8,6 +8,7 @@ import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
@@ -40,7 +41,9 @@ public class TestJavaMaps extends TestBase {
         employee.byteMap = byteMap;
         ds.save(employee);
 
-        Employee loaded = ds.find(Employee.class).get();
+        Employee loaded = ds.find(Employee.class)
+                            .find(new FindOptions().limit(1))
+                            .next();
 
         assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
         assertNull(loaded.floatMap);
@@ -56,7 +59,9 @@ public class TestJavaMaps extends TestBase {
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
         getDs().save(model);
-        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id).get();
+        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
+                                       .find(new FindOptions().limit(1))
+                                       .next();
         Assert.assertNull(model.wrapped.others);
         Assert.assertNull(model2.wrapped.others);
     }
@@ -69,7 +74,9 @@ public class TestJavaMaps extends TestBase {
             expectedEntity.getLinkedHashMap().put(i, "a" + i);
         }
         getDs().save(expectedEntity);
-        LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class).get();
+        LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class)
+                                                      .find(new FindOptions().limit(1))
+                                                      .next();
         Assert.assertNotNull(storedEntity);
         Assert.assertEquals(expectedEntity.getLinkedHashMap(), storedEntity.getLinkedHashMap());
     }

@@ -9,11 +9,12 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.mapping.MappingException;
 import xyz.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import xyz.morphia.query.FindOptions;
 
 public class TestLazyWithMissingReferences extends TestBase {
 
     @Test(expected = MappingException.class)
-    public void testMissingRef() throws Exception {
+    public void testMissingRef() {
         final Source source = new Source();
         source.setTarget(new Target());
 
@@ -23,23 +24,23 @@ public class TestLazyWithMissingReferences extends TestBase {
     }
 
     @Test(expected = LazyReferenceFetchingException.class)
-    public void testMissingRefLazy() throws Exception {
+    public void testMissingRefLazy() {
         final Source e = new Source();
         e.setLazy(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        Assert.assertNull(getDs().find(Source.class).get().getLazy());
+        Assert.assertNull(getDs().find(Source.class).find(new FindOptions().limit(1)).tryNext().getLazy());
     }
 
     @Test
-    public void testMissingRefLazyIgnoreMissing() throws Exception {
+    public void testMissingRefLazyIgnoreMissing() {
         final Source e = new Source();
         e.setIgnoreMissing(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
 
         try {
-            getDs().find(Source.class).get().getIgnoreMissing().foo();
+            getDs().find(Source.class).find(new FindOptions().limit(1)).tryNext().getIgnoreMissing().foo();
         } catch (RuntimeException re) {
             Assert.assertEquals("Cannot dispatch method foo", re.getMessage());
         }

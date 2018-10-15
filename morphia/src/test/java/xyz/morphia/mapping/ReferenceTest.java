@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.client.MongoCursor;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,11 +15,10 @@ import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.mapping.lazy.ProxyTestBase;
-import xyz.morphia.query.MorphiaKeyIterator;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,9 @@ public class ReferenceTest extends ProxyTestBase {
         container.singleRef = ref;
         getDs().save(container);
 
-        Assert.assertNotNull(getDs().find(Container.class).filter("singleRef", ref).get());
+        Assert.assertNotNull(getDs().find(Container.class).filter("singleRef", ref)
+                                    .find(new FindOptions().limit(1))
+                                    .next());
     }
 
     @Test
@@ -153,7 +155,7 @@ public class ReferenceTest extends ProxyTestBase {
         final Query<Container> query = getDs().find(Container.class)
                                                .disableValidation()
                                               .field("singleRef").equal(ref);
-        Assert.assertNotNull(query.get());
+        Assert.assertNotNull(query.find(new FindOptions().limit(1)).next());
     }
 
     @Test
@@ -183,22 +185,7 @@ public class ReferenceTest extends ProxyTestBase {
                                     new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
-        MorphiaKeyIterator<Complex> keys = getDs().find(Complex.class).fetchKeys();
-        assertTrue(keys.hasNext());
-        assertEquals(list.get(0).getId(), keys.next().getId());
-        assertEquals(list.get(1).getId(), keys.next().getId());
-        assertEquals(list.get(2).getId(), keys.next().getId());
-        assertFalse(keys.hasNext());
-    }
-
-    @Test
-    public void testFetchEmptyEntities() {
-        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-                                    new Complex(new ChildId("JD", 26), "Dorian"),
-                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
-        getDs().save(list);
-
-        Iterator<Complex> keys = getDs().find(Complex.class).fetchEmptyEntities();
+        MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
         assertTrue(keys.hasNext());
         assertEquals(list.get(0).getId(), keys.next().getId());
         assertEquals(list.get(1).getId(), keys.next().getId());
@@ -422,7 +409,7 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Entity("complex")
-    private static class Complex {
+    public static class Complex {
         @Id
         @Embedded
         private ChildId id;
@@ -432,7 +419,7 @@ public class ReferenceTest extends ProxyTestBase {
         Complex() {
         }
 
-        Complex(final ChildId id, final String value) {
+        public Complex(final ChildId id, final String value) {
             this.id = id;
             this.value = value;
         }
@@ -480,14 +467,14 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Embedded
-    private static class ChildId {
+    public static class ChildId {
         private String name;
         private int age;
 
         ChildId() {
         }
 
-        ChildId(final String name, final int age) {
+        public ChildId(final String name, final int age) {
             this.name = name;
             this.age = age;
         }

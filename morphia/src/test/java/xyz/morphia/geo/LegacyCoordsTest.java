@@ -4,6 +4,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import org.junit.Test;
 import xyz.morphia.TestBase;
+import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
-    public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() throws Exception {
+    public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
@@ -103,11 +104,11 @@ public class LegacyCoordsTest extends TestBase {
                                                             .near(1.0, 2.0, 0.1);
         // then
         assertThat(locationQuery.asList().size(), is(0));
-        assertThat(locationQuery.get(), is(nullValue()));
+        assertThat(locationQuery.find(new FindOptions().limit(1)).tryNext(), is(nullValue()));
     }
 
     @Test
-    public void shouldReturnAllLocationsOrderedByDistanceFromQueryLocationWhenPerformingNearQuery() throws Exception {
+    public void shouldReturnAllLocationsOrderedByDistanceFromQueryLocationWhenPerformingNearQuery() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
@@ -129,7 +130,7 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
-    public void shouldReturnOnlyThosePlacesWithinTheGivenRadius() throws Exception {
+    public void shouldReturnOnlyThosePlacesWithinTheGivenRadius() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
@@ -149,7 +150,7 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test(expected = MongoException.class)
-    public void shouldThrowAnExceptionIfQueryingWithoutA2dIndex() throws Exception {
+    public void shouldThrowAnExceptionIfQueryingWithoutA2dIndex() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
@@ -160,7 +161,8 @@ public class LegacyCoordsTest extends TestBase {
         getDs().find(PlaceWithLegacyCoords.class)
                .field("location")
                .near(0, 0)
-               .get();
+               .find(new FindOptions().limit(1))
+               .tryNext();
 
         // then expect the Exception
     }

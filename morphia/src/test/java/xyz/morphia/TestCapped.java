@@ -5,13 +5,14 @@ import org.junit.Test;
 import xyz.morphia.annotations.CappedAt;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestCapped extends TestBase {
     @Test
-    public void testCappedEntity() throws Exception {
+    public void testCappedEntity() {
         // given
         getMorphia().map(CurrentStatus.class);
         getDs().ensureCaps();
@@ -22,7 +23,10 @@ public class TestCapped extends TestBase {
         assertEquals(1, getDs().getCount(CurrentStatus.class));
         getDs().save(new CurrentStatus("Kinda Bad"));
         assertEquals(1, getDs().getCount(CurrentStatus.class));
-        assertTrue(getDs().find(CurrentStatus.class).get().message.contains("Bad"));
+        assertTrue(getDs().find(CurrentStatus.class)
+                          .find(new FindOptions().limit(1))
+                          .next()
+                       .message.contains("Bad"));
         getDs().save(new CurrentStatus("Kinda Bad2"));
         assertEquals(1, getDs().getCount(CurrentStatus.class));
         getDs().save(new CurrentStatus("Kinda Bad3"));

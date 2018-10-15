@@ -21,6 +21,7 @@ import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Property;
+import xyz.morphia.query.FindOptions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,7 +38,7 @@ public class GenericsMappingTest extends TestBase {
     }
 
     @Test
-    public void testIt() throws Exception {
+    public void testIt() {
         getMorphia().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();
@@ -50,7 +51,9 @@ public class GenericsMappingTest extends TestBase {
         getDs().save(ct);
         assertNotNull(ct.id);
         assertEquals(1, getDs().getCount(ContainsThings.class));
-        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).get();
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class)
+                                               .find(new FindOptions().limit(1))
+                                               .next();
         assertNotNull(ctLoaded);
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);

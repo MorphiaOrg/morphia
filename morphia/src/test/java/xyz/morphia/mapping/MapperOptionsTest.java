@@ -8,6 +8,7 @@ import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
+import xyz.morphia.query.FindOptions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -163,7 +164,10 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(hl);
         final DBObject dbObj = getDs().getCollection(HasList.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("names"));
-        Assert.assertEquals(expected, getDs().find(HasList.class).get().names);
+        Assert.assertEquals(expected, getDs().find(HasList.class)
+                                             .find(new FindOptions().limit(1))
+                                             .tryNext()
+                                          .names);
     }
 
     private void shouldFindField(final HasMap hl, final Map<String, String> expected) {
@@ -171,7 +175,10 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(hl);
         dbObj = getDs().getCollection(HasMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
-        Assert.assertEquals(expected, getDs().find(HasMap.class).get().properties);
+        Assert.assertEquals(expected, getDs().find(HasMap.class)
+                                             .find(new FindOptions().limit(1))
+                                             .tryNext()
+                                          .properties);
     }
 
     private void shouldFindField(final HasCollectionValuedMap hm, final Map<String, Collection<String>> expected) {
@@ -179,7 +186,10 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(hm);
         dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
-        Assert.assertEquals(expected, getDs().find(HasCollectionValuedMap.class).get().properties);
+        Assert.assertEquals(expected, getDs().find(HasCollectionValuedMap.class)
+                                             .find(new FindOptions().limit(1))
+                                             .tryNext()
+                                          .properties);
     }
 
     private void shouldFindField(final HasComplexObjectValuedMap hm, final Map<String, ComplexObject> expected) {
@@ -187,35 +197,50 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(hm);
         dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
-        Assert.assertEquals(expected, getDs().find(HasComplexObjectValuedMap.class).get().properties);
+        Assert.assertEquals(expected, getDs().find(HasComplexObjectValuedMap.class)
+                                             .find(new FindOptions().limit(1))
+                                             .tryNext()
+                                          .properties);
     }
 
     private void shouldNotFindField(final HasMap hl) {
         getDs().save(hl);
         DBObject dbObj = getDs().getCollection(HasMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
-        Assert.assertNull(getDs().find(HasMap.class).get().properties);
+        Assert.assertNull(getDs().find(HasMap.class)
+                                 .find(new FindOptions().limit(1))
+                                 .tryNext()
+                              .properties);
     }
 
     private void shouldNotFindField(final HasList hl) {
         getDs().save(hl);
         DBObject dbObj = getDs().getCollection(HasList.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("names"), dbObj.containsField("names"));
-        Assert.assertNull(getDs().find(HasList.class).get().names);
+        Assert.assertNull(getDs().find(HasList.class)
+                                 .find(new FindOptions().limit(1))
+                                 .tryNext()
+                              .names);
     }
 
     private void shouldNotFindField(final HasCollectionValuedMap hm) {
         getDs().save(hm);
         DBObject dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
-        Assert.assertNull(getDs().find(HasCollectionValuedMap.class).get().properties);
+        Assert.assertNull(getDs().find(HasCollectionValuedMap.class)
+                                 .find(new FindOptions().limit(1))
+                                 .tryNext()
+                              .properties);
     }
 
     private void shouldNotFindField(final HasComplexObjectValuedMap hm) {
         getDs().save(hm);
         DBObject dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
-        Assert.assertNull(getDs().find(HasComplexObjectValuedMap.class).get().properties);
+        Assert.assertNull(getDs().find(HasComplexObjectValuedMap.class)
+                                 .find(new FindOptions().limit(1))
+                                 .tryNext()
+                              .properties);
     }
 
     private static class HasList implements Serializable {

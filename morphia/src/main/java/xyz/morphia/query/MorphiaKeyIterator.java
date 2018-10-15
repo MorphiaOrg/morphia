@@ -2,6 +2,7 @@ package xyz.morphia.query;
 
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.MongoCursor;
 import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.mapping.Mapper;
@@ -11,7 +12,9 @@ import xyz.morphia.mapping.Mapper;
  *
  * @param <T> the entity type
  * @author Scott Hernandez
+ * @deprecated this is being replaced by {@link MongoCursor}
  */
+@Deprecated
 public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
     /**
      * Create
