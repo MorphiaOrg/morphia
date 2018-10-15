@@ -39,7 +39,6 @@ import xyz.morphia.query.FindOptions;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;

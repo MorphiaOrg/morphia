@@ -74,10 +74,10 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> areasInTheUK = getDs().find(Area.class)
+        List<Area> areasInTheUK = toList(getDs().find(Area.class)
                                          .field("area")
                                          .within(requiredEuropeanCountries)
-                                         .asList();
+                                         .find());
 
         // then
         assertThat(areasInTheUK.size(), is(2));
@@ -102,10 +102,10 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // when
         List<City> citiesInTheUK;
-        citiesInTheUK = getDs().find(City.class)
+        citiesInTheUK = toList(getDs().find(City.class)
                                .field("location")
                                .within(europeanCountries)
-                               .asList();
+                               .find());
 
         // then
         assertThat(citiesInTheUK.size(), is(3));
@@ -155,10 +155,10 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
+        List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
                                                       .field("everything")
                                                       .within(europeanCountries)
-                                                      .asList();
+                                                      .find());
 
         // then
         assertThat(everythingInTheUK.size(), is(2));
@@ -202,10 +202,10 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsInTheUK = getDs().find(Regions.class)
+        List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
                                               .field("regions")
                                               .within(europeanCountries)
-                                              .asList();
+                                              .find());
 
         // then
         assertThat(regionsInTheUK.size(), is(2));
@@ -234,10 +234,10 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routesInTheUK = getDs().find(Route.class)
+        List<Route> routesInTheUK = toList(getDs().find(Route.class)
                                            .field("route")
                                            .within(requiredEuropeanCountries)
-                                           .asList();
+                                           .find());
 
         // then
         assertThat(routesInTheUK.size(), is(2));

@@ -54,12 +54,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> routesOrderedByDistanceFromLondon = getDs().find(Area.class)
+        List<Area> routesOrderedByDistanceFromLondon = toList(getDs().find(Area.class)
                                                               .field("area")
                                                               .near(pointBuilder()
                                                                         .latitude(51.5286416)
                                                                         .longitude(-0.1015987).build(), 20000)
-                                                              .asList();
+                                                              .find());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(1));
@@ -88,12 +88,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> routesOrderedByDistanceFromLondon = getDs().find(Area.class)
+        List<Area> routesOrderedByDistanceFromLondon = toList(getDs().find(Area.class)
                                                               .field("area")
                                                               .near(pointBuilder()
                                                                         .latitude(51.5286416)
                                                                         .longitude(-0.1015987).build())
-                                                              .asList();
+                                                              .find());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(3));
@@ -118,10 +118,10 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesOrderedByDistanceFromLondon = datastore.find(City.class)
+        List<City> citiesOrderedByDistanceFromLondon = toList(datastore.find(City.class)
                                                                 .field("location")
                                                                 .near(GeoJson.point(latitude, longitude), 200000)
-                                                                .asList();
+                                                                .find());
 
         // then
         assertThat(citiesOrderedByDistanceFromLondon.size(), is(1));
@@ -143,19 +143,18 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesOrderedByDistanceFromLondon;
-        citiesOrderedByDistanceFromLondon = getDs().find(City.class)
-                                                   .field("location")
-                                                   .near(pointBuilder()
-                                                             .latitude(latitudeLondon)
-                                                             .longitude(longitudeLondon).build())
-                                                   .asList();
+        List<City> cities = toList(getDs().find(City.class)
+                                          .field("location")
+                                          .near(pointBuilder()
+                                                    .latitude(latitudeLondon)
+                                                    .longitude(longitudeLondon).build())
+                                          .find());
 
         // then
-        assertThat(citiesOrderedByDistanceFromLondon.size(), is(3));
-        assertThat(citiesOrderedByDistanceFromLondon.get(0), is(london));
-        assertThat(citiesOrderedByDistanceFromLondon.get(1), is(manchester));
-        assertThat(citiesOrderedByDistanceFromLondon.get(2), is(sevilla));
+        assertThat(cities.size(), is(3));
+        assertThat(cities.get(0), is(london));
+        assertThat(cities.get(1), is(manchester));
+        assertThat(cities.get(2), is(sevilla));
     }
 
     @Test
@@ -199,16 +198,16 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> resultsOrderedByDistanceFromSeville = getDs().find(AllTheThings.class)
-                                                                        .field("everything")
-                                                                        .near(pointBuilder()
-                                                                                  .latitude(37.3753707)
-                                                                                  .longitude(-5.9550583).build(), 20000)
-                                                                        .asList();
+        List<AllTheThings> list = toList(getDs().find(AllTheThings.class)
+                                                .field("everything")
+                                                .near(pointBuilder()
+                                                          .latitude(37.3753707)
+                                                          .longitude(-5.9550583).build(), 20000)
+                                                .find());
 
         // then
-        assertThat(resultsOrderedByDistanceFromSeville.size(), is(1));
-        assertThat(resultsOrderedByDistanceFromSeville.get(0), is(sevilla));
+        assertThat(list.size(), is(1));
+        assertThat(list.get(0), is(sevilla));
     }
 
     @Test
@@ -252,12 +251,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> resultsOrderedByDistanceFromLondon = getDs().find(AllTheThings.class)
-                                                                       .field("everything")
-                                                                       .near(pointBuilder()
-                                                                                 .latitude(51.5286416)
-                                                                                 .longitude(-0.1015987).build())
-                                                                       .asList();
+        List<AllTheThings> resultsOrderedByDistanceFromLondon = toList(getDs().find(AllTheThings.class)
+                                                                              .field("everything")
+                                                                              .near(pointBuilder()
+                                                                                        .latitude(51.5286416)
+                                                                                        .longitude(-0.1015987).build())
+                                                                              .find());
 
         // then
         assertThat(resultsOrderedByDistanceFromLondon.size(), is(2));
@@ -302,12 +301,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsOrderedByDistanceFromLondon = getDs().find(Regions.class)
-                                                                  .field("regions")
-                                                                  .near(pointBuilder()
-                                                                            .latitude(51.5286416)
-                                                                            .longitude(-0.1015987).build(), 20000)
-                                                                  .asList();
+        List<Regions> regionsOrderedByDistanceFromLondon = toList(getDs().find(Regions.class)
+                                                                         .field("regions")
+                                                                         .near(pointBuilder()
+                                                                                   .latitude(51.5286416)
+                                                                                   .longitude(-0.1015987).build(), 20000)
+                                                                         .find());
 
         // then
         assertThat(regionsOrderedByDistanceFromLondon.size(), is(1));
@@ -351,12 +350,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsOrderedByDistanceFromLondon = getDs().find(Regions.class)
-                                                                  .field("regions")
-                                                                  .near(pointBuilder()
-                                                                            .latitude(51.5286416)
-                                                                            .longitude(-0.1015987).build())
-                                                                  .asList();
+        List<Regions> regionsOrderedByDistanceFromLondon = toList(getDs().find(Regions.class)
+                                                                         .field("regions")
+                                                                         .near(pointBuilder()
+                                                                                   .latitude(51.5286416)
+                                                                                   .longitude(-0.1015987).build())
+                                                                         .find());
 
         // then
         assertThat(regionsOrderedByDistanceFromLondon.size(), is(3));
@@ -383,12 +382,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routesOrderedByDistanceFromLondon = getDs().find(Route.class)
-                                                               .field("route")
-                                                               .near(pointBuilder()
-                                                                         .latitude(51.5286416)
-                                                                         .longitude(-0.1015987).build(), 20000)
-                                                               .asList();
+        List<Route> routesOrderedByDistanceFromLondon = toList(getDs().find(Route.class)
+                                                                      .field("route")
+                                                                      .near(pointBuilder()
+                                                                                .latitude(51.5286416)
+                                                                                .longitude(-0.1015987).build(), 20000)
+                                                                      .find());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(1));
@@ -413,12 +412,12 @@ public class GeoNearQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routesOrderedByDistanceFromLondon = getDs().find(Route.class)
-                                                               .field("route")
-                                                               .near(pointBuilder()
-                                                                         .latitude(51.5286416)
-                                                                         .longitude(-0.1015987).build())
-                                                               .asList();
+        List<Route> routesOrderedByDistanceFromLondon = toList(getDs().find(Route.class)
+                                                                      .field("route")
+                                                                      .near(pointBuilder()
+                                                                                .latitude(51.5286416)
+                                                                                .longitude(-0.1015987).build())
+                                                                      .find());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(3));

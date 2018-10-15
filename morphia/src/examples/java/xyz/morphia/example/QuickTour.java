@@ -16,7 +16,6 @@ import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateOperations;
 import xyz.morphia.query.UpdateResults;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public final class QuickTour {
     private QuickTour() {
     }
 
-    public static void main(final String[] args) throws UnknownHostException {
+    public static void main(final String[] args) {
         final Morphia morphia = new Morphia();
 
         // tell morphia where to find your classes
@@ -54,19 +53,19 @@ public final class QuickTour {
         datastore.save(elmer);
 
         Query<Employee> query = datastore.find(Employee.class);
-        final List<Employee> employees = query.asList();
+        final long employees = query.count();
 
-        Assert.assertEquals(3, employees.size());
+        Assert.assertEquals(3, employees);
 
-        List<Employee> underpaid = datastore.find(Employee.class)
-                                            .filter("salary <=", 30000)
-                                            .asList();
-        Assert.assertEquals(1, underpaid.size());
+        long underpaid = datastore.find(Employee.class)
+                                  .filter("salary <=", 30000)
+                                  .count();
+        Assert.assertEquals(1, underpaid);
 
         underpaid = datastore.find(Employee.class)
                              .field("salary").lessThanOrEq(30000)
-                             .asList();
-        Assert.assertEquals(1, underpaid.size());
+                             .count();
+        Assert.assertEquals(1, underpaid);
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter("salary <=", 30000);

@@ -29,11 +29,11 @@ public class TestLargeObjectsWithCursor extends TestBase {
     }
 
     @Test
-    public void testWithManyElementsInCollection() throws Exception {
+    public void testWithManyElementsInCollection() {
         Query<E> query = getDs().find(E.class);
         final long countAll = query.count();
         query = getDs().find(E.class);
-        final List<E> list = query.asList();
+        final List<E> list = toList(query.find());
         Assert.assertEquals(documentsNb, countAll);
         Assert.assertEquals(documentsNb, list.size());
     }
@@ -55,10 +55,6 @@ public class TestLargeObjectsWithCursor extends TestBase {
 
         public Integer getIndex() {
             return index;
-        }
-
-        public byte[] getLargeContent() {
-            return largeContent;
         }
 
         private byte[] createLargeByteArray() {

@@ -115,10 +115,10 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        final List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
-                                                         .field("location")
-                                                         .within(Shape.center(new Shape.Point(1, 2), 1.1))
-                                                         .asList();
+        final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
+                                                                .field("location")
+                                                                .within(Shape.center(new Shape.Point(1, 2), 1.1))
+                                                                .find());
 
         // then
         assertThat(found.size(), is(1));

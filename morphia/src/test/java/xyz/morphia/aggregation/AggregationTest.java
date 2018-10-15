@@ -96,7 +96,7 @@ public class AggregationTest extends TestBase {
         database.getCollection("out_users").drop();
         database.createCollection("out_users", new CreateCollectionOptions()
             .validationOptions(new ValidationOptions()
-                                   .validator(Document.parse("{ age : { gte : 13 } }"))));
+                                   .validator(Document.parse("{ \"age\" : { \"gte\" : 13 } }"))));
 
         try {
             getDs()
@@ -325,9 +325,9 @@ public class AggregationTest extends TestBase {
         getDs().createAggregation(Order.class)
                .lookup("inventory", "item", "sku", "inventoryDocs")
                .out("lookups", Order.class);
-        List<Order> lookups = getAds().createQuery("lookups", Order.class)
-                                      .order("_id")
-                                      .asList();
+        List<Order> lookups = toList(getAds().createQuery("lookups", Order.class)
+                                             .order("_id")
+                                             .find());
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));

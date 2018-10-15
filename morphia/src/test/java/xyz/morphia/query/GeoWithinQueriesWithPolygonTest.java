@@ -1,5 +1,6 @@
 package xyz.morphia.query;
 
+import com.mongodb.client.MongoCursor;
 import org.junit.Before;
 import org.junit.Test;
 import xyz.morphia.TestBase;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static xyz.morphia.geo.GeoJson.geometryCollection;
 import static xyz.morphia.geo.GeoJson.lineString;
@@ -68,21 +70,21 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> areasInTheUK = getDs().find(Area.class)
-                                         .field("area")
-                                         .within(uk)
-                                         .asList();
+        MongoCursor<Area> areasInTheUK = getDs().find(Area.class)
+                                                .field("area")
+                                                .within(uk)
+                                                .find();
 
         // then
-        assertThat(areasInTheUK.size(), is(1));
-        assertThat(areasInTheUK.get(0), is(london));
+        assertThat(areasInTheUK.next(), is(london));
+        assertFalse(areasInTheUK.hasNext());
 
         if (serverIsAtLeastVersion(3.0)) {
             // should not error
             getDs().find(Area.class)
                    .field("area")
                    .within(uk, NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING)
-                   .asList();
+                   .find();
         }
     }
 
@@ -104,11 +106,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesInTheUK;
-        citiesInTheUK = getDs().find(City.class)
-                               .field("location")
-                               .within(uk)
-                               .asList();
+        List<City> citiesInTheUK = toList(getDs().find(City.class)
+                                                 .field("location")
+                                                 .within(uk)
+                                                 .find());
 
         // then
         assertThat(citiesInTheUK.size(), is(2));
@@ -162,10 +163,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .within(uk)
-                                                      .asList();
+        List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
+                                                             .field("everything")
+                                                             .within(uk)
+                                                             .find());
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -215,10 +216,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .within(uk)
-                                              .asList();
+        List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
+                                                     .field("regions")
+                                                     .within(uk)
+                                                     .find());
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -251,10 +252,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routesInTheUK = getDs().find(Route.class)
-                                           .field("route")
-                                           .within(uk)
-                                           .asList();
+        List<Route> routesInTheUK = toList(getDs().find(Route.class)
+                                                  .field("route")
+                                                  .within(uk)
+                                                  .find());
 
         // then
         assertThat(routesInTheUK.size(), is(1));

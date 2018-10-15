@@ -757,7 +757,7 @@ public class TestUpdateOps extends TestBase {
 
         getDs().update(query, updateOperations, new UpdateOptions());
 
-        List<EntityLogs> list = getDs().find(EntityLogs.class).asList();
+        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).find());
         for (int i = 0; i < list.size(); i++) {
             final EntityLogs entityLogs = list.get(i);
             assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
@@ -780,7 +780,7 @@ public class TestUpdateOps extends TestBase {
 
         getDs().updateFirst(query, newLogs, false);
 
-        List<EntityLogs> list = getDs().find(EntityLogs.class).asList();
+        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).find());
         for (int i = 0; i < list.size(); i++) {
             final EntityLogs entityLogs = list.get(i);
             assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
@@ -800,7 +800,7 @@ public class TestUpdateOps extends TestBase {
                               .set("raw", new BasicDBObject("new", "value")),
                        new UpdateOptions());
 
-        List<EntityLogs> list = getDs().find(EntityLogs.class).asList();
+        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).find());
         for (int i = 0; i < list.size(); i++) {
             final EntityLogs entityLogs = list.get(i);
             assertEquals(entityLogs.id.equals(logs1.id) ? new BasicDBObject("new", "value") : logs.get(i).raw, entityLogs.raw);

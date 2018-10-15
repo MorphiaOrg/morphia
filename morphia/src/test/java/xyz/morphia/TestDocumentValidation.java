@@ -70,7 +70,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void overwriteValidation() {
-        Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
+        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
         MongoDatabase database = addValidation(validator, "validation");
 
         assertEquals(validator, getValidator());
@@ -115,7 +115,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void validationDocuments() {
-        Document validator = Document.parse("{ jelly : { $ne : 'rhubarb' } }");
+        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
         getMorphia().map(DocumentValidation.class);
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
 
@@ -213,13 +213,13 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
 
-        Assert.assertFalse(query.field("number").equal(8).asList().isEmpty());
+        Assert.assertTrue(query.field("number").equal(8).find().hasNext());
     }
 
     @Test
     public void saveToNewCollection() {
         getMorphia().map(DocumentValidation.class);
-        final Document validator = Document.parse("{ number : { $gt : 10 } }");
+        final Document validator = Document.parse("{ \"number\" : { \"$gt\" : 10 } }");
         String collection = "newdocs";
         addValidation(validator, collection);
 
@@ -272,7 +272,7 @@ public class TestDocumentValidation extends TestBase {
         getAds().insert(list, new InsertOptions()
             .bypassDocumentValidation(true));
 
-        Assert.assertFalse(query.field("number").equal(8).asList().isEmpty());
+        Assert.assertTrue(query.field("number").equal(8).find().hasNext());
     }
 
 

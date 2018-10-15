@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
+  Copyright (C) 2010 Olafur nGauti Gudmundsson
   <p/>
   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
   obtain a copy of the License at
@@ -46,7 +46,7 @@ import static org.junit.Assert.assertTrue;
 public class TestDAO extends TestBase {
 
     @Test
-    public void testExists() throws Exception {
+    public void testExists() {
         final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
 
         Hotel borg = new Hotel();
@@ -76,7 +76,7 @@ public class TestDAO extends TestBase {
     }
 
     @Test
-    public void testDAO() throws Exception {
+    public void testDAO() {
         getMorphia().map(Hotel.class);
 
         final Hotel borg = new Hotel();
@@ -123,18 +123,18 @@ public class TestDAO extends TestBase {
 
         hotelDAO.save(hilton);
 
-        final List<Hotel> allHotels = hotelDAO.find().asList();
+        final List<Hotel> allHotels = toList(hotelDAO.find().find());
         assertEquals(2, allHotels.size());
 
-        assertEquals(1, hotelDAO.createQuery()
-                                .asList(new FindOptions()
-                                            .skip(1)
-                                            .limit(10))
-                                .size());
-        assertEquals(1, hotelDAO.createQuery()
-                                .asList(new FindOptions()
-                                            .limit(1))
-                                .size());
+        assertEquals(1, toList(hotelDAO.createQuery()
+                                       .find(new FindOptions()
+                                                 .skip(1)
+                                                 .limit(10)))
+                            .size());
+        assertEquals(1, toList(hotelDAO.createQuery()
+                                       .find(new FindOptions()
+                                                 .limit(1)))
+                            .size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
@@ -151,7 +151,7 @@ public class TestDAO extends TestBase {
     }
 
     @Test
-    public void testNewDAO() throws Exception {
+    public void testNewDAO() {
         getMorphia().map(Hotel.class);
 
         final DAO<Hotel, ObjectId> hotelDAO = new BasicDAO<Hotel, ObjectId>(Hotel.class, getMongoClient(), getMorphia(), "morphia_test");
@@ -196,7 +196,7 @@ public class TestDAO extends TestBase {
 
         hotelDAO.save(hilton);
 
-        assertEquals(2, hotelDAO.find().asList().size());
+        assertEquals(2, toList(hotelDAO.find().find()).size());
 
         assertEquals(2, hotelDAO.findIds().size());
 
@@ -214,15 +214,15 @@ public class TestDAO extends TestBase {
 
         assertEquals(hilton.getId(), hotelDAO.findOneId(getDs().find(Hotel.class).field("stars").equal(4)).getId());
 
-        assertEquals(1, hotelDAO.createQuery()
-                                .asList(new FindOptions()
-                                            .skip(1)
-                                            .limit(10))
-                                .size());
-        assertEquals(1, hotelDAO.createQuery()
-                                .asList(new FindOptions()
-                                            .limit(1))
-                                .size());
+        assertEquals(1, toList(hotelDAO.createQuery()
+                                       .find(new FindOptions()
+                                                 .skip(1)
+                                                 .limit(10)))
+                            .size());
+        assertEquals(1, toList(hotelDAO.createQuery()
+                                       .find(new FindOptions()
+                                                 .limit(1)))
+                            .size());
         assertTrue(hotelDAO.exists("type", Hotel.Type.BUSINESS));
         assertNotNull(hotelDAO.findOne("type", Hotel.Type.LEISURE));
 
@@ -248,7 +248,7 @@ public class TestDAO extends TestBase {
     }
 
     @Test
-    public void testSaveEntityWithId() throws Exception {
+    public void testSaveEntityWithId() {
         final HotelDAO hotelDAO = new HotelDAO(getMorphia(), getMongoClient());
 
         final Hotel borg = new Hotel();

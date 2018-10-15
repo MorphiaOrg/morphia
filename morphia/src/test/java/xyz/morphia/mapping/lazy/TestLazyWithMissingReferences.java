@@ -20,7 +20,7 @@ public class TestLazyWithMissingReferences extends TestBase {
 
         getDs().save(source); // does not fail due to pre-initialized Ids
 
-        getDs().find(Source.class).asList();
+        toList(getDs().find(Source.class).find());
     }
 
     @Test(expected = LazyReferenceFetchingException.class)

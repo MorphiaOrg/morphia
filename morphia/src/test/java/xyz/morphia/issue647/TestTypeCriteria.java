@@ -13,7 +13,7 @@ import xyz.morphia.query.Type;
 public class TestTypeCriteria extends TestBase {
 
     @Test
-    public void getStringTypeData() throws Exception {
+    public void getStringTypeData() {
         Class1 entity = new Class1();
         entity.firstName = "first_name";
         getDs().save(entity);
@@ -22,7 +22,7 @@ public class TestTypeCriteria extends TestBase {
 
         Query<Class1> query = getDs().find(Class1.class);
         query.criteria("first_name").type(Type.STRING);
-        Assert.assertTrue(query.asList().size() > 0);
+        Assert.assertTrue(query.count() > 0);
     }
 
     @Entity(value = "user", noClassnameStored = true)

@@ -1,5 +1,6 @@
 package xyz.morphia.query;
 
+import com.mongodb.client.MongoCursor;
 import org.junit.Before;
 import org.junit.Test;
 import xyz.morphia.TestBase;
@@ -10,9 +11,8 @@ import xyz.morphia.geo.LineString;
 import xyz.morphia.geo.Regions;
 import xyz.morphia.geo.Route;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static xyz.morphia.geo.GeoJson.geometryCollection;
 import static xyz.morphia.geo.GeoJson.lineString;
@@ -45,14 +45,14 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> matchingCity = getDs().find(City.class)
-                                         .field("location")
-                                         .intersects(spanishLine)
-                                         .asList();
+        MongoCursor<City> matchingCity = getDs().find(City.class)
+                                                .field("location")
+                                                .intersects(spanishLine)
+                                                .find();
 
         // then
-        assertThat(matchingCity.size(), is(1));
-        assertThat(matchingCity.get(0), is(sevilla));
+        assertThat(matchingCity.next(), is(sevilla));
+        assertFalse(matchingCity.hasNext());
     }
 
     @Test
@@ -80,15 +80,15 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> areaContainingPoint = getDs().find(Area.class)
-                                                .field("area")
-                                                .intersects(lineString(point(37.4056048, -5.9666089),
+        MongoCursor<Area> areaContainingPoint = getDs().find(Area.class)
+                                                       .field("area")
+                                                       .intersects(lineString(point(37.4056048, -5.9666089),
                                                                        point(37.404497, -5.9640557)))
-                                                .asList();
+                                                       .find();
 
         // then
-        assertThat(areaContainingPoint.size(), is(1));
-        assertThat(areaContainingPoint.get(0), is(sevilla));
+        assertThat(areaContainingPoint.next(), is(sevilla));
+        assertFalse(areaContainingPoint.hasNext());
     }
 
     @Test
@@ -134,15 +134,15 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .intersects(lineString(point(37.4056048, -5.9666089),
+        MongoCursor<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
+                                                             .field("everything")
+                                                             .intersects(lineString(point(37.4056048, -5.9666089),
                                                                              point(37.404497, -5.9640557)))
-                                                      .asList();
+                                                             .find();
 
         // then
-        assertThat(everythingInTheUK.size(), is(1));
-        assertThat(everythingInTheUK.get(0), is(sevilla));
+        assertThat(everythingInTheUK.next(), is(sevilla));
+        assertFalse(everythingInTheUK.hasNext());
     }
 
     @Test
@@ -182,15 +182,15 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .intersects(lineString(point(37.4056048, -5.9666089),
+        MongoCursor<Regions> regionsInTheUK = getDs().find(Regions.class)
+                                                     .field("regions")
+                                                     .intersects(lineString(point(37.4056048, -5.9666089),
                                                                      point(37.404497, -5.9640557)))
-                                              .asList();
+                                                     .find();
 
         // then
-        assertThat(regionsInTheUK.size(), is(1));
-        assertThat(regionsInTheUK.get(0), is(sevilla));
+        assertThat(regionsInTheUK.next(), is(sevilla));
+        assertFalse(regionsInTheUK.hasNext());
     }
 
     @Test
@@ -213,15 +213,15 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routeContainingPoint = getDs().find(Route.class)
-                                                  .field("route")
-                                                  .intersects(lineString(point(37.4043709, -5.9643244),
+        MongoCursor<Route> routeContainingPoint = getDs().find(Route.class)
+                                                         .field("route")
+                                                         .intersects(lineString(point(37.4043709, -5.9643244),
                                                                          point(37.4045286, -5.9642332)))
-                                                  .asList();
+                                                         .find();
 
         // then
-        assertThat(routeContainingPoint.size(), is(1));
-        assertThat(routeContainingPoint.get(0), is(sevilla));
+        assertThat(routeContainingPoint.next(), is(sevilla));
+        assertFalse(routeContainingPoint.hasNext());
     }
 
 }

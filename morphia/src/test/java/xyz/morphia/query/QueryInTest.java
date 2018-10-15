@@ -5,21 +5,21 @@ import com.mongodb.MongoException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
 import xyz.morphia.Key;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.testutil.TestEntity;
-import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -39,9 +39,7 @@ public class QueryInTest extends TestBase {
             query.criteria("otherIds").hasAnyOf(memberships)
         );
 
-        List<Data> dataList = query.asList();
-
-        Assert.assertEquals(0, dataList.size());
+        Assert.assertFalse(query.find().hasNext());
     }
 
     @Test
@@ -57,32 +55,32 @@ public class QueryInTest extends TestBase {
         getDs().save(has);
 
         Query<HasIdOnly> q = getDs().find(HasIdOnly.class);
-        q.criteria("list").in(Arrays.asList(b));
-        Assert.assertEquals(1, q.asList().size());
+        q.criteria("list").in(singletonList(b));
+        Assert.assertEquals(1, q.count());
 
         q = getDs().find(HasIdOnly.class);
         q.criteria("entity").equal(b.getId());
-        Assert.assertEquals(1, q.asList().size());
+        Assert.assertEquals(1, q.count());
     }
 
     @Test
-    public void testInIdList() throws Exception {
+    public void testInIdList() {
         final Doc doc = new Doc();
         doc.id = 1;
         getDs().save(doc);
 
         // this works
-        getDs().find(Doc.class).field("_id").equal(1).asList();
+        getDs().find(Doc.class).field("_id").equal(1).find();
 
         final List<Long> idList = new ArrayList<Long>();
         idList.add(1L);
         // this causes an NPE
-        getDs().find(Doc.class).field("_id").in(idList).asList();
+        getDs().find(Doc.class).field("_id").in(idList).find();
 
     }
 
     @Test
-    public void testInQuery() throws Exception {
+    public void testInQuery() {
         checkMinServerVersion(2.5);
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {
@@ -93,12 +91,11 @@ public class QueryInTest extends TestBase {
         getDs().save(hr);
 
         Query<HasRefs> query = getDs().find(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
-        final List<HasRefs> res = query.asList();
-        Assert.assertEquals(1, res.size());
+        Assert.assertEquals(1, query.count());
     }
 
     @Test
-    public void testInQueryByKey() throws Exception {
+    public void testInQueryByKey() {
         checkMinServerVersion(2.5);
         final HasRef hr = new HasRef();
         List<Key<ReferencedEntity>> refs = new ArrayList<Key<ReferencedEntity>>();
@@ -115,7 +112,7 @@ public class QueryInTest extends TestBase {
 
         Query<HasRef> query = getDs().find(HasRef.class).field("ref").in(refs);
         try {
-            Assert.assertEquals(1, query.asList().size());
+            Assert.assertEquals(1, query.count());
         } catch (MongoException e) {
             LOG.debug("query = " + query);
             throw e;
@@ -123,7 +120,7 @@ public class QueryInTest extends TestBase {
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMorphia().map(HasRefs.class);
         getMorphia().map(ReferencedEntity.class);
     }
@@ -135,9 +132,7 @@ public class QueryInTest extends TestBase {
 
         final Query<HasRefs> q = getDs().find(HasRefs.class);
         q.field("refs").doesNotExist();
-        final List<HasRefs> found = q.asList();
-        Assert.assertNotNull(found);
-        Assert.assertEquals(1, found.size());
+        Assert.assertEquals(1, q.count());
     }
 
     @Entity("data")

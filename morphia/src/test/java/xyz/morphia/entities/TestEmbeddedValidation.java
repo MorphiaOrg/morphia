@@ -16,6 +16,7 @@
 
 package xyz.morphia.entities;
 
+import com.mongodb.client.MongoCursor;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -94,10 +95,10 @@ public class TestEmbeddedValidation extends TestBase {
 
         Query<EntityWithListsAndArrays> query = getDs().find(EntityWithListsAndArrays.class)
                                                           .field("listEmbeddedType.number").equal(42L);
-        List<EntityWithListsAndArrays> list = query.asList();
+        MongoCursor<EntityWithListsAndArrays> cursor = query.find();
 
-        Assert.assertEquals(1, list.size());
-        Assert.assertEquals(fortyTwo, list.get(0).getListEmbeddedType().get(0));
+        Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
+        Assert.assertFalse(cursor.hasNext());
 
         UpdateOperations<EntityWithListsAndArrays> operations = getDs()
             .createUpdateOperations(EntityWithListsAndArrays.class)
@@ -109,10 +110,10 @@ public class TestEmbeddedValidation extends TestBase {
         fortyTwo.setNumber(0L);
         query = getDs().find(EntityWithListsAndArrays.class)
                        .field("listEmbeddedType.number").equal(0);
-        list = query.asList();
+        cursor = query.find();
 
-        Assert.assertEquals(1, list.size());
-        Assert.assertEquals(fortyTwo, list.get(0).getListEmbeddedType().get(0));
+        Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
+        Assert.assertFalse(cursor.hasNext());
 
     }
 

@@ -116,7 +116,7 @@ public class TestSuperDatastore extends TestBase {
         getAds().save(ns, rect);
         assertEquals(2, getAds().getCount(ns));
 
-        rectLoaded = getAds().find(ns, Rectangle.class).asList().get(1);
+        rectLoaded = toList(getAds().find(ns, Rectangle.class).find()).get(1);
         assertEquals(rect.getId(), rectLoaded.getId());
         assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 

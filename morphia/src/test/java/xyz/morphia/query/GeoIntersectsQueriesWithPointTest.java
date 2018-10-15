@@ -45,10 +45,10 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> matchingCity = getDs().find(City.class)
-                                         .field("location")
-                                         .intersects(coordsOfManchester)
-                                         .asList();
+        List<City> matchingCity = toList(getDs().find(City.class)
+                                                .field("location")
+                                                .intersects(coordsOfManchester)
+                                                .find());
 
         // then
         assertThat(matchingCity.size(), is(1));
@@ -80,10 +80,10 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Area> areaContainingPoint = getDs().find(Area.class)
-                                                .field("area")
-                                                .intersects(point(51.507780365645885, -0.21786745637655258))
-                                                .asList();
+        List<Area> areaContainingPoint = toList(getDs().find(Area.class)
+                                                       .field("area")
+                                                       .intersects(point(51.507780365645885, -0.21786745637655258))
+                                                       .find());
 
         // then
         assertThat(areaContainingPoint.size(), is(1));
@@ -131,10 +131,10 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .intersects(point(51.50802478194237, -0.21474729292094707))
-                                                      .asList();
+        List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
+                                                             .field("everything")
+                                                             .intersects(point(51.50802478194237, -0.21474729292094707))
+                                                             .find());
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -178,10 +178,10 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .intersects(point(51.498216362670064, 0.0074849557131528854))
-                                              .asList();
+        List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
+                                                     .field("regions")
+                                                     .intersects(point(51.498216362670064, 0.0074849557131528854))
+                                                     .find());
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -213,10 +213,10 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routeContainingPoint = getDs().find(Route.class)
-                                                  .field("route")
-                                                  .intersects(point(37.40759155713022, -5.964911067858338))
-                                                  .asList();
+        List<Route> routeContainingPoint = toList(getDs().find(Route.class)
+                                                         .field("route")
+                                                         .intersects(point(37.40759155713022, -5.964911067858338))
+                                                         .find());
 
         // then
         assertThat(routeContainingPoint.size(), is(1));

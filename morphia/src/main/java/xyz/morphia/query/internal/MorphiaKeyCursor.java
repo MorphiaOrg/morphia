@@ -90,6 +90,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         wrapped.remove();
     }
 
+    @SuppressWarnings("unchecked")
     private Key<T> convertItem(final DBObject dbObj) {
         Object id = dbObj.get(Mapper.ID_KEY);
         if (id instanceof DBObject) {

@@ -51,13 +51,13 @@ public class TestIdField extends TestBase {
 
         assertEquals(a.data, getDs().get(EmbeddedId.class, id).data);
 
-        final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).asList().get(0);
+        final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).find().next();
         Assert.assertEquals(a.data, embeddedId.data);
         Assert.assertEquals(a.id, embeddedId.id);
     }
 
     @Test
-    public void testIdFieldNameMapping() throws Exception {
+    public void testIdFieldNameMapping() {
         final Rectangle r = new Rectangle(1, 12);
         final BasicDBObject dbObj = (BasicDBObject) getMorphia().toDBObject(r);
         assertFalse(dbObj.containsField("id"));
@@ -66,7 +66,7 @@ public class TestIdField extends TestBase {
     }
 
     @Test
-    public void testKeyAsId() throws Exception {
+    public void testKeyAsId() {
         getMorphia().map(KeyAsId.class);
 
         final Rectangle r = new Rectangle(1, 1);
@@ -82,7 +82,7 @@ public class TestIdField extends TestBase {
     }
 
     @Test
-    public void testMapAsId() throws Exception {
+    public void testMapAsId() {
         getMorphia().map(MapAsId.class);
 
         final MapAsId mai = new MapAsId();

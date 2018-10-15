@@ -10,7 +10,6 @@ import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.MappingException;
 import xyz.morphia.mapping.cache.EntityCache;
-import xyz.morphia.query.MorphiaIterator;
 import xyz.morphia.query.Query;
 
 import java.util.Iterator;
@@ -90,7 +89,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      * @see MapreduceType
      */
     public Iterator<T> getInlineResults() {
-        return new MorphiaIterator<T, T>(datastore, output.results().iterator(), mapper, clazz, null, cache);
+        return new xyz.morphia.query.MorphiaIterator<T, T>(datastore, output.results().iterator(), mapper, clazz, null, cache);
     }
 
     /**

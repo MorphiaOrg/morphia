@@ -1,17 +1,3 @@
-/*
- * Copyright (C) 2010 Olafur Gauti Gudmundsson
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
- */
-
-
 package xyz.morphia.query;
 
 
@@ -87,7 +73,7 @@ import static xyz.morphia.query.Sort.naturalDescending;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
 
     @Test
@@ -131,15 +117,15 @@ public class TestQuery extends TestBase {
     public void maxScan() {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
-        assertEquals(2, getDs().find(Pic.class)
-                               .maxScan(2)
-                               .asList()
-                               .size());
+        assertEquals(2, toList(getDs().find(Pic.class)
+                                      .maxScan(2)
+                                      .find())
+                            .size());
         assertEquals(2, getDs().find(Pic.class)
                                .asList(new FindOptions()
                                            .modifier("$maxScan", 2))
                                .size());
-        assertEquals(4, getDs().find(Pic.class).asList().size());
+        assertEquals(4, toList(getDs().find(Pic.class).find()).size());
     }
 
     @Test
@@ -264,39 +250,31 @@ public class TestQuery extends TestBase {
 
         assertEquals(0, getDs().find(Pic.class)
                                .field("name").contains("PIC")
-                               .asList()
-                               .size());
+                               .count());
         assertEquals(4, getDs().find(Pic.class)
                                .field("name").containsIgnoreCase("PIC")
-                               .asList()
-                               .size());
+                               .count());
 
         assertEquals(0, getDs().find(Pic.class)
                                .field("name").equal("PIC1")
-                               .asList()
-                               .size());
+                               .count());
         assertEquals(1, getDs().find(Pic.class)
                                .field("name").equalIgnoreCase("PIC1")
-                               .asList()
-                               .size());
+                               .count());
 
         assertEquals(0, getDs().find(Pic.class)
                                .field("name").endsWith("C1")
-                               .asList()
-                               .size());
+                               .count());
         assertEquals(1, getDs().find(Pic.class)
                                .field("name").endsWithIgnoreCase("C1")
-                               .asList()
-                               .size());
+                               .count());
 
         assertEquals(0, getDs().find(Pic.class)
                                .field("name").startsWith("PIC")
-                               .asList()
-                               .size());
+                               .count());
         assertEquals(4, getDs().find(Pic.class)
                                .field("name").startsWithIgnoreCase("PIC")
-                               .asList()
-                               .size());
+                               .count());
     }
 
     @Test
@@ -309,12 +287,12 @@ public class TestQuery extends TestBase {
 
         Query query = getDs().find(ContainsRenamedFields.class)
                              .field("last_name").equal("last");
-        assertEquals(1, query.asList().size());
-        assertEquals(2, query.asList(new FindOptions()
+        assertEquals(1, toList(query.find()).size());
+        assertEquals(2, toList(query.find(new FindOptions()
                                          .collation(builder()
                                                         .locale("en")
                                                         .collationStrength(CollationStrength.SECONDARY)
-                                                        .build()))
+                                                        .build())))
                              .size());
         assertEquals(1, query.count());
         assertEquals(2, query.count(new CountOptions()
@@ -348,9 +326,9 @@ public class TestQuery extends TestBase {
         getDb().command(new BasicDBObject("profile", 2));
         String expectedComment = "test comment";
 
-        getDs().find(Pic.class)
-               .asList(new FindOptions()
-                           .modifier("$comment", expectedComment));
+        toList(getDs().find(Pic.class)
+               .find(new FindOptions()
+                           .modifier("$comment", expectedComment)));
 
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
@@ -369,7 +347,7 @@ public class TestQuery extends TestBase {
         getDb().command(new BasicDBObject("profile", 2));
         String expectedComment = "test comment";
 
-        getDs().find(Pic.class).comment(expectedComment).asList();
+        toList(getDs().find(Pic.class).comment(expectedComment).find());
 
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
@@ -393,13 +371,13 @@ public class TestQuery extends TestBase {
                           .find(new FindOptions().limit(1))
                           .tryNext());
 
-        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
+        List<PhotoWithKeywords> keywords = toList(getDs().find(PhotoWithKeywords.class)
                                                   .field("keywords")
                                                   .elemMatch(getDs()
                                                                  .find(Keyword.class)
                                                                  .filter("score > ", 20)
                                                                  .filter("score < ", 100))
-                                                  .asList();
+                                                  .find());
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
     }
@@ -967,7 +945,7 @@ public class TestQuery extends TestBase {
     public void testNaturalSortAscending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalAscending()).asList();
+        List<Rectangle> results = toList(getDs().find(Rectangle.class).order(naturalAscending()).find());
 
         assertEquals(4, results.size());
 
@@ -993,7 +971,7 @@ public class TestQuery extends TestBase {
     public void testNaturalSortDescending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalDescending()).asList();
+        List<Rectangle> results = toList(getDs().find(Rectangle.class).order(naturalDescending()).find());
 
         assertEquals(4, results.size());
 
@@ -1024,10 +1002,10 @@ public class TestQuery extends TestBase {
             new PhotoWithKeywords("1", "2"),
             new PhotoWithKeywords("3", "4"),
             new PhotoWithKeywords("5", "6")));
-        assertEquals(2, getDs().find(PhotoWithKeywords.class)
-                               .asList(new FindOptions()
-                                           .batchSize(-2))
-                               .size());
+        assertEquals(2, toList(getDs().find(PhotoWithKeywords.class)
+                                      .find(new FindOptions()
+                                                .batchSize(-2)))
+                            .size());
     }
 
     @Test
@@ -1040,10 +1018,10 @@ public class TestQuery extends TestBase {
             new PhotoWithKeywords("1", "2"),
             new PhotoWithKeywords("3", "4"),
             new PhotoWithKeywords("5", "6")));
-        assertEquals(2, getDs().find(PhotoWithKeywords.class)
-                               .batchSize(-2)
-                               .asList()
-                               .size());
+        assertEquals(2, toList(getDs().find(PhotoWithKeywords.class)
+                                      .batchSize(-2)
+                                      .find())
+                            .size());
     }
 
     @Test
@@ -1245,8 +1223,7 @@ public class TestQuery extends TestBase {
 
         assertEquals(1, getDs().find(ContainsPic.class)
                                .field("lazyPic").equal(p)
-                               .asList()
-                               .size());
+                               .count());
     }
 
     @Test
@@ -1261,13 +1238,13 @@ public class TestQuery extends TestBase {
 
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
 
-        assertEquals(1, query.field("pic").equal(p).asList().size());
+        assertEquals(1, query.field("pic").equal(p).count());
 
         try {
             getDs().find(ContainsPic.class).filter("pic.name", "foo")
                    .find(new FindOptions().limit(1))
                    .next();
-            assertNull("query validation should have thrown an exception");
+            fail("query validation should have thrown an exception");
         } catch (ValidationException e) {
             assertTrue(e.getMessage().contains("Cannot use dot-"));
         }
@@ -1790,7 +1767,7 @@ public class TestQuery extends TestBase {
         @Id
         private ObjectId id;
         private String name;
-        private boolean prePersist = false;
+        private boolean prePersist;
 
         public Pic() {
         }
@@ -1993,8 +1970,8 @@ public class TestQuery extends TestBase {
     private void compareLists(final List<Rectangle> list, final Query<Rectangle> query1, final Query<Rectangle> query2,
                               final Comparator<Rectangle> comparator) {
         Collections.sort(list, comparator);
-        assertEquals(query1.asList(), list);
-        assertEquals(query2.asList(), list);
+        assertEquals(toList(query1.find()), list);
+        assertEquals(toList(query2.find()), list);
     }
 
     private String getCommentFromProfileRecord(final DBObject profileRecord) {

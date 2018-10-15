@@ -198,7 +198,7 @@ public class TestDatastore extends TestBase {
         getDs().save(fbUsers);
         assertEquals(4, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
-        List<FacebookUser> res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
+        List<FacebookUser> res = toList(getDs().get(FacebookUser.class, asList(1L, 2L)).find());
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(0).id);
@@ -209,7 +209,7 @@ public class TestDatastore extends TestBase {
         getAds().insert(fbUsers);
         assertEquals(4, getDs().getCount(FacebookUser.class));
         assertNotNull(getDs().get(FacebookUser.class, 1));
-        res = getDs().get(FacebookUser.class, asList(1L, 2L)).asList();
+        res = toList(getDs().get(FacebookUser.class, asList(1L, 2L)).find());
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(0).id);

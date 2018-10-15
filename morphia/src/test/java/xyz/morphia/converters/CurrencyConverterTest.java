@@ -16,9 +16,6 @@
 
 package xyz.morphia.converters;
 
-import java.util.Currency;
-import java.util.Locale;
-
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +23,11 @@ import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.query.FindOptions;
 
-import static org.junit.Assert.assertNull;
+import java.util.Currency;
+import java.util.Locale;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CurrencyConverterTest extends ConverterTest<Currency, String> {
     private final CurrencyConverter converter = new CurrencyConverter();

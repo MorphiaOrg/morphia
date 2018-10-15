@@ -5,12 +5,15 @@ import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings({"deprecation", "WeakerAccess"})
 public abstract class TestBase {
@@ -121,4 +124,17 @@ public abstract class TestBase {
     public BasicDBObject obj(final String key, final Object value) {
         return new BasicDBObject(key, value);
     }
+
+    protected static <E> List<E> toList(final MongoCursor<E> cursor) {
+        final List<E> results = new ArrayList<E>();
+        try {
+            while (cursor.hasNext()) {
+                results.add(cursor.next());
+            }
+        } finally {
+            cursor.close();
+        }
+        return results;
+    }
+
 }
