@@ -5,13 +5,13 @@ jdk:
 notifications:
   email:
     recipients:
-    - justin.lee@mongodb.com
+    - jlee@antwerkz.com
     on_success: change
     on_failure: always
 
 env:
   matrix:
-    - MONGODB=3.4.0-rc0
+    - MONGODB=3.4.0
 
 before_script:
   - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz -O /tmp/mongodb.tgz

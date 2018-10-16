@@ -1,7 +1,7 @@
 githubUser = "mongodb"
 githubRepo = "morphia"
 githubBranch = "1.4.x"
-currentVersion = "1.4"
+currentVersion = "1.4-SNAPSHOT"
 highlightTheme = "idea.css"
 apiUrl = "/javadoc"
 coreApiUrl = "http://api.mongodb.org/java/3.4/"
