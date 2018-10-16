@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.49" />
+    <meta name="description" content="">
+
+
+    <link rel="shortcut icon" href="/morphia/1.5/images/favicon.png" type="image/x-icon" />
+<link rel="icon" href="/morphia/1.5/images/favicon.png" type="image/x-icon" />
+    <title>Quick Tour :: Morphia</title>
+
+    
+    <link href="/morphia/1.5/css/nucleus.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1539660179" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1539660179" rel="stylesheet">
+    
+
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1539660179"></script>
+
+    <style type="text/css">
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    <link href="/morphia/1.5/css/java.css" rel="stylesheet">
+<link href="/morphia/1.5/css/theme-green.css" rel="stylesheet">
+
+<style>
+    :root {
+        --MAIN-TEXT-color:#004042;  
+        --MAIN-TITLES-TEXT-color: #004042;  
+        --MAIN-LINK-color:#006cbc;  
+        --MAIN-LINK-HOVER-color:#3f6d2c;  
+        --MAIN-ANCHOR-color: #599a3e;  
+
+        --MENU-HEADER-BG-color:#004042;  
+        --MENU-HEADER-BORDER-color:#6ca439;  
+
+        --MENU-SEARCH-BG-color:#006264;  
+        --MENU-SEARCH-BOX-color: #84c767;  
+        --MENU-SEARCH-BOX-ICONS-color: #c7f7c4;  
+
+        --MENU-SECTIONS-ACTIVE-BG-color:#1b211c;  
+        --MENU-SECTIONS-BG-color:#222723;  
+        --MENU-SECTIONS-LINK-color: #ccc;  
+        --MENU-SECTIONS-LINK-HOVER-color: #e6e6e6;   
+        --MENU-SECTION-ACTIVE-CATEGORY-color: #777;  
+        --MENU-SECTION-ACTIVE-CATEGORY-BG-color: #f3f4eb;  
+
+        --MENU-VISITED-color: #599a3e;  
+        --MENU-SECTION-HR-color: #18211c;  
+    }
+
+    body {
+        background-color: var(--MENU-SECTION-ACTIVE-CATEGORY-BG-color);
+        padding-top: 0;
+    }
+
+    h1 {
+        color: var(--MAIN-TITLES-TEXT-color) !important;
+    }
+
+    strong {
+        color: var(--MAIN-TITLES-TEXT-color) !important;
+    }
+
+    #top-bar-sticky-wrapper {
+        visibility: hidden !important;
+        min-height: 0;
+    }
+
+</style>
+
+  </head>
+  <body class="" data-url="/morphia/1.5/getting-started/quick-tour/">
+    <nav id="sidebar" class="">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="/morphia/1.5">
+    <img src="/morphia/1.5/images/logo.png" alt="Morphia Logo"/>
+</a>
+<span id="version-tag">Morphia 1.5-SNAPSHOT</span>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="text" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-close"></i></span>
+</div>
+
+<script type="text/javascript" src="/morphia/1.5/js/lunr.min.js?1539660179"></script>
+<script type="text/javascript" src="/morphia/1.5/js/auto-complete.js?1539660179"></script>
+<script type="text/javascript">
+    
+        var baseurl = '\/morphia\/1.5';
+    
+</script>
+<script type="text/javascript" src="/morphia/1.5/js/search.js?1539660179"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/morphia/1.5/getting-started/" title="Getting Started" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="/morphia/1.5/getting-started/">
+          Getting Started
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
+        <a href="/morphia/1.5/getting-started/installation-guide/">
+        Installation Guide
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/getting-started/quick-tour/" title="Quick Tour" class="dd-item active">
+        <a href="/morphia/1.5/getting-started/quick-tour/">
+        Quick Tour
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/morphia/1.5/guides/" title="Reference Guides" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/morphia/1.5/guides/">
+          Reference Guides
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/annotations/" title="Annotations" class="dd-item ">
+        <a href="/morphia/1.5/guides/annotations/">
+        Annotations
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/aggregation/" title="Aggregation" class="dd-item ">
+        <a href="/morphia/1.5/guides/aggregation/">
+        Aggregation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/morphia/1.5/guides/indexing/">
+        Indexing
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/jrebel/" title="JRebel" class="dd-item ">
+        <a href="/morphia/1.5/guides/jrebel/">
+        JRebel
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
+        <a href="/morphia/1.5/guides/lifecyclemethods/">
+        Life Cycle Methods
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/querying/" title="Querying" class="dd-item ">
+        <a href="/morphia/1.5/guides/querying/">
+        Querying
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/updating/" title="Updating" class="dd-item ">
+        <a href="/morphia/1.5/guides/updating/">
+        Updating
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/morphia/1.5/guides/validationextension/" title="Validation Extension" class="dd-item ">
+        <a href="/morphia/1.5/guides/validationextension/">
+        Validation Extension
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="/morphia/1.5/javadoc"><i class='fas fa-book'></i> API Documentation</a>
+              </li>
+          
+              <li> 
+                  <a class="padding" href="https://github.com/MorphiaOrg/morphia"><i class='fab fa-fw fa-github'></i> Source Code</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="footer">
+      
+    </section>
+  </div>
+</nav>
+
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/morphia/1.5/'>Morphia</a> > <a href='/morphia/1.5/getting-started/'>Getting Started</a> > Quick Tour
+          
+         
+          
+         
+          
+           
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#setting-up-morphia">Setting up Morphia</a></li>
+<li><a href="#mapping-options">Mapping Options</a></li>
+<li><a href="#mapping-classes">Mapping Classes</a></li>
+<li><a href="#saving-data">Saving Data</a></li>
+<li><a href="#querying">Querying</a></li>
+<li><a href="#updates">Updates</a></li>
+<li><a href="#removes">Removes</a></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+
+        
+        <div id="body-inner">
+          
+            <h1>Quick Tour</h1>
+          
+
+        
+
+
+
+
+<p>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
+abstract much of that away but if something is confusing, please consult the Java driver <a href="http://mongodb.github
+.io/mongo-java-driver/">documentation</a> as well.</p>
+
+<p>The following code snippets come from the <strong>QuickTour.java</strong> example code
+that can be found with the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/examples/java/xyz/morphia/example/QuickTour.java
+">Morphia source</a>.</p>
+
+<h2 id="setting-up-morphia">Setting up Morphia</h2>
+
+<p>The following example shows how to create the initial Morphia instance.  Using this instance, you can configure various aspects of how
+Morphia maps your entities and validates your queries.</p>
+
+<pre><code class="language-java">final Morphia morphia = new Morphia();
+
+// tell Morphia where to find your classes
+// can be called multiple times with different packages or classes
+morphia.mapPackage(&quot;xyz.morphia.example&quot;);
+
+// create the Datastore connecting to the default port on the local host
+final Datastore datastore = morphia.createDatastore(new MongoClient(), &quot;morphia_example&quot;);
+datastore.ensureIndexes();
+</code></pre>
+
+<p>This snippet creates the Morphia instance we&rsquo;ll be using in our simple application.  The <strong>Morphia</strong> class exists to configure the <strong>Mapper</strong>
+ to be used and to define various system-wide defaults.  It is also what is used to create the <strong>Datastore</strong> we&rsquo;ll be using.  The
+ <strong>Datastore</strong> takes two parameters:  the <strong>MongoClient</strong> used to connect to MongoDB and the name of the database to use.  With this
+ approach we could conceivably configure Morphia once and then connect to multiple databases by creating different <strong>Datastore</strong> instances.
+   In practice, this is likely pretty rare but it is possible.</p>
+
+<p>The second line, which we skipped over, deserves a bit of consideration.  In this case, we&rsquo;re telling Morphia to look at every class in the
+package we&rsquo;ve given and find every class annotated with <strong>@Entity</strong> (which we&rsquo;ll cover shortly) and discover the mapping metadata we&rsquo;ve
+put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
+ to properly cover all your entities wherever they might live in your application.</p>
+
+<h2 id="mapping-options">Mapping Options</h2>
+
+<p>Once you have an instance of Morphia, you can configure various mapping options via the <strong>MappingOptions</strong> class.  While it&rsquo;s possible to
+specify the <strong>Mapper</strong> when creating an instance of Morphia, most users will use the default mapper.  In either case, the <strong>Mapper</strong> can
+ be fetched using the <strong>getMapper()</strong> method on the <strong>Morphia</strong> instance.  The two most common elements to configure are <strong>storeEmpties</strong> and
+ <strong>storeNulls</strong>.  By default Morphia will not store empty <strong>List</strong> or <strong>Map</strong> values nor will it store null values in to MongoDB.  If your
+ application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
+ for you.  There are a few other options to configure on <strong>MappingOptions</strong>, but we&rsquo;ll not be covering them here.</p>
+
+<h2 id="mapping-classes">Mapping Classes</h2>
+
+<p>There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with <strong>@Entity</strong>
+ is treated as a top level document stored directly in a collection.  Any class with <strong>@Entity</strong> must have a field annotated with <strong>@Id</strong> to
+define which field to use as the _<strong>id</strong> value in the document written to MongoDB.  <strong>@Embedded</strong> indicates that the class will result in a
+subdocument inside another document.  <strong>@Embedded</strong> classes do not require the presence of an <strong>@Id</strong> field.</p>
+
+<pre><code class="language-java">@Entity(&quot;employees&quot;)
+@Indexes(
+    @Index(value = &quot;salary&quot;, fields = @Field(&quot;salary&quot;))
+)
+class Employee {
+    @Id
+    private ObjectId id;
+    private String name;
+    @Reference
+    private Employee manager;
+    @Reference
+    private List&lt;Employee&gt; directReports;
+    @Property(&quot;wage&quot;)
+    private Double salary;
+}
+</code></pre>
+
+<p>There are a few things here to discuss and others we&rsquo;ll defer to later sections.  This class is annotated using the <strong>@Entity</strong> annotation
+so we know that it will be a top level document.  In the annotation, you&rsquo;ll see <strong>&ldquo;employees&rdquo;</strong>.  By default, Morphia will use the class
+name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
+<strong>Employee</strong> instances will be saved in to the <strong>employees</strong> collection instead.  There is a little more to this annotation but the
+<a href="/morphia/1.5/guides/annotations/#entity">annotations guide</a> covers those details.</p>
+
+<p>The <strong>@Indexes</strong> annotation lists which indexes Morphia should create.  In this instance, we&rsquo;re defining an index named <strong>salary</strong> on the
+ field salary with the default ordering of ascending.  More information on indexing can found
+  <a href="/morphia/1.5/guides/annotations/#indexes">here</a>.</p>
+
+<p>We&rsquo;ve marked the <strong>id</strong> field to be used as our primary key (the _<strong>id</strong> field in the document).  In this instance we&rsquo;re using the Java driver
+type of <strong>ObjectId</strong> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <strong>ObjectId</strong> or <strong>Long</strong>.  There are
+two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy
+every field to a document bound for the database.</p>
+
+<p>The simplest of the two remaining annotations is <strong>@Property</strong>.  This annotation is entirely optional.  If you leave this annotation off,
+Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&rsquo;ll want to change
+the document field name for any number of reasons.  In those cases, you can use <strong>@Property</strong> and pass it the name to be used when this
+class is serialized out to a document to be handed off to MongoDB.</p>
+
+<p>This just leaves <strong>@Reference</strong>.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
+Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/reference/database-references/#dbrefs
+"><strong>DBRef</strong></a> which is just a
+collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
+ exception.</p>
+
+<h2 id="saving-data">Saving Data</h2>
+
+<p>For the most part, you treat your Java objects just like you normally would.  When you&rsquo;re ready to write an object to the database, it&rsquo;s
+as simple as this:</p>
+
+<pre><code class="language-java">final Employee elmer = new Employee(&quot;Elmer Fudd&quot;, 50000.0);
+datastore.save(elmer);
+</code></pre>
+
+<p>Taking it one step further, lets define some relationships and save those, too.</p>
+
+<pre><code class="language-java">final Employee daffy = new Employee(&quot;Daffy Duck&quot;, 40000.0);
+datastore.save(daffy);
+
+final Employee pepe = new Employee(&quot;Pepé Le Pew&quot;, 25000.0);
+datastore.save(pepe);
+
+elmer.getDirectReports().add(daffy);
+elmer.getDirectReports().add(pepe);
+
+datastore.save(elmer);
+</code></pre>
+
+<p>As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and save.  Morphia
+takes care of saving the keys in Elmer&rsquo;s document that refer to Daffy and Pepé.  Updating data in MongoDB is as simple as updating your
+Java objects and then calling <strong>datastore.save()</strong> with them again.  For bulk updates (e.g., everyone gets a raise!) this is not the most
+efficient way of doing updates.  It is possible to update directly in the database without having to pull in every document, convert to
+Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
+how to query.</p>
+
+<h2 id="querying">Querying</h2>
+
+<p>Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
+directly and only rarely do you need to take additional action.  As with everything else, <strong>Datastore</strong> is where we start:</p>
+
+<pre><code class="language-java">final Query&lt;Employee&gt; query = datastore.createQuery(Employee.class);
+final List&lt;Employee&gt; employees = query.asList();
+</code></pre>
+
+<p>This is a basic Morphia query.  Here, we&rsquo;re telling the <strong>Datastore</strong> to create a query that&rsquo;s been typed to <strong>Employee</strong>.  In this
+case, we&rsquo;re fetching every <strong>Employee</strong> in to a <strong>List</strong>.  For very large query results, this could very well be too much to fit in to
+memory.  For this simple example, using <strong>asList()</strong> is fine but in practice <strong>fetch()</strong> is usually the more appropriate choice.  Most queries
+will, of course, want to filter the data in some way. There are two ways of doing this:</p>
+
+<pre><code class="language-java">underpaid = datastore.createQuery(Employee.class)
+                     .field(&quot;salary&quot;).lessThanOrEq(30000)
+                     .asList();
+</code></pre>
+
+<p>The <strong>field()</strong> method here is used to filter on the named field and returns an instance of an interface with a number of methods to build
+a query.  This approach is helpful if compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
+ query building can be done quite safely.</p>
+
+<p>The other approach uses the <strong>filter()</strong> method which is a little more free form and succinct than <strong>field()</strong>.  Here we can embed
+certain operators in the query string.  While this is less verbose than the alternative, it does leave more things in the string to
+validate and potentially get wrong:</p>
+
+<pre><code class="language-java">List&lt;Employee&gt; underpaid = datastore.createQuery(Employee.class)
+                                    .filter(&quot;salary &lt;=&quot;, 30000)
+                                    .asList();
+</code></pre>
+
+<p>Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a
+field called <strong>salary</strong> on the <strong>Employee</strong> class.  If you happen to have mapped that field such that the name in the database doesn&rsquo;t match
+the Java field, Morphia can use either form and will validate against either name.</p>
+
+<h2 id="updates">Updates</h2>
+
+<p>Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
+of update operations.  In this example, we&rsquo;ll find all the underpaid employees and give them a raise of 10000.  The first step is to create
+ the query to find all the underpaid employees.  This is one we&rsquo;ve already seen:</p>
+
+<pre><code class="language-java">final Query&lt;Employee&gt; underPaidQuery = datastore.createQuery(Employee.class)
+                                             .filter(&quot;salary &lt;=&quot;, 30000);
+</code></pre>
+
+<p>To define how we want to update the documents matched by this query, we create an <strong>UpdateOperations</strong> instance:</p>
+
+<pre><code class="language-java">final UpdateOperations&lt;Employee&gt; updateOperations = datastore.createUpdateOperations(Employee.class)
+                                                   .inc(&quot;salary&quot;, 10000);
+</code></pre>
+
+<p>There are many operations on this class but, in this case, we&rsquo;re only updating the <strong>salary</strong> field by 10000.  This corresponds to the
+<a href="http://docs.mongodb.org/manual/reference/operator/update/inc/
+"><strong>$inc</strong></a> operator.  There&rsquo;s one last step involved here:</p>
+
+<pre><code class="language-java">final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
+</code></pre>
+
+<p>This line executes the update in the database without having to pull in however many documents are matched by the query.  The
+<strong>UpdateResults</strong> instance returned will contain various statistics about the update operation.</p>
+
+<h2 id="removes">Removes</h2>
+
+<p>After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
+then tell the <strong>Datastore</strong> to delete them:</p>
+
+<pre><code class="language-java">final Query&lt;Employee&gt; overPaidQuery = datastore.createQuery(Employee.class)
+                                                .filter(&quot;salary &gt;&quot;, 100000);
+datastore.delete(overPaidQuery);
+</code></pre>
+
+<p>There are a couple of variations on <strong>delete()</strong> but this is probably the most common usage.  If you already have an object in hand, there
+is a <strong>delete</strong> that can take that reference and delete it.  There is more information in the <a href="/javadoc">javadoc</a>.</p>
+
+
+<footer class=" footline" >
+	
+</footer>
+
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+        
+            <a class="nav nav-prev" href="/morphia/1.5/getting-started/installation-guide/" title="Installation Guide"> <i class="fas fa-chevron-left"></i></a>
+        
+        
+            <a class="nav nav-next" href="/morphia/1.5/guides/" title="Reference Guides" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+        
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/morphia/1.5/js/clipboard.min.js?1539660179"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1539660179"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1539660179"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1539660179"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1539660179"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1539660179"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1539660179"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1539660179"></script>
+    <script src="/morphia/1.5/js/learn.js?1539660179"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1539660179"></script>
+
+    <link href="/morphia/1.5/mermaid/mermaid.css?1539660179" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1539660179"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    
+
+  </body>
+</html>
+
