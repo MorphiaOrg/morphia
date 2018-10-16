@@ -68,7 +68,7 @@ public @interface Index {
     /**
      * @return if true, tells the unique index to drop duplicates silently when creating; only the first will be kept
      *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     * @deprecated this functionality is no longer supported on the server
      */
     @Deprecated
     boolean dropDups() default false;

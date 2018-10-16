@@ -251,7 +251,6 @@ public class IndexHelperTest extends TestBase {
             .name("index_name")
             .background(true)
             .disableValidation(true)
-            .dropDups(true)
             .expireAfterSeconds(42)
             .sparse(true)
             .unique(true)
