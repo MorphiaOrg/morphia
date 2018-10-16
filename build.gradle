@@ -174,7 +174,7 @@ def find(executable) {
 
 private boolean isSnapshotBranch() {
     String name = gitVersion()
-    name == 'master' || name == 'mapper' || name == '1.4.x'
+    name == 'master' || name == 'mapper'
 }
 
 apply from: 'gradle/osgi-compatibility.gradle'
