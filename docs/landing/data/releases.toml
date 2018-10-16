@@ -19,6 +19,13 @@
   group = "xyz.morphia.morphia"
 
 [[versions]]
+  version = "1.5.0-SNAPSHOT"
+  status = "development"
+  docs = "./1.5"
+  api = "/javadoc"
+  group = "xyz.morphia.morphia"
+
+[[versions]]
   version = "2.0.0-SNAPSHOT"
   status = "development"
   docs = "./2.0"

@@ -1,4 +1,4 @@
-baseurl = "/morphia/1.4"
+baseurl = "/morphia/1.5"
 languageCode = "en-us"
 title = "Morphia"
 theme = "learn"
