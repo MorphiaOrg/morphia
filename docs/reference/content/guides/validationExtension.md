@@ -37,7 +37,7 @@ This is a lightweight wrapper around the JSR 303 API. It installs a simple globa
 [life cycle methods]({{< relref "/guides/lifeCycleMethods.md" >}}) needed for validation. You can use any implementation of JSR 303 by
 just adding it to the classpath.
 
-You can look at the code [here]({{< srcref "validation/src/main/java/org/mongodb/morphia/ValidationExtension.java" >}}).
+You can look at the code [here]({{< srcref "validation/src/main/java/xyz/morphia/ValidationExtension.java" >}}).
 
 ## Dependencies
 
@@ -49,7 +49,7 @@ You can look at the code [here]({{< srcref "validation/src/main/java/org/mongodb
 If you use Maven to manage your project, you can reference Morphia as a dependency:
 ```xml
 <dependency>
-    <groupId>org.mongodb.morphia</groupId>
+    <groupId>xyz.morphia</groupId>
     <artifactId>morphia-validation</artifactId>
     <version>1.3.2</version>
 </dependency>

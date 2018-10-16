@@ -26,7 +26,7 @@ function initializeJS() {
 };
 
 var toggleDownload = function() {
-  downloadLink = 'https://oss.sonatype.org/content/repositories/releases/org/mongodb/morphia/morphia';
+  downloadLink = 'https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia';
   prefix = $('.distroPicker').prop('checked') ? "#maven" : "#gradle"
   releaseVersion = $('.releasePicker').selectpicker().val();
   activeVersion = $('.releasePicker option:selected').text();

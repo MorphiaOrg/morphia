@@ -18,11 +18,11 @@
         <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
     </Match>
     <Match>
-        <Class name="org.mongodb.morphia.testmodel.Hotel"/>
+        <Class name="xyz.morphia.testmodel.Hotel"/>
         <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="org.mongodb.morphia.utils.E1"/>
+        <Class name="xyz.morphia.utils.E1"/>
         <Bug pattern="SS_SHOULD_BE_STATIC"/>
     </Match>
     <Match>
@@ -34,7 +34,7 @@
         <Bug pattern="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
     </Match>
     <Match>
-        <Class name="org.mongodb.morphia.mapping.MappedClass"/>
+        <Class name="xyz.morphia.mapping.MappedClass"/>
         <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
     </Match>
     <Match>
@@ -44,7 +44,7 @@
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
     <Match>
-        <Class name="org.mongodb.morphia.aggregation.Sort"/>
+        <Class name="xyz.morphia.aggregation.Sort"/>
         <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
     </Match>
 

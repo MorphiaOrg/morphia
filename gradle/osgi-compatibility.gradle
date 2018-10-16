@@ -3,8 +3,8 @@ project(':morphia') {
 
     configure(jar.manifest) {
         name = 'Morphia Core'
-        symbolicName = 'org.mongodb.morphia'
-        attributes("JavaRebel-Plugin": "org.mongodb.morphia.ext.jrebel.JRebelPlugin")
+        symbolicName = 'xyz.morphia'
+        attributes("JavaRebel-Plugin": "xyz.morphia.ext.jrebel.JRebelPlugin")
         
         instruction 'Import-Package', '*'
         instruction 'Bundle-License', 'http://www.apache.org/licenses/LICENSE-2.0.txt'

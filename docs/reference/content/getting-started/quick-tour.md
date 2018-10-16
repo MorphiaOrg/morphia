@@ -13,7 +13,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/) as well.
 
 The following code snippets come from the __QuickTour.java__ example code
-that can be found with the [Morphia source]({{< srcref "morphia/src/examples/java/org/mongodb/morphia/example/QuickTour.java">}}).
+that can be found with the [Morphia source]({{< srcref "morphia/src/examples/java/xyz/morphia/example/QuickTour.java">}}).
 
 ## Setting up Morphia
 
@@ -26,7 +26,7 @@ final Morphia morphia = new Morphia();
 
 // tell Morphia where to find your classes
 // can be called multiple times with different packages or classes
-morphia.mapPackage("org.mongodb.morphia.example");
+morphia.mapPackage("xyz.morphia.example");
 
 // create the Datastore connecting to the default port on the local host
 final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");

@@ -19,7 +19,7 @@ add/remove/change values)
 See the [annotations guide]({{< relref "/guides/annotations.md" >}}) for a full list of the annotations supported.
 
 ## Examples
-[Here](https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/org/mongodb/morphia/TestQuery.java#L63) is a one of the test classes.
+[Here](https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/TestQuery.java#L63) is a one of the test classes.
 
 All parameters and return values are options in your implemented methods.
 

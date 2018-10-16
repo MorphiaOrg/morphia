@@ -39,7 +39,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
     apply plugin: 'jacoco'
     apply plugin: 'optional-base'
 
-    group = 'org.mongodb.morphia'
+    group = 'xyz.morphia'
     sourceCompatibility = JavaVersion.VERSION_1_6
     targetCompatibility = JavaVersion.VERSION_1_6
 
@@ -99,8 +99,8 @@ configure(subprojects.findAll { it.name != 'util' }) {
         }
 
         if (!JavaVersion.current().isJava8Compatible()) {
-            exclude 'org/mongodb/morphia/converters/LocalDate*', 'org/mongodb/morphia/converters/LocalTime*',
-                    'org/mongodb/morphia/converters/Instant*', 'org/mongodb/morphia/converters/Java8*'
+            exclude 'xyz/morphia/converters/LocalDate*', 'xyz/morphia/converters/LocalTime*',
+                    'xyz/morphia/converters/Instant*', 'xyz/morphia/converters/Java8*'
         }
 
         jacoco { enabled = false }

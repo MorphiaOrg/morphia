@@ -52,7 +52,7 @@ name as defined in the class's mapping via, e.g.,  the [__@Property__]({{< ref "
 
 Indicates the "type" of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.
 
-*See [IndexType](/javadoc/org/mongodb/morphia/utils/IndexType.html)*
+*See [IndexType](/javadoc/xyz/morphia/utils/IndexType.html)*
 
 #### weight()
 *Optional*
