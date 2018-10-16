@@ -14,7 +14,7 @@ import static org.kohsuke.github.GHIssueState.OPEN
 
 //this class needs you to have your credentials in ~/.github
 class DraftReleaseNotesTask extends DefaultTask {
-    String repositoryName = "mongodb/morphia"
+    String repositoryName = "MorphiaOrg/morphia"
     //generally we're going to expect the release milestone to be open. This is set-able for testing.
     GHIssueState expectedMilestoneState = OPEN
 

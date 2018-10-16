@@ -9,8 +9,8 @@ Bug Fixes and New Features
 --------------------------
 
 Before starting to write code, look for existing [tickets]
-(https://github.com/mongodb/morphia/issues) or [create one]
-(https://github.com/mongodb/morphia/issues/new) 
+(https://github.com/MorphiaOrg/morphia/issues) or [create one]
+(https://github.com/MorphiaOrg/morphia/issues/new) 
 for your bug, issue, or feature request. This helps the community
 avoid working on something that might not be of interest or which
 has already been addressed.  Once you've verified your potential bug

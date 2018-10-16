@@ -29,7 +29,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         def milestoneNumber = task.getMilestoneNumber(repository, 'post-1.0', GHIssueState.OPEN)
@@ -45,7 +45,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         GHMilestone milestone = task.getMilestoneNumber(repository, '0.108', GHIssueState.OPEN)
@@ -60,7 +60,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         when:
         def milestoneNumber = task.getMilestoneNumber(repository, '0.108', CLOSED)
@@ -75,7 +75,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
         GHMilestone release108Milestone = repository.getMilestone(9)
 
         when:
@@ -92,7 +92,7 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         given:
         Project project = ProjectBuilder.builder().build()
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
         def releaseVersion = 'post-1.0'
 
         // add some arbitrary (real) issues to see them populated in the release notes
@@ -111,15 +111,15 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         "### Downloads\n" +
         "Below and on maven central.\n\n" +
         "### Docs\n" +
-        "https://rawgithub.com/wiki/mongodb/morphia/javadoc/post-1.0/index.html\n\n" +
+        "https://rawgithub.com/wiki/MorphiaOrg/morphia/javadoc/post-1.0/index.html\n\n" +
         "### Issues Resolved\n" +
         "#### ENHANCEMENTS\n" +
-        "* [Issue 620](https://github.com/mongodb/morphia/pull/620): Moved around a chunk of tests\n" +
-        "* [Issue 609](https://github.com/mongodb/morphia/issues/609): Support ID generator so users can specify the behaviour when an ID" +
+        "* [Issue 620](https://github.com/MorphiaOrg/morphia/pull/620): Moved around a chunk of tests\n" +
+        "* [Issue 609](https://github.com/MorphiaOrg/morphia/issues/609): Support ID generator so users can specify the behaviour when an ID" +
         " is not supplied\n" +
         "\n" +
         "#### BUGS\n" +
-        "* [Issue 599](https://github.com/mongodb/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
+        "* [Issue 599](https://github.com/MorphiaOrg/morphia/issues/599): QueryImpl usage potentially unsafe with cursor management\n\n"
     }
 
     @Ignore('Functional')
@@ -130,13 +130,13 @@ class DraftReleaseNotesTaskSpecification extends Specification {
         DraftReleaseNotesTask task = project.task('draftReleaseNotes', type: DraftReleaseNotesTask)
         task.releaseVersion = '0.108'
         task.expectedMilestoneState = CLOSED
-        GHRepository repository = GitHub.connect().getRepository("mongodb/morphia")
+        GHRepository repository = GitHub.connect().getRepository("MorphiaOrg/morphia")
 
         expect:
         task.draftReleaseNotes();
 
         //not a great test, there are no assertions.  It's a fully functional test, so go to
-        // https://github.com/mongodb/morphia/releases
+        // https://github.com/MorphiaOrg/morphia/releases
         //to see if the draft release notes have been posted with the text, the issues, and the jars for the release
     }
 

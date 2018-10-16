@@ -4,17 +4,17 @@ initWiki() {
 	if [ ! -d ${WIKIDIR} ]
 	then
 		echo no wiki.  cloning
-		git clone git@github.com:mongodb/morphia.wiki.git ${WIKIDIR}
+		git clone git@github.com:MorphiaOrg/morphia.wiki.git ${WIKIDIR}
 	fi
 }
 
 updateIndex() {
-	echo "## [Current](https://rawgithub.com/wiki/mongodb/morphia/javadoc/${TAG}/apidocs/index.html)\n" > Javadoc.md
+	echo "## [Current](https://rawgithub.com/wiki/MorphiaOrg/morphia/javadoc/${TAG}/apidocs/index.html)\n" > Javadoc.md
 	for i in `ls -t javadoc/`
 	do
 		if [ "$i" != "${TAG}" ]
 		then
-			echo "[$i](https://rawgithub.com/wiki/mongodb/morphia/javadoc/${i}/apidocs/index.html)\n" >> Javadoc.md
+			echo "[$i](https://rawgithub.com/wiki/MorphiaOrg/morphia/javadoc/${i}/apidocs/index.html)\n" >> Javadoc.md
 		fi
 	done
 }
