@@ -120,7 +120,7 @@ configure(subprojects.findAll { it.name != 'util' }) {
     task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'findbugsMain']) {}
 
     javadoc {
-        exclude "**/internal/**"
+        exclude "**/internal/**", "**/relocated/**"
 
         dependsOn project(':util').compileJava //We need taglets to be compiled
 
