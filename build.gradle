@@ -18,11 +18,13 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
 
     dependencies {
         classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.2'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:1.12.+'
+        classpath 'net.researchgate:gradle-release:2.6.0'
     }
 }
 
@@ -134,6 +136,11 @@ configure(subprojects.findAll { it.name != 'util' }) {
         options.encoding = 'UTF-8'
         options.charSet 'UTF-8'
         options.docEncoding 'UTF-8'
+    }
+
+    release {
+        tagTemplate = 'r${version}'
+        buildTasks = ['build']
     }
 }
 
