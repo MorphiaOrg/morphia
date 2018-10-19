@@ -17,4 +17,3 @@
 /**
  * Provides taglets for documentation
  */
-package taglets;

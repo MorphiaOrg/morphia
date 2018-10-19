@@ -1,156 +1,185 @@
-ext.configDir = new File(rootDir, 'config')
-ext.git = find('git')
-ext.majorVersion = major(version)
-
-ext.latest = isSnapshotBranch() ? version : latest_release
-
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
-    }
-}
-
 buildscript {
     repositories {
-        mavenLocal()
         mavenCentral()
         jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenLocal()
     }
-
     dependencies {
-        classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.2'
-        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:1.12.+'
-        classpath 'net.researchgate:gradle-release:2.6.0'
+        classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.5'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
+        classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.4'
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+ext {
+    configDir = new File(rootDir, 'config')
+    majorVersion = major(version)
+    latest = isSnapshotBranch() ? version : latest_release
+    gitVersion = getGitVersion()
 }
 
-configure(subprojects.findAll { it.name != 'util' }) {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
-    apply plugin: 'checkstyle'
-    apply plugin: 'findbugs'
-    apply plugin: 'jacoco'
-    apply plugin: 'optional-base'
+def configDir = ext.configDir
+def coreProjects = subprojects.findAll { !['util'].contains(it.name) }
+def javaProjects = subprojects
+def javaMainProjects = subprojects.findAll { !['util'].contains(it.name) }
+def javaCodeCheckedProjects = subprojects.findAll { !['util', 'no-proxy-dep-tests'].contains(it.name) }
 
-    group = 'xyz.morphia'
-    sourceCompatibility = JavaVersion.VERSION_1_6
-    targetCompatibility = JavaVersion.VERSION_1_6
-
+configure(coreProjects) {
     evaluationDependsOn(':util')
+    group = 'xyz.morphia'
 
     repositories {
         mavenCentral()
+        jcenter()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        google()
         mavenLocal()
     }
+}
+
+configure(javaProjects) {
+    apply plugin: 'java-library'
+
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
 
     dependencies {
-        testCompile 'junit:junit:4.12'
+        compile files("${System.getProperty('java.home')}/../lib/tools.jar")
+    }
+}
+
+configure(javaMainProjects) {
+    apply plugin: 'idea'
+    apply plugin: 'osgi'
+    apply plugin: 'nebula.optional-base'
+
+    dependencies {
+        compile 'org.slf4j:slf4j-api:1.7.6', optional
     }
 
-    project.archivesBaseName = "morphia-${project.name}"
+    tasks.withType(AbstractCompile) {
+        options.encoding = 'ISO-8859-1'
+        options.fork = true
+        options.debug = true
+        options.compilerArgs = ['-Xlint:all', '-Xlint:-options', '-Xlint:-deprecation']
+    }
+}
 
-    task listDependencies << {
-        configurations.compile.each { File file -> println file }
+configure(javaCodeCheckedProjects) {
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
+    apply plugin: 'org.kordamp.gradle.clirr'
+    apply plugin: 'jacoco'
+    apply plugin: 'codenarc'
+
+    dependencies {
+        testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+        testCompile 'cglib:cglib-nodep:2.2.2'
+        testCompile 'org.hamcrest:hamcrest-all:1.3'
+        testCompile 'ch.qos.logback:logback-classic:1.1.1'
+        testCompile project(':util') //Adding categories to classpath
     }
 
-    task testCoverage(dependsOn: check)
+    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'spotbugsMain']) {}
+
+    tasks.withType(Test) {
+        maxHeapSize = "3g"
+        maxParallelForks = 1
+
+        project.ext.buildingWith = { propertyName ->
+            project.hasProperty(propertyName) && project.property(propertyName).toBoolean()
+        }
+
+        useJUnit {
+            if (!project.buildingWith('rs.enabled')) {
+                excludeCategories 'category.ReplicaSet'
+            }
+            if (project.buildingWith('quicktest')) {
+                excludeCategories 'category.SlowUnit'
+            }
+            if (project.buildingWith('travistest')) {
+                excludeCategories 'category.SlowUnit', 'category.Slow'
+            }
+        }
+
+        jacoco { enabled = false }
+
+        testLogging { exceptionFormat = 'full' }
+    }
+
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (taskGraph.hasTask(testCoverage)) {
+            tasks.withType(Test) { jacoco { enabled = true } }
+        }
+    }
+
+    task testCoverage(dependsOn: test)
+
+    /* Code quality */
+    tasks.withType(Checkstyle) {
+        reports {
+            xml.enabled true
+            html.enabled true
+        }
+    }
 
     checkstyle {
-        toolVersion = "6.7"
-        configFile = new File("$configDir/checkstyle.xml")
+        toolVersion = "7.4"
+        configFile = new File(configDir, 'checkstyle.xml')
+        configProperties.checkstyleConfigDir = configDir
     }
 
-    findbugs {
-        excludeFilter = new File("$configDir/findbugs-exclude.xml")
-        toolVersion = '3.0.0'
+    spotbugs {
+        excludeFilter = new File(configDir, 'findbugs-exclude.xml')
         sourceSets = [sourceSets.main]
+        toolVersion = '3.1.7'
     }
 
-    tasks.withType(FindBugs) {
+    codenarc {
+        toolVersion = '1.1'
+        reportFormat = project.buildingWith('xmlReports.enabled') ? 'xml' : 'html'
+    }
+
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
         reports {
             xml.enabled = project.buildingWith('xmlReports.enabled')
             html.enabled = !project.buildingWith('xmlReports.enabled')
         }
     }
 
-
-    tasks.withType(AbstractCompile) {
-        options.encoding = 'ISO-8859-1'
-        options.fork = true
-        options.debug = true
-        options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-Xlint:-options']
-    }
-
     tasks.withType(Test) {
-        if (System.getenv()['RS_ENABLED'] == "true") {
-            systemProperty 'MONGO_URI', 'mongodb://localhost:27017,localhost:27018,localhost:27019'
+        def jdkHome = findProperty("jdkHome")
+        if (jdkHome) {
+            def javaExecutablesPath = new File(jdkHome, 'bin')
+            def javaExecutables = [:].withDefault { execName ->
+                def executable = new File(javaExecutablesPath, execName)
+                assert executable.exists() : "There is no ${execName} executable in ${javaExecutablesPath}"
+                executable
+            }
+            executable = javaExecutables.java
         }
-
-
-        useJUnit {
-        }
-
-        if (!JavaVersion.current().isJava8Compatible()) {
-            exclude 'xyz/morphia/converters/LocalDate*', 'xyz/morphia/converters/LocalTime*',
-                    'xyz/morphia/converters/Instant*', 'xyz/morphia/converters/Java8*'
-        }
-
-        jacoco { enabled = false }
-
-        beforeTest { descr ->
-            logger.info("[Test ${descr.className} > ${descr.name}]")
-        }
-    }
-
-
-    test {
-        // set heap size for the test JVM(s)
-        minHeapSize = "256m"
-        maxHeapSize = "512m"
-    }
-
-    task quickCheck(dependsOn: ['checkstyleMain', 'checkstyleTest', 'findbugsMain']) {}
-
-    javadoc {
-        exclude "**/internal/**", "**/relocated/**"
-
-        dependsOn project(':util').compileJava //We need taglets to be compiled
-
-        options.author = true
-        options.version = true
-        options.tagletPath project(':util').sourceSets.main.output.classesDir
-        options.setTaglets([ 'taglets.ManualTaglet', 'taglets.ServerReleaseTaglet' ])
-        options.links 'http://docs.oracle.com/javase/6/docs/api/'
-        options.links 'http://api.mongodb.org/java/3.0/'
-        title "Morphia ${majorVersion} API"
-        options.encoding = 'UTF-8'
-        options.charSet 'UTF-8'
-        options.docEncoding 'UTF-8'
-    }
-
-    release {
-        tagTemplate = 'r${version}'
-        buildTasks = ['build']
     }
 }
 
-task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) << {
-    dependsOn = subprojects.tasks.clirr
-    reports = files((subprojects.findAll { it.clirr.enabled == true }).tasks.clirr.xmlReport)
+def getGitVersion() {
+    def describeStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', "rev-parse", "--abbrev-ref", "HEAD"
+        standardOutput = describeStdOut
+    }
+    describeStdOut.toString().trim()
 }
 
-def buildingWith(n) {
-    project.hasProperty(n)
+apply from: 'gradle/publish.gradle'
+apply from: 'gradle/deploy.gradle'
+apply from: 'gradle/javadoc.gradle'
+apply from: 'gradle/testColorOutput.gradle'
+apply from: 'gradle/docs.gradle'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
 }
 
 def major(fullVersion) {
@@ -158,32 +187,7 @@ def major(fullVersion) {
         (isSnapshotBranch() && fullVersion.contains('-SNAPSHOT') ? '-SNAPSHOT' : '')
 }
 
-def gitVersion() {
-    def stdOut = new ByteArrayOutputStream()
-    exec {
-        commandLine git, "rev-parse", "--abbrev-ref", "HEAD"
-        standardOutput = stdOut
-        ignoreExitValue = true
-    }
-
-    return stdOut.toString().trim()
-}
-
-def find(executable) {
-    def list = ['/usr/local/bin/', '/usr/bin/']
-    list.findResult {
-        def exec = file(it + executable)
-        if(exec.exists()) {
-            exec.absolutePath
-        }
-    } ?: executable
-}
-
 private boolean isSnapshotBranch() {
-    String name = gitVersion()
+    String name = getGitVersion()
     name == 'master' || name == 'mapper'
 }
-
-apply from: 'gradle/osgi-compatibility.gradle'
-apply from: 'gradle/release-process.gradle'
-apply from: 'gradle/docs.gradle'

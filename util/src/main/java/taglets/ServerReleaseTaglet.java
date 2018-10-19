@@ -1,4 +1,4 @@
-/*
+package taglets;/*
  * Copyright (c) 2008-2015 MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package taglets;
 
 import com.sun.tools.doclets.Taglet;
 
@@ -31,7 +29,7 @@ public class ServerReleaseTaglet extends DocTaglet {
      * @param tagletMap the map of taglets
      */
     public static void register(final Map<String, Taglet> tagletMap) {
-        Taglet t = new taglets.ServerReleaseTaglet();
+        Taglet t = new ServerReleaseTaglet();
         tagletMap.put(t.getName(), t);
     }
 

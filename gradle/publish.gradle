@@ -14,71 +14,95 @@
  * limitations under the License.
  */
 
-configure(subprojects - project(':util')) {
-    apply plugin: 'nexus'
+ext {
+    configurePom = { project ->
+        { ->
+                name = project.hasProperty('pomName') ? project.getProperty('pomName') : project.name
+                description = project.description
+                url = project.hasProperty('pomURL') ? project.getProperty('pomURL') : 'http://www.morphia.xyz'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/MorphiaOrg/morphia.git'
+                    connection = 'scm:git:https://github.com/MorphiaOrg/morphia.git'
+                    developerConnection = 'scm:git:https://github.com/MorphiaOrg/morphia.git'
+                }
+
+                developers {
+                    developer {
+                        name  = 'Various'
+                        organization = 'MorphiaOrg'
+                    }
+                }
+            }
+    }
+    configureMavenRepositories = { project ->
+        { ->
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            maven {
+                url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username project.hasProperty('nexusUsername') ? project.getProperty('nexusUsername') : ''
+                    password project.hasProperty('nexusPassword') ? project.getProperty('nexusPassword') : ''
+                }
+            }
+        }
+    }
+}
+
+def deployProjects = subprojects.findAll { !['util', 'no-proxy-deps-tests', 'docs'].contains(it.name) }
+
+configure(deployProjects) { project ->
+    apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
-    project.ext.mavenDeployers = []
-
-    def pom = { config ->
-        project.mavenDeployers*.pom config
+    task sourcesJar(type: Jar) {
+        from project.sourceSets.main.allJava
+        classifier = 'sources'
     }
 
-    install {
-        project.mavenDeployers << repositories.mavenInstaller
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier = 'javadoc'
     }
 
-    uploadArchives {
-        project.mavenDeployers << repositories.mavenDeployer {
-            def nexusCredentials = [
-                    userName: project.properties.nexusUsername,
-                    password: project.properties.nexusPassword
-            ]
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = project.archivesBaseName
+                from project.components.java
+                artifact sourcesJar
+                artifact javadocJar
 
-            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-                authentication(nexusCredentials)
-            }
-            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                authentication(nexusCredentials)
-            }
-        }
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            }
-        }
-    }
-
-    modifyPom {
-        project {
-            name = 'Morphia'
-            description = 'Java Object Document Mapper for MongoDB'
-            url 'https://github.com/MorphiaOrg/morphia.git'
-
-            scm {
-                url 'https://github.com/MorphiaOrg/morphia.git'
-                connection 'scm:git:https://github.com/MorphiaOrg/morphia.git'
-            }
-
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-
-            developers {
-                developer {
-                    name 'Various'
-                    organization = 'MorphiaOrg'
-                }
+                pom configurePom(project)
             }
         }
 
-        whenConfigured { resultPom ->
-            resultPom.dependencies.removeAll { dep -> dep.scope != 'compile' }
-            resultPom.dependencies*.scope = null
+        repositories configureMavenRepositories(project)
+    }
+
+    afterEvaluate {
+        signing {
+            sign publishing.publications.mavenJava
+        }
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof Sign }) {
+        if (project.hasProperty("signing_keyId")) {
+            allprojects { ext."signing.keyId" = project.property("signing_keyId") }
+        }
+        if (project.hasProperty("signing_secretKeyRingFile")) {
+            allprojects { ext."signing.secretKeyRingFile" = project.property("signing_secretKeyRingFile") }
+        }
+        if (project.hasProperty("signing_password")) {
+            allprojects { ext."signing.password" = project.property("signing_password") }
         }
     }
 }

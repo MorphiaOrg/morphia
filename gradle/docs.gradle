@@ -1,17 +1,10 @@
 import org.gradle.tooling.BuildException
 
-def urlVersion = version.split('\\.')[0..1].join('.')
+def urlVersion = project.version.split('\\.')[0..1].join('.')
 def ghPages = file("build/gh-pages")
 
-ext.hugo = find('hugo')
-
-task showExecutables { doLast {
-    println "hugo = $hugo"
-    println "git = $git"
-} }
-
 def forceLanding() {
-    gitVersion() == 'master' || buildingWith('forceLanding')
+    gitVersion == 'master' || buildingWith('forceLanding')
 }
 
 task cleanDocs() {
@@ -33,8 +26,7 @@ task publishReference(dependsOn: ['reference', 'clonePages']) {
         }
         exec {
             workingDir referencePage
-            commandLine git
-            args("add", ".")
+            commandLine 'git', "add", "."
         }
     }
 }
@@ -49,8 +41,7 @@ task publishLanding(dependsOn: ['landing', 'clonePages']) {
         exec {
             workingDir ghPages
             environment System.getenv()
-            commandLine git
-            args("add", ".")
+            commandLine 'git', "add", "."
         }
     }
 }
@@ -60,9 +51,8 @@ task pushDocs(dependsOn: ['cleanDocs', 'publishReference', 'publishLanding']) {
         exec {
             workingDir ghPages
             environment System.getenv()
-            commandLine git
+            commandLine 'git', "commit", "-a", "-m", "pushing docs updates"
             ignoreExitValue true
-            args("commit", "-a", "-m", "pushing docs updates")
         }
         exec {
             workingDir ghPages
@@ -88,7 +78,7 @@ task landing {
         exec {
             workingDir 'docs/landing'
             environment System.getenv()
-            commandLine hugo
+            commandLine 'hugo'
         }
     }
 }
@@ -101,7 +91,7 @@ task reference(dependsOn: ':morphia:javadoc') {
         exec {
             workingDir 'docs/reference'
             environment System.getenv()
-            commandLine hugo
+            commandLine 'hugo'
         }
         copy {
             from 'morphia/build/docs'
@@ -137,8 +127,7 @@ task viewLanding(dependsOn: 'landing') {
         exec {
             workingDir 'docs/landing'
             environment System.getenv()
-            commandLine hugo
-            args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+            commandLine 'hugo', "server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch"
         }
     }
 }
@@ -148,8 +137,7 @@ task viewReference(dependsOn: 'reference') {
         exec {
             workingDir 'docs/reference'
             environment System.getenv()
-            commandLine hugo
-            args("server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch")
+            commandLine 'hugo', "server", "--baseUrl=http://localhost/", "--buildDrafts", "--watch"
         }
     }
 }
@@ -163,8 +151,7 @@ task clonePages {
             exec {
                 workingDir rootDir
                 environment System.getenv()
-                commandLine git
-                args("config", "--get", "remote.origin.url")
+                commandLine 'git', "config", "--get", "remote.origin.url"
                 standardOutput = stream
             }
 
@@ -173,16 +160,14 @@ task clonePages {
             exec {
                 workingDir 'build'
                 environment System.getenv()
-                commandLine git
-                args("clone", url, "-b", "gh-pages", "gh-pages")
+                commandLine 'git', "clone", url, "-b", "gh-pages", "gh-pages"
             }
         } else {
             println "${pages} already exists.  skipping clone."
             exec {
                 workingDir 'build/gh-pages'
                 environment System.getenv()
-                commandLine git
-                args("pull")
+                commandLine 'git', "pull"
             }
 
         }
