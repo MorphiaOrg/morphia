@@ -56,7 +56,6 @@ ext {
 }
 
 def deployProjects = subprojects.findAll { !['util', 'no-proxy-deps-tests', 'docs'].contains(it.name) }
-
 configure(deployProjects) { project ->
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
