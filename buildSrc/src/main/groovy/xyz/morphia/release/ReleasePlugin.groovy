@@ -27,7 +27,7 @@ class ReleasePlugin implements Plugin<Project> {
 
         project.task('prepareRelease', type: PrepareReleaseTask, dependsOn: project.subprojects.clean)
         // uploadArchives is configured in publish.gradle
-        project.task('draftReleaseNotes', type: DraftReleaseNotesTask, dependsOn: ['prepareRelease', project.subprojects.uploadArchives])
+        project.task('draftReleaseNotes', type: DraftReleaseNotesTask, dependsOn: ['prepareRelease', project.subprojects.publish])
         project.task('updateToNextVersion', type: UpdateToNextVersionTask, dependsOn: [ 'draftReleaseNotes', 'pushDocs' ])
         project.task('release', dependsOn: 'updateToNextVersion')
     }

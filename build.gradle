@@ -177,6 +177,7 @@ apply from: 'gradle/deploy.gradle'
 apply from: 'gradle/javadoc.gradle'
 apply from: 'gradle/testColorOutput.gradle'
 apply from: 'gradle/docs.gradle'
+apply from: 'gradle/release-process.gradle'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.10.2'
