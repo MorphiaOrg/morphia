@@ -54,7 +54,7 @@ public class ZipCodeDataSetTest extends TestBase {
     }
 
     @Test
-    public void averageCitySizeByState() throws InterruptedException, TimeoutException, IOException {
+    public void averageCitySizeByState() {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         AggregationPipeline pipeline = getDs().createAggregation(City.class)
@@ -63,27 +63,32 @@ public class ZipCodeDataSetTest extends TestBase {
         validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "MN", 5372);
     }
 
-    public void installSampleData() throws IOException, TimeoutException, InterruptedException {
+    public void installSampleData() {
         File file = new File("zips.json");
-        if (!file.exists()) {
-            file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
+        try {
             if (!file.exists()) {
-                download(new URL("http://media.mongodb.org/zips.json"), file);
+                file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
+                if (!file.exists()) {
+                    download(new URL("http://media.mongodb.org/zips.json"), file);
+                }
             }
+            DBCollection zips = getDb().getCollection("zips");
+            if (zips.count() == 0) {
+                new ProcessExecutor().command(MONGO_IMPORT,
+                    "--db", getDb().getName(),
+                    "--collection", "zipcodes",
+                    "--file", file.getAbsolutePath())
+                                     .redirectError(System.err)
+                                     .execute();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        DBCollection zips = getDb().getCollection("zips");
-        if (zips.count() == 0) {
-            new ProcessExecutor().command(MONGO_IMPORT,
-                                          "--db", getDb().getName(),
-                                          "--collection", "zipcodes",
-                                          "--file", file.getAbsolutePath())
-                                 .redirectError(System.err)
-                                 .execute();
-        }
+        Assume.assumeTrue("Failed to process media files", file.exists());
     }
 
     @Test
-    public void populationsAbove10M() throws IOException, TimeoutException, InterruptedException {
+    public void populationsAbove10M() {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
@@ -99,7 +104,7 @@ public class ZipCodeDataSetTest extends TestBase {
     }
 
     @Test
-    public void smallestAndLargestCities() throws InterruptedException, TimeoutException, IOException {
+    public void smallestAndLargestCities() {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
         getMorphia().mapPackage(getClass().getPackage().getName());

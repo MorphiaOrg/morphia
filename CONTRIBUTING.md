@@ -27,7 +27,7 @@ Pull Requests
 
 Pull requests should be made against the master (development)
 branch and include relevant tests, if applicable. Code should compile
-and tests should pass under Java 5.  Please run 'gradlew check' to confirm.  If 
+and tests should pass under Java 8.  Please run 'gradlew check' to confirm.  If 
 your tests modify code related to replica sets, please ensure 
 that you run the tests with a replica set where the primary is on port 27017.
 
