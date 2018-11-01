@@ -133,6 +133,7 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <excludePackageNames>**/relocated/**</excludePackageNames>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
         </plugins>
