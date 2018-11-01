@@ -50,7 +50,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -952,7 +952,7 @@ public class Mapper {
                 if (isPropertyType(subType)) {
                     return toDBObject(newObj);
                 } else {
-                    final HashMap m = new HashMap();
+                    final LinkedHashMap m = new LinkedHashMap();
                     for (final Map.Entry e : (Iterable<Map.Entry>) ((Map) newObj).entrySet()) {
                         m.put(e.getKey(), toMongoObject(e.getValue(), includeClassName));
                     }
