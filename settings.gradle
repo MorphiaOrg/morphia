@@ -1,7 +1,0 @@
-include ':logging-slf4j'
-include ':validation'
-include ':entityscanner-plug'
-include ':guice-plug'
-include ':no-proxy-deps-tests'
-include ':morphia'
-include ':util'
