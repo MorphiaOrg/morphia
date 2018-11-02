@@ -49,8 +49,8 @@ You can look at the code [here]({{< srcref "validation/src/main/java/xyz/morphia
 If you use Maven to manage your project, you can reference Morphia as a dependency:
 ```xml
 <dependency>
-    <groupId>xyz.morphia</groupId>
-    <artifactId>morphia-validation</artifactId>
+    <groupId>xyz.morphia.morphia</groupId>
+    <artifactId>validation</artifactId>
     <version>1.4.0-SNAPSHOT</version>
 </dependency>
 ```

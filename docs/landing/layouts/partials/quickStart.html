@@ -35,7 +35,7 @@
     </div>
   </form>
   <div class="hidden-md hidden-sm hidden-xs col-lg-2 col-lg-pull-10 downloadLink">
-  <a href="https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia/{{$currentReleasedVersion.version}}/"
+  <a href="https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia/core/{{$currentReleasedVersion.version}}/"
      id="downloadLink" class="btn btn-dark btn-download" target="_blank">Download</a>
   </div>
   </div>
@@ -59,8 +59,8 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;groupId&gt;xyz.morphia.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;core&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -80,7 +80,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-            compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
+            compile 'xyz.morphia.morphia:core:{{$currentVersion.version}}'
         }
         repositories {
           maven {
@@ -94,8 +94,8 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;org.mongodb.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;groupId&gt;xyz.morphia.morphia&lt;/groupId&gt;
+              &lt;artifactId&gt;core&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -105,7 +105,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-          compile 'org.mongodb.morphia:morphia:{{$currentVersion.version}}'
+          compile 'xyz.morphia.morphia:core:{{$currentVersion.version}}'
         }
 
 
