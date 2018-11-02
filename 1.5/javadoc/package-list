@@ -4,6 +4,7 @@ xyz.morphia.annotations
 xyz.morphia.converters
 xyz.morphia.dao
 xyz.morphia.geo
+xyz.morphia.internal
 xyz.morphia.logging
 xyz.morphia.logging.jdk
 xyz.morphia.mapping
@@ -14,5 +15,6 @@ xyz.morphia.mapping.validation
 xyz.morphia.mapping.validation.classrules
 xyz.morphia.mapping.validation.fieldrules
 xyz.morphia.query
+xyz.morphia.query.internal
 xyz.morphia.query.validation
 xyz.morphia.utils
