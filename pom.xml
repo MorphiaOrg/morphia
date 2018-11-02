@@ -135,6 +135,8 @@
                     <failOnError>false</failOnError>
                     <excludePackageNames>**/relocated/**</excludePackageNames>
                     <doclint>none</doclint>
+                    <doctitle>Morphia</doctitle>
+                    <windowtitle>Morphia</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>
                             <groupId>${project.groupId}</groupId>

@@ -21,7 +21,15 @@ public/index.html: $(shell find . | grep -v public)
 	@hugo
 
 all: public/index.html $(JAVADOC)/index.html
-	@rsync -ra $(JAVADOC) public
+	@mkdir -p public/javadoc
+	@rsync -ra $(JAVADOC)/ public/javadoc
+
+publish: all
+	rsync -rav --delete public/ ../../target/gh-pages/$(MAJOR)
+	cd ../../target/gh-pages/$(MAJOR) ; git add .
 
 watch: all
 	hugo server --baseUrl=http://localhost/ --buildDrafts --watch
+
+clean:
+	rm -rf public
