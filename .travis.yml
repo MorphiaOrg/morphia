@@ -11,7 +11,7 @@ notifications:
 
 env:
   matrix:
-    - MONGODB=3.4.0
+    - MONGODB=3.4.17
 
 before_script:
   - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz -O /tmp/mongodb.tgz
@@ -19,5 +19,5 @@ before_script:
   - mkdir /tmp/data
   - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
-install: ./gradlew -q jar --stacktrace
-script: ./gradlew check --stacktrace
+install: ./mvn package
+script: ./mvn test
