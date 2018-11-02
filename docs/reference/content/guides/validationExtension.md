@@ -51,6 +51,6 @@ If you use Maven to manage your project, you can reference Morphia as a dependen
 <dependency>
     <groupId>xyz.morphia.morphia</groupId>
     <artifactId>validation</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>{{< version >}}</version>
 </dependency>
 ```

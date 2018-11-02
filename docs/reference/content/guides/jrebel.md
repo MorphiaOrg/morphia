@@ -40,6 +40,6 @@ If you use Maven to manage your project, you can reference the Extension as a de
 <dependency>
     <groupId>xyz.morphia.morphia</groupId>
     <artifactId>jrebel-plug</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>{{< version >}}</version>
 </dependency>
 ```
