@@ -30,5 +30,4 @@ before_script:
   - mkdir /tmp/data
   - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
-install: ./gradlew -q jar --stacktrace -P${DRIVER}
-script: ./gradlew check --stacktrace -P${DRIVER}
+script: mvn test

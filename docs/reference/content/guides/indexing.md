@@ -86,9 +86,7 @@ mapped document names.  Setting this to __true__ disables this validation.
 #### dropDups()
 *Default: false*
 
-When defining a [unique]({{< relref "#unique" >}}) index, if there are duplicate values found, the index creation will.  Setting this 
-value to
-true will instruct MongoDB to drop the documents with duplicate values.
+When defining a [unique]({{< relref "#unique" >}}) index, if there are duplicate values found, the index creation will.  Setting this value to true will instruct MongoDB to drop the documents with duplicate values.
 
 {{% note class="important" %}}
 As of MongoDB version 3.0, the dropDups option is no longer available.

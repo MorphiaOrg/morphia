@@ -10,4 +10,4 @@ title = "Installation Guide"
 
 The recommended way to get started using Morphia in your project is with a dependency management system.
 
-{{< install version="1.5.0-SNAPSHOT" >}}
+{{< install >}}

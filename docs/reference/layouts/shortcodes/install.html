@@ -1,25 +1,26 @@
-{{ $version := .Get "version"}}
 <section class="maven">
-<pre><code>
+<pre><code class="ini">
 &lt;dependencies&gt;
     &lt;dependency&gt;
         &lt;groupId&gt;xyz.morphia&lt;/groupId&gt;
         &lt;artifactId&gt;morphia&lt;/artifactId&gt;
-        &lt;version&gt;{{$version}}&lt;/version&gt;
+        &lt;version&gt;{{ .Page.Site.Data.morphia.currentVersion }}&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
+
 </code></pre>
 </section>
 <section class="gradle hidden">
 <pre><code>
   dependencies {
-      compile 'xyz.morphia:morphia:{{$version}}'
+      compile 'xyz.morphia:morphia:{{ .Page.Site.Data.morphia.currentVersion }}'
   }
+
 </code></pre>
 </section>
 <section class="downloadInfo">
 <p class="small">You can also download the jars
-  <a href="https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia/{{$version}}" target="_blank">directly</a>
+  <a href="https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia/{{ .Page.Site.Data.morphia.currentVersion }}" target="_blank">directly</a>
   from sonatype.</a>
 </p>
 
