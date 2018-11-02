@@ -19,5 +19,5 @@ before_script:
   - mkdir /tmp/data
   - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
-install: ./mvn package
-script: ./mvn test
+install: mvn package
+script: mvn test
