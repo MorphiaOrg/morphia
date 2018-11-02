@@ -134,7 +134,7 @@
                 <version>3.0.1</version>
                 <configuration>
                     <failOnError>false</failOnError>
-                    <excludePackageNames>**/relocated/**</excludePackageNames>
+                    <excludePackageNames>**/relocated/**, **/internal/**, xyz/morphia/utils</excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia</doctitle>
                     <windowtitle>Morphia</windowtitle>

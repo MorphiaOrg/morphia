@@ -1,6 +1,12 @@
 [[versions]]
-  version = "1.3.2"
+  version = "1.4.0"
   status = "current"
+  docs = "./1.4"
+  api = "/javadoc"
+  group = "xyz.morphia.morphia"
+
+[[versions]]
+  version = "1.3.2"
   docs = "./1.3"
   api = "/javadoc"
   group = "org.mongodb.morphia"
@@ -10,13 +16,6 @@
   docs = "./1.2"
   api = "/javadoc"
   group = "org.mongodb.morphia"
-
-[[versions]]
-  version = "1.5.0-SNAPSHOT"
-  status = "development"
-  docs = "./1.4"
-  api = "/javadoc"
-  group = "xyz.morphia.morphia"
 
 [[versions]]
   version = "1.5.0-SNAPSHOT"

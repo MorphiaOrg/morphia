@@ -1,4 +1,4 @@
-SUBDIRS = reference
+SUBDIRS = reference landing
 
 .PHONY: subdirs $(SUBDIRS) ../target
 
@@ -12,9 +12,11 @@ $(SUBDIRS):
 	git clone $(shell git config --get remote.origin.url) -b gh-pages ../target/gh-pages
 
 publish: all ../target/gh-pages
-	cd ../target/gh-pages ; git pull
-	@$(MAKE) -s -C reference publish
-	cd ../target/gh-pages ; git commit -a -m "pushing docs updates" && git push
+	@cd ../target/gh-pages ; git pull
+	@$(foreach var, $(SUBDIRS), $(MAKE) -s -C $(var) publish;)
+	cd ../target/gh-pages ; git add . && git commit -a -m "pushing docs updates"
+	cd ../target/gh-pages && git push
 
 clean:
-	@$(MAKE) -s -C reference clean
+	@$(foreach var,$(SUBDIRS),$(MAKE) -s -C $(var) clean;)
+	@rm -rf ../target/gh-pages
