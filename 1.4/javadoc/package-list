@@ -4,6 +4,7 @@ xyz.morphia.annotations
 xyz.morphia.converters
 xyz.morphia.dao
 xyz.morphia.geo
+xyz.morphia.internal
 xyz.morphia.logging
 xyz.morphia.logging.jdk
 xyz.morphia.mapping
