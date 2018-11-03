@@ -27,8 +27,8 @@
     </appender>
 
     <root>
-        <level value="WARN"/>
-        <appender-ref ref="CONSOLE"/>
+        <level value="ERROR"/>
+        <appender-ref ref="adsf;lka"/>
     </root>
 
 </log4j:configuration>
