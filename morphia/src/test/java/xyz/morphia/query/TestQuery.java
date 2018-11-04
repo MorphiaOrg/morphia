@@ -1098,7 +1098,8 @@ public class TestQuery extends TestBase {
         query.criteria("keywords.keyword").not().startsWith("ralph");
         DBObject queryObject = query.getQueryObject();
         BasicDBObject expected = new BasicDBObject("keywords.keyword",
-            new BasicDBObject("$not", new BasicDBObject("$regex", "^ralph")));
+            new BasicDBObject("$not", new BasicDBObject("$regex", "^ralph")
+                .append("$options", "")));
         assertEquals(expected.toString(), queryObject.toString());
     }
 
