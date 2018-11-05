@@ -8,14 +8,15 @@ function endsWith(str, suffix) {
 function initLunr() {
     if (!endsWith(baseurl,"/")){
         baseurl = baseurl+'/'
-    }
+    };
+
     // First retrieve the index file
     $.getJSON(baseurl +"index.json")
         .done(function(index) {
             pagesIndex =   index;
             // Set up lunrjs by declaring the fields we use
             // Also provide their boost level for the ranking
-            lunrIndex = new lunr.Index;
+            lunrIndex = new lunr.Index
             lunrIndex.ref("uri");
             lunrIndex.field('title', {
                 boost: 15

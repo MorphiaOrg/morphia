@@ -1,3 +1,6 @@
+org.bson.codecs
+org.bson.codecs.configuration
+org.bson.codecs.pojo
 xyz.morphia
 xyz.morphia.aggregation
 xyz.morphia.annotations
@@ -9,9 +12,10 @@ xyz.morphia.mapping
 xyz.morphia.mapping.cache
 xyz.morphia.mapping.codec
 xyz.morphia.mapping.experimental
+xyz.morphia.mapping.lazy
+xyz.morphia.mapping.lazy.proxy
 xyz.morphia.mapping.validation
 xyz.morphia.mapping.validation.classrules
 xyz.morphia.mapping.validation.fieldrules
 xyz.morphia.query
 xyz.morphia.query.validation
-xyz.morphia.utils

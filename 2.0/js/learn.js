@@ -23,7 +23,8 @@ function getScrollBarWidth() {
     document.body.removeChild(outer);
 
     return (w1 - w2);
-}
+};
+
 function setMenuHeight() {
     $('#sidebar .highlightable').height($('#sidebar').innerHeight() - $('#header-wrapper').height() - 40);
     $('#sidebar .highlightable').perfectScrollbar('update');
@@ -65,7 +66,8 @@ $(window).resize(function() {
                 if (!execAsap)
                     func.apply(obj, args);
                 timeout = null;
-            }
+            };
+
             if (timeout)
                 clearTimeout(timeout);
             else if (execAsap)
@@ -73,7 +75,7 @@ $(window).resize(function() {
 
             timeout = setTimeout(delayed, threshold || 100);
         };
-    };
+    }
     // smartresize
     jQuery.fn[sr] = function(fn) { return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
 
@@ -134,7 +136,7 @@ jQuery(document).ready(function() {
             $('ul.topics').removeClass('searched');
             items.css('display', 'block');
             sessionStorage.removeItem('search-value');
-            $(".highlightable").unhighlight({ element: 'mark' });
+            $(".highlightable").unhighlight({ element: 'mark' })
             return;
         }
 
@@ -157,7 +159,7 @@ jQuery(document).ready(function() {
     });
 
     if (sessionStorage.getItem('search-value')) {
-        var searchValue = sessionStorage.getItem('search-value');
+        var searchValue = sessionStorage.getItem('search-value')
         $(document.body).removeClass('searchbox-hidden');
         $('[data-search-input]').val(searchValue);
         $('[data-search-input]').trigger('input');
@@ -236,7 +238,7 @@ jQuery(document).ready(function() {
     $('#top-bar a:not(:has(img)):not(.btn)').addClass('highlight');
     $('#body-inner a:not(:has(img)):not(.btn):not(a[rel="footnote"])').addClass('highlight');
 
-    var touchsupport = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+    var touchsupport = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)
     if (!touchsupport){ // browser doesn't support touch
         $('#toc-menu').hover(function() {
             $('.progress').stop(true, false, true).fadeToggle(100);
@@ -435,6 +437,8 @@ jQuery.fn.highlight = function(words, options) {
         return word.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     });
     if (words.length == 0) { return this; }
+    ;
+
     var flag = settings.caseSensitive ? "" : "i";
     var pattern = "(" + words.join("|") + ")";
     if (settings.wordsOnly) {

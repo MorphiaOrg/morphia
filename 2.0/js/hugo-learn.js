@@ -28,7 +28,7 @@ images.wrap(function(){
 
 // Change styles, depending on parameters set to the image
 images.each(function(index){
-  var image = $(this);
+  var image = $(this)
   var o = getUrlParameter(image[0].src);
   if (typeof o !== "undefined") {
     var h = o["height"];
