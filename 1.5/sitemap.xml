@@ -3,76 +3,76 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/morphia/1.5/issues-help/</loc>
+    <loc>/morphia/2.0/issues-help/</loc>
     <lastmod>2015-03-18T16:56:14+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/annotations/</loc>
+    <loc>/morphia/2.0/guides/annotations/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/getting-started/</loc>
+    <loc>/morphia/2.0/getting-started/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/getting-started/installation-guide/</loc>
+    <loc>/morphia/2.0/getting-started/installation-guide/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/</loc>
+    <loc>/morphia/2.0/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/getting-started/quick-tour/</loc>
+    <loc>/morphia/2.0/getting-started/quick-tour/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/</loc>
+    <loc>/morphia/2.0/guides/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/aggregation/</loc>
+    <loc>/morphia/2.0/guides/aggregation/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/categories/</loc>
+    <loc>/morphia/2.0/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/indexing/</loc>
+    <loc>/morphia/2.0/guides/indexing/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/jrebel/</loc>
+    <loc>/morphia/2.0/guides/jrebel/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/lifecyclemethods/</loc>
+    <loc>/morphia/2.0/guides/lifecyclemethods/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/querying/</loc>
+    <loc>/morphia/2.0/guides/querying/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/tags/</loc>
+    <loc>/morphia/2.0/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/updating/</loc>
+    <loc>/morphia/2.0/guides/updating/</loc>
   </url>
   
   <url>
-    <loc>/morphia/1.5/guides/validationextension/</loc>
+    <loc>/morphia/2.0/guides/validationextension/</loc>
   </url>
   
 </urlset>
