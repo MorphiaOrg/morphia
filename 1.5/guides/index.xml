@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Reference Guides on Morphia</title>
-    <link>/morphia/2.0/guides/</link>
+    <link>/morphia/1.5/guides/</link>
     <description>Recent content in Reference Guides on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
     
-	<atom:link href="/morphia/2.0/guides/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/morphia/1.5/guides/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Annotations</title>
-      <link>/morphia/2.0/guides/annotations/</link>
+      <link>/morphia/1.5/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/annotations/</guid>
+      <guid>/morphia/1.5/guides/annotations/</guid>
       <description>Below is a list of all the annotations and a brief description of how to use them.
 Indexes Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes. To see the next few annotations in context, please refer to TestIndexCollections.java or TestIndexed.java in the Morphia source.
 Index The @Index documentation can be found here. There are two pieces to this annotation that are mutually exclusive.</description>
@@ -24,29 +24,29 @@ Index The @Index documentation can be found here. There are two pieces to this a
     
     <item>
       <title>Aggregation</title>
-      <link>/morphia/2.0/guides/aggregation/</link>
+      <link>/morphia/1.5/guides/aggregation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/aggregation/</guid>
+      <guid>/morphia/1.5/guides/aggregation/</guid>
       <description>The aggregation framework in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection. These pipelines can be used for analytics or they can be used to convert your data from one form to another. This guide will not go in to the details of how aggregation works, however. The official MongoDB documentation has extensive tutorials on such details. Rather, this guide will focus on the Morphia API.</description>
     </item>
     
     <item>
       <title>Indexing</title>
-      <link>/morphia/2.0/guides/indexing/</link>
+      <link>/morphia/1.5/guides/indexing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/indexing/</guid>
+      <guid>/morphia/1.5/guides/indexing/</guid>
       <description>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. In addition to the familiar ascending/descending index types, Morphia and MongoDB support TTL, text, and geospatial indexes. When defining text indexes there are certain restrictions which will be covered below. Full details for all these types are available in the manual.
 There are two ways to define indexes: at the class level and at the field level.</description>
     </item>
     
     <item>
       <title>JRebel</title>
-      <link>/morphia/2.0/guides/jrebel/</link>
+      <link>/morphia/1.5/guides/jrebel/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/jrebel/</guid>
+      <guid>/morphia/1.5/guides/jrebel/</guid>
       <description>This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.
 Prerequisites Of course you need to run JRebel (http://zeroturnaround.com) for this extension to be useful. On top of that, you need to tell JRebel about the Plugin. In order to do that, add the following two new Elements to the VM startup command:
 -Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar  If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.</description>
@@ -54,30 +54,30 @@ Prerequisites Of course you need to run JRebel (http://zeroturnaround.com) for t
     
     <item>
       <title>Life Cycle Methods</title>
-      <link>/morphia/2.0/guides/lifecyclemethods/</link>
+      <link>/morphia/1.5/guides/lifecyclemethods/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/lifecyclemethods/</guid>
+      <guid>/morphia/1.5/guides/lifecyclemethods/</guid>
       <description>There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save) , and Pre/Post-Load.
- @PrePersist - Called before save, it can return a Document in place of an empty one. @PostPersist - Called after the save call to the database @PreLoad - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values) @PostLoad - Called after populating the entity with the values from the document  See the annotations guide for a full list of the annotations supported.</description>
+ @PrePersist - Called before save, it can return a DBObject in place of an empty one. @PreSave - Called right before DBCollection.save() is called. Changes made to the entity will not be persisted; the DBObject can be passed as an argument (you can add/remove/change values) @PostPersist - Called after the save call to the database @PreLoad - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can add/remove/change values) @PostLoad - Called after populating the entity with the values from the document  See the annotations guide for a full list of the annotations supported.</description>
     </item>
     
     <item>
       <title>Querying</title>
-      <link>/morphia/2.0/guides/querying/</link>
+      <link>/morphia/1.5/guides/querying/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/querying/</guid>
+      <guid>/morphia/1.5/guides/querying/</guid>
       <description>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes. It attempts to provide as much type safety and validation as possible. To this end, Morphia offers the Query class which can be parameterized to the type of your entity.
 Creating a Query The Datastore is the key class when using Morphia. Virtually all operations begin with the Datastore.</description>
     </item>
     
     <item>
       <title>Updating</title>
-      <link>/morphia/2.0/guides/updating/</link>
+      <link>/morphia/1.5/guides/updating/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/updating/</guid>
+      <guid>/morphia/1.5/guides/updating/</guid>
       <description>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.
 Updating (on the server) The update method on Datastore is used to issue a command to the server to change existing documents. The effects of the update command are defined via UpdateOperations methods.
 The Field Expression The field expression, used by all update operations, can be either a single field name or any dot-notation form (for embedded elements).</description>
@@ -85,10 +85,10 @@ The Field Expression The field expression, used by all update operations, can be
     
     <item>
       <title>Validation Extension</title>
-      <link>/morphia/2.0/guides/validationextension/</link>
+      <link>/morphia/1.5/guides/validationextension/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/morphia/2.0/guides/validationextension/</guid>
+      <guid>/morphia/1.5/guides/validationextension/</guid>
       <description>This is a simple extension to Morphia to process JSR 303 Validation Annotations.
 Using Add this at the start of your application (or wherever you create your morphia instances).
 new ValidationExtension(morphia);  Example Here is a simple example using (as an example) Hibernate validation:
