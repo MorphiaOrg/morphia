@@ -222,8 +222,4 @@
         </module>
     </module>
     <module name="SuppressionCommentFilter"/>
-    <module name="SuppressionFilter">
-        <property name="file" value="config/checkstyle-exclude.xml"/>
-    </module>
-
 </module>
