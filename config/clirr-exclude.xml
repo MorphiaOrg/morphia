@@ -1,0 +1,13 @@
+<differences>
+    <difference>
+        <className>org.slf4j.*</className>
+    </difference>
+    <difference>
+        <className>com.mongodb.*</className>
+    </difference>
+    <difference>
+        <className>**</className>
+        <method>**</method>
+        <differenceType>7012</differenceType>
+    </difference>
+</differences>
