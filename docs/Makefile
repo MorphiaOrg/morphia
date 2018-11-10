@@ -13,7 +13,7 @@ $(SUBDIRS):
 
 publish: all ../target/gh-pages
 	@cd ../target/gh-pages ; git pull
-	@$(foreach var, $(SUBDIRS), $(MAKE) -s -C $(var) publish;)
+	@$(foreach var, $(SUBDIRS), $(MAKE) -C $(var) publish;)
 	cd ../target/gh-pages ; git add . && git commit -a -m "pushing docs updates"
 	cd ../target/gh-pages && git push
 
