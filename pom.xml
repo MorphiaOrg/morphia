@@ -28,14 +28,6 @@
             <name>JCenter</name>
             <url>https://jcenter.bintray.com/</url>
         </pluginRepository>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-gantsign-maven</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/gantsign/maven</url>
-        </pluginRepository>
     </pluginRepositories>
 
     <properties>
@@ -71,22 +63,30 @@
                         <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>3.1.8</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.github.spotbugs</groupId>
-                            <artifactId>spotbugs</artifactId>
-                            <version>3.1.8</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-enforcer-plugin</artifactId>
+              <version>3.0.0-M2</version>
+              <executions>
+                <execution>
+                  <id>enforce-maven</id>
+                  <goals>
+                    <goal>enforce</goal>
+                  </goals>
+                  <configuration>
+                    <rules>
+                      <requireMavenVersion>
+                        <version>3.5.4</version>
+                      </requireMavenVersion>
+                    </rules>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
@@ -176,8 +176,4 @@
         <module>no-proxy-deps-tests</module>
         <module>docs</module>
     </modules>
-
-    <prerequisites>
-        <maven>3.5</maven>
-    </prerequisites>
 </project>
