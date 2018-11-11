@@ -174,6 +174,5 @@
         <module>logging-slf4j</module>
         <module>entityscanner-plug</module>
         <module>no-proxy-deps-tests</module>
-        <module>docs</module>
     </modules>
 </project>
