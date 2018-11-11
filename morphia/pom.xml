@@ -57,6 +57,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>3.1.8</version>
                 <configuration>
                     <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>

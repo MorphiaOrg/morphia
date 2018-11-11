@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
     <build>
-        <defaultGoal>exec:exec</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -31,18 +30,32 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>reference</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>make</executable>
-                    <arguments>
-                        <argument>-s</argument>
-                        <argument>reference</argument>
-                    </arguments>
-                </configuration>
             </plugin>
         </plugins>
     </build>

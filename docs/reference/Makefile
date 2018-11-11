@@ -13,7 +13,7 @@ $(JAVADOC)/index.html: $(shell find $(CORE)/src/main/java -name *.java)
 	mvn -f ../../morphia javadoc:javadoc
 
 public/index.html: $(shell find . | grep -v public)
-	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
+	sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
 	 	-e "s/majorVersion.*/majorVersion = \"$(MAJOR)\"/" \
 		-e "s|coreApiUrl.*|coreApiUrl = \"http://mongodb.github.io/mongo-java-driver/$(DRIVER)/javadoc/\"|" \
 		data/morphia.toml > data/morphia.toml.sed
