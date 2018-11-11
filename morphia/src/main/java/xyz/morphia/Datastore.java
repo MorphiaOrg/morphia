@@ -535,7 +535,9 @@ public interface Datastore {
      * @param options the options to apply to the map/reduce job
      * @return the results
      * @since 1.3
+     * @deprecated This feature will not be supported in 2.0
      */
+    @Deprecated
     <T> MapreduceResults<T> mapReduce(MapReduceOptions<T> options);
 
     /**
@@ -551,6 +553,7 @@ public interface Datastore {
      * @param scopeFields Each map entry will be a global variable in all the functions; can be null
      * @return counts and stuff
      * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
+     * @deprecated This feature will not be supported in 2.0
      */
     @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize,
@@ -566,6 +569,7 @@ public interface Datastore {
      * @param baseCommand The base command to fill in and send to the server
      * @return counts and stuff
      * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
+     * @deprecated This feature will not be supported in 2.0
      */
     @Deprecated
     <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, Class<T> outputType, MapReduceCommand baseCommand);

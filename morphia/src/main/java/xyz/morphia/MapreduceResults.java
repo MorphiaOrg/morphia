@@ -18,9 +18,11 @@ import java.util.Iterator;
  * Stores the results of a map reduce operation
  *
  * @param <T> the type of the results
+ * @deprecated This feature will not be supported in 2.0
  */
 @NotSaved
 @SuppressWarnings("deprecation")
+@Deprecated
 public class MapreduceResults<T> implements Iterable<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
     private final Stats counts = new Stats();
