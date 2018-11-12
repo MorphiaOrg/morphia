@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author ScottHernandez
  */
+@Deprecated
 public class DefaultCreator implements ObjectFactory {
 
     private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);

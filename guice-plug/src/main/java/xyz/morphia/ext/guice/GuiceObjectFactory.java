@@ -19,6 +19,7 @@ import java.util.Set;
 /**
  * @author us@thomas-daily.de
  */
+@Deprecated
 public class GuiceObjectFactory implements ObjectFactory {
 
     // rather messy, i'd like ObjectFactory to be tackled to have a clean
