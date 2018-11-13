@@ -8,6 +8,8 @@ DRIVER = $(shell mvn -f $(POM) help:evaluate -Dexpression=driver.version 2>&1 | 
 	| sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
 MAJOR = $(shell echo ${CURRENT} | sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
 BRANCH = $(shell git branch | grep \* | cut -d ' ' -f2 )
+SRC_LINK = "https://github.com/MorphiaOrg/morphia/tree/$(BRANCH)"
+TEXT = Morphia $(MAJOR)
 
 CORE = ../../morphia
 JAVADOC = $(CORE)/target/site/apidocs
@@ -24,6 +26,11 @@ public/index.html: $(shell find . | grep -v public)
 		-e "s|gitBranch.*|gitBranch = \"$(BRANCH)\"|" \
 		data/morphia.toml > data/morphia.toml.sed
 	@mv data/morphia.toml.sed data/morphia.toml
+
+	sed -e "s|<span id=\"version-tag\">.*|<span id=\"version-tag\">$(TEXT)</span>|" \
+		layouts/partials/logo.html > layouts/partials/logo.html.sed
+	@mv layouts/partials/logo.html.sed layouts/partials/logo.html
+
 	@hugo
 
 all: public/index.html $(JAVADOC)/index.html
