@@ -2,10 +2,12 @@
 .DEFAULT_GOAL := all
 
 POM = ../../pom.xml
+DUMMY = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1)
 CURRENT = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1 | grep -v INFO)
 DRIVER = $(shell mvn -f $(POM) help:evaluate -Dexpression=driver.version 2>&1 | grep -v INFO \
 	| sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
 MAJOR = $(shell echo ${CURRENT} | sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
+BRANCH = $(shell git branch | grep \* | cut -d ' ' -f2 )
 
 CORE = ../../morphia
 JAVADOC = $(CORE)/target/site/apidocs
@@ -19,6 +21,7 @@ public/index.html: $(shell find . | grep -v public)
 	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
 	 	-e "s/majorVersion.*/majorVersion = \"$(MAJOR)\"/" \
 		-e "s|coreApiUrl.*|coreApiUrl = \"http://mongodb.github.io/mongo-java-driver/$(DRIVER)/javadoc/\"|" \
+		-e "s|gitBranch.*|gitBranch = \"$(BRANCH)\"|" \
 		data/morphia.toml > data/morphia.toml.sed
 	@mv data/morphia.toml.sed data/morphia.toml
 	@hugo
