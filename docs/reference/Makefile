@@ -14,6 +14,8 @@ $(JAVADOC)/index.html: $(shell find $(CORE)/src/main/java -name *.java)
 	mvn -f ../../morphia javadoc:javadoc
 
 public/index.html: $(shell find . | grep -v public)
+	@echo Updating documentation to use $(CURRENT) for the current version
+	@echo with the major version of $(MAJOR) and driver version of $(DRIVER).
 	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
 	 	-e "s/majorVersion.*/majorVersion = \"$(MAJOR)\"/" \
 		-e "s|coreApiUrl.*|coreApiUrl = \"http://mongodb.github.io/mongo-java-driver/$(DRIVER)/javadoc/\"|" \
