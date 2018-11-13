@@ -541,8 +541,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         return db;
     }
 
-    private MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(db.getName());
+    @Override
+    public MongoDatabase getDatabase() {
+        return database;
     }
 
     @Override

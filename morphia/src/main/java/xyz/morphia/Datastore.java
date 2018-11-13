@@ -8,6 +8,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.Indexes;
@@ -483,8 +484,19 @@ public interface Datastore {
 
     /**
      * @return the DB this Datastore uses
+     * @deprecated use #getDatabase(). In general, should you need a DB reference, please use the MongoClient used to create this
+     * Datastore to retrieve it.
+     *
+     * @see MongoClient#getDB(String)
+     * @see MongoDatabase
      */
+    @Deprecated
     DB getDB();
+
+    /**
+     * @return the MongoDatabase used by this DataStore
+     */
+    MongoDatabase getDatabase();
 
     /**
      * @return the default WriteConcern used by this Datastore
