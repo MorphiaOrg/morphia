@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := all
 
 POM = ../../pom.xml
-DUMMY = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1)
+DUMMY = $(shell mvn -q -f $(POM) help:evaluate -Dexpression=project.version 2>&1)
 CURRENT = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1 | grep -v INFO)
 DRIVER = $(shell mvn -f $(POM) help:evaluate -Dexpression=driver.version 2>&1 | grep -v INFO \
 	| sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
@@ -14,10 +14,8 @@ TEXT = Morphia $(MAJOR)
 CORE = ../../morphia
 JAVADOC = $(CORE)/target/site/apidocs
 
-$(JAVADOC)/index.html: $(shell find $(CORE)/src/main/java -name *.java)
-	mvn -f ../../morphia javadoc:javadoc
-
-public/index.html: $(shell find . | grep -v public)
+data/morphia.toml: $(POM) Makefile
+	@echo $(DUMMY) > /dev/null
 	@echo Updating documentation to use $(CURRENT) for the current version
 	@echo with the major version of $(MAJOR) and driver version of $(DRIVER).
 	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
@@ -31,6 +29,10 @@ public/index.html: $(shell find . | grep -v public)
 		layouts/partials/logo.html > layouts/partials/logo.html.sed
 	@mv layouts/partials/logo.html.sed layouts/partials/logo.html
 
+$(JAVADOC)/index.html: $(shell find $(CORE)/src/main/java -name *.java)
+	mvn -f ../../morphia javadoc:javadoc
+
+public/index.html: $(POM) $(shell find . | grep -v public)
 	@hugo
 
 all: public/index.html $(JAVADOC)/index.html
