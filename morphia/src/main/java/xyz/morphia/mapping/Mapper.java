@@ -50,8 +50,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -634,7 +634,9 @@ public class Mapper {
                         Reference refAnn = mf.getAnnotation(Reference.class);
                         Class<?> idType = null;
                         if (!mf.getType().equals(Key.class) && isMapped(mf.getType())) {
-                            idType = getMappedClass(mf.getType()).getMappedIdField().getType();
+                            final MappedClass mappedClass = getMappedClass(mf.getType());
+                            final MappedField idField = mappedClass.getMappedIdField();
+                            idType = idField != null ? idField.getType() : null;
                         }
                         boolean valueIsIdType = mappedValue.getClass().equals(idType);
                         if (refAnn != null) {
