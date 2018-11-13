@@ -13,7 +13,7 @@ abstract much of that away but if something is confusing, please consult the Jav
 .io/mongo-java-driver/) as well.
 
 The following code snippets come from the __QuickTour.java__ example code
-that can be found with the [Morphia source]({{< srcref "morphia/src/examples/java/xyz/morphia/example/QuickTour.java">}}).
+that can be found with the [Morphia source]({{< srcref "examples/src/test/java/xyz/morphia/example/QuickTour.java">}}).
 
 ## Setting up Morphia
 
