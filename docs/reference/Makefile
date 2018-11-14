@@ -2,7 +2,6 @@
 .DEFAULT_GOAL := all
 
 POM = ../../pom.xml
-DUMMY = $(shell mvn -q -f $(POM) help:evaluate -Dexpression=project.version 2>&1)
 CURRENT = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1 | grep -v INFO)
 DRIVER = $(shell mvn -f $(POM) help:evaluate -Dexpression=driver.version 2>&1 | grep -v INFO \
 	| sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
@@ -15,7 +14,7 @@ CORE = ../../morphia
 JAVADOC = $(CORE)/target/site/apidocs
 
 data/morphia.toml: $(POM) Makefile
-	@echo $(DUMMY) > /dev/null
+	@mvn -q -f $(POM) help:evaluate -Dexpression=project.version > /dev/null
 	@echo Updating documentation to use $(CURRENT) for the current version
 	@echo with the major version of $(MAJOR) and driver version of $(DRIVER).
 	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
