@@ -60,7 +60,7 @@
       &lt;dependencies&gt;
           &lt;dependency&gt;
               &lt;groupId&gt;{{$currentVersion.group}}&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;artifactId&gt;{{$currentVersion.artifact}}&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -80,7 +80,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-            compile '{{$currentVersion.group}}:morphia:{{$currentVersion.version}}'
+            compile '{{$currentVersion.group}}:{{$currentVersion.artifact}}:{{$currentVersion.version}}'
         }
         repositories {
           maven {
@@ -95,7 +95,7 @@
       &lt;dependencies&gt;
           &lt;dependency&gt;
               &lt;groupId&gt;{{$currentVersion.group}}&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+              &lt;artifactId&gt;{{$currentVersion.artifact}}&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
       &lt;/dependencies&gt;
@@ -105,7 +105,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-          compile '{{$currentVersion.group}}:morphia:{{$currentVersion.version}}'
+          compile '{{$currentVersion.group}}:{{$currentVersion.artifact}}:{{$currentVersion.version}}'
         }
 
 
