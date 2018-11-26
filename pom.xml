@@ -37,14 +37,15 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.version>3.5.2</maven.version>
-        <driver.version>3.8.0</driver.version>
-        <zt.exec.version>1.5</zt.exec.version>
-        <awaitility.version>1.5.0</awaitility.version>
-        <json.assert.version>1.2.3</json.assert.version>
-        <slf4j.version>1.7.25</slf4j.version>
+
+        <awaitility.version>1.7.0</awaitility.version>
+        <driver.version>3.9.0</driver.version>
         <jacoco.version>0.8.1</jacoco.version>
+        <json.assert.version>1.2.3</json.assert.version>
+        <maven.version>3.5.2</maven.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <surefire.version>2.22.1</surefire.version>
+        <zt.exec.version>1.10</zt.exec.version>
     </properties>
 
     <build>
