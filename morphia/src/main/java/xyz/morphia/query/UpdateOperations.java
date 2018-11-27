@@ -142,7 +142,9 @@ public interface UpdateOperations<T> {
      *
      * @return this
      * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
+     * @deprecated this functionality is deprecated in mongodb 3.6 and has been removed from 4.0
      */
+    @Deprecated
     UpdateOperations<T> isolated();
 
     /**
@@ -150,7 +152,9 @@ public interface UpdateOperations<T> {
      *
      * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
      * @since 1.3
+     * @deprecated this functionality is deprecated in mongodb 3.6 and has been removed from 4.0
      */
+    @Deprecated
     boolean isIsolated();
 
     /**
