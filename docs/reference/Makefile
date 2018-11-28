@@ -2,9 +2,9 @@
 .DEFAULT_GOAL := all
 
 POM = ../../pom.xml
-CURRENT = $(shell mvn -f $(POM) help:evaluate -Dexpression=project.version 2>&1 | grep -v INFO)
-DRIVER = $(shell mvn -f $(POM) help:evaluate -Dexpression=driver.version 2>&1 | grep -v INFO \
-	| sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
+SETTINGS = ../../target/maven.settings.xml
+CURRENT = $(shell grep "\<version\>" $(SETTINGS) | head -n 3 | tail -n 1 | cut -d\> -f2 | cut -d\< -f1 )
+DRIVER = $(shell grep "\<driver.version\>" $(SETTINGS) | head -n 1 | cut -d\> -f2 | cut -d\< -f1 | sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
 MAJOR = $(shell echo ${CURRENT} | sed -e 's/-SNAPSHOT//' -e 's/.[0-9]*$$//')
 BRANCH = $(shell git branch | grep \* | cut -d ' ' -f2 )
 SRC_LINK = "https://github.com/MorphiaOrg/morphia/tree/$(BRANCH)"
@@ -13,8 +13,11 @@ TEXT = Morphia $(MAJOR)
 CORE = ../../morphia
 JAVADOC = $(CORE)/target/site/apidocs
 
-data/morphia.toml: $(POM) Makefile
-	@mvn -q -f $(POM) help:evaluate -Dexpression=project.version > /dev/null
+$(SETTINGS): $(shell find ../.. -name pom.xml)
+	@echo Emitting property values
+	@mvn -q -f $(POM) help:effective-pom -Doutput=target/maven.settings.xml
+
+data/morphia.toml: $(POM) Makefile ../../target/maven.settings.xml
 	@echo Updating documentation to use $(CURRENT) for the current version
 	@echo with the major version of $(MAJOR) and driver version of $(DRIVER).
 	@sed -e "s/currentVersion.*/currentVersion = \"$(CURRENT)\"/" \
@@ -24,7 +27,7 @@ data/morphia.toml: $(POM) Makefile
 		data/morphia.toml > data/morphia.toml.sed
 	@mv data/morphia.toml.sed data/morphia.toml
 
-	sed -e "s|<span id=\"version-tag\">.*|<span id=\"version-tag\">$(TEXT)</span>|" \
+	@sed -e "s|<span id=\"version-tag\">.*|<span id=\"version-tag\">$(TEXT)</span>|" \
 		layouts/partials/logo.html > layouts/partials/logo.html.sed
 	@mv layouts/partials/logo.html.sed layouts/partials/logo.html
 
