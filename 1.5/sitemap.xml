@@ -63,6 +63,10 @@
   </url>
   
   <url>
+    <loc>/morphia/1.5/guides/schemavalidation/</loc>
+  </url>
+  
+  <url>
     <loc>/morphia/1.5/tags/</loc>
     <priority>0</priority>
   </url>

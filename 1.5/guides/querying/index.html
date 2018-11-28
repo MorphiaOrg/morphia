@@ -12,17 +12,17 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/morphia/1.5/css/nucleus.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/fontawesome-all.min.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/hybrid.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/featherlight.min.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/auto-complete.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/theme.css?1543366504" rel="stylesheet">
-    <link href="/morphia/1.5/css/hugo-theme.css?1543366504" rel="stylesheet">
+    <link href="/morphia/1.5/css/nucleus.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1543369622" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1543369622" rel="stylesheet">
     
 
-    <script src="/morphia/1.5/js/jquery-2.x.min.js?1543366504"></script>
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1543369622"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -100,14 +100,14 @@
     <span data-search-clear=""><i class="fas fa-close"></i></span>
 </div>
 
-<script type="text/javascript" src="/morphia/1.5/js/lunr.min.js?1543366504"></script>
-<script type="text/javascript" src="/morphia/1.5/js/auto-complete.js?1543366504"></script>
+<script type="text/javascript" src="/morphia/1.5/js/lunr.min.js?1543369622"></script>
+<script type="text/javascript" src="/morphia/1.5/js/auto-complete.js?1543369622"></script>
 <script type="text/javascript">
     
         var baseurl = '\/morphia\/1.5';
     
 </script>
-<script type="text/javascript" src="/morphia/1.5/js/search.js?1543366504"></script>
+<script type="text/javascript" src="/morphia/1.5/js/search.js?1543369622"></script>
 
     
   </div>
@@ -332,6 +332,25 @@
  
   
     
+      <li data-nav-id="/morphia/1.5/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
+        <a href="/morphia/1.5/guides/schemavalidation/">
+        Schema Validation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/morphia/1.5/guides/updating/" title="Updating" class="dd-item ">
         <a href="/morphia/1.5/guides/updating/">
         Updating
@@ -519,7 +538,7 @@ like this:</p>
 <pre><code class="language-javascript">{ price: { $gte: 1000 } }
 </code></pre>
 
-<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/xyz/morphia/query/FilterOperator.java
+<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/xyz/morphia/query/FilterOperator.java
 ">FilterOperator</a> class.</p>
 
 <table>
@@ -665,7 +684,7 @@ like this:</p>
 <h3 id="field"><strong>field()</strong></h3>
 
 <p>For those who would prefer more compile time validation of their queries, there is <strong>field()</strong>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/xyz/morphia/query/FieldEnd.java
+returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/xyz/morphia/query/FieldEnd.java
 ">class</a> providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  <strong>filter()</strong> can be.  To perform the same query as above, you&rsquo;d write this:</p>
@@ -726,7 +745,7 @@ public static class Greeting {
 </code></pre>
 
 <p>The <strong>$**</strong> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/xyz/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/query/TestTextSearching.java
 ">test</a> does:</p>
 
 <pre><code class="language-java">morphia.map(Greeting.class);
@@ -759,7 +778,7 @@ the query results in different ways.</p>
 
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/xyz/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 
 <pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
@@ -825,7 +844,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/xyz/morphia/TestQuery.java
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/TestQuery.java
 ">unit tests</a> in the <strong>testTailableCursors()</strong> test:</p>
 
 <pre><code class="language-java">getMorphia().map(CappedPic.class);
@@ -1102,6 +1121,22 @@ Artist result = datastore.createQuery(Artist.class, query).get();
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -1115,7 +1150,7 @@ Artist result = datastore.createQuery(Artist.class, query).get();
             <a class="nav nav-prev" href="/morphia/1.5/guides/lifecyclemethods/" title="Life Cycle Methods"> <i class="fas fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="/morphia/1.5/guides/updating/" title="Updating" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="/morphia/1.5/guides/schemavalidation/" title="Schema Validation" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
         
     </div>
 
@@ -1124,20 +1159,20 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.5/js/clipboard.min.js?1543366504"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1543366504"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1543366504"></script>
-    <script src="/morphia/1.5/js/jquery.sticky.js?1543366504"></script>
-    <script src="/morphia/1.5/js/featherlight.min.js?1543366504"></script>
-    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1543366504"></script>
-    <script src="/morphia/1.5/js/highlight.pack.js?1543366504"></script>
+    <script src="/morphia/1.5/js/clipboard.min.js?1543369622"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1543369622"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1543369622"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1543369622"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1543369622"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1543369622"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1543369622"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1543366504"></script>
-    <script src="/morphia/1.5/js/learn.js?1543366504"></script>
-    <script src="/morphia/1.5/js/hugo-learn.js?1543366504"></script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1543369622"></script>
+    <script src="/morphia/1.5/js/learn.js?1543369622"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1543369622"></script>
 
-    <link href="/morphia/1.5/mermaid/mermaid.css?1543366504" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.5/mermaid/mermaid.js?1543366504"></script>
+    <link href="/morphia/1.5/mermaid/mermaid.css?1543369622" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1543369622"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
