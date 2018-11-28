@@ -1218,7 +1218,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return insert(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOptions().writeConcern(wc));
     }
 
-    protected DBCollection getCollection(final String kind) {
+    private DBCollection getCollection(final String kind) {
         if (kind == null) {
             return null;
         }

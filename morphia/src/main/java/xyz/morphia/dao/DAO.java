@@ -205,7 +205,9 @@ public interface DAO<T, K> {
     /**
      * @return the collection mapped by the entity class
      * @see #getEntityClass()
+     * @deprecated the return type for this method will change in 2.0
      */
+    @Deprecated
     DBCollection getCollection();
 
     /**
