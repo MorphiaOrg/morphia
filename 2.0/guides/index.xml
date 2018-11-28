@@ -73,6 +73,17 @@ Creating a Query The Datastore is the key class when using Morphia. Virtually al
     </item>
     
     <item>
+      <title>Schema Validation</title>
+      <link>/morphia/2.0/guides/schemavalidation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/2.0/guides/schemavalidation/</guid>
+      <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
+Below we have a basic entity definition. Note the new annotation @Validation.
+@Entity(&amp;quot;validation&amp;quot;) @Validation(&amp;quot;{ number : { $gt : 10 } }&amp;quot;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
+    </item>
+    
+    <item>
       <title>Updating</title>
       <link>/morphia/2.0/guides/updating/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
