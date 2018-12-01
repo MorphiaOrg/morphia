@@ -12,8 +12,6 @@ xyz.morphia.mapping
 xyz.morphia.mapping.cache
 xyz.morphia.mapping.codec
 xyz.morphia.mapping.experimental
-xyz.morphia.mapping.lazy
-xyz.morphia.mapping.lazy.proxy
 xyz.morphia.mapping.validation
 xyz.morphia.mapping.validation.classrules
 xyz.morphia.mapping.validation.fieldrules
