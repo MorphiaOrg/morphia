@@ -1,4 +1,3 @@
-org.bson.codecs
 xyz.morphia
 xyz.morphia.aggregation
 xyz.morphia.annotations
