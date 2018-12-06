@@ -1,6 +1,4 @@
 org.bson.codecs
-org.bson.codecs.configuration
-org.bson.codecs.pojo
 xyz.morphia
 xyz.morphia.aggregation
 xyz.morphia.annotations
