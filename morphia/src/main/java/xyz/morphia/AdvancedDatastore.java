@@ -38,7 +38,7 @@ public interface AdvancedDatastore extends Datastore {
      * Returns an {@link AggregationPipeline} bound to the given collection and class.
      *
      * @param collection the collection to query
-     * @param clazz The class to create aggregation against
+     * @param clazz      The class to create aggregation against
      * @return the aggregation pipeline
      */
     AggregationPipeline createAggregation(String collection, Class<?> clazz);
@@ -159,10 +159,10 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      the class from which to get the index definitions
      * @param fields     the fields to index
      * @param <T>        the type to index
-     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
-     * methods in the Java driver itself.
      * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @see #ensureIndexes(String, Class)
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
      */
     @Deprecated
     <T> void ensureIndex(String collection, Class<T> clazz, String fields);
@@ -179,10 +179,10 @@ public interface AdvancedDatastore extends Datastore {
      * @param dropDupsOnCreate This value is no longer supported.  Tells the unique index to drop duplicates silently when creating;
      *                         only the first will be kept
      * @param <T>              the type to index
-     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
-     * methods in the Java driver itself.
      * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @see #ensureIndexes(String, Class)
+     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
+     * methods in the Java driver itself.
      */
     @Deprecated
     <T> void ensureIndex(String collection, Class<T> clazz, String name,

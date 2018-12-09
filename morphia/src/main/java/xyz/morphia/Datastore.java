@@ -71,11 +71,11 @@ public interface Datastore {
     /**
      * Deletes the given entity (by id)
      *
-     * @param clazz the type to delete
-     * @param id    the ID of the entity to delete
+     * @param clazz   the type to delete
+     * @param id      the ID of the entity to delete
      * @param options the options to use when deleting
-     * @param <T>   the type to delete
-     * @param <V>   the type of the id
+     * @param <T>     the type to delete
+     * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
      */
@@ -95,11 +95,11 @@ public interface Datastore {
     /**
      * Deletes the given entities (by id)
      *
-     * @param clazz the type to delete
-     * @param ids   the IDs of the entity to delete
+     * @param clazz   the type to delete
+     * @param ids     the IDs of the entity to delete
      * @param options the options to use when deleting
-     * @param <T>   the type to delete
-     * @param <V>   the type of the id
+     * @param <T>     the type to delete
+     * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
      */
@@ -177,8 +177,8 @@ public interface Datastore {
     /**
      * Process any {@link Validation} annotations for document validation.
      *
-     * @since 1.3
      * @mongodb.driver.manual core/document-validation/
+     * @since 1.3
      */
     void enableDocumentValidation();
 
@@ -189,9 +189,9 @@ public interface Datastore {
      * @param clazz  the class from which to get the index definitions
      * @param fields the fields to index
      * @param <T>    the type to index
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
      * methods in the Java driver itself.
-     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      */
     @Deprecated
     <T> void ensureIndex(Class<T> clazz, String fields);
@@ -206,9 +206,9 @@ public interface Datastore {
      * @param unique           true if the index should enforce uniqueness on the fields indexed
      * @param dropDupsOnCreate Support for this has been removed from the server.  This value is ignored.
      * @param <T>              the type to index
+     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
      * methods in the Java driver itself.
-     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
      */
     @Deprecated
     <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
@@ -228,7 +228,6 @@ public interface Datastore {
      *
      * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
      *                   definition
-     *
      * @see Indexes
      * @see Indexed
      * @see Text
@@ -240,7 +239,6 @@ public interface Datastore {
      *
      * @param clazz the class from which to get the index definitions
      * @param <T>   the type to index
-     *
      * @see Indexes
      * @see Indexed
      * @see Text
@@ -254,7 +252,6 @@ public interface Datastore {
      * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
      *                   definition
      * @param <T>        the type to index
-     *
      * @see Indexes
      * @see Indexed
      * @see Text
@@ -287,8 +284,8 @@ public interface Datastore {
      * @param value    the value to check for
      * @param <T>      the type to query
      * @param <V>      the type to filter value
-     * @deprecated use {@link FindOptions} when running the query instead
      * @return the query
+     * @deprecated use {@link FindOptions} when running the query instead
      */
     @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value);
@@ -318,12 +315,13 @@ public interface Datastore {
      * @return the deleted Entity
      */
     <T> T findAndDelete(Query<T> query);
+
     /**
      * Deletes the given entities based on the query (first item only).
      *
-     * @param query the query to use when finding entities to delete
+     * @param query   the query to use when finding entities to delete
      * @param options the options to apply to the delete
-     * @param <T>   the type to query
+     * @param <T>     the type to query
      * @return the deleted Entity
      * @since 1.3
      */
@@ -486,11 +484,10 @@ public interface Datastore {
 
     /**
      * @return the DB this Datastore uses
-     * @deprecated use #getDatabase(). In general, should you need a DB reference, please use the MongoClient used to create this
-     * Datastore to retrieve it.
-     *
      * @see MongoClient#getDB(String)
      * @see MongoDatabase
+     * @deprecated use #getDatabase(). In general, should you need a DB reference, please use the MongoClient used to create this
+     * Datastore to retrieve it.
      */
     @Deprecated
     DB getDB();
@@ -566,7 +563,6 @@ public interface Datastore {
      * @param finalize    The finalize function, in javascript, as a string; can be null
      * @param scopeFields Each map entry will be a global variable in all the functions; can be null
      * @return counts and stuff
-     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      * @deprecated This feature will not be supported in 2.0
      */
     @Deprecated
@@ -582,7 +578,6 @@ public interface Datastore {
      * @param outputType  The type of resulting data; inline is not working yet
      * @param baseCommand The base command to fill in and send to the server
      * @return counts and stuff
-     * @deprecated use {@link #mapReduce(MapReduceOptions)} instead
      * @deprecated This feature will not be supported in 2.0
      */
     @Deprecated
@@ -806,7 +801,7 @@ public interface Datastore {
     /**
      * updates the first entity found using the entity as a template, if nothing is found insert the update as an entity if
      * "createIfMissing" is true.
-     *
+     * <p>
      * If the entity is a versioned entity, an UnsupportedOperationException is thrown.
      *
      * @param query           the query used to match the documents to update
