@@ -125,8 +125,8 @@
                     <failOnError>false</failOnError>
                     <excludePackageNames>**/relocated/**, **/internal/**, xyz/morphia/utils</excludePackageNames>
                     <doclint>none</doclint>
-                    <doctitle>Morphia</doctitle>
-                    <windowtitle>Morphia</windowtitle>
+                    <doctitle>Morphia ${project.version}</doctitle>
+                    <windowtitle>Morphia ${project.version}</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>
                             <groupId>${project.groupId}</groupId>

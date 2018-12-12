@@ -447,18 +447,22 @@ public interface Datastore {
      * @param <V>   the type of the ID
      * @return the query to find the entities
      * @deprecated use {@link Query} instead.
-     * @inline
+     * @morphia.inline
      */
     @Deprecated
     <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids);
-    /**
+/*
+    */
+/**
      * @deprecated
-     */
+     *//*
+
     @Deprecated
     @SuppressWarnings("CheckStyle:JavadocMethod")
     default <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
         return find(clazz).filter(Mapper.ID_KEY + " in", ids);
     }
+*/
 
 
     /**
