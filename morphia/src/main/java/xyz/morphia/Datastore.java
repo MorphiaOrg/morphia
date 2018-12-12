@@ -9,11 +9,14 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CountOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.Indexes;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Validation;
+import xyz.morphia.mapping.Mapper;
 import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.QueryFactory;
@@ -305,6 +308,7 @@ public interface Datastore {
      * @return the key if the entity exists
      * @deprecated use {@link Query#first()} instead
      */
+    @Deprecated
     Key<?> exists(Object keyOrEntity);
 
     /**
@@ -313,7 +317,9 @@ public interface Datastore {
      * @param clazz the class to use for mapping the results
      * @param <T>   the type to query
      * @return the query
+     * @deprecated use {@link Query} instead
      */
+    @Deprecated
     <T> Query<T> find(Class<T> clazz);
 
     /**
@@ -326,7 +332,7 @@ public interface Datastore {
      * @param <T>      the type to query
      * @param <V>      the type to filter value
      * @return the query
-     * @deprecated use {@link FindOptions} when running the query instead
+     * @deprecated use {@link Query} instead
      */
     @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value);
@@ -343,7 +349,7 @@ public interface Datastore {
      * @param <T>      the type to query
      * @param <V>      the type to filter value
      * @return the query
-     * @deprecated use {@link FindOptions} when running the query instead
+     * @deprecated use {@link Query} instead
      */
     @Deprecated
     <T, V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
@@ -377,7 +383,9 @@ public interface Datastore {
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
      * @since 1.3
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions, WriteConcern)}
      */
+    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
 
     /**
@@ -393,12 +401,25 @@ public interface Datastore {
     /**
      * Find the first Entity from the Query, and modify it.
      *
+     * @param query        the query to use when finding entities to update
+     * @param operations   the updates to apply to the matched documents
+     * @param options      the options to apply to the update
+     * @param writeConcern the WriteConcern to apply
+     * @param <T>          the type to query
+     * @return The modified Entity (the result of the update)
+     * @since 1.3
+     */
+    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindOneAndUpdateOptions options, WriteConcern writeConcern);
+
+    /**
+     * Find the first Entity from the Query, and modify it.
+     *
      * @param query      the query to find the Entity with; You are not allowed to offset/skip in the query.
      * @param operations the updates to apply to the matched documents
      * @param oldVersion indicated the old version of the Entity should be returned
      * @param <T>        the type to query
      * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions, WriteConcern)}
      */
     @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion);
@@ -412,7 +433,7 @@ public interface Datastore {
      * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
      * @param <T>             the type of the entity
      * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions, WriteConcern)}
      */
     @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion, boolean createIfMissing);
@@ -425,8 +446,20 @@ public interface Datastore {
      * @param <T>   the type to fetch
      * @param <V>   the type of the ID
      * @return the query to find the entities
+     * @deprecated use {@link Query} instead.
+     * @inline
      */
+    @Deprecated
     <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids);
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    @SuppressWarnings("CheckStyle:JavadocMethod")
+    default <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
+        return find(clazz).filter(Mapper.ID_KEY + " in", ids);
+    }
+
 
     /**
      * Find the given entity (by id); shorthand for {@code find("_id ", id)}
@@ -436,7 +469,9 @@ public interface Datastore {
      * @param <T>   the type to fetch
      * @param <V>   the type of the ID
      * @return the matched entity.  may be null.
+     * @deprecated use {@link Query} instead
      */
+    @Deprecated
     <T, V> T get(Class<T> clazz, V id);
 
     /**
@@ -445,6 +480,7 @@ public interface Datastore {
      * @param entity The entity to search for
      * @param <T>    the type to fetch
      * @return the matched entity.  may be null.
+     * @deprecated use {@link Query} instead
      */
     <T> T get(T entity);
 
@@ -855,5 +891,58 @@ public interface Datastore {
     @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
 
-    <T> T first();
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    @SuppressWarnings("unchecked")
+    default <T> T get(final T entity) {
+        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
+    }
+
+    /**
+     * @return the Mapper used by this Datastore
+     */
+    Mapper getMapper();
+
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    default <T> T getByKey(final Class<T> clazz, final Key<T> key) {
+        return find(clazz).filter("_id", key.getId()).first();
+    }
+
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    default <T> long getCount(final T entity) {
+        return find(entity.getClass()).count();
+    }
+
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    default <T> long getCount(final Class<T> clazz) {
+        return find(clazz).count();
+    }
+
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    default <T> long getCount(final Query<T> query) {
+        return query.count();
+    }
+
+    /**
+     * @deprecated Inline this method to update to the new usage
+     */
+    @Deprecated
+    default <T> long getCount(final Query<T> query, final CountOptions options) {
+        return query.count(options);
+    }
+
 }
