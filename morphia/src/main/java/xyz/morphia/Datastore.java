@@ -14,7 +14,6 @@ import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.Indexes;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Validation;
-import xyz.morphia.query.CountOptions;
 import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.QueryFactory;
@@ -65,7 +64,9 @@ public interface Datastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the id
      * @return results of the delete
+     * @deprecated use {@link #delete(Query)} instead
      */
+    @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, V id);
 
     /**
@@ -78,7 +79,9 @@ public interface Datastore {
      * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
+     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
      */
+    @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, V id, DeleteOptions options);
 
     /**
@@ -89,7 +92,9 @@ public interface Datastore {
      * @param <T>   the type to delete
      * @param <V>   the type of the id
      * @return results of the delete
+     * @deprecated use {@link #delete(Query)} instead
      */
+    @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids);
 
     /**
@@ -102,7 +107,9 @@ public interface Datastore {
      * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
+     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
      */
+    @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids, DeleteOptions options);
 
     /**
@@ -122,8 +129,33 @@ public interface Datastore {
      * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
+     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
      */
+    @Deprecated
     <T> WriteResult delete(Query<T> query, DeleteOptions options);
+
+    /**
+     * Deletes entities based on the query
+     *
+     * @param <T>     the type to delete
+     * @param query   the query to use when finding documents to delete
+     * @param options the options to apply to the delete
+     * @return results of the delete
+     * @since 1.3
+     */
+    <T> WriteResult delete(Query<T> query, com.mongodb.client.model.DeleteOptions options);
+
+    /**
+     * Deletes entities based on the query
+     *
+     * @param <T>     the type to delete
+     * @param query   the query to use when finding documents to delete
+     * @param options the options to apply to the delete
+     * @param concern the WriteConcern to use when deleting
+     * @return results of the delete
+     * @since 1.3
+     */
+    <T> WriteResult delete(Query<T> query, com.mongodb.client.model.DeleteOptions options, WriteConcern concern);
 
     /**
      * Deletes entities based on the query, with the WriteConcern
@@ -132,7 +164,7 @@ public interface Datastore {
      * @param wc    the WriteConcern to use when deleting
      * @param <T>   the type to delete
      * @return results of the delete
-     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
+     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions, WriteConcern)} instead
      */
     @Deprecated
     <T> WriteResult delete(Query<T> query, WriteConcern wc);
@@ -143,7 +175,9 @@ public interface Datastore {
      * @param entity the entity to delete
      * @param <T>    the type to delete
      * @return results of the delete
+     * @deprecated use {@link #delete(Query)} instead
      */
+    @Deprecated
     <T> WriteResult delete(T entity);
 
     /**
@@ -154,7 +188,9 @@ public interface Datastore {
      * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
+    @Deprecated
     <T> WriteResult delete(T entity, DeleteOptions options);
 
     /**
@@ -164,7 +200,7 @@ public interface Datastore {
      * @param wc     the WriteConcern to use when deleting
      * @param <T>    the type to delete
      * @return results of the delete
-     * @deprecated use {@link #delete(Query, DeleteOptions)}
+     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions, WriteConcern)}
      */
     @Deprecated
     <T> WriteResult delete(T entity, WriteConcern wc);
@@ -231,7 +267,9 @@ public interface Datastore {
      * @see Indexes
      * @see Indexed
      * @see Text
+     * @deprecated use {@link #ensureIndexes()} instead
      */
+    @Deprecated
     void ensureIndexes(boolean background);
 
     /**
@@ -255,7 +293,9 @@ public interface Datastore {
      * @see Indexes
      * @see Indexed
      * @see Text
+     * @deprecated use {@link #ensureIndexes(Class)} instead
      */
+    @Deprecated
     <T> void ensureIndexes(Class<T> clazz, boolean background);
 
     /**
@@ -263,6 +303,7 @@ public interface Datastore {
      *
      * @param keyOrEntity the value to check for
      * @return the key if the entity exists
+     * @deprecated use {@link Query#first()} instead
      */
     Key<?> exists(Object keyOrEntity);
 
@@ -813,4 +854,6 @@ public interface Datastore {
      */
     @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
+
+    <T> T first();
 }
