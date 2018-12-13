@@ -424,12 +424,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        final Object id = mapper.getId(unwrapped);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
-        }
-        return (T) get(unwrapped.getClass(), id);
+        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
     }
 
     @Override
@@ -518,12 +513,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> long getCount(final T entity) {
-        return getCollection(ProxyHelper.unwrap(entity)).count();
+        return find(ProxyHelper.unwrap(entity).getClass()).count();
     }
 
     @Override
     public <T> long getCount(final Class<T> clazz) {
-        return getCollection(clazz).count();
+        return find(clazz).count();
     }
 
     @Override

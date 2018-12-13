@@ -17,7 +17,6 @@ import xyz.morphia.annotations.Indexes;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Validation;
 import xyz.morphia.mapping.Mapper;
-import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.QueryFactory;
 import xyz.morphia.query.UpdateOperations;
@@ -317,9 +316,7 @@ public interface Datastore {
      * @param clazz the class to use for mapping the results
      * @param <T>   the type to query
      * @return the query
-     * @deprecated use {@link Query} instead
      */
-    @Deprecated
     <T> Query<T> find(Class<T> clazz);
 
     /**
@@ -451,19 +448,6 @@ public interface Datastore {
      */
     @Deprecated
     <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids);
-/*
-    */
-/**
-     * @deprecated
-     *//*
-
-    @Deprecated
-    @SuppressWarnings("CheckStyle:JavadocMethod")
-    default <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
-        return find(clazz).filter(Mapper.ID_KEY + " in", ids);
-    }
-*/
-
 
     /**
      * Find the given entity (by id); shorthand for {@code find("_id ", id)}
@@ -485,7 +469,9 @@ public interface Datastore {
      * @param <T>    the type to fetch
      * @return the matched entity.  may be null.
      * @deprecated use {@link Query} instead
+     * @morphia.inline
      */
+    @Deprecated
     <T> T get(T entity);
 
     /**
@@ -494,9 +480,11 @@ public interface Datastore {
      * @param clazz the class to use for mapping
      * @param key   the key search with
      * @param <T>   the type to fetch
+     * @deprecated use a {@link Query} instead
      * @return the matched entity.  may be null.
      */
     <T> T getByKey(Class<T> clazz, Key<T> key);
+
 
     /**
      * Find the given entities (by id), verifying they are of the correct type; shorthand for {@code find("_id in", ids)}
@@ -505,6 +493,7 @@ public interface Datastore {
      * @param keys  the keys to search with
      * @param <T>   the type to fetch
      * @return the matched entities.  may be null.
+     * @deprecated use a {@link Query} instead
      */
     <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys);
 
@@ -514,6 +503,7 @@ public interface Datastore {
      * @param keys the keys to search with
      * @param <T>  the type to fetch
      * @return the matched entities.  may be null.
+     * @deprecated use a {@link Query} instead
      */
     <T> List<T> getByKeys(Iterable<Key<T>> keys);
 
@@ -531,6 +521,7 @@ public interface Datastore {
      * @param entity The entity whose type to count
      * @param <T>    the type to count
      * @return the count
+     * @deprecated use {@link Query#count()} instead
      */
     <T> long getCount(T entity);
 
@@ -540,8 +531,11 @@ public interface Datastore {
      * @param clazz The clazz type to count
      * @param <T>   the type to count
      * @return the count
+     * @deprecated use {@link Query#count()} instead
+     * @morphia.inline
      */
     <T> long getCount(Class<T> clazz);
+
 
     /**
      * Gets the count of items returned by this query; same as {@code query.countAll()}
@@ -549,6 +543,8 @@ public interface Datastore {
      * @param query the query to filter the documents to count
      * @param <T>   the type to count
      * @return the count
+     * @deprecated use {@link Query#count()} instead
+     * @morphia.inline
      */
     <T> long getCount(Query<T> query);
 
@@ -560,8 +556,9 @@ public interface Datastore {
      * @param options the options to apply to the count
      * @return the count
      * @since 1.3
+     * @deprecated use {@link Query#count(CountOptions)} instead
      */
-    <T> long getCount(Query<T> query, CountOptions options);
+    <T> long getCount(Query<T> query, xyz.morphia.query.CountOptions options);
 
     /**
      * @return the DB this Datastore uses
@@ -896,57 +893,7 @@ public interface Datastore {
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
 
     /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    default <T> T get(final T entity) {
-        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
-    }
-
-    /**
      * @return the Mapper used by this Datastore
      */
     Mapper getMapper();
-
-    /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    default <T> T getByKey(final Class<T> clazz, final Key<T> key) {
-        return find(clazz).filter("_id", key.getId()).first();
-    }
-
-    /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    default <T> long getCount(final T entity) {
-        return find(entity.getClass()).count();
-    }
-
-    /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    default <T> long getCount(final Class<T> clazz) {
-        return find(clazz).count();
-    }
-
-    /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    default <T> long getCount(final Query<T> query) {
-        return query.count();
-    }
-
-    /**
-     * @deprecated Inline this method to update to the new usage
-     */
-    @Deprecated
-    default <T> long getCount(final Query<T> query, final CountOptions options) {
-        return query.count(options);
-    }
-
 }
