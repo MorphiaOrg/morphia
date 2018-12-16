@@ -5,6 +5,7 @@ import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import org.bson.types.CodeWScope;
@@ -586,12 +587,22 @@ public interface Query<T> extends MongoIterable<T> {
      * @param options the options to apply to the count operation
      * @return the count
      * @since 1.3
+     * @deprecated use {@link #count(com.mongodb.client.model.CountOptions)} instead
      */
+    @Deprecated
     long count(CountOptions options);
 
     /**
-     * Execute the query and get the results.  This method is provided for orthogonality; Query.fetch().iterator() is identical to
-     * Query.iterator().
+     * Count the total number of values in the result, ignoring limit and offset
+     *
+     * @param options the options to apply to the count operation
+     * @return the count
+     * @since 1.5
+     */
+    long count(com.mongodb.client.model.CountOptions options);
+
+    /**
+     * Execute the query and get the results.
      *
      * @return an Iterator of the results
      * @deprecated use {@link #find(FindOptions)} instead
@@ -600,8 +611,7 @@ public interface Query<T> extends MongoIterable<T> {
     MorphiaIterator<T, T> fetch();
 
     /**
-     * Execute the query and get the results.  This method is provided for orthogonality; Query.fetch().iterator() is identical to
-     * Query.iterator().
+     * Execute the query and get the results.
      *
      * @param options the options to apply to the find operation
      * @return an Iterator of the results
@@ -612,20 +622,21 @@ public interface Query<T> extends MongoIterable<T> {
     MorphiaIterator<T, T> fetch(FindOptions options);
 
     /**
-     * Execute the query and get the results.  This method is provided for orthogonality; {@link Query#find()#iterator()} is identical to
-     * {@link Query#iterator()}.
+     * Execute the query and get the results.
      *
-     * @return an Iterator of the results
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return an MongoCursor
      * @since 1.4
+     * @see #find(FindOptions)
      */
     MongoCursor<T> find();
 
     /**
-     * Execute the query and get the results.  This method is provided for orthogonality; Query.find().iterator() is identical to
-     * Query.iterator().
+     * Execute the query and get the results.
      *
      * @param options the options to apply to the find operation
-     * @return an Iterator of the results
+     * @return a MongoCursor
      * @since 1.4
      * @deprecated use {@link #find(com.mongodb.client.model.FindOptions)}
      */
@@ -633,14 +644,16 @@ public interface Query<T> extends MongoIterable<T> {
     MongoCursor<T> find(FindOptions options);
 
     /**
-     * Execute the query and get the results.  This method is provided for orthogonality; Query.find().iterator() is identical to
-     * Query.iterator().
+     * Execute the query and get the results.
      *
-     * @param options the options to apply to the find operation
-     * @return an Iterator of the results
+     * @param unused these options are unused.  Apply any query options other than projections and sorts directly to the
+     *               {@link FindIterable} returned.  this parameter is supplied in order to aid in method overloading.  In 2.0, there
+     *               will be no
+     *               parameter required.
+     * @return an FindIterable
      * @since 1.5
      */
-    MongoCursor<T> find(com.mongodb.client.model.FindOptions options);
+    FindIterable<T> find(com.mongodb.client.model.FindOptions unused);
 
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less

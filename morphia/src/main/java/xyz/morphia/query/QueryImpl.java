@@ -8,6 +8,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Function;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
@@ -49,6 +51,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
     private final xyz.morphia.DatastoreImpl ds;
     private final DBCollection dbColl;
+    private final MongoCollection collection;
     private final Class<T> clazz;
     private EntityCache cache;
     private boolean validateName = true;
@@ -87,6 +90,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                                         ? ReadPreference.secondaryPreferred()
                                         : null);
         }
+        collection = ds.getDatabase().getCollection(coll.getName());
     }
 
     /**
@@ -214,8 +218,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MongoCursor<T> find(final com.mongodb.client.model.FindOptions options) {
-        return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
+    @SuppressWarnings("unchecked")
+    public FindIterable<T> find(final com.mongodb.client.model.FindOptions options) {
+        return collection.find(new Document(getQueryObject().toMap()), DBObject.class)
+                         .sort(new Document(getSortObject().toMap()))
+                         .projection(new Document(getFieldsObject().toMap()));
     }
 
     @Override
