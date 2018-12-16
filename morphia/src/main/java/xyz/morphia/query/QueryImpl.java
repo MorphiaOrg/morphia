@@ -2,11 +2,14 @@ package xyz.morphia.query;
 
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.Function;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import org.bson.BSONObject;
 import org.bson.Document;
@@ -24,6 +27,7 @@ import xyz.morphia.query.internal.MorphiaCursor;
 import xyz.morphia.query.internal.MorphiaKeyCursor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +43,6 @@ import static xyz.morphia.query.QueryValidator.validateQuery;
  * Implementation of Query
  *
  * @param <T> The type we will be querying for, and returning.
- * @author Scott Hernandez
  */
 @SuppressWarnings("deprecation")
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
@@ -197,7 +200,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
         }
 
-        return new MorphiaIterator<T, T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
+        return new MorphiaIterator<T, T>(ds, prepareCursor(options), ds.getMapper(), clazz, dbColl.getName(), cache);
     }
 
     @Override
@@ -207,6 +210,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public MongoCursor<T> find(final FindOptions options) {
+        return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
+    }
+
+    @Override
+    public MongoCursor<T> find(final com.mongodb.client.model.FindOptions options) {
         return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
     }
 
@@ -235,6 +243,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         cloned.includeFields = true;
 
         return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
+    }
+
+    @Override
+    public T first(final FindOptions options) {
+        return null;
     }
 
     @Override
@@ -744,8 +757,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MorphiaIterator<T, T> iterator() {
-        return fetch();
+    public MongoCursor<T> iterator() {
+        return find();
+    }
+
+    @Override
+    public T first() {
+        return null;
     }
 
     /**
@@ -779,6 +797,21 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                                              .sort(getSortObject())
                                              .projection(getFieldsObject()))
                      .setDecoderFactory(ds.getDecoderFact());
+    }
+
+    @Override
+    public <U> MongoIterable<U> map(final Function<T, U> mapper) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void forEach(final Block<? super T> block) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <A extends Collection<? super T>> A into(final A target) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

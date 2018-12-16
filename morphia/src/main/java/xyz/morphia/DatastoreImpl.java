@@ -20,6 +20,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.ValidationOptions;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.aggregation.AggregationPipelineImpl;
 import xyz.morphia.annotations.CappedAt;
@@ -424,7 +426,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(final T entity) {
-        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
+        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).get();
     }
 
     @Override
@@ -1130,22 +1132,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * Deletes entities based on the query, with the WriteConcern
-     *
-     * @param clazz the clazz to query against when finding documents to delete
-     * @param id    the ID to look for
-     * @param wc    the WriteConcern to use when deleting
-     * @param <T>   the type to delete
-     * @param <V>   the type of the key
-     * @return results of the delete
-     * @deprecated use {@link #delete(Class, Object, DeleteOptions)}
-     */
-    @Deprecated
-    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(createQuery(clazz).filter(Mapper.ID_KEY, id), new DeleteOptions().writeConcern(wc));
-    }
-
-    /**
      * Find all instances by type in a different collection than what is mapped on the class given skipping some documents and returning a
      * fixed number of the remaining.
      *
@@ -1460,6 +1446,34 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
         return dbObject;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> UpdateResult updateOne(final Query<T> query,
+                                      final UpdateOperations<T> operations,
+                                      final com.mongodb.client.model.UpdateOptions options,
+                                      final WriteConcern writeConcern) {
+        final MongoCollection<T> mongoCollection = getMongoCollection(query.getCollection().getName(), query.getEntityClass());
+
+        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
+        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
+
+        Map<String, Object> queryObject = query.getQueryObject().toMap();
+
+        if (!fields.isEmpty()) {
+            operations.inc(fields.get(0).getNameToStore(), 1);
+        }
+
+        final Map<String, Object> update = ((UpdateOpsImpl) operations).getOps().toMap();
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(format("Executing update(%s) for query: %s, ops: %s, upsert: %s",
+                mongoCollection.getNamespace().getCollectionName(), queryObject, update, options.isUpsert()));
+        }
+        return mongoCollection
+                   .withWriteConcern(getWriteConcern(query.getEntityClass()))
+                   .updateOne(new Document(queryObject), new Document(update), options);
+
     }
 
     @Override
