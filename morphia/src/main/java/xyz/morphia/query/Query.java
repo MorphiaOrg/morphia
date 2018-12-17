@@ -199,12 +199,15 @@ public interface Query<T> extends MongoIterable<T> {
 
     /**
      * @return the entity {@link Class}.
+     * @deprecated
+     * @morphia.internal
      */
     Class<T> getEntityClass();
 
     /**
      * @return the Mongo fields {@link DBObject}.
-     * @deprecated This is an internal method and subject to change or removal.  Do not use.
+     * @deprecated
+     * @morphia.internal
      */
     @Deprecated
     DBObject getFieldsObject();
@@ -229,14 +232,16 @@ public interface Query<T> extends MongoIterable<T> {
 
     /**
      * @return the Mongo query {@link DBObject}.
-     * @deprecated This is an internal method and subject to change or removal.  Do not use.
+     * @deprecated
+     * @morphia.internal
      */
     @Deprecated
     DBObject getQueryObject();
 
     /**
      * @return the Mongo sort {@link DBObject}.
-     * @deprecated This is an internal method and subject to change or removal.  Do not use.
+     * @deprecated
+     * @morphia.internal
      */
     @Deprecated
     DBObject getSortObject();
@@ -543,6 +548,15 @@ public interface Query<T> extends MongoIterable<T> {
      * @since 1.4
      */
     MongoCursor<Key<T>> keys(FindOptions options);
+
+    /**
+     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
+     *
+     * @param unused the options to apply to the find operation
+     * @return the keys of the documents returned by this query
+     * @since 1.5
+     */
+    FindIterable<Key<T>> keys(com.mongodb.client.model.FindOptions unused);
 
     /**
      * Execute the query and get the results.

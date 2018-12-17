@@ -7,6 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Function;
+import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -139,6 +140,29 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return new MorphiaKeyCursor<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public MorphiaKeyIterable<T> keys(final com.mongodb.client.model.FindOptions options) {
+        QueryImpl<T> cloned = cloneQuery();
+        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
+        cloned.includeFields = true;
+
+        final Document query = new Document(getQueryObject().toMap());
+        final Document sort = new Document(getSortObject().toMap());
+        final Document projection = new Document(getFieldsObject().toMap());
+
+        return new MorphiaKeyIterable<T>(ds.getMongo().startSession(), collection.getNamespace(), DBObject.class, DBObject.class,
+            ds.getMongo().getMongoClientOptions().getCodecRegistry(), ReadPreference.primary(), ReadConcern.MAJORITY, ex)
+        final MongoCursor cursor = collection.find(query, DBObject.class)
+                                             .sort(sort)
+                                             .projection(projection)
+                                             .iterator();
+        new MorphiaCursor<T>(ds, cursor, ds.getMapper(), clazz, cache);
+
+        return cursor;
+    }
+
 
     @Override
     public List<Key<T>> asKeyList() {
