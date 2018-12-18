@@ -269,8 +269,8 @@ public class MapReduceOptions<T> {
             throw new QueryException("mapReduce does not allow the offset/retrievedFields query ");
         }
 
-        final DBCollection dbColl = inputCollection != null ? getQuery().getCollection().getDB().getCollection(inputCollection)
-                                                            : query.getCollection();
+        final DBCollection dbColl = inputCollection != null ? getQuery().getDBCollection().getDB().getCollection(inputCollection)
+                                                            : query.getDBCollection();
         final String target = outputCollection != null ? outputCollection : mapper.getMappedClass(resultType).getCollectionName();
 
         final MapReduceCommand command = new MapReduceCommand(dbColl, map, reduce, target, outputType, query.getQueryObject());

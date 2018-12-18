@@ -7,14 +7,12 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Function;
-import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
-import org.bson.BSONObject;
 import org.bson.Document;
 import org.bson.types.CodeWScope;
 import xyz.morphia.Datastore;
@@ -58,7 +56,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private boolean validateName = true;
     private boolean validateType = true;
     private Boolean includeFields;
-    private BasicDBObject baseQuery;
+    private Document baseQuery;
     private FindOptions options;
 
     FindOptions getOptions() {
@@ -143,24 +141,28 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public MorphiaKeyIterable<T> keys(final com.mongodb.client.model.FindOptions options) {
+    public FindIterable<Key<T>> keys(final com.mongodb.client.model.FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
         cloned.includeFields = true;
 
-        final Document query = new Document(getQueryObject().toMap());
-        final Document sort = new Document(getSortObject().toMap());
-        final Document projection = new Document(getFieldsObject().toMap());
+        final Document query = new Document(cloned.getQueryObject().toMap());
+        final Document sort = new Document(cloned.getSortObject().toMap());
 
-        return new MorphiaKeyIterable<T>(ds.getMongo().startSession(), collection.getNamespace(), DBObject.class, DBObject.class,
-            ds.getMongo().getMongoClientOptions().getCodecRegistry(), ReadPreference.primary(), ReadConcern.MAJORITY, ex)
-        final MongoCursor cursor = collection.find(query, DBObject.class)
-                                             .sort(sort)
-                                             .projection(projection)
-                                             .iterator();
-        new MorphiaCursor<T>(ds, cursor, ds.getMapper(), clazz, cache);
+//        return new MorphiaKeyIterable<T>(ds.getMongo().startSession(), collection.getNamespace(), Key.class, DBObject.class,
+//            ds.getMongo().getMongoClientOptions().getCodecRegistry(), ReadPreference.primary(), ReadConcern.MAJORITY, )
 
-        return cursor;
+        return collection.find(query, Key.class)
+                         .sort(sort)
+                         .projection(new Document(Mapper.ID_KEY, 1));
+
+        //        final MongoCursor cursor = collection.find(query, DBObject.class)
+//                                             .sort(sort)
+//                                             .projection(projection)
+//                                             .iterator();
+//        new MorphiaCursor<T>(ds, cursor, ds.getMapper(), clazz, cache);
+//
+//        return cursor;
     }
 
 
@@ -214,6 +216,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public long count(final CountOptions options) {
         return dbColl.getCount(getQueryObject(), options.getOptions());
+    }
+
+    @Override
+    public long count(final com.mongodb.client.model.CountOptions options) {
+        return collection.countDocuments(getQueryDocument(), options);
     }
 
     @Override
@@ -349,8 +356,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         return n;
     }
 
-    protected BasicDBObject copy(final DBObject dbObject) {
+    private BasicDBObject copy(final DBObject dbObject) {
         return dbObject == null ? null : new BasicDBObject(dbObject.toMap());
+    }
+    private Document copy(final Document document) {
+        return document == null ? null : new Document(document);
     }
 
     @Override
@@ -412,7 +422,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Map<String, Object> explain() {
         return explain(getOptions());
     }
@@ -451,8 +460,13 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     @Deprecated
-    public DBCollection getCollection() {
+    public DBCollection getDBCollection() {
         return dbColl;
+    }
+
+    @Override
+    public MongoCollection getCollection() {
+        return collection;
     }
 
     @Override
@@ -464,7 +478,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Deprecated
     public DBObject getFieldsObject() {
         DBObject projection = getOptions().getProjection();
-        if (projection == null || projection.keySet().size() == 0) {
+        if (projection == null || projection.keySet().isEmpty()) {
             return null;
         }
 
@@ -498,7 +512,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final DBObject obj = new BasicDBObject();
 
         if (baseQuery != null) {
-            obj.putAll((BSONObject) baseQuery);
+            obj.putAll(baseQuery);
         }
 
         addTo(obj);
@@ -507,12 +521,20 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     /**
+     * @morphia.internal
+     * @return the query document
+     */
+    public Document getQueryDocument() {
+        return baseQuery;
+    }
+
+    /**
      * Sets query structure directly
      *
      * @param query the DBObject containing the query
      */
     public void setQueryObject(final DBObject query) {
-        baseQuery = new BasicDBObject(query.toMap());
+        baseQuery = new Document(query.toMap());
     }
 
     @Override

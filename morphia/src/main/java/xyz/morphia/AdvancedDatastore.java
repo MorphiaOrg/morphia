@@ -115,8 +115,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>   the entity type
      * @param <V>   is the type of the ID, for example ObjectId
      * @return the result of this delete operation.
-     * @deprecated use {@link #find(String, Class)} and {@link #delete(Query)} instead
      * @morphia.inline
+     * @deprecated use {@link #find(String, Class)} and {@link #delete(Query)} instead
      */
     @Deprecated
     <T, V> WriteResult delete(String kind, Class<T> clazz, V id);
@@ -135,9 +135,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>     the entity type
      * @param <V>     is the type of the ID, for example ObjectId
      * @return the result of this delete operation.
+     * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #find(String, Class)} and {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
-     * @morphia.inline
      */
     @Deprecated
     <T, V> WriteResult delete(String kind, Class<T> clazz, V id, DeleteOptions options);
@@ -226,9 +226,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param readPreference Uses the supplied ReadPreference for the check.  If readPreference is null the preference is taken from the
      *                       annotation or uses the default preference.
      * @return the key if the entity exists
+     * @morphia.inline
      * @see #exists(Object)
      * @deprecated use {@link Query#first()} instead
-     * @morphia.inline
      */
     @Deprecated
     Key<?> exists(Object keyOrEntity, ReadPreference readPreference);
@@ -256,8 +256,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type to query
      * @param <V>        the type to filter value
      * @return the query
-     * @deprecated use {@link #find(String, Class)} and apply the options to the {@link com.mongodb.client.model.FindOptions} parameter
      * @morphia.inline
+     * @deprecated use {@link #find(String, Class)} and apply the options to the {@link com.mongodb.client.model.FindOptions} parameter
      */
     @Deprecated
     <T, V> Query<T> find(String collection, Class<T> clazz, String property, V value, int offset, int size);
@@ -269,8 +269,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param ref   the DBRef to use when querying
      * @param <T>   the type to fetch
      * @return the entity referenced in the DBRef.  May be null.
-     * @deprecated use {@link #find(Class)} instead
      * @morphia.inline
+     * @deprecated use {@link #find(Class)} instead
      */
     @Deprecated
     <T> T get(Class<T> clazz, DBRef ref);
@@ -284,8 +284,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type to fetch
      * @param <V>        the type of the ID
      * @return the entity with the id.  May be null.
-     * @deprecated use {@link #find(String, Class)} instead
      * @morphia.inline
+     * @deprecated use {@link #find(String, Class)} instead
      */
     @Deprecated
     <T, V> T get(String collection, Class<T> clazz, V id);
@@ -295,8 +295,8 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param collection the collection to count
      * @return the collection size
-     * @deprecated use {@link Query#count()} instead
      * @morphia.inline
+     * @deprecated use {@link Query#count()} instead
      */
     @Deprecated
     long getCount(String collection);
@@ -317,9 +317,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc     the WriteConcern to use when inserting
      * @param <T>    the type of the entity
      * @return the new key of the inserted entity
+     * @morphia.inline
      * @see WriteConcern
      * @deprecated use {@link #insert(T, InsertOneOptions, WriteConcern)}
-     * @morphia.inline
      */
     @Deprecated
     <T> Key<T> insert(T entity, WriteConcern wc);
@@ -331,9 +331,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
      * @return the new key of the inserted entity
+     * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #insert(T, InsertOneOptions)} instead
-     * @morphia.inline
      */
     @Deprecated
     <T> Key<T> insert(T entity, InsertOptions options);
@@ -379,9 +379,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param options    the options to apply to the insert operation
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
+     * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #insert(String, T, InsertOneOptions)} instead
-     * @morphia.inline
      */
     @Deprecated
     <T> Key<T> insert(String collection, T entity, InsertOptions options);
@@ -404,7 +404,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param collection the collection to update
      * @param entity     the entity to insert
      * @param options    the options to apply to the insert operation
-     * @param concern the WriteConcern to use when inserting
+     * @param concern    the WriteConcern to use when inserting
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
      * @since 1.5
@@ -417,8 +417,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param entities the entities to insert
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @deprecated use {@link #insert(Iterable)} instead
      * @morphia.inline
+     * @deprecated use {@link #insert(Iterable)} instead
      */
     @Deprecated
     <T> Iterable<Key<T>> insert(T... entities);
@@ -439,8 +439,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc       the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @deprecated use {@link #insert(Iterable, InsertManyOptions, WriteConcern)}
      * @morphia.inline
+     * @deprecated use {@link #insert(Iterable, InsertManyOptions, WriteConcern)}
      */
     @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc);
@@ -452,9 +452,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param options  the options to apply to the insert operation
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
+     * @morphia.inline
      * @since 1.3
      * @deprecated use {@link Iterable, InsertOneOptions} instead
-     * @morphia.inline
      */
     @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, InsertOptions options);
@@ -475,7 +475,7 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param entities the entities to insert
      * @param options  the options to apply to the insert operation
-     * @param concern the WriteConcern to use when inserting
+     * @param concern  the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
      * @since 1.5

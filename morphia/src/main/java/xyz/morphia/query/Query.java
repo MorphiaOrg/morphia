@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import org.bson.types.CodeWScope;
@@ -190,12 +191,19 @@ public interface Query<T> extends MongoIterable<T> {
     int getBatchSize();
 
     /**
-     * @return the {@link DBCollection} of the {@link Query}.
+     * @return
      *
      * @deprecated This is an internal method and subject to change or removal.  Do not use.
+     * @morphia.internal
      */
     @Deprecated
-    DBCollection getCollection();
+    DBCollection getDBCollection();
+
+    /**
+     * @return
+     * @morphia.internal
+     */
+    MongoCollection getCollection();
 
     /**
      * @return the entity {@link Class}.
