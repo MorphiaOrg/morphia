@@ -5,13 +5,13 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import xyz.morphia.Datastore;
+import xyz.morphia.DatastoreImpl;
 import xyz.morphia.InsertOptions;
 import xyz.morphia.Key;
 import xyz.morphia.Morphia;
 import xyz.morphia.UpdateOptions;
 import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
-import xyz.morphia.query.QueryResults;
 import xyz.morphia.query.UpdateOperations;
 import xyz.morphia.query.UpdateResults;
 
@@ -28,18 +28,8 @@ import java.util.List;
  */
 @SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
-    //CHECKSTYLE:OFF
-    /**
-     * @deprecated use {@link #getEntityClass()}
-     */
-    @Deprecated
-    protected Class<T> entityClazz;
-    /**
-     * @deprecated use {@link #getDatastore()}
-     */
-    @Deprecated
-    protected xyz.morphia.DatastoreImpl ds;
-    //CHECKSTYLE:ON
+    private Class<T> entityClazz;
+    private DatastoreImpl ds;
 
     /**
      * Create a new BasicDAO
@@ -147,12 +137,12 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     }
 
     @Override
-    public QueryResults<T> find() {
+    public Query<T> find() {
         return createQuery();
     }
 
     @Override
-    public QueryResults<T> find(final Query<T> query) {
+    public Query<T> find(final Query<T> query) {
         return query;
     }
 

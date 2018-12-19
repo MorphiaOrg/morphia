@@ -36,6 +36,16 @@ public class UpdateOptions {
         return options;
     }
 
+    public UpdateOptions() {
+    }
+
+    public UpdateOptions(final com.mongodb.client.model.UpdateOptions options, final WriteConcern concern) {
+        bypassDocumentValidation(options.getBypassDocumentValidation());
+        collation(options.getCollation());
+        upsert(options.isUpsert());
+        writeConcern(concern);
+    }
+
     /**
      * Create a copy of the options instance.
      *

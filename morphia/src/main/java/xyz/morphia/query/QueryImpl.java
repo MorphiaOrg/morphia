@@ -89,7 +89,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                                         ? ReadPreference.secondaryPreferred()
                                         : null);
         }
-        collection = ds.getDatabase().getCollection(coll.getName());
+        collection = coll != null ? ds.getDatabase().getCollection(coll.getName()) : null;
     }
 
     /**

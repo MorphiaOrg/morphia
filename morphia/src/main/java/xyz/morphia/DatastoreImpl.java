@@ -19,6 +19,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.ValidationOptions;
@@ -74,9 +75,9 @@ import static java.util.Collections.singletonList;
  * A generic (type-safe) wrapper around mongodb collections
  *
  * @deprecated This is an internal implementation of a published API.  No public alternative planned.
+ * @morphia.internal
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
 
@@ -392,6 +393,19 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final FindOneAndUpdateOptions options) {
+        return findAndModify(query, operations, new FindAndModifyOptions(options, null));
+    }
+
+    @Override
+    public <T> T findAndModify(final Query<T> query,
+                               final UpdateOperations<T> operations,
+                               final FindOneAndUpdateOptions options,
+                               final WriteConcern writeConcern) {
+        return findAndModify(query, operations, new FindAndModifyOptions(options, writeConcern));
     }
 
     @Override
@@ -1652,6 +1666,11 @@ public class DatastoreImpl implements AdvancedDatastore {
                                       final UpdateOperations<T> operations,
                                       final com.mongodb.client.model.UpdateOptions options,
                                       final WriteConcern writeConcern) {
+        return update(query, operations, new UpdateOptions(options, writeConcern)
+                     .multi(false))
+                   .toUpdateResult(writeConcern);
+
+/*
         final MongoCollection<T> mongoCollection = getMongoCollection(query.getDBCollection().getName(), query.getEntityClass(), writeConcern);
 
         final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
@@ -1672,6 +1691,16 @@ public class DatastoreImpl implements AdvancedDatastore {
                    .withWriteConcern(getWriteConcern(query.getEntityClass()))
                    .updateOne(new Document(queryObject), new Document(update), options);
 
+*/
+    }
+
+    @Override
+    public <T> UpdateResult updateOne(final Query<T> query,
+                                      final UpdateOperations<T> operations,
+                                      final com.mongodb.client.model.UpdateOptions options) {
+        return update(query, operations, new UpdateOptions(options, null)
+                     .multi(false))
+                   .toUpdateResult(mongoClient.getWriteConcern());
     }
 
     @Override
@@ -1802,7 +1831,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         WriteConcern wc = defConcern;
         if (clazzOrEntity != null) {
             final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-            if (entityAnn != null && entityAnn.concern().length() != 0) {
+            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
                 wc = WriteConcern.valueOf(entityAnn.concern());
             }
         }

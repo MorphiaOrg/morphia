@@ -119,7 +119,7 @@ public interface DAO<T, K> {
      * @return the entities
      * @see #getEntityClass()
      */
-    QueryResults<T> find();
+    Query<T> find();
 
     /**
      * Finds entities matching a query
@@ -127,7 +127,7 @@ public interface DAO<T, K> {
      * @param query the query to use when finding the documents
      * @return the entities which match the criteria
      */
-    QueryResults<T> find(Query<T> query);
+    Query<T> find(Query<T> query);
 
     /**
      * Finds the entities Ts

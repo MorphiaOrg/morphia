@@ -16,10 +16,14 @@
 
 package xyz.morphia;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
+import org.bson.Document;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +37,19 @@ import static com.mongodb.assertions.Assertions.notNull;
 public final class FindAndModifyOptions {
     private DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
         .returnNew(true);
+
+    public FindAndModifyOptions() {
+    }
+
+    FindAndModifyOptions(final FindOneAndUpdateOptions options, final WriteConcern writeConcern) {
+        bypassDocumentValidation(options.getBypassDocumentValidation());
+        collation(options.getCollation());
+        maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        projection(new BasicDBObject(((Document) options.getProjection())));
+        returnNew(options.getReturnDocument() == ReturnDocument.AFTER);
+        upsert(options.isUpsert());
+        writeConcern(writeConcern);
+    }
 
     FindAndModifyOptions copy() {
         FindAndModifyOptions copy = new FindAndModifyOptions();
