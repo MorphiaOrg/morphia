@@ -25,45 +25,45 @@ planned to help users transition to 2.0.0 with as little fuss as possible.  Many
 reduce both the burden of learning Morphia's capabilities and the burden of maintaining and updating the API going forward.  These 
 details and more are laid out below:
 
-* _Deprecating much of Datastore._  Over the years many convenience methods have been added to Datastore to make certain operations 
+* **Deprecating much of Datastore.**  Over the years many convenience methods have been added to Datastore to make certain operations 
 slightly easier.  This profusion of methods have made adding overloads for things like WriteConcern and ReadPreference awkward.  We're 
 left with the choice adding such overrides for each variation on the interface or omitting some updates leading to inconsistencies in 
 the API.  The decision was bad to deprecate those methods leading to fewer methods which will be easier to both understand for new 
 comers and require less work when updating in the future.
-* _Deprecating Morphia's Option classes._  When these classes were introduced, the goal was to shield Morphia users from changes in the 
+* **Deprecating Morphia's Option classes.**  When these classes were introduced, the goal was to shield Morphia users from changes in the 
 driver APIs.  In practice this has not worked out as well as hoped.  It has, in fact, led to an increase in maintenance burden.  So 2.0 
 will take the opportunity to correct this misfeature and will expose and use the driver options classes directly.  This gives us two 
 huge benefits:
     1.  As the driver adds new options to queries, updates, etc., Morphia gets these for free.  Users will no longer need to wait on a 
     Morphia update to provided access to these updated features.
-    2. There will be less need for maintenance as Morphia will no longer need to track these classes to provide Morhpia-side analogs for
+    2. There will be less need for maintenance as Morphia will no longer need to track these classes to provide Morphia-side analogs for
      these features.
 
   In practice, these options classes have very similar interfaces, by design, so migration should not be terribly problematic.
-* _Deprecating internal Morphia artifacts._  Because Java's accessibility controls are rather limited in certain use cases, various 
+* **Deprecating internal Morphia artifacts.**  Because Java's accessibility controls are rather limited in certain use cases, various 
 aspects of Morphia's internal APIs have been exposed to users.  These were never intended for external use but as with any API, once 
 it's out there folks will use it.  1.5.0 will attempt to rectify some of this by explicitly marking these items as deprecated/internal. 
  Future versions may change or remove these items without warning.
-* _No significant mapper fixes_  The primary feature update in 2.0 will be moving to the new `PojoCodec` API.  This update will fix many
+* **No significant mapper fixes**  The primary feature update in 2.0 will be moving to the new `PojoCodec` API.  This update will fix many
  of the outstanding mapping bugs in Morphia by simple virtue of upgrading.  As such, there won't be much focus on cleaning up issues 
  with the current mapping code.
-* _Release timeline_.  As with most software projects, it will release when it's ready.    Hopefully, this means the first month or two 
+* **Release timeline**.  As with most software projects, it will release when it's ready.    Hopefully, this means the first month or two 
 of 2019 if all goes well.  Development time is split between 1.5 and 2.0 so the ultimate timing may we vary.
 
 # 2.0.0
 
-* _Updated Mapper_.  The keystone feature of 2.0 is the updated mapper.  Using updates to the driver, Morphia will transition off its 
+* **Updated Mapper**.  The keystone feature of 2.0 is the updated mapper.  Using updates to the driver, Morphia will transition off its 
 own mapping code and leverage the infrastructure now provided by the driver.  This means that many of the mapping bugs around generics 
 will begin working, e.g.  However it also means that the shapes of documents in the database might end up looking different.  Work is 
 underway to mitigate as much of that as possible but it might not be 100% effective.
-* _Realignment against driver APIs._ Morphia will make better use of the driver API.  Sometimes this will mean replacing Morphia's 
+* **Realignment against driver APIs.** Morphia will make better use of the driver API.  Sometimes this will mean replacing Morphia's 
 Options classes with the driver's Options.  In other cases, this will mean return types from methods will change.  The hope is that such
  changes will result in a cleaner, more future-proof API.  These changes do not come without some breakage.  Efforts are being made to 
  mitigate much of that but, again, will not be 100% effective.
 
 # 2.1.0
 
-* _Aggregation updates_.  It's a little early to speculate too much about what 2.1.0 will need but there's a sizable back log of 
+* **Aggregation updates**.  It's a little early to speculate too much about what 2.1.0 will need but there's a sizable back log of 
 aggregation updates to complete.  The current aggregation API was a mild experiment but was sadly not communicated as such as well as it
  should have been.  The updates will will include both new features and, hopefully, and improved more usable API.  This might come in 
  the form of a parallel, experimental API that evolves and eventually replaces the current API.
