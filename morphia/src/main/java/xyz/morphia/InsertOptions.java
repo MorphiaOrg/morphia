@@ -17,8 +17,6 @@
 package xyz.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.model.InsertManyOptions;
-import com.mongodb.client.model.InsertOneOptions;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
@@ -30,17 +28,6 @@ public class InsertOptions {
 
     public InsertOptions() {
     }
-
-    public InsertOptions(final InsertOneOptions options, final WriteConcern concern) {
-        bypassDocumentValidation(options.getBypassDocumentValidation());
-        writeConcern(concern);
-    }
-
-    public InsertOptions(final InsertManyOptions options, final WriteConcern concern) {
-        bypassDocumentValidation(options.getBypassDocumentValidation());
-        writeConcern(concern);
-    }
-
 
     /**
      * Create a copy of the options instance.

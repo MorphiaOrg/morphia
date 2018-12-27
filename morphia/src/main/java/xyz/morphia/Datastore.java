@@ -9,10 +9,6 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.CountOptions;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import com.mongodb.client.model.InsertManyOptions;
-import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.result.UpdateResult;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.annotations.Indexed;
@@ -84,7 +80,7 @@ public interface Datastore {
      * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
-     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
     @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, V id, DeleteOptions options);
@@ -112,7 +108,7 @@ public interface Datastore {
      * @param <V>     the type of the id
      * @return results of the delete
      * @since 1.3
-     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
     @Deprecated
     <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids, DeleteOptions options);
@@ -134,21 +130,8 @@ public interface Datastore {
      * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
-     * @deprecated use {@link #delete(Query, com.mongodb.client.model.DeleteOptions)} instead
      */
-    @Deprecated
     <T> WriteResult delete(Query<T> query, DeleteOptions options);
-
-    /**
-     * Deletes entities based on the query
-     *
-     * @param <T>     the type to delete
-     * @param query   the query to use when finding documents to delete
-     * @param options the options to apply to the delete
-     * @return results of the delete
-     * @since 1.5
-     */
-    <T> WriteResult delete(Query<T> query, com.mongodb.client.model.DeleteOptions options);
 
     /**
      * Deletes entities based on the query, with the WriteConcern
@@ -157,7 +140,7 @@ public interface Datastore {
      * @param wc    the WriteConcern to use when deleting
      * @param <T>   the type to delete
      * @return results of the delete
-     * @deprecated use {@link AdvancedDatastore#delete(Query, com.mongodb.client.model.DeleteOptions, WriteConcern)} instead
+     * @deprecated use {@link AdvancedDatastore#delete(Query, DeleteOptions)} instead
      */
     @Deprecated
     <T> WriteResult delete(Query<T> query, WriteConcern wc);
@@ -168,9 +151,7 @@ public interface Datastore {
      * @param entity the entity to delete
      * @param <T>    the type to delete
      * @return results of the delete
-     * @deprecated use {@link #delete(Query)} instead
      */
-    @Deprecated
     <T> WriteResult delete(T entity);
 
     /**
@@ -181,9 +162,7 @@ public interface Datastore {
      * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
-     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
-    @Deprecated
     <T> WriteResult delete(T entity, DeleteOptions options);
 
     /**
@@ -193,9 +172,7 @@ public interface Datastore {
      * @param wc     the WriteConcern to use when deleting
      * @param <T>    the type to delete
      * @return results of the delete
-     * @deprecated use {@link AdvancedDatastore#delete(Query, com.mongodb.client.model.DeleteOptions, WriteConcern)}
      */
-    @Deprecated
     <T> WriteResult delete(T entity, WriteConcern wc);
 
     /**
@@ -371,9 +348,7 @@ public interface Datastore {
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
      * @since 1.3
-     * @deprecated use {@link AdvancedDatastore#findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions)}
      */
-    @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
 
     /**
@@ -389,24 +364,12 @@ public interface Datastore {
     /**
      * Find the first Entity from the Query, and modify it.
      *
-     * @param query        the query to use when finding entities to update
-     * @param operations   the updates to apply to the matched documents
-     * @param options      the options to apply to the update
-     * @param <T>          the type to query
-     * @return The modified Entity (the result of the update)
-     * @since 1.5
-     */
-    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindOneAndUpdateOptions options);
-
-    /**
-     * Find the first Entity from the Query, and modify it.
-     *
      * @param query      the query to find the Entity with; You are not allowed to offset/skip in the query.
      * @param operations the updates to apply to the matched documents
      * @param oldVersion indicated the old version of the Entity should be returned
      * @param <T>        the type to query
      * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions)}
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
     @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion);
@@ -420,7 +383,7 @@ public interface Datastore {
      * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
      * @param <T>             the type of the entity
      * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindOneAndUpdateOptions)}
+     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
      */
     @Deprecated
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion, boolean createIfMissing);
@@ -707,7 +670,7 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @param wc       the WriteConcern to use
      * @return the keys of the entities
-     * @deprecated use {@link #save(List, InsertManyOptions, WriteConcern)} instead
+     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
      */
     @Deprecated
     <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
@@ -719,22 +682,8 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
      * @return the keys of the entities
-     * @deprecated use {@link #save(List, InsertManyOptions, WriteConcern)} instead
      */
-    @Deprecated
     <T> Iterable<Key<T>> save(Iterable<T> entities, InsertOptions options);
-
-    /**
-     * Saves the entities (Objects) and updates the @Id field, with the WriteConcern
-     *
-     * @param entities     the entities to save
-     * @param <T>          the type of the entity
-     * @param options      the options to apply to the save operation
-     * @param writeConcern the WriteConcern to apply
-     * @return the keys of the entities
-     * @since 1.5
-     */
-    <T> List<Key<T>> save(List<T> entities, InsertManyOptions options, WriteConcern writeConcern);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -742,7 +691,7 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @return the keys of the entities
-     * @deprecated use {@link #save(List, InsertManyOptions, WriteConcern)} instead
+     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
      */
     @Deprecated
     <T> Iterable<Key<T>> save(T... entities);
@@ -763,7 +712,7 @@ public interface Datastore {
      * @param wc     the WriteConcern to use
      * @param <T>    the type of the entity
      * @return the keys of the entity
-     * @deprecated use {@link #save(Object, InsertOneOptions, WriteConcern)} instead
+     * @deprecated use {@link #save(T, InsertOptions)} instead
      */
     @Deprecated
     <T> Key<T> save(T entity, WriteConcern wc);
@@ -775,22 +724,8 @@ public interface Datastore {
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
      * @return the keys of the entity
-     * @deprecated use {@link #save(Object, InsertOneOptions, WriteConcern)} instead
      */
-    @Deprecated
     <T> Key<T> save(T entity, InsertOptions options);
-
-    /**
-     * Saves an entity (Object) and updates the @Id field
-     *
-     * @param entity       the entity to save
-     * @param <T>          the type of the entity
-     * @param options      the options to apply to the save operation
-     * @param writeConcern the WriteConcern to use for this operation
-     * @return the keys of the entity
-     * @since 1.5
-     */
-    <T> Key<T> save(T entity, InsertOneOptions options, WriteConcern writeConcern);
 
     /**
      * Updates an entity with the operations; this is an atomic operation
@@ -838,22 +773,8 @@ public interface Datastore {
      * @param <T>        the type of the entity
      * @return the results of the updates
      * @since 1.3
-     * @deprecated use {@link #updateOne(Query, UpdateOperations, com.mongodb.client.model.UpdateOptions)}
      */
-    @Deprecated
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options);
-
-    /**
-     * Updates the first entity found with the operations; this is an atomic operation per entity
-     *
-     * @param query        the query used to match the documents to update
-     * @param operations   the update operations to perform
-     * @param options      the options to apply to the update
-     * @param <T>          the type of the entity
-     * @return the results of the updates
-     * @since 1.5
-     */
-    <T> UpdateResult updateOne(Query<T> query, UpdateOperations<T> operations, com.mongodb.client.model.UpdateOptions options);
 
     /**
      * Updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;
@@ -865,7 +786,7 @@ public interface Datastore {
      * @param createIfMissing if true, a document will be created if none can be found that match the query
      * @param <T>             the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link #updateOne(Query, UpdateOperations, com.mongodb.client.model.UpdateOptions)} with upsert set to the value of
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of
      * createIfMissing
      */
     @Deprecated
@@ -882,7 +803,7 @@ public interface Datastore {
      * @param wc              the WriteConcern to use
      * @param <T>             the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link AdvancedDatastore#updateOne(Query, UpdateOperations, com.mongodb.client.model.UpdateOptions, WriteConcern)}
+     * @deprecated use {@link AdvancedDatastore#update(Query, UpdateOperations, UpdateOptions)}
      * with upsert set to the value of createIfMissing
      */
     @Deprecated
@@ -895,7 +816,7 @@ public interface Datastore {
      * @param operations the update operations to perform
      * @param <T>        the type of the entity
      * @return the results of the update
-     * @deprecated use {@link #updateOne(Query, UpdateOperations, com.mongodb.client.model.UpdateOptions)}
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)}
      */
     @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations);
@@ -922,8 +843,7 @@ public interface Datastore {
      * @param wc              the WriteConcern to use
      * @param <T>             the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link #updateOne(Query, UpdateOperations, com.mongodb.client.model.UpdateOptions)} with upsert set to the value of
-     * createIfMissing
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
     @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing, WriteConcern wc);
@@ -939,7 +859,7 @@ public interface Datastore {
      * @param createIfMissing if true, a document will be created if none can be found that match the query
      * @param <T>             the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link #find(Class)} and {@link #save(Object)} directly
+     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
      */
     @Deprecated
     <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
@@ -947,6 +867,7 @@ public interface Datastore {
     /**
      * @return the Mapper used by this Datastore
      * @since 1.5
+     * @morphia.internal
      */
     Mapper getMapper();
 }

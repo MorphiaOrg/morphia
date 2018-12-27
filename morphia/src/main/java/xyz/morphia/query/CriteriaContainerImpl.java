@@ -4,6 +4,7 @@ package xyz.morphia.query;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.HashSet;

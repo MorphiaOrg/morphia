@@ -21,8 +21,9 @@ import xyz.morphia.testmodel.Circle;
 import xyz.morphia.testmodel.Rectangle;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class TestSuperDatastore extends TestBase {
+public class TestSuperDatastoreDeprecated extends TestBase {
     @Test
     public void testDeleteDoesNotDeleteAnythingWhenGivenAnIncorrectId() {
         // given
@@ -34,13 +35,13 @@ public class TestSuperDatastore extends TestBase {
         rect.setId(id);
 
         getAds().save(ns, rect);
-        assertEquals(1, getAds().find(ns, Rectangle.class).count());
+        assertEquals(1, getAds().getCount(ns));
 
         // when giving an ID that is not the entity ID.  Note that at the time of writing this will also log a validation warning
-        getAds().delete(getAds().find(ns, Rectangle.class).filter("_id",  1));
+        getAds().delete(ns, Rectangle.class, 1);
 
         // then
-        assertEquals(1, getDb().getCollection(ns).count());
+        assertEquals(1, getAds().getCount(ns));
     }
 
     @Test
@@ -58,13 +59,13 @@ public class TestSuperDatastore extends TestBase {
         circle.setId(new ObjectId());
         getAds().save(ns, circle);
 
-        assertEquals(2, getAds().find(ns, Rectangle.class).count());
+        assertEquals(2, getAds().getCount(ns));
 
         // when
-        getAds().delete(getAds().find(ns, Circle.class).filter("_id", rectangleId));
+        getAds().delete(ns, Circle.class, rectangleId);
 
         // then
-        assertEquals(1, getAds().find(ns, Circle.class).count());
+        assertEquals(1, getAds().getCount(ns));
     }
 
     @Test
@@ -78,13 +79,13 @@ public class TestSuperDatastore extends TestBase {
         rect.setId(id);
 
         getAds().save(ns, rect);
-        assertEquals(1, getAds().find(ns, Rectangle.class).count());
+        assertEquals(1, getAds().getCount(ns));
 
         // when
-        getAds().delete(getAds().find(ns, Rectangle.class).filter("_id", id));
+        getAds().delete(ns, Rectangle.class, id);
 
         // then
-        assertEquals(0, getAds().find(ns, Rectangle.class).count());
+        assertEquals(0, getAds().getCount(ns));
     }
 
     @Test
@@ -97,7 +98,7 @@ public class TestSuperDatastore extends TestBase {
         getDb().getCollection(ns).remove(new BasicDBObject());
 
         getAds().save(ns, rect);
-        assertEquals(1, getAds().find(ns, Rectangle.class).count());
+        assertEquals(1, getAds().getCount(ns));
         Rectangle rectLoaded = getAds().find(ns, Rectangle.class)
                                        .find(new FindOptions().limit(1))
                                        .next();
@@ -106,25 +107,22 @@ public class TestSuperDatastore extends TestBase {
 
         rect = new Rectangle(2, 1);
         getAds().save(rect); //saved to default collection name (kind)
-        assertEquals(1, getDs().find(Rectangle.class).count());
+        assertEquals(1, getAds().getCount(rect));
 
         rect.setId(null);
         getAds().save(rect); //saved to default collection name (kind)
-        assertEquals(2, getDs().find(Rectangle.class).count());
+        assertEquals(2, getAds().getCount(rect));
 
         rect = new Rectangle(4, 3);
         getAds().save(ns, rect);
-        assertEquals(2, getAds().find(ns, Rectangle.class).count());
+        assertEquals(2, getAds().getCount(ns));
 
         rectLoaded = toList(getAds().find(ns, Rectangle.class).find()).get(1);
         assertEquals(rect.getId(), rectLoaded.getId());
         assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
 
-        getAds().find(ns, Rectangle.class)
-                .filter("_id !=", "-1")
-                .find(new FindOptions()
-                          .skip(1)
-                          .limit(1))
+        getAds().find(ns, Rectangle.class, "_id !=", "-1", 1, 1)
+                .find(new FindOptions().limit(1))
                 .next();
     }
 
@@ -136,11 +134,8 @@ public class TestSuperDatastore extends TestBase {
         getDb().getCollection(ns).remove(new BasicDBObject());
 
         getAds().save(ns, rect);
-        assertEquals(1, getAds().find(ns, Rectangle.class).count());
-
-        final Rectangle rectLoaded = getAds().find(ns, Rectangle.class)
-                                             .filter("_id", rect.getId())
-                                             .first();
+        assertEquals(1, getAds().getCount(ns));
+        final Rectangle rectLoaded = getAds().get(ns, Rectangle.class, rect.getId());
         assertEquals(rect.getId(), rectLoaded.getId());
         assertEquals(rect.getArea(), rectLoaded.getArea(), 0);
     }

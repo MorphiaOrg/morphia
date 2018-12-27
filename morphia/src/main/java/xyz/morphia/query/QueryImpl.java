@@ -8,7 +8,6 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Function;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
@@ -24,6 +23,7 @@ import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.cache.EntityCache;
+import xyz.morphia.query.internal.MappingIterable;
 import xyz.morphia.query.internal.MorphiaCursor;
 import xyz.morphia.query.internal.MorphiaKeyCursor;
 
@@ -50,13 +50,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
     private final xyz.morphia.DatastoreImpl ds;
     private final DBCollection dbColl;
-    private final MongoCollection collection;
     private final Class<T> clazz;
     private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
     private Boolean includeFields;
-    private Document baseQuery;
+    private DBObject baseQuery;
     private FindOptions options;
 
     FindOptions getOptions() {
@@ -89,7 +88,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
                                         ? ReadPreference.secondaryPreferred()
                                         : null);
         }
-        collection = coll != null ? ds.getDatabase().getCollection(coll.getName()) : null;
     }
 
     /**
@@ -138,33 +136,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
         return new MorphiaKeyCursor<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public FindIterable<Key<T>> keys(final com.mongodb.client.model.FindOptions options) {
-        QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
-        cloned.includeFields = true;
-
-        final Document query = new Document(cloned.getQueryObject().toMap());
-        final Document sort = new Document(cloned.getSortObject().toMap());
-
-//        return new MorphiaKeyIterable<T>(ds.getMongo().startSession(), collection.getNamespace(), Key.class, DBObject.class,
-//            ds.getMongo().getMongoClientOptions().getCodecRegistry(), ReadPreference.primary(), ReadConcern.MAJORITY, )
-
-        return collection.find(query, Key.class)
-                         .sort(sort)
-                         .projection(new Document(Mapper.ID_KEY, 1));
-
-        //        final MongoCursor cursor = collection.find(query, DBObject.class)
-//                                             .sort(sort)
-//                                             .projection(projection)
-//                                             .iterator();
-//        new MorphiaCursor<T>(ds, cursor, ds.getMapper(), clazz, cache);
-//
-//        return cursor;
-    }
-
 
     @Override
     public List<Key<T>> asKeyList() {
@@ -219,11 +190,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public long count(final com.mongodb.client.model.CountOptions options) {
-        return collection.countDocuments(getQueryDocument(), options);
-    }
-
-    @Override
     public MorphiaIterator<T, T> fetch() {
         return fetch(getOptions());
     }
@@ -246,14 +212,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MongoCursor<T> find(final FindOptions options) {
         return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public FindIterable<T> find(final com.mongodb.client.model.FindOptions options) {
-        return collection.find(new Document(getQueryObject().toMap()), DBObject.class)
-                         .sort(new Document(getSortObject().toMap()))
-                         .projection(new Document(getFieldsObject().toMap()));
     }
 
     @Override
@@ -359,9 +317,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private BasicDBObject copy(final DBObject dbObject) {
         return dbObject == null ? null : new BasicDBObject(dbObject.toMap());
     }
-    private Document copy(final Document document) {
-        return document == null ? null : new Document(document);
-    }
 
     @Override
     @Deprecated
@@ -465,11 +420,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public MongoCollection getCollection() {
-        return collection;
-    }
-
-    @Override
     public Class<T> getEntityClass() {
         return clazz;
     }
@@ -512,7 +462,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final DBObject obj = new BasicDBObject();
 
         if (baseQuery != null) {
-            obj.putAll(baseQuery);
+            obj.putAll(baseQuery.toMap());
         }
 
         addTo(obj);
@@ -521,20 +471,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     /**
-     * @morphia.internal
-     * @return the query document
-     */
-    public Document getQueryDocument() {
-        return baseQuery;
-    }
-
-    /**
      * Sets query structure directly
      *
      * @param query the DBObject containing the query
      */
     public void setQueryObject(final DBObject query) {
-        baseQuery = new Document(query.toMap());
+        baseQuery = new BasicDBObject(query.toMap());
     }
 
     @Override
@@ -816,7 +758,12 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public T first() {
-        return null;
+        final MongoCursor<T> iterator = iterator();
+        try {
+            return iterator.tryNext();
+        } finally {
+            iterator.close();
+        }
     }
 
     /**
@@ -854,17 +801,30 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public <U> MongoIterable<U> map(final Function<T, U> mapper) {
-        throw new UnsupportedOperationException();
+        return new MappingIterable<T, U>(this, mapper);
     }
 
     @Override
     public void forEach(final Block<? super T> block) {
-        throw new UnsupportedOperationException();
+        MongoCursor<T> cursor = iterator();
+        try {
+            while (cursor.hasNext()) {
+                block.apply(cursor.next());
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
     @Override
     public <A extends Collection<? super T>> A into(final A target) {
-        throw new UnsupportedOperationException();
+        forEach(new Block<T>() {
+            @Override
+            public void apply(final T t) {
+                target.add(t);
+            }
+        });
+        return target;
     }
 
     @Override
@@ -878,7 +838,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
      * are EQUAL.
      */
-    protected FilterOperator translate(final String operator) {
+    private FilterOperator translate(final String operator) {
         return FilterOperator.fromString(operator);
     }
 

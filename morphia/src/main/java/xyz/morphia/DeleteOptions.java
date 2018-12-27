@@ -32,10 +32,6 @@ public final class DeleteOptions {
     public DeleteOptions() {
     }
 
-    DeleteOptions(final com.mongodb.client.model.DeleteOptions options) {
-        this.options.collation(options.getCollation());
-    }
-
     /**
      * Copies this instance to a new one.
      *

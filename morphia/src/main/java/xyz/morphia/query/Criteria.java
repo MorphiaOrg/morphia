@@ -2,6 +2,7 @@ package xyz.morphia.query;
 
 
 import com.mongodb.DBObject;
+import org.bson.Document;
 
 
 /**
@@ -12,6 +13,7 @@ public interface Criteria {
      * Adds this Criteria's information to the DBObject
      *
      * @param obj the DBObject to update
+     * @morphia.internal
      */
     void addTo(DBObject obj);
 

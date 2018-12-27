@@ -5,8 +5,6 @@ import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import org.bson.types.CodeWScope;
@@ -53,9 +51,9 @@ public interface Query<T> extends MongoIterable<T> {
      *
      * @param comment the comment to add
      * @return the Query to enable chaining of commands
-     * @mongodb.driver.manual reference/operator/meta/comment $comment
      * @see FindOptions#modifier(String, Object)
      * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$comment", comment)}
+     * @mongodb.driver.manual reference/operator/meta/comment $comment
      */
     @Deprecated
     Query<T> comment(String comment);
@@ -191,7 +189,7 @@ public interface Query<T> extends MongoIterable<T> {
     int getBatchSize();
 
     /**
-     * @return
+     * @return the collection this query targets
      *
      * @deprecated This is an internal method and subject to change or removal.  Do not use.
      * @morphia.internal
@@ -200,16 +198,11 @@ public interface Query<T> extends MongoIterable<T> {
     DBCollection getDBCollection();
 
     /**
-     * @return
-     * @morphia.internal
-     */
-    MongoCollection getCollection();
-
-    /**
      * @return the entity {@link Class}.
      * @deprecated
      * @morphia.internal
      */
+    @Deprecated
     Class<T> getEntityClass();
 
     /**
@@ -558,15 +551,6 @@ public interface Query<T> extends MongoIterable<T> {
     MongoCursor<Key<T>> keys(FindOptions options);
 
     /**
-     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
-     *
-     * @param unused the options to apply to the find operation
-     * @return the keys of the documents returned by this query
-     * @since 1.5
-     */
-    FindIterable<Key<T>> keys(com.mongodb.client.model.FindOptions unused);
-
-    /**
      * Execute the query and get the results.
      *
      * @return returns a List of the documents returned by a query
@@ -609,19 +593,8 @@ public interface Query<T> extends MongoIterable<T> {
      * @param options the options to apply to the count operation
      * @return the count
      * @since 1.3
-     * @deprecated use {@link #count(com.mongodb.client.model.CountOptions)} instead
      */
-    @Deprecated
     long count(CountOptions options);
-
-    /**
-     * Count the total number of values in the result, ignoring limit and offset
-     *
-     * @param options the options to apply to the count operation
-     * @return the count
-     * @since 1.5
-     */
-    long count(com.mongodb.client.model.CountOptions options);
 
     /**
      * Execute the query and get the results.
@@ -660,22 +633,8 @@ public interface Query<T> extends MongoIterable<T> {
      * @param options the options to apply to the find operation
      * @return a MongoCursor
      * @since 1.4
-     * @deprecated use {@link #find(com.mongodb.client.model.FindOptions)}
      */
-    @Deprecated
     MongoCursor<T> find(FindOptions options);
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param unused these options are unused.  Apply any query options other than projections and sorts directly to the
-     *               {@link FindIterable} returned.  this parameter is supplied in order to aid in method overloading.  In 2.0, there
-     *               will be no
-     *               parameter required.
-     * @return an FindIterable
-     * @since 1.5
-     */
-    FindIterable<T> find(com.mongodb.client.model.FindOptions unused);
 
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
