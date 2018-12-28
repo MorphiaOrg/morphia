@@ -1,17 +1,14 @@
 package xyz.morphia.query;
 
 
-import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
-import com.mongodb.client.result.UpdateResult;
-import org.bson.BsonValue;
 
 import static java.lang.String.format;
 
 /**
  * This class holds various metrics about the results of an update operation.
  */
-public class UpdateResults {
+public class  UpdateResults {
     private final WriteResult wr;
 
     /**
@@ -68,18 +65,5 @@ public class UpdateResults {
     @Override
     public String toString() {
         return format("UpdateResults{wr=%s}", wr);
-    }
-
-    /**
-     * @morphia.internal
-     * @return
-     */
-    public UpdateResult toUpdateResult(WriteConcern concern) {
-        if(concern.isAcknowledged()) {
-            final long modified = getInsertedCount() + getUpdatedCount();
-            return UpdateResult.acknowledged(getWriteResult().getN(), modified, (BsonValue) getNewId());
-        } else {
-            return UpdateResult.unacknowledged();
-        }
     }
 }

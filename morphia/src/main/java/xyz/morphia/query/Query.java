@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @param <T> The java type to query against
  */
-public interface Query<T> extends MongoIterable<T> {
+public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Creates a container to hold 'and' clauses
      *
@@ -42,6 +42,7 @@ public interface Query<T> extends MongoIterable<T> {
      * Creates and returns a copy of this {@link Query}.
      *
      * @return this
+     * @morphia.internal
      */
     Query<T> cloneQuery();
 
@@ -713,7 +714,7 @@ public interface Query<T> extends MongoIterable<T> {
      * Get the key of the first entity in the result set.  Obeys the {@link Query} offset value.
      *
      * @return the key of the first instance in the result, or null if the result set is empty.
-     * @deprecated use {@link #find()} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
+     * @deprecated use {@link #first()} instead
      */
     @Deprecated
     Key<T> getKey();
@@ -724,7 +725,7 @@ public interface Query<T> extends MongoIterable<T> {
      * @param options the options to apply to the find operation
      * @return the key of the first instance in the result, or null if the result set is empty.
      * @since 1.3
-     * @deprecated use {@link #find(FindOptions)} and {@link MongoCursor#hasNext()} or {@link MongoCursor#tryNext()}
+     * @deprecated use {@link #first()} instead
      */
     @Deprecated
     Key<T> getKey(FindOptions options);

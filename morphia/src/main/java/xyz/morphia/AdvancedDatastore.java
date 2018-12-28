@@ -24,6 +24,7 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @return the decoder factory
      * @see DBDecoderFactory
+     * @morphia.internal
      */
     DBDecoderFactory getDecoderFact();
 
@@ -31,6 +32,7 @@ public interface AdvancedDatastore extends Datastore {
      * Sets the DBDecoderFactory to use in this Datastore
      *
      * @param fact the DBDecoderFactory to use
+     * @morphia.internal
      */
     void setDecoderFact(DBDecoderFactory fact);
 
@@ -212,6 +214,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      the class from which to get the index definitions
      * @param background if true, the index will be built in the background.  If false, the method will block until the index is created.
      * @param <T>        the type to index
+     * @deprecated use {@link #ensureIndexes(String, Class)} instead and specify background true or false in the annotations
      */
     <T> void ensureIndexes(String collection, Class<T> clazz, boolean background);
 
@@ -315,7 +318,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new key of the inserted entity
      * @morphia.inline
      * @see WriteConcern
-     * @deprecated use {@link #insert(T, InsertOptions)}
+     * @deprecated use {@link #insert(Object, InsertOptions)}
      */
     @Deprecated
     <T> Key<T> insert(T entity, WriteConcern wc);
@@ -383,7 +386,6 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc       the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @morphia.inline
      * @deprecated use {@link #insert(Iterable, InsertOptions)}
      */
     @Deprecated
@@ -398,9 +400,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new keys of the inserted entities
      * @morphia.inline
      * @since 1.3
-     * @deprecated use {@link Iterable, InsertOneOptions} instead
      */
-    @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, InsertOptions options);
 
     /**
@@ -467,7 +467,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc         the WriteConcern to use when inserting
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
-     * @deprecated use {@link #save(String, T, InsertOptions)} instead
+     * @deprecated use {@link #save(String, Object, InsertOptions)} instead
      */
     @Deprecated
     <T> Key<T> save(String collection, T entity, WriteConcern wc);

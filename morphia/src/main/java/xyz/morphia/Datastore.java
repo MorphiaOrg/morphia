@@ -9,13 +9,13 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.UpdateResult;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.Indexes;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Validation;
 import xyz.morphia.mapping.Mapper;
+import xyz.morphia.query.CountOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.QueryFactory;
 import xyz.morphia.query.UpdateOperations;
@@ -172,7 +172,9 @@ public interface Datastore {
      * @param wc     the WriteConcern to use when deleting
      * @param <T>    the type to delete
      * @return results of the delete
+     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
      */
+    @Deprecated
     <T> WriteResult delete(T entity, WriteConcern wc);
 
     /**
@@ -467,6 +469,7 @@ public interface Datastore {
      * @param clazz the class to use for mapping
      * @return the mapped collection for the collection
      * @deprecated the return type for this method will change in 2.0
+     * @morphia.internal
      */
     @Deprecated
     DBCollection getCollection(Class<?> clazz);
@@ -518,7 +521,7 @@ public interface Datastore {
      * @deprecated use {@link Query#count(CountOptions)} instead
      */
     @Deprecated
-    <T> long getCount(Query<T> query, xyz.morphia.query.CountOptions options);
+    <T> long getCount(Query<T> query, CountOptions options);
 
     /**
      * @return the DB this Datastore uses
@@ -533,6 +536,7 @@ public interface Datastore {
     /**
      * @return the MongoDatabase used by this DataStore
      * @since 1.5
+     * @morphia.internal
      */
     MongoDatabase getDatabase();
 
@@ -712,7 +716,7 @@ public interface Datastore {
      * @param wc     the WriteConcern to use
      * @param <T>    the type of the entity
      * @return the keys of the entity
-     * @deprecated use {@link #save(T, InsertOptions)} instead
+     * @deprecated use {@link #save(Object, InsertOptions)} instead
      */
     @Deprecated
     <T> Key<T> save(T entity, WriteConcern wc);
