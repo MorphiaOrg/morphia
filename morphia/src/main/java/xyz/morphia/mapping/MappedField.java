@@ -534,16 +534,7 @@ public class MappedField {
             final Type[] types = pt.getActualTypeArguments();
             realType = toClass(pt);
 
-            for (Type type : types) {
-                if (type instanceof ParameterizedType) {
-                    typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, mapper));
-                } else {
-                    if (type instanceof WildcardType) {
-                        type = ((WildcardType) type).getUpperBounds()[0];
-                    }
-                    typeParameters.add(new EphemeralMappedField(type, this, mapper));
-                }
-            }
+            collectTypeParameters(mapper, types);
         } else if (genericType instanceof WildcardType) {
             final WildcardType wildcardType = (WildcardType) genericType;
             final Type[] types = wildcardType.getUpperBounds();
@@ -557,16 +548,7 @@ public class MappedField {
                 realType = toClass(genericType);
 
                 final Type[] types = pt.getActualTypeArguments();
-                for (Type type : types) {
-                    if (type instanceof ParameterizedType) {
-                        typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, mapper));
-                    } else {
-                        if (type instanceof WildcardType) {
-                            type = ((WildcardType) type).getUpperBounds()[0];
-                        }
-                        typeParameters.add(new EphemeralMappedField(type, this, mapper));
-                    }
-                }
+                collectTypeParameters(mapper, types);
             } else {
                 if (genericComponentType instanceof TypeVariable) {
                     realType = toClass(genericType);
@@ -585,6 +567,19 @@ public class MappedField {
 
         if (realType == null) {
             throw new MappingException(format("A type could not be found for the field %s.%s", getType(), getField()));
+        }
+    }
+
+    private void collectTypeParameters(final Mapper mapper, final Type[] types) {
+        for (Type type : types) {
+            if (type instanceof ParameterizedType) {
+                typeParameters.add(new EphemeralMappedField((ParameterizedType) type, this, mapper));
+            } else {
+                if (type instanceof WildcardType) {
+                    type = ((WildcardType) type).getUpperBounds()[0];
+                }
+                typeParameters.add(new EphemeralMappedField(type, this, mapper));
+            }
         }
     }
 
