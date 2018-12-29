@@ -1,0 +1,8 @@
+{
+  "java.method.removed": [
+    {
+      "classQualifiedName": "xyz.morphia.query.QueryResults",
+      "justification": "These methods were pushed down to Query"
+    }
+  ]
+}

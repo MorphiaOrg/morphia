@@ -7,7 +7,6 @@ import com.mongodb.WriteResult;
 import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.query.Query;
-import xyz.morphia.query.QueryResults;
 import xyz.morphia.query.UpdateOperations;
 import xyz.morphia.query.UpdateResults;
 

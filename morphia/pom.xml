@@ -16,24 +16,25 @@
     <build>
         <plugins>
             <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.9.1</version>
-                    <executions>
-                      <execution>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
                         <id>add-test-source</id>
                         <phase>generate-test-sources</phase>
                         <goals>
-                          <goal>add-test-source</goal>
+                            <goal>add-test-source</goal>
                         </goals>
                         <configuration>
-                          <sources>
-                            <source>src/test/deprecated</source>
-                          </sources>
+                            <sources>
+                                <source>src/test/deprecated</source>
+                            </sources>
                         </configuration>
-                      </execution>
-                    </executions>
-                  </plugin>            <plugin>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
@@ -89,6 +90,65 @@
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
                     <javadocUrl>http://morphiaorg.github.io/morphia/1.5/javadoc/</javadocUrl>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.revapi</groupId>
+                <artifactId>revapi-maven-plugin</artifactId>
+                <version>0.10.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.revapi</groupId>
+                        <artifactId>revapi-java</artifactId>
+                        <version>${revapi-java.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>revapi</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--<failBuildOnProblemsFound>true</failBuildOnProblemsFound>-->
+                    <!--<oldVersion>1.4.0</oldVersion>-->
+                    <analysisConfigurationFiles>
+                        <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
+                    </analysisConfigurationFiles>
+                    <analysisConfiguration>
+                        <revapi.semver.ignore>
+                            <enabled>true</enabled>
+                            <versionIncreaseAllows>
+                                <major>breaking</major>
+                                <minor>nonBreaking</minor>
+                                <patch>equivalent</patch>
+                            </versionIncreaseAllows>
+                            <passThroughDifferences>
+                                <item>java.class.nonPublicPartOfAPI</item>
+                            </passThroughDifferences>
+                        </revapi.semver.ignore>
+                    </analysisConfiguration>
+
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>build-plugins</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>revapi-config</id>
+                        <goals>
+                            <goal>revapi-config</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <input>../config/revapi-input.json</input>
+                    <output>../config/revapi.json</output>
                 </configuration>
             </plugin>
         </plugins>

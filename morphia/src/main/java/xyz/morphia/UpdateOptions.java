@@ -36,6 +36,9 @@ public class UpdateOptions {
         return options;
     }
 
+    /**
+     * Creates a new options instance.
+     */
     public UpdateOptions() {
     }
 

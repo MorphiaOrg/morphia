@@ -34,6 +34,9 @@ public final class FindAndModifyOptions {
     private DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
         .returnNew(true);
 
+    /**
+     * Creates a new options instance.
+     */
     public FindAndModifyOptions() {
     }
 

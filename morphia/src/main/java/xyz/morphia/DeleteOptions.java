@@ -29,6 +29,9 @@ import com.mongodb.client.model.DBCollectionRemoveOptions;
 public final class DeleteOptions {
     private final DBCollectionRemoveOptions options = new DBCollectionRemoveOptions();
 
+    /**
+     * Creates a new options instance.
+     */
     public DeleteOptions() {
     }
 

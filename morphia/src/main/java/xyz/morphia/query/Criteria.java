@@ -2,7 +2,6 @@ package xyz.morphia.query;
 
 
 import com.mongodb.DBObject;
-import org.bson.Document;
 
 
 /**

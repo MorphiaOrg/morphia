@@ -46,6 +46,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <surefire.version>2.22.1</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
+        <revapi-java.version>0.18.1</revapi-java.version>
     </properties>
 
     <build>
@@ -125,8 +126,8 @@
                     <failOnError>false</failOnError>
                     <excludePackageNames>**/relocated/**, **/internal/**, xyz/morphia/utils</excludePackageNames>
                     <doclint>none</doclint>
-                    <doctitle>Morphia ${project.version}</doctitle>
-                    <windowtitle>Morphia ${project.version}</windowtitle>
+                    <doctitle>Morphia</doctitle>
+                    <windowtitle>Morphia</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>
                             <groupId>${project.groupId}</groupId>
@@ -154,6 +155,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>build-plugins</module>
         <module>util</module>
         <module>morphia</module>
         <module>guice-plug</module>

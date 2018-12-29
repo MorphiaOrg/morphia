@@ -26,6 +26,9 @@ import com.mongodb.WriteConcern;
 public class InsertOptions {
     private com.mongodb.InsertOptions options = new com.mongodb.InsertOptions();
 
+    /**
+     * Creates a new options instance.
+     */
     public InsertOptions() {
     }
 
