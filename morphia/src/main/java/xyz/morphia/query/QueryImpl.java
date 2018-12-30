@@ -414,7 +414,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     @Deprecated
-    public DBCollection getDBCollection() {
+    public DBCollection getCollection() {
         return dbColl;
     }
 

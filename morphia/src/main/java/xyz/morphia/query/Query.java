@@ -196,7 +196,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @morphia.internal
      */
     @Deprecated
-    DBCollection getDBCollection();
+    DBCollection getCollection();
 
     /**
      * @return the entity {@link Class}.

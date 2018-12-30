@@ -164,7 +164,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> WriteResult delete(final Query<T> query, final DeleteOptions options) {
 
-        DBCollection dbColl = query.getDBCollection();
+        DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
@@ -332,7 +332,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T findAndDelete(final Query<T> query, final FindAndModifyOptions options) {
-        DBCollection dbColl = query.getDBCollection();
+        DBCollection dbColl = query.getCollection();
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
         }
@@ -356,7 +356,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final FindAndModifyOptions options) {
-        DBCollection dbColl = query.getDBCollection();
+        DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
@@ -576,7 +576,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> MapreduceResults<T> mapReduce(final MapReduceOptions<T> options) {
-        DBCollection collection = options.getQuery().getDBCollection();
+        DBCollection collection = options.getQuery().getCollection();
 
         final EntityCache cache = createCache();
         MapreduceResults<T> results = new MapreduceResults<T>(collection.mapReduce(options.toCommand(getMapper())));
@@ -598,7 +598,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
                                              final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
 
-        final DBCollection dbColl = query.getDBCollection();
+        final DBCollection dbColl = query.getCollection();
 
         final String outColl = mapper.getCollectionName(outputType);
 
@@ -638,7 +638,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final OutputType outType = type.toOutputType();
 
-        final DBCollection dbColl = query.getDBCollection();
+        final DBCollection dbColl = query.getCollection();
 
         final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
                                                           baseCommand.getOutputTarget(), outType, query.getQueryObject());
@@ -1552,7 +1552,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
-        DBCollection dbColl = query.getDBCollection();
+        DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
@@ -1584,7 +1584,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @SuppressWarnings("unchecked")
     private <T> UpdateResults update(final Query<T> query, final DBObject update, final UpdateOptions options) {
 
-        DBCollection dbColl = query.getDBCollection();
+        DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
             dbColl = getCollection(query.getEntityClass());
