@@ -58,7 +58,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
         }
 
         private byte[] createLargeByteArray() {
-            final int size = (int) (4000 + Math.random() * 100000);
+            final int size = (int) (4000 + Math.random() * 10000);
             final byte[] arr = new byte[size];
             for (int i = 0; i < arr.length; i++) {
                 arr[i] = 'a';
