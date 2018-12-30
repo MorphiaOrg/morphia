@@ -52,6 +52,9 @@ of 2019 if all goes well.  Development time is split between 1.5 and 2.0 so the 
 
 # 2.0.0
 
+Much of 1.5.0 development is intended to start the culling process of removing redundant/overlapping methods.  As a result, 2.0's API 
+should be much leaner and much easier reason about.  The hope is that this leaner API will be easier to extend and maintain.
+* **Java 8 minimum support**.  As of 2.0, Morphia will move to requiring Java8+.
 * **Updated Mapper**.  The keystone feature of 2.0 is the updated mapper.  Using updates to the driver, Morphia will transition off its 
 own mapping code and leverage the infrastructure now provided by the driver.  This means that many of the mapping bugs around generics 
 will begin working, e.g.  However it also means that the shapes of documents in the database might end up looking different.  Work is 
@@ -60,6 +63,11 @@ underway to mitigate as much of that as possible but it might not be 100% effect
 Options classes with the driver's Options.  In other cases, this will mean return types from methods will change.  The hope is that such
  changes will result in a cleaner, more future-proof API.  These changes do not come without some breakage.  Efforts are being made to 
  mitigate much of that but, again, will not be 100% effective.
+* **Removal of modules**.  As of 2.0 there will only be the core module.  Modules such as `entityscanner-plug` and `logging-slf4j` have 
+not seen any updates or apparent use in quite some time.  The entity scanner code was only ever half implemented and the logging code is 
+vestigial at best.  2.0 will leverage slf4j directly internally and users can choose whatever logging implementation they would like.  
+Any dependence on `xyz.morphia.logging.Logger` will need to be updated after 2.0.  Steps should be taken now to migrate away from these 
+types now.  
 
 # 2.1.0
 

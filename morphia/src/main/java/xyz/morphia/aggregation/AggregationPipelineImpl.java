@@ -33,7 +33,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     private final List<DBObject> stages = new ArrayList<DBObject>();
     private final Mapper mapper;
     private final xyz.morphia.DatastoreImpl datastore;
-    private boolean firstStage = false;
+    private boolean firstStage;
 
     /**
      * Creates an AggregationPipeline
