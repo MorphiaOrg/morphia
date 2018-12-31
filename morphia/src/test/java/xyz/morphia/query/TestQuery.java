@@ -1138,7 +1138,7 @@ public class TestQuery extends TestBase {
                               .project("_id", true)
                               .project("first_name", true)
                               .getFieldsObject();
-        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -1356,7 +1356,7 @@ public class TestQuery extends TestBase {
         DBObject fields = getDs()
                               .find(ContainsRenamedFields.class)
                               .retrievedFields(true, "_id", "first_name").getFieldsObject();
-        assertNull(fields.get(Mapper.CLASS_NAME_FIELDNAME));
+        assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test

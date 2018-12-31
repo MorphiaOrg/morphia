@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -33,10 +34,9 @@ public class MapImplTest extends TestBase {
 
         final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
                                                                           .findOne()
-                                                                          .get("values")).get(
-                                                                                                 "first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-        assertTrue(!hasF);
+                                                                          .get("values"))
+                                                      .get("first");
+        assertFalse(goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test //@Ignore("waiting on issue 184")
@@ -55,8 +55,8 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values")).get(
                                                                                                  "second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-        assertTrue("className should not be here.", !hasF);
+        assertFalse("className should not be here.", goo.containsField(
+            getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -74,8 +74,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values"))
                                                       .get("second");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-        assertTrue("className should be here.", hasF);
+        assertTrue("className should be here.", goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -91,8 +90,7 @@ public class MapImplTest extends TestBase {
                                                                           .findOne()
                                                                           .get("values"))
                                                       .get("first");
-        final boolean hasF = goo.containsField(Mapper.CLASS_NAME_FIELDNAME);
-        assertTrue(hasF);
+        assertTrue(goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test

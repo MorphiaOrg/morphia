@@ -324,7 +324,7 @@ class ReferenceMapper implements CustomMapper {
             id = dbRef.getId();
         }
         if (id instanceof DBObject) {
-            ((DBObject) id).removeField(Mapper.CLASS_NAME_FIELDNAME);
+            ((DBObject) id).removeField(mapper.getOptions().getDiscriminatorField());
         }
         refDbObject = collection.findOne(id);
 

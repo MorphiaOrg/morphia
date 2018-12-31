@@ -22,7 +22,7 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz);
 
     /**
-     * Creates an instance of the class defined in the {@link Mapper#CLASS_NAME_FIELDNAME} field in the dbObject passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the dbObject passed in.  If that field
      * is missing, the given Class is used instead.
      *
      * @param clazz type class to instantiate
@@ -33,7 +33,7 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz, DBObject dbObj);
 
     /**
-     * Creates an instance of the class defined in the {@link Mapper#CLASS_NAME_FIELDNAME} field in the dbObject passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the dbObject passed in.  If that field
      * is missing, morphia attempts to the MappedField to determine which concrete class to instantiate.
      *
      * @param mapper the Mapper to use

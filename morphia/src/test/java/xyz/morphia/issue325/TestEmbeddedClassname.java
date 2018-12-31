@@ -32,21 +32,22 @@ public class TestEmbeddedClassname extends TestBase {
         DBObject aRaw = r.singleA.raw;
 
         // Test that singleA does not contain the class name
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        final String discriminatorField = getMorphia().getMapper().getOptions().getDiscriminatorField();
+        Assert.assertFalse(aRaw.containsField(discriminatorField));
 
         // Test that aList does not contain the class name
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(aRaw.containsField(discriminatorField));
 
         // Test that bList does not contain the class name of the subclass
         ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("bList", new B()));
         r = ds.get(Root.class, "id");
 
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(aRaw.containsField(discriminatorField));
 
         DBObject bRaw = r.bList.get(0).getRaw();
-        Assert.assertFalse(bRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertFalse(bRaw.containsField(discriminatorField));
 
         ds.delete(ds.find(Root.class));
 
@@ -59,9 +60,9 @@ public class TestEmbeddedClassname extends TestBase {
 
         // test that singleA.raw *does* contain the classname because we stored a subclass there
         aRaw = r.singleA.raw;
-        Assert.assertTrue(aRaw.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertTrue(aRaw.containsField(discriminatorField));
         DBObject bRaw2 = r.aList.get(0).raw;
-        Assert.assertTrue(bRaw2.containsField(Mapper.CLASS_NAME_FIELDNAME));
+        Assert.assertTrue(bRaw2.containsField(discriminatorField));
     }
 
     @Entity(noClassnameStored = true)

@@ -295,4 +295,8 @@ public class MapperOptions {
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
     }
+
+    public String getDiscriminatorField() {
+        return Mapper.CLASS_NAME_FIELDNAME;
+    }
 }

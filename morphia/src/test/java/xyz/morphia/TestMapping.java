@@ -215,7 +215,8 @@ public class TestMapping extends TestBase {
         cea.res = new RenamedEmbedded[]{new RenamedEmbedded()};
 
         final DBObject dbObj = getMorphia().toDBObject(cea);
-        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) ((List) dbObj.get("res")).get(0)).containsField(
+            getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -248,7 +249,8 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final DBObject dbObj = getMorphia().toDBObject(cee);
-        assertTrue(!((DBObject) dbObj.get("cil")).containsField(Mapper.CLASS_NAME_FIELDNAME));
+        assertTrue(!((DBObject) dbObj.get("cil")).containsField(
+            getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -677,7 +679,8 @@ public class TestMapping extends TestBase {
         borg.setAddress(address);
 
         BasicDBObject hotelDbObj = (BasicDBObject) getMorphia().toDBObject(borg);
-        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0)).containsField(Mapper.CLASS_NAME_FIELDNAME)));
+        assertTrue(!(((DBObject) ((List) hotelDbObj.get("phoneNumbers")).get(0)).containsField(
+            getMorphia().getMapper().getOptions().getDiscriminatorField())));
 
 
         hotels.save(hotelDbObj);

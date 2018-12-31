@@ -88,7 +88,9 @@ public class Mapper {
     /**
      * Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to
      * support polymorphism
+     * @deprecated
      */
+    @Deprecated
     public static final String CLASS_NAME_FIELDNAME = "className";
 
     private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
@@ -186,7 +188,6 @@ public class Mapper {
      * @param dbObject    the DBObject containing the document from mongodb
      * @param cache       the EntityCache to use
      * @return the new entity
-     * @see Mapper#CLASS_NAME_FIELDNAME
      * @morphia.internal
      * @deprecated no replacement is planned
      */
@@ -235,14 +236,14 @@ public class Mapper {
      */
     @Deprecated
     <T> T fromDBObject(final Datastore datastore, final DBObject dbObject) {
-        if (dbObject.containsField(CLASS_NAME_FIELDNAME)) {
+        if (dbObject.containsField(opts.getDiscriminatorField())) {
             T entity = opts.getObjectFactory().createInstance(null, dbObject);
             entity = fromDb(datastore, dbObject, entity, createEntityCache());
 
             return entity;
         } else {
             throw new MappingException(format("The DBObject does not contain a %s key.  Determining entity type is impossible.",
-                                              CLASS_NAME_FIELDNAME));
+                opts.getDiscriminatorField()));
         }
     }
 
@@ -599,7 +600,6 @@ public class Mapper {
      *
      * @param entity The POJO
      * @return the DBObject
-     * @see Mapper#CLASS_NAME_FIELDNAME
      */
     public DBObject toDBObject(final Object entity) {
         return toDBObject(entity, null);
@@ -611,7 +611,6 @@ public class Mapper {
      * @param entity          The POJO
      * @param involvedObjects A Map of (already converted) POJOs
      * @return the DBObject
-     * @see Mapper#CLASS_NAME_FIELDNAME
      */
     public DBObject toDBObject(final Object entity, final Map<Object, DBObject> involvedObjects) {
         return toDBObject(entity, involvedObjects, true);
@@ -703,13 +702,13 @@ public class Mapper {
                     if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
                         for (Object o : list) {
                             if (o instanceof DBObject) {
-                                ((DBObject) o).removeField(CLASS_NAME_FIELDNAME);
+                                ((DBObject) o).removeField(opts.getDiscriminatorField());
                             }
                         }
                     }
                 }
             } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
-                ((DBObject) mappedValue).removeField(CLASS_NAME_FIELDNAME);
+                ((DBObject) mappedValue).removeField(opts.getDiscriminatorField());
             }
         }
 
@@ -966,7 +965,7 @@ public class Mapper {
             if (isSingleValue && !isPropertyType(type)) {
                 final DBObject dbObj = toDBObject(newObj);
                 if (!includeClassName) {
-                    dbObj.removeField(CLASS_NAME_FIELDNAME);
+                    dbObj.removeField(opts.getDiscriminatorField());
                 }
                 return dbObj;
             } else if (newObj instanceof DBObject) {
@@ -1008,7 +1007,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored()) {
-            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
+            dbObject.put(opts.getDiscriminatorField(), entity.getClass().getName());
         }
 
         if (lifecycle) {
@@ -1046,5 +1045,4 @@ public class Mapper {
         final BSONEncoder enc = new BasicBSONEncoder();
         return new Key<T>(clazz, getCollectionName(clazz), enc.encode(toDBObject(id)));
     }
-
 }
