@@ -108,7 +108,7 @@ public class Mapper {
     // TODO: make these configurable
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
     private final xyz.morphia.converters.Converters converters;
-    private MapperOptions opts = new MapperOptions();
+    private MapperOptions opts = MapperOptions.builder().build();
 
     private final IdentityHashMap<MappedField, CustomMapper> mapperCache = new IdentityHashMap<MappedField, CustomMapper>();
 

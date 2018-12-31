@@ -7,37 +7,34 @@ import xyz.morphia.logging.Logger;
 import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.cache.DefaultEntityCacheFactory;
 import xyz.morphia.mapping.cache.EntityCacheFactory;
+import xyz.morphia.mapping.lazy.DatastoreProvider;
 
 /**
  * Options to control mapping behavior.
- *
- * @author Scott Hernandez
  */
 @SuppressWarnings("deprecation")
 public class MapperOptions {
     private static final Logger LOG = MorphiaLoggerFactory.get(MapperOptions.class);
-    /**
-     * @deprecated this is actually the default and proper behavior.  this setting is redundant
-     */
-    @Deprecated
-    private boolean actLikeSerializer;
     private boolean ignoreFinals; //ignore final fields.
     private boolean storeNulls;
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
     private boolean cacheClassLookups;
     private boolean mapSubPackages;
-    private ObjectFactory objectFactory = new DefaultCreator(this);
+    private ObjectFactory objectFactory;
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
-    private xyz.morphia.mapping.lazy.DatastoreProvider datastoreProvider;
 
     /**
      * Creates a default options instance.
+     * @deprecated use the Builder instead
+     * @see #builder()
+     * @see Builder
      */
+    @Deprecated
     public MapperOptions() {
     }
 
@@ -45,20 +42,39 @@ public class MapperOptions {
      * Copy Constructor
      *
      * @param options the MapperOptions to copy
+     * @deprecated use the Builder instead
+     * @see #builder(MapperOptions)
+     * @see Builder
      */
+    @Deprecated
     public MapperOptions(final MapperOptions options) {
-        setActLikeSerializer(options.isActLikeSerializer());
-        setIgnoreFinals(options.isIgnoreFinals());
-        setStoreNulls(options.isStoreNulls());
-        setStoreEmpties(options.isStoreEmpties());
-        setUseLowerCaseCollectionNames(options.isUseLowerCaseCollectionNames());
-        setCacheClassLookups(options.isCacheClassLookups());
-        setObjectFactory(options.getObjectFactory());
-        setCacheFactory(options.getCacheFactory());
-        setEmbeddedMapper(options.getEmbeddedMapper());
-        setDefaultMapper(options.getDefaultMapper());
-        setReferenceMapper(options.getReferenceMapper());
-        setValueMapper(options.getValueMapper());
+        ignoreFinals = options.isIgnoreFinals();
+        storeNulls = options.isStoreNulls();
+        storeEmpties = options.isStoreEmpties();
+        useLowerCaseCollectionNames = options.isUseLowerCaseCollectionNames();
+        cacheClassLookups = options.isCacheClassLookups();
+        objectFactory = options.getObjectFactory();
+        cacheFactory = options.getCacheFactory();
+        embeddedMapper = options.getEmbeddedMapper();
+        defaultMapper = options.getDefaultMapper();
+        referenceMapper = options.getReferenceMapper();
+        valueMapper = options.getValueMapper();
+        mapSubPackages = options.isMapSubPackages();
+    }
+
+    private MapperOptions(final Builder builder) {
+        ignoreFinals = builder.ignoreFinals;
+        storeNulls = builder.storeNulls;
+        storeEmpties = builder.storeEmpties;
+        useLowerCaseCollectionNames = builder.useLowerCaseCollectionNames;
+        cacheClassLookups = builder.cacheClassLookups;
+        mapSubPackages = builder.mapSubPackages;
+        objectFactory = builder.objectFactory;
+        cacheFactory = builder.cacheFactory;
+        embeddedMapper = builder.embeddedMapper;
+        defaultMapper = builder.defaultMapper;
+        referenceMapper = builder.referenceMapper;
+        valueMapper = builder.valueMapper;
     }
 
     /**
@@ -72,7 +88,10 @@ public class MapperOptions {
      * Sets the factory to create an EntityCache
      *
      * @param cacheFactory the factory
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setCacheFactory(final EntityCacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
     }
@@ -82,20 +101,19 @@ public class MapperOptions {
      * @deprecated unused
      */
     @Deprecated
-    public xyz.morphia.mapping.lazy.DatastoreProvider getDatastoreProvider() {
-        return datastoreProvider;
+    public DatastoreProvider getDatastoreProvider() {
+        return null;
     }
 
     /**
      * Sets the DatastoreProvider Morphia should use
      *
-     * @param datastoreProvider the DatastoreProvider to use
+     * @param ignored the DatastoreProvider to use
      * @deprecated unused
      */
     @Deprecated
-    public void setDatastoreProvider(final xyz.morphia.mapping.lazy.DatastoreProvider datastoreProvider) {
+    public void setDatastoreProvider(final DatastoreProvider ignored) {
         LOG.warning("DatastoreProviders are no longer needed or used.");
-        this.datastoreProvider = datastoreProvider;
     }
 
     /**
@@ -109,7 +127,10 @@ public class MapperOptions {
      * Sets the mapper to use for top level entities
      *
      * @param pDefaultMapper the mapper to use
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setDefaultMapper(final CustomMapper pDefaultMapper) {
         defaultMapper = pDefaultMapper;
     }
@@ -125,7 +146,10 @@ public class MapperOptions {
      * Sets the mapper to use for embedded entities
      *
      * @param pEmbeddedMapper the mapper to use
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setEmbeddedMapper(final CustomMapper pEmbeddedMapper) {
         embeddedMapper = pEmbeddedMapper;
     }
@@ -134,6 +158,9 @@ public class MapperOptions {
      * @return the factory to use when creating new instances
      */
     public ObjectFactory getObjectFactory() {
+        if(objectFactory == null) {
+            objectFactory = new DefaultCreator(this);
+        }
         return objectFactory;
     }
 
@@ -142,7 +169,10 @@ public class MapperOptions {
      * could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
      *
      * @param objectFactory the factory to use
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setObjectFactory(final ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
     }
@@ -160,7 +190,10 @@ public class MapperOptions {
      *
      * @param pReferenceMapper the mapper to use
      * @see Reference
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setReferenceMapper(final CustomMapper pReferenceMapper) {
         referenceMapper = pReferenceMapper;
     }
@@ -176,7 +209,10 @@ public class MapperOptions {
      * Sets the mapper to use when processing values
      *
      * @param pValueMapper the mapper to use
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setValueMapper(final CustomMapper pValueMapper) {
         valueMapper = pValueMapper;
     }
@@ -187,18 +223,17 @@ public class MapperOptions {
      */
     @Deprecated
     public boolean isActLikeSerializer() {
-        return actLikeSerializer;
+        return true;
     }
 
     /**
      * Instructs Morphia to follow JDK serialization semantics and ignore values marked up with the transient keyword
      *
-     * @param actLikeSerializer true if Morphia should ignore transient fields
+     * @param ignored true if Morphia should ignore transient fields
      * @deprecated this is actually the default and proper behavior.  this setting is redundant
      */
     @Deprecated
-    public void setActLikeSerializer(final boolean actLikeSerializer) {
-        this.actLikeSerializer = actLikeSerializer;
+    public void setActLikeSerializer(final boolean ignored) {
     }
 
     /**
@@ -212,7 +247,10 @@ public class MapperOptions {
      * Sets whether Morphia should cache name -> Class lookups
      *
      * @param cacheClassLookups true if the lookup results should be cached
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setCacheClassLookups(final boolean cacheClassLookups) {
         this.cacheClassLookups = cacheClassLookups;
     }
@@ -228,7 +266,10 @@ public class MapperOptions {
      * Controls if final fields are stored.
      *
      * @param ignoreFinals true if Morphia should ignore final fields
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setIgnoreFinals(final boolean ignoreFinals) {
         this.ignoreFinals = ignoreFinals;
     }
@@ -244,7 +285,10 @@ public class MapperOptions {
      * Controls if Morphia should store empty values for lists/maps/sets/arrays
      *
      * @param storeEmpties true if Morphia should store empty values for lists/maps/sets/arrays
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setStoreEmpties(final boolean storeEmpties) {
         this.storeEmpties = storeEmpties;
     }
@@ -260,7 +304,10 @@ public class MapperOptions {
      * Controls if null are stored.
      *
      * @param storeNulls true if Morphia should store null values
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setStoreNulls(final boolean storeNulls) {
         this.storeNulls = storeNulls;
     }
@@ -276,7 +323,10 @@ public class MapperOptions {
      * Controls if default entity collection name should be lowercase.
      *
      * @param useLowerCaseCollectionNames true if Morphia should use lower case values when calculating collection names
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
         this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
     }
@@ -291,12 +341,128 @@ public class MapperOptions {
     /**
      * Controls if classes from sub-packages should be mapped.
      * @param mapSubPackages true if Morphia should map classes from the sub-packages as well
+     * @deprecated use the Builder instead
+     * @see Builder
      */
+    @Deprecated
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
     }
 
     public String getDiscriminatorField() {
         return Mapper.CLASS_NAME_FIELDNAME;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builder(final MapperOptions copy) {
+        Builder builder = new Builder();
+        builder.ignoreFinals = copy.isIgnoreFinals();
+        builder.storeNulls = copy.isStoreNulls();
+        builder.storeEmpties = copy.isStoreEmpties();
+        builder.useLowerCaseCollectionNames = copy.isUseLowerCaseCollectionNames();
+        builder.cacheClassLookups = copy.isCacheClassLookups();
+        builder.mapSubPackages = copy.isMapSubPackages();
+        builder.objectFactory = copy.getObjectFactory();
+        builder.cacheFactory = copy.getCacheFactory();
+        builder.embeddedMapper = copy.getEmbeddedMapper();
+        builder.defaultMapper = copy.getDefaultMapper();
+        builder.referenceMapper = copy.getReferenceMapper();
+        builder.valueMapper = copy.getValueMapper();
+        return builder;
+    }
+
+    @SuppressWarnings("unused")
+    public static final class Builder {
+
+        private boolean ignoreFinals;
+        private boolean storeNulls;
+        private boolean storeEmpties;
+        private boolean useLowerCaseCollectionNames;
+        private boolean cacheClassLookups;
+        private boolean mapSubPackages;
+        private ObjectFactory objectFactory;
+        private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
+        private CustomMapper embeddedMapper = new EmbeddedMapper();
+        private CustomMapper defaultMapper = embeddedMapper;
+        private CustomMapper referenceMapper = new ReferenceMapper();
+        private CustomMapper valueMapper = new ValueMapper();
+
+        private Builder() {
+        }
+
+        public Builder actLikeSerializer(final boolean actLikeSerializer) {
+            return this;
+        }
+
+        public Builder ignoreFinals(final boolean ignoreFinals) {
+            this.ignoreFinals = ignoreFinals;
+            return this;
+        }
+
+        public Builder storeNulls(final boolean storeNulls) {
+            this.storeNulls = storeNulls;
+            return this;
+        }
+
+        public Builder storeEmpties(final boolean storeEmpties) {
+            this.storeEmpties = storeEmpties;
+            return this;
+        }
+
+        public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
+            this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+            return this;
+        }
+
+        public Builder cacheClassLookups(final boolean cacheClassLookups) {
+            this.cacheClassLookups = cacheClassLookups;
+            return this;
+        }
+
+        public Builder mapSubPackages(final boolean mapSubPackages) {
+            this.mapSubPackages = mapSubPackages;
+            return this;
+        }
+
+        public Builder objectFactory(final ObjectFactory objectFactory) {
+            this.objectFactory = objectFactory;
+            return this;
+        }
+
+        public Builder cacheFactory(final EntityCacheFactory cacheFactory) {
+            this.cacheFactory = cacheFactory;
+            return this;
+        }
+
+        public Builder embeddedMapper(final CustomMapper embeddedMapper) {
+            this.embeddedMapper = embeddedMapper;
+            return this;
+        }
+
+        public Builder defaultMapper(final CustomMapper defaultMapper) {
+            this.defaultMapper = defaultMapper;
+            return this;
+        }
+
+        public Builder referenceMapper(final CustomMapper referenceMapper) {
+            this.referenceMapper = referenceMapper;
+            return this;
+        }
+
+        public Builder valueMapper(final CustomMapper valueMapper) {
+            this.valueMapper = valueMapper;
+            return this;
+        }
+
+        public Builder datastoreProvider(final DatastoreProvider datastoreProvider) {
+            return this;
+        }
+
+        public MapperOptions build() {
+            return new MapperOptions(this);
+        }
     }
 }
