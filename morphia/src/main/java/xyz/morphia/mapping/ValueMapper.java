@@ -9,9 +9,8 @@ import java.util.Map;
 
 
 /**
- * Simple mapper that just uses the Mapper.getOptions().converts
- *
- * @author Scott Hernnadez
+ * @morphia.internal
+ * @deprecated
  */
 class ValueMapper implements CustomMapper {
     @Override

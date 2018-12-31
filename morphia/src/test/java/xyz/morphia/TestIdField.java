@@ -21,7 +21,6 @@ import org.junit.Test;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
-import xyz.morphia.mapping.Mapper;
 import xyz.morphia.testmodel.Rectangle;
 
 import java.util.Arrays;
@@ -61,7 +60,7 @@ public class TestIdField extends TestBase {
         final Rectangle r = new Rectangle(1, 12);
         final BasicDBObject dbObj = (BasicDBObject) getMorphia().toDBObject(r);
         assertFalse(dbObj.containsField("id"));
-        assertTrue(dbObj.containsField(Mapper.ID_KEY));
+        assertTrue(dbObj.containsField("_id"));
         assertEquals(4, dbObj.size()); //_id, h, w, className
     }
 

@@ -59,12 +59,10 @@ import static java.util.Arrays.asList;
 
 
 /**
- * Represents a mapped class between the MongoDB DBObject and the java POJO.
- * <p/>
- * This class will validate classes to make sure they meet the requirement for persistence.
- *
- * @author Scott Hernandez
+ * @morphia.internal
+ * @deprecated
  */
+@Deprecated
 public class MappedClass {
     private static final Logger LOG = MorphiaLoggerFactory.get(MappedClass.class);
     /**

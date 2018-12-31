@@ -60,9 +60,8 @@ import static java.util.Arrays.asList;
 
 
 /**
- * Represents the mapping of this field to/from mongodb (name, list<annotation>)
- *
- * @author Scott Hernandez
+ * @morphia.internal
+ * @deprecated
  */
 @SuppressWarnings("unchecked")
 public class MappedField {
@@ -593,7 +592,7 @@ public class MappedField {
      */
     protected String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
-            return Mapper.ID_KEY;
+            return "_id";
         } else if (hasAnnotation(Property.class)) {
             final Property mv = (Property) foundAnnotations.get(Property.class);
             if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {

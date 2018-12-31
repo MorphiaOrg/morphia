@@ -92,7 +92,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
 
     @SuppressWarnings("unchecked")
     private Key<T> convertItem(final DBObject dbObj) {
-        Object id = dbObj.get(Mapper.ID_KEY);
+        Object id = dbObj.get("_id");
         if (id instanceof DBObject) {
             Class type = mapper.getMappedClass(clazz).getMappedIdField().getType();
             id = mapper.fromDBObject(datastore, type, (DBObject) id, mapper.createEntityCache());

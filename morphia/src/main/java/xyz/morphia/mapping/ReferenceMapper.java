@@ -25,7 +25,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * @morphia.internal
+ * @deprecated
+ */
 @SuppressWarnings({"unchecked", "rawtypes"})
 class ReferenceMapper implements CustomMapper {
     public static final Logger LOG = MorphiaLoggerFactory.get(ReferenceMapper.class);

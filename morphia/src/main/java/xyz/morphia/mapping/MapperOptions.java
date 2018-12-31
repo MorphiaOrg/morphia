@@ -25,15 +25,15 @@ public class MapperOptions {
     private boolean storeNulls;
     private boolean storeEmpties;
     private boolean useLowerCaseCollectionNames;
-    private boolean cacheClassLookups = false;
-    private boolean mapSubPackages = false;
+    private boolean cacheClassLookups;
+    private boolean mapSubPackages;
     private ObjectFactory objectFactory = new DefaultCreator(this);
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
-    private xyz.morphia.mapping.lazy.DatastoreProvider datastoreProvider = null;
+    private xyz.morphia.mapping.lazy.DatastoreProvider datastoreProvider;
 
     /**
      * Creates a default options instance.

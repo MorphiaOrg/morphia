@@ -33,7 +33,6 @@ import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.generics.model.ChildEmbedded;
 import xyz.morphia.generics.model.ChildEntity;
-import xyz.morphia.mapping.Mapper;
 import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.UpdateException;
@@ -824,8 +823,8 @@ public class TestDatastore extends TestBase {
         @PostPersist
         void postPersistWithParam(final DBObject dbObj) {
             postPersistWithParam = true;
-            if (!dbObj.containsField(Mapper.ID_KEY)) {
-                throw new RuntimeException("missing " + Mapper.ID_KEY);
+            if (!dbObj.containsField("_id")) {
+                throw new RuntimeException("missing " + "_id");
             }
         }
 

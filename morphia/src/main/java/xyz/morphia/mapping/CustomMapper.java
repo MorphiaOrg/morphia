@@ -9,9 +9,8 @@ import java.util.Map;
 
 
 /**
- * A CustomMapper if one that implements the methods needed to map to/from POJO/DBObject
- *
- * @author skot
+ * @morphia.internal
+ * @deprecated
  */
 public interface CustomMapper {
     /**

@@ -17,6 +17,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @morphia.internal
+ * @deprecated
+ */
 class EmbeddedMapper implements CustomMapper {
     static boolean shouldSaveClassName(final Object rawVal, final Object convertedVal, final MappedField mf) {
         if (rawVal == null || mf == null) {

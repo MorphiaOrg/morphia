@@ -130,7 +130,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MongoCursor<Key<T>> keys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
+        cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
 
         return new MorphiaKeyCursor<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
@@ -221,7 +221,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MorphiaIterator<T, T> fetchEmptyEntities(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
+        cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
         return cloned.fetch();
     }
@@ -234,7 +234,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     @Override
     public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject(Mapper.ID_KEY, 1));
+        cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
 
         return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());

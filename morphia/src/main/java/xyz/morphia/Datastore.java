@@ -542,14 +542,18 @@ public interface Datastore {
 
     /**
      * @return the default WriteConcern used by this Datastore
+     * @deprecated {@see MongoClient#setDefaultWriteConcern}
      */
+    @Deprecated
     WriteConcern getDefaultWriteConcern();
 
     /**
      * Sets the default WriteConcern for this Datastore
      *
      * @param wc the default WriteConcern to be used by this Datastore
+     * @deprecated {@see MongoClient#setDefaultWriteConcern}
      */
+    @Deprecated
     void setDefaultWriteConcern(WriteConcern wc);
 
     /**
@@ -558,9 +562,7 @@ public interface Datastore {
      * @param entity the entity whose key is to be returned
      * @param <T>    the type of the entity
      * @return the Key
-     * @deprecated use {@link Mapper#getKey(Object)} instead
      */
-    @Deprecated
     <T> Key<T> getKey(T entity);
 
     /**

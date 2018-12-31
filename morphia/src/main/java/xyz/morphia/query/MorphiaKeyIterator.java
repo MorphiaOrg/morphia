@@ -32,7 +32,7 @@ public class MorphiaKeyIterator<T> extends MorphiaIterator<T, Key<T>> {
     @Override
     @SuppressWarnings("unchecked")
     protected Key<T> convertItem(final DBObject dbObj) {
-        Object id = dbObj.get(Mapper.ID_KEY);
+        Object id = dbObj.get("_id");
         if (id instanceof DBObject) {
             Class type = getMapper().getMappedClass(getClazz()).getMappedIdField().getType();
             id = getMapper().fromDBObject(getDatastore(), type, (DBObject) id, getMapper().createEntityCache());

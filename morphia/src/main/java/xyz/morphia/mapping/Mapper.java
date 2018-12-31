@@ -66,27 +66,31 @@ import static xyz.morphia.utils.ReflectionUtils.isPropertyType;
 
 
 /**
- * <p>This is the heart of Morphia and takes care of mapping from/to POJOs/DBObjects<p> <p>This class is thread-safe and keeps various
- * "cached" data which should speed up processing.</p>
- *
- * @author Olafur Gauti Gudmundsson
- * @author Scott Hernandez
+ * @morphia.internal
+ * @deprecated this class will be internalized in 2.0
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
+@Deprecated
 public class Mapper {
     /**
      * The @{@link xyz.morphia.annotations.Id} field name that is stored with mongodb.
+     * @deprecated use "_id" directly
      */
+    @Deprecated
     public static final String ID_KEY = "_id";
+
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
+     * @morphia.internal
      */
     public static final String IGNORED_FIELDNAME = ".";
+
     /**
      * Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to
      * support polymorphism
      */
     public static final String CLASS_NAME_FIELDNAME = "className";
+
     private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
     /**
      * Set of classes that registered by this mapper
@@ -183,7 +187,10 @@ public class Mapper {
      * @param cache       the EntityCache to use
      * @return the new entity
      * @see Mapper#CLASS_NAME_FIELDNAME
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
             final Throwable t = new Throwable();
@@ -223,7 +230,10 @@ public class Mapper {
      * @param dbObject  the DBObject
      * @param <T>       the type of the referenced entity
      * @return the entity
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     <T> T fromDBObject(final Datastore datastore, final DBObject dbObject) {
         if (dbObject.containsField(CLASS_NAME_FIELDNAME)) {
             T entity = opts.getObjectFactory().createInstance(null, dbObject);
@@ -231,7 +241,7 @@ public class Mapper {
 
             return entity;
         } else {
-            throw new MappingException(format("The DBOBbject does not contain a %s key.  Determining entity type is impossible.",
+            throw new MappingException(format("The DBObject does not contain a %s key.  Determining entity type is impossible.",
                                               CLASS_NAME_FIELDNAME));
         }
     }
@@ -245,7 +255,10 @@ public class Mapper {
      * @param entity    the instance to populate
      * @param cache     the EntityCache to use
      * @return the entity
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     public <T> T fromDb(final Datastore datastore, final DBObject dbObject, final T entity, final EntityCache cache) {
         //hack to bypass things and just read the value.
         if (entity instanceof MappedField) {
@@ -255,9 +268,9 @@ public class Mapper {
 
         // check the history key (a key is the namespace + id)
 
-        if (dbObject.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null
+        if (dbObject.containsField("_id") && getMappedClass(entity).getIdField() != null
             && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get(ID_KEY));
+            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get("_id"));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
                 return cachedInstance;
@@ -285,14 +298,14 @@ public class Mapper {
                     readMappedField(datastore, mf, entity, cache, updated);
                 }
             } catch (final MappingException e) {
-                Object id = dbObject.get(ID_KEY);
+                Object id = dbObject.get("_id");
                 String entityName = entity.getClass().getName();
                 throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
                                                   datastore.getDB().getName()), e);
             }
 
-            if (updated.containsField(ID_KEY) && getMappedClass(entity).getIdField() != null) {
-                final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get(ID_KEY));
+            if (updated.containsField("_id") && getMappedClass(entity).getIdField() != null) {
+                final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get("_id"));
                 cache.putEntity(key, entity);
             }
             mc.callLifecycleMethods(PostLoad.class, entity, updated, this);
@@ -305,7 +318,10 @@ public class Mapper {
      *
      * @param collection the collection name
      * @return the Class mapped to this collection name
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     public Class<?> getClassFromCollection(final String collection) {
         final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
         if (mcs == null || mcs.isEmpty()) {
@@ -324,7 +340,10 @@ public class Mapper {
      *
      * @param object the object to process
      * @return the collection name
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     public String getCollectionName(final Object object) {
         if (object == null) {
             throw new IllegalArgumentException();
@@ -362,6 +381,8 @@ public class Mapper {
 
     /**
      * @return the cache of instances
+     * @morphia.internal
+     * @deprecated no replacement is planned
      */
     public Map<Class, Object> getInstanceCache() {
         return instanceCache;
@@ -723,7 +744,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity);
 
         // update id field, if there.
-        if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get(ID_KEY) != null)) {
+        if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get("_id") != null)) {
             try {
                 final MappedField mf = mc.getMappedIdField();
                 final Object oldIdValue = mc.getIdField().get(entity);
