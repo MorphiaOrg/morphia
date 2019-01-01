@@ -2,10 +2,10 @@ package xyz.morphia.mapping;
 
 
 import com.mongodb.DBObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.ObjectFactory;
 import xyz.morphia.annotations.ConstructorArgs;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultCreator implements ObjectFactory {
 
-    private static final Logger LOG = MorphiaLoggerFactory.get(DefaultCreator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultCreator.class);
 
     private Map<String, Class> classNameCache = new ConcurrentHashMap<String, Class>();
 
@@ -178,8 +178,8 @@ public class DefaultCreator implements ObjectFactory {
                     c = Class.forName(className, true, getClassLoaderForClass());
                 }
             } catch (ClassNotFoundException e) {
-                if (LOG.isWarningEnabled()) {
-                    LOG.warning("Class not found defined in dbObj: ", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Class not found defined in dbObj: ", e);
                 }
             }
         }

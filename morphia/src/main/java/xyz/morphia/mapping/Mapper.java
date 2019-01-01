@@ -17,6 +17,8 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.bson.BSONEncoder;
 import org.bson.BasicBSONEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.Datastore;
 import xyz.morphia.EntityInterceptor;
 import xyz.morphia.Key;
@@ -32,8 +34,6 @@ import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Serialized;
 import xyz.morphia.converters.CustomConverters;
 import xyz.morphia.converters.TypeConverter;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.cache.EntityCache;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.LazyProxyFactory;
@@ -93,7 +93,7 @@ public class Mapper {
     @Deprecated
     public static final String CLASS_NAME_FIELDNAME = "className";
 
-    private static final Logger LOG = MorphiaLoggerFactory.get(Mapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
     /**
      * Set of classes that registered by this mapper
      */
@@ -939,7 +939,7 @@ public class Mapper {
 
         final Object newObj = getConverters().encode(origClass, javaObj);
         if (newObj == null) {
-            LOG.warning("converted " + javaObj + " to null");
+            LOG.warn("converted " + javaObj + " to null");
             return null;
         }
         final Class type = newObj.getClass();

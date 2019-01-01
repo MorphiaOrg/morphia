@@ -8,9 +8,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.geo.GeometryShapeConverter;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.query.Query;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @SuppressWarnings("deprecation")
 public class AggregationPipelineImpl implements AggregationPipeline {
-    private static final Logger LOG = MorphiaLoggerFactory.get(AggregationPipelineImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AggregationPipelineImpl.class);
 
     private final DBCollection collection;
     private final Class source;

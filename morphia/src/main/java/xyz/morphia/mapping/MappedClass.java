@@ -18,6 +18,8 @@ package xyz.morphia.mapping;
 
 
 import com.mongodb.DBObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.EntityInterceptor;
 import xyz.morphia.annotations.Converters;
 import xyz.morphia.annotations.Embedded;
@@ -38,8 +40,6 @@ import xyz.morphia.annotations.Serialized;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.annotations.Validation;
 import xyz.morphia.annotations.Version;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.validation.MappingValidator;
 import xyz.morphia.utils.ReflectionUtils;
 
@@ -64,7 +64,7 @@ import static java.util.Arrays.asList;
  */
 @Deprecated
 public class MappedClass {
-    private static final Logger LOG = MorphiaLoggerFactory.get(MappedClass.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MappedClass.class);
     /**
      * Annotations we are interested in looking for.
      *
@@ -581,8 +581,8 @@ public class MappedClass {
                 } else {
                     if (mapper.getOptions().getDefaultMapper() != null) {
                         persistenceFields.add(new MappedField(field, clazz, mapper));
-                    } else if (LOG.isWarningEnabled()) {
-                        LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
+                    } else if (LOG.isWarnEnabled()) {
+                        LOG.warn(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
                                            field.getType().getName()));
                     }
                 }

@@ -20,6 +20,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.ValidationOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.aggregation.AggregationPipeline;
 import xyz.morphia.aggregation.AggregationPipelineImpl;
 import xyz.morphia.annotations.CappedAt;
@@ -28,8 +30,6 @@ import xyz.morphia.annotations.NotSaved;
 import xyz.morphia.annotations.PostPersist;
 import xyz.morphia.annotations.Validation;
 import xyz.morphia.annotations.Version;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -73,7 +73,7 @@ import static java.util.Collections.singletonList;
  */
 @Deprecated
 public class DatastoreImpl implements AdvancedDatastore {
-    private static final Logger LOG = MorphiaLoggerFactory.get(DatastoreImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
     private final Morphia morphia;
     private final MongoClient mongoClient;
@@ -256,7 +256,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     if (dbResult.containsField("capped")) {
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
                     } else {
-                        LOG.warning("DBCollection already exists with same name(" + collName
+                        LOG.warn("DBCollection already exists with same name(" + collName
                                         + ") and is not capped; not creating capped version!");
                     }
                 } else {
@@ -976,7 +976,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
-            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
+            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
 
         indexHelper.createIndex(getMongoCollection(collection, clazz, null), getMapper().getMappedClass(clazz),

@@ -1,13 +1,13 @@
 package xyz.morphia.query;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.geo.CoordinateReferenceSystem;
 import xyz.morphia.geo.Geometry;
 import xyz.morphia.geo.MultiPolygon;
 import xyz.morphia.geo.Point;
 import xyz.morphia.geo.Polygon;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.utils.Assert;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import static xyz.morphia.query.FilterOperator.INTERSECTS;
  * @param <T> the type of the CriteriaContainer
  */
 public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
-    private static final Logger LOG = MorphiaLoggerFactory.get(FieldEndImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
 
     private final QueryImpl<?> query;
     private final String field;
@@ -111,9 +111,9 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T hasAnyOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
-        if (LOG.isWarningEnabled()) {
+        if (LOG.isWarnEnabled()) {
             if (!values.iterator().hasNext()) {
-                LOG.warning("Specified an empty list/collection with the '" + field + "' criteria");
+                LOG.warn("Specified an empty list/collection with the '" + field + "' criteria");
             }
         }
         return addCriteria(FilterOperator.IN, values);

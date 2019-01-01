@@ -21,12 +21,13 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.PreLoad;
-import xyz.morphia.logging.Logger;
 import xyz.morphia.query.FindOptions;
 import xyz.morphia.query.Query;
 import xyz.morphia.query.TestQuery.ContainsPic;
@@ -62,7 +63,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static xyz.morphia.logging.MorphiaLoggerFactory.get;
 import static xyz.morphia.query.PushOptions.options;
 
 /**
@@ -70,7 +70,7 @@ import static xyz.morphia.query.PushOptions.options;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class TestUpdateOps extends TestBase {
-    private static final Logger LOG = get(TestUpdateOps.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestUpdateOps.class);
 
     @Test
     public void shouldUpdateAnArrayElement() {

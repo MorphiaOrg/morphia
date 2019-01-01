@@ -23,6 +23,8 @@ import org.bson.BsonDocumentWriter;
 import org.bson.Document;
 import org.bson.codecs.Encoder;
 import org.bson.codecs.EncoderContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.annotations.Collation;
 import xyz.morphia.annotations.Field;
 import xyz.morphia.annotations.Index;
@@ -33,8 +35,6 @@ import xyz.morphia.annotations.NotSaved;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Serialized;
 import xyz.morphia.annotations.Text;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -56,7 +56,7 @@ import static xyz.morphia.internal.MorphiaUtils.join;
 import static xyz.morphia.utils.IndexType.fromValue;
 
 final class IndexHelper {
-    private static final Logger LOG = MorphiaLoggerFactory.get(IndexHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
     private static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private final Mapper mapper;
@@ -94,7 +94,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
-            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
+            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         final Map<String, Object> newOptions = extractOptions(indexed.options());
         if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
@@ -187,7 +187,7 @@ final class IndexHelper {
                     for (final Index index : indexes.value()) {
                         Index updated = index;
                         if (index.fields().length == 0) {
-                            LOG.warning(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
+                            LOG.warn(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
                                                    + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                             updated = new IndexBuilder()
                                 .migrate(index);
@@ -255,7 +255,7 @@ final class IndexHelper {
                 if (!index.options().disableValidation()) {
                     throw new MappingException(message);
                 }
-                LOG.warning(message);
+                LOG.warn(message);
             }
             keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
         }
@@ -265,7 +265,7 @@ final class IndexHelper {
     @SuppressWarnings("deprecation")
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
-            LOG.warning("Support for dropDups has been removed from the server.  Please remove this setting.");
+            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
             .background(options.background() || background)

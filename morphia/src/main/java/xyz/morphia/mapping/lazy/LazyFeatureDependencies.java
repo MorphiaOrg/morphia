@@ -1,8 +1,8 @@
 package xyz.morphia.mapping.lazy;
 
 
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -10,7 +10,7 @@ import xyz.morphia.logging.MorphiaLoggerFactory;
  */
 public final class LazyFeatureDependencies {
 
-    private static final Logger LOG = MorphiaLoggerFactory.get(LazyFeatureDependencies.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LazyFeatureDependencies.class);
     private static Boolean fulFilled;
 
     private LazyFeatureDependencies() {
@@ -24,7 +24,7 @@ public final class LazyFeatureDependencies {
     public static boolean assertDependencyFullFilled() {
         final boolean fulfilled = testDependencyFullFilled();
         if (!fulfilled) {
-            LOG.warning("Lazy loading impossible due to missing dependencies.");
+            LOG.warn("Lazy loading impossible due to missing dependencies.");
         }
         return fulfilled;
     }

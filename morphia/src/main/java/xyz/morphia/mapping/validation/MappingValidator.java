@@ -1,12 +1,12 @@
 package xyz.morphia.mapping.validation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.ObjectFactory;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Property;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Serialized;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.validation.ConstraintViolation.Level;
@@ -43,7 +43,7 @@ import static java.util.Collections.sort;
  */
 public class MappingValidator {
 
-    private static final Logger LOG = MorphiaLoggerFactory.get(MappingValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
     private ObjectFactory creator;
 
     /**
@@ -183,7 +183,7 @@ public class MappingValidator {
                     logger.error(v.render());
                     break;
                 case WARNING:
-                    logger.warning(v.render());
+                    logger.warn(v.render());
                     break;
                 case INFO:
                     logger.info(v.render());

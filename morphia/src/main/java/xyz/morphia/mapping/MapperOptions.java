@@ -1,10 +1,10 @@
 package xyz.morphia.mapping;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.ObjectFactory;
 import xyz.morphia.annotations.Reference;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.cache.DefaultEntityCacheFactory;
 import xyz.morphia.mapping.cache.EntityCacheFactory;
 import xyz.morphia.mapping.lazy.DatastoreProvider;
@@ -14,7 +14,7 @@ import xyz.morphia.mapping.lazy.DatastoreProvider;
  */
 @SuppressWarnings("deprecation")
 public class MapperOptions {
-    private static final Logger LOG = MorphiaLoggerFactory.get(MapperOptions.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
     private boolean ignoreFinals; //ignore final fields.
     private boolean storeNulls;
     private boolean storeEmpties;
@@ -113,7 +113,7 @@ public class MapperOptions {
      */
     @Deprecated
     public void setDatastoreProvider(final DatastoreProvider ignored) {
-        LOG.warning("DatastoreProviders are no longer needed or used.");
+        LOG.warn("DatastoreProviders are no longer needed or used.");
     }
 
     /**

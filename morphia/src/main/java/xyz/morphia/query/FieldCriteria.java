@@ -3,8 +3,8 @@ package xyz.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -20,7 +20,7 @@ import static xyz.morphia.query.QueryValidator.validateQuery;
  * Defines a Criteria against a field
  */
 class FieldCriteria extends AbstractCriteria {
-    private static final Logger LOG = MorphiaLoggerFactory.get(FieldCriteria.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FieldCriteria.class);
 
     private final String field;
     private final FilterOperator operator;

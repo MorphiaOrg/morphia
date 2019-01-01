@@ -20,11 +20,11 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappingException;
 
 import java.io.File;
@@ -64,7 +64,7 @@ import java.util.regex.Pattern;
  * @author Olafur Gauti Gudmundsson
  */
 public final class ReflectionUtils {
-    private static final Logger LOG = MorphiaLoggerFactory.get(ReflectionUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
 
 
     private ReflectionUtils() {

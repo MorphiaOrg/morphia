@@ -13,11 +13,11 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import org.bson.Document;
 import org.bson.types.CodeWScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Entity;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -46,7 +46,7 @@ import static xyz.morphia.query.QueryValidator.validateQuery;
  */
 @SuppressWarnings("deprecation")
 public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
-    private static final Logger LOG = MorphiaLoggerFactory.get(QueryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     private final xyz.morphia.DatastoreImpl ds;
     private final DBCollection dbColl;
     private final Class<T> clazz;
@@ -784,11 +784,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         }
 
         if (findOptions.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
-            LOG.warning("Snapshotted query should not have hint/sort.");
+            LOG.warn("Snapshotted query should not have hint/sort.");
         }
 
         if (findOptions.getCursorType() != NonTailable && (findOptions.getSortDBObject() != null)) {
-            LOG.warning("Sorting on tail is not allowed.");
+            LOG.warn("Sorting on tail is not allowed.");
         }
 
         return dbColl.find(query, findOptions.getOptions()

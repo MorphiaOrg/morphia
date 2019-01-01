@@ -19,6 +19,8 @@ package xyz.morphia.mapping;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.AlsoLoad;
 import xyz.morphia.annotations.ConstructorArgs;
@@ -32,8 +34,6 @@ import xyz.morphia.annotations.Serialized;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.annotations.Version;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.utils.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -65,7 +65,7 @@ import static java.util.Arrays.asList;
  */
 @SuppressWarnings("unchecked")
 public class MappedField {
-    private static final Logger LOG = MorphiaLoggerFactory.get(MappedField.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
     private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<Class<? extends Annotation>>();
 
@@ -516,8 +516,8 @@ public class MappedField {
         }
 
         if (!isMongoType && !isSingleValue && (subType == null || subType == Object.class)) {
-            if (LOG.isWarningEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
-                LOG.warning(format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
+            if (LOG.isWarnEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
+                LOG.warn(format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
                                    + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
             }
             isMongoType = true;
@@ -558,8 +558,8 @@ public class MappedField {
         }
 
         if (Object.class.equals(realType) || Object[].class.equals(realType)) {
-            if (LOG.isWarningEnabled()) {
-                LOG.warning(format("Parameterized types are treated as untyped Objects. See field '%s' on %s", field.getName(),
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(format("Parameterized types are treated as untyped Objects. See field '%s' on %s", field.getName(),
                                    field.getDeclaringClass()));
             }
         }
@@ -668,12 +668,12 @@ public class MappedField {
             } catch (NoSuchMethodException e) {
                 // do nothing
             } catch (IllegalArgumentException e) {
-                if (LOG.isWarningEnabled()) {
-                    LOG.warning("There should not be an argument", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("There should not be an argument", e);
                 }
             } catch (Exception e) {
-                if (LOG.isWarningEnabled()) {
-                    LOG.warning("", e);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("", e);
                 }
             }
         }
@@ -684,8 +684,8 @@ public class MappedField {
                 constructor.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 if (!hasAnnotation(ConstructorArgs.class)) {
-                    if (LOG.isWarningEnabled()) {
-                        LOG.warning("No usable constructor for " + type.getName(), e);
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("No usable constructor for " + type.getName(), e);
                     }
                 }
             }

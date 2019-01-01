@@ -5,13 +5,13 @@ import com.mongodb.client.MongoCursor;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
 import xyz.morphia.TestBase;
 import xyz.morphia.aggregation.zipcode.City;
 import xyz.morphia.aggregation.zipcode.Population;
 import xyz.morphia.aggregation.zipcode.State;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.query.Query;
 
 import java.io.File;
@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import static java.lang.String.format;
 import static xyz.morphia.aggregation.Group.average;
@@ -40,7 +39,7 @@ import static xyz.morphia.query.Sort.ascending;
  */
 public class ZipCodeDataSetTest extends TestBase {
     public static final String MONGO_IMPORT;
-    private static final Logger LOG = MorphiaLoggerFactory.get(ZipCodeDataSetTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
 
     static {
         String property = System.getProperty("mongodb_server");

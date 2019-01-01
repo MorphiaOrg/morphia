@@ -1,8 +1,8 @@
 package xyz.morphia.converters;
 
 import com.mongodb.DBObject;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.MapperOptions;
@@ -22,7 +22,7 @@ import static java.lang.String.format;
  * Defines a bundle of converters
  */
 public abstract class Converters {
-    private static final Logger LOG = MorphiaLoggerFactory.get(Converters.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Converters.class);
 
     private final Mapper mapper;
     private final List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
@@ -261,7 +261,7 @@ public abstract class Converters {
         final List<TypeConverter> tcs = tcMap.get(c);
         if (tcs != null) {
             if (tcs.size() > 1) {
-                LOG.warning("Duplicate converter for " + c + ", returning first one from " + tcs);
+                LOG.warn("Duplicate converter for " + c + ", returning first one from " + tcs);
             }
             return tcs.get(0);
         }
@@ -289,7 +289,7 @@ public abstract class Converters {
 
         if (tcs != null) {
             if (tcs.size() > 1) {
-                LOG.warning("Duplicate converter for " + mf.getType() + ", returning first one from " + tcs);
+                LOG.warn("Duplicate converter for " + mf.getType() + ", returning first one from " + tcs);
             }
             return tcs.get(0);
         }
@@ -306,7 +306,7 @@ public abstract class Converters {
     private void addTypedConverter(final Class type, final TypeConverter tc) {
         if (tcMap.containsKey(type)) {
             tcMap.get(type).add(0, tc);
-            LOG.warning("Added duplicate converter for " + type + " ; " + tcMap.get(type));
+            LOG.warn("Added duplicate converter for " + type + " ; " + tcMap.get(type));
         } else {
             final List<TypeConverter> values = new ArrayList<TypeConverter>();
             values.add(tc);

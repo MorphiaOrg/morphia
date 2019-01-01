@@ -3,10 +3,10 @@ package xyz.morphia;
 
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.annotations.NotSaved;
 import xyz.morphia.annotations.Transient;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.MappingException;
 import xyz.morphia.mapping.cache.EntityCache;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 @SuppressWarnings("deprecation")
 @Deprecated
 public class MapreduceResults<T> implements Iterable<T> {
-    private static final Logger LOG = MorphiaLoggerFactory.get(MapreduceResults.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MapreduceResults.class);
     private final Stats counts = new Stats();
     private MapReduceOutput output;
     private String outputCollectionName;
@@ -78,7 +78,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      */
     @Deprecated
     public String getError() {
-        LOG.warning("MapreduceResults.getError() will always return null.");
+        LOG.warn("MapreduceResults.getError() will always return null.");
         return null;
     }
 
@@ -140,7 +140,7 @@ public class MapreduceResults<T> implements Iterable<T> {
      */
     @Deprecated
     public boolean isOk() {
-        LOG.warning("MapreduceResults.isOk() will always return true.");
+        LOG.warn("MapreduceResults.isOk() will always return true.");
         return true;
     }
 

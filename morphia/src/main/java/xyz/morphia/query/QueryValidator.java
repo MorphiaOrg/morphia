@@ -1,8 +1,8 @@
 package xyz.morphia.query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.annotations.Serialized;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -30,7 +30,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 final class QueryValidator {
-    private static final Logger LOG = MorphiaLoggerFactory.get(QueryValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryValidator.class);
 
     private QueryValidator() {
     }
@@ -120,13 +120,13 @@ final class QueryValidator {
                 if ((mf.isSingleValue() && !compatibleForType)
                     || mf.isMultipleValues() && !(compatibleForSubclass || compatibleForType)) {
 
-                    if (LOG.isWarningEnabled()) {
-                        LOG.warning(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn(format("The type(s) for the query/update may be inconsistent; using an instance of type '%s' "
                                            + "for the field '%s.%s' which is declared as '%s'", val.getClass().getName(),
                                            mf.getDeclaringClass().getName(), mf.getJavaFieldName(), mf.getType().getName()
                                           ));
                         typeValidationFailures.addAll(subclassValidationFailures);
-                        LOG.warning("Validation warnings: \n" + typeValidationFailures);
+                        LOG.warn("Validation warnings: \n" + typeValidationFailures);
                     }
                 }
             }

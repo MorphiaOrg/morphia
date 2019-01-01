@@ -1,8 +1,8 @@
 package xyz.morphia.converters;
 
 
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.mapping.MappedField;
 
 import java.text.ParseException;
@@ -16,7 +16,7 @@ import java.util.Locale;
  * @author scotthernandez
  */
 public class DateConverter extends TypeConverter implements SimpleValueConverter {
-    private static final Logger LOG = MorphiaLoggerFactory.get(DateConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DateConverter.class);
 
 
     /**

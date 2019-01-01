@@ -1,6 +1,6 @@
 package xyz.morphia.logging.slf4j;
 
-import xyz.morphia.logging.Logger;
+import org.slf4j.Logger;
 import xyz.morphia.logging.LoggerFactory;
 
 /**

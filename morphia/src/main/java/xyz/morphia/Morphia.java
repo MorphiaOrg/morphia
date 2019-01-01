@@ -17,10 +17,10 @@ package xyz.morphia;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.MappingException;
 import xyz.morphia.mapping.cache.EntityCache;
@@ -37,7 +37,7 @@ import java.util.Set;
  * @author Scott Hernandez
  */
 public class Morphia {
-    private static final Logger LOG = MorphiaLoggerFactory.get(Morphia.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Morphia.class);
     private final Mapper mapper;
 
     /**

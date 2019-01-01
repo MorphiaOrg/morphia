@@ -4,11 +4,11 @@ package xyz.morphia.mapping;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Reference;
-import xyz.morphia.logging.Logger;
-import xyz.morphia.logging.MorphiaLoggerFactory;
 import xyz.morphia.mapping.cache.EntityCache;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 class ReferenceMapper implements CustomMapper {
-    public static final Logger LOG = MorphiaLoggerFactory.get(ReferenceMapper.class);
+    public static final Logger LOG = LoggerFactory.getLogger(ReferenceMapper.class);
 
     @Override
     public void fromDBObject(final Datastore datastore, final DBObject dbObject, final MappedField mf, final Object entity,
@@ -150,7 +150,7 @@ class ReferenceMapper implements CustomMapper {
                 public void eval(final Object val) {
                     final Object ent = resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), val);
                     if (ent == null) {
-                        LOG.warning("Null reference found when retrieving value for " + mf.getFullName());
+                        LOG.warn("Null reference found when retrieving value for " + mf.getFullName());
                     } else {
                         refs.add(ent);
                     }
