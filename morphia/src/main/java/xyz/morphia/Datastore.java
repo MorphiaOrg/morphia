@@ -542,7 +542,7 @@ public interface Datastore {
 
     /**
      * @return the default WriteConcern used by this Datastore
-     * @deprecated {@see MongoClient#setDefaultWriteConcern}
+     * @deprecated {@link MongoClient#setWriteConcern(WriteConcern)}
      */
     @Deprecated
     WriteConcern getDefaultWriteConcern();
@@ -551,7 +551,7 @@ public interface Datastore {
      * Sets the default WriteConcern for this Datastore
      *
      * @param wc the default WriteConcern to be used by this Datastore
-     * @deprecated {@see MongoClient#setDefaultWriteConcern}
+     * @deprecated {@link MongoClient#setWriteConcern(WriteConcern)}
      */
     @Deprecated
     void setDefaultWriteConcern(WriteConcern wc);
