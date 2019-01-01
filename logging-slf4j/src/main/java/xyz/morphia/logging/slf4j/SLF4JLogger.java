@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class hands off log messages to the underlying slf4j logging system.
  */
-public class SLF4JLogger implements Logger {
+public class SLF4JLogger implements xyz.morphia.logging.Logger {
     private final Logger logger;
 
     /**
