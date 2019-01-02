@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.morphia.internal.PathTarget;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -13,8 +14,6 @@ import xyz.morphia.utils.ReflectionUtils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import static xyz.morphia.query.QueryValidator.validateQuery;
 
 /**
  * Defines a Criteria against a field
@@ -34,16 +33,10 @@ class FieldCriteria extends AbstractCriteria {
     @SuppressWarnings("deprecation")
     FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
         //validate might modify prop string to translate java field name to db field name
-        final StringBuilder sb = new StringBuilder(fieldName);
         final Mapper mapper = query.getDatastore().getMapper();
-        final MappedField mf = validateQuery(query.getEntityClass(),
-                                             mapper,
-                                             sb,
-                                             op,
-                                             value,
-                                             query.isValidatingNames(),
-                                             query.isValidatingTypes());
-
+        final PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(query.getEntityClass()), fieldName,
+            query.isValidatingNames());
+        final MappedField mf = pathTarget.getTarget();
 
         MappedClass mc = null;
         try {
@@ -76,7 +69,7 @@ class FieldCriteria extends AbstractCriteria {
             mappedValue = Collections.emptyList();
         }
 
-        this.field = sb.toString();
+        this.field = pathTarget.translatedPath();
         this.operator = op;
         this.value = mappedValue;
         this.not = not;

@@ -118,10 +118,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             throw new QueryException("Values cannot be null or empty.");
         }
 
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field);
-        if (!validateNames) {
-            pathTarget.disableValidation();
-        }
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
         BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
         options.update(dbObject);
@@ -278,10 +275,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         }
 
         Object val = value;
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), f);
-        if (!validateNames) {
-            pathTarget.disableValidation();
-        }
+        PathTarget pathTarget = new PathTarget(mapper, clazz, f, validateNames);
         MappedField mf = pathTarget.getTarget();
 
         if (convert) {

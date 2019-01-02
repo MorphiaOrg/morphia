@@ -10,6 +10,7 @@ import xyz.morphia.annotations.Reference;
 import xyz.morphia.annotations.Serialized;
 import xyz.morphia.entities.EntityWithListsAndArrays;
 import xyz.morphia.entities.SimpleEntity;
+import xyz.morphia.internal.PathTarget;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -33,7 +34,6 @@ import static xyz.morphia.query.FilterOperator.IN;
 import static xyz.morphia.query.FilterOperator.MOD;
 import static xyz.morphia.query.FilterOperator.NOT_IN;
 import static xyz.morphia.query.FilterOperator.SIZE;
-import static xyz.morphia.query.QueryValidator.validateQuery;
 
 public class QueryValidatorTest {
     @Rule
@@ -448,7 +448,7 @@ public class QueryValidatorTest {
         // this unit test is to drive fixing a null pointer in the logging code.  It's a bit stupid but it's an edge case that wasn't
         // caught.
         // when this is called, don't error
-        validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("name"), EQUAL, null, true, true);
+        new PathTarget(new Mapper(), SimpleEntity.class, "name");
     }
 
     @Test
@@ -470,23 +470,23 @@ public class QueryValidatorTest {
     @Test
     public void shouldReferToMappedClassInExceptionWhenFieldNotFound() {
         thrown.expect(ValidationException.class);
-        thrown.expectMessage("The field 'notAField' could not be found in 'org.bson.types.ObjectId'");
-        validateQuery(SimpleEntity.class, new Mapper(), new StringBuilder("id.notAField"), FilterOperator.EQUAL, 1, true, true);
+        thrown.expectMessage("Could not resolve path '_id.notAField' against 'xyz.morphia.entities.SimpleEntity'");
+        new PathTarget(new Mapper(), SimpleEntity.class, "id.notAField").getTarget();
     }
 
     @Test
     public void shouldReferToMappedClassInExceptionWhenQueryingPastReferenceField() {
         thrown.expect(ValidationException.class);
-        thrown.expectMessage("Cannot use dot-notation past 'reference' in 'xyz.morphia.query.QueryValidatorTest$WithReference'");
-        validateQuery(WithReference.class, new Mapper(), new StringBuilder("reference.name"), FilterOperator.EQUAL, "", true, true);
+        thrown.expectMessage("Could not resolve path 'reference.name' against 'xyz.morphia.query.QueryValidatorTest$WithReference'");
+        new PathTarget(new Mapper(), WithReference.class, "reference.name").getTarget();
     }
 
     @Test
     public void shouldReferToMappedClassInExceptionWhenQueryingPastSerializedField() {
         thrown.expect(ValidationException.class);
-        thrown.expectMessage("Cannot use dot-notation past 'serialized' in "
+        thrown.expectMessage("Could not resolve path 'serialized.name' against "
                              + "'xyz.morphia.query.QueryValidatorTest$WithSerializedField'");
-        validateQuery(WithSerializedField.class, new Mapper(), new StringBuilder("serialized.name"), FilterOperator.EQUAL, "", true, true);
+        new PathTarget(new Mapper(), WithSerializedField.class, "serialized.name").getTarget();
     }
 
     private static class GeoEntity {

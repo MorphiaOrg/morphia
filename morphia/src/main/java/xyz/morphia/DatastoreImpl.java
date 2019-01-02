@@ -351,7 +351,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final DBObject result = dbColl.findAndModify(query.getQueryObject(), copy.getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
+        return result == null ? null : mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
     }
 
     @Override
@@ -373,7 +373,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                            .update(((UpdateOpsImpl<T>) operations).getOps())
                                            .getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
     }
 

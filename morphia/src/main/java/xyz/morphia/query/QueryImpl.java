@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Entity;
+import xyz.morphia.internal.PathTarget;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -36,7 +37,6 @@ import static com.mongodb.CursorType.NonTailable;
 import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static xyz.morphia.query.QueryValidator.validateQuery;
 
 
 /**
@@ -113,9 +113,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             }
 
             if (validate) {
-                final StringBuilder sb = new StringBuilder(s);
-                validateQuery(clazz, mapper, sb, FilterOperator.IN, "", true, false);
-                s = sb.toString();
+                s = new PathTarget(mapper, clazz, s).translatedPath();
             }
             ret.put(s, dir);
         }
@@ -545,8 +543,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> order(final Meta sort) {
-        validateQuery(clazz, ds.getMapper(), new StringBuilder(sort.getField()), FilterOperator.IN, "", false, false);
-
         getOptions().sort(sort.toDatabase());
 
         return this;
@@ -558,9 +554,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         for (Sort sort : sorts) {
             String s = sort.getField();
             if (validateName) {
-                final StringBuilder sb = new StringBuilder(s);
-                validateQuery(clazz, ds.getMapper(), sb, FilterOperator.IN, "", true, false);
-                s = sb.toString();
+                s = new PathTarget(ds.getMapper(), clazz, s).translatedPath();
             }
             sortList.put(s, sort.getOrder());
         }
@@ -595,9 +589,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> project(final String field, final boolean include) {
-        final StringBuilder sb = new StringBuilder(field);
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
-        String fieldName = sb.toString();
+        final Mapper mapper = ds.getMapper();
+        String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateName).translatedPath();
         validateProjections(fieldName, include);
         project(fieldName, include ? 1 : 0);
         return this;
@@ -623,9 +616,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> project(final String field, final ArraySlice slice) {
-        final StringBuilder sb = new StringBuilder(field);
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, validateName, false);
-        String fieldName = sb.toString();
+        final Mapper mapper = ds.getMapper();
+        String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateName).translatedPath();
         validateProjections(fieldName, true);
         project(fieldName, slice.toDatabase());
         return this;
@@ -633,9 +625,8 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public Query<T> project(final Meta meta) {
-        final StringBuilder sb = new StringBuilder(meta.getField());
-        validateQuery(clazz, ds.getMapper(), sb, FilterOperator.EQUAL, null, false, false);
-        String fieldName = sb.toString();
+        final Mapper mapper = ds.getMapper();
+        String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
         validateProjections(fieldName, true);
         project(meta.toDatabase());
         return this;

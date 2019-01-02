@@ -31,7 +31,6 @@ import xyz.morphia.annotations.Indexed;
 import xyz.morphia.annotations.PrePersist;
 import xyz.morphia.annotations.Property;
 import xyz.morphia.annotations.Reference;
-import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.ReferenceTest.ChildId;
 import xyz.morphia.mapping.ReferenceTest.Complex;
 import xyz.morphia.testmodel.Hotel;
@@ -1227,7 +1226,7 @@ public class TestQuery extends TestBase {
                                .count());
     }
 
-    @Test
+    @Test(expected = ValidationException.class)
     public void testQueryOverReference() {
 
         final ContainsPic cpk = new ContainsPic();
@@ -1241,14 +1240,9 @@ public class TestQuery extends TestBase {
 
         assertEquals(1, query.field("pic").equal(p).count());
 
-        try {
-            getDs().find(ContainsPic.class).filter("pic.name", "foo")
-                   .find(new FindOptions().limit(1))
-                   .next();
-            fail("query validation should have thrown an exception");
-        } catch (ValidationException e) {
-            assertTrue(e.getMessage().contains("Cannot use dot-"));
-        }
+        getDs().find(ContainsPic.class).filter("pic.name", "foo")
+               .find(new FindOptions().limit(1))
+               .next();
     }
 
     @Test

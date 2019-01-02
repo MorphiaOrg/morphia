@@ -57,7 +57,7 @@ public class PathTargetTest extends TestBase {
         getMorphia().map(ParentType.class, EmbeddedType.class);
         Mapper mapper = getMorphia().getMapper();
 
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(ParentType.class), "embedded.number");
+        PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.number");
         Assert.assertEquals("embedded.number", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(EmbeddedType.class).getMappedFieldByJavaField("number"), pathTarget.getTarget());
     }
@@ -67,7 +67,7 @@ public class PathTargetTest extends TestBase {
         getMorphia().map(ParentType.class, EmbeddedType.class, EmbeddedSubtype.class);
         Mapper mapper = getMorphia().getMapper();
 
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(ParentType.class), "embedded.flag");
+        PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.flag");
         Assert.assertEquals("embedded.flag", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(EmbeddedSubtype.class).getMappedFieldByJavaField("flag"), pathTarget.getTarget());
     }
@@ -100,7 +100,7 @@ public class PathTargetTest extends TestBase {
         Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
         Assert.assertEquals(mapper.getMappedClass(Grade.class).getMappedField("d"), pathTarget.getTarget());
 
-        pathTarget = new PathTarget(mapper, mapper.getMappedClass(Article.class), "translations");
+        pathTarget = new PathTarget(mapper, Article.class, "translations");
         Assert.assertEquals("translations", pathTarget.translatedPath());
     }
 
@@ -123,10 +123,8 @@ public class PathTargetTest extends TestBase {
     public void disableValidation() {
         getMorphia().map(WithNested.class, Nested.class, NestedImpl.class, AnotherNested.class);
         Mapper mapper = getMorphia().getMapper();
-        MappedClass mappedClass = mapper.getMappedClass(WithNested.class);
 
-        final PathTarget pathTarget = new PathTarget(mapper, mappedClass, "nested.field.fail");
-        pathTarget.disableValidation();
+        final PathTarget pathTarget = new PathTarget(mapper, WithNested.class, "nested.field.fail", false);
         Assert.assertEquals("nested.field.fail", pathTarget.translatedPath());
         Assert.assertNull(pathTarget.getTarget());
     }

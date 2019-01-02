@@ -79,9 +79,8 @@ public class EmbeddedMappingTest extends TestBase {
                    .field("nested.field").equal("nested value")
                    .find(new FindOptions().limit(1))
                    .next();
-            Assert.fail("Querying against an interface should fail validation");
         } catch (ValidationException ignore) {
-            // all good
+            Assert.fail("Should be able to resolve against the implementations found.");
         }
         found = getDs().find(WithNested.class)
                        .disableValidation()

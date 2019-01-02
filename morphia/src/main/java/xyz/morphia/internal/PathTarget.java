@@ -16,6 +16,7 @@
 
 package xyz.morphia.internal;
 
+import xyz.morphia.annotations.Serialized;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
@@ -29,20 +30,19 @@ import static java.util.Arrays.asList;
 import static xyz.morphia.internal.MorphiaUtils.join;
 
 /**
- * This is an internal class and is subject to change or removal.
- *
  * @since 1.3
+ * @morphia.internal
  */
+@SuppressWarnings("deprecation")
 public class PathTarget {
-    private final String path;
     private final List<String> segments;
-    private boolean validateNames = true;
+    private boolean validateNames;
     private int position;
     private Mapper mapper;
     private MappedClass context;
     private MappedClass root;
     private MappedField target;
-    private boolean resolved = false;
+    private boolean resolved;
 
     /**
      * Creates a resolution context for the given root and path.
@@ -52,18 +52,30 @@ public class PathTarget {
      * @param path path
      */
     public PathTarget(final Mapper mapper, final MappedClass root, final String path) {
-        this.root = root;
-        segments = asList(path.split("\\."));
-        this.mapper = mapper;
-        this.path = path;
+        this(mapper, root, path, true);
+    }
+
+    public <T> PathTarget(final Mapper mapper, final Class<T> clazz, final String field) {
+        this(mapper, mapper.getMappedClass(clazz), field, true);
+    }
+
+    public <T> PathTarget(final Mapper mapper, final Class<T> clazz, final String field, final boolean validateNames) {
+        this(mapper, mapper.getMappedClass(clazz), field, validateNames);
     }
 
     /**
-     * Disables validation of path segments.
+     * Creates a resolution context for the given root and path.
+     *
+     * @param mapper mapper
+     * @param root root
+     * @param path path
      */
-    public void disableValidation() {
-        resolved = false;
-        validateNames = false;
+    public PathTarget(final Mapper mapper, final MappedClass root, final String path, boolean validateNames) {
+        segments = asList(path.split("\\."));
+        this.root = root;
+        this.mapper = mapper;
+        this.validateNames = validateNames;
+        resolved = path.startsWith("$");
     }
 
     private boolean hasNext() {
@@ -102,10 +114,10 @@ public class PathTarget {
         context = this.root;
         position = 0;
         MappedField field = null;
-        while (hasNext()) {
+        while (context != null && hasNext()) {
             String segment = next();
 
-            if (segment.equals("$") || segment.matches("[0-9]+")) {  // array operator
+            if ("$".equals(segment) || segment.matches("[0-9]+")) {  // array operator
                 if (!hasNext()) {
                     break;
                 }
@@ -114,19 +126,26 @@ public class PathTarget {
             field = resolveField(segment);
 
             if (field != null) {
+                if (hasNext() && (field.isReference() || field.hasAnnotation(Serialized.class))) {
+                    failValidation();
+                }
                 translate(field.getNameToStore());
                 if (field.isMap() && hasNext()) {
                     next();  // consume the map key segment
                 }
             } else {
                 if (validateNames) {
-                    throw new ValidationException(format("Could not resolve path '%s' against '%s'.", join(segments, '.'),
-                                                         root.getClazz().getName()));
+                    failValidation();
                 }
             }
         }
         target = field;
         resolved = true;
+    }
+
+    private void failValidation() {
+        throw new ValidationException(format("Could not resolve path '%s' against '%s'.", join(segments, '.'),
+                                             root.getClazz().getName()));
     }
 
     private void translate(final String nameToStore) {
