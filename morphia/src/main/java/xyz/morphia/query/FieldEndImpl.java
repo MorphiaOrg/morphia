@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 import static xyz.morphia.query.FilterOperator.GEO_WITHIN;
 import static xyz.morphia.query.FilterOperator.INTERSECTS;
 
@@ -47,13 +50,15 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T contains(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile(string));
+        /*LITERAL*/
+        return addCriteria(FilterOperator.EQUAL, compile(quote(string)));
     }
 
     @Override
     public T containsIgnoreCase(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile(string, Pattern.CASE_INSENSITIVE));
+        /*  | LITERAL */
+        return addCriteria(FilterOperator.EQUAL, compile(quote(string), CASE_INSENSITIVE));
     }
 
     @Override
@@ -64,13 +69,13 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T endsWith(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile(suffix + "$"));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$"));
     }
 
     @Override
     public T endsWithIgnoreCase(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile(suffix + "$", Pattern.CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$", CASE_INSENSITIVE));
     }
 
     @Override
@@ -79,9 +84,9 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
-    public T equalIgnoreCase(final Object val) {
+    public T equalIgnoreCase(final String val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile("^" + val + "$", Pattern.CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(val) + "$", CASE_INSENSITIVE));
     }
 
     @Override
@@ -243,13 +248,15 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     @Override
     public T startsWith(final String prefix) {
         Assert.parametersNotNull("val", prefix);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile("^" + prefix));
+        /*LITERAL*/
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix)));
     }
 
     @Override
     public T startsWithIgnoreCase(final String prefix) {
         Assert.parametersNotNull("val", prefix);
-        return addCriteria(FilterOperator.EQUAL, Pattern.compile("^" + prefix, Pattern.CASE_INSENSITIVE));
+        /*  | LITERAL */
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
     }
 
     @Override

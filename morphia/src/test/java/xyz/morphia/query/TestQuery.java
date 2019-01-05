@@ -53,6 +53,9 @@ import static com.mongodb.client.model.Collation.builder;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.LITERAL;
+import static java.util.regex.Pattern.compile;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -273,6 +276,69 @@ public class TestQuery extends TestBase {
                                .count());
         assertEquals(4, getDs().find(Pic.class)
                                .field("name").startsWithIgnoreCase("PIC")
+                               .count());
+    }
+    @Test
+    public void testCaseVariantsWithSpecialChars() {
+        getDs().save(asList(
+            new Pic("making waves:  _.~\"~._.~\"~._.~\"~._.~\"~._"),
+            new Pic(">++('>   fish bones"),
+            new Pic("hacksaw [|^^^^^^^")));
+
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").contains("^")
+                               .count());
+
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").contains("aw [|^^")
+                               .count());
+        assertEquals(0, getDs().find(Pic.class)
+                               .field("name").contains("AW [|^^")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").containsIgnoreCase("aw [|^^")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").containsIgnoreCase("AW [|^^")
+                               .count());
+
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").startsWith(">++('>   fish")
+                               .count());
+        assertEquals(0, getDs().find(Pic.class)
+                               .field("name").startsWith(">++('>   FIsh")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").startsWithIgnoreCase(">++('>   FISH")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").startsWithIgnoreCase(">++('>   FISH")
+                               .count());
+
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").equal(">++('>   fish bones")
+                               .count());
+        assertEquals(0, getDs().find(Pic.class)
+                               .field("name").equal(">++('>   FISH BONES")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").equalIgnoreCase(">++('>   fish bones")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").equalIgnoreCase(">++('>   FISH BONES")
+                               .count());
+
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").endsWith("'>   fish bones")
+                               .count());
+        assertEquals(0, getDs().find(Pic.class)
+                               .field("name").endsWith("'>   FISH BONES")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").endsWithIgnoreCase("'>   fish bones")
+                               .count());
+        assertEquals(1, getDs().find(Pic.class)
+                               .field("name").endsWithIgnoreCase("'>   FISH BONES")
                                .count());
     }
 
@@ -1088,18 +1154,6 @@ public class TestQuery extends TestBase {
         final Query<Keyword> query = getDs().find(Keyword.class);
         query.criteria("score").not().greaterThan(7);
         assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))), query.getQueryObject());
-    }
-
-    @Test
-    @SuppressWarnings("deprecation")
-    public void testNotGeneratesCorrectQueryForRegex() {
-        final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
-        query.criteria("keywords.keyword").not().startsWith("ralph");
-        DBObject queryObject = query.getQueryObject();
-        BasicDBObject expected = new BasicDBObject("keywords.keyword",
-            new BasicDBObject("$not", new BasicDBObject("$regex", "^ralph")
-                .append("$options", "")));
-        assertEquals(expected.toString(), queryObject.toString());
     }
 
     @Test
