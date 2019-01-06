@@ -1,5 +1,7 @@
 package xyz.morphia.geo;
 
+import com.mongodb.client.model.geojson.PolygonCoordinates;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,4 +66,18 @@ public class MultiPolygon implements Geometry {
                + "coordinates=" + coordinates
                + '}';
     }
+
+    @Override
+      public com.mongodb.client.model.geojson.MultiPolygon convert() {
+          return convert(null);
+      }
+
+      @Override
+      public com.mongodb.client.model.geojson.MultiPolygon convert(final CoordinateReferenceSystem crs) {
+          List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
+          for (final Polygon list : coordinates) {
+              coords.add(list.convert(crs).getCoordinates());
+          }
+          return new com.mongodb.client.model.geojson.MultiPolygon(crs != null ? crs.convert() : null, coords);
+      }
 }

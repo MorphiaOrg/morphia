@@ -7,7 +7,7 @@ import xyz.morphia.TestBase;
 import xyz.morphia.geo.AllTheThings;
 import xyz.morphia.geo.Area;
 import xyz.morphia.geo.City;
-import xyz.morphia.geo.GeoJson;
+import xyz.morphia.geo.Point;
 import xyz.morphia.geo.Regions;
 import xyz.morphia.geo.Route;
 
@@ -103,12 +103,12 @@ public class GeoNearQueriesTest extends TestBase {
     }
 
     @Test
-    public void shouldFindCitiesCloseToAGivenPointWithinARadiusOfMeters() {
+    public void shouldFindNearAPoint() {
         // given
         double latitude = 51.5286416;
         double longitude = -0.1015987;
         Datastore datastore = getDs();
-        City london = new City("London", point(latitude, longitude));
+        City london = new City("London", point(51.5286416, -0.1015987));
         datastore.save(london);
         City manchester = new City("Manchester", point(53.4722454, -2.2235922));
         datastore.save(manchester);
@@ -117,20 +117,37 @@ public class GeoNearQueriesTest extends TestBase {
 
         getDs().ensureIndexes();
 
-        // when
-        List<City> citiesOrderedByDistanceFromLondon = toList(datastore.find(City.class)
-                                                                .field("location")
-                                                                .near(GeoJson.point(latitude, longitude), 200000)
-                                                                .find());
+        final Point searchPoint = pointBuilder().latitude(50).longitude(0.1278)
+                                                .build();
+        List<City> cities = toList(datastore.find(City.class)
+                                            .field("location")
+                                            .near(searchPoint, 200000)
+                                            .find());
 
-        // then
-        assertThat(citiesOrderedByDistanceFromLondon.size(), is(1));
-        assertThat(citiesOrderedByDistanceFromLondon.get(0), is(london));
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0), is(london));
+
+        cities = toList(datastore.find(City.class)
+                                            .field("location")
+                                            .nearSphere(searchPoint, 200000D, null)
+                                            .find());
+
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0), is(london));
+
+        assertThat(toList(datastore.find(City.class)
+                                   .field("location")
+                                   .near(searchPoint, 200000D, 195000D)
+                                   .find()).size(), is(0));
+
+        assertThat(toList(datastore.find(City.class)
+                                   .field("location")
+                                   .nearSphere(searchPoint, 200000D, 195000D)
+                                   .find()).size(), is(0));
     }
 
     @Test
-    public void shouldFindCitiesOrderedByDistanceFromAGivenPoint() {
-        // given
+    public void shouldFindCitiesOrderedByDistance() {
         double latitudeLondon = 51.5286416;
         double longitudeLondon = -0.1015987;
         City manchester = new City("Manchester", point(53.4722454, -2.2235922));
@@ -142,7 +159,6 @@ public class GeoNearQueriesTest extends TestBase {
 
         getDs().ensureIndexes();
 
-        // when
         List<City> cities = toList(getDs().find(City.class)
                                           .field("location")
                                           .near(pointBuilder()
@@ -150,7 +166,18 @@ public class GeoNearQueriesTest extends TestBase {
                                                     .longitude(longitudeLondon).build())
                                           .find());
 
-        // then
+        assertThat(cities.size(), is(3));
+        assertThat(cities.get(0), is(london));
+        assertThat(cities.get(1), is(manchester));
+        assertThat(cities.get(2), is(sevilla));
+
+        cities = toList(getDs().find(City.class)
+                                          .field("location")
+                                          .nearSphere(pointBuilder()
+                                                    .latitude(latitudeLondon)
+                                                    .longitude(longitudeLondon).build())
+                                          .find());
+
         assertThat(cities.size(), is(3));
         assertThat(cities.get(0), is(london));
         assertThat(cities.get(1), is(manchester));

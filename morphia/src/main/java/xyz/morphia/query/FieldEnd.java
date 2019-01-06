@@ -289,7 +289,9 @@ public interface FieldEnd<T> {
      * @param maxDistance the radius, in meters, to find the results inside
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link #near(Point, Double, Double)}
      */
+    @Deprecated
     T near(Point point, int maxDistance);
 
     /**
@@ -301,6 +303,40 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/near/ $near
      */
     T near(Point point);
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point       the point to find results close to
+     * @param maxDistance the maximum distance in meters from the point
+     * @param minDistance the minimum distance in meters from the point 
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @since 1.5
+     */
+    T near(Point point, Double maxDistance, Double minDistance);
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point the point to find results close to
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @since 1.5
+     */
+    T nearSphere(Point point);
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point       the point to find results close to
+     * @param maxDistance the maximum distance in meters from the point
+     * @param minDistance the minimum distance in meters from the point
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @since 1.5
+     */
+    T nearSphere(Point point, Double maxDistance, Double minDistance);
 
     /**
      * Negates the criteria applied to the field

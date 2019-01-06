@@ -210,6 +210,12 @@
             <version>2.11.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+          <groupId>org.gdal</groupId>
+          <artifactId>gdal</artifactId>
+          <version>2.4.0</version>
+          <type>test</type>
+        </dependency>
     </dependencies>
 
     <reporting>

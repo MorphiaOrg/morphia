@@ -13,4 +13,8 @@ public interface Geometry {
      * @return a List containing either Geometry objects, or a pair of coordinates as doubles
      */
     List<?> getCoordinates();
+
+    com.mongodb.client.model.geojson.Geometry convert();
+
+    com.mongodb.client.model.geojson.Geometry convert(CoordinateReferenceSystem crs);
 }

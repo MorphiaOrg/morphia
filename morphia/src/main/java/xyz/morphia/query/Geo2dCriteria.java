@@ -9,12 +9,12 @@ import java.util.Map;
 /**
  * Geospatial specific FieldCriteria logic
  */
-class GeoFieldCriteria extends FieldCriteria {
+class Geo2dCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
 
-    GeoFieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
-                     final Map<String, Object> opts) {
+    Geo2dCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
+                  final Map<String, Object> opts) {
         super(query, field, op, value);
         this.opts = opts;
     }

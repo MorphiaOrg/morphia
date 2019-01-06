@@ -13,4 +13,6 @@ public abstract class CoordinateReferenceSystem {
      * @return the type
      */
     public abstract CoordinateReferenceSystemType getType();
+
+    public abstract com.mongodb.client.model.geojson.CoordinateReferenceSystem convert();
 }

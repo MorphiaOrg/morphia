@@ -27,7 +27,7 @@ public class GeometryQueryConverter extends TypeConverter implements SimpleValue
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        Object encode = getMapper().getConverters().encode(((Geometry) value));
+        Object encode = getMapper().getConverters().encode(value);
         return new BasicDBObject("$geometry", encode);
     }
 }

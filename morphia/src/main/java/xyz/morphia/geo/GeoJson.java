@@ -1,5 +1,10 @@
 package xyz.morphia.geo;
 
+import com.mongodb.client.model.geojson.Position;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Factory class for creating GeoJSON types.  See <a href="http://docs.mongodb
  * .org/manual/applications/geospatial-indexes/#geojson-objects">the
@@ -128,5 +133,28 @@ public final class GeoJson {
      */
     public static GeometryCollection geometryCollection(final Geometry... geometries) {
         return new GeometryCollection(geometries);
+    }
+
+    /**
+     * @morphia.internal
+     * @param points
+     * @return
+     */
+    public static List<Position> convertPoints(List<Point> points) {
+        final ArrayList<Position> positions = new ArrayList<Position>();
+        for (final Point point : points) {
+            positions.add(new Position(point.getLongitude(), point.getLatitude()));
+        }
+
+        return positions;
+    }
+
+    public static List<List<Position>> convertLineStrings(final List<LineString> lineStrings) {
+        final List<List<Position>> positions = new ArrayList<List<Position>>();
+        for (final LineString line : lineStrings) {
+            positions.add(convertPoints(line.getCoordinates()));
+        }
+
+        return positions;
     }
 }

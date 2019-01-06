@@ -1,5 +1,8 @@
 package xyz.morphia.geo;
 
+import com.mongodb.client.model.geojson.PolygonCoordinates;
+import com.mongodb.client.model.geojson.Position;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,5 +105,19 @@ public class Polygon implements Geometry {
                + "exteriorBoundary=" + exteriorBoundary
                + ", interiorBoundaries=" + interiorBoundaries
                + '}';
+    }
+
+    @Override
+    public com.mongodb.client.model.geojson.Polygon convert() {
+        return convert(null);
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public com.mongodb.client.model.geojson.Polygon convert(final CoordinateReferenceSystem crs) {
+        final List<List<Position>> lists = GeoJson.convertLineStrings(interiorBoundaries);
+        final List[] holeArray = lists.toArray(new List[0]);
+        return new com.mongodb.client.model.geojson.Polygon(crs != null ? crs.convert() : null,
+            new PolygonCoordinates(exteriorBoundary.convert().getCoordinates(), holeArray));
     }
 }

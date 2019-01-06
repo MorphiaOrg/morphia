@@ -12,6 +12,7 @@ import com.mongodb.DefaultDBDecoder;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
@@ -20,6 +21,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.ValidationOptions;
+import org.bson.codecs.configuration.CodecRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.morphia.aggregation.AggregationPipeline;
@@ -119,7 +121,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.morphia = morphia;
         this.mapper = mapper;
         this.mongoClient = mongoClient;
-        this.database = database;
+        this.database =
+            database.withCodecRegistry(CodecRegistries.fromRegistries(
+                mongoClient.getMongoClientOptions().getCodecRegistry(),
+                MongoClientSettings.getDefaultCodecRegistry()));
         this.db = mongoClient.getDB(database.getName());
         this.defConcern = mongoClient.getWriteConcern();
         this.indexHelper = new IndexHelper(mapper, database);

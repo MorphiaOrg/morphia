@@ -1,5 +1,6 @@
 package xyz.morphia.geo;
 
+import com.mongodb.client.model.geojson.Position;
 import xyz.morphia.annotations.Embedded;
 
 import java.util.ArrayList;
@@ -82,5 +83,23 @@ public class Point implements Geometry {
     @Override
     public String toString() {
         return String.format("Point{coordinates=%s}", coordinates);
+    }
+
+    /**
+     * @morphia.internal
+     * @return this Point converted to a driver Point
+     */
+    @Override
+    public com.mongodb.client.model.geojson.Point convert() {
+        return convert(null);
+    }
+
+    /**
+     * @morphia.internal
+     * @return this Point converted to a driver Point
+     */
+    @Override
+    public com.mongodb.client.model.geojson.Point convert(final CoordinateReferenceSystem crs) {
+        return new com.mongodb.client.model.geojson.Point(crs != null ? crs.convert() : null, new Position(getLongitude(), getLatitude()));
     }
 }

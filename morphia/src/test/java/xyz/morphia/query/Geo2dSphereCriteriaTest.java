@@ -9,20 +9,20 @@ import static org.junit.Assert.assertThat;
 import static xyz.morphia.geo.PointBuilder.pointBuilder;
 import static xyz.morphia.query.FilterOperator.NEAR;
 
-public class StandardGeoFieldCriteriaTest extends TestBase {
+public class Geo2dSphereCriteriaTest extends TestBase {
     @Test
     public void shouldCreateCorrectNearQueryWithMaxDistance() {
         // given
-        int maxDistanceMeters = 13;
+        double maxDistanceMeters = 13;
         double latitude = 3.2;
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
-        StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
-                                                                                                          .build(),
-                                                                         maxDistanceMeters);
+                                                                                                          .build())
+                                                          .maxDistance(maxDistanceMeters);
 
         // when
         BasicDBObject queryDocument = new BasicDBObject();
@@ -49,11 +49,10 @@ public class StandardGeoFieldCriteriaTest extends TestBase {
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
 
-        StandardGeoFieldCriteria criteria = new StandardGeoFieldCriteria(stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
-                                                                                                          .build(),
-                                                                         null);
+                                                                                                          .build());
 
         // when
         BasicDBObject queryDocument = new BasicDBObject();

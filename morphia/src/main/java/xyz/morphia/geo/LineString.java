@@ -64,4 +64,14 @@ public class LineString implements Geometry {
                + "coordinates=" + coordinates
                + '}';
     }
+
+    @Override
+    public com.mongodb.client.model.geojson.LineString convert() {
+        return convert(null);
+    }
+
+    @Override
+    public com.mongodb.client.model.geojson.LineString convert(final CoordinateReferenceSystem crs) {
+        return new com.mongodb.client.model.geojson.LineString(crs != null ? crs.convert() : null, GeoJson.convertPoints(coordinates));
+    }
 }

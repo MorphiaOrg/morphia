@@ -91,4 +91,9 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
     public String toString() {
         return format("NamedCoordinateReferenceSystem{name='%s'}", name);
     }
+
+    @Override
+    public com.mongodb.client.model.geojson.CoordinateReferenceSystem convert() {
+        return new com.mongodb.client.model.geojson.NamedCoordinateReferenceSystem(name);
+    }
 }

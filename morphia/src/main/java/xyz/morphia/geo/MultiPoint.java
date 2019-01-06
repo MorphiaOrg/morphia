@@ -63,4 +63,15 @@ public class MultiPoint implements Geometry {
                + "coordinates=" + coordinates
                + '}';
     }
+
+    @Override
+    public com.mongodb.client.model.geojson.MultiPoint convert() {
+        return convert(null);
+    }
+
+    @Override
+    public com.mongodb.client.model.geojson.MultiPoint convert(final CoordinateReferenceSystem crs) {
+        return new com.mongodb.client.model.geojson.MultiPoint(crs != null ? crs.convert() : null,
+            GeoJson.convertPoints(coordinates));
+    }
 }
