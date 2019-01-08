@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import xyz.morphia.Datastore;
 import xyz.morphia.EntityInterceptor;
 import xyz.morphia.Key;
+import xyz.morphia.Morphia;
 import xyz.morphia.annotations.Converters;
 import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.NotSaved;
@@ -35,6 +36,7 @@ import xyz.morphia.annotations.Serialized;
 import xyz.morphia.converters.CustomConverters;
 import xyz.morphia.converters.TypeConverter;
 import xyz.morphia.mapping.cache.EntityCache;
+import xyz.morphia.mapping.experimental.MorphiaReference;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.LazyProxyFactory;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -880,7 +882,7 @@ public class Mapper {
             mapper = opts.getValueMapper();
         } else if (mf.hasAnnotation(Embedded.class)) {
             mapper = opts.getEmbeddedMapper();
-        } else if (mf.hasAnnotation(Reference.class)) {
+        } else if (mf.hasAnnotation(Reference.class) || MorphiaReference.class == mf.getConcreteType()) {
             mapper = opts.getReferenceMapper();
         } else {
             mapper = opts.getDefaultMapper();
@@ -902,7 +904,7 @@ public class Mapper {
         if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
             || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
             opts.getValueMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
-        } else if (Reference.class.equals(annType)) {
+        } else if (Reference.class.equals(annType) || MorphiaReference.class == mf.getConcreteType()) {
             opts.getReferenceMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
         } else if (Embedded.class.equals(annType)) {
             opts.getEmbeddedMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);

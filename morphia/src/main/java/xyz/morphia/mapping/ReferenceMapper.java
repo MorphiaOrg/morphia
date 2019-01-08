@@ -10,6 +10,7 @@ import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.mapping.cache.EntityCache;
+import xyz.morphia.mapping.experimental.MorphiaReference;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReferenceList;
@@ -39,12 +40,21 @@ class ReferenceMapper implements CustomMapper {
         final Class fieldType = mf.getType();
 
         final Reference refAnn = mf.getAnnotation(Reference.class);
-        if (mf.isMap()) {
-            readMap(datastore, mapper, entity, refAnn, cache, mf, dbObject);
-        } else if (mf.isMultipleValues()) {
-            readCollection(datastore, mapper, dbObject, mf, entity, refAnn, cache);
-        } else {
-            readSingle(datastore, mapper, entity, fieldType, refAnn, cache, mf, dbObject);
+        if(refAnn != null) {
+            if (mf.isMap()) {
+                readMap(datastore, mapper, entity, refAnn, cache, mf, dbObject);
+            } else if (mf.isMultipleValues()) {
+                readCollection(datastore, mapper, dbObject, mf, entity, refAnn, cache);
+            } else {
+                readSingle(datastore, mapper, entity, fieldType, refAnn, cache, mf, dbObject);
+            }
+        } else if(MorphiaReference.class == mf.getConcreteType()) {
+            final MappedClass mappedClass = mapper.getMappedClass(mf.getTypeParameters().get(0).getConcreteType());
+            final MappedField idField = mappedClass.getMappedIdField();
+            final Object idValue = mapper.getConverters().decode(idField.getConcreteType(), dbObject.get(mf.getMappedFieldName()), mf);
+            final MorphiaReference reference = (MorphiaReference) mapper.getConverters().decode(mf.getConcreteType(), idValue, mf);
+            reference.instrument(datastore, mappedClass);
+            mf.setFieldValue(entity, reference);
         }
 
     }
@@ -61,14 +71,18 @@ class ReferenceMapper implements CustomMapper {
         }
 
         final Reference refAnn = mf.getAnnotation(Reference.class);
-        if (mf.isMap()) {
-            writeMap(mf, dbObject, name, fieldValue, refAnn, mapper);
-        } else if (mf.isMultipleValues()) {
-            writeCollection(mf, dbObject, name, fieldValue, refAnn, mapper);
-        } else {
-            writeSingle(dbObject, name, fieldValue, refAnn, mapper);
+        if (refAnn != null) {
+            if (mf.isMap()) {
+                writeMap(mf, dbObject, name, fieldValue, refAnn, mapper);
+            } else if (mf.isMultipleValues()) {
+                writeCollection(mf, dbObject, name, fieldValue, refAnn, mapper);
+            } else {
+                writeSingle(dbObject, name, fieldValue, refAnn, mapper);
+            }
+        } else if (MorphiaReference.class == mf.getConcreteType()) {
+            final Object id = mapper.getConverters().encode(mf.getConcreteType(), fieldValue);
+            dbObject.put(name, id);
         }
-
     }
 
     private void addValue(final List values, final Object o, final Mapper mapper, final boolean idOnly) {

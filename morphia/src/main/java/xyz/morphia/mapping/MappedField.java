@@ -34,6 +34,7 @@ import xyz.morphia.annotations.Serialized;
 import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.annotations.Version;
+import xyz.morphia.mapping.experimental.MorphiaReference;
 import xyz.morphia.utils.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -400,7 +401,8 @@ public class MappedField {
      * @see DBRef
      */
     public boolean isReference() {
-        return hasAnnotation(Reference.class) || Key.class == getConcreteType() || DBRef.class == getConcreteType();
+        return hasAnnotation(Reference.class) || Key.class == getConcreteType() || DBRef.class == getConcreteType()
+               || MorphiaReference.class == getConcreteType();
     }
 
     /**
