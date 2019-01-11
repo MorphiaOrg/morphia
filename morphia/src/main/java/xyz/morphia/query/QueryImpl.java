@@ -141,7 +141,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public List<Key<T>> asKeyList(final FindOptions options) {
-        return toList(keys(options));
+        return MorphiaCursor.toList(keys(options));
     }
 
     @Override
@@ -151,19 +151,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public List<T> asList(final FindOptions options) {
-        return toList(find(options));
-    }
-
-    private static <E> List<E> toList(final MongoCursor<E> cursor) {
-        final List<E> results = new ArrayList<E>();
-        try {
-            while (cursor.hasNext()) {
-                results.add(cursor.next());
-            }
-        } finally {
-            cursor.close();
-        }
-        return results;
+        return MorphiaCursor.toList(find(options));
     }
 
     @Override

@@ -10,6 +10,8 @@ import xyz.morphia.Datastore;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.cache.EntityCache;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -39,6 +41,24 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         this.clazz = clazz;
         this.cache = cache;
         this.datastore = datastore;
+    }
+
+    /**
+     * @morphia.internal
+     * @param cursor
+     * @param <E>
+     * @return
+     */
+    public static <E> List<E> toList(final MongoCursor<E> cursor) {
+        final List<E> results = new ArrayList<E>();
+        try {
+            while (cursor.hasNext()) {
+                results.add(cursor.next());
+            }
+        } finally {
+            cursor.close();
+        }
+        return results;
     }
 
     /**

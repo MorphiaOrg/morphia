@@ -35,6 +35,7 @@ import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.annotations.Version;
 import xyz.morphia.mapping.experimental.MorphiaReference;
+import xyz.morphia.mapping.experimental.MorphiaReferenceList;
 import xyz.morphia.utils.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -416,9 +417,6 @@ public class MappedField {
      * @return true if this field is not a container type such as a List, Map, Set, or array
      */
     public boolean isSingleValue() {
-        if (!isSingleValue && !isMap && !isSet && !isArray && !isCollection) {
-            throw new RuntimeException("Not single, but none of the types that are not-single.");
-        }
         return isSingleValue;
     }
 
@@ -715,24 +713,16 @@ public class MappedField {
     }
 
     private void discoverMultivalued() {
-        if (realType.isArray()
-            || Collection.class.isAssignableFrom(realType)
-            || Map.class.isAssignableFrom(realType)
+        isMap = Map.class.isAssignableFrom(realType);
+        isSet = Set.class.isAssignableFrom(realType);
+        //for debugging
+        isCollection = Collection.class.isAssignableFrom(realType);
+        isArray = realType.isArray();
+
+        if (isArray || isCollection || isMap || (!typeParameters.isEmpty() && List.class.isAssignableFrom(typeParameters.get(0).realType))
             || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
 
             isSingleValue = false;
-
-            isMap = Map.class.isAssignableFrom(realType);
-            isSet = Set.class.isAssignableFrom(realType);
-            //for debugging
-            isCollection = Collection.class.isAssignableFrom(realType);
-            isArray = realType.isArray();
-
-            //for debugging with issue
-            if (!isMap && !isSet && !isCollection && !isArray) {
-                throw new MappingException(format("%s.%s is not a map/set/collection/array : %s", field.getName(),
-                                                  field.getDeclaringClass(), realType));
-            }
 
             // get the subtype T, T[]/List<T>/Map<?,T>; subtype of Long[], List<Long> is Long
             subType = (realType.isArray()) ? realType.getComponentType() : ReflectionUtils.getParameterizedType(field, isMap ? 1 : 0);

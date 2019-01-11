@@ -19,6 +19,7 @@ package xyz.morphia.converters;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.experimental.MorphiaReference;
+import xyz.morphia.mapping.experimental.SingleReference;
 
 public class ReferenceConverter extends TypeConverter {
     private Mapper mapper;
@@ -34,21 +35,12 @@ public class ReferenceConverter extends TypeConverter {
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        MorphiaReference reference = (MorphiaReference) value;
-        if(reference.isResolved()) {
-            final Object wrapped = reference.get();
-            Object id = reference.getId();
-            if(id == null) {
-                id = mapper.getId(wrapped);
-            }
-            return mapper.toMongoObject(optionalExtraInfo, mapper.getMappedClass(wrapped), id);
-        } else {
-            return null;
-        }
+        return ((MorphiaReference) value).encode(mapper, value, optionalExtraInfo);
     }
 
     @Override
     public Object decode(final Class<?> targetClass, final Object idValue, final MappedField optionalExtraInfo) {
-        return idValue == null ? null : MorphiaReference.wrapId(idValue);
+        throw new UnsupportedOperationException("should never get here");
+//        return idValue == null ? null : SingleReference.wrapId(idValue);
     }
 }
