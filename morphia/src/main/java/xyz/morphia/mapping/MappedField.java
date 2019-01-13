@@ -35,7 +35,6 @@ import xyz.morphia.annotations.Text;
 import xyz.morphia.annotations.Transient;
 import xyz.morphia.annotations.Version;
 import xyz.morphia.mapping.experimental.MorphiaReference;
-import xyz.morphia.mapping.experimental.MorphiaReferenceList;
 import xyz.morphia.utils.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -101,7 +100,7 @@ public class MappedField {
     private boolean isSet; // indicated if the collection is a set
     //for debugging
     private boolean isArray; // indicated if it is an Array
-    private boolean isCollection; // indicated if the collection is a list)
+    private boolean isList; // indicated if the collection is a list)
     private Type genericType;
 
     private String nameToStore; // the field name in the db.
@@ -477,8 +476,8 @@ public class MappedField {
         if (isSet()) {
             sb.append(" set:true,");
         }
-        if (isCollection) {
-            sb.append(" collection:true,");
+        if (isList) {
+            sb.append(" list:true,");
         }
         if (isArray) {
             sb.append(" array:true,");
@@ -715,12 +714,10 @@ public class MappedField {
     private void discoverMultivalued() {
         isMap = Map.class.isAssignableFrom(realType);
         isSet = Set.class.isAssignableFrom(realType);
-        //for debugging
-        isCollection = Collection.class.isAssignableFrom(realType);
+        isList = List.class.isAssignableFrom(realType);
         isArray = realType.isArray();
 
-        if (isArray || isCollection || isMap || (!typeParameters.isEmpty() && List.class.isAssignableFrom(typeParameters.get(0).realType))
-            || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
+        if (isArray || isList || isMap || isSet || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
 
             isSingleValue = false;
 

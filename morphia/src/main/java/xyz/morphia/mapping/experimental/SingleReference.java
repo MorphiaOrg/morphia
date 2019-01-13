@@ -7,17 +7,16 @@ import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 import xyz.morphia.query.Query;
 
-import java.util.List;
-
+/**
+ * @morphia.internal
+ * @param <T>
+ */
 public class SingleReference<T> extends MorphiaReference<T> {
-    private final String collection;
     private Object id;
     private T value;
-    private Datastore datastore;
-    private MappedClass mappedClass;
 
     private SingleReference() {
-        collection = null;
+
     }
 
     /**
@@ -27,14 +26,12 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param id
      */
     public SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
-        this.datastore = datastore;
-        this.mappedClass = mappedClass;
+        super(datastore, mappedClass);
         this.id = id;
-        collection = null;
     }
 
     protected SingleReference(final T value, final String collection) {
-        this.collection = collection;
+        super(collection);
         set(value);
     }
 
@@ -50,7 +47,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         if (value == null && id != null) {
-            final Query<?> query = datastore.find(mappedClass.getClazz())
+            final Query<?> query = getDatastore().find(getMappedClass().getClazz())
                                             .filter("_id", id);
             final MongoCursor<?> mongoCursor = query.find();
             value = (T) mongoCursor.tryNext();
@@ -59,8 +56,8 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     public void set(T value) {
-        if(datastore != null) {
-            id = datastore.getMapper().getId(value);
+        if(getDatastore() != null) {
+            id = getDatastore().getMapper().getId(value);
         }
         this.value = value;
     }
@@ -69,10 +66,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return id;
     }
 
-    /**
-     * @morphia.internal
-     * @return
-     */
     public boolean isResolved() {
         return value != null;
     }

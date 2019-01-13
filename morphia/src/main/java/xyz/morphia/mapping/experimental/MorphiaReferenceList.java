@@ -11,16 +11,13 @@ import java.util.List;
 
 import static xyz.morphia.query.internal.MorphiaCursor.*;
 
+/**
+ * @morphia.internal
+ * @param <T>
+ */
 public class MorphiaReferenceList<T> extends MorphiaReference<List<T>> {
-    private final String collection;
     private List<Object> ids;
     private List<T> values;
-    private Datastore datastore;
-    private MappedClass mappedClass;
-
-    private MorphiaReferenceList() {
-        collection = null;
-    }
 
     /**
      * @morphia.internal
@@ -29,21 +26,19 @@ public class MorphiaReferenceList<T> extends MorphiaReference<List<T>> {
      * @param ids
      */
     public MorphiaReferenceList(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        this.datastore = datastore;
-        this.mappedClass = mappedClass;
+        super(datastore, mappedClass);
         this.ids = ids;
-        collection = null;
     }
 
     protected MorphiaReferenceList(final List<T> values, final String collection) {
-        this.collection = collection;
+        super(collection);
         set(values);
     }
 
     @SuppressWarnings("unchecked")
     public List<T> get() {
         if (values == null && ids != null) {
-            values = toList((MongoCursor<T>) datastore.find(mappedClass.getClazz())
+            values = toList((MongoCursor<T>) getDatastore().find(getMappedClass().getClazz())
                                                       .filter("_id in", ids)
                                                       .find());
         }
@@ -54,18 +49,6 @@ public class MorphiaReferenceList<T> extends MorphiaReference<List<T>> {
         this.values = values;
     }
 
-    /**
-     * @morphia.internal
-     */
-    public void instrument(Datastore datastore, final MappedClass mappedClass) {
-        this.datastore = datastore;
-        this.mappedClass = mappedClass;
-    }
-
-    /**
-     * @morphia.internal
-     * @return
-     */
     public boolean isResolved() {
         return values != null;
     }

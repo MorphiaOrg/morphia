@@ -35,7 +35,7 @@ public class ReferenceConverter extends TypeConverter {
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
-        return ((MorphiaReference) value).encode(mapper, value, optionalExtraInfo);
+        return value == null ? null : ((MorphiaReference) value).encode(mapper, value, optionalExtraInfo);
     }
 
     @Override
