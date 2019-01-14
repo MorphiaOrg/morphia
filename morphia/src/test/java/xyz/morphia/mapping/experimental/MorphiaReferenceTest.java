@@ -7,9 +7,14 @@ import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Id;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MorphiaReferenceTest extends TestBase {
     @Test
@@ -24,7 +29,7 @@ public class MorphiaReferenceTest extends TestBase {
         final Book loaded = getDs().find(Book.class).filter("_id", book.id).first();
         Assert.assertFalse(loaded.author.isResolved());
         Assert.assertEquals(author, loaded.author.get());
-        Assert.assertTrue(loaded.author.isResolved());
+        assertTrue(loaded.author.isResolved());
     }
 
     @Test
@@ -42,13 +47,46 @@ public class MorphiaReferenceTest extends TestBase {
             book.setAuthor(author);
             getDs().save(book);
         }
-        author.setBooks(list);
+        author.setList(list);
         getDs().save(author);
 
         final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
-        Assert.assertFalse(loaded.books.isResolved());
-        Assert.assertEquals(list, loaded.getBooks());
-        Assert.assertTrue(loaded.books.isResolved());
+        Assert.assertFalse(loaded.list.isResolved());
+        Assert.assertEquals(list, loaded.getList());
+        assertTrue(loaded.list.isResolved());
+    }
+    @Test
+    public void setReference() {
+        final Author author = new Author("Jane Austen");
+        getDs().save(author);
+
+        Set<Book> set = new HashSet<Book>(5);
+        set.add(new Book("Sense and Sensibility"));
+        set.add(new Book("Pride and Prejudice"));
+        set.add(new Book("Mansfield Park"));
+        set.add(new Book("Emma"));
+        set.add(new Book("Northanger Abbey"));
+        for (final Book book : set) {
+            book.setAuthor(author);
+            getDs().save(book);
+        }
+        author.setSet(set);
+        getDs().save(author);
+
+        final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
+        Assert.assertFalse(loaded.set.isResolved());
+        final Set<Book> set1 = loaded.getSet();
+
+        System.out.println("set1 = " + set1);
+        System.out.println("set = " + set);
+
+        assertEquals(set.size(), set1.size());
+
+        for (final Book book : set) {
+            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+        }
+
+        assertTrue(loaded.set.isResolved());
     }
 
     @Test
@@ -73,7 +111,7 @@ public class MorphiaReferenceTest extends TestBase {
         final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
         Assert.assertFalse(loaded.map.isResolved());
         Assert.assertEquals(books, loaded.getMap());
-        Assert.assertTrue(loaded.map.isResolved());
+        assertTrue(loaded.map.isResolved());
     }
 
     private static class Author {
@@ -82,7 +120,8 @@ public class MorphiaReferenceTest extends TestBase {
 
         private String name;
 
-        private MorphiaReference<List<Book>> books;
+        private MorphiaReference<List<Book>> list;
+        private MorphiaReference<Set<Book>> set;
         private MorphiaReference<Map<String, Book>> map;
 
         public Author() {
@@ -108,12 +147,20 @@ public class MorphiaReferenceTest extends TestBase {
             this.name = name;
         }
 
-        public List<Book> getBooks() {
-            return books.get();
+        public List<Book> getList() {
+            return list.get();
         }
 
-        public void setBooks(final List<Book> books) {
-            this.books = MorphiaReference.wrap(books);
+        public void setList(final List<Book> list) {
+            this.list = MorphiaReference.wrap(list);
+        }
+
+        public Set<Book> getSet() {
+            return set.get();
+        }
+
+        public void setSet(final Set<Book> set) {
+            this.set = MorphiaReference.wrap(set);
         }
 
         public Map<String, Book> getMap() {
@@ -213,7 +260,8 @@ public class MorphiaReferenceTest extends TestBase {
         @Override
         public String toString() {
             return "Book{" +
-                   "name='" + name + '\'' +
+                   "name='" + name + "', " +
+                   "hash=" + hashCode() +
                    '}';
         }
     }

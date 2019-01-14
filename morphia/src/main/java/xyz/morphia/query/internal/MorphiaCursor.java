@@ -11,8 +11,10 @@ import xyz.morphia.mapping.Mapper;
 import xyz.morphia.mapping.cache.EntityCache;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 
 /**
@@ -51,6 +53,24 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      */
     public static <E> List<E> toList(final MongoCursor<E> cursor) {
         final List<E> results = new ArrayList<E>();
+        try {
+            while (cursor.hasNext()) {
+                results.add(cursor.next());
+            }
+        } finally {
+            cursor.close();
+        }
+        return results;
+    }
+
+    /**
+     * @morphia.internal
+     * @param cursor
+     * @param <E>
+     * @return
+     */
+    public static <E> Set<E> toSet(final MongoCursor<E> cursor) {
+        final Set<E> results = new HashSet<E>(5);
         try {
             while (cursor.hasNext()) {
                 results.add(cursor.next());

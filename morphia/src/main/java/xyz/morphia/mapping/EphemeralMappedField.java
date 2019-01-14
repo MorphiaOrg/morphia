@@ -95,6 +95,8 @@ public class EphemeralMappedField extends MappedField {
             return super.getType();
         } else if (isMap()) {
             return Map.class;
+        } else if (isSet()) {
+            return Set.class;
         } else {
             return List.class;
         }

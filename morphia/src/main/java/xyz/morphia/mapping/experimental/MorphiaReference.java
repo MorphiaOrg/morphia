@@ -7,6 +7,7 @@ import xyz.morphia.mapping.Mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class MorphiaReference<T> {
     private String collection;
@@ -72,7 +73,9 @@ public abstract class MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public static <V> MorphiaReference<V> wrap(final V value, String collection) {
         if(value instanceof List) {
-            return (MorphiaReference<V>) new MorphiaReferenceList<V>((List<V>)value, collection);
+            return (MorphiaReference<V>) new MorphiaReferenceList<V>((List<V>) value, collection);
+        } else if(value instanceof Set) {
+            return (MorphiaReference<V>) new MorphiaReferenceSet<V>((Set<V>)value, collection);
         } else if(value instanceof Map) {
             return (MorphiaReference<V>) new MorphiaReferenceMap<V>((Map<String, V>)value, collection);
         } else {

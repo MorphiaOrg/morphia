@@ -14,6 +14,7 @@ import xyz.morphia.mapping.cache.EntityCache;
 import xyz.morphia.mapping.experimental.MorphiaReference;
 import xyz.morphia.mapping.experimental.MorphiaReferenceList;
 import xyz.morphia.mapping.experimental.MorphiaReferenceMap;
+import xyz.morphia.mapping.experimental.MorphiaReferenceSet;
 import xyz.morphia.mapping.experimental.SingleReference;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -94,7 +95,7 @@ class ReferenceMapper implements CustomMapper {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             final MappedClass mappedClass = mapper.getMappedClass(subType);
             if (Set.class.isAssignableFrom(paramType)) {
-                throw new UnsupportedOperationException("set not implemented yet");
+                reference = new MorphiaReferenceSet(datastore, mappedClass, dbVal);
             } else {
                 reference = new MorphiaReferenceList(datastore, mappedClass, dbVal);
             }
