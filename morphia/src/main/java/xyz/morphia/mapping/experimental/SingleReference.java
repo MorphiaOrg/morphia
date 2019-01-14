@@ -1,6 +1,8 @@
 package xyz.morphia.mapping.experimental;
 
+import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
+import xyz.morphia.AdvancedDatastore;
 import xyz.morphia.Datastore;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
@@ -25,8 +27,8 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param mappedClass
      * @param id
      */
-    public SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
-        super(datastore, mappedClass);
+    public SingleReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final Object id) {
+        super(datastore, mappedClass, collection);
         this.id = id;
     }
 
@@ -47,9 +49,16 @@ public class SingleReference<T> extends MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         if (value == null && id != null) {
-            final Query<?> query = getDatastore().find(getMappedClass().getClazz())
-                                            .filter("_id", id);
-            final MongoCursor<?> mongoCursor = query.find();
+            final Query<?> query;
+            if (getCollection() == null) {
+                query = getDatastore().find(getMappedClass().getClazz());
+            } else {
+                query = ((AdvancedDatastore) getDatastore()).find(getCollection(), getMappedClass().getClazz());
+            }
+
+            final MongoCursor<?> mongoCursor = query
+                                                   .filter("_id", id)
+                                                   .find();
             value = (T) mongoCursor.tryNext();
         }
         return value;
@@ -77,6 +86,9 @@ public class SingleReference<T> extends MorphiaReference<T> {
             Object id = getId();
             if(id == null) {
                 id = mapper.getId(wrapped);
+            }
+            if(getCollection() != null) {
+                id = new DBRef(getCollection(), id);
             }
             return mapper.toMongoObject(optionalExtraInfo, mapper.getMappedClass(wrapped), id);
         } else {

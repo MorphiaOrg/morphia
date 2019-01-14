@@ -14,7 +14,13 @@ public abstract class MorphiaReference<T> {
     private Datastore datastore;
     private MappedClass mappedClass;
 
-    MorphiaReference() {
+    protected MorphiaReference() {
+    }
+
+    MorphiaReference(final Datastore datastore, final MappedClass mappedClass, final String collection) {
+        this.datastore = datastore;
+        this.mappedClass = mappedClass;
+        this.collection = collection;
     }
 
     MorphiaReference(final String collection) {
@@ -67,11 +73,11 @@ public abstract class MorphiaReference<T> {
     }
 
     public static <V> MorphiaReference<V> wrap(final V value) {
-        return wrap(value, null);
+        return wrap(null, value);
     }
 
     @SuppressWarnings("unchecked")
-    public static <V> MorphiaReference<V> wrap(final V value, String collection) {
+    public static <V> MorphiaReference<V> wrap(String collection, final V value) {
         if(value instanceof List) {
             return (MorphiaReference<V>) new MorphiaReferenceList<V>((List<V>) value, collection);
         } else if(value instanceof Set) {

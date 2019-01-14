@@ -86,7 +86,7 @@ class ReferenceMapper implements CustomMapper {
 
     public void readMorphiaReferenceValues(Mapper mapper, Datastore datastore, MappedField mappedField, DBObject dbObject, Object entity) {
         final Class paramType = mappedField.getTypeParameters().get(0).getType();
-        final MorphiaReference<?> reference;
+        MorphiaReference<?> reference = null;
         if (Map.class.isAssignableFrom(paramType)) {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             reference = new MorphiaReferenceMap(datastore, mapper.getMappedClass(subType), (Map) mappedField.getDbObjectValue(dbObject));
@@ -94,20 +94,27 @@ class ReferenceMapper implements CustomMapper {
             final BasicDBList dbVal = (BasicDBList) mappedField.getDbObjectValue(dbObject);
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             final MappedClass mappedClass = mapper.getMappedClass(subType);
-            if (Set.class.isAssignableFrom(paramType)) {
-                reference = new MorphiaReferenceSet(datastore, mappedClass, dbVal);
-            } else {
-                reference = new MorphiaReferenceList(datastore, mappedClass, dbVal);
+            if (dbVal != null) {
+                if (Set.class.isAssignableFrom(paramType)) {
+                    reference = new MorphiaReferenceSet(datastore, mappedClass, dbVal);
+                } else {
+                    reference = new MorphiaReferenceList(datastore, mappedClass, dbVal);
+                }
             }
         } else {
             final MappedClass mappedClass = mapper.getMappedClass(paramType);
             final MappedField idField = mappedClass.getMappedIdField();
-            final Object idValue = mapper.getConverters().decode(idField.getConcreteType(), dbObject.get(mappedField.getMappedFieldName()),
-                mappedField);
-            reference = new SingleReference(datastore, mappedClass, idValue);
+            Object id = dbObject.get(mappedField.getMappedFieldName());
+            String collection = null;
+            if (id instanceof DBRef) {
+                collection = ((DBRef) id).getCollectionName();
+                id = mapper.getConverters().decode(idField.getConcreteType(), ((DBRef) id).getId(), mappedField);
+            }
+            reference = new SingleReference(datastore, mappedClass, collection, id);
         }
         mappedField.setFieldValue(entity, reference);
     }
+
     public void writeMorphiaReferenceValues(final MappedField mf, final DBObject dbObject, final Mapper mapper, final String name,
                                             final Object fieldValue) {
         final Class paramType = mf.getTypeParameters().get(0).getType();

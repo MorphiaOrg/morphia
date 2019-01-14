@@ -33,6 +33,23 @@ public class MorphiaReferenceTest extends TestBase {
     }
 
     @Test
+    public void basicReferenceWithCollection() {
+        final Author author = new Author("Jane Austen");
+        getAds().save("jane", author);
+
+        final Book book = new Book("Pride and Prejudice");
+        book.setAuthor("jane", author);
+        getAds().save(book);
+
+        Assert.assertNull(getDs().find(Author.class).first());
+        Assert.assertNotNull(getAds().find("jane", Author.class).first());
+        final Book loaded = getDs().find(Book.class).filter("_id", book.id).first();
+        Assert.assertFalse(loaded.author.isResolved());
+        Assert.assertEquals(author, loaded.author.get());
+        assertTrue(loaded.author.isResolved());
+    }
+
+    @Test
     public void listReference() {
         final Author author = new Author("Jane Austen");
         getDs().save(author);
@@ -76,9 +93,6 @@ public class MorphiaReferenceTest extends TestBase {
         final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
         Assert.assertFalse(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
-
-        System.out.println("set1 = " + set1);
-        System.out.println("set = " + set);
 
         assertEquals(set.size(), set1.size());
 
@@ -231,6 +245,10 @@ public class MorphiaReferenceTest extends TestBase {
 
         public void setAuthor(final Author author) {
             this.author = MorphiaReference.wrap(author);
+        }
+
+        public void setAuthor(final String collection, final Author author) {
+            this.author = MorphiaReference.wrap(collection, author);
         }
 
         @Override
