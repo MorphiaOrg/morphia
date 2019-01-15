@@ -8,6 +8,7 @@ xyz.morphia.logging
 xyz.morphia.logging.jdk
 xyz.morphia.mapping
 xyz.morphia.mapping.cache
+xyz.morphia.mapping.experimental
 xyz.morphia.mapping.lazy
 xyz.morphia.mapping.lazy.proxy
 xyz.morphia.mapping.validation
