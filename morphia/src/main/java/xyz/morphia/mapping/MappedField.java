@@ -100,7 +100,7 @@ public class MappedField {
     private boolean isSet; // indicated if the collection is a set
     //for debugging
     private boolean isArray; // indicated if it is an Array
-    private boolean isList; // indicated if the collection is a list)
+    private boolean isCollection; // indicated if the collection is a list)
     private Type genericType;
 
     private String nameToStore; // the field name in the db.
@@ -416,6 +416,9 @@ public class MappedField {
      * @return true if this field is not a container type such as a List, Map, Set, or array
      */
     public boolean isSingleValue() {
+        if (!isSingleValue && !isMap && !isSet && !isArray && !isCollection) {
+            throw new RuntimeException("Not single, but none of the types that are not-single.");
+        }
         return isSingleValue;
     }
 
@@ -476,8 +479,8 @@ public class MappedField {
         if (isSet()) {
             sb.append(" set:true,");
         }
-        if (isList) {
-            sb.append(" list:true,");
+        if (isCollection) {
+            sb.append(" collection:true,");
         }
         if (isArray) {
             sb.append(" array:true,");
@@ -714,10 +717,11 @@ public class MappedField {
     private void discoverMultivalued() {
         isMap = Map.class.isAssignableFrom(realType);
         isSet = Set.class.isAssignableFrom(realType);
-        isList = List.class.isAssignableFrom(realType);
+        //for debugging
+        isCollection = Collection.class.isAssignableFrom(realType);
         isArray = realType.isArray();
 
-        if (isArray || isList || isMap || isSet || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
+        if (isArray || isCollection || isMap || isSet || GenericArrayType.class.isAssignableFrom(genericType.getClass())) {
 
             isSingleValue = false;
 
