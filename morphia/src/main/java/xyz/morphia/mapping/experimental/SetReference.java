@@ -7,43 +7,36 @@ import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static xyz.morphia.query.internal.MorphiaCursor.toSet;
 
 /**
- * @morphia.internal
  * @param <T>
+ * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public class MorphiaReferenceSet<T> extends MorphiaReference<Set<T>> {
-    private Set<Object> ids;
+public class SetReference<T> extends MorphiaReference<Set<T>> {
+    private List<Object> ids;
     private Set<T> values;
 
     /**
      * @morphia.internal
-     * @param datastore
-     * @param mappedClass
-     * @param ids
      */
-    public MorphiaReferenceSet(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        super(datastore, mappedClass);
-        this.ids = new HashSet(ids);
+    public SetReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final List ids) {
+        super(datastore, mappedClass, collection);
+        this.ids = ids;
     }
 
-    protected MorphiaReferenceSet(final Set<T> values, final String collection) {
+    protected SetReference(final Set<T> values, final String collection) {
         super(collection);
         set(values);
     }
 
-    @SuppressWarnings("unchecked")
     public Set<T> get() {
         if (values == null && ids != null) {
-            values = toSet((MongoCursor<T>) getDatastore().find(getMappedClass().getClazz())
-                                                      .filter("_id in", ids)
-                                                      .find());
+            values = toSet(find());
         }
         return values;
     }
@@ -56,14 +49,20 @@ public class MorphiaReferenceSet<T> extends MorphiaReference<Set<T>> {
         return values != null;
     }
 
+    @SuppressWarnings("unchecked")
+    MongoCursor<T> find() {
+        return (MongoCursor<T>) buildQuery()
+                                    .filter("_id in", ids)
+                                    .find();
+    }
+
     @Override
     public Object encode(final Mapper mapper, final Object value, final MappedField field) {
-        if(isResolved()) {
+        if (isResolved()) {
             final Class type = field.getTypeParameters().get(0).getSubClass();
-            final Set wrapped = get();
-            List ids = new ArrayList(wrapped.size());
-            for (final Object o : wrapped) {
-                ids.add(mapper.getId(o));
+            List ids = new ArrayList();
+            for (final Object o : get()) {
+                ids.add(wrapId(mapper, o));
             }
             return mapper.toMongoObject(field, mapper.getMappedClass(type), ids);
         } else {

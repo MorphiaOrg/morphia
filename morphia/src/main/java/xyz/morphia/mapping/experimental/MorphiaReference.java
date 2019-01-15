@@ -1,9 +1,12 @@
 package xyz.morphia.mapping.experimental;
 
+import com.mongodb.DBRef;
+import xyz.morphia.AdvancedDatastore;
 import xyz.morphia.Datastore;
 import xyz.morphia.mapping.MappedClass;
 import xyz.morphia.mapping.MappedField;
 import xyz.morphia.mapping.Mapper;
+import xyz.morphia.query.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,16 @@ public abstract class MorphiaReference<T> {
     }
 
     public abstract T get();
+
+    protected Query<?> buildQuery() {
+        final Query<?> query;
+        if (getCollection() == null) {
+            query = getDatastore().find(getMappedClass().getClazz());
+        } else {
+            query = ((AdvancedDatastore) getDatastore()).find(getCollection(), getMappedClass().getClazz());
+        }
+        return query;
+    }
 
     public abstract void set(T value);
 
@@ -79,13 +92,21 @@ public abstract class MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public static <V> MorphiaReference<V> wrap(String collection, final V value) {
         if(value instanceof List) {
-            return (MorphiaReference<V>) new MorphiaReferenceList<V>((List<V>) value, collection);
+            return (MorphiaReference<V>) new ListReference<V>((List<V>) value, collection);
         } else if(value instanceof Set) {
-            return (MorphiaReference<V>) new MorphiaReferenceSet<V>((Set<V>)value, collection);
+            return (MorphiaReference<V>) new SetReference<V>((Set<V>)value, collection);
         } else if(value instanceof Map) {
-            return (MorphiaReference<V>) new MorphiaReferenceMap<V>((Map<String, V>)value, collection);
+            return (MorphiaReference<V>) new MapReference<V>((Map<String, V>)value, collection);
         } else {
             return new SingleReference<V>(value, collection);
         }
+    }
+
+    protected Object wrapId(final Mapper mapper, final Object wrapped) {
+        Object id = mapper.getId(wrapped);
+        if(getCollection() != null) {
+            id = new DBRef(getCollection(), id);
+        }
+        return id;
     }
 }

@@ -11,10 +11,10 @@ import xyz.morphia.Datastore;
 import xyz.morphia.Key;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.mapping.cache.EntityCache;
+import xyz.morphia.mapping.experimental.ListReference;
+import xyz.morphia.mapping.experimental.MapReference;
 import xyz.morphia.mapping.experimental.MorphiaReference;
-import xyz.morphia.mapping.experimental.MorphiaReferenceList;
-import xyz.morphia.mapping.experimental.MorphiaReferenceMap;
-import xyz.morphia.mapping.experimental.MorphiaReferenceSet;
+import xyz.morphia.mapping.experimental.SetReference;
 import xyz.morphia.mapping.experimental.SingleReference;
 import xyz.morphia.mapping.lazy.LazyFeatureDependencies;
 import xyz.morphia.mapping.lazy.proxy.ProxiedEntityReference;
@@ -89,16 +89,29 @@ class ReferenceMapper implements CustomMapper {
         MorphiaReference<?> reference = null;
         if (Map.class.isAssignableFrom(paramType)) {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
-            reference = new MorphiaReferenceMap(datastore, mapper.getMappedClass(subType), (Map) mappedField.getDbObjectValue(dbObject));
+
+            final Map<String, Object> ids = (Map<String, Object>) mappedField.getDbObjectValue(dbObject);
+            final Collection<Object> values = ids.values();
+            final Object first = values.iterator().next();
+            String collection = null;
+            if (first instanceof DBRef) {
+                collection = ((DBRef) first).getCollectionName();
+            }
+
+            reference = new MapReference(datastore, mapper.getMappedClass(subType), collection, ids);
         } else if (Collection.class.isAssignableFrom(paramType)) {
             final BasicDBList dbVal = (BasicDBList) mappedField.getDbObjectValue(dbObject);
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             final MappedClass mappedClass = mapper.getMappedClass(subType);
             if (dbVal != null) {
+                String collection = null;
+                if(!dbVal.isEmpty() && dbVal.get(0) instanceof DBRef) {
+                    collection = ((DBRef) dbVal.get(0)).getCollectionName();
+                }
                 if (Set.class.isAssignableFrom(paramType)) {
-                    reference = new MorphiaReferenceSet(datastore, mappedClass, dbVal);
+                    reference = new SetReference(datastore, mappedClass, collection, dbVal);
                 } else {
-                    reference = new MorphiaReferenceList(datastore, mappedClass, dbVal);
+                    reference = new ListReference(datastore, mappedClass, collection, dbVal);
                 }
             }
         } else {
@@ -122,7 +135,7 @@ class ReferenceMapper implements CustomMapper {
         boolean notEmpty;
         Object value;
         if (Map.class.isAssignableFrom(paramType)) {
-            final Map map = (Map) ((MorphiaReferenceMap) fieldValue).encode(mapper, fieldValue, mf);
+            final Map map = (Map) ((MapReference) fieldValue).encode(mapper, fieldValue, mf);
             value = map;
             notNull = map != null;
             notEmpty = notNull && !map.isEmpty();
