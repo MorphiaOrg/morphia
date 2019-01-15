@@ -1,5 +1,6 @@
 package xyz.morphia.mapping.experimental;
 
+import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import xyz.morphia.Datastore;
 import xyz.morphia.mapping.MappedClass;
@@ -26,12 +27,28 @@ public class SetReference<T> extends MorphiaReference<Set<T>> {
      */
     public SetReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final List ids) {
         super(datastore, mappedClass, collection);
-        this.ids = ids;
+        this.ids = unwrap(ids);
     }
 
     protected SetReference(final Set<T> values, final String collection) {
         super(collection);
         set(values);
+    }
+
+    private List<Object> unwrap(final List ids) {
+        List<Object> unwrapped = null;
+        if(ids != null && !ids.isEmpty()) {
+            if(ids.get(0) instanceof DBRef) {
+                unwrapped = new ArrayList<Object>();
+                for (final Object id : ids) {
+                    unwrapped.add(((DBRef) id).getId());
+                }
+            } else {
+                unwrapped = ids;
+            }
+        }
+
+        return unwrapped;
     }
 
     public Set<T> get() {

@@ -188,6 +188,36 @@ public class MorphiaReferenceTest extends TestBase {
         assertTrue(loaded.map.isResolved());
     }
 
+    @Test
+    public void setReferenceWithCollection() {
+        final Author author = new Author("Jane Austen");
+        getAds().save("jane", author);
+
+        Set<Book> set = new HashSet<Book>(5);
+        set.add(new Book("Sense and Sensibility"));
+        set.add(new Book("Pride and Prejudice"));
+        set.add(new Book("Mansfield Park"));
+        set.add(new Book("Emma"));
+        set.add(new Book("Northanger Abbey"));
+        for (final Book book : set) {
+            book.setAuthor("jane", author);
+            getAds().save("books", book);
+        }
+        author.setSet("books", set);
+        getAds().save("jane", author);
+
+        final Author loaded = getAds().find("jane", Author.class).filter("_id", author.getId()).first();
+        Assert.assertFalse(loaded.set.isResolved());
+        final Set<Book> set1 = loaded.getSet();
+
+        assertEquals(set.size(), set1.size());
+
+        for (final Book book : set) {
+            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+        }
+
+        assertTrue(loaded.set.isResolved());
+    }
 
     private static class Author {
         @Id
@@ -240,6 +270,10 @@ public class MorphiaReferenceTest extends TestBase {
 
         public void setSet(final Set<Book> set) {
             this.set = MorphiaReference.wrap(set);
+        }
+
+        public void setSet(final String collection, final Set<Book> set) {
+            this.set = MorphiaReference.wrap(collection, set);
         }
 
         public Map<String, Book> getMap() {

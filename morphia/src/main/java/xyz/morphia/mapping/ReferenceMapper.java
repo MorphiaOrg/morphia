@@ -91,19 +91,21 @@ class ReferenceMapper implements CustomMapper {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
 
             final Map<String, Object> ids = (Map<String, Object>) mappedField.getDbObjectValue(dbObject);
-            final Collection<Object> values = ids.values();
-            final Object first = values.iterator().next();
-            String collection = null;
-            if (first instanceof DBRef) {
-                collection = ((DBRef) first).getCollectionName();
-            }
+            if(ids != null) {
+                final Collection<Object> values = ids.values();
+                final Object first = values.iterator().next();
+                String collection = null;
+                if (first instanceof DBRef) {
+                    collection = ((DBRef) first).getCollectionName();
+                }
 
-            reference = new MapReference(datastore, mapper.getMappedClass(subType), collection, ids);
+                reference = new MapReference(datastore, mapper.getMappedClass(subType), collection, ids);
+            }
         } else if (Collection.class.isAssignableFrom(paramType)) {
             final BasicDBList dbVal = (BasicDBList) mappedField.getDbObjectValue(dbObject);
-            final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
-            final MappedClass mappedClass = mapper.getMappedClass(subType);
             if (dbVal != null) {
+                final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
+                final MappedClass mappedClass = mapper.getMappedClass(subType);
                 String collection = null;
                 if(!dbVal.isEmpty() && dbVal.get(0) instanceof DBRef) {
                     collection = ((DBRef) dbVal.get(0)).getCollectionName();
