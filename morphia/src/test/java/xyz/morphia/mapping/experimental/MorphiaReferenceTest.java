@@ -38,7 +38,7 @@ public class MorphiaReferenceTest extends TestBase {
         getDs().save(author);
 
         List<Book> list = new ArrayList<Book>();
-        list.add(new Book("Sense and Sensibility "));
+        list.add(new Book("Sense and Sensibility"));
         list.add(new Book("Pride and Prejudice"));
         list.add(new Book("Mansfield Park"));
         list.add(new Book("Emma"));
@@ -94,7 +94,7 @@ public class MorphiaReferenceTest extends TestBase {
 
         Map<String, Book> books = new LinkedHashMap<String, Book>();
         for (final Book book : new Book[]{
-            new Book("Sense and Sensibility "),
+            new Book("Sense and Sensibility"),
             new Book("Pride and Prejudice"),
             new Book("Mansfield Park"),
             new Book("Emma"),
@@ -135,7 +135,7 @@ public class MorphiaReferenceTest extends TestBase {
         getAds().save("jane", author);
 
         List<Book> list = new ArrayList<Book>();
-        list.add(new Book("Sense and Sensibility "));
+        list.add(new Book("Sense and Sensibility"));
         list.add(new Book("Pride and Prejudice"));
         list.add(new Book("Mansfield Park"));
         list.add(new Book("Emma"));
@@ -165,7 +165,7 @@ public class MorphiaReferenceTest extends TestBase {
 
         Map<String, Book> books = new LinkedHashMap<String, Book>();
         for (final Book book : new Book[]{
-            new Book("Sense and Sensibility "),
+            new Book("Sense and Sensibility"),
             new Book("Pride and Prejudice"),
             new Book("Mansfield Park"),
             new Book("Emma"),

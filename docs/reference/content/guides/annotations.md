@@ -17,18 +17,18 @@ annotations in context, please refer to [TestIndexCollections.java]({{< srcref
 
 ### Index
 
-The __@Index__ documentation can be found [here]({{< apiref "xyz/morphia/annotations/Index" >}}).  There are two pieces to this 
+The [@Index]({{< apiref "xyz/morphia/annotations/Index" >}}) documentation can be found [here]({{< apiref "xyz/morphia/annotations/Index" >}}).  There are two pieces to this 
 annotation that are mutually exclusive.  The first group of parameters are considered legacy.  They are safe to use but will be removed 
 in the 2.x series.  These options and more have been conglomerated in the 
 [@IndexOptions]({{< apiref "xyz/morphia/annotations/IndexOptions" >}}) annotation.
 
 #### Field
 The [@Field]({{< apiref "xyz/morphia/annotations/Field" >}}) annotation defines indexing on a specific document field.  Multiple
-instances of this annotation may be passed to the __@Index__ annotation to define a compound index on multiple fields.
+instances of this annotation may be passed to the [@Index]({{< apiref "xyz/morphia/annotations/Index" >}}) annotation to define a compound index on multiple fields.
 
 #### IndexOptions
 The [@IndexOptions]({{< apiref "xyz/morphia/annotations/IndexOptions" >}}) annotation defines the options to apply to an index
-definition.  This annotation replaces the fields found directly on the __@Index__ annotation.  This annotation was added to ensure that index
+definition.  This annotation replaces the fields found directly on the [@Index]({{< apiref "xyz/morphia/annotations/Index" >}}) annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.
 
 #### Collation
@@ -43,8 +43,8 @@ be faster if it does.  See [CountOptions]({{< apiref "xyz/morphia/CountOptions" 
 
 #### Indexed
 [@Indexed]({{< apiref "xyz/morphia/annotations/Indexed" >}}), applied to a Java field, marks the field to be indexed by MongoDB.
-This is used for simple, single-field indexes.  As stated above, the __options__ value replaces the individual setting values on the
-__@Indexed__ annotation itself.
+This is used for simple, single-field indexes.  As stated above, the `options` value replaces the individual setting values on the
+`@Indexed` annotation itself.
 
 ## Entity Mapping
 Morphia provides a number of annotations providing for the customization of object mapping.
@@ -57,20 +57,24 @@ references and embedding.
 
 ### Reference
 [@Reference]({{< apiref "xyz/morphia/annotations/Reference" >}}) marks a field as a reference to a document stored in another
-collection and is linked (by a __DBRef__ field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced 
-via an __@Reference__ field must have already have a non-null __@Id__ value in the referenced entity. This can be done by either saving the 
-referenced entities first or by manually assigning them ID values.  By default, these referenced entities are automatically loaded by 
-Morphia along with the referencing entity.  This can result in a high number of database round trips just to load a single entity.  To 
-resolve this, __lazy = true__ can be passed to the annotation.  This will create a dynamic proxy which will lazily load the entity the first 
-time it is referenced in code.  
+collection and is linked (by a `DBRef` field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced 
+via an `@Reference` field must have already have a non-null [@Id]({{< apiref "xyz/morphia/annotations/Id" >}}) value in the referenced
+entity. This can be done by either saving the referenced entities first or by manually assigning them ID values.  By default, these 
+referenced entities are automatically loaded by Morphia along with the referencing entity.  This can result in a high number of database
+round trips just to load a single entity.  To resolve this, `lazy = true` can be passed to the annotation.  This will create a dynamic
+proxy which will lazily load the entity the first time it is referenced in code.  
 
-Fields annotated with __@Reference__ will show up in MongoDB as __DBRef__ fields by default.  A __DBRef__ stores not only the entity's ID value 
+Fields annotated with `@Reference` will show up in MongoDB as `DBRef` fields by default.  A `DBRef` stores not only the entity's ID value 
 but also the collection name.  In most cases, this is probably redundant information as the collection name is already encoded in the 
-entity's mapping information.  To reduce the amount of storage necessary to track these references, use __idOnly = true__ in the mapping.
+entity's mapping information.  To reduce the amount of storage necessary to track these references, use `idOnly = true` in the mapping.
 This will result in only the ID value being stored in the document.
+
+Morphia 1.5.0 introduced a new experimental API help with some of the complications involved with the annotation based mapping.  As this 
+is an experimental API, details may change and the entire API might be removed.  But users are encouraged to experiment with the API and 
+provide any feedback via GitHub Issues.  Further documentation can be found [here]({{< ref "guides/references.md" >}}).
  
 ### Embedded
-In contrast to __@Reference__ where a nested Java reference ends up as a separate document in a collection, 
+In contrast to `@Reference` where a nested Java reference ends up as a separate document in a collection, 
 [@Embedded]({{< apiref "xyz/morphia/annotations/Embedded" >}}) tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.
@@ -78,7 +82,7 @@ embedded instance.
 ### Validation
 [@Validation]({{< apiref "xyz/morphia/annotations/Validation" >}}) allows for the definition of a 
 [document validation]({{< docsref "core/document-validation/" >}}) schema to applied to all writes to MongoDB.  Validation rules are 
-specified on a per-collection basis using any query operators, with the exception of __$near__, __$nearSphere__, __$text__, and __$where__.  This
+specified on a per-collection basis using any query operators, with the exception of `$near`, `$nearSphere`, `$text`, and `$where`.  This
 validation definition is done using the MongoDB query syntax as shown here:
 
 ```java
@@ -92,15 +96,16 @@ public class SomeEntity {
 
 Various operations on [Datastore]({{< apiref "xyz/morphia/Datastore" >}}) and 
 [AdvancedDatastore]({{< apiref "xyz/morphia/AdvancedDatastore" >}}) can bypass this validation via their Options classes. For 
-these operations, specify the __bypassDocumentValidation__ option to disable document validation for a specific operation.  See 
+these operations, specify the `bypassDocumentValidation` option to disable document validation for a specific operation.  See 
 [InsertOptions]({{< apiref "xyz/morphia/InsertOptions" >}}), [UpdateOptions]({{< apiref "xyz/morphia/UpdateOptions" >}}),
 [MapReduceOptions]({{< apiref "xyz/morphia/MapReduceOptions" >}}),
  and [FindAndModifyOptions]({{< apiref "xyz/morphia/FindAndModifyOptions" >}}) for more information.    
 
 ### Id
-[@Id]({{< apiref "xyz/morphia/annotations/Id" >}}) marks a field in an entity to be the ___id__ field in MongoDB.  This 
-annotation is required on all top level entities regardless of the presence of an __@Entity__ annotation.  If a class is marked with 
-__@Embedded__ this annotation is not required since embedded documents are not required to have _id fields.
+[@Id]({{< apiref "xyz/morphia/annotations/Id" >}}) marks a field in an entity to be the `_id` field in MongoDB.  This 
+annotation is required on all top level entities regardless of the presence of an [@Entity]({{< apiref "xyz/morphia/annotations/Entity" >}})
+ annotation.  If a class is marked with [@Embedded]({{< apiref "xyz/morphia/annotations/Embedded" >}}) this annotation is not required 
+ since embedded documents are not required to have `_id` fields.
 
 ### Property
 [@Property]({{< apiref "xyz/morphia/annotations/Property" >}}) is an optional annotation instructing Morphia to persist the 
@@ -109,11 +114,11 @@ overridden by passing a String with the new name to the annotation.
 
 ### Transient
 [@Transient]({{< apiref "xyz/morphia/annotations/Transient" >}}) instructs Morphia to ignore this field when converting an 
-entity to a document.  The Java keyword __transient__ can also be used instead.
+entity to a document.  The Java keyword `transient` can also be used instead.
 
 ### Serialized
 [@Serialized]({{< apiref "xyz/morphia/annotations/Serialized" >}}) instructs Morphia to serialize this field using JDK 
-serialization.  The field's value gets converted to a __byte[]__ and passed to MongoDB.
+serialization.  The field's value gets converted to a `byte[]` and passed to MongoDB.
 
 ### NotSaved
 [@NotSaved]({{< apiref "xyz/morphia/annotations/NotSaved" >}}) instructs Morphia to ignore this field when saving but will
@@ -129,7 +134,7 @@ renamed.
 
 ### Version
 [@Version]({{< apiref "xyz/morphia/annotations/Version" >}}) marks a field in an entity to control optimistic locking. If the
-versions change in the database while modifying an entity (including deletes) a __ConcurrentModificationException__ will be thrown. This 
+versions change in the database while modifying an entity (including deletes) a `ConcurrentModificationException` will be thrown. This 
 field will be automatically managed for you -- there is no need to set a value and you should not do so.  If another name beside the Java
 field name is desired, a name can be passed to this annotation to change the document's field name.
 
@@ -137,11 +142,11 @@ field name is desired, a name can be passed to this annotation to change the doc
 
 There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.
 
-- __@PreLoad__ - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)
-- __@PostLoad__ - Called after mapping to the entity
-- __@PrePersist__ - Called before save, it can return a DBObject in place of an empty one.
-- __@PreSave__ - Called before the save call to the datastore
-- __@PostPersist__ - Called after the save call to the datastore
+- `@PreLoad` - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)
+- `@PostLoad` - Called after mapping to the entity
+- `@PrePersist` - Called before save, it can return a DBObject in place of an empty one.
+- `@PreSave` - Called before the save call to the datastore
+- `@PostPersist` - Called after the save call to the datastore
 
 ### Examples
 [This](https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/xyz/morphia/TestQuery.java#L63) is one of the test
@@ -149,7 +154,7 @@ classes.
 
 All parameters and return values are optional in your implemented methods.
 
-#### __@PrePersist__
+#### `@PrePersist`
 Here is a simple example of an entity that always saves the Date it was last updated at.
 ```java
 class BankAccount {
@@ -160,7 +165,7 @@ class BankAccount {
 }
 ```
 
-#### __@EntityListeners__
+#### `@EntityListeners`
 In addition, you can separate the lifecycle event implementation in an external class, or many.
 ```java
 @EntityListeners(BackAccountWatcher.class)

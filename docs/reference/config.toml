@@ -5,8 +5,10 @@ theme = "learn"
 canonifyurls = false
 
 [params]
-    disableBreadcrumb = true
-    disableNextPrev = true
+  disableBreadCrumb = true
+  disableNextPrev = false
+  disableInlineCopyToClipBoard = true
+  disableSearch = true
 
 [[menu.main]]
 
