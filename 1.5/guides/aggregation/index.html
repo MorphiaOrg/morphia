@@ -12,17 +12,17 @@
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/morphia/1.5/css/nucleus.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hybrid.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/featherlight.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/auto-complete.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/theme.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hugo-theme.css?1547609477" rel="stylesheet">
+    <link href="/morphia/1.5/css/nucleus.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1547611659" rel="stylesheet">
     
 
-    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547609477"></script>
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547611659"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -513,14 +513,14 @@ convert your data from one form to another.  This guide will not go in to the de
  focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/xyz/morphia/aggregation/AggregationTest.java
 ">tests</a> in Morphia itself.</p>
 
-<p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <strong>Datastore</strong>:</p>
+<p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <code>Datastore</code>:</p>
 
 <pre><code class="language-java">Iterator&lt;Author&gt; aggregate = datastore.createAggregation(Book.class)
       .group(&quot;author&quot;, grouping(&quot;books&quot;, push(&quot;title&quot;)))
       .out(Author.class, options);
 </code></pre>
 
-<p><strong>createAggregation()</strong> takes a <strong>Class</strong> literal.  This lets Morphia know which collection to perform this aggregation
+<p><code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
 against.  Because of the transformational operations available in the aggregation <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline
 ">pipeline</a>,
  Morphia can not validate as much as it can with querying so care will need to be taken to ensure
@@ -528,12 +528,12 @@ against.  Because of the transformational operations available in the aggregatio
 
 <h2 id="the-pipeline">The Pipeline</h2>
 
-<p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <strong>group()</strong>.  This method is the Morphia
+<p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <code>group()</code>.  This method is the Morphia
 equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/
-"><strong>$group</strong></a> operator.  This stage, as the name
+"><code>$group</code></a> operator.  This stage, as the name
 suggests, groups together documents based on the given field&rsquo;s values.  In this example, we are collecting together all the books by
-author.  The first parameter to <strong>group()</strong> defines the _<strong>id</strong> of the resulting documents.  Within this grouping, this pipeline takes the
-<strong>books</strong> fields for each author and extracts the <strong>title</strong>.  With this grouping of data, we&rsquo;re then <strong>push()</strong>ing the titles in to an array
+author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting documents.  Within this grouping, this pipeline takes the
+<code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping of data, we&rsquo;re then <code>push()</code>ing the titles in to an array
 in the final document.  This example is the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author
 ">example</a> found in the aggregation tutorials.  This results in a series of
  documents that look like this:</p>
@@ -544,27 +544,27 @@ in the final document.  This example is the Morphia equivalent of an <a href="ht
 
 <h2 id="executing-the-pipeline">Executing the Pipeline</h2>
 
-<p>There are two basic ways to execute an aggregation pipeline:  <strong>aggregate()</strong> and <strong>out()</strong>.  These methods are Morphia&rsquo;s cues to send the
+<p>There are two basic ways to execute an aggregation pipeline:  <code>aggregate()</code> and <code>out()</code>.  These methods are Morphia&rsquo;s cues to send the
  pipeline to MongoDB for execution.  In that regard, both are similar.  In practice, how the results are processed is even very similar.
-  The differences, however, can have huge implications on the performance of your application.  <strong>aggregate()</strong> by default will use the
+  The differences, however, can have huge implications on the performance of your application.  <code>aggregate()</code> by default will use the
  &lsquo;inline&rsquo; method for returning the aggregation results.  This approach has the same 16MB limitation that all documents in MongoDB share.
-  We can changes this behavior using the <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><strong>AggregationOptions</strong></a>
-  class.  The <strong>options</strong> reference we passed to <strong>out()</strong> also applies to <strong>aggregate()</strong>.</p>
+  We can changes this behavior using the <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html"><code>AggregationOptions</code></a>
+  class.  The <code>options</code> reference we passed to <code>out()</code> also applies to <code>aggregate()</code>.</p>
 
 <h3 id="aggregation-options">Aggregation Options</h3>
 
 <p>There are a handful options here but there&rsquo;s one that deserves some extra attention. As mentioned, the aggregation pipeline, by default,
  returns everything &ldquo;inline&rdquo; but as of MongoDB 2.6 you can tell the aggregation framework to return a cursor instead.  This is what the
  value of <a href="http://api.mongodb.org/java/3.0/com/mongodb/AggregationOptions.html#getOutputMode--">AggregationOptions#getOutputMode()</a>
- determines.  By setting the output mode to <strong>CURSOR</strong>, MongoDB can return a result size much larger than 16MB.  The options can also be
+ determines.  By setting the output mode to <code>CURSOR</code>, MongoDB can return a result size much larger than 16MB.  The options can also be
  configured to update the batch size or to set the time out threshold after which an aggregation will fail.  It is also possible to tell
   the aggregation framework to use disk space which allows, among other things, sorting of larger data sets than what can fit in memory
   on the server.</p>
 
 <h3 id="out">$out</h3>
 
-<p>But this example doesn&rsquo;t use <strong>aggregate()</strong>, of course, it uses <strong>out()</strong> which gives us access to the <strong>$out</strong> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/
-"><strong>$out</strong></a> is a new operator in MongoDB 2.6 that allows the results of a
+<p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+"><code>$out</code></a> is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.</p>
 
@@ -574,20 +574,20 @@ if it does not exist, will be created upon execution of the pipeline.</p>
 
 </div>
 
-<p>Using <strong>out()</strong> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
-framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <strong>find</strong> on the output
+<p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
+framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
-output mode to <strong>CURSOR</strong> with <strong>aggregate()</strong> and your application need not know the difference.  It does, of course, have an impact on your
-database and any existing data.  The use of <strong>$out</strong> and <strong>out()</strong> can be greatly beneficial in scenarios such as precomputed aggregated
+output mode to <code>CURSOR</code> with <code>aggregate()</code> and your application need not know the difference.  It does, of course, have an impact on your
+database and any existing data.  The use of <code>$out</code> and <code>out()</code> can be greatly beneficial in scenarios such as precomputed aggregated
 results for later retrieval.</p>
 
 <h3 id="typed-results">Typed Results</h3>
 
-<p><strong>out()</strong> has several variants.  In this example, we&rsquo;re passing in <strong>Author.class</strong> which tells Morphia that we want to map each document
-returned to an instance of <strong>Author</strong>.  Because we&rsquo;re using <strong>out()</strong> instead of <strong>aggregate()</strong>, Morphia will use the mapped collection for
-<strong>Author</strong> as the output collection for the pipeline.  If you&rsquo;d like to use an alternate collection but still return a cursor of <strong>Author</strong>
+<p><code>out()</code> has several variants.  In this example, we&rsquo;re passing in <code>Author.class</code> which tells Morphia that we want to map each document
+returned to an instance of <code>Author</code>.  Because we&rsquo;re using <code>out()</code> instead of <code>aggregate()</code>, Morphia will use the mapped collection for
+<code>Author</code> as the output collection for the pipeline.  If you&rsquo;d like to use an alternate collection but still return a cursor of <code>Author</code>
 instances, you can use <a href="/javadoc/xyz/morphia/aggregation/AggregationPipeline.html#out-java
-.lang.String-java.lang.Class-com.mongodb.AggregationOptions-"><strong>out(String,Class,AggregationOptions)</strong></a> instead.</p>
+.lang.String-java.lang.Class-com.mongodb.AggregationOptions-"><code>out(String,Class,AggregationOptions)</code></a> instead.</p>
 
 
 <footer class=" footline" >
@@ -875,20 +875,20 @@ instances, you can use <a href="/javadoc/xyz/morphia/aggregation/AggregationPipe
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.5/js/clipboard.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/jquery.sticky.js?1547609477"></script>
-    <script src="/morphia/1.5/js/featherlight.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/highlight.pack.js?1547609477"></script>
+    <script src="/morphia/1.5/js/clipboard.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1547611659"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1547611659"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547609477"></script>
-    <script src="/morphia/1.5/js/learn.js?1547609477"></script>
-    <script src="/morphia/1.5/js/hugo-learn.js?1547609477"></script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547611659"></script>
+    <script src="/morphia/1.5/js/learn.js?1547611659"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1547611659"></script>
 
-    <link href="/morphia/1.5/mermaid/mermaid.css?1547609477" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.5/mermaid/mermaid.js?1547609477"></script>
+    <link href="/morphia/1.5/mermaid/mermaid.css?1547611659" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1547611659"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

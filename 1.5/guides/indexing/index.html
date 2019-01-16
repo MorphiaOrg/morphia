@@ -12,17 +12,17 @@
     <title>Indexing :: Morphia</title>
 
     
-    <link href="/morphia/1.5/css/nucleus.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hybrid.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/featherlight.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/auto-complete.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/theme.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hugo-theme.css?1547609477" rel="stylesheet">
+    <link href="/morphia/1.5/css/nucleus.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1547611659" rel="stylesheet">
     
 
-    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547609477"></script>
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547611659"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -534,9 +534,9 @@ an entity&rsquo;s source.  In addition to the familiar ascending/descending inde
 
 <h2 id="class-level-indexes">Class Level Indexes</h2>
 
-<p>Class level indexing begins with the <a href="/morphia/1.5/guides/annotations/#indexes"><strong>@Indexes</strong></a> annotation.  This is a container
-annotation whose sole purpose is to hold a number of <a href="/morphia/1.5/guides/annotations/#index"><strong>@Index</strong></a> annotations.  This annotation
-has two primary components to cover here:  <strong>fields</strong> and <strong>options</strong>.  An index definition would take the following form:</p>
+<p>Class level indexing begins with the <a href="/morphia/1.5/guides/annotations/#indexes"><code>@Indexes</code></a> annotation.  This is a container
+annotation whose sole purpose is to hold a number of <a href="/morphia/1.5/guides/annotations/#index"><code>@Index</code></a> annotations.  This annotation
+has two primary components to cover here:  <code>fields</code> and <code>options</code>.  An index definition would take the following form:</p>
 
 <pre><code class="language-java">@Entity
 @Indexes({
@@ -559,14 +559,15 @@ public class IndexExample {
 
 <h3 id="fields">Fields</h3>
 
-<p>The fields to use in an index definition are defined with the <a href="/morphia/1.5/guides/annotations/#field"><strong>@Field</strong></a> annotation. An
-arbitrary number of <strong>@Field</strong>s can be given but at least one must be present.</p>
+<p>The fields to use in an index definition are defined with the <a href="/morphia/1.5/guides/annotations/#field"><code>@Field</code></a> annotation. An
+arbitrary number of <a href="/morphia/1.5/javadoc?xyz/morphia/annotations/Field.html
+"><code>@Field</code></a>s can be given but at least one must be present.</p>
 
 <h4 id="value">value()</h4>
 
 <p>Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.5/guides/annotations/#property"><strong>@Property</strong></a> or
- <a href="/morphia/1.5/guides/annotations/#embedded"><strong>@Embedded</strong></a> annotations.  For most index types, this value is validated by default.  An
+name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1.5/guides/annotations/#property"><code>@Property</code></a> or
+ <a href="/morphia/1.5/guides/annotations/#embedded"><code>@Embedded</code></a> annotations.  For most index types, this value is validated by default.  An
   exception is made for <a href="#text-indexing">text indexes</a> as discussed below.</p>
 
 <h4 id="type">type()</h4>
@@ -581,11 +582,11 @@ name as defined in the class&rsquo;s mapping via, e.g.,  the <a href="/morphia/1
 
 <p><em>Optional</em></p>
 
-<p>Specifies the weight to use when creating a text index.  This value only makes sense when direction is <strong>IndexType.TEXT</strong>.</p>
+<p>Specifies the weight to use when creating a text index.  This value only makes sense when direction is <code>IndexType.TEXT</code>.</p>
 
 <h3 id="index-options">Index Options</h3>
 
-<p>Options for an index are defined on the <a href="/morphia/1.5/guides/annotations/#indexoptions"><strong>@IndexOptions</strong></a>.  More complete coverage can
+<p>Options for an index are defined on the <a href="/morphia/1.5/guides/annotations/#indexoptions"><code>@IndexOptions</code></a>.  More complete coverage can
 be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options
 ">manual</a> but we&rsquo;ll provide some basic coverage
 here as well.</p>
@@ -605,7 +606,7 @@ MongoDB database remains available during the index building operation.  The Mon
 <p><em>Default: false</em></p>
 
 <p>When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
-mapped document names.  Setting this to <strong>true</strong> disables this validation.</p>
+mapped document names.  Setting this to <code>true</code> disables this validation.</p>
 
 <h4 id="dropdups">dropDups()</h4>
 
@@ -661,7 +662,7 @@ the sort order.</p>
 
 <p><em>Default: false</em></p>
 
-<p>If <strong>true</strong>, the index only references documents with the specified field. These indexes use less space but behave differently in
+<p>If <code>true</code>, the index only references documents with the specified field. These indexes use less space but behave differently in
 some situations (particularly sorts).  See <a href="http://docs.mongodb.org/manual/core/index-sparse/
 ">Sparse Indexes</a> for more
 information.</p>
@@ -671,7 +672,7 @@ information.</p>
 <p><em>Default: false</em></p>
 
 <p>Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
-existing value in the index.  Specify <strong>true</strong> to create a unique index.</p>
+existing value in the index.  Specify <code>true</code> to create a unique index.</p>
 
 <h4 id="partialfilter">partialFilter()</h4>
 
@@ -690,14 +691,15 @@ existing value in the index.  Specify <strong>true</strong> to create a unique i
 <p><em>Optional</em></p>
 
 <p>Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
-can be defined using the <strong>collation()</strong> property on <strong>@IndexOptions</strong> and takes an <a href="/morphia/1.5/guides/annotations/#collation"><strong>@Collation</strong></a>
+can be defined using the <code>collation()</code> property on <a href="/morphia/1.5/javadoc?xyz/morphia/annotations/IndexOptions.html
+"><code>@IndexOptions</code></a> and takes an <a href="/morphia/1.5/guides/annotations/#collation"><code>@Collation</code></a>
 instance.</p>
 
 <h2 id="field-level-indexes">Field Level Indexes</h2>
 
 <p>Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-<a href="/morphia/1.5/guides/annotations/#indexed"><strong>@Indexed</strong></a> annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the <a href="/morphia/1.5/guides/annotations/#field"><strong>@Field</strong></a>
+<a href="/morphia/1.5/guides/annotations/#indexed"><code>@Indexed</code></a> annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the <a href="/morphia/1.5/guides/annotations/#field"><code>@Field</code></a>
 annotations are unnecessary.  The options for the index are the same as defined <a href="#options">above</a>.  A field level index
 definition would look like this:</p>
 
@@ -718,7 +720,7 @@ the <a href="http://docs.mongodb.org/manual/core/index-text/
 ">manual</a> but there are a few Morphia specific details to cover.  Indexed field names are validated
 by default but validation is disabled when an index is defined using MongoDB&rsquo;s
 <a href="http://docs.mongodb.org/manual/core/index-text/#text-index-wildcard
-"><strong>$**</strong></a> syntax.  This special instruction tells MongoDB to create a text index on
+"><code>$**</code></a> syntax.  This special instruction tells MongoDB to create a text index on
 all fields with string content in a document.  A <a href="http://docs.mongodb.org/manual/core/index-text/#compound-index
 ">compound index</a> can be created
 incorporating a text index but it&rsquo;s important to note there can only be one text index on a collection.</p>
@@ -1020,20 +1022,20 @@ incorporating a text index but it&rsquo;s important to note there can only be on
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.5/js/clipboard.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/jquery.sticky.js?1547609477"></script>
-    <script src="/morphia/1.5/js/featherlight.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/highlight.pack.js?1547609477"></script>
+    <script src="/morphia/1.5/js/clipboard.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1547611659"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1547611659"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547609477"></script>
-    <script src="/morphia/1.5/js/learn.js?1547609477"></script>
-    <script src="/morphia/1.5/js/hugo-learn.js?1547609477"></script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547611659"></script>
+    <script src="/morphia/1.5/js/learn.js?1547611659"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1547611659"></script>
 
-    <link href="/morphia/1.5/mermaid/mermaid.css?1547609477" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.5/mermaid/mermaid.js?1547609477"></script>
+    <link href="/morphia/1.5/mermaid/mermaid.css?1547611659" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1547611659"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

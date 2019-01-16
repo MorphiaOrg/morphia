@@ -12,17 +12,17 @@
     <title>Updating :: Morphia</title>
 
     
-    <link href="/morphia/1.5/css/nucleus.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hybrid.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/featherlight.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/auto-complete.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/theme.css?1547609477" rel="stylesheet">
-    <link href="/morphia/1.5/css/hugo-theme.css?1547609477" rel="stylesheet">
+    <link href="/morphia/1.5/css/nucleus.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1547611659" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1547611659" rel="stylesheet">
     
 
-    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547609477"></script>
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1547611659"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -578,7 +578,7 @@ datastore.update(updateQuery, ops);
 datastore.update(updateQuery, ops);
 </code></pre>
 
-<p>After this update, the name of the hotel would be <strong>null</strong> when the entity is loaded.</p>
+<p>After this update, the name of the hotel would be <code>null</code> when the entity is loaded.</p>
 
 <h3 id="inc-dec">inc()/dec()</h3>
 
@@ -611,7 +611,7 @@ datastore.update(updateQuery, ops);
 
 <h3 id="push-addtoset">push()/addToSet()</h3>
 
-<p><strong>push()</strong> is used to add a value to an array field:</p>
+<p><code>push()</code> is used to add a value to an array field:</p>
 
 <pre><code class="language-java">ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -619,8 +619,8 @@ datastore.update(updateQuery, ops);
 datastore.update(updateQuery, ops);
 </code></pre>
 
-<p>This will issue a <strong>$push</strong> operation adding <strong>11</strong> to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use <strong>addToSet()</strong> instead:</p>
+<p>This will issue a <code>$push</code> operation adding <code>11</code> to the list.  This might result in duplicated values in this field.  If the values should
+be unique, use <code>addToSet()</code> instead:</p>
 
 <pre><code class="language-java">ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -628,7 +628,7 @@ be unique, use <strong>addToSet()</strong> instead:</p>
 datastore.update(updateQuery, ops);
 </code></pre>
 
-<p><strong>push()</strong> and <strong>addToSet()</strong> can take either single values or a <strong>List</strong> of values.  The <strong>push()</strong> methods can also optionally take a
+<p><code>push()</code> and <code>addToSet()</code> can take either single values or a <code>List</code> of values.  The <code>push()</code> methods can also optionally take a
 <a href="/morphia/1.5/javadoc?xyz/morphia/query/PushOptions.html
 ">PushOptions</a> instance allowing for tweaking how the values are added to the
 list.  See <a href="http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
@@ -637,7 +637,7 @@ available.</p>
 
 <h3 id="removefirst-removelast-removeall">removeFirst()/removeLast()/removeAll()</h3>
 
-<p>To remove values from a list, use <strong>removeFirst()</strong>, <strong>removeLast()</strong>, or <strong>removeAll()</strong>:</p>
+<p>To remove values from a list, use <code>removeFirst()</code>, <code>removeLast()</code>, or <code>removeAll()</code>:</p>
 
 <pre><code class="language-java">//given roomNumbers = [ 1, 2, 3 ]
 ops = datastore
@@ -731,7 +731,7 @@ ops = datastore
 
 <h2 id="createifmissing-overload-parameter">createIfMissing (overload parameter)</h2>
 
-<p>All of the update methods on <strong>Datastore</strong> are overloaded and accept a <strong>createIfMissing</strong> parameter</p>
+<p>All of the update methods on <code>Datastore</code> are overloaded and accept a <code>createIfMissing</code> parameter</p>
 
 <pre><code class="language-java">ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -1033,20 +1033,20 @@ datastore
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.5/js/clipboard.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/jquery.sticky.js?1547609477"></script>
-    <script src="/morphia/1.5/js/featherlight.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547609477"></script>
-    <script src="/morphia/1.5/js/highlight.pack.js?1547609477"></script>
+    <script src="/morphia/1.5/js/clipboard.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1547611659"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1547611659"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1547611659"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547609477"></script>
-    <script src="/morphia/1.5/js/learn.js?1547609477"></script>
-    <script src="/morphia/1.5/js/hugo-learn.js?1547609477"></script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1547611659"></script>
+    <script src="/morphia/1.5/js/learn.js?1547611659"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1547611659"></script>
 
-    <link href="/morphia/1.5/mermaid/mermaid.css?1547609477" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.5/mermaid/mermaid.js?1547609477"></script>
+    <link href="/morphia/1.5/mermaid/mermaid.css?1547611659" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1547611659"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
