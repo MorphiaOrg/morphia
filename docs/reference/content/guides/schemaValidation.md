@@ -28,6 +28,6 @@ public class DocumentValidation {
 
 In this case, only one value is supplied to the annotation.  This string value is the query that will be used to match against any new 
 documents or updated documents.  Should this query fail to match the new document, validation will fail on the document and it will be 
-rejected.  In addition to the required query, there are two other values that can be configured based on your needs:  __level__ with a 
-default of __STRICT__ and __action__ with a default of __ERROR__.  A __MODERATE__ validation level does not apply rules to updates on 
- existing invalid documents.  An __action__ setting of __WARN__ will merely log any validation violations.
+rejected.  In addition to the required query, there are two other values that can be configured based on your needs:  `level` with a 
+default of `STRICT` and `action` with a default of `ERROR`.  A `MODERATE` validation level does not apply rules to updates on 
+ existing invalid documents.  An `action` setting of `WARN` will merely log any validation violations.

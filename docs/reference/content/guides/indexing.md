@@ -15,9 +15,9 @@ There are two ways to define indexes:  at the class level and at the field level
 
 ## Class Level Indexes
 
-Class level indexing begins with the [__@Indexes__]({{< ref "/guides/annotations.md#indexes" >}}) annotation.  This is a container
-annotation whose sole purpose is to hold a number of [__@Index__]({{< ref "/guides/annotations.md#index" >}}) annotations.  This annotation
-has two primary components to cover here:  __fields__ and __options__.  An index definition would take the following form:
+Class level indexing begins with the [`@Indexes`]({{< ref "/guides/annotations.md#indexes" >}}) annotation.  This is a container
+annotation whose sole purpose is to hold a number of [`@Index`]({{< ref "/guides/annotations.md#index" >}}) annotations.  This annotation
+has two primary components to cover here:  `fields` and `options`.  An index definition would take the following form:
 
 ```java
 @Entity
@@ -41,13 +41,13 @@ public class IndexExample {
 
 ### Fields
 
-The fields to use in an index definition are defined with the [__@Field__]({{< ref "/guides/annotations.md#field" >}}) annotation. An
-arbitrary number of __@Field__s can be given but at least one must be present.
+The fields to use in an index definition are defined with the [`@Field`]({{< ref "/guides/annotations.md#field" >}}) annotation. An
+arbitrary number of [`@Field`]({{< apiref "xyz/morphia/annotations/Field" >}})s can be given but at least one must be present.
 
 #### value()
 Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
-name as defined in the class's mapping via, e.g.,  the [__@Property__]({{< ref "/guides/annotations.md#property" >}}) or
- [__@Embedded__]({{< ref "/guides/annotations.md#embedded" >}}) annotations.  For most index types, this value is validated by default.  An
+name as defined in the class's mapping via, e.g.,  the [`@Property`]({{< ref "/guides/annotations.md#property" >}}) or
+ [`@Embedded`]({{< ref "/guides/annotations.md#embedded" >}}) annotations.  For most index types, this value is validated by default.  An
   exception is made for [text indexes]({{< relref "#text-indexing" >}}) as discussed below.
 
 #### type()
@@ -60,11 +60,11 @@ Indicates the "type" of the index (ascending, descending, geo2D, geo2d sphere, o
 #### weight()
 *Optional*
 
-Specifies the weight to use when creating a text index.  This value only makes sense when direction is __IndexType.TEXT__.
+Specifies the weight to use when creating a text index.  This value only makes sense when direction is `IndexType.TEXT`.
 
 ### Index Options
 
-Options for an index are defined on the [__@IndexOptions__]({{< ref "/guides/annotations.md#indexoptions" >}}).  More complete coverage can
+Options for an index are defined on the [`@IndexOptions`]({{< ref "/guides/annotations.md#indexoptions" >}}).  More complete coverage can
 be found in the [manual]({{< docsref "reference/method/db.collection.createIndex/#options" >}}) but we'll provide some basic coverage
 here as well.
 
@@ -81,7 +81,7 @@ MongoDB database remains available during the index building operation.  The Mon
 *Default: false*
 
 When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the
-mapped document names.  Setting this to __true__ disables this validation.
+mapped document names.  Setting this to `true` disables this validation.
 
 #### dropDups()
 *Default: false*
@@ -125,7 +125,7 @@ Whether user specified or MongoDB generated, index names including their full na
 #### sparse()
 *Default: false*
 
-If __true__, the index only references documents with the specified field. These indexes use less space but behave differently in
+If `true`, the index only references documents with the specified field. These indexes use less space but behave differently in
 some situations (particularly sorts).  See [Sparse Indexes]({{< docsref "core/index-sparse/" >}}) for more
 information.
 
@@ -133,7 +133,7 @@ information.
 *Default: false*
 
 Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an
-existing value in the index.  Specify __true__ to create a unique index.
+existing value in the index.  Specify `true` to create a unique index.
 
 #### partialFilter()
 *Optional*
@@ -151,14 +151,14 @@ New in MongoDB 3.2, [partial indexes](https://docs.mongodb.com/v3.2/core/index-p
 *Optional*
 
 Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
-can be defined using the __collation()__ property on __@IndexOptions__ and takes an [__@Collation__]({{< ref "/guides/annotations.md#collation" >}})
+can be defined using the `collation()` property on [`@IndexOptions`]({{< apiref "xyz/morphia/annotations/IndexOptions" >}}) and takes an [`@Collation`]({{< ref "/guides/annotations.md#collation" >}})
 instance.
 
 ## Field Level Indexes
 
 Field level indexing is a simpler approach to defining a basic, single key index.  These indexes are defined by applying the
-[__@Indexed__] ({{< ref "/guides/annotations.md#indexed" >}}) annotation to a particular field on a class.  Because the index definition is
-applied at the field level, the index is created using only that field and so the [__@Field__]({{< ref "/guides/annotations.md#field" >}})
+[`@Indexed`]({{< ref "/guides/annotations.md#indexed" >}}) annotation to a particular field on a class.  Because the index definition is
+applied at the field level, the index is created using only that field and so the [`@Field`]({{< ref "/guides/annotations.md#field" >}})
 annotations are unnecessary.  The options for the index are the same as defined [above]({{< relref "#options" >}}).  A field level index
 definition would look like this:
 
@@ -178,7 +178,7 @@ private class FieldIndex {
 Morphia's indexing supports MongoDB's text indexing and search functionality as we've briefly seen above.  Full details can be found in
 the [manual]({{< docsref "core/index-text/" >}}) but there are a few Morphia specific details to cover.  Indexed field names are validated
 by default but validation is disabled when an index is defined using MongoDB's
-[__$**__]({{< docsref "core/index-text/#text-index-wildcard" >}}) syntax.  This special instruction tells MongoDB to create a text index on
+[`$**`]({{< docsref "core/index-text/#text-index-wildcard" >}}) syntax.  This special instruction tells MongoDB to create a text index on
 all fields with string content in a document.  A [compound index]({{< docsref "core/index-text/#compound-index" >}}) can be created
 incorporating a text index but it's important to note there can only be one text index on a collection.
 

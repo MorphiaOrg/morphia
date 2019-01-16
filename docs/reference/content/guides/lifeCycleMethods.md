@@ -8,13 +8,13 @@ title = "Life Cycle Methods"
 There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save)
 , and Pre/Post-Load.
 
-- __@PrePersist__ - Called before save, it can return a __DBObject__ in place of an empty one.
-- __@PreSave__ - Called right before __DBCollection.save()__ is called. Changes made to the entity will not be persisted; the __DBObject__ can
+- `@PrePersist` - Called before save, it can return a `DBObject` in place of an empty one.
+- `@PreSave` - Called right before `DBCollection.save()` is called. Changes made to the entity will not be persisted; the `DBObject` can
  be passed as an argument (you can add/remove/change values)
-- __@PostPersist__ - Called after the save call to the database
-- __@PreLoad__ - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can
+- `@PostPersist` - Called after the save call to the database
+- `@PreLoad` - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can
 add/remove/change values)
-- __@PostLoad__ - Called after populating the entity with the values from the document
+- `@PostLoad` - Called after populating the entity with the values from the document
 
 See the [annotations guide]({{< relref "/guides/annotations.md" >}}) for a full list of the annotations supported.
 

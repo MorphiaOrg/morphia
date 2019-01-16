@@ -78,7 +78,7 @@ UpdateOperations ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-After this update, the name of the hotel would be __null__ when the entity is loaded.
+After this update, the name of the hotel would be `null` when the entity is loaded.
 
 ### inc()/dec()
 
@@ -112,7 +112,7 @@ datastore.update(updateQuery, ops);
 
 ### push()/addToSet()
 
-__push()__ is used to add a value to an array field:
+`push()` is used to add a value to an array field:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -120,8 +120,8 @@ ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-This will issue a __$push__ operation adding __11__ to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use __addToSet()__ instead:
+This will issue a `$push` operation adding `11` to the list.  This might result in duplicated values in this field.  If the values should
+be unique, use `addToSet()` instead:
 ```java
 ops = datastore
     .createUpdateOperations(Hotel.class)
@@ -129,14 +129,14 @@ ops = datastore
 datastore.update(updateQuery, ops);
 ```
 
-__push()__ and __addToSet()__ can take either single values or a __List__ of values.  The __push()__ methods can also optionally take a 
+`push()` and `addToSet()` can take either single values or a `List` of values.  The `push()` methods can also optionally take a 
 [PushOptions]({{< apiref "xyz/morphia/query/PushOptions" >}}) instance allowing for tweaking how the values are added to the 
 list.  See [the manual]({{< docsref "reference/operator/update/push/#modifiers" >}}) for more information about the various modifiers
 available.
 
 
 ### removeFirst()/removeLast()/removeAll()
-To remove values from a list, use __removeFirst()__, __removeLast()__, or __removeAll()__:
+To remove values from a list, use `removeFirst()`, `removeLast()`, or `removeAll()`:
 ```java
 //given roomNumbers = [ 1, 2, 3 ]
 ops = datastore
@@ -233,7 +233,7 @@ ops = datastore
 
 ## createIfMissing (overload parameter)
 
-All of the update methods on __Datastore__ are overloaded and accept a __createIfMissing__ parameter
+All of the update methods on `Datastore` are overloaded and accept a `createIfMissing` parameter
 
 ```java
 ops = datastore
