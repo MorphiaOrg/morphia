@@ -103,6 +103,16 @@ Creating a Query The Datastore is the key class when using Morphia. Virtually al
     </item>
     
     <item>
+      <title>References</title>
+      <link>/morphia/1.5/guides/references/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.5/guides/references/</guid>
+      <description>Morphia supports two styles of defining references: the @Reference annotation and the experimental MorphiaReference. The annotation based approach is discussed here. This guide will cover the wrapper based approach.
+important This API is experimental. Its implementation and API subject to change based on user feedback. It&amp;rsquo;s ultimate inclusion in a public permanent API can not be guaranteed. That said, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative.</description>
+    </item>
+    
+    <item>
       <title>Schema Validation</title>
       <link>/morphia/1.5/guides/schemavalidation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
