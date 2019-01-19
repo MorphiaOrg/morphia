@@ -17,6 +17,7 @@ import xyz.morphia.query.UpdateResults;
 import xyz.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -132,6 +133,20 @@ public class VersionTest extends TestBase {
         Assert.assertEquals(initial.version + 1, postUpdate.version);
     }
 
+    @Test(expected = ConcurrentModificationException.class)
+    public void testManuallyIdentifiedConcurrentModification() {
+        final String id = UUID.randomUUID().toString();
+
+        final ManuallyIdentifiedEntity entity1 = new ManuallyIdentifiedEntity();
+        final ManuallyIdentifiedEntity entity2 = new ManuallyIdentifiedEntity();
+
+        entity1.setId(id);
+        entity2.setId(id);
+
+        getDs().save(entity1);
+        getDs().save(entity2);
+    }
+
     @Entity
     public static class VersionInHashcode {
         @Id
@@ -191,4 +206,27 @@ public class VersionTest extends TestBase {
 
     }
 
+    @Entity
+    public static class ManuallyIdentifiedEntity {
+        @Id
+        private String id;
+        @Version
+        private Long version;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(final String id) {
+            this.id = id;
+        }
+
+        public Long getVersion() {
+            return version;
+        }
+
+        public void setVersion(final Long version) {
+            this.version = version;
+        }
+    }
 }
