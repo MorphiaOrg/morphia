@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -376,10 +377,17 @@ public class Mapper {
         }
         unwrapped = ProxyHelper.unwrap(unwrapped);
         try {
-            return getMappedClass(unwrapped.getClass()).getIdField().get(unwrapped);
+            final MappedClass mappedClass = getMappedClass(unwrapped.getClass());
+            if(mappedClass != null) {
+                final Field idField = mappedClass.getIdField();
+                if(idField != null) {
+                    return idField.get(unwrapped);
+                }
+            }
         } catch (Exception e) {
-            return null;
+            LOG.error(e.getMessage(), e);
         }
+        return null;
     }
 
     /**
