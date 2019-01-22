@@ -8,6 +8,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
+import org.mongodb.morphia.query.BucketAutoOptions;
+import org.mongodb.morphia.query.BucketOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.morphia.geo.GeometryShapeConverter;
@@ -50,10 +52,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     /**
-     * Returns the internal list of stages for this pipeline.  This is an internal method intended
-     * only for testing and validation.  Use at your own risk.
-     *
-     * @return the list of stages
+     * @morphia.internal
      */
     public List<DBObject> getStages() {
         return stages;
@@ -248,13 +247,13 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline bucket(final String field, final List<?> boundaries) {
-        return this.bucket(field, boundaries, new BucketOptions());
+        return bucket(field, boundaries, new BucketOptions());
     }
 
     @Override
     public AggregationPipeline bucket(final String field, final List<?> boundaries, final BucketOptions options) {
         if (boundaries == null || boundaries.size() < 2) {
-            throw new RuntimeException("Boundaries list should be presented and has at least 2 elements");
+            throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
         }
         DBObject dbObject = options.toDBObject();
         dbObject.put("groupBy", "$" + field);
@@ -265,7 +264,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline bucketAuto(final String field, final int bucketCount) {
-        return this.bucketAuto(field, bucketCount, new BucketAutoOptions());
+        return bucketAuto(field, bucketCount, new BucketAutoOptions());
     }
 
     @Override

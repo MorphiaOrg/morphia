@@ -2,7 +2,7 @@ package org.mongodb.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.mongodb.morphia.aggregation.Accumulator;
+import xyz.morphia.aggregation.Accumulator;
 
 import java.util.HashMap;
 import java.util.Map;

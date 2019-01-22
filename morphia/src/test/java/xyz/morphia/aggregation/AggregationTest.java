@@ -31,6 +31,8 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongodb.morphia.query.BucketAutoOptions;
+import org.mongodb.morphia.query.BucketOptions;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.AlsoLoad;
 import xyz.morphia.annotations.Embedded;
