@@ -137,8 +137,6 @@ public final class GeoJson {
 
     /**
      * @morphia.internal
-     * @param points
-     * @return
      */
     public static List<Position> convertPoints(List<Point> points) {
         final ArrayList<Position> positions = new ArrayList<Position>();

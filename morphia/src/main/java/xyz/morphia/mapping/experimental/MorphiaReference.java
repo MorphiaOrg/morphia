@@ -51,19 +51,16 @@ public abstract class MorphiaReference<T> {
 
     /**
      * @morphia.internal
-     * @return
      */
     public abstract boolean isResolved();
 
     /**
      * @morphia.internal
-     * @return
      */
     public abstract Object encode(final Mapper mapper, Object value, MappedField optionalExtraInfo);
 
     /**
      * @morphia.internal
-     * @return
      */
     protected String getCollection() {
         return collection;
@@ -71,7 +68,6 @@ public abstract class MorphiaReference<T> {
 
     /**
      * @morphia.internal
-     * @return
      */
     protected Datastore getDatastore() {
         return datastore;
@@ -79,7 +75,6 @@ public abstract class MorphiaReference<T> {
 
     /**
      * @morphia.internal
-     * @return
      */
     protected MappedClass getMappedClass() {
         return mappedClass;
