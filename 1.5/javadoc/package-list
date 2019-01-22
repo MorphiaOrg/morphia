@@ -1,3 +1,4 @@
+org.mongodb.morphia.query
 xyz.morphia
 xyz.morphia.aggregation
 xyz.morphia.annotations
