@@ -28,8 +28,18 @@ import java.util.List;
  */
 @SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
-    private Class<T> entityClazz;
-    private DatastoreImpl ds;
+    //CHECKSTYLE:OFF
+    /**
+     * @deprecated use {@link #getEntityClass()}
+     */
+    @Deprecated
+    protected Class<T> entityClazz;
+    /**
+     * @deprecated use {@link #getDatastore()}
+     */
+    @Deprecated
+    protected xyz.morphia.DatastoreImpl ds;
+    //CHECKSTYLE:ON
 
     /**
      * Create a new BasicDAO
