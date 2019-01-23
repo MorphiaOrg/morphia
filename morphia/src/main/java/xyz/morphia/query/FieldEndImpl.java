@@ -81,9 +81,9 @@ public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T
     }
 
     @Override
-    public T equalIgnoreCase(final String val) {
+    public T equalIgnoreCase(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(val) + "$", CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(val.toString()) + "$", CASE_INSENSITIVE));
     }
 
     @Override

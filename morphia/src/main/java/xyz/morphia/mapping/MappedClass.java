@@ -395,13 +395,7 @@ public class MappedClass {
         return idField;
     }
 
-    /**
-     * Gets the lifecycle methods for particular annotation.
-     *
-     * @param clazz the annotation to search with
-     * @return the list of methods
-     */
-    public List<ClassMethodPair> getLifecycleMethods(final Class<Annotation> clazz) {
+    private List<ClassMethodPair> getLifecycleMethods(final Class<Annotation> clazz) {
         return lifecycleMethods.get(clazz);
     }
 

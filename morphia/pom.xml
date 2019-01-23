@@ -112,7 +112,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failBuildOnProblemsFound>false</failBuildOnProblemsFound>
+                    <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                     <!--<oldVersion>1.4.0</oldVersion>-->
                     <analysisConfigurationFiles>
                         <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
@@ -125,12 +125,8 @@
                                 <minor>nonBreaking</minor>
                                 <patch>equivalent</patch>
                             </versionIncreaseAllows>
-                            <passThroughDifferences>
-                                <item>java.class.nonPublicPartOfAPI</item>
-                            </passThroughDifferences>
                         </revapi.semver.ignore>
                     </analysisConfiguration>
-
                 </configuration>
             </plugin>
             <plugin>

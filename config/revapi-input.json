@@ -3,6 +3,75 @@
     {
       "classQualifiedName": "xyz.morphia.query.QueryResults",
       "justification": "These methods were pushed down to Query"
+    },
+    {
+      "class" : "com.mongodb..*",
+      "justification": "Driver classes should be ignored"
+    }
+
+  ],
+  "java.method.abstractMethodAdded": [
+    {
+      "classQualifiedName": "xyz.morphia.geo.CoordinateReferenceSystem",
+      "justification": "These will be used as transition helpers in 2.0"
+    }
+  ],
+  "java.class.nowFinal": [
+    {
+      "class" : "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.parameterTypeChanged": [
+    {
+      "class" : "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.visibilityReduced": [
+    {
+      "class" : "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.annotation.added": [
+    {
+      "class" : "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.addedToInterface": [
+    {
+      "class" : "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.returnTypeChanged": [
+    {
+      "class" : "xyz.morphia.query.QueryImpl",
+      "justification": "Necessary API fixes"
+    }
+  ],
+  "java.annotation.removed": [
+    {
+      "class" : "xyz.morphia.geo.Point ",
+      "justification": "Necessary API fixes"
+    }
+  ],
+  "java.method.returnTypeChangedCovariantly": [
+    {
+      "class" : "xyz.morphia.dao.BasicDAO",
+      "justification": "Necessary API fixes"
+    },
+    {
+      "class" : "xyz.morphia.dao.DAO",
+      "justification": "Necessary API fixes"
+    }
+  ],
+  "java.class.externalClassExposedInAPI": [
+    {
+      "class" : "*",
+      "justification": "Necessary API fixes"
     }
   ]
 }
