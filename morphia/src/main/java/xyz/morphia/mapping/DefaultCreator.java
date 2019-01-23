@@ -71,12 +71,12 @@ public class DefaultCreator implements ObjectFactory {
         try {
             return getNoArgsConstructor(clazz).newInstance();
         } catch (Exception e) {
-            if (Collection.class.isAssignableFrom(clazz)) {
-                return (T) createList(null);
-            } else if (Map.class.isAssignableFrom(clazz)) {
+            if (Map.class.isAssignableFrom(clazz)) {
                 return (T) createMap(null);
             } else if (Set.class.isAssignableFrom(clazz)) {
                 return (T) createSet(null);
+            } else if (Collection.class.isAssignableFrom(clazz)) {
+                return (T) createList(null);
             }
             throw new MappingException("No usable constructor for " + clazz.getName(), e);
         }
