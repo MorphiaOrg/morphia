@@ -18,7 +18,9 @@ import java.util.List;
  *
  * @param <T> The Java type serviced by this DAO
  * @param <K> The Key type used by the entity
+ * @deprecated This interface poorly tracks Datastore's API.  Use Datastore directly or wrap in an application specific DAO
  */
+@Deprecated
 public interface DAO<T, K> {
     /**
      * @return the total count

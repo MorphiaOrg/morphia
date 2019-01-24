@@ -25,7 +25,9 @@ import java.util.List;
  * @param <K> the type of the key
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
+ * @deprecated This interface poorly tracks Datastore's API.  Use Datastore directly or wrap in an application specific DAO
  */
+@Deprecated
 @SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
     //CHECKSTYLE:OFF

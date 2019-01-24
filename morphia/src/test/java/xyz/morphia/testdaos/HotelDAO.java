@@ -25,6 +25,7 @@ import xyz.morphia.testmodel.Hotel;
 /**
  * @author Olafur Gauti Gudmundsson
  */
+@Deprecated
 public class HotelDAO extends BasicDAO<Hotel, ObjectId> {
 
     public HotelDAO(final Morphia morphia, final MongoClient mongoClient) {
