@@ -259,7 +259,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 final DB database = getDB();
                 if (database.getCollectionNames().contains(collName)) {
                     final DBObject dbResult = database.command(start("collstats", collName).get());
-                    if (dbResult.containsField("capped")) {
+                    if (((CommandResult) dbResult).getBoolean("capped")) {
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
                     } else {
                         LOG.warn("DBCollection already exists with same name(" + collName
