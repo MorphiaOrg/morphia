@@ -159,23 +159,26 @@ final class IndexHelper {
                 }
                 for (MappedClass aClass : classes) {
                     for (Index index : collectIndexes(aClass, parents)) {
-                        List<Field> fields = new ArrayList<Field>();
-                        for (Field field : index.fields()) {
-                            fields.add(new FieldBuilder()
-                                           .value(field.value().equals("$**")
-                                                  ? field.value()
-                                                  : mf.getNameToStore() + "." + field.value())
-                                           .type(field.type())
-                                           .weight(field.weight()));
-                        }
-                        list.add(new IndexBuilder(index)
-                                     .fields(fields));
+                        list.add(new IndexBuilder(index, mf.getNameToStore()));
                     }
                 }
             }
         }
 
         return list;
+    }
+
+    private List<Field> updateFieldsWithPrefix(final MappedField mf, final Index index) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Field field : index.fields()) {
+            fields.add(new FieldBuilder()
+                           .value(field.value().equals("$**")
+                                  ? field.value()
+                                  : mf.getNameToStore() + "." + field.value())
+                           .type(field.type())
+                           .weight(field.weight()));
+        }
+        return fields;
     }
 
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {

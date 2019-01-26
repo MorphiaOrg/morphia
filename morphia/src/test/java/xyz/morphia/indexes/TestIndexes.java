@@ -19,16 +19,21 @@ package xyz.morphia.indexes;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import xyz.morphia.Datastore;
 import xyz.morphia.TestBase;
 import xyz.morphia.annotations.Collation;
+import xyz.morphia.annotations.Embedded;
 import xyz.morphia.annotations.Entity;
 import xyz.morphia.annotations.Field;
+import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Index;
 import xyz.morphia.annotations.IndexOptions;
 import xyz.morphia.annotations.Indexes;
@@ -38,6 +43,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static org.junit.Assert.assertEquals;
+import static xyz.morphia.utils.IndexType.DESC;
 
 public class TestIndexes extends TestBase {
 
@@ -67,7 +73,7 @@ public class TestIndexes extends TestBase {
             for (DBObject dbObject : indexInfo) {
                 if (dbObject.get("name").equals("collated")) {
                     assertEquals(BasicDBObject.parse("{ name : { $exists : true } }"),
-                                 dbObject.get("partialFilterExpression"));
+                        dbObject.get("partialFilterExpression"));
                     BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
                     assertEquals("en_US", collation.get("locale"));
                     assertEquals("upper", collation.get("caseFirst"));
@@ -90,6 +96,21 @@ public class TestIndexes extends TestBase {
         datastore.ensureIndexes(TestWithHashedIndex.class);
         assertEquals(2, hashIndexColl.getIndexInfo().size());
         assertHashed(hashIndexColl.getIndexInfo());
+    }
+
+    @Test
+    public void embeddedIndexPartialFilters() {
+        getMorphia().map(FeedEvent.class, InboxEvent.class);
+        getDs().ensureIndexes();
+        final ListIndexesIterable<Document> indexes = getDatabase().getCollection("InboxEvent")
+                                                                   .listIndexes();
+        for (final Document index : indexes) {
+            if (!"_id_".equals(index.get("name"))) {
+                for (String name : index.get("key", Document.class).keySet()) {
+                    Assert.assertTrue("Key names should start with the field name: " + name, name.startsWith("feedEvent."));
+                }
+            }
+        }
     }
 
     private void assertBackground(final List<DBObject> indexInfo) {
@@ -126,6 +147,7 @@ public class TestIndexes extends TestBase {
     @Indexes({@Index("name")})
     public static class TestWithDeprecatedIndex {
 
+
         private String name;
 
     }
@@ -134,7 +156,23 @@ public class TestIndexes extends TestBase {
     @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "hashedValue", type = IndexType.HASHED)})})
     public static class TestWithHashedIndex {
         private String hashedValue;
+
     }
 
+    @Entity
+    @Indexes(@Index(fields = {@Field("actor.actorObject.userId"), @Field(value = "actor.actorType", type = DESC)},
+        options = @IndexOptions(disableValidation = true,
+            partialFilter = "{ 'actor.actorObject.userId': { $exists: true }, 'actor.actorType': { $exists: true } }")))
+    public static class FeedEvent {
+        @Id
+        private ObjectId id;
+    }
 
+    @Entity
+    public static class InboxEvent {
+        @Id
+        private ObjectId id;
+        @Embedded
+        private FeedEvent feedEvent;
+    }
 }

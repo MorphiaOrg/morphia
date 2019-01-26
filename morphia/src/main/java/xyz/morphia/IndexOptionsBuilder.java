@@ -16,13 +16,31 @@
 
 package xyz.morphia;
 
+import org.bson.Document;
 import xyz.morphia.annotations.Collation;
 import xyz.morphia.annotations.Index;
 import xyz.morphia.annotations.IndexOptions;
 import xyz.morphia.annotations.Indexed;
 
+import java.util.Map.Entry;
+
 @SuppressWarnings("deprecation")
 class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
+    public IndexOptionsBuilder() {
+    }
+
+    public IndexOptionsBuilder(final IndexOptions original, final String prefix) {
+        super(original);
+        if(!"".equals(original.partialFilter())) {
+            final Document parse = Document.parse(original.partialFilter());
+            final Document filter = new Document();
+            for (final Entry<String, Object> entry : parse.entrySet()) {
+                filter.put(prefix + "." + entry.getKey(), entry.getValue());
+            }
+            partialFilter(filter.toJson());
+        }
+    }
+
     @Override
     public Class<IndexOptions> annotationType() {
         return IndexOptions.class;

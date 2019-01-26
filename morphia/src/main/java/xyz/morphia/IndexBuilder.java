@@ -33,6 +33,25 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
         super(original);
     }
 
+    IndexBuilder(final Index original, final String prefix) {
+        super(original);
+        fields(updateFieldsWithPrefix(prefix, original));
+        options(new IndexOptionsBuilder(original.options(), prefix));
+    }
+
+    private List<Field> updateFieldsWithPrefix(final String prefix, final Index index) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Field field : index.fields()) {
+            fields.add(new FieldBuilder()
+                           .value(field.value().equals("$**")
+                                  ? field.value()
+                                  : prefix + "." + field.value())
+                           .type(field.type())
+                           .weight(field.weight()));
+        }
+        return fields;
+    }
+
     static Index normalize(final Index index) {
         return index.fields().length != 0
                ? index
