@@ -20,6 +20,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.client.ListIndexesIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
@@ -37,6 +38,8 @@ import xyz.morphia.annotations.Id;
 import xyz.morphia.annotations.Index;
 import xyz.morphia.annotations.IndexOptions;
 import xyz.morphia.annotations.Indexes;
+import xyz.morphia.mapping.MapperOptions;
+import xyz.morphia.mapping.MapperOptions.Builder;
 import xyz.morphia.utils.IndexType;
 
 import java.util.List;
@@ -102,15 +105,23 @@ public class TestIndexes extends TestBase {
     public void embeddedIndexPartialFilters() {
         getMorphia().map(FeedEvent.class, InboxEvent.class);
         getDs().ensureIndexes();
-        final ListIndexesIterable<Document> indexes = getDatabase().getCollection("InboxEvent")
-                                                                   .listIndexes();
-        for (final Document index : indexes) {
+        final MongoCollection<Document> inboxEvent = getDatabase().getCollection("InboxEvent");
+        for (final Document index : inboxEvent.listIndexes()) {
             if (!"_id_".equals(index.get("name"))) {
                 for (String name : index.get("key", Document.class).keySet()) {
                     Assert.assertTrue("Key names should start with the field name: " + name, name.startsWith("feedEvent."));
                 }
             }
         }
+
+        // check the logging is disabled
+        inboxEvent.drop();
+        final Builder builder = MapperOptions
+                                    .builder(getMorphia().getMapper().getOptions())
+                                    .disableEmbeddedIndexes(true);
+        getMorphia().getMapper().setOptions(builder.build());
+        getDs().ensureIndexes();
+        Assert.assertNull("No indexes should be generated for InboxEvent", inboxEvent.listIndexes().iterator().tryNext());
     }
 
     private void assertBackground(final List<DBObject> indexInfo) {

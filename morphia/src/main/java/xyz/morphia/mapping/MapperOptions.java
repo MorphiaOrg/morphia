@@ -21,6 +21,7 @@ public class MapperOptions {
     private boolean useLowerCaseCollectionNames;
     private boolean cacheClassLookups;
     private boolean mapSubPackages;
+    private boolean disableEmbeddedIndexes;
     private ObjectFactory objectFactory;
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
@@ -64,6 +65,7 @@ public class MapperOptions {
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
+        disableEmbeddedIndexes = builder.disableEmbeddedIndexes;
         storeNulls = builder.storeNulls;
         storeEmpties = builder.storeEmpties;
         useLowerCaseCollectionNames = builder.useLowerCaseCollectionNames;
@@ -332,6 +334,14 @@ public class MapperOptions {
     }
 
     /**
+     * @return true if Morphia should skip scanning @{@link xyz.morphia.annotations.Embedded} fields for index definitions.
+     * @since 1.5
+     */
+    public boolean isDisableEmbeddedIndexes() {
+        return disableEmbeddedIndexes;
+    }
+
+    /**
      * @return true if Morphia should map classes from the sub-packages as well
      */
     public boolean isMapSubPackages() {
@@ -371,6 +381,7 @@ public class MapperOptions {
         builder.defaultMapper = copy.getDefaultMapper();
         builder.referenceMapper = copy.getReferenceMapper();
         builder.valueMapper = copy.getValueMapper();
+        builder.disableEmbeddedIndexes = copy.isDisableEmbeddedIndexes();
         return builder;
     }
 
@@ -383,6 +394,7 @@ public class MapperOptions {
         private boolean useLowerCaseCollectionNames;
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
+        private boolean disableEmbeddedIndexes;
         private ObjectFactory objectFactory;
         private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
         private CustomMapper embeddedMapper = new EmbeddedMapper();
@@ -424,6 +436,11 @@ public class MapperOptions {
 
         public Builder mapSubPackages(final boolean mapSubPackages) {
             this.mapSubPackages = mapSubPackages;
+            return this;
+        }
+
+        public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
+            this.disableEmbeddedIndexes = disableEmbeddedIndexes;
             return this;
         }
 

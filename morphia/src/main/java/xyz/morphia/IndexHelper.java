@@ -137,11 +137,14 @@ final class IndexHelper {
 
         List<Index> indexes = collectTopLevelIndexes(mc);
         indexes.addAll(collectFieldIndexes(mc));
-        indexes.addAll(collectNestedIndexes(mc, parentMCs));
+        if(!mapper.getOptions().isDisableEmbeddedIndexes()) {
+            indexes.addAll(collectNestedIndexes(mc, parentMCs));
+        }
 
         return indexes;
     }
 
+    @Deprecated
     private List<Index> collectNestedIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
@@ -159,6 +162,8 @@ final class IndexHelper {
                 }
                 for (MappedClass aClass : classes) {
                     for (Index index : collectIndexes(aClass, parents)) {
+                        LOG.warn("Embedded index generation is being removed from 2.0.  Please migrate any index definitions you need to "
+                                 + "the parent entity to ensure these indexes continue to be generated in future versions.");
                         list.add(new IndexBuilder(index, mf.getNameToStore()));
                     }
                 }
