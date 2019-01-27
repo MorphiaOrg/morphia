@@ -11,6 +11,11 @@ import xyz.morphia.mapping.Mapper;
 
 import java.io.Serializable;
 import java.lang.reflect.TypeVariable;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,6 +65,26 @@ public class ReflectionUtilsTest extends TestBase {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
+
+        for (Class clazz : result) {
+            assertThat(clazz.getPackage().getName().startsWith("org.junit"), is(true));
+        }
+        assertThat(result.contains(org.junit.Assert.class), is(true));
+        assertThat(result.contains(org.junit.rules.RuleChain.class), is(true));
+    }
+
+    @SuppressWarnings("Since15")
+    @Test
+    public void testGetFromJarFileWithUnicodePath() throws Exception {
+        //we need a jar to test with so use JUnit since it will always be there
+        String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        final Path input = Paths.get(rootPath);
+        final Path output = Paths.get("/tmp/我的路径/something.jar");
+        output.getParent().toFile().mkdirs();
+        final Path jar = Files.copy(input, output);
+        final URLClassLoader classLoader = new URLClassLoader(new URL[]{jar.toUri().toURL()});
+        Set<Class<?>> result = ReflectionUtils.getFromJARFile(classLoader, jar.toString(),
+            "org/junit", true);
 
         for (Class clazz : result) {
             assertThat(clazz.getPackage().getName().startsWith("org.junit"), is(true));
