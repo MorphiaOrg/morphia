@@ -9,7 +9,7 @@
         <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="org.mongodb" level="warn">
+        <logger name="xyz.morphia" level="warn">
             <AppenderRef ref="Console"/>
         </logger>
     </Loggers>
