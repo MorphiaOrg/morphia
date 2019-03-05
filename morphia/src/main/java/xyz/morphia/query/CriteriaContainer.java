@@ -35,11 +35,4 @@ public interface CriteriaContainer extends Criteria {
      */
 
     CriteriaContainer or(Criteria... criteria);
-
-    /**
-     * Removes Criteria to this container
-     *
-     * @param criteria the criteria to remove
-     */
-    void remove(Criteria criteria);
 }

@@ -13,6 +13,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
+import org.json.JSONException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -33,6 +34,7 @@ import xyz.morphia.annotations.Property;
 import xyz.morphia.annotations.Reference;
 import xyz.morphia.mapping.ReferenceTest.ChildId;
 import xyz.morphia.mapping.ReferenceTest.Complex;
+import xyz.morphia.query.QueryForSubtypeTest.User;
 import xyz.morphia.testmodel.Hotel;
 import xyz.morphia.testmodel.Rectangle;
 
@@ -72,7 +74,7 @@ import static xyz.morphia.query.Sort.naturalDescending;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "ConstantConditions"})
 public class TestQuery extends TestBase {
 
     @Test
@@ -1617,6 +1619,27 @@ public class TestQuery extends TestBase {
         Assert.assertEquals("foo", retrievedValue.value1);
     }
 
+    @Test
+    public void testCriteriaContainers() throws JSONException {
+        final Query<User> query = getDs().createQuery(User.class)
+                                         .disableValidation();
+
+        final CriteriaContainer topAnd = query.and(
+            query.or(
+                query.criteria("fieldA").equal("a"),
+                query.criteria("fieldB").equal("b")),
+            query.and(
+                query.criteria("fieldC").equal("c"),
+                query.or(
+                    query.criteria("fieldD").equal("d"),
+                    query.criteria("fieldE").equal("e"))));
+
+        BasicDBObject expected = BasicDBObject.parse(
+            "{ \"$and\": [{ \"$or\": [{ \"fieldA\": \"a\" }, { \"fieldB\": \"b\" }] }, { \"$and\": [{ \"fieldC\": \"c\" }, { \"$or\": [{ \"fieldD\": "
+                          + "\"d\" }, { \"fieldE\": \"e\" }] } ] } ]}");
+        Assert.assertEquals(expected, query.getQueryObject());
+    }
+
     @Entity(value = "user", noClassnameStored = true)
     private static class Class1 {
         @Id
@@ -1680,11 +1703,11 @@ public class TestQuery extends TestBase {
         }
 
         Keyword(final String k) {
-            this.keyword = k;
+            keyword = k;
         }
 
         Keyword(final String k, final Integer score) {
-            this.keyword = k;
+            keyword = k;
             this.score = score;
         }
 

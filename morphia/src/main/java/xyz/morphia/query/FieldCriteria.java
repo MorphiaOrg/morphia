@@ -83,7 +83,8 @@ class FieldCriteria extends AbstractCriteria {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void addTo(final DBObject obj) {
+    public DBObject toDBObject() {
+        final DBObject obj = new BasicDBObject();
         if (FilterOperator.EQUAL.equals(operator)) {
             // no operator, prop equals (or NOT equals) value
             if (not) {
@@ -108,6 +109,7 @@ class FieldCriteria extends AbstractCriteria {
                 inner.put(operator.val(), value);
             }
         }
+        return obj;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package xyz.morphia.query;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import org.bson.Document;
@@ -57,8 +58,8 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     }
 
     @Override
-    public void addTo(final DBObject obj) {
-        BasicDBObjectBuilder query;
+    public DBObject toDBObject() {
+        DBObject query;
         FilterOperator operator = getOperator();
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getQuery().getDatastore().getMapper());
         final DBObject geometryAsDBObject = (DBObject) geometryQueryConverter.encode(geometry, null);
@@ -69,11 +70,11 @@ final class Geo2dSphereCriteria extends FieldCriteria {
                 if (options != null) {
                     geometryAsDBObject.putAll(options);
                 }
-                query = BasicDBObjectBuilder.start(NEAR.val(), geometryAsDBObject);
+                query = new BasicDBObject(NEAR.val(), geometryAsDBObject);
                 break;
             case GEO_WITHIN:
             case INTERSECTS:
-                query = BasicDBObjectBuilder.start(operator.val(), geometryAsDBObject);
+                query = new BasicDBObject(operator.val(), geometryAsDBObject);
                 if (crs != null) {
                     ((DBObject) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
                 }
@@ -82,6 +83,6 @@ final class Geo2dSphereCriteria extends FieldCriteria {
                 throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));
         }
 
-        obj.put(getField(), query.get());
+        return new BasicDBObject(getField(), query);
     }
 }

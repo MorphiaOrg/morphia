@@ -309,7 +309,7 @@ public interface FieldEnd<T> {
      *
      * @param point       the point to find results close to
      * @param maxDistance the maximum distance in meters from the point
-     * @param minDistance the minimum distance in meters from the point 
+     * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @since 1.5

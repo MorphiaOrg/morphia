@@ -65,7 +65,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param field the field
      * @return the FieldEnd to define the criteria
      */
-    FieldEnd<? extends CriteriaContainerImpl> criteria(String field);
+    FieldEnd<? extends CriteriaContainer> criteria(String field);
 
     /**
      * Disables cursor timeout on server.

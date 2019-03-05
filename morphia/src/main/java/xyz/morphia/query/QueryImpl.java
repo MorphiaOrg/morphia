@@ -28,6 +28,7 @@ import xyz.morphia.query.internal.MorphiaCursor;
 import xyz.morphia.query.internal.MorphiaKeyCursor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ import static com.mongodb.CursorType.NonTailable;
 import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static xyz.morphia.query.CriteriaJoin.*;
+import static xyz.morphia.query.CriteriaJoin.AND;
 
 
 /**
@@ -45,7 +48,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * @param <T> The type we will be querying for, and returning.
  */
 @SuppressWarnings("deprecation")
-public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
+public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     private final xyz.morphia.DatastoreImpl ds;
     private final DBCollection dbColl;
@@ -56,7 +59,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     private Boolean includeFields;
     private DBObject baseQuery;
     private FindOptions options;
-
+    private CriteriaContainer criteriaContainer = new CriteriaContainerImpl(this, AND);
     FindOptions getOptions() {
         if (options == null) {
             options = new FindOptions();
@@ -72,9 +75,6 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
      * @param ds    the Datastore to use
      */
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
-        super(CriteriaJoin.AND);
-
-        setQuery(this);
         this.clazz = clazz;
         this.ds = ((xyz.morphia.DatastoreImpl) ds);
         dbColl = coll;
@@ -287,15 +287,14 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
-        n.setQuery(n); // feels weird, correct?
         n.validateName = validateName;
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
         n.options = options != null ? options.copy() : null;
 
         // fields from superclass
-        n.setAttachedTo(getAttachedTo());
-        n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
+//        n.setAttachedTo(getAttachedTo());
+//        n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
         return n;
     }
 
@@ -311,11 +310,11 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
     }
 
     @Override
-    public FieldEnd<? extends CriteriaContainerImpl> criteria(final String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
-        add(container);
+    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
+//        add(container);
 
-        return new FieldEndImpl<CriteriaContainerImpl>(this, field, container);
+        return new FieldEndImpl(this, field, container);
     }
 
     @Override
@@ -450,7 +449,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
             obj.putAll(baseQuery.toMap());
         }
 
-        addTo(obj);
+        obj.putAll(toDBObject());
 
         return obj;
     }
@@ -807,7 +806,7 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
 
     @Override
     public String toString() {
-        return String.format("{ query: %s %s }", getQueryObject(), getOptions().getProjection() == null
+        return String.format("{ %s %s }", getQueryObject(), getOptions().getProjection() == null
                                                                    ? ""
                                                                    : ", projection: " + getFieldsObject());
     }
@@ -944,5 +943,40 @@ public class QueryImpl<T> extends CriteriaContainerImpl implements Query<T> {
         result = 31 * result + (baseQuery != null ? baseQuery.hashCode() : 0);
         result = 31 * result + hash(options);
         return result;
+    }
+
+    @Override
+    public void add(final Criteria... criteria) {
+        for (final Criteria c : criteria) {
+//            c.attach(this);
+            criteriaContainer.add(c);
+        }
+    }
+
+    @Override
+    public CriteriaContainer and(final Criteria... criteria) {
+        return collect(AND, criteria);
+    }
+
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        return collect(OR, criteria);
+    }
+
+    private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
+        final CriteriaContainerImpl parent = new CriteriaContainerImpl(this, cj);
+
+        for (final Criteria c : criteria) {
+            parent.add(c);
+        }
+
+        criteriaContainer = parent;
+
+        return criteriaContainer;
+    }
+
+    @Override
+    public DBObject toDBObject() {
+        return criteriaContainer.toDBObject();
     }
 }

@@ -1,6 +1,7 @@
 package xyz.morphia.query;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.junit.Test;
 import xyz.morphia.TestBase;
 import xyz.morphia.testutil.JSONMatcher;
@@ -25,8 +26,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
                                                           .maxDistance(maxDistanceMeters);
 
         // when
-        BasicDBObject queryDocument = new BasicDBObject();
-        criteria.addTo(queryDocument);
+        DBObject queryDocument = criteria.toDBObject();
 
         // then
         assertThat(queryDocument.toString(), JSONMatcher.jsonEqual("  { location : "
@@ -55,8 +55,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
                                                                                                           .build());
 
         // when
-        BasicDBObject queryDocument = new BasicDBObject();
-        criteria.addTo(queryDocument);
+        DBObject queryDocument = criteria.toDBObject();
 
 
         // then

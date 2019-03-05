@@ -1,6 +1,7 @@
 package xyz.morphia.query;
 
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
@@ -20,7 +21,8 @@ class Geo2dCriteria extends FieldCriteria {
     }
 
     @Override
-    public void addTo(final DBObject obj) {
+    public DBObject toDBObject() {
+        final DBObject obj = new BasicDBObject();
         final BasicDBObjectBuilder query;
         switch (getOperator()) {
             case NEAR:
@@ -50,5 +52,7 @@ class Geo2dCriteria extends FieldCriteria {
         }
 
         obj.put(getField(), query.get());
+
+        return obj;
     }
 }

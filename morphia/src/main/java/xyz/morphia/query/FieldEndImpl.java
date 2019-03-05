@@ -25,7 +25,7 @@ import static xyz.morphia.query.FilterOperator.INTERSECTS;
  *
  * @param <T> the type of the CriteriaContainer
  */
-public class FieldEndImpl<T extends CriteriaContainerImpl> implements FieldEnd<T> {
+public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
 
     private final QueryImpl<?> query;

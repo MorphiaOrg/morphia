@@ -6,5 +6,10 @@ package xyz.morphia.query;
  */
 public enum CriteriaJoin {
     AND,
-    OR
-}
+    OR;
+
+
+    @Override
+    public String toString() {
+        return "$" + name().toLowerCase();
+    }}
