@@ -6,9 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static xyz.morphia.query.CriteriaJoin.AND;
 
@@ -107,16 +105,14 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
             list.add(child.toDBObject());
         }
 
-        if(list.size() == 1) {
-            if(joinMethod == AND) {
+        if(!list.isEmpty()) {
+            if(list.size() == 1 && joinMethod == AND) {
                 dbObject.putAll(list.get(0));
             } else {
-                dbObject.put(joinMethod.toString(), list.get(0));
+                final BasicDBList dbList = new BasicDBList();
+                dbList.addAll(list);
+                dbObject.put(joinMethod.toString(), dbList);
             }
-        } else if(list.size() > 1) {
-            final BasicDBList dbList = new BasicDBList();
-            dbList.addAll(list);
-            dbObject.put(joinMethod.toString(), dbList);
         }
         return dbObject;
     }
