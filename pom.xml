@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>3.9.1</driver.version>
+        <driver.version>3.10.1</driver.version>
         <jacoco.version>0.8.1</jacoco.version>
         <json.assert.version>1.2.3</json.assert.version>
         <maven.version>3.5.2</maven.version>
