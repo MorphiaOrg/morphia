@@ -54,7 +54,7 @@
       "mapOfList.bar": {
         "$in": [
           {
-            "className": "xyz.morphia.EmbeddedReferenceType",
+            "className": "dev.morphia.EmbeddedReferenceType",
             "number": 1,
             "text": "chance"
           }
@@ -87,7 +87,7 @@
       "mixedTypeList": {
         "$in": [
           {
-            "className": "xyz.morphia.EmbeddedReferenceType",
+            "className": "dev.morphia.EmbeddedReferenceType",
             "number": 1,
             "text": "chance"
           }
@@ -96,14 +96,14 @@
     },
     {
       "mixedTypeMap.foo": {
-        "className": "xyz.morphia.ReferenceType",
+        "className": "dev.morphia.ReferenceType",
         "_id": 3,
         "string": "strikes"
       }
     },
     {
       "mixedTypeMap.bar": {
-        "className": "xyz.morphia.EmbeddedReferenceType",
+        "className": "dev.morphia.EmbeddedReferenceType",
         "number": 3,
         "text": "strikes"
       }
@@ -112,7 +112,7 @@
       "mixedTypeMapOfList.bar": {
         "$in": [
           {
-            "className": "xyz.morphia.EmbeddedReferenceType",
+            "className": "dev.morphia.EmbeddedReferenceType",
             "number": 1,
             "text": "chance"
           }

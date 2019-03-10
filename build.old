@@ -28,7 +28,7 @@ def javaCodeCheckedProjects = subprojects.findAll { !['util', 'no-proxy-dep-test
 
 configure(coreProjects) {
     evaluationDependsOn(':util')
-    group = 'xyz.morphia'
+    group = 'dev.morphia'
 
     repositories {
         mavenCentral()

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>xyz.morphia.morphia</groupId>
+        <groupId>dev.morphia.morphia</groupId>
         <artifactId>parent</artifactId>
         <version>1.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>xyz.morphia.morphia</groupId>
+            <groupId>dev.morphia.morphia</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>

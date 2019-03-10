@@ -35,7 +35,7 @@
     </div>
   </form>
   <div class="hidden-md hidden-sm hidden-xs col-lg-2 col-lg-pull-10 downloadLink">
-  <a href="https://oss.sonatype.org/content/repositories/releases/xyz/morphia/morphia/core/{{$currentReleasedVersion.version}}/"
+  <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/core/{{$currentReleasedVersion.version}}/"
      id="downloadLink" class="btn btn-dark btn-download" target="_blank">Download</a>
   </div>
   </div>
@@ -59,7 +59,7 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;xyz.morphia.morphia&lt;/groupId&gt;
+              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
               &lt;artifactId&gt;core&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
@@ -80,7 +80,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-            compile 'xyz.morphia.morphia:core:{{$currentVersion.version}}'
+            compile 'dev.morphia.morphia:core:{{$currentVersion.version}}'
         }
         repositories {
           maven {
@@ -94,7 +94,7 @@
       <pre><code>
       &lt;dependencies&gt;
           &lt;dependency&gt;
-              &lt;groupId&gt;xyz.morphia.morphia&lt;/groupId&gt;
+              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
               &lt;artifactId&gt;core&lt;/artifactId&gt;
               &lt;version&gt;{{$currentVersion.version}}&lt;/version&gt;
           &lt;/dependency&gt;
@@ -105,7 +105,7 @@
       <div id="gradle-{{$versionPos}}" class="download hidden">
       <pre><code>
         dependencies {
-          compile 'xyz.morphia.morphia:core:{{$currentVersion.version}}'
+          compile 'dev.morphia.morphia:core:{{$currentVersion.version}}'
         }
 
 

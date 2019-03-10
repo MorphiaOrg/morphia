@@ -11,7 +11,7 @@ convert your data from one form to another.  This guide will not go in to the de
  MongoDB [documentation]({{< docsref "aggregation" >}}) has extensive tutorials on such details.  Rather, this
  guide will
  focus on the Morphia API.  The examples shown here are taken from the [tests]({{< srcref
-  "morphia/src/test/java/xyz/morphia/aggregation/AggregationTest.java">}}) in Morphia itself.
+  "morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java">}}) in Morphia itself.
 
 Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the __Datastore__:
 
@@ -83,5 +83,5 @@ results for later retrieval.
 __out()__ has several variants.  In this example, we're passing in __Author.class__ which tells Morphia that we want to map each document
 returned to an instance of __Author__.  Because we're using __out()__ instead of __aggregate()__, Morphia will use the mapped collection for
 __Author__ as the output collection for the pipeline.  If you'd like to use an alternate collection but still return a cursor of __Author__
-instances, you can use [__out(String,Class,AggregationOptions)__](/javadoc/xyz/morphia/aggregation/AggregationPipeline.html#out-java
+instances, you can use [__out(String,Class,AggregationOptions)__](/javadoc/dev/morphia/aggregation/AggregationPipeline.html#out-java
 .lang.String-java.lang.Class-com.mongodb.AggregationOptions-) instead.

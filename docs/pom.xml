@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>xyz.morphia.morphia</groupId>
+        <groupId>dev.morphia.morphia</groupId>
         <artifactId>parent</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -31,6 +31,7 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>

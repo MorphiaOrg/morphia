@@ -1,6 +1,6 @@
 githubUser = "morphia"
 githubRepo = "MorpiaOrg"
-currentVersion = "1.4.0"
+currentVersion = "1.4.1-SNAPSHOT"
 majorVersion = "1.4"
 highlightTheme = "idea.css"
 apiUrl = "/javadoc"

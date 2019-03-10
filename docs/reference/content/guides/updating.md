@@ -9,9 +9,9 @@ There are two basic ways to update your data: insert/save a whole Entity or issu
 
 ## Updating (on the server)
 
-The update method on [Datastore]({{< apiref "xyz/morphia/Datastore" >}}) is used to issue a command to the server to change 
+The update method on [Datastore]({{< apiref "dev/morphia/Datastore" >}}) is used to issue a command to the server to change 
 existing documents.  The effects of the update command are defined via 
-[UpdateOperations]({{< apiref "xyz/morphia/query/UpdateOperations" >}}) methods.
+[UpdateOperations]({{< apiref "dev/morphia/query/UpdateOperations" >}}) methods.
 
 ## The Field Expression
 
@@ -130,7 +130,7 @@ datastore.update(updateQuery, ops);
 ```
 
 __push()__ and __addToSet()__ can take either single values or a __List__ of values.  The __push()__ methods can also optionally take a 
-[PushOptions]({{< apiref "xyz/morphia/query/PushOptions" >}}) instance allowing for tweaking how the values are added to the 
+[PushOptions]({{< apiref "dev/morphia/query/PushOptions" >}}) instance allowing for tweaking how the values are added to the 
 list.  See [the manual]({{< docsref "reference/operator/update/push/#modifiers" >}}) for more information about the various modifiers
 available.
 

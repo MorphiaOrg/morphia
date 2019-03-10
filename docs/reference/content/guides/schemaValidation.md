@@ -10,7 +10,7 @@ other mapping data on an entity's source.  [Schema validation]({{< docsref "core
 perform schema validation during updates and insertions.  Validation rules are on a per-collection basis and can be defined via 
 annotations just like indexes are.
 
-Below we have a basic entity definition.  Note the new annotation [@Validation](/javadoc/xyz/morphia/annotations/Validation.html).
+Below we have a basic entity definition.  Note the new annotation [@Validation](/javadoc/dev/morphia/annotations/Validation.html).
 
 ```java
 @Entity("validation")

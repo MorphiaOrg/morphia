@@ -23,7 +23,7 @@ clirr {
 
 jar {
     manifest {
-        instruction 'Automatic-Module-Name', 'xyz.morhpia'
+        instruction 'Automatic-Module-Name', 'dev.morphia'
         instruction 'Build-Version', project.gitVersion
         instruction 'Import-Package',
                     'com.mongodb.*'
