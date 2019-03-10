@@ -6,7 +6,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static xyz.morphia.query.CriteriaJoin.AND;
 
@@ -34,7 +36,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     @Override
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
-//            c.attach(this);
+            c.attach(this);
             children.add(c);
         }
     }
@@ -54,9 +56,14 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         return collect(CriteriaJoin.OR, criteria);
     }
 
-/*
     @Override
-    public void addTo(final DBObject obj) {
+    public void remove(final Criteria criteria) {
+        children.remove(criteria);
+    }
+
+    @Override
+    public DBObject toDBObject() {
+        DBObject dbObject = new BasicDBObject();
         if (joinMethod == AND) {
             final Set<String> fields = new HashSet<String>();
             int nonNullFieldNames = 0;
@@ -67,52 +74,27 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
                 }
             }
             if (fields.size() < nonNullFieldNames) {
-                //use $and
                 final BasicDBList and = new BasicDBList();
 
                 for (final Criteria child : children) {
-                    final BasicDBObject container = new BasicDBObject();
-                    child.addTo(container);
-                    and.add(container);
+                    and.add(child.toDBObject());
                 }
 
-                obj.put("$and", and);
+                dbObject.put("$and", and);
             } else {
                 //no dup field names, don't use $and
                 for (final Criteria child : children) {
-                    child.addTo(obj);
+                    dbObject.putAll(child.toDBObject());
                 }
             }
         } else if (joinMethod == CriteriaJoin.OR) {
             final BasicDBList or = new BasicDBList();
 
             for (final Criteria child : children) {
-                final BasicDBObject container = new BasicDBObject();
-                child.addTo(container);
-                or.add(container);
+                or.add(child.toDBObject());
             }
 
-            obj.put("$or", or);
-        }
-    }
-*/
-
-    public DBObject toDBObject() {
-        final DBObject dbObject = new BasicDBObject();
-
-        List<DBObject> list = new ArrayList<DBObject>();
-        for (Criteria child : children) {
-            list.add(child.toDBObject());
-        }
-
-        if(!list.isEmpty()) {
-            if(list.size() == 1 && joinMethod == AND) {
-                dbObject.putAll(list.get(0));
-            } else {
-                final BasicDBList dbList = new BasicDBList();
-                dbList.addAll(list);
-                dbObject.put(joinMethod.toString(), dbList);
-            }
+            dbObject.put("$or", or);
         }
         return dbObject;
     }
@@ -120,6 +102,22 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     @Override
     public String getFieldName() {
         return joinMethod.toString();
+    }
+
+    /**
+     * @return the Query for this CriteriaContainer
+     */
+    public QueryImpl<?> getQuery() {
+        return query;
+    }
+
+    /**
+     * Sets the Query for this CriteriaContainer
+     *
+     * @param query the query
+     */
+    public void setQuery(final QueryImpl<?> query) {
+        this.query = query;
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {

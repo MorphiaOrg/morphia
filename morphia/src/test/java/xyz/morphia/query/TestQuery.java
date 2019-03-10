@@ -51,6 +51,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.client.model.Collation.builder;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
@@ -74,7 +75,7 @@ import static xyz.morphia.query.Sort.naturalDescending;
 /**
  * @author Scott Hernandez
  */
-@SuppressWarnings({"unchecked", "unused", "ConstantConditions"})
+@SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
 
     @Test
@@ -1151,7 +1152,9 @@ public class TestQuery extends TestBase {
     @SuppressWarnings("deprecation")
     public void testNotGeneratesCorrectQueryForGreaterThan() {
         final Query<Keyword> query = getDs().find(Keyword.class);
-        query.criteria("score").not().greaterThan(7);
+        query.criteria("score")
+             .not()
+             .greaterThan(7);
         assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))), query.getQueryObject());
     }
 
@@ -1620,7 +1623,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testCriteriaContainers() throws JSONException {
+    public void testCriteriaContainers() {
         final Query<User> query = getDs().createQuery(User.class)
                                          .disableValidation();
 
@@ -1634,9 +1637,8 @@ public class TestQuery extends TestBase {
                     query.criteria("fieldD").equal("d"),
                     query.criteria("fieldE").equal("e"))));
 
-        BasicDBObject expected = BasicDBObject.parse(
-            "{ \"$and\": [{ \"$or\": [{ \"fieldA\": \"a\" }, { \"fieldB\": \"b\" }] }, { \"$and\": [{ \"fieldC\": \"c\" }, { \"$or\": [{ \"fieldD\": "
-                          + "\"d\" }, { \"fieldE\": \"e\" }] } ] } ]}");
+        DBObject expected = parse("{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}],"
+                                  + " \"fieldC\": \"c\", \"$or\": [{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}");
         Assert.assertEquals(expected, query.getQueryObject());
     }
 
@@ -1703,11 +1705,11 @@ public class TestQuery extends TestBase {
         }
 
         Keyword(final String k) {
-            keyword = k;
+            this.keyword = k;
         }
 
         Keyword(final String k, final Integer score) {
-            keyword = k;
+            this.keyword = k;
             this.score = score;
         }
 

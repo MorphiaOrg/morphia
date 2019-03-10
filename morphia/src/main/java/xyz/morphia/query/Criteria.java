@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 
 /**
  * Internal class for building up query documents.
+ * @morphia.internal
  */
 public interface Criteria {
     DBObject toDBObject();
@@ -15,7 +16,7 @@ public interface Criteria {
      *
      * @param container the container to add to
      */
-//    void attach(CriteriaContainer container);
+    void attach(CriteriaContainer container);
 
     /**
      * @return the field name for the criteria

@@ -85,7 +85,8 @@ public class TestSerializedFormat extends TestBase {
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
         DBObject dbObject = query.getQueryObject();
-        Assert.assertEquals(BasicDBObject.parse(readFully("/QueryStructure.json")), dbObject);
+        final DBObject parse = BasicDBObject.parse(readFully("/QueryStructure.json"));
+        Assert.assertEquals(parse, dbObject);
     }
 
     private void verifyCoverage(final DBObject dbObject) {

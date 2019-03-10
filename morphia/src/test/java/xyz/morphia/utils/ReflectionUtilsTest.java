@@ -80,6 +80,7 @@ public class ReflectionUtilsTest extends TestBase {
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         final Path input = Paths.get(rootPath);
         final Path output = Paths.get("/tmp/我的路径/something.jar");
+        output.toFile().delete();
         output.getParent().toFile().mkdirs();
         final Path jar = Files.copy(input, output);
         final URLClassLoader classLoader = new URLClassLoader(new URL[]{jar.toUri().toURL()});

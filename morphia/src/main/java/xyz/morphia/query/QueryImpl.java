@@ -291,7 +291,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
         n.options = options != null ? options.copy() : null;
-
+        n.criteriaContainer = criteriaContainer;
         // fields from superclass
 //        n.setAttachedTo(getAttachedTo());
 //        n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
@@ -312,9 +312,9 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
-//        add(container);
+        add(container);
 
-        return new FieldEndImpl(this, field, container);
+        return new FieldEndImpl<CriteriaContainer>(this, field, container);
     }
 
     @Override
@@ -978,5 +978,19 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public DBObject toDBObject() {
         return criteriaContainer.toDBObject();
+    }
+
+    @Override
+    public void remove(final Criteria criteria) {
+        criteriaContainer.remove(criteria);
+    }
+
+    @Override
+    public void attach(final CriteriaContainer container) {
+        if (criteriaContainer != null) {
+            criteriaContainer.remove(this);
+        }
+
+        criteriaContainer = container;
     }
 }

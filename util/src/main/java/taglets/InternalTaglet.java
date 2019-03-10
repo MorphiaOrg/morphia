@@ -29,7 +29,7 @@ public class InternalTaglet extends DocTaglet {
     }
 
     private String getMessage() {
-        return "This is an internal method.  Its function and presence are subject to change without warning.  Its use is highly "
+        return "This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly "
                + "discouraged.";
     }
 
