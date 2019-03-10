@@ -68,6 +68,30 @@
       "justification": "Necessary API fixes"
     }
   ],
+  "java.class.superTypeTypeParametersChanged": [
+    {
+      "class" : "xyz.morphia.query.FieldEndImpl",
+      "justification": "An internal implementation detail leak"
+    }
+  ],
+  "java.generics.formalTypeParameterChanged": [
+    {
+      "class" : "xyz.morphia.query.FieldEndImpl",
+      "justification": "An internal implementation detail leak"
+    }
+  ],
+  "java.class.noLongerImplementsInterface": [
+    {
+      "class" : "xyz.morphia.query.FieldEndImpl",
+      "justification": "An internal implementation detail leak"
+    }
+  ],
+  "java.method.returnTypeTypeParametersChanged": [
+    {
+      "class" : "xyz.morphia.query.FieldEndImpl",
+      "justification": "An internal implementation detail leak"
+    }
+  ],
   "java.class.externalClassExposedInAPI": [
     {
       "class" : "*",

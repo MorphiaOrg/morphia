@@ -49,6 +49,22 @@
     "class" : "xyz.morphia.dao.DAO",
     "justification" : "Necessary API fixes"
   }, {
+    "code" : "java.class.superTypeTypeParametersChanged",
+    "class" : "xyz.morphia.query.FieldEndImpl",
+    "justification" : "An internal implementation detail leak"
+  }, {
+    "code" : "java.generics.formalTypeParameterChanged",
+    "class" : "xyz.morphia.query.FieldEndImpl",
+    "justification" : "An internal implementation detail leak"
+  }, {
+    "code" : "java.class.noLongerImplementsInterface",
+    "class" : "xyz.morphia.query.FieldEndImpl",
+    "justification" : "An internal implementation detail leak"
+  }, {
+    "code" : "java.method.returnTypeTypeParametersChanged",
+    "class" : "xyz.morphia.query.FieldEndImpl",
+    "justification" : "An internal implementation detail leak"
+  }, {
     "code" : "java.class.externalClassExposedInAPI",
     "class" : "*",
     "justification" : "Necessary API fixes"

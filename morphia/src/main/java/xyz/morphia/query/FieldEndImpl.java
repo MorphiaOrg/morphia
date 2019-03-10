@@ -16,6 +16,8 @@ import java.util.Map;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
+import static xyz.morphia.query.FilterOperator.*;
+import static xyz.morphia.query.FilterOperator.EQUAL;
 import static xyz.morphia.query.FilterOperator.GEO_WITHIN;
 import static xyz.morphia.query.FilterOperator.INTERSECTS;
 
@@ -49,65 +51,65 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T contains(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(FilterOperator.EQUAL, compile(quote(string)));
+        return addCriteria(EQUAL, compile(quote(string)));
     }
 
     @Override
     public T containsIgnoreCase(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(FilterOperator.EQUAL, compile(quote(string), CASE_INSENSITIVE));
+        return addCriteria(EQUAL, compile(quote(string), CASE_INSENSITIVE));
     }
 
     @Override
     public T doesNotExist() {
-        return addCriteria(FilterOperator.EXISTS, false);
+        return addCriteria(EXISTS, false);
     }
 
     @Override
     public T endsWith(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$"));
+        return addCriteria(EQUAL, compile(quote(suffix) + "$"));
     }
 
     @Override
     public T endsWithIgnoreCase(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$", CASE_INSENSITIVE));
+        return addCriteria(EQUAL, compile(quote(suffix) + "$", CASE_INSENSITIVE));
     }
 
     @Override
     public T equal(final Object val) {
-        return addCriteria(FilterOperator.EQUAL, val);
+        return addCriteria(EQUAL, val);
     }
 
     @Override
     public T equalIgnoreCase(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(val.toString()) + "$", CASE_INSENSITIVE));
+        return addCriteria(EQUAL, compile("^" + quote(val.toString()) + "$", CASE_INSENSITIVE));
     }
 
     @Override
     public T exists() {
-        return addCriteria(FilterOperator.EXISTS, true);
+        return addCriteria(EXISTS, true);
     }
 
     @Override
     public T greaterThan(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.GREATER_THAN, val);
+        return addCriteria(GREATER_THAN, val);
     }
 
     @Override
     public T greaterThanOrEq(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.GREATER_THAN_OR_EQUAL, val);
+        return addCriteria(GREATER_THAN_OR_EQUAL, val);
     }
 
     @Override
     public T hasAllOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
         Assert.parameterNotEmpty("values", values);
-        return addCriteria(FilterOperator.ALL, values);
+        return addCriteria(ALL, values);
     }
 
     @Override
@@ -118,39 +120,39 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
                 LOG.warn("Specified an empty list/collection with the '" + field + "' criteria");
             }
         }
-        return addCriteria(FilterOperator.IN, values);
+        return addCriteria(IN, values);
     }
 
     @Override
     public T hasNoneOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
         Assert.parameterNotEmpty("values", values);
-        return addCriteria(FilterOperator.NOT_IN, values);
+        return addCriteria(NOT_IN, values);
     }
 
     @Override
     @Deprecated
     public T doesNotHaveThisElement(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val, true);
+        return addCriteria(ELEMENT_MATCH, val, true);
     }
 
     @Override
     @Deprecated
     public T hasThisElement(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, val, not);
+        return addCriteria(ELEMENT_MATCH, val, not);
     }
 
     @Override
     public T elemMatch(final Query query) {
         Assert.parametersNotNull("query", query);
-        return addCriteria(FilterOperator.ELEMENT_MATCH, query, not);
+        return addCriteria(ELEMENT_MATCH, query, not);
     }
 
     @Override
     public T hasThisOne(final Object val) {
-        return addCriteria(FilterOperator.EQUAL, val);
+        return addCriteria(EQUAL, val);
     }
 
     @Override
@@ -174,18 +176,18 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T lessThan(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.LESS_THAN, val);
+        return addCriteria(LESS_THAN, val);
     }
 
     @Override
     public T lessThanOrEq(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(FilterOperator.LESS_THAN_OR_EQUAL, val);
+        return addCriteria(LESS_THAN_OR_EQUAL, val);
     }
 
     @Override
     public T mod(final long divisor, final long remainder) {
-        return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
+        return addCriteria(MOD, new long[]{divisor, remainder});
     }
 
     @Override
@@ -195,7 +197,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final double longitude, final double latitude, final boolean spherical) {
-        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{longitude, latitude}, null);
+        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR, new double[]{longitude, latitude}, null);
     }
 
     @Override
@@ -205,7 +207,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final double longitude, final double latitude, final double radius, final boolean spherical) {
-        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR,
+        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR,
                               new double[]{longitude, latitude},
                               opts("$maxDistance", radius));
     }
@@ -217,13 +219,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final Point point) {
-        target.add(Geo2dSphereCriteria.geo(query, field, FilterOperator.NEAR, point));
+        target.add(Geo2dSphereCriteria.geo(query, field, NEAR, point));
         return target;
     }
 
     @Override
     public T near(final Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(query, field, FilterOperator.NEAR, point)
+        target.add(Geo2dSphereCriteria.geo(query, field, NEAR, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -235,7 +237,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T nearSphere(final Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(query, field, FilterOperator.NEAR_SPHERE, point)
+        target.add(Geo2dSphereCriteria.geo(query, field, NEAR_SPHERE, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -249,7 +251,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T notEqual(final Object val) {
-        return addCriteria(FilterOperator.NOT_EQUAL, val);
+        return addCriteria(NOT_EQUAL, val);
     }
 
     @Override
@@ -259,26 +261,26 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T sizeEq(final int val) {
-        return addCriteria(FilterOperator.SIZE, val);
+        return addCriteria(SIZE, val);
     }
 
     @Override
     public T startsWith(final String prefix) {
         Assert.parametersNotNull("val", prefix);
         /*LITERAL*/
-        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix)));
+        return addCriteria(EQUAL, compile("^" + quote(prefix)));
     }
 
     @Override
     public T startsWithIgnoreCase(final String prefix) {
         Assert.parametersNotNull("val", prefix);
         /*  | LITERAL */
-        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
+        return addCriteria(EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
     }
 
     @Override
     public T type(final Type type) {
-        return addCriteria(FilterOperator.TYPE, type.val());
+        return addCriteria(TYPE, type.val());
     }
 
     @Override
