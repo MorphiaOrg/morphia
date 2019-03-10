@@ -31,7 +31,6 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
