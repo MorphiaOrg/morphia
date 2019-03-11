@@ -41,7 +41,7 @@ In this case, we're instructing Morphia to add a filter using [$gte]({{< docsref
 ```
 
 The list of supported filter operations can be found in the [FilterOperator]({{< srcref
- "morphia/src/main/java/xyz/morphia/query/FilterOperator.java">}}) class.
+ "morphia/src/main/java/dev/morphia/query/FilterOperator.java">}}) class.
 
 | Operator | Alias |
 | ---------|------- |
@@ -78,7 +78,7 @@ The list of supported filter operations can be found in the [FilterOperator]({{<
 ### `field()`
 
 For those who would prefer more compile time validation of their queries, there is `field()`.  This method takes only the field name and
-returns an instance of a [class]({{< srcref "morphia/src/main/java/xyz/morphia/query/FieldEnd.java">}}) providing methods with which
+returns an instance of a [class]({{< srcref "morphia/src/main/java/dev/morphia/query/FieldEnd.java">}}) providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  `filter()` can be.  To perform the same query as above, you'd write this:
 
@@ -91,7 +91,7 @@ case) would easily be caught by an IDE or compiler.  Which version you use is la
 
 {{% note %}}
 Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-[`@Property`]({{< apiref "xyz/morphia/annotations/Property" >}}) annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+[`@Property`]({{< apiref "dev/morphia/annotations/Property" >}}) annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
 result in an error.
 {{% /note %}}
 
@@ -140,7 +140,7 @@ public static class Greeting {
 
 The `$**` value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
 desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this [test]({{<
-srcref "morphia/src/test/java/xyz/morphia/query/TestTextSearching.java">}}) does:
+srcref "morphia/src/test/java/dev/morphia/query/TestTextSearching.java">}}) does:
 
 ```java
 morphia.map(Greeting.class);
@@ -173,7 +173,7 @@ the query results in different ways.
 
 [Projections]({{< docsref "tutorial/project-fields-from-query-results/" >}}) allow you to return only a subset of the fields in a
 document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the [unit tests]({{< srcref
-"morphia/src/test/java/xyz/morphia/TestQuery.java" >}}), this is an example of this feature in action:
+"morphia/src/test/java/dev/morphia/TestQuery.java" >}}), this is an example of this feature in action:
 
 ```java
 ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
@@ -204,7 +204,7 @@ As you can see here, we're saving this entity with a first and last name but our
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
   saved. For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using [`Datastore#merge(T)`]({{< apiref "xyz/morphia/Datastore#merge-T-" >}})
+  for this entity will be removed.  To save such instances back consider using [`Datastore#merge(T)`]({{< apiref "dev/morphia/Datastore#merge-T-" >}})
 {{% /note %}}
 
 ### Limiting and Skipping
@@ -224,7 +224,7 @@ pagination, however.  See the [skip]({{< docsref "reference/method/cursor.skip" 
 
 ### Ordering
 
-Ordering the results of a query is done via [`Query.order(String)`](/javadoc/xyz/morphia/query/Query.html#order-java.lang.String-)
+Ordering the results of a query is done via [`Query.order(String)`](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-)
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
  for a particular field simply prefix that field with a `-`.  For example, to sort by age (youngest to oldest) and then income (highest
  to lowest), you would use this:
@@ -238,7 +238,7 @@ query.order("age,-income");
 If you have a [capped collection]({{< docsref "core/capped-collections/" >}}) it's possible to "tail" a query so that when new documents
 are added to the collection that match your query, they'll be returned by the [tailable cursor]({{< docsref
 "reference/glossary/#term-tailable-cursor" >}}).  An example of this feature in action can be found in the [unit tests]({{< srcref
-"morphia/src/test/java/xyz/morphia/TestQuery.java">}}) in the `testTailableCursors()` test:
+"morphia/src/test/java/dev/morphia/TestQuery.java">}}) in the `testTailableCursors()` test:
 
 ```java
 getMorphia().map(CappedPic.class);

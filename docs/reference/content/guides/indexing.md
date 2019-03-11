@@ -42,7 +42,7 @@ public class IndexExample {
 ### Fields
 
 The fields to use in an index definition are defined with the [`@Field`]({{< ref "/guides/annotations.md#field" >}}) annotation. An
-arbitrary number of [`@Field`]({{< apiref "xyz/morphia/annotations/Field" >}})s can be given but at least one must be present.
+arbitrary number of [`@Field`]({{< apiref "dev/morphia/annotations/Field" >}})s can be given but at least one must be present.
 
 #### value()
 Indicates which field to use for indexing.  The name used for the field can be either the Java field name or the mapped document field
@@ -55,7 +55,7 @@ name as defined in the class's mapping via, e.g.,  the [`@Property`]({{< ref "/g
 
 Indicates the "type" of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.
 
-*See [IndexType](/javadoc/xyz/morphia/utils/IndexType.html)*
+*See [IndexType](/javadoc/dev/morphia/utils/IndexType.html)*
 
 #### weight()
 *Optional*
@@ -151,7 +151,7 @@ New in MongoDB 3.2, [partial indexes](https://docs.mongodb.com/v3.2/core/index-p
 *Optional*
 
 Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.  A collation
-can be defined using the `collation()` property on [`@IndexOptions`]({{< apiref "xyz/morphia/annotations/IndexOptions" >}}) and takes an [`@Collation`]({{< ref "/guides/annotations.md#collation" >}})
+can be defined using the `collation()` property on [`@IndexOptions`]({{< apiref "dev/morphia/annotations/IndexOptions" >}}) and takes an [`@Collation`]({{< ref "/guides/annotations.md#collation" >}})
 instance.
 
 ## Field Level Indexes

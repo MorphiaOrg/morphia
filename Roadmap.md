@@ -66,7 +66,7 @@ Options classes with the driver's Options.  In other cases, this will mean retur
 * **Removal of modules**.  As of 2.0 there will only be the core module.  Modules such as `entityscanner-plug` and `logging-slf4j` have 
 not seen any updates or apparent use in quite some time.  The entity scanner code was only ever half implemented and the logging code is 
 vestigial at best.  2.0 will leverage slf4j directly internally and users can choose whatever logging implementation they would like.  
-Any dependence on `xyz.morphia.logging.Logger` will need to be updated after 2.0.  Steps should be taken now to migrate away from these 
+Any dependence on `dev.morphia.logging.Logger` will need to be updated after 2.0.  Steps should be taken now to migrate away from these 
 types now.  
 
 # 2.1.0

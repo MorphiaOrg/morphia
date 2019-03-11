@@ -1,5 +1,5 @@
-baseurl = "/morphia/1.5"
-homePageUrl = "https://morphia.xyz/morphia"
+baseurl = "/1.5"
+homePageUrl = "https://morphia.dev/"
 languageCode = "en-us"
 title = "Morphia"
 theme = "learn"

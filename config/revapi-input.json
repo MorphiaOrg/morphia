@@ -1,7 +1,7 @@
 {
   "java.method.removed": [
     {
-      "classQualifiedName": "xyz.morphia.query.QueryResults",
+      "classQualifiedName": "dev.morphia.query.QueryResults",
       "justification": "These methods were pushed down to Query"
     },
     {
@@ -12,7 +12,7 @@
   ],
   "java.method.abstractMethodAdded": [
     {
-      "classQualifiedName": "xyz.morphia.geo.CoordinateReferenceSystem",
+      "classQualifiedName": "dev.morphia.geo.CoordinateReferenceSystem",
       "justification": "These will be used as transition helpers in 2.0"
     }
   ],
@@ -48,47 +48,47 @@
   ],
   "java.method.returnTypeChanged": [
     {
-      "class" : "xyz.morphia.query.QueryImpl",
+      "class" : "dev.morphia.query.QueryImpl",
       "justification": "Necessary API fixes"
     }
   ],
   "java.annotation.removed": [
     {
-      "class" : "xyz.morphia.geo.Point ",
+      "class" : "dev.morphia.geo.Point ",
       "justification": "Necessary API fixes"
     }
   ],
   "java.method.returnTypeChangedCovariantly": [
     {
-      "class" : "xyz.morphia.dao.BasicDAO",
+      "class" : "dev.morphia.dao.BasicDAO",
       "justification": "Necessary API fixes"
     },
     {
-      "class" : "xyz.morphia.dao.DAO",
+      "class" : "dev.morphia.dao.DAO",
       "justification": "Necessary API fixes"
     }
   ],
   "java.class.superTypeTypeParametersChanged": [
     {
-      "class" : "xyz.morphia.query.FieldEndImpl",
+      "class" : "dev.morphia.query.FieldEndImpl",
       "justification": "An internal implementation detail leak"
     }
   ],
   "java.generics.formalTypeParameterChanged": [
     {
-      "class" : "xyz.morphia.query.FieldEndImpl",
+      "class" : "dev.morphia.query.FieldEndImpl",
       "justification": "An internal implementation detail leak"
     }
   ],
   "java.class.noLongerImplementsInterface": [
     {
-      "class" : "xyz.morphia.query.FieldEndImpl",
+      "class" : "dev.morphia.query.FieldEndImpl",
       "justification": "An internal implementation detail leak"
     }
   ],
   "java.method.returnTypeTypeParametersChanged": [
     {
-      "class" : "xyz.morphia.query.FieldEndImpl",
+      "class" : "dev.morphia.query.FieldEndImpl",
       "justification": "An internal implementation detail leak"
     }
   ],

@@ -8,7 +8,7 @@
         <version>9</version>
     </parent>
 
-    <groupId>xyz.morphia.morphia</groupId>
+    <groupId>dev.morphia.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
     <version>1.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -124,7 +124,7 @@
                 <version>3.0.1</version>
                 <configuration>
                     <failOnError>false</failOnError>
-                    <excludePackageNames>**/relocated/**, **/internal/**, xyz/morphia/utils</excludePackageNames>
+                    <excludePackageNames>**/relocated/**, **/internal/**, dev/morphia/utils</excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia</doctitle>
                     <windowtitle>Morphia</windowtitle>

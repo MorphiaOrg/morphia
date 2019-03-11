@@ -1,9 +1,9 @@
 [[versions]]
-  version = "1.4.0"
+  version = "1.4.1"
   status = "current"
   docs = "./1.4"
   api = "/javadoc"
-  group = "xyz.morphia.morphia"
+  group = "dev.morphia.morphia"
   artifact = "core"
 
 [[versions]]
@@ -25,7 +25,7 @@
   status = "development"
   docs = "./1.5"
   api = "/javadoc"
-  group = "xyz.morphia.morphia"
+  group = "dev.morphia.morphia"
   artifact = "core"
 
 [[versions]]
@@ -33,7 +33,7 @@
   status = "development"
   docs = "./2.0"
   api = "/javadoc"
-  group = "xyz.morphia.morphia"
+  group = "dev.morphia.morphia"
   artifact = "core"
 
 [[drivers]]

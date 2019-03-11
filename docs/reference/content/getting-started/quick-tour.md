@@ -12,8 +12,8 @@ Morphia wraps the MongoDB Java driver so some level of familiarity with using th
 abstract much of that away but if something is confusing, please consult the Java driver [documentation](http://mongodb.github
 .io/mongo-java-driver/) as well.
 
-The following code snippets come from the [QuickTour.java]({{< srcref "examples/src/test/java/xyz/morphia/example/QuickTour.java">}}) 
-example code that can be found with the [Morphia source](http://morphia.xyz/morphia).
+The following code snippets come from the [QuickTour.java]({{< srcref "examples/src/test/java/dev/morphia/example/QuickTour.java">}}) 
+example code that can be found with the [Morphia source](http://morphia.dev/morphia).
 
 ## Setting up Morphia
 
@@ -26,7 +26,7 @@ final Morphia morphia = new Morphia();
 
 // tell Morphia where to find your classes
 // can be called multiple times with different packages or classes
-morphia.mapPackage("xyz.morphia.example");
+morphia.mapPackage("dev.morphia.example");
 
 // create the Datastore connecting to the default port on the local host
 final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");
@@ -40,7 +40,7 @@ This snippet creates the Morphia instance we'll be using in our simple applicati
    In practice, this is likely pretty rare but it is possible.
    
 The second line, which we skipped over, deserves a bit of consideration.  In this case, we're telling Morphia to look at every class in the 
-package we've given and find every class annotated with [`@Entity`]({{< apiref "xyz/morphia/annotations/Entity" >}}) (which we'll cover shortly) and discover the mapping metadata we've 
+package we've given and find every class annotated with [`@Entity`]({{< apiref "dev/morphia/annotations/Entity" >}}) (which we'll cover shortly) and discover the mapping metadata we've 
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
  to properly cover all your entities wherever they might live in your application.
  
@@ -55,10 +55,10 @@ specify the `Mapper` when creating an instance of Morphia, most users will use t
  
 ## Mapping Classes
 
-There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with [`@Entity`]({{< apiref "xyz/morphia/annotations/Entity" >}})
- is treated as a top level document stored directly in a collection.  Any class with [`@Entity`]({{< apiref "xyz/morphia/annotations/Entity" >}}) must have a field annotated with [`@Id`]({{< apiref "xyz/morphia/annotations/Id" >}}) to 
-define which field to use as the `_id` value in the document written to MongoDB.  [`@Embedded`]({{< apiref "xyz/morphia/annotations/Embedded" >}}) indicates that the class will result in a 
-subdocument inside another document.  [`@Embedded`]({{< apiref "xyz/morphia/annotations/Embedded" >}}) classes do not require the presence of an [`@Id`]({{< apiref "xyz/morphia/annotations/Id" >}}) field.
+There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with [`@Entity`]({{< apiref "dev/morphia/annotations/Entity" >}})
+ is treated as a top level document stored directly in a collection.  Any class with [`@Entity`]({{< apiref "dev/morphia/annotations/Entity" >}}) must have a field annotated with [`@Id`]({{< apiref "dev/morphia/annotations/Id" >}}) to 
+define which field to use as the `_id` value in the document written to MongoDB.  [`@Embedded`]({{< apiref "dev/morphia/annotations/Embedded" >}}) indicates that the class will result in a 
+subdocument inside another document.  [`@Embedded`]({{< apiref "dev/morphia/annotations/Embedded" >}}) classes do not require the presence of an [`@Id`]({{< apiref "dev/morphia/annotations/Id" >}}) field.
 
 ```java
 @Entity("employees")
@@ -78,13 +78,13 @@ class Employee {
 }
 ```
 
-There are a few things here to discuss and others we'll defer to later sections.  This class is annotated using the [`@Entity`]({{< apiref "xyz/morphia/annotations/Entity" >}}) annotation 
+There are a few things here to discuss and others we'll defer to later sections.  This class is annotated using the [`@Entity`]({{< apiref "dev/morphia/annotations/Entity" >}}) annotation 
 so we know that it will be a top level document.  In the annotation, you'll see `"employees"`.  By default, Morphia will use the class 
 name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all 
 `Employee` instances will be saved in to the `employees` collection instead.  There is a little more to this annotation but the 
 [annotations guide]({{< relref "/guides/annotations.md#entity" >}}) covers those details.
 
-The [`@Indexes`]({{< apiref "xyz/morphia/annotations/Indexes" >}}) annotation lists which indexes Morphia should create.  In this instance, we're defining an index named `salary` on the
+The [`@Indexes`]({{< apiref "dev/morphia/annotations/Indexes" >}}) annotation lists which indexes Morphia should create.  In this instance, we're defining an index named `salary` on the
  field salary with the default ordering of ascending.  More information on indexing can found
   [here]({{< relref "/guides/annotations.md#indexes" >}}).
  
@@ -93,12 +93,12 @@ type of `ObjectId` as the ID type.  The ID can be any type you'd like but is gen
 two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy 
 every field to a document bound for the database.
 
-The simplest of the two remaining annotations is [`@Property`]({{< apiref "xyz/morphia/annotations/Property" >}}).  This annotation is entirely optional.  If you leave this annotation off, 
+The simplest of the two remaining annotations is [`@Property`]({{< apiref "dev/morphia/annotations/Property" >}}).  This annotation is entirely optional.  If you leave this annotation off, 
 Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you'll want to change 
-the document field name for any number of reasons.  In those cases, you can use [`@Property`]({{< apiref "xyz/morphia/annotations/Property" >}}) and pass it the name to be used when this 
+the document field name for any number of reasons.  In those cases, you can use [`@Property`]({{< apiref "dev/morphia/annotations/Property" >}}) and pass it the name to be used when this 
 class is serialized out to a document to be handed off to MongoDB.  
 
-This just leaves [`@Reference`]({{< apiref "xyz/morphia/annotations/Reference" >}}).  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case 
+This just leaves [`@Reference`]({{< apiref "dev/morphia/annotations/Reference" >}}).  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case 
 Morphia will store what MongoDB calls a [`DBRef`]({{< docsref "reference/database-references/#dbrefs" >}}) which is just a 
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
  exception.

@@ -1,4 +1,4 @@
-baseurl = "/morphia/"
+baseurl = "https://morphia.dev/"
 languageCode = "en-us"
 title = "Morphia"
 canonifyurls = false

@@ -6,7 +6,7 @@ title = "References"
 +++
 
 Morphia supports two styles of defining references:  the `@Reference` annotation and the experimental [`MorphiaReference`]({{< apiref 
-"xyz/morphia/mapping/experimental/MorphiaReference" >}}).  The annotation based approach is discussed 
+"dev/morphia/mapping/experimental/MorphiaReference" >}}).  The annotation based approach is discussed 
 [here]({{< ref "guides/annotations" >}}).  This guide will cover the wrapper based approach.
 
 {{% note class="important" %}}
@@ -16,7 +16,7 @@ permanent API can not be guaranteed.  That said, users are encouraged to experim
 {{% /note %}}
 
 An alternative to the traditional annotation-based approach is the [`MorphiaReference`]({{< apiref
- "xyz/morphia/mapping/experimental/MorphiaReference" >}}) wrapper.  This type can not be instantiated directly.  Instead a `wrap()` 
+ "dev/morphia/mapping/experimental/MorphiaReference" >}}) wrapper.  This type can not be instantiated directly.  Instead a `wrap()` 
  method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are 
  supported by `wrap()`:  a reference to a single entity, a List of references to entities, a Set, and a Map.  `wrap()` will determine how
   best to handle the type passed and create the appropriate structures internally.  This is how this type might be used in practice:
@@ -96,7 +96,7 @@ As you can see we have 3 different references from `Author` to `Book` and one in
 that the public API of those two classes don't expose the `MorphiaReference` externally.  This is, of course, a stylistic choice but is 
 the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.  Looking at `Author#setList()
 `, you'll note we have two variants.  These two classes are extracted from [MorphiaReferenceTest.java]({{< srcref
-"morphia/src/test/java/xyz/morphia/mapping/experimental/MorphiaReferenceTest.java">}}) test.  In practice, you're unlikely to need both 
+"morphia/src/test/java/dev/morphia/mapping/experimental/MorphiaReferenceTest.java">}}) test.  In practice, you're unlikely to need both 
 versions of `setList()` but in this case they help to illustrate, and test, a feature.
 
 The basic of `setList()` accepts a `List<Book>` and stores them as references to `Book` instances stored in the collection as defined by 
@@ -108,7 +108,7 @@ away with storing only the `_id` fields for each book.  This gives us data in th
 > db.Author.find().pretty()
 {
 	"_id" : ObjectId("5c3e99276a44c77dfc1b5dbd"),
-	"className" : "xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
 	"name" : "Jane Austen",
 	"list" : [
 		ObjectId("5c3e99276a44c77dfc1b5dbe"),
@@ -129,7 +129,7 @@ refer to documents stored in different collections.  For these cases, there is a
 > db.jane.find().pretty()
 {
 	"_id" : ObjectId("5c3e99c06a44c77e5a9b5701"),
-	"className" : "xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
 	"name" : "Jane Austen",
 	"list" : [
 		DBRef("books", ObjectId("5c3e99c06a44c77e5a9b5702")),
@@ -159,7 +159,7 @@ complicated.  With the default, mapped collections being used, a `Map` would loo
 > db.Author.find().pretty()
 {
 	"_id" : ObjectId("5c3e9cad6a44c77fa8f38f58"),
-	"className" : "xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
 	"name" : "Jane Austen",
 	"map" : {
 		"Sense and Sensibility " : ObjectId("5c3e9cad6a44c77fa8f38f59"),
@@ -177,7 +177,7 @@ Using custom collections, the `Map`s change slightly:
 > db.jane.find().pretty()
 {
 	"_id" : ObjectId("5c3e9d096a44c77fd500e03f"),
-	"className" : "xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
 	"name" : "Jane Austen",
 	"map" : {
 		"Sense and Sensibility " : DBRef("books", ObjectId("5c3e9d096a44c77fd500e040")),
