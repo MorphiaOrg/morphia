@@ -32,7 +32,7 @@ data/morphia.toml: $(POM) Makefile ../../target/maven.settings.xml
 	@mv layouts/partials/logo.html.sed layouts/partials/logo.html
 
 $(JAVADOC)/index.html: $(shell find $(CORE)/src/main/java -name *.java)
-	mvn -f ../../morphia javadoc:javadoc
+	mvn -f $(CORE) clean javadoc:javadoc
 
 public/index.html: $(POM) $(shell find . | grep -v public)
 	@hugo
@@ -43,6 +43,7 @@ all: public/index.html $(JAVADOC)/index.html
 
 publish: all
 	rsync -ra --delete public/ ../../target/gh-pages/$(MAJOR)
+	cd ../../target/gh-pages/ ; git add $(MAJOR)
 
 watch: all
 	hugo server --baseUrl=http://localhost/ --buildDrafts --watch

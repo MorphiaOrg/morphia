@@ -1,12 +1,15 @@
-baseurl = "/morphia/1.4"
+baseurl = "/1.4"
+homePageUrl = "https://morphia.dev/"
 languageCode = "en-us"
 title = "Morphia"
 theme = "learn"
 canonifyurls = false
 
 [params]
-    disableBreadcrumb = true
-    disableNextPrev = true
+  disableBreadCrumb = true
+  disableNextPrev = false
+  disableInlineCopyToClipBoard = true
+  disableSearch = true
 
 [[menu.main]]
 
