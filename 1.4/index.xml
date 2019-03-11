@@ -38,7 +38,7 @@ Index The @Index documentation can be found here. There are two pieces to this a
       
       <guid>/morphia/1.4/getting-started/installation-guide/</guid>
       <description>The recommended way to get started using Morphia in your project is with a dependency management system.
-&amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;xyz.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.4.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;xyz.morphia:morphia:1.4.0&#39; }   You can also download the jars directly from sonatype.  </description>
+&amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.4.1&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia:morphia:1.4.1&#39; }   You can also download the jars directly from sonatype.  </description>
     </item>
     
     <item>
@@ -100,6 +100,17 @@ Prerequisites Of course you need to run JRebel (http://zeroturnaround.com) for t
       <guid>/morphia/1.4/guides/querying/</guid>
       <description>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes. It attempts to provide as much type safety and validation as possible. To this end, Morphia offers the Query class which can be parameterized to the type of your entity.
 Creating a Query The Datastore is the key class when using Morphia. Virtually all operations begin with the Datastore.</description>
+    </item>
+    
+    <item>
+      <title>Schema Validation</title>
+      <link>/morphia/1.4/guides/schemavalidation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/morphia/1.4/guides/schemavalidation/</guid>
+      <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
+Below we have a basic entity definition. Note the new annotation @Validation.
+@Entity(&amp;quot;validation&amp;quot;) @Validation(&amp;quot;{ number : { $gt : 10 } }&amp;quot;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
     </item>
     
     <item>
