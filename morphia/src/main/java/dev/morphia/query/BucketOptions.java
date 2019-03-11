@@ -1,4 +1,4 @@
-package org.mongodb.morphia.query;
+package dev.morphia.query;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -8,25 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The options for a bucket auto stage of aggregation pipeline.
+ * The options for a bucket stage of aggregation pipeline.
  *
  * @author Roman Lapin
  */
-public class BucketAutoOptions {
+public class BucketOptions {
 
-    private Granularity granularity;
+    private Object defaultField;
     private Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
 
 
     /**
-     * Converts a BucketAutoOptions to a DBObject for use by the Java driver.
+     * Converts a BucketOptions to a DBObject for use by the Java driver.
      *
      * @return the DBObject
      */
     public DBObject toDBObject() {
         DBObject dbObject = new BasicDBObject();
-        if (granularity != null) {
-            dbObject.put("granularity", granularity.getGranulality());
+        if (defaultField != null) {
+            dbObject.put("default", defaultField);
         }
 
         DBObject output = new BasicDBObject();
@@ -41,18 +41,18 @@ public class BucketAutoOptions {
     }
 
     /**
-     * Define granularity field for the bucketauto stage
+     * Define default field for the bucket stage
      *
-     * @param granularity granularity {@link Granularity}
+     * @param defaultField name of the field
      * @return this
      */
-    public BucketAutoOptions granularity(final Granularity granularity) {
-        this.granularity = granularity;
+    public BucketOptions defaultField(final Object defaultField) {
+        this.defaultField = defaultField;
         return this;
     }
 
     /**
-     * Define output field for the bucketauto stage
+     * Define output field for the bucket stage
      *
      * @param fieldName name of the output field
      * @return this
@@ -80,16 +80,17 @@ public class BucketAutoOptions {
         }
 
         /**
-         * Returns an array of all unique values that results from applying an expression to each document
-         * in a group of documents that share the same group by key. Order of the elements in the output array is unspecified.
+         * Returns an array of all unique values that results from applying
+         * an expression to each document in a group of documents that share
+         * the same group by key. Order of the elements in the output array is unspecified.
          *
          * @param field the field to process
          * @return an Accumulator
          * @mongodb.driver.manual reference/operator/aggregation/addToSet $addToSet
          */
-        public BucketAutoOptions addToSet(final String field) {
+        public BucketOptions addToSet(final String field) {
             accumulators.put(fieldName, new Accumulator("$addToSet", field));
-            return BucketAutoOptions.this;
+            return BucketOptions.this;
         }
 
         /**
@@ -100,10 +101,10 @@ public class BucketAutoOptions {
          * @return an Accumulator
          * @mongodb.driver.manual reference/operator/aggregation/avg $avg
          */
-        public BucketAutoOptions average(final String field) {
+        public BucketOptions average(final String field) {
 
             accumulators.put(fieldName, new Accumulator("$avg", field));
-            return BucketAutoOptions.this;
+            return BucketOptions.this;
         }
 
         /**
@@ -115,63 +116,26 @@ public class BucketAutoOptions {
          * @return an Accumulator
          * @mongodb.driver.manual reference/operator/aggregation/sum $sum
          */
-        public BucketAutoOptions sum(final Object field) {
+        public BucketOptions sum(final Object field) {
             accumulators.put(fieldName, new Accumulator("$sum", field));
-            return BucketAutoOptions.this;
+            return BucketOptions.this;
         }
 
 
     }
 
     /**
-     *
-     * @return granurality for the current bucketauto stage
+     * @return default bucket name
      */
-    public Granularity getGranurality() {
-        return granularity;
+    public Object getDefaultField() {
+        return defaultField;
     }
 
     /**
-     * A value that specifies the preferred number series to use to ensure
-     * that the calculated boundary edges end on preferred round numbers or their powers of 10.
-     *
-     * Available only if the all groupBy values are numeric and none of them are NaN.
-     */
-    public enum Granularity {
-        R5("R5"),
-        R10("R10"),
-        R20("R20"),
-        R40("R40"),
-        R80("R80"),
-        ONE_TWO_FIVE("1-2-5"),
-        E6("E6"),
-        E12("E12"),
-        E24("E24"),
-        E48("E48"),
-        E96("E96"),
-        E192("E192"),
-        POWERSOF2("POWERSOF2");
-
-        private String granularity;
-
-        Granularity(final String granularity) {
-
-            this.granularity = granularity;
-        }
-
-        /**
-         * @return granurality string value
-         */
-        public String getGranulality() {
-            return granularity;
-        }
-    }
-
-    /**
-     *
      * @return output accumulators per output field
      */
     public Map<String, Accumulator> getAccumulators() {
         return accumulators;
     }
+
 }

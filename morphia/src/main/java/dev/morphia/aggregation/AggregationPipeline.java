@@ -4,8 +4,8 @@ package dev.morphia.aggregation;
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
-import org.mongodb.morphia.query.BucketAutoOptions;
-import org.mongodb.morphia.query.BucketOptions;
+import dev.morphia.query.BucketAutoOptions;
+import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 
