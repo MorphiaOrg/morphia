@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.49" />
+    <meta name="generator" content="Hugo 0.53" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>References :: Morphia</title>
 
     
-    <link href="/morphia/1.5/css/nucleus.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/fontawesome-all.min.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/hybrid.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/featherlight.min.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/auto-complete.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/theme.css?1552237818" rel="stylesheet">
-    <link href="/morphia/1.5/css/hugo-theme.css?1552237818" rel="stylesheet">
+    <link href="/morphia/1.5/css/nucleus.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/fontawesome-all.min.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/hybrid.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/featherlight.min.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/perfect-scrollbar.min.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/auto-complete.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/theme.css?1552268875" rel="stylesheet">
+    <link href="/morphia/1.5/css/hugo-theme.css?1552268875" rel="stylesheet">
     
 
-    <script src="/morphia/1.5/js/jquery-2.x.min.js?1552237818"></script>
+    <script src="/morphia/1.5/js/jquery-2.x.min.js?1552268875"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -488,7 +488,7 @@
         
 
 
-<p>Morphia supports two styles of defining references:  the <code>@Reference</code> annotation and the experimental <a href="/morphia/1.5/javadoc?xyz/morphia/mapping/experimental/MorphiaReference.html
+<p>Morphia supports two styles of defining references:  the <code>@Reference</code> annotation and the experimental <a href="/morphia/1.5/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a>.  The annotation based approach is discussed
 <a href="/morphia/1.5/guides/annotations/">here</a>.  This guide will cover the wrapper based approach.</p>
 
@@ -500,7 +500,7 @@ permanent API can not be guaranteed.  That said, users are encouraged to experim
 
 </div>
 
-<p>An alternative to the traditional annotation-based approach is the <a href="/morphia/1.5/javadoc?xyz/morphia/mapping/experimental/MorphiaReference.html
+<p>An alternative to the traditional annotation-based approach is the <a href="/morphia/1.5/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a> wrapper.  This type can not be instantiated directly.  Instead a <code>wrap()</code>
  method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are
  supported by <code>wrap()</code>:  a reference to a single entity, a List of references to entities, a Set, and a Map.  <code>wrap()</code> will determine how
@@ -579,7 +579,7 @@ private class Book {
 <p>As you can see we have 3 different references from <code>Author</code> to <code>Book</code> and one in the opposite direction.  It would also be good to note
 that the public API of those two classes don&rsquo;t expose the <code>MorphiaReference</code> externally.  This is, of course, a stylistic choice but is
 the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.  Looking at <code>Author#setList()
-</code>, you&rsquo;ll note we have two variants.  These two classes are extracted from <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/xyz/morphia/mapping/experimental/MorphiaReferenceTest.java
+</code>, you&rsquo;ll note we have two variants.  These two classes are extracted from <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/mapping/experimental/MorphiaReferenceTest.java
 ">MorphiaReferenceTest.java</a> test.  In practice, you&rsquo;re unlikely to need both
 versions of <code>setList()</code> but in this case they help to illustrate, and test, a feature.</p>
 
@@ -591,7 +591,7 @@ away with storing only the <code>_id</code> fields for each book.  This gives us
 <pre><code class="language-javascript">&gt; db.Author.find().pretty()
 {
 	&quot;_id&quot; : ObjectId(&quot;5c3e99276a44c77dfc1b5dbd&quot;),
-	&quot;className&quot; : &quot;xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
 	&quot;name&quot; : &quot;Jane Austen&quot;,
 	&quot;list&quot; : [
 		ObjectId(&quot;5c3e99276a44c77dfc1b5dbe&quot;),
@@ -611,7 +611,7 @@ refer to documents stored in different collections.  For these cases, there is a
 <pre><code class="language-javascript">&gt; db.jane.find().pretty()
 {
 	&quot;_id&quot; : ObjectId(&quot;5c3e99c06a44c77e5a9b5701&quot;),
-	&quot;className&quot; : &quot;xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
 	&quot;name&quot; : &quot;Jane Austen&quot;,
 	&quot;list&quot; : [
 		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c06a44c77e5a9b5702&quot;)),
@@ -642,7 +642,7 @@ complicated.  With the default, mapped collections being used, a <code>Map</code
 <pre><code class="language-javascript">&gt; db.Author.find().pretty()
 {
 	&quot;_id&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f58&quot;),
-	&quot;className&quot; : &quot;xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
 	&quot;name&quot; : &quot;Jane Austen&quot;,
 	&quot;map&quot; : {
 		&quot;Sense and Sensibility &quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f59&quot;),
@@ -659,7 +659,7 @@ complicated.  With the default, mapped collections being used, a <code>Map</code
 <pre><code class="language-javascript">&gt; db.jane.find().pretty()
 {
 	&quot;_id&quot; : ObjectId(&quot;5c3e9d096a44c77fd500e03f&quot;),
-	&quot;className&quot; : &quot;xyz.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
 	&quot;name&quot; : &quot;Jane Austen&quot;,
 	&quot;map&quot; : {
 		&quot;Sense and Sensibility &quot; : DBRef(&quot;books&quot;, ObjectId(&quot;5c3e9d096a44c77fd500e040&quot;)),
@@ -967,20 +967,20 @@ consideration can be given to adding such functionality in the future.</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.5/js/clipboard.min.js?1552237818"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1552237818"></script>
-    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1552237818"></script>
-    <script src="/morphia/1.5/js/jquery.sticky.js?1552237818"></script>
-    <script src="/morphia/1.5/js/featherlight.min.js?1552237818"></script>
-    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1552237818"></script>
-    <script src="/morphia/1.5/js/highlight.pack.js?1552237818"></script>
+    <script src="/morphia/1.5/js/clipboard.min.js?1552268875"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.min.js?1552268875"></script>
+    <script src="/morphia/1.5/js/perfect-scrollbar.jquery.min.js?1552268875"></script>
+    <script src="/morphia/1.5/js/jquery.sticky.js?1552268875"></script>
+    <script src="/morphia/1.5/js/featherlight.min.js?1552268875"></script>
+    <script src="/morphia/1.5/js/html5shiv-printshiv.min.js?1552268875"></script>
+    <script src="/morphia/1.5/js/highlight.pack.js?1552268875"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1552237818"></script>
-    <script src="/morphia/1.5/js/learn.js?1552237818"></script>
-    <script src="/morphia/1.5/js/hugo-learn.js?1552237818"></script>
+    <script src="/morphia/1.5/js/modernizr.custom.71422.js?1552268875"></script>
+    <script src="/morphia/1.5/js/learn.js?1552268875"></script>
+    <script src="/morphia/1.5/js/hugo-learn.js?1552268875"></script>
 
-    <link href="/morphia/1.5/mermaid/mermaid.css?1552237818" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.5/mermaid/mermaid.js?1552237818"></script>
+    <link href="/morphia/1.5/mermaid/mermaid.css?1552268875" type="text/css" rel="stylesheet" />
+    <script src="/morphia/1.5/mermaid/mermaid.js?1552268875"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

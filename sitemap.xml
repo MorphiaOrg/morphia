@@ -3,17 +3,17 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/morphia/categories/</loc>
+    <loc>/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/morphia/</loc>
+    <loc>/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/morphia/tags/</loc>
+    <loc>/tags/</loc>
     <priority>0</priority>
   </url>
   
