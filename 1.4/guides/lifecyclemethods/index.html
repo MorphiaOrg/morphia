@@ -7,31 +7,35 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/morphia/1.4/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/morphia/1.4/images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/1.4/images/favicon.png" type="image/x-icon" />
+<link rel="icon" href="/1.4/images/favicon.png" type="image/x-icon" />
     <title>Life Cycle Methods :: Morphia</title>
 
     
-    <link href="/morphia/1.4/css/nucleus.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/fontawesome-all.min.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/hybrid.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/featherlight.min.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/perfect-scrollbar.min.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/auto-complete.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/theme.css?1552271835" rel="stylesheet">
-    <link href="/morphia/1.4/css/hugo-theme.css?1552271835" rel="stylesheet">
+    <link href="/1.4/css/nucleus.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/fontawesome-all.min.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/hybrid.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/featherlight.min.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/perfect-scrollbar.min.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/auto-complete.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/theme.css?1552271974" rel="stylesheet">
+    <link href="/1.4/css/hugo-theme.css?1552271974" rel="stylesheet">
     
 
-    <script src="/morphia/1.4/js/jquery-2.x.min.js?1552271835"></script>
+    <script src="/1.4/js/jquery-2.x.min.js?1552271974"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
       
+        :not(pre) > code + span.copy-to-clipboard {
+            display: none;
+        }
+      
     </style>
-    <link href="/morphia/1.4/css/java.css" rel="stylesheet">
-<link href="/morphia/1.4/css/theme-green.css" rel="stylesheet">
+    <link href="/1.4/css/java.css" rel="stylesheet">
+<link href="/1.4/css/theme-green.css" rel="stylesheet">
 
 <style>
     :root {
@@ -80,35 +84,19 @@
 </style>
 
   </head>
-  <body class="" data-url="/morphia/1.4/guides/lifecyclemethods/">
+  <body class="" data-url="/1.4/guides/lifecyclemethods/">
     <nav id="sidebar" class="">
 
 
 
   <div id="header-wrapper">
     <div id="header">
-      <a id="logo" href="/morphia/1.4">
-    <img src="/morphia/1.4/images/logo.png" alt="Morphia Logo"/>
+      <a id="logo" href="/1.4">
+    <img src="/1.4/images/logo.png" alt="Morphia Logo"/>
 </a>
 <span id="version-tag">Morphia 1.4</span>
 
     </div>
-    
-        <div class="searchbox">
-    <label for="search-by"><i class="fas fa-search"></i></label>
-    <input data-search-input id="search-by" type="text" placeholder="Search...">
-    <span data-search-clear=""><i class="fas fa-close"></i></span>
-</div>
-
-<script type="text/javascript" src="/morphia/1.4/js/lunr.min.js?1552271835"></script>
-<script type="text/javascript" src="/morphia/1.4/js/auto-complete.js?1552271835"></script>
-<script type="text/javascript">
-    
-        var baseurl = '\/morphia\/1.4';
-    
-</script>
-<script type="text/javascript" src="/morphia/1.4/js/search.js?1552271835"></script>
-
     
   </div>
 
@@ -123,12 +111,12 @@
  
   
     
-    <li data-nav-id="/morphia/1.4/getting-started/" title="Getting Started" class="dd-item 
+    <li data-nav-id="/1.4/getting-started/" title="Getting Started" class="dd-item 
         
         
         
         ">
-      <a href="/morphia/1.4/getting-started/">
+      <a href="/1.4/getting-started/">
           Getting Started
           
       </a>
@@ -148,8 +136,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
-        <a href="/morphia/1.4/getting-started/installation-guide/">
+      <li data-nav-id="/1.4/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
+        <a href="/1.4/getting-started/installation-guide/">
         Installation Guide
         
         </a>
@@ -167,8 +155,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/getting-started/quick-tour/" title="Quick Tour" class="dd-item ">
-        <a href="/morphia/1.4/getting-started/quick-tour/">
+      <li data-nav-id="/1.4/getting-started/quick-tour/" title="Quick Tour" class="dd-item ">
+        <a href="/1.4/getting-started/quick-tour/">
         Quick Tour
         
         </a>
@@ -193,12 +181,12 @@
  
   
     
-    <li data-nav-id="/morphia/1.4/guides/" title="Reference Guides" class="dd-item 
+    <li data-nav-id="/1.4/guides/" title="Reference Guides" class="dd-item 
         parent
         
         
         ">
-      <a href="/morphia/1.4/guides/">
+      <a href="/1.4/guides/">
           Reference Guides
           
       </a>
@@ -218,8 +206,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/annotations/" title="Annotations" class="dd-item ">
-        <a href="/morphia/1.4/guides/annotations/">
+      <li data-nav-id="/1.4/guides/annotations/" title="Annotations" class="dd-item ">
+        <a href="/1.4/guides/annotations/">
         Annotations
         
         </a>
@@ -237,8 +225,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/aggregation/" title="Aggregation" class="dd-item ">
-        <a href="/morphia/1.4/guides/aggregation/">
+      <li data-nav-id="/1.4/guides/aggregation/" title="Aggregation" class="dd-item ">
+        <a href="/1.4/guides/aggregation/">
         Aggregation
         
         </a>
@@ -256,8 +244,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/indexing/" title="Indexing" class="dd-item ">
-        <a href="/morphia/1.4/guides/indexing/">
+      <li data-nav-id="/1.4/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/1.4/guides/indexing/">
         Indexing
         
         </a>
@@ -275,8 +263,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/jrebel/" title="JRebel" class="dd-item ">
-        <a href="/morphia/1.4/guides/jrebel/">
+      <li data-nav-id="/1.4/guides/jrebel/" title="JRebel" class="dd-item ">
+        <a href="/1.4/guides/jrebel/">
         JRebel
         
         </a>
@@ -294,8 +282,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item active">
-        <a href="/morphia/1.4/guides/lifecyclemethods/">
+      <li data-nav-id="/1.4/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item active">
+        <a href="/1.4/guides/lifecyclemethods/">
         Life Cycle Methods
         
         </a>
@@ -313,8 +301,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/querying/" title="Querying" class="dd-item ">
-        <a href="/morphia/1.4/guides/querying/">
+      <li data-nav-id="/1.4/guides/querying/" title="Querying" class="dd-item ">
+        <a href="/1.4/guides/querying/">
         Querying
         
         </a>
@@ -332,8 +320,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
-        <a href="/morphia/1.4/guides/schemavalidation/">
+      <li data-nav-id="/1.4/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
+        <a href="/1.4/guides/schemavalidation/">
         Schema Validation
         
         </a>
@@ -351,8 +339,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/updating/" title="Updating" class="dd-item ">
-        <a href="/morphia/1.4/guides/updating/">
+      <li data-nav-id="/1.4/guides/updating/" title="Updating" class="dd-item ">
+        <a href="/1.4/guides/updating/">
         Updating
         
         </a>
@@ -370,8 +358,8 @@
  
   
     
-      <li data-nav-id="/morphia/1.4/guides/validationextension/" title="Validation Extension" class="dd-item ">
-        <a href="/morphia/1.4/guides/validationextension/">
+      <li data-nav-id="/1.4/guides/validationextension/" title="Validation Extension" class="dd-item ">
+        <a href="/1.4/guides/validationextension/">
         Validation Extension
         
         </a>
@@ -400,7 +388,7 @@
         <ul>
           
               <li> 
-                  <a class="padding" href="/morphia/1.4/javadoc"><i class='fas fa-book'></i> API Documentation</a>
+                  <a class="padding" href="/1.4/javadoc"><i class='fas fa-book'></i> API Documentation</a>
               </li>
           
               <li> 
@@ -451,7 +439,7 @@
             
           
           
-            <a href='/morphia/1.4/'>Morphia</a> > <a href='/morphia/1.4/guides/'>Reference Guides</a> > Life Cycle Methods
+            <a href='/1.4/'>Morphia</a> > <a href='/1.4/guides/'>Reference Guides</a> > Life Cycle Methods
           
          
           
@@ -508,7 +496,7 @@ add/remove/change values)</li>
 <li><strong>@PostLoad</strong> - Called after populating the entity with the values from the document</li>
 </ul>
 
-<p>See the <a href="/morphia/1.4/guides/annotations/">annotations guide</a> for a full list of the annotations supported.</p>
+<p>See the <a href="/1.4/guides/annotations/">annotations guide</a> for a full list of the annotations supported.</p>
 
 <h2 id="examples">Examples</h2>
 
@@ -821,10 +809,10 @@ class DigitalSigner {
 
 
         
-            <a class="nav nav-prev" href="/morphia/1.4/guides/jrebel/" title="JRebel"> <i class="fas fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="/1.4/guides/jrebel/" title="JRebel"> <i class="fas fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="/morphia/1.4/guides/querying/" title="Querying" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="/1.4/guides/querying/" title="Querying" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
         
     </div>
 
@@ -833,20 +821,20 @@ class DigitalSigner {
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/1.4/js/clipboard.min.js?1552271835"></script>
-    <script src="/morphia/1.4/js/perfect-scrollbar.min.js?1552271835"></script>
-    <script src="/morphia/1.4/js/perfect-scrollbar.jquery.min.js?1552271835"></script>
-    <script src="/morphia/1.4/js/jquery.sticky.js?1552271835"></script>
-    <script src="/morphia/1.4/js/featherlight.min.js?1552271835"></script>
-    <script src="/morphia/1.4/js/html5shiv-printshiv.min.js?1552271835"></script>
-    <script src="/morphia/1.4/js/highlight.pack.js?1552271835"></script>
+    <script src="/1.4/js/clipboard.min.js?1552271974"></script>
+    <script src="/1.4/js/perfect-scrollbar.min.js?1552271974"></script>
+    <script src="/1.4/js/perfect-scrollbar.jquery.min.js?1552271974"></script>
+    <script src="/1.4/js/jquery.sticky.js?1552271974"></script>
+    <script src="/1.4/js/featherlight.min.js?1552271974"></script>
+    <script src="/1.4/js/html5shiv-printshiv.min.js?1552271974"></script>
+    <script src="/1.4/js/highlight.pack.js?1552271974"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/1.4/js/modernizr.custom.71422.js?1552271835"></script>
-    <script src="/morphia/1.4/js/learn.js?1552271835"></script>
-    <script src="/morphia/1.4/js/hugo-learn.js?1552271835"></script>
+    <script src="/1.4/js/modernizr.custom.71422.js?1552271974"></script>
+    <script src="/1.4/js/learn.js?1552271974"></script>
+    <script src="/1.4/js/hugo-learn.js?1552271974"></script>
 
-    <link href="/morphia/1.4/mermaid/mermaid.css?1552271835" type="text/css" rel="stylesheet" />
-    <script src="/morphia/1.4/mermaid/mermaid.js?1552271835"></script>
+    <link href="/1.4/mermaid/mermaid.css?1552271974" type="text/css" rel="stylesheet" />
+    <script src="/1.4/mermaid/mermaid.js?1552271974"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
