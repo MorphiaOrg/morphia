@@ -16,4 +16,3 @@ dev.morphia.mapping.validation.classrules
 dev.morphia.mapping.validation.fieldrules
 dev.morphia.query
 dev.morphia.query.validation
-org.mongodb.morphia.query
