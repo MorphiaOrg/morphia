@@ -10,7 +10,7 @@ import static java.time.ZoneId.systemDefault;
  *
  */
 @SuppressWarnings("Since15")
-public enum DateForm {
+public enum DateStorage {
     UTC {
         @Override
         public ZoneId getZone() {

@@ -18,8 +18,7 @@ package dev.morphia.converters;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import dev.morphia.mapping.DateForm;
+import dev.morphia.mapping.DateStorage;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.Datastore;
@@ -83,7 +82,7 @@ public class Java8EntityTest extends TestBase {
         Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
         final Java8Entity loaded = getDs().createQuery(Java8Entity.class).first();
 
-        getDs().getMapper().getOptions().setDateForm(DateForm.UTC);
+        getDs().getMapper().getOptions().setDateStorage(DateStorage.UTC);
         final Java8Entity loaded3 = getDs().createQuery(Java8Entity.class).first();
 
         collection.remove(new BasicDBObject());

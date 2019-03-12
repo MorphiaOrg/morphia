@@ -49,7 +49,7 @@ public class LocalDateConverter extends TypeConverter implements SimpleValueConv
         }
 
         if (val instanceof Date) {
-            return LocalDateTime.ofInstant(((Date) val).toInstant(), mapper.getOptions().getDateForm().getZone())
+            return LocalDateTime.ofInstant(((Date) val).toInstant(), mapper.getOptions().getDateStorage().getZone())
                                 .toLocalDate();
         }
 
@@ -63,7 +63,7 @@ public class LocalDateConverter extends TypeConverter implements SimpleValueConv
         }
         LocalDate date = (LocalDate) value;
         return Date.from(date.atStartOfDay()
-                             .atZone(mapper.getOptions().getDateForm().getZone())
+                             .atZone(mapper.getOptions().getDateStorage().getZone())
                              .toInstant());
     }
 }

@@ -22,8 +22,6 @@ import dev.morphia.mapping.Mapper;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import static java.time.ZoneId.systemDefault;
-
 /**
  * Provides a converter for {@link java.time.LocalDateTime} converting the value to a Date.
  */
@@ -51,7 +49,7 @@ public class LocalDateTimeConverter extends TypeConverter implements SimpleValue
         }
 
         if (val instanceof Date) {
-            return LocalDateTime.ofInstant(((Date) val).toInstant(), mapper.getOptions().getDateForm().getZone());
+            return LocalDateTime.ofInstant(((Date) val).toInstant(), mapper.getOptions().getDateStorage().getZone());
         }
 
         throw new IllegalArgumentException("Can't convert to LocalDateTime from " + val);
@@ -62,6 +60,6 @@ public class LocalDateTimeConverter extends TypeConverter implements SimpleValue
         if (value == null) {
             return null;
         }
-        return Date.from(((LocalDateTime) value).atZone(mapper.getOptions().getDateForm().getZone()).toInstant());
+        return Date.from(((LocalDateTime) value).atZone(mapper.getOptions().getDateStorage().getZone()).toInstant());
     }
 }
