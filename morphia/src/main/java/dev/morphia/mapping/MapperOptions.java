@@ -22,6 +22,7 @@ public class MapperOptions {
     private boolean cacheClassLookups;
     private boolean mapSubPackages;
     private boolean disableEmbeddedIndexes;
+    private DateForm dateForm = DateForm.SYSTEM_DEFAULT;
     private ObjectFactory objectFactory;
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
     private CustomMapper embeddedMapper = new EmbeddedMapper();
@@ -61,6 +62,8 @@ public class MapperOptions {
         referenceMapper = options.getReferenceMapper();
         valueMapper = options.getValueMapper();
         mapSubPackages = options.isMapSubPackages();
+        dateForm = options.dateForm;
+        disableEmbeddedIndexes = options.disableEmbeddedIndexes;
     }
 
     private MapperOptions(final Builder builder) {
@@ -77,6 +80,7 @@ public class MapperOptions {
         defaultMapper = builder.defaultMapper;
         referenceMapper = builder.referenceMapper;
         valueMapper = builder.valueMapper;
+        dateForm = builder.dateForm;
     }
 
     /**
@@ -363,6 +367,28 @@ public class MapperOptions {
         return Mapper.CLASS_NAME_FIELDNAME;
     }
 
+    public void setDisableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
+        this.disableEmbeddedIndexes = disableEmbeddedIndexes;
+    }
+
+    /**
+     * @return the format to use for Java 8 date/time storage
+     */
+    public DateForm getDateForm() {
+        return dateForm;
+    }
+
+    /**
+     * This is used to determine how Java 8 dates and times are stored in the database.
+     *
+     * @deprecated This will be removed in 2.0.  It is intended to bridge the gap when correcting the storage of data/time values in the
+     * database.  {@link DateForm#UTC} should be used and will be the default in 2.0.  In 1.5 it is {@link DateForm#SYSTEM_DEFAULT} for
+     * backwards compatibility.
+     */
+    public void setDateForm(final DateForm dateForm) {
+        this.dateForm = dateForm;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -395,6 +421,7 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private boolean disableEmbeddedIndexes;
+        private DateForm dateForm = DateForm.SYSTEM_DEFAULT;
         private ObjectFactory objectFactory;
         private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
         private CustomMapper embeddedMapper = new EmbeddedMapper();
@@ -471,6 +498,11 @@ public class MapperOptions {
 
         public Builder valueMapper(final CustomMapper valueMapper) {
             this.valueMapper = valueMapper;
+            return this;
+        }
+
+        public Builder dateForm(final DateForm dateForm) {
+            this.dateForm = dateForm;
             return this;
         }
 

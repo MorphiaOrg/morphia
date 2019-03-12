@@ -32,8 +32,12 @@ class ConverterTest<F, T> extends TestBase {
         Assert.assertEquals(expected, getConverter().encode(input));
     }
 
-    TypeConverter getConverter() {
+    protected TypeConverter getConverter() {
         return converter;
+    }
+
+    protected void setConverter(final TypeConverter converter) {
+        this.converter = converter;
     }
 
     @SuppressWarnings("unchecked")

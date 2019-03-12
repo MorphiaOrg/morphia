@@ -72,10 +72,10 @@ public class DefaultConverters extends Converters {
         addConverter(new GeometryConverter());
 
         if (JAVA_8) {
-            addConverter(LocalTimeConverter.class);
-            addConverter(LocalDateTimeConverter.class);
-            addConverter(LocalDateConverter.class);
-            addConverter(InstantConverter.class);
+            addConverter(new LocalTimeConverter());
+            addConverter(new LocalDateTimeConverter(mapper));
+            addConverter(new LocalDateConverter(mapper));
+            addConverter(new InstantConverter());
         }
 
         //generic converter that will just pass things through.

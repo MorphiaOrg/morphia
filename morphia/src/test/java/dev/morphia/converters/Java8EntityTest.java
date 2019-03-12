@@ -16,6 +16,10 @@
 
 package dev.morphia.converters;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import dev.morphia.mapping.DateForm;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.Datastore;
@@ -67,6 +71,32 @@ public class Java8EntityTest extends TestBase {
         Assert.assertEquals(0L, getDs().find(Java8Entity.class).field("localDate").equal(localDate.minus(1, DAYS)).count());
         Assert.assertEquals(9L, getDs().find(Java8Entity.class).field("localDateTime")
                                        .notEqual(localDateTime.plus(6, DAYS)).count());
+    }
+
+    @Test
+    public void dateForm() {
+        LocalDate localDate = LocalDate.of(1995, 10, 15);
+        LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 2, 15, 16, 123 * 1000000);
+
+        final DBCollection collection = getDs().getCollection(Java8Entity.class);
+
+        Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
+        final Java8Entity loaded = getDs().createQuery(Java8Entity.class).first();
+
+        getDs().getMapper().getOptions().setDateForm(DateForm.UTC);
+        final Java8Entity loaded3 = getDs().createQuery(Java8Entity.class).first();
+
+        collection.remove(new BasicDBObject());
+
+        Java8Entity created2 = createEntity(getDs(), null, localDate, localDateTime, null);
+        final Java8Entity loaded2 = getDs().createQuery(Java8Entity.class).first();
+
+        Assert.assertNotEquals(created, created2);
+        Assert.assertEquals(loaded.getLocalDate(), loaded2.getLocalDate());
+        Assert.assertEquals(loaded.getLocalDateTime(), loaded2.getLocalDateTime());
+
+        Assert.assertEquals(loaded.getLocalDate(), loaded3.getLocalDate());
+        Assert.assertNotEquals(loaded.getLocalDateTime(), loaded3.getLocalDateTime());
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {

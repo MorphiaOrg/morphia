@@ -27,7 +27,8 @@ import java.util.Date;
 @SuppressWarnings("Since15")
 public class LocalDateConverterTest extends ConverterTest<LocalDate, Date> {
     public LocalDateConverterTest() {
-        super(new LocalDateConverter());
+        super(null);
+        setConverter(new LocalDateConverter(getDs().getMapper()));
     }
 
     @Test

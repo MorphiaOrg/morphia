@@ -22,6 +22,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.ValidationOptions;
+import dev.morphia.mapping.DateForm;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +130,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.db = mongoClient.getDB(database.getName());
         this.defConcern = mongoClient.getWriteConcern();
         this.indexHelper = new IndexHelper(mapper, database);
+
+        if (mapper.getOptions().getDateForm() == DateForm.SYSTEM_DEFAULT) {
+            LOG.warn("Currently using the system default zoneId for encoding.  This default will change in 2.0 to use UTC which will "
+                     + "likely break your application.  Consult the migration guide for mitigation suggestions.");
+        }
     }
 
     /**
