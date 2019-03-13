@@ -4,9 +4,6 @@ package dev.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -15,9 +12,14 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static dev.morphia.utils.IndexType.DESC;
 
@@ -32,13 +34,28 @@ public class TestIndexCollections extends TestBase {
         ads.ensureIndexes();
 
         ads.ensureIndexes("b_2", HasEmbeddedIndex.class);
-        BasicDBObject[] indexes = new BasicDBObject[]{
+        DBObject[] indexes = new BasicDBObject[]{
             new BasicDBObject("name", 1),
             new BasicDBObject("embeddedIndex.color", -1),
             new BasicDBObject("embeddedIndex.name", 1),
         };
 
         testIndex(db.getCollection("b_2").getIndexInfo(), indexes);
+        testIndex(ads.getCollection(HasEmbeddedIndex.class).getIndexInfo(), indexes);
+    }
+
+    @Test
+    public void testDisablingEmbedded() {
+        AdvancedDatastore ads = getAds();
+        ads.getMapper().getOptions().setDisableEmbeddedIndexes(true);
+        getDs().getCollection(HasEmbeddedIndex.class).drop();
+        getMorphia().map(HasEmbeddedIndex.class);
+        ads.ensureIndexes();
+
+        DBObject[] indexes = new BasicDBObject[]{
+            new BasicDBObject("name", 1),
+        };
+
         testIndex(ads.getCollection(HasEmbeddedIndex.class).getIndexInfo(), indexes);
     }
 
@@ -79,22 +96,19 @@ public class TestIndexCollections extends TestBase {
             .append("field2", 1));
     }
 
-    private void testIndex(final List<DBObject> indexInfo, final BasicDBObject... indexes) {
-        Iterator<DBObject> iterator = indexInfo.iterator();
-        while (iterator.hasNext()) {
-            final DBObject dbObject = iterator.next();
-            if (dbObject.get("name").equals("_id_")) {
-                iterator.remove();
-            } else {
-                for (final DBObject index : indexes) {
-                    final DBObject key = (DBObject) dbObject.get("key");
-                    if (key.equals(index)) {
-                        iterator.remove();
-                    }
-                }
+    private void testIndex(final List<DBObject> indexInfo, final DBObject... indexes) {
+        Set<String> expected = new TreeSet<String>();
+        Set<String> actual = new TreeSet<String>();
+        for (final DBObject index : indexes) {
+            expected.addAll(index.keySet());
+        }
+
+        for (final DBObject dbObject : indexInfo) {
+            if (!"_id_".equals(dbObject.get("name"))) {
+                actual.addAll(((DBObject) dbObject.get("key")).keySet());
             }
         }
-        Assert.assertTrue("Should have found all the indexes.  Remaining: " + indexInfo, indexInfo.isEmpty());
+        Assert.assertEquals("Should have found all the indexes.", expected, actual);
     }
 
     @Entity
