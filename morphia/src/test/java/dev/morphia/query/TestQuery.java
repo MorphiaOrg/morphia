@@ -1824,6 +1824,15 @@ public class TestQuery extends TestBase {
         public void setSize(final int size) {
             this.size = size;
         }
+
+        @Override
+        public String toString() {
+            return "ContainsPic{" +
+                   "id=" + id +
+                   ", name='" + name + '\'' +
+                   ", size=" + size +
+                   '}';
+        }
     }
 
     @Entity

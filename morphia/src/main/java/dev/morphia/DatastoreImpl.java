@@ -826,6 +826,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
         return update(query, operations, new UpdateOptions()
             .upsert(createIfMissing)
+            .multi(true)
             .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 

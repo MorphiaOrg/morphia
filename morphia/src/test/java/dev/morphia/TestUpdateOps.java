@@ -16,6 +16,8 @@ package dev.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCursor;
+import dev.morphia.query.Sort;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -218,6 +220,32 @@ public class TestUpdateOps extends TestBase {
         getDs().update(finder, updateOperations4, true);
         validateNoClassName(finder.get());
     }
+
+    @Test
+    public void testMultiUpdates() {
+        getMorphia().map(ContainsPic.class);
+        Query<ContainsPic> finder = getDs().find(ContainsPic.class);
+
+        createContainsPic(0);
+        createContainsPic(1);
+        createContainsPic(2);
+
+        UpdateOperations<ContainsPic> updateOperations4 = getDs().createUpdateOperations(ContainsPic.class)
+                                                                .inc("size");
+        getDs().update(finder, updateOperations4, true);
+
+        final List<ContainsPic> iterator = finder.order(Sort.ascending("size")).asList();
+        for (int i = 0; i < 3; i++) {
+            Assert.assertEquals(iterator.toString(), i + 1, iterator.get(i).getSize());
+        }
+    }
+
+    public void createContainsPic(final int size) {
+        final ContainsPic containsPic = new ContainsPic();
+        containsPic.setSize(size);
+        getDs().save(containsPic);
+    }
+
 
     @Test
     public void testAddToSet() {
