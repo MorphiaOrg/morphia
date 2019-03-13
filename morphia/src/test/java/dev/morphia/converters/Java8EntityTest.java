@@ -18,18 +18,19 @@ package dev.morphia.converters;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import dev.morphia.mapping.DateStorage;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
+import dev.morphia.mapping.DateStorage;
 import dev.morphia.query.FindOptions;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -95,7 +96,9 @@ public class Java8EntityTest extends TestBase {
         Assert.assertEquals(loaded.getLocalDateTime(), loaded2.getLocalDateTime());
 
         Assert.assertEquals(loaded.getLocalDate(), loaded3.getLocalDate());
-        Assert.assertNotEquals(loaded.getLocalDateTime(), loaded3.getLocalDateTime());
+        if (!TimeZone.getDefault().equals(TimeZone.getTimeZone("UTC"))) {
+            Assert.assertNotEquals(loaded.getLocalDateTime(), loaded3.getLocalDateTime());
+        }
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {
