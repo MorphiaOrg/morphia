@@ -9,6 +9,16 @@
     "class" : "com.mongodb..*",
     "justification" : "Driver classes should be ignored"
   }, {
+    "code" : "java.method.numberOfParametersChanged",
+    "classQualifiedName" : "dev.morphia.converters.LocalDateConverter",
+    "methodName" : "<init>",
+    "justification" : "These are largely used internally and should rarely be seen in user code"
+  }, {
+    "code" : "java.method.numberOfParametersChanged",
+    "classQualifiedName" : "dev.morphia.converters.LocalDateTimeConverter",
+    "methodName" : "<init>",
+    "justification" : "These are largely used internally and should rarely be seen in user code"
+  }, {
     "code" : "java.method.abstractMethodAdded",
     "classQualifiedName" : "dev.morphia.geo.CoordinateReferenceSystem",
     "justification" : "These will be used as transition helpers in 2.0"
