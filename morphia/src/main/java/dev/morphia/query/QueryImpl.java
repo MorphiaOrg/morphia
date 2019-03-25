@@ -292,9 +292,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         n.baseQuery = copy(baseQuery);
         n.options = options != null ? options.copy() : null;
         n.criteriaContainer = criteriaContainer;
-        // fields from superclass
-//        n.setAttachedTo(getAttachedTo());
-//        n.setChildren(getChildren() == null ? null : new ArrayList<Criteria>(getChildren()));
         return n;
     }
 

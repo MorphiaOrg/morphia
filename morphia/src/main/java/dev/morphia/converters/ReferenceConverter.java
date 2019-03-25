@@ -41,6 +41,5 @@ public class ReferenceConverter extends TypeConverter {
     @Override
     public Object decode(final Class<?> targetClass, final Object idValue, final MappedField optionalExtraInfo) {
         throw new UnsupportedOperationException("should never get here");
-//        return idValue == null ? null : SingleReference.wrapId(idValue);
     }
 }

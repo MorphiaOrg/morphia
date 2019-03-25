@@ -89,10 +89,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             final DBRef dbRef = (DBRef) id;
 
             collection = dbRef.getCollectionName();
-//            final MappedField typeParameter = mappedField.getTypeParameters().get(0);
-//            final Class type = typeParameter.getType();
-//            final MappedField idField = mapper.getMappedClass(type).getMappedIdField();
-            id = dbRef.getId(); // mapper.getConverters().decode(idField.getConcreteType(), dbRef.getId(), mappedField);
+            id = dbRef.getId();
         }
 
         return new SingleReference(datastore, mappedClass, collection, id);

@@ -454,16 +454,9 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final Map<String, List<Key>> kindMap = new HashMap<String, List<Key>>();
         final List<T> entities = new ArrayList<T>();
-        // String clazzKind = (clazz==null) ? null :
-        // getMapper().getCollectionName(clazz);
         for (final Key<?> key : keys) {
             mapper.updateCollection(key);
 
-            // if (clazzKind != null && !key.getKind().equals(clazzKind))
-            // throw new IllegalArgumentException("Types are not equal (" +
-            // clazz + "!=" + key.getKindClass() +
-            // ") for key and method parameter clazz");
-            //
             if (kindMap.containsKey(key.getCollection())) {
                 kindMap.get(key.getCollection()).add(key);
             } else {
@@ -1355,7 +1348,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         long newVersion = nextValue(oldVersion);
 
         dbObj.put(versionKeyName, newVersion);
-        //        mfVersion.setFieldValue(entity, newVersion);
 
         if (idValue != null && newVersion == 1) {
             try {
@@ -1386,52 +1378,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         return wr;
     }
-
-/*
-    private <T> UpdateResult tryVersionedUpdate(final MongoCollection collection, final T entity, final Document document,
-                                                final Object idValue, final InsertOneOptions options, final MappedClass mc) {
-        if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            return null;
-        }
-
-        final MappedField mfVersion = mc.getMappedVersionField();
-        final String versionKeyName = mfVersion.getNameToStore();
-
-        Long oldVersion = (Long) mfVersion.getFieldValue(entity);
-        long newVersion = nextValue(oldVersion);
-
-        document.put(versionKeyName, newVersion);
-        //        mfVersion.setFieldValue(entity, newVersion);
-
-        UpdateResult result;
-        if (idValue != null && newVersion != 1) {
-            final Query<?> query = find(collection.getNamespace().getCollectionName(), entity.getClass())
-                                       .disableValidation()
-                                       .filter(Mapper.ID_KEY, idValue)
-                                       .enableValidation()
-                                       .filter(versionKeyName, oldVersion);
-            result = update(query, document, new com.mongodb.client.model.UpdateOptions()
-                                                 .bypassDocumentValidation(options.getBypassDocumentValidation()));
-
-            if (result.getModifiedCount() != 1) {
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                    entity.getClass().getName(), idValue, oldVersion));
-            }
-        } else {
-            if (((DBObject) document).get(ID_FIELD_NAME) == null) {
-                collection.insertOne(document, options);
-                result = UpdateResult.acknowledged(1, 1L, null);
-            } else {
-                result = collection.updateOne(new Document(ID_FIELD_NAME, document.get(ID_FIELD_NAME)), document,
-                    new com.mongodb.client.model.UpdateOptions()
-                        .bypassDocumentValidation(options.getBypassDocumentValidation())
-                        .upsert(true));
-            }
-        }
-
-        return result;
-    }
-*/
 
     private Query<?> buildExistsQuery(final Object entityOrKey) {
         final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
@@ -1470,22 +1416,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         return postSaveOperations(entities, involvedObjects, dbColl.getName());
     }
-/*
-    private <T> Iterable<Key<T>> insert(final MongoCollection collection, final Iterable<T> entities, final InsertManyOptions options) {
-        if (!entities.iterator().hasNext()) {
-            return emptyList();
-        }
-
-        final Map<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
-        final List<DBObject> list = new ArrayList<DBObject>();
-        for (final T entity : entities) {
-            list.add(toDbObject(entity, involvedObjects));
-        }
-        collection.insertMany(list, options);
-
-        return postSaveOperations(entities, involvedObjects, collection.getNamespace().getCollectionName());
-    }
-*/
 
     /**
      * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
@@ -1640,43 +1570,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                enforceWriteConcern(options, query.getEntityClass())
                                                    .getOptions()));
     }
-
-/*
-    @SuppressWarnings("unchecked")
-    private <T> UpdateResult update(final Query<T> query, final Document update, final com.mongodb.client.model.UpdateOptions options) {
-
-        MongoCollection collection = query.getCollection();
-        if (collection == null) {
-            collection = getMongoCollection(query.getEntityClass());
-        }
-
-        if (query.getSortObject() != null && !query.getSortObject().keySet().isEmpty()) {
-            throw new QueryException("sorting is not allowed for updates.");
-        }
-
-        Document queryDocument = ((QueryImpl) query).getQueryDocument();
-
-        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
-        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
-        if (!fields.isEmpty()) {
-            final MappedField versionMF = fields.get(0);
-            if (update.get(versionMF.getNameToStore()) == null) {
-                if (!update.containsKey("$inc")) {
-                    update.put("$inc", new Document(versionMF.getNameToStore(), 1));
-                } else {
-                    ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
-                }
-            }
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Executing update(%s) for query: %s, operations: %s",
-                             collection.getNamespace().getCollectionName(), queryDocument, update));
-        }
-
-        return collection.updateOne(queryDocument, update, options);
-    }
-*/
 
     /**
      * Gets the write concern for entity or returns the default write concern for this datastore

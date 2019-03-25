@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Entity
-public class ClassA /*implements InterfaceA*/ {
+public class ClassA implements InterfaceA {
     @Id
     ObjectId _id;
     @Reference(lazy = true)
@@ -22,12 +22,12 @@ public class ClassA /*implements InterfaceA*/ {
     MorphiaReference<Set<InterfaceB>> set;
     MorphiaReference<Map<String, InterfaceB>> map;
 
-//        @Override
+    @Override
     public ObjectId getId() {
         return _id;
     }
 
-//        @Override
+    @Override
     public InterfaceB getB() {
         return b;
     }
