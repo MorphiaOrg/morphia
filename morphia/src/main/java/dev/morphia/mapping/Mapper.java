@@ -197,15 +197,11 @@ public class Mapper {
     @Deprecated
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
-            final Throwable t = new Throwable();
-            LOG.error("A null reference was passed in for the dbObject", t);
+            LOG.error("A null reference was passed in for the dbObject", new Throwable());
             return null;
         }
 
-        T entity;
-        entity = opts.getObjectFactory().createInstance(entityClass, dbObject);
-        entity = fromDb(datastore, dbObject, entity, cache);
-        return entity;
+        return fromDb(datastore, dbObject, opts.getObjectFactory().createInstance(entityClass, dbObject), cache);
     }
 
     /**
@@ -661,14 +657,14 @@ public class Mapper {
                     }
                 } else {
                     if (mf != null) {
-                        Reference refAnn = mf.getAnnotation(Reference.class);
                         Class<?> idType = null;
                         if (!mf.getType().equals(Key.class) && isMapped(mf.getType())) {
-                            final MappedClass mappedClass = getMappedClass(mf.getType());
-                            final MappedField idField = mappedClass.getMappedIdField();
+                            final MappedField idField = getMappedClass(mf.getType())
+                                                            .getMappedIdField();
                             idType = idField != null ? idField.getType() : null;
                         }
                         boolean valueIsIdType = mappedValue.getClass().equals(idType);
+                        Reference refAnn = mf.getAnnotation(Reference.class);
                         if (refAnn != null) {
                             if (!valueIsIdType) {
                                 Key<?> key = value instanceof Key ? (Key<?>) value : getKey(value);
@@ -678,6 +674,14 @@ public class Mapper {
                                                   : keyToDBRef(key);
                                 }
                             }
+                        } else if (mf.getType().isAssignableFrom(MorphiaReference.class)) {
+                            if (!valueIsIdType) {
+                                Key<?> key = value instanceof Key ? (Key<?>) value : getKey(value);
+                                if (key != null) {
+                                    mappedValue = keyToId(key);
+                                }
+                            }
+
                         } else if (mf.getType().equals(Key.class)) {
                             mappedValue = keyToDBRef(valueIsIdType
                                           ? createKey(mf.getSubClass(), value)

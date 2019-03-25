@@ -591,8 +591,9 @@ public class MappedField {
 
     /**
      * @return the name of the field's key-name for mongodb
+     * @morphia.internal
      */
-    protected String getMappedFieldName() {
+    public String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
             return "_id";
         } else if (hasAnnotation(Property.class)) {

@@ -744,6 +744,16 @@ public class TestDatastore extends TestBase {
         }
     }
 
+    @Entity(value = "facebook_users", noClassnameStored = true)
+    public static class FacebookUserWithNoClassNameStored extends FacebookUser {
+        public FacebookUserWithNoClassNameStored(long id, String name) {
+            super(id, name);
+        }
+
+        public FacebookUserWithNoClassNameStored() {
+        }
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public static class LifecycleListener {
         private static boolean prePersist;

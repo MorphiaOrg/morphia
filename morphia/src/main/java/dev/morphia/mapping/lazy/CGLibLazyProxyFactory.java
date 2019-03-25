@@ -66,7 +66,7 @@ public class CGLibLazyProxyFactory implements LazyProxyFactory {
         final T backend = (T) new NonFinalizingHotSwappingInvoker(new Class[]{targetClass, Serializable.class}, factory, objectReference,
                                                                   DelegationMode.SIGNATURE).proxy();
 
-        return (T) Dispatching.proxy(targetClass, new Class[]{ProxiedEntityReference.class, targetClass, Serializable.class})
+        return (T) Dispatching.proxy(targetClass, new Class[]{ProxiedEntityReference.class, Serializable.class})
                               .with(objectReference, backend)
                               .build(factory);
 

@@ -5,6 +5,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import dev.morphia.mapping.experimental.CollectionReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.Datastore;
@@ -73,7 +74,7 @@ class ReferenceMapper implements CustomMapper {
         }
 
         if(fieldValue instanceof MorphiaReference && !mf.getTypeParameters().isEmpty()) {
-            writeMorphiaReferenceValues(mf, dbObject, mapper, name, fieldValue);
+            writeMorphiaReferenceValues(dbObject, mf, fieldValue, name, mapper);
         } else {
             final Reference refAnn = mf.getAnnotation(Reference.class);
             if (mf.isMap()) {
@@ -361,71 +362,32 @@ class ReferenceMapper implements CustomMapper {
 
     public void readMorphiaReferenceValues(Mapper mapper, Datastore datastore, MappedField mappedField, DBObject dbObject, Object entity) {
         final Class paramType = mappedField.getTypeParameters().get(0).getType();
-        MorphiaReference<?> reference = null;
+        MorphiaReference<?> reference;
         if (Map.class.isAssignableFrom(paramType)) {
-            final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
-
-            final Map<String, Object> ids = (Map<String, Object>) mappedField.getDbObjectValue(dbObject);
-            if(ids != null) {
-                final Collection<Object> values = ids.values();
-                final Object first = values.iterator().next();
-                String collection = null;
-                if (first instanceof DBRef) {
-                    collection = ((DBRef) first).getCollectionName();
-                }
-
-                reference = new MapReference(datastore, mapper.getMappedClass(subType), collection, ids);
-            }
+            reference = MapReference.decode(datastore, mapper, mappedField, dbObject);
         } else if (Collection.class.isAssignableFrom(paramType)) {
-            final BasicDBList dbVal = (BasicDBList) mappedField.getDbObjectValue(dbObject);
-            if (dbVal != null) {
-                final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
-                final MappedClass mappedClass = mapper.getMappedClass(subType);
-                String collection = null;
-                if(!dbVal.isEmpty() && dbVal.get(0) instanceof DBRef) {
-                    collection = ((DBRef) dbVal.get(0)).getCollectionName();
-                }
-                if (Set.class.isAssignableFrom(paramType)) {
-                    reference = new SetReference(datastore, mappedClass, collection, dbVal);
-                } else {
-                    reference = new ListReference(datastore, mappedClass, collection, dbVal);
-                }
-            }
+            reference = CollectionReference.decode(datastore, mapper, mappedField, paramType, dbObject);
         } else {
-            final MappedClass mappedClass = mapper.getMappedClass(paramType);
-            final MappedField idField = mappedClass.getMappedIdField();
-            Object id = dbObject.get(mappedField.getMappedFieldName());
-            String collection = null;
-            if (id instanceof DBRef) {
-                collection = ((DBRef) id).getCollectionName();
-                id = mapper.getConverters().decode(idField.getConcreteType(), ((DBRef) id).getId(), mappedField);
-            }
-            reference = new SingleReference(datastore, mappedClass, collection, id);
+            reference = SingleReference.decode(datastore, mapper, mappedField, paramType, dbObject);
         }
         mappedField.setFieldValue(entity, reference);
     }
 
-    public void writeMorphiaReferenceValues(final MappedField mf, final DBObject dbObject, final Mapper mapper, final String name,
-                                            final Object fieldValue) {
+    public void writeMorphiaReferenceValues(final DBObject dbObject,
+                                            final MappedField mf,
+                                            final Object fieldValue, final String name, final Mapper mapper) {
         final Class paramType = mf.getTypeParameters().get(0).getType();
-        boolean notNull;
-        boolean notEmpty;
-        Object value;
+
+        boolean notEmpty = true;
+        final Object value = ((MorphiaReference) fieldValue).encode(mapper, fieldValue, mf);
+        final boolean notNull = value != null;
+
         if (Map.class.isAssignableFrom(paramType)) {
-            final Map map = (Map) ((MapReference) fieldValue).encode(mapper, fieldValue, mf);
-            value = map;
-            notNull = map != null;
-            notEmpty = notNull && !map.isEmpty();
+            notEmpty = notNull && !((Map) value).isEmpty();
         } else if (Collection.class.isAssignableFrom(paramType)) {
-            final Collection collection = (Collection) ((MorphiaReference) fieldValue).encode(mapper, fieldValue, mf);
-            value = collection;
-            notNull = collection != null;
-            notEmpty = notNull && !collection.isEmpty();
-        } else {
-            value = mapper.getConverters().encode(mf.getConcreteType(), fieldValue);
-            notNull = value != null;
-            notEmpty = true;
+            notEmpty = notNull && !((Collection) value).isEmpty();
         }
+
         if ((notNull || mapper.getOptions().isStoreNulls()) &&
              (notEmpty || mapper.getOptions().isStoreEmpties())) {
             dbObject.put(name, value);

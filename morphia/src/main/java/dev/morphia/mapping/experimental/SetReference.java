@@ -8,6 +8,7 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,16 +19,14 @@ import static dev.morphia.query.internal.MorphiaCursor.toSet;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public class SetReference<T> extends MorphiaReference<Set<T>> {
-    private List<Object> ids;
+public class SetReference<T> extends CollectionReference<Set<T>> {
     private Set<T> values;
 
     /**
      * @morphia.internal
      */
     public SetReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final List ids) {
-        super(datastore, mappedClass, collection);
-        this.ids = unwrap(ids);
+        super(datastore, mappedClass, collection, ids);
     }
 
     protected SetReference(final Set<T> values, final String collection) {
@@ -35,55 +34,19 @@ public class SetReference<T> extends MorphiaReference<Set<T>> {
         set(values);
     }
 
-    private List<Object> unwrap(final List ids) {
-        List<Object> unwrapped = null;
-        if(ids != null && !ids.isEmpty()) {
-            if(ids.get(0) instanceof DBRef) {
-                unwrapped = new ArrayList<Object>();
-                for (final Object id : ids) {
-                    unwrapped.add(((DBRef) id).getId());
-                }
-            } else {
-                unwrapped = ids;
-            }
-        }
-
-        return unwrapped;
+    @Override
+    public Set<T> getValues() {
+        return values;
     }
 
     public Set<T> get() {
-        if (values == null && ids != null) {
-            values = toSet(find());
+        if (values == null && getIds() != null) {
+            values = new LinkedHashSet(find());
         }
         return values;
     }
 
     public void set(Set<T> values) {
         this.values = values;
-    }
-
-    public boolean isResolved() {
-        return values != null;
-    }
-
-    @SuppressWarnings("unchecked")
-    MongoCursor<T> find() {
-        return (MongoCursor<T>) buildQuery()
-                                    .filter("_id in", ids)
-                                    .find();
-    }
-
-    @Override
-    public Object encode(final Mapper mapper, final Object value, final MappedField field) {
-        if (isResolved()) {
-            final Class type = field.getTypeParameters().get(0).getSubClass();
-            List ids = new ArrayList();
-            for (final Object o : get()) {
-                ids.add(wrapId(mapper, o));
-            }
-            return mapper.toMongoObject(field, mapper.getMappedClass(type), ids);
-        } else {
-            return null;
-        }
     }
 }

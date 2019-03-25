@@ -11,6 +11,8 @@ import com.mongodb.MongoInternalException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
+import dev.morphia.TestDatastore;
+import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
@@ -912,6 +914,48 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser2 = new FacebookUser(2, "tom");
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
+        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
+        assertEquals(1, fbUser1.getId());
+
+        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+        for (final Key<FacebookUser> key : fbKeys) {
+            fbUserKeys.add(key);
+        }
+
+        assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
+        assertEquals(fbUser2.getId(), fbUserKeys.get(1).getId());
+        assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
+        assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
+
+        final KeysKeysKeys k1 = new KeysKeysKeys(null, fbUserKeys);
+        final Key<KeysKeysKeys> k1Key = getDs().save(k1);
+        assertEquals(k1.getId(), k1Key.getId());
+
+        final KeysKeysKeys k1Reloaded = getDs().get(k1);
+        final KeysKeysKeys k1Loaded = getDs().getByKey(KeysKeysKeys.class, k1Key);
+        assertNotNull(k1Reloaded);
+        assertNotNull(k1Loaded);
+        for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
+            assertNotNull(key.getId());
+        }
+
+        assertEquals(4, k1Loaded.getUsers().size());
+
+        final List<FacebookUser> fbUsers = getDs().getByKeys(FacebookUser.class, k1Loaded.getUsers());
+        assertEquals(4, fbUsers.size());
+        for (final FacebookUser fbUser : fbUsers) {
+            assertNotNull(fbUser);
+            assertNotNull(fbUser.getId());
+            assertNotNull(fbUser.getUsername());
+        }
+    }
+
+    @Test
+    public void testKeyListLookupsWithNoClassNameStored() {
+        final FacebookUser fbUser1 = new FacebookUserWithNoClassNameStored(1, "scott");
+        final FacebookUser fbUser2 = new FacebookUserWithNoClassNameStored(2, "tom");
+        final FacebookUser fbUser3 = new FacebookUserWithNoClassNameStored(3, "oli");
+        final FacebookUser fbUser4 = new FacebookUserWithNoClassNameStored(4, "frank");
         final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 

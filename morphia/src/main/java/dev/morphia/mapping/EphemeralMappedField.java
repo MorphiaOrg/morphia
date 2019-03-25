@@ -123,7 +123,7 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    protected String getMappedFieldName() {
+    public String getMappedFieldName() {
         return "";
     }
 
