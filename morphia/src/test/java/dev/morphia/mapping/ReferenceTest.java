@@ -5,9 +5,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCursor;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
@@ -17,19 +14,26 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
+import static dev.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static dev.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
 
 /**
  * @author Gene Trog, (eternal0@github.com)
@@ -193,6 +197,27 @@ public class ReferenceTest extends ProxyTestBase {
         assertFalse(keys.hasNext());
     }
 
+    @Test
+    public void maps() {
+        Ref ref = new Ref("refId");
+        getDs().save(ref);
+        // create entity B with a reference to A
+        Sets sets = new Sets();
+        sets.refs = new HashSet<Ref>();
+        sets.refs.add(ref);
+        getDs().save(sets);
+
+        // this query throws a NullPointerException
+        Assert.assertNotNull(getDs().find(Sets.class).filter("refs", ref).first());
+
+        final MapOfSet map = new MapOfSet();
+        map.strings = new HashMap<String, Set<String>>();
+        map.strings.put("name", new TreeSet<String>(asList("one", "two", "three")));
+        getDs().save(map);
+        final MapOfSet first = getDs().find(MapOfSet.class).first();
+        Assert.assertEquals(map, first);
+    }
+
     private void allNull(final Container container) {
         Assert.assertNull(container.lazyMapRef);
         Assert.assertNull(container.singleRef);
@@ -284,31 +309,69 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public int hashCode() {
-            return id.hashCode();
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final Ref ref = (Ref) o;
+
+            return id != null ? id.equals(ref.id) : ref.id == null;
         }
+
+        @Override
+        public int hashCode() {
+            return id != null ? id.hashCode() : 0;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Ref{id='%s'}", id);
+        }
+    }
+
+    @Entity("sets")
+    public static class Sets {
+
+        @Id
+        private ObjectId id;
+
+        @Reference
+        private Set<Ref> refs;
+    }
+
+    @Entity("cs")
+    public static class MapOfSet {
+        @Id
+        private ObjectId id;
+
+        private Map<String, Set<String>> strings;
 
         @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof Ref)) {
+            if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
-            final Ref ref = (Ref) o;
+            final MapOfSet map = (MapOfSet) o;
 
-            if (id != null ? !id.equals(ref.id) : ref.id != null) {
+            if (id != null ? !id.equals(map.id) : map.id != null) {
                 return false;
             }
-
-            return true;
+            return strings != null ? strings.equals(map.strings) : map.strings == null;
         }
 
         @Override
-        public String toString() {
-            return String.format("Ref{id='%s'}", id);
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (strings != null ? strings.hashCode() : 0);
+            return result;
         }
     }
 
