@@ -24,10 +24,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
@@ -41,12 +37,18 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.Builder;
 import dev.morphia.utils.IndexType;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
-import static org.junit.Assert.assertEquals;
 import static dev.morphia.utils.IndexType.DESC;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
 
@@ -122,6 +124,31 @@ public class TestIndexes extends TestBase {
         getMorphia().getMapper().setOptions(builder.build());
         getDs().ensureIndexes();
         Assert.assertNull("No indexes should be generated for InboxEvent", inboxEvent.listIndexes().iterator().tryNext());
+    }
+
+    @Test
+    public void optionsFromOldSyntax() {
+        getMorphia().map(MongoSettingsHistory.class);
+        getDs().ensureIndex(MongoSettingsHistory.class, "query_by_key_and_date", "key, newValue, -date", true, false);
+
+        final List<DBObject> indexes = getDs().getCollection(MongoSettingsHistory.class).getIndexInfo();
+        DBObject index = null;
+        for (final DBObject possible : indexes) {
+            if("query_by_key_and_date".equals(possible.get("name"))) {
+                index = possible;
+            }
+        }
+        Assert.assertNotNull(index);
+        assertTrue((Boolean) index.get("unique"));
+    }
+
+    @Entity
+    private static class MongoSettingsHistory {
+        @Id
+        ObjectId id;
+        String key;
+        Date date;
+        Integer newValue;
     }
 
     private void assertBackground(final List<DBObject> indexInfo) {

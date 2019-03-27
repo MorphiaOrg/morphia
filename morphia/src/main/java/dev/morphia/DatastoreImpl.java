@@ -22,10 +22,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.DBCollectionUpdateOptions;
 import com.mongodb.client.model.ValidationOptions;
-import dev.morphia.mapping.DateStorage;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
@@ -50,6 +46,9 @@ import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
 import dev.morphia.utils.Assert;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -982,10 +981,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         indexHelper.createIndex(getMongoCollection(collection, clazz, null), getMapper().getMappedClass(clazz),
-                                new IndexBuilder()
-                                    .fields(fields)
-                                    .name(name)
-                                    .unique(unique), false);
+            new IndexBuilder()
+                .fields(fields)
+                .options(new IndexOptionsBuilder()
+                             .name(name)
+                             .unique(unique)
+                        ), false);
     }
 
     @Override
