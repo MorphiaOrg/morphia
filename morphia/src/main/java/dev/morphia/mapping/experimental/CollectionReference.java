@@ -23,34 +23,31 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     private List<Object> ids;
     private Map<String, List<Object>> collections = new HashMap<String, List<Object>>();
 
+    CollectionReference() {
+    }
 
-    public CollectionReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final List ids) {
-        super(datastore, mappedClass, collection);
+    CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+        super(datastore, mappedClass);
         List<Object> unwrapped = ids;
         if(ids != null) {
             for (final Object o : ids) {
-                collate(datastore, collections, collection, o);
+                collate(datastore, collections, o);
             }
         }
 
         this.ids = unwrapped;
     }
 
-    public CollectionReference(final String collection) {
-        super(collection);
-    }
-
     static void collate(final Datastore datastore, final Map<String, List<Object>> collections,
-                        final String collection,
                         final Object o) {
         final String collectionName;
         final Object id;
         if (o instanceof DBRef) {
             final DBRef dbRef = (DBRef) o;
-            collectionName = collection != null ? collection: dbRef.getCollectionName();
+            collectionName = dbRef.getCollectionName();
             id = dbRef.getId();
         } else {
-            collectionName = collection != null ? collection: datastore.getMapper().getCollectionName(o);
+            collectionName = datastore.getMapper().getCollectionName(o);
             id = o;
         }
 
@@ -70,11 +67,11 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return getValues() != null;
     }
 
-    protected abstract Collection<?> getValues();
+    abstract Collection<?> getValues();
 
     public abstract C get();
 
-    protected final List<Object> getIds() {
+    final List<Object> getIds() {
         return ids;
     }
 
@@ -87,7 +84,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return values;
     }
 
-    public void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
+    void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
 
         final MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection, Object.class)
                                                                           .disableValidation()
@@ -117,7 +114,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         if (isResolved()) {
             List ids = new ArrayList();
             for (final Object entity : get()) {
-                ids.add(wrapId(mapper, field, getCollection(), entity));
+                ids.add(wrapId(mapper, field, entity));
             }
             return ids;
         } else {
@@ -142,9 +139,9 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 collection = mappedClass.getMappedIdField() != null ? mappedClass.getCollectionName() : null;
             }
             if (Set.class.isAssignableFrom(paramType)) {
-                reference = new SetReference(datastore, mappedClass, collection, dbVal);
+                reference = new SetReference(datastore, mappedClass, dbVal);
             } else {
-                reference = new ListReference(datastore, mappedClass, collection, dbVal);
+                reference = new ListReference(datastore, mappedClass, dbVal);
             }
         }
 

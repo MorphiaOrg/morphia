@@ -9,7 +9,6 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,21 +27,20 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
     /**
      * @morphia.internal
      */
-    public MapReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final Map<String, Object> ids) {
-        super(datastore, mappedClass, collection);
+    MapReference(final Datastore datastore, final MappedClass mappedClass, final Map<String, Object> ids) {
+        super(datastore, mappedClass);
         Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(datastore, collections, collection, entry.getValue());
+                CollectionReference.collate(datastore, collections, entry.getValue());
             }
         }
 
         this.ids = unwrapped;
     }
 
-    protected MapReference(final Map<String, T> values, final String collection) {
-        super(collection);
-        set(values);
+    MapReference(final Map<String, T> values) {
+        this.values = values;
     }
 
     public Map<String, T> get() {
@@ -60,7 +58,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
+    private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
 
         final Class<?> collectionType = getMappedClass().getClazz();
         final MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection, collectionType)
@@ -85,10 +83,6 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         }
     }
 
-    public void set(Map<String, T> values) {
-        this.values = values;
-    }
-
     public boolean isResolved() {
         return values != null;
     }
@@ -98,7 +92,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         if (isResolved()) {
             Map<String, Object> ids = new LinkedHashMap<String, Object>();
             for (final Entry<String, T> entry : get().entrySet()) {
-                ids.put(entry.getKey(), wrapId(mapper, field, getCollection(), entry.getValue()));
+                ids.put(entry.getKey(), wrapId(mapper, field, entry.getValue()));
             }
             return ids;
         } else {
@@ -113,7 +107,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         final Map<String, Object> ids = (Map<String, Object>) mappedField.getDbObjectValue(dbObject);
         MapReference reference = null;
         if (ids != null) {
-            reference = new MapReference(datastore, mapper.getMappedClass(subType), null, ids);
+            reference = new MapReference(datastore, mapper.getMappedClass(subType), ids);
         }
 
         return reference;

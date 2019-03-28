@@ -112,113 +112,6 @@ public class MorphiaReferenceTest extends TestBase {
         assertTrue(loaded.map.isResolved());
     }
 
-    @Test
-    public void basicReferenceWithCollection() {
-        final Author author = new Author("Jane Austen");
-        getAds().save("jane", author);
-
-        final Book book = new Book("Pride and Prejudice");
-        book.setAuthor("jane", author);
-        getDs().save(book);
-
-        Assert.assertNull(getDs().find(Author.class).first());
-        Assert.assertNotNull(getAds().find("jane", Author.class).first());
-        final Book loaded = getDs().find(Book.class).filter("_id", book.id).first();
-        Assert.assertFalse(loaded.author.isResolved());
-        Assert.assertEquals(author, loaded.author.get());
-        assertTrue(loaded.author.isResolved());
-    }
-
-    @Test
-    public void listReferenceWithCollection() {
-        final Author author = new Author("Jane Austen");
-        getAds().save("jane", author);
-
-        List<Book> list = new ArrayList<Book>();
-        list.add(new Book("Sense and Sensibility"));
-        list.add(new Book("Pride and Prejudice"));
-        list.add(new Book("Mansfield Park"));
-        list.add(new Book("Emma"));
-        list.add(new Book("Northanger Abbey"));
-        for (final Book book : list) {
-            book.setAuthor("jane", author);
-            getAds().save("books", book);
-        }
-        author.setList("books", list);
-        getAds().save("jane", author);
-
-        Assert.assertNull(getDs().find(Author.class).first());
-        Assert.assertNotNull(getAds().find("jane", Author.class).first());
-        Assert.assertNull(getDs().find(Book.class).first());
-        Assert.assertNotNull(getAds().find("books", Book.class).first());
-
-        final Author loaded = getAds().find("jane", Author.class).filter("_id", author.getId()).first();
-        Assert.assertFalse(loaded.list.isResolved());
-        Assert.assertEquals(list, loaded.getList());
-        assertTrue(loaded.list.isResolved());
-    }
-
-    @Test
-    public void mapReferenceWithCollection() {
-        final Author author = new Author("Jane Austen");
-        getAds().save("jane", author);
-
-        Map<String, Book> books = new LinkedHashMap<String, Book>();
-        for (final Book book : new Book[]{
-            new Book("Sense and Sensibility"),
-            new Book("Pride and Prejudice"),
-            new Book("Mansfield Park"),
-            new Book("Emma"),
-            new Book("Northanger Abbey")}) {
-            book.setAuthor("jane", author);
-            getAds().save("books", book);
-            books.put(book.name, book);
-        }
-        author.setMap("books", books);
-        getAds().save("jane", author);
-
-        Assert.assertNull(getDs().find(Author.class).first());
-        Assert.assertNotNull(getAds().find("jane", Author.class).first());
-        Assert.assertNull(getDs().find(Book.class).first());
-        Assert.assertNotNull(getAds().find("books", Book.class).first());
-
-        final Author loaded = getAds().find("jane", Author.class).filter("_id", author.getId()).first();
-        Assert.assertFalse(loaded.map.isResolved());
-        Assert.assertEquals(books, loaded.getMap());
-        assertTrue(loaded.map.isResolved());
-    }
-
-    @Test
-    public void setReferenceWithCollection() {
-        final Author author = new Author("Jane Austen");
-        getAds().save("jane", author);
-
-        Set<Book> set = new HashSet<Book>(5);
-        set.add(new Book("Sense and Sensibility"));
-        set.add(new Book("Pride and Prejudice"));
-        set.add(new Book("Mansfield Park"));
-        set.add(new Book("Emma"));
-        set.add(new Book("Northanger Abbey"));
-        for (final Book book : set) {
-            book.setAuthor("jane", author);
-            getAds().save("books", book);
-        }
-        author.setSet("books", set);
-        getAds().save("jane", author);
-
-        final Author loaded = getAds().find("jane", Author.class).filter("_id", author.getId()).first();
-        Assert.assertFalse(loaded.set.isResolved());
-        final Set<Book> set1 = loaded.getSet();
-
-        assertEquals(set.size(), set1.size());
-
-        for (final Book book : set) {
-            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
-        }
-
-        assertTrue(loaded.set.isResolved());
-    }
-
     private static class Author {
         @Id
         private ObjectId id;
@@ -260,10 +153,6 @@ public class MorphiaReferenceTest extends TestBase {
             this.list = MorphiaReference.wrap(list);
         }
 
-        public void setList(final String collection, final List<Book> list) {
-            this.list = MorphiaReference.wrap(collection, list);
-        }
-
         public Set<Book> getSet() {
             return set.get();
         }
@@ -272,20 +161,12 @@ public class MorphiaReferenceTest extends TestBase {
             this.set = MorphiaReference.wrap(set);
         }
 
-        public void setSet(final String collection, final Set<Book> set) {
-            this.set = MorphiaReference.wrap(collection, set);
-        }
-
         public Map<String, Book> getMap() {
             return map.get();
         }
 
         public void setMap(final Map<String, Book> map) {
             this.map = MorphiaReference.wrap(map);
-        }
-
-        public void setMap(final String collection,  final Map<String, Book> map) {
-            this.map = MorphiaReference.wrap(collection, map);
         }
 
         @Override
@@ -348,10 +229,6 @@ public class MorphiaReferenceTest extends TestBase {
 
         public void setAuthor(final Author author) {
             this.author = MorphiaReference.wrap(author);
-        }
-
-        public void setAuthor(final String collection, final Author author) {
-            this.author = MorphiaReference.wrap(collection, author);
         }
 
         @Override

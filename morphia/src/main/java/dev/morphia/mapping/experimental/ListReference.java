@@ -6,29 +6,26 @@ import dev.morphia.mapping.MappedClass;
 import java.util.Collection;
 import java.util.List;
 
-import static dev.morphia.query.internal.MorphiaCursor.toList;
-
 /**
  * @param <T>
  * @morphia.internal
  */
-public class ListReference<T> extends CollectionReference<List<T>> {
+class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 
     /**
      * @morphia.internal
      */
-    public ListReference(final Datastore datastore, final MappedClass mappedClass, final String collection, final List ids) {
-        super(datastore, mappedClass, collection, ids);
+    ListReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+        super(datastore, mappedClass, ids);
     }
 
-    protected ListReference(final List<T> values, final String collection) {
-        super(collection);
-        set(values);
+    ListReference(final List<T> values) {
+        this.values = values;
     }
 
     @Override
-    protected Collection<?> getValues() {
+    Collection<?> getValues() {
         return values;
     }
 
@@ -40,8 +37,4 @@ public class ListReference<T> extends CollectionReference<List<T>> {
         return values;
     }
 
-    @Override
-    public void set(List<T> values) {
-        this.values = values;
-    }
 }

@@ -50,7 +50,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param collection the collection to query
      * @param clazz      the class of objects to be returned
      * @return Query for the specified class clazz
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Query<T> createQuery(String collection, Class<T> clazz);
 
     /**
@@ -67,7 +69,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      the class of objects to be returned
      * @param q          the query which will be passed to a {@link dev.morphia.query.QueryFactory}
      * @return Query for the specified class clazz
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Query<T> createQuery(String collection, Class<T> clazz, DBObject q);
 
     /**
@@ -203,7 +207,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param collection the collection to update
      * @param clazz      the class from which to get the index definitions
      * @param <T>        the type to index
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> void ensureIndexes(String collection, Class<T> clazz);
 
     /**
@@ -216,6 +222,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type to index
      * @deprecated use {@link #ensureIndexes(String, Class)} instead and specify background true or false in the annotations
      */
+    @Deprecated
     <T> void ensureIndexes(String collection, Class<T> clazz, boolean background);
 
     /**
@@ -239,7 +246,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      the class to use for mapping the results
      * @param <T>        the type to query
      * @return the query
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Query<T> find(String collection, Class<T> clazz);
 
     /**
@@ -342,7 +351,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param entity     the entity to insert
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Key<T> insert(String collection, T entity);
 
     /**
@@ -355,7 +366,9 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new key of the inserted entity
      * @morphia.inline
      * @since 1.3
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Key<T> insert(String collection, T entity, InsertOptions options);
 
     /**
@@ -410,7 +423,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param entities   the entities to insert
      * @param <T>        the type of the entity
      * @return the new keys of the inserted entities
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities);
 
     /**
@@ -436,7 +451,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type of the entity
      * @return the new keys of the inserted entities
      * @since 1.3
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities, InsertOptions options);
 
     /**
@@ -456,7 +473,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param entity     the entity to save
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Key<T> save(String collection, T entity);
 
     /**
@@ -480,6 +499,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param options    the options to apply to the save operation
      * @param <T>        the type of the entity
      * @return the new key of the inserted entity
+     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
      */
+    @Deprecated
     <T> Key<T> save(String collection, T entity, InsertOptions options);
 }

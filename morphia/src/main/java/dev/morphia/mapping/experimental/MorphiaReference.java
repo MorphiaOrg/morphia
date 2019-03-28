@@ -10,41 +10,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Wrapper type for references to entities in other collections
+ *
+ * @param <T>
+ * @since 1.5
+ */
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
     private MappedClass mappedClass;
-    private final String collection;
 
-    MorphiaReference(final Datastore datastore, final MappedClass mappedClass, final String collection) {
+    MorphiaReference() {
+    }
+
+    MorphiaReference(final Datastore datastore, final MappedClass mappedClass) {
         this.datastore = datastore;
         this.mappedClass = mappedClass;
-        this.collection = collection;
     }
 
-    public MorphiaReference(final String collection) {
-        this.collection = collection;
-    }
-
-    public static Object wrapId(final Mapper mapper, final MappedField field, final String collection, final Object entity) {
+    static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
         Object id = mapper.getId(entity);
         Object encoded = mapper.toMongoObject(field, mapper.getMappedClass(entity), id);
         if(!entity.getClass().equals(field.getType())) {
-            encoded = new DBRef(collection != null ? collection : mapper.getCollectionName(entity), encoded);
+            encoded = new DBRef(mapper.getCollectionName(entity), encoded);
         }
 
         return encoded;
     }
 
     public abstract T get();
-
-    public abstract void set(T value);
-
-    /**
-     * @morphia.internal
-     */
-    protected String getCollection() {
-        return collection;
-    }
 
     /**
      * @morphia.internal
@@ -59,32 +53,27 @@ public abstract class MorphiaReference<T> {
     /**
      * @morphia.internal
      */
-    protected Datastore getDatastore() {
+    Datastore getDatastore() {
         return datastore;
     }
 
     /**
      * @morphia.internal
      */
-    protected MappedClass getMappedClass() {
+    MappedClass getMappedClass() {
         return mappedClass;
     }
 
-    public static <V> MorphiaReference<V> wrap(final V value) {
-         return wrap(null, value);
-     }
-
      @SuppressWarnings("unchecked")
-     public static <V> MorphiaReference<V> wrap(String collection, final V value) {
+     public static <V> MorphiaReference<V> wrap(final V value) {
          if(value instanceof List) {
-             return (MorphiaReference<V>) new ListReference<V>((List<V>) value, collection);
+             return (MorphiaReference<V>) new ListReference<V>((List<V>) value);
          } else if(value instanceof Set) {
-             return (MorphiaReference<V>) new SetReference<V>((Set<V>)value, collection);
+             return (MorphiaReference<V>) new SetReference<V>((Set<V>)value);
          } else if(value instanceof Map) {
-             return (MorphiaReference<V>) new MapReference<V>((Map<String, V>)value, collection);
+             return (MorphiaReference<V>) new MapReference<V>((Map<String, V>)value);
          } else {
-             return new SingleReference<V>(value, collection);
+             return new SingleReference<V>(value);
          }
      }
-
 }
