@@ -10,9 +10,7 @@ Morphia supports two styles of defining references:  the `@Reference` annotation
 [here]({{< ref "guides/annotations" >}}).  This guide will cover the wrapper based approach.
 
 {{% note class="important" %}}
-This API is experimental.  Its implementation and API subject to change based on user feedback.  It's ultimate inclusion in a public 
-permanent API can not be guaranteed.  That said, users are encouraged to experiment with the API and provide as much feedback as possible
- both positive and negative.
+This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.
 {{% /note %}}
 
 An alternative to the traditional annotation-based approach is the [`MorphiaReference`]({{< apiref
@@ -40,10 +38,6 @@ private class Author {
         this.list = MorphiaReference.wrap(list);
     }
 
-    public void setList(final String collection, final List<Book> list) {
-        this.list = MorphiaReference.wrap(collection, list);
-    }
-
     public Set<Book> getSet() {
         return set.get();
     }
@@ -52,20 +46,12 @@ private class Author {
         this.set = MorphiaReference.wrap(set);
     }
 
-    public void setSet(final String collection, final Set<Book> set) {
-        this.set = MorphiaReference.wrap(collection, set);
-    }
-
     public Map<String, Book> getMap() {
         return map.get();
     }
 
     public void setMap(final Map<String, Book> map) {
         this.map = MorphiaReference.wrap(map);
-    }
-
-    public void setMap(final String collection,  final Map<String, Book> map) {
-        this.map = MorphiaReference.wrap(collection, map);
     }
 }
 
@@ -84,25 +70,15 @@ private class Book {
     public void setAuthor(final Author author) {
         this.author = MorphiaReference.wrap(author);
     }
-
-    public void setAuthor(final String collection, final Author author) {
-        this.author = MorphiaReference.wrap(collection, author);
-    }
 }
 
 ```
 
 As you can see we have 3 different references from `Author` to `Book` and one in the opposite direction.  It would also be good to note 
-that the public API of those two classes don't expose the `MorphiaReference` externally.  This is, of course, a stylistic choice but is 
-the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.  Looking at `Author#setList()
-`, you'll note we have two variants.  These two classes are extracted from [MorphiaReferenceTest.java]({{< srcref
-"morphia/src/test/java/dev/morphia/mapping/experimental/MorphiaReferenceTest.java">}}) test.  In practice, you're unlikely to need both 
-versions of `setList()` but in this case they help to illustrate, and test, a feature.
+that the public API of those two classes don't expose the `MorphiaReference` externally.  This is, of course, a stylistic choice but is the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.  
 
-The basic of `setList()` accepts a `List<Book>` and stores them as references to `Book` instances stored in the collection as defined by 
-the mapping metadata for `Book`.  In this particular case, `Book` does not have an explicit collection named and so the class name of 
-`Book` is used to determine the collection name.  Because these references point to the mapped collection name for the type, we can get 
-away with storing only the `_id` fields for each book.  This gives us data in the database that looks like this:
+`setList()` accepts a `List<Book>` and stores them as references to `Book` instances stored in the collection as defined by 
+the mapping metadata for `Book`.  Because these references point to the mapped collection name for the type, we can get away with storing only the `_id` fields for each book.  This gives us data in the database that looks like this:
 
 ```javascript
 > db.Author.find().pretty()
@@ -121,9 +97,7 @@ away with storing only the `_id` fields for each book.  This gives us data in th
 ```
 
 As you can see, we only need to store the ID values because the collection is already known elsewhere.  However, sometimes we need to 
-refer to documents stored in different collections.  For these cases, there is a `wrap(String collection, final V value)` overload.  This
- instructs the `MorphiaReference` wrapper to use a different collection.  Using this version, we get data in the database that looks like
-  this:
+refer to documents stored in different collections.  For example, if the generic type of the reference is a parent interface or class, we sometimes need to store extra information.  For these cases, we store the references as full `DBRef` instances so we can track the appropriate collection for each reference.  Using this version, we get data in the database that looks like this:
   
 ```javascript
 > db.jane.find().pretty()
@@ -148,12 +122,11 @@ properly reconstitute these references when you're ready to use them.
 {{% note %}}
 Before we go too much further, it's important to point that, regardless of the type of the references, they are fetched lazily.  So if 
 you multiple fields with referenced entities, they will not be fetched until you call `get()` on the `MorphiaReference`.  If the type is 
-a `Collection` or a `Map`, all the referenced entities are fetched and loaded via a single query.  This saves on server round trips but 
-does raise the risk of potential `OutOfMemoryError` problems.
+a `Collection` or a `Map`, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential `OutOfMemoryError` problems if you load too many objects in to memory this way.
 {{% /note %}}
 
 A `Set` of references will look no different in the database than the `List` does.  However, `Map`s of references are slightly more 
-complicated.  With the default, mapped collections being used, a `Map` would look something like this:
+complicated.  A `Map` might look something like this:
 
 ```javascript
 > db.Author.find().pretty()
@@ -171,28 +144,8 @@ complicated.  With the default, mapped collections being used, a `Map` would loo
 }
 ``` 
 
-Using custom collections, the `Map`s change slightly:
-
-```javascript
-> db.jane.find().pretty()
-{
-	"_id" : ObjectId("5c3e9d096a44c77fd500e03f"),
-	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
-	"name" : "Jane Austen",
-	"map" : {
-		"Sense and Sensibility " : DBRef("books", ObjectId("5c3e9d096a44c77fd500e040")),
-		"Pride and Prejudice" : DBRef("books", ObjectId("5c3e9d0a6a44c77fd500e041")),
-		"Mansfield Park" : DBRef("books", ObjectId("5c3e9d0a6a44c77fd500e042")),
-		"Emma" : DBRef("books", ObjectId("5c3e9d0a6a44c77fd500e043")),
-		"Northanger Abbey" : DBRef("books", ObjectId("5c3e9d0a6a44c77fd500e044"))
-	}
-}
-```
-
 References to single entities will follow the same pattern with regards to the `_id` values vs `DBRef` entries.
 
 {{% note  %}}
-Currently there is no support for configuring the `ignoreMissing` parameter as there is via the annotation.  The wrapper will silently drop 
-missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in general 
-consideration can be given to adding such functionality in the future.
+Currently there is no support for configuring the `ignoreMissing` parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.
 {{% /note %}}

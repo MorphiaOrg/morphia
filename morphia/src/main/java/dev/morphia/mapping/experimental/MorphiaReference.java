@@ -16,6 +16,7 @@ import java.util.Set;
  * @param <T>
  * @since 1.5
  */
+@SuppressWarnings("unchecked")
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
     private MappedClass mappedClass;
@@ -31,7 +32,7 @@ public abstract class MorphiaReference<T> {
     static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
         Object id = mapper.getId(entity);
         Object encoded = mapper.toMongoObject(field, mapper.getMappedClass(entity), id);
-        if(!entity.getClass().equals(field.getType())) {
+        if (!entity.getClass().equals(field.getType())) {
             encoded = new DBRef(mapper.getCollectionName(entity), encoded);
         }
 

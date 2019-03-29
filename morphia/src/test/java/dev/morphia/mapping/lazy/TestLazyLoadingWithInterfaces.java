@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static java.util.Arrays.asList;
 
 public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
@@ -27,14 +28,14 @@ public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
         a.reference = MorphiaReference.<InterfaceB>wrap(b2);
 
         final List<InterfaceB> list = asList(b1, b2);
-        final HashSet<InterfaceB> set = new HashSet<InterfaceB>(list);
-        final HashMap<String, InterfaceB> map = new HashMap<String, InterfaceB>();
+        final Set<InterfaceB> set = new HashSet<InterfaceB>(list);
+        final Map<String, InterfaceB> map = new HashMap<String, InterfaceB>();
         map.put("key1", b1);
         map.put("key2", b2);
 
-        a.list = MorphiaReference.wrap(list);
-        a.set = MorphiaReference.<Set<InterfaceB>>wrap(set);
-        a.map = MorphiaReference.<Map<String, InterfaceB>>wrap(map);
+        a.set = wrap(set);
+        a.list = wrap(list);
+        a.map = wrap(map);
 
         getDs().save(a);
 
