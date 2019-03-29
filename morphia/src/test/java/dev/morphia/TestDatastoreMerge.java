@@ -15,20 +15,19 @@
 package dev.morphia;
 
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Version;
 import org.bson.types.ObjectId;
 import org.junit.Test;
-import dev.morphia.annotations.Id;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-
-/**
- * @author Scott Hernandez
- */
 public class TestDatastoreMerge extends TestBase {
 
     @Test
-    public void testMerge() throws Exception {
+    public void testMerge() {
         final Merger te = new Merger();
         te.name = "test1";
         te.foo = "bar";
@@ -49,11 +48,47 @@ public class TestDatastoreMerge extends TestBase {
         assertEquals(te2.position, teLoaded.position);
     }
 
+    @Test
+    public void merge() {
+        Datastore ds = getDs();
+
+        Test1 test1 = new Test1();
+        test1.name = "foobar";
+        ds.save(test1);
+
+        Test2 test2 = ds.createQuery(Test2.class).get();
+        assertNotNull(test2.id);
+        test2.blarg = "barfoo";
+        ds.merge(test2);
+
+        test1 = ds.createQuery(Test1.class).field("_id").equal(test1.id).get();
+
+        assertNotNull(test1.name);//fails
+    }
+
     private static class Merger {
         @Id
         private ObjectId id;
         private String name;
         private String foo;
         private int position;
+    }
+
+    @Entity(value = "test", noClassnameStored = true)
+    static class Test1 {
+        @Id
+        ObjectId id;
+        String name;
+        @Version
+        long version;
+    }
+
+    @Entity(value = "test", noClassnameStored = true)
+    static class Test2 {
+        @Id
+        ObjectId id;
+        String blarg;
+        @Version
+        long version;
     }
 }

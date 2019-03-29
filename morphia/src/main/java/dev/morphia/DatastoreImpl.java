@@ -698,11 +698,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = getCollection(unwrapped);
 
         // try to do an update if there is a @Version field
-        wr = tryVersionedUpdate(dbColl, unwrapped, dbObj, idValue, new InsertOptions().writeConcern(wc), mc);
+        final DBObject $set = new BasicDBObject("$set", dbObj);
+        wr = tryVersionedUpdate(dbColl, unwrapped, $set, idValue, new InsertOptions().writeConcern(wc), mc);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter("_id", id);
-            wr = update(query, new BasicDBObject("$set", dbObj), new UpdateOptions().writeConcern(wc)).getWriteResult();
+            wr = update(query, $set, new UpdateOptions().writeConcern(wc)).getWriteResult();
         }
 
         final UpdateResults res = new UpdateResults(wr);
@@ -1348,7 +1349,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         Long oldVersion = (Long) mfVersion.getFieldValue(entity);
         long newVersion = nextValue(oldVersion);
 
-        dbObj.put(versionKeyName, newVersion);
+        final DBObject $set = (DBObject) dbObj.get("$set");
+        if($set == null) {
+            dbObj.put(versionKeyName, newVersion);
+        } else {
+            $set.put(versionKeyName, newVersion);
+        }
 
         if (idValue != null && newVersion == 1) {
             try {
@@ -1553,11 +1559,15 @@ public class DatastoreImpl implements AdvancedDatastore {
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
-            if (update.get(versionMF.getNameToStore()) == null) {
-                if (!update.containsField("$inc")) {
-                    update.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
+            DBObject localUpdate = update;
+            if(localUpdate.get("$set") != null) {
+                localUpdate = (DBObject) localUpdate.get("$set");
+            }
+            if (localUpdate.get(versionMF.getNameToStore()) == null) {
+                if (!localUpdate.containsField("$inc")) {
+                    localUpdate.put("$inc", new BasicDBObject(versionMF.getNameToStore(), 1));
                 } else {
-                    ((Map<String, Object>) (update.get("$inc"))).put(versionMF.getNameToStore(), 1);
+                    ((Map<String, Object>) (localUpdate.get("$inc"))).put(versionMF.getNameToStore(), 1);
                 }
             }
         }
