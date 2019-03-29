@@ -109,7 +109,7 @@ Creating a Query The Datastore is the key class when using Morphia. Virtually al
       
       <guid>/1.5/guides/references/</guid>
       <description>Morphia supports two styles of defining references: the @Reference annotation and the experimental MorphiaReference. The annotation based approach is discussed here. This guide will cover the wrapper based approach.
-important This API is experimental. Its implementation and API subject to change based on user feedback. It&amp;rsquo;s ultimate inclusion in a public permanent API can not be guaranteed. That said, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative.</description>
+important This API is experimental. Its implementation and API subject to change based on user feedback. However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</description>
     </item>
     
     <item>
