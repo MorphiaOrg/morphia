@@ -18,18 +18,19 @@ package dev.morphia.utils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import org.bson.types.CodeWScope;
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappingException;
+import org.bson.types.CodeWScope;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -54,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
@@ -483,47 +485,6 @@ public final class ReflectionUtils {
     /**
      * Returns the classes in a package
      *
-     * @param packageName the package to scan
-     * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
-     * @throws ClassNotFoundException thrown if a class can not be found
-     */
-    public static Set<Class<?>> getClasses(final String packageName) throws IOException, ClassNotFoundException {
-        return getClasses(packageName, false);
-    }
-
-    /**
-     * Returns the classes in a package
-     *
-     * @param packageName    the package to scan
-     * @param mapSubPackages whether to map the sub-packages while scanning
-     * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
-     * @throws ClassNotFoundException thrown if a class can not be found
-     */
-    public static Set<Class<?>> getClasses(final String packageName, final boolean mapSubPackages) throws IOException,
-                                                                                                          ClassNotFoundException {
-        final ClassLoader loader = Thread.currentThread()
-                                         .getContextClassLoader();
-        return getClasses(loader, packageName, mapSubPackages);
-    }
-
-    /**
-     * Returns the classes in a package
-     *
-     * @param loader      the ClassLoader to use
-     * @param packageName the package to scan
-     * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
-     * @throws ClassNotFoundException thrown if a class can not be found
-     */
-    public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName) throws IOException, ClassNotFoundException {
-        return getClasses(loader, packageName, false);
-    }
-
-    /**
-     * Returns the classes in a package
-     *
      * @param loader         the ClassLoader to use
      * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
@@ -549,18 +510,20 @@ public final class ReflectionUtils {
                     filePath = filePath.replaceAll("%23", "#");
                 }
 
-                if (filePath != null) {
-                    if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
-                        String jarPath = filePath.substring(0, filePath.indexOf("!"))
-                                                 .substring(filePath.indexOf(":") + 1);
-                        // WINDOWS HACK
-                        if (jarPath.contains(":")) {
-                            jarPath = jarPath.substring(1);
-                        }
-                        classes.addAll(getFromJARFile(loader, jarPath, path, mapSubPackages));
-                    } else {
-                        classes.addAll(getFromDirectory(loader, new File(filePath), packageName, mapSubPackages));
+                if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
+                    String jarPath = filePath.substring(0, filePath.lastIndexOf("!"))
+                                             .substring(filePath.indexOf(":") + 1);
+                    // WINDOWS HACK
+                    if (jarPath.contains(":")) {
+                        jarPath = jarPath.substring(1);
                     }
+                    if(jarPath.contains("!")) {
+                        classes.addAll(readFromNestedJar(loader, jarPath, path, mapSubPackages));
+                    } else {
+                        classes.addAll(getFromJarFile(loader, jarPath, path, mapSubPackages));
+                    }
+                } else {
+                    classes.addAll(getFromDirectory(loader, new File(filePath), packageName, mapSubPackages));
                 }
             }
         }
@@ -568,18 +531,45 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Returns the classes in a package found in a jar
-     *
-     * @param loader      the ClassLoader to use
-     * @param jar         the jar to scan
-     * @param packageName the package to scan
-     * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
-     * @throws ClassNotFoundException thrown if a class can not be found
+     * @param loader
+     * @param jarPath
+     * @param packageName
+     * @param mapSubPackages
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @morphia.internal
      */
-    public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName)
-        throws IOException, ClassNotFoundException {
-        return getFromJARFile(loader, jar, packageName, false);
+    protected static Set<Class<?>> readFromNestedJar(final ClassLoader loader,
+                                                   final String jarPath,
+                                                   final String packageName,
+                                                   final boolean mapSubPackages) throws IOException, ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final JarFile jarFile = new JarFile(new File(jarPath.substring(0, jarPath.indexOf("!"))));
+        final InputStream inputStream = jarFile.getInputStream(jarFile.getEntry(
+            jarPath.substring(jarPath.indexOf("!") + 2)));
+        final String packagePath = packageName.replace('.', '/');
+        final JarInputStream jarStream = new JarInputStream(inputStream);
+        try {
+            JarEntry jarEntry;
+            do {
+                jarEntry = jarStream.getNextJarEntry();
+                if (jarEntry != null) {
+                    String className = jarEntry.getName();
+                    if (className.endsWith(".class")) {
+                        String classPackageName = getPackageName(className);
+                        if (classPackageName.equals(packagePath) || (mapSubPackages && isSubPackage(classPackageName, packagePath))) {
+                            className = stripFilenameExtension(className);
+                            classes.add(Class.forName(className.replace('/', '.'), true, loader));
+                        }
+                    }
+                }
+            } while (jarEntry != null);
+        } finally {
+            jarFile.close();
+            jarStream.close();
+        }
+        return classes;
     }
 
     /**
@@ -592,8 +582,9 @@ public final class ReflectionUtils {
      * @return the list of classes
      * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
+     * @morphia.internal
      */
-    public static Set<Class<?>> getFromJARFile(final ClassLoader loader, final String jar, final String packageName, final boolean
+    public static Set<Class<?>> getFromJarFile(final ClassLoader loader, final String jar, final String packageName, final boolean
                                                                                                                          mapSubPackages)
         throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
@@ -617,20 +608,6 @@ public final class ReflectionUtils {
             jarFile.close();
         }
         return classes;
-    }
-
-    /**
-     * Returns the classes in a package found in a directory
-     *
-     * @param loader      the ClassLoader to use
-     * @param directory   the directory to scan
-     * @param packageName the package to scan
-     * @return the list of classes
-     * @throws ClassNotFoundException thrown if a class can not be found
-     */
-    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName)
-        throws ClassNotFoundException {
-        return getFromDirectory(loader, directory, packageName, false);
     }
 
     /**

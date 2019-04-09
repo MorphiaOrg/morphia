@@ -1,6 +1,5 @@
 package dev.morphia.utils;
 
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -8,7 +7,11 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.Mapper;
+import org.junit.Assume;
+import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.TypeVariable;
 import java.net.URL;
@@ -23,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.testutil.ExactClassMatcher.exactClass;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static dev.morphia.testutil.ExactClassMatcher.exactClass;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -64,7 +68,7 @@ public class ReflectionUtilsTest extends TestBase {
     public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        Set<Class<?>> result = ReflectionUtils.getFromJARFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
+        Set<Class<?>> result = ReflectionUtils.getFromJarFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
 
         for (Class clazz : result) {
             assertThat(clazz.getPackage().getName().startsWith("org.junit"), is(true));
@@ -84,7 +88,7 @@ public class ReflectionUtilsTest extends TestBase {
         output.getParent().toFile().mkdirs();
         final Path jar = Files.copy(input, output);
         final URLClassLoader classLoader = new URLClassLoader(new URL[]{jar.toUri().toURL()});
-        Set<Class<?>> result = ReflectionUtils.getFromJARFile(classLoader, jar.toString(),
+        Set<Class<?>> result = ReflectionUtils.getFromJarFile(classLoader, jar.toString(),
             "org/junit", true);
 
         for (Class clazz : result) {
@@ -136,6 +140,20 @@ public class ReflectionUtilsTest extends TestBase {
 
     private interface MapWithoutGenericTypes extends Map<Integer, String> {
     }
+
+    // jar can be built using git@github.com:em14Vito/morphia-demo-project.git
+    @Test
+    public void nestedJars() throws IOException, ClassNotFoundException {
+        final File file = new File("lib/morphia-test-executable.jar");
+        Assume.assumeTrue(file.exists());
+
+        final Set<Class<?>> classes = ReflectionUtils.readFromNestedJar(new URLClassLoader(new URL[] { file.toURI().toURL() }),
+            "lib/morphia-test-executable.jar!/BOOT-INF/lib/repository-1.0-SNAPSHOT.jar",
+            "com.github.em14vito.repository.mongodb", true);
+
+        assertFalse(classes.isEmpty());
+    }
+
 
     @Entity("generic_arrays")
     static class MyEntity {
