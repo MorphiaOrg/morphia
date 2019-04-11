@@ -73,8 +73,9 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
         try {
             Class<A> annotationType = (Class<A>) annotation.annotationType();
             for (Method method : annotationType.getDeclaredMethods()) {
-                Object value = method.invoke(annotation);
-                if (!method.getDefaultValue().equals(value)) {
+                Object value = unwrapAnnotation(method.invoke(annotation));
+                final Object defaultValue = unwrapAnnotation(method.getDefaultValue());
+                if (value != null && !value.equals(defaultValue)) {
                     map.put(method.getName(), value);
                 }
             }
@@ -82,6 +83,14 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
             throw new MappingException(e.getMessage(), e);
         }
         return map;
+    }
+
+    private static Object unwrapAnnotation(final Object o) {
+        if(o instanceof Annotation) {
+            return toMap((Annotation) o);
+        } else {
+            return o;
+        }
     }
 
     @Override

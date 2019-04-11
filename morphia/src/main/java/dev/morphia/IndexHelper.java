@@ -97,7 +97,8 @@ final class IndexHelper {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         final Map<String, Object> newOptions = extractOptions(indexed.options());
-        if (!extractOptions(indexed).isEmpty() && !newOptions.isEmpty()) {
+        final Map<String, Object> oldOptions = extractOldOptions(indexed);
+        if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
             throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
                                            + "allowed.  Please migrate all settings to @IndexOptions");
         }
@@ -120,11 +121,9 @@ final class IndexHelper {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
-                final Indexed indexed = mf.getAnnotation(Indexed.class);
-                list.add(convert(indexed, mf.getNameToStore()));
+                list.add(convert(mf.getAnnotation(Indexed.class), mf.getNameToStore()));
             } else if (mf.hasAnnotation(Text.class)) {
-                final Text text = mf.getAnnotation(Text.class);
-                list.add(convert(text, mf.getNameToStore()));
+                list.add(convert(mf.getAnnotation(Text.class), mf.getNameToStore()));
             }
         }
         return list;
@@ -173,19 +172,6 @@ final class IndexHelper {
         return list;
     }
 
-    private List<Field> updateFieldsWithPrefix(final MappedField mf, final Index index) {
-        List<Field> fields = new ArrayList<Field>();
-        for (Field field : index.fields()) {
-            fields.add(new FieldBuilder()
-                           .value(field.value().equals("$**")
-                                  ? field.value()
-                                  : mf.getNameToStore() + "." + field.value())
-                           .type(field.type())
-                           .weight(field.weight()));
-        }
-        return fields;
-    }
-
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {
         List<Index> list = new ArrayList<Index>();
         if (mc != null) {
@@ -222,11 +208,9 @@ final class IndexHelper {
         return toMap(options);
     }
 
-    private Map<String, Object> extractOptions(final Indexed indexed) {
+    private Map<String, Object> extractOldOptions(final Indexed indexed) {
         Map<String, Object> map = toMap(indexed);
-        if (indexed.options().collation().locale().equals("")) {
-            map.remove("options");
-        }
+        map.remove("options");
         map.remove("value");
         return map;
     }

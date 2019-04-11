@@ -15,6 +15,7 @@ package dev.morphia.indexes;
 
 import com.mongodb.DBObject;
 import com.mongodb.DuplicateKeyException;
+import dev.morphia.annotations.Collation;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,7 +56,7 @@ public class TestIndexed extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(UniqueIndexOnValue.class).map(IndexOnValue.class).map(NamedIndexOnValue.class);
+        getMorphia().map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
     }
 
     @Test
@@ -205,6 +206,20 @@ public class TestIndexed extends TestBase {
     public void testMixedIndexDefinitions() throws Exception {
         getMorphia().map(MixedIndexDefinitions.class);
         getDs().ensureIndexes(MixedIndexDefinitions.class);
+    }
+
+    @Test
+    public void testDefaults() {
+        getMorphia().map(NewIndexed.class);
+        getDs().ensureIndexes();
+    }
+
+    @Entity
+    private static class NewIndexed {
+        @Id
+        ObjectId id;
+        @Indexed(options = @IndexOptions(collation = @Collation(locale = "en_US")))
+        String name;
     }
 
     @SuppressWarnings("unused")

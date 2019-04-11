@@ -77,9 +77,7 @@ public @interface Indexed {
 
     /**
      * @return the type of the index (ascending, descending, geo2d); default is ascending
-     *
-     * @deprecated use the {@link IndexOptions} found in {@link #options()}
+     * @see IndexDirection
      */
-    @Deprecated
     IndexDirection value() default IndexDirection.ASC;
 }
