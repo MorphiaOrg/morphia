@@ -8,6 +8,7 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.Mapper;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -143,6 +144,7 @@ public class ReflectionUtilsTest extends TestBase {
 
     // jar can be built using git@github.com:em14Vito/morphia-demo-project.git
     @Test
+    @Ignore
     public void nestedJars() throws IOException, ClassNotFoundException {
         final File file = new File("lib/morphia-test-executable.jar");
         Assume.assumeTrue(file.exists());
