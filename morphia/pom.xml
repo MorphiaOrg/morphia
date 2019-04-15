@@ -79,7 +79,7 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <javadocUrl>http://morphiaorg.github.io/morphia/1.5/javadoc/</javadocUrl>
+                    <javadocUrl>https://morphia.dev/1.5/javadoc/</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
