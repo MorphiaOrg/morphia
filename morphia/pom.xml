@@ -48,6 +48,11 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>3.1.8</version>
+                <executions>
+                    <execution>
+                        <id>spotbugs</id>
+                    </execution>
+                </executions>
                 <configuration>
                     <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
@@ -57,6 +62,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                    </execution>
+                </executions>
                 <configuration>
                     <configLocation>../config/checkstyle.xml</configLocation>
                     <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
@@ -198,27 +208,4 @@
         </dependency>
     </dependencies>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <configuration>
-                    <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
-                    <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <configLocation>../config/checkstyle.xml</configLocation>
-                    <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
-                    <encoding>UTF-8</encoding>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 </project>
