@@ -77,7 +77,7 @@
             <plugin>
                 <groupId>com.antwerkz.github</groupId>
                 <artifactId>issues-maven-plugin</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
                 <executions>
                     <execution>
                         <id>issues</id>
@@ -113,7 +113,7 @@
                 </executions>
                 <configuration>
                     <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                    <!--<oldVersion>1.4.0</oldVersion>-->
+                    <oldVersion>1.4.1</oldVersion>
                     <analysisConfigurationFiles>
                         <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                     </analysisConfigurationFiles>
