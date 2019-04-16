@@ -2,6 +2,7 @@ dev.morphia
 dev.morphia.aggregation
 dev.morphia.annotations
 dev.morphia.converters
+dev.morphia.converters.experimental
 dev.morphia.dao
 dev.morphia.geo
 dev.morphia.logging
