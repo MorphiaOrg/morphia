@@ -86,7 +86,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
     private static Object unwrapAnnotation(final Object o) {
-        if(o instanceof Annotation) {
+        if (o instanceof Annotation) {
             return toMap((Annotation) o);
         } else {
             return o;

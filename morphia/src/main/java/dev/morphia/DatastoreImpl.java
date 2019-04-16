@@ -1,7 +1,6 @@
 package dev.morphia;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -71,8 +70,8 @@ import static java.util.Collections.singletonList;
 /**
  * A generic (type-safe) wrapper around mongodb collections
  *
- * @deprecated This is an internal implementation of a published API.  No public alternative planned.
  * @morphia.internal
+ * @deprecated This is an internal implementation of a published API.  No public alternative planned.
  */
 @Deprecated
 public class DatastoreImpl implements AdvancedDatastore {
@@ -249,24 +248,24 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
                 final CappedAt cap = mc.getEntityAnnotation().cap();
                 final String collName = mapper.getCollectionName(mc.getClazz());
-                final BasicDBObjectBuilder dbCapOpts = start("capped", true);
+                final BasicDBObject dbCapOpts = new BasicDBObject("capped", true);
                 if (cap.value() > 0) {
-                    dbCapOpts.add("size", cap.value());
+                    dbCapOpts.put("size", cap.value());
                 }
                 if (cap.count() > 0) {
-                    dbCapOpts.add("max", cap.count());
+                    dbCapOpts.put("max", cap.count());
                 }
                 final DB database = getDB();
                 if (database.getCollectionNames().contains(collName)) {
-                    final DBObject dbResult = database.command(start("collstats", collName).get());
-                    if (((CommandResult) dbResult).getBoolean("capped")) {
+                    final CommandResult dbResult = database.command(start("collstats", collName).get());
+                    if (dbResult.getBoolean("capped")) {
                         LOG.debug("DBCollection already exists and is capped already; doing nothing. " + dbResult);
                     } else {
                         LOG.warn("DBCollection already exists with same name(" + collName
-                                        + ") and is not capped; not creating capped version!");
+                                 + ") and is not capped; not creating capped version!");
                     }
                 } else {
-                    getDB().createCollection(collName, dbCapOpts.get());
+                    getDB().createCollection(collName, dbCapOpts);
                     LOG.debug("Created capped DBCollection (" + collName + ") with opts " + dbCapOpts);
                 }
             }
@@ -284,18 +283,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (validation != null) {
             String collectionName = mc.getCollectionName();
             CommandResult result = getDB()
-                .command(new BasicDBObject("collMod", collectionName)
-                             .append("validator", parse(validation.value()))
-                             .append("validationLevel", validation.level().getValue())
-                             .append("validationAction", validation.action().getValue())
-                        );
+                                       .command(new BasicDBObject("collMod", collectionName)
+                                                    .append("validator", parse(validation.value()))
+                                                    .append("validationLevel", validation.level().getValue())
+                                                    .append("validationAction", validation.action().getValue())
+                                               );
 
             if (!result.ok()) {
                 if (result.getInt("code") == 26) {
                     ValidationOptions options = new ValidationOptions()
-                        .validator(parse(validation.value()))
-                        .validationLevel(validation.level())
-                        .validationAction(validation.action());
+                                                    .validator(parse(validation.value()))
+                                                    .validationLevel(validation.level())
+                                                    .validationAction(validation.action());
                     getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
                 } else {
                     result.throwOnError();
@@ -348,16 +347,16 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         FindAndModifyOptions copy = enforceWriteConcern(options, query.getEntityClass())
-            .copy()
-            .projection(query.getFieldsObject())
-            .sort(query.getSortObject())
-            .returnNew(false)
-            .upsert(false)
-            .remove(true);
+                                        .copy()
+                                        .projection(query.getFieldsObject())
+                                        .sort(query.getSortObject())
+                                        .returnNew(false)
+                                        .upsert(false)
+                                        .remove(true);
 
         final DBObject result = dbColl.findAndModify(query.getQueryObject(), copy.getOptions());
 
-        return result == null ? null : mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
+        return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
     }
 
     @Override
@@ -377,24 +376,24 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                            .sort(query.getSortObject())
                                                                            .projection(query.getFieldsObject())
                                                                            .update(((UpdateOpsImpl<T>) operations).getOps())
-                                           .getOptions());
+                                                                           .getOptions());
 
-        return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
     }
 
     @Override
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations) {
         return findAndModify(query, operations, new FindAndModifyOptions()
-            .returnNew(true));
+                                                    .returnNew(true));
     }
 
     @Override
     @Deprecated
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
         return findAndModify(query, operations, new FindAndModifyOptions()
-            .returnNew(!oldVersion)
-            .upsert(false));
+                                                    .returnNew(!oldVersion)
+                                                    .upsert(false));
     }
 
     @Override
@@ -402,8 +401,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
                                final boolean createIfMissing) {
         return findAndModify(query, operations, new FindAndModifyOptions()
-            .returnNew(!oldVersion)
-            .upsert(createIfMissing));
+                                                    .returnNew(!oldVersion)
+                                                    .upsert(createIfMissing));
 
     }
 
@@ -503,13 +502,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> MongoCollection<T> getMongoCollection(final Class<T> clazz) {
-        return getMongoCollection(mapper.getCollectionName(clazz), clazz, null);
+        return getMongoCollection(mapper.getCollectionName(clazz), clazz);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz, final WriteConcern concern) {
+    private <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
         final MongoCollection<T> collection = database.getCollection(name, clazz);
-        return enforceWriteConcern(collection, clazz, concern);
+        return enforceWriteConcern(collection, clazz);
     }
 
     @Override
@@ -611,7 +610,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             cmd.setSort(query.getSortObject());
         }
 
-        if (finalize != null && finalize.length() != 0) {
+        if (finalize != null && !finalize.isEmpty()) {
             cmd.setFinalize(finalize);
         }
 
@@ -641,7 +640,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = query.getCollection();
 
         final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
-                                                          baseCommand.getOutputTarget(), outType, query.getQueryObject());
+            baseCommand.getOutputTarget(), outType, query.getQueryObject());
         cmd.setFinalize(baseCommand.getFinalize());
         cmd.setScope(baseCommand.getScope());
 
@@ -653,7 +652,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         if (LOG.isTraceEnabled()) {
-            LOG.info("Executing " + cmd.toString());
+            LOG.info("Executing " + cmd);
         }
 
         final EntityCache cache = createCache();
@@ -698,12 +697,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         final DBCollection dbColl = getCollection(unwrapped);
 
         // try to do an update if there is a @Version field
-        final DBObject $set = new BasicDBObject("$set", dbObj);
-        wr = tryVersionedUpdate(dbColl, unwrapped, $set, idValue, new InsertOptions().writeConcern(wc), mc);
+        final DBObject set = new BasicDBObject("$set", dbObj);
+        wr = tryVersionedUpdate(dbColl, unwrapped, set, idValue, new InsertOptions().writeConcern(wc), mc);
 
         if (wr == null) {
             final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter("_id", id);
-            wr = update(query, $set, new UpdateOptions().writeConcern(wc)).getWriteResult();
+            wr = update(query, set, new UpdateOptions().writeConcern(wc)).getWriteResult();
         }
 
         final UpdateResults res = new UpdateResults(wr);
@@ -760,7 +759,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Deprecated
     public <T> Key<T> save(final T entity, final WriteConcern wc) {
         return save(entity, new InsertOptions()
-            .writeConcern(wc));
+                                .writeConcern(wc));
     }
 
     @Override
@@ -782,8 +781,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final MappedClass mc = mapper.getMappedClass(entity);
         Query<?> query = createQuery(mapper.getMappedClass(entity).getClazz())
-            .disableValidation()
-            .filter("_id", mapper.getId(entity));
+                             .disableValidation()
+                             .filter("_id", mapper.getId(entity));
         if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
             final MappedField field = mc.getFieldsAnnotatedWith(Version.class).get(0);
             query.field(field.getNameToStore()).equal(field.getFieldValue(entity));
@@ -805,18 +804,18 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations) {
         return update(query, operations, new UpdateOptions()
-            .upsert(false)
-            .multi(true)
-            .writeConcern(getWriteConcern(query.getEntityClass())));
+                                             .upsert(false)
+                                             .multi(true)
+                                             .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
     @Deprecated
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
         return update(query, operations, new UpdateOptions()
-            .upsert(createIfMissing)
-            .multi(true)
-            .writeConcern(getWriteConcern(query.getEntityClass())));
+                                             .upsert(createIfMissing)
+                                             .multi(true)
+                                             .writeConcern(getWriteConcern(query.getEntityClass())));
     }
 
     @Override
@@ -824,9 +823,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                     final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
-                    .upsert(createIfMissing)
-                    .multi(true)
-                    .writeConcern(wc));
+                                             .upsert(createIfMissing)
+                                             .multi(true)
+                                             .writeConcern(wc));
     }
 
     @Override
@@ -839,7 +838,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
         return update(query, operations, new UpdateOptions()
-            .upsert(createIfMissing));
+                                             .upsert(createIfMissing));
 
     }
 
@@ -848,8 +847,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
                                          final WriteConcern wc) {
         return update(query, operations, new UpdateOptions()
-            .upsert(createIfMissing)
-            .writeConcern(wc));
+                                             .upsert(createIfMissing)
+                                             .writeConcern(wc));
     }
 
     @Override
@@ -981,7 +980,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
 
-        indexHelper.createIndex(getMongoCollection(collection, clazz, null), getMapper().getMappedClass(clazz),
+        indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz),
             new IndexBuilder()
                 .fields(fields)
                 .options(new IndexOptionsBuilder()
@@ -997,7 +996,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
-        indexHelper.createIndex(getMongoCollection(collection, clazz, null), mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz), background);
     }
 
     @Override
@@ -1054,7 +1053,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> Key<T> insert(final String collection, final T entity) {
         final T unwrapped = ProxyHelper.unwrap(entity);
         return insert(getCollection(collection), unwrapped, new InsertOptions()
-            .writeConcern(getWriteConcern(unwrapped)));
+                                                                .writeConcern(getWriteConcern(unwrapped)));
     }
 
     @Override
@@ -1105,7 +1104,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final WriteConcern wc) {
         return insert(getDB().getCollection(collection), entities, new InsertOptions()
-            .writeConcern(wc));
+                                                                       .writeConcern(wc));
     }
 
     @Override
@@ -1186,7 +1185,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
         return insert(entities, new InsertOptions()
-            .writeConcern(defConcern));
+                                    .writeConcern(defConcern));
     }
 
     /**
@@ -1217,13 +1216,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     protected <T> Key<T> insert(final DBCollection dbColl, final T entity, final InsertOptions options) {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<Object, DBObject>();
         dbColl.insert(singletonList(entityToDBObj(entity, involvedObjects)), enforceWriteConcern(options, entity.getClass())
-            .getOptions());
+                                                                                 .getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, dbColl.getName()).get(0);
     }
 
-    private MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass, final WriteConcern proposed) {
-        WriteConcern applied = proposed != null ? proposed : getWriteConcern(klass);
+    private MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass) {
+        WriteConcern applied = getWriteConcern(klass);
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
@@ -1232,8 +1231,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
-                .copy()
-                .writeConcern(getWriteConcern(klass));
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
@@ -1241,8 +1240,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     <T> InsertOptions enforceWriteConcern(final InsertOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
-                .copy()
-                .writeConcern(getWriteConcern(klass));
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
@@ -1250,8 +1249,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
-                .copy()
-                .writeConcern(getWriteConcern(klass));
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
@@ -1259,8 +1258,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     <T> DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
-                .copy()
-                .writeConcern(getWriteConcern(klass));
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
         }
         return options;
     }
@@ -1329,10 +1328,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             return dbColl.insert(singletonList(document), options.getOptions());
         } else {
             return dbColl.update(new BasicDBObject(ID_FIELD_NAME, document.get(ID_FIELD_NAME)), document,
-                          new DBCollectionUpdateOptions()
-                              .bypassDocumentValidation(options.getBypassDocumentValidation())
-                              .writeConcern(options.getWriteConcern())
-                              .upsert(true));
+                new DBCollectionUpdateOptions()
+                    .bypassDocumentValidation(options.getBypassDocumentValidation())
+                    .writeConcern(options.getWriteConcern())
+                    .upsert(true));
         }
     }
 
@@ -1349,11 +1348,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         Long oldVersion = (Long) mfVersion.getFieldValue(entity);
         long newVersion = nextValue(oldVersion);
 
-        final DBObject $set = (DBObject) dbObj.get("$set");
-        if($set == null) {
+        final DBObject set = (DBObject) dbObj.get("$set");
+        if (set == null) {
             dbObj.put(versionKeyName, newVersion);
         } else {
-            $set.put(versionKeyName, newVersion);
+            set.put(versionKeyName, newVersion);
         }
 
         if (idValue != null && newVersion == 1) {
@@ -1361,23 +1360,23 @@ public class DatastoreImpl implements AdvancedDatastore {
                 wr = dbColl.insert(singletonList(dbObj), options.getOptions());
             } catch (DuplicateKeyException e) {
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
-                                                                 entity.getClass().getName(), idValue));
+                    entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
             final Query<?> query = find(dbColl.getName(), entity.getClass())
-                .disableValidation()
-                .filter("_id", idValue)
-                .enableValidation()
-                .filter(versionKeyName, oldVersion);
+                                       .disableValidation()
+                                       .filter("_id", idValue)
+                                       .enableValidation()
+                                       .filter(versionKeyName, oldVersion);
             final UpdateResults res = update(query, dbObj, new UpdateOptions()
-                .bypassDocumentValidation(options.getBypassDocumentValidation())
-                .writeConcern(options.getWriteConcern()));
+                                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                               .writeConcern(options.getWriteConcern()));
 
             wr = res.getWriteResult();
 
             if (res.getUpdatedCount() != 1) {
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                                                                 entity.getClass().getName(), idValue, oldVersion));
+                    entity.getClass().getName(), idValue, oldVersion));
             }
         } else {
             wr = saveDocument(dbColl, dbObj, options);
@@ -1489,7 +1488,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = mapper.getMappedClass(ent);
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                                              mc.getClazz().getName()));
+                mc.getClazz().getName()));
         }
         DBObject dbObject = entityToDBObj(ent, involvedObjects);
         List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
@@ -1526,12 +1525,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                             dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
+                dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
         return new UpdateResults(dbColl.update(queryObject, update,
-                                               enforceWriteConcern(options, query.getEntityClass())
-                                                   .getOptions()));
+            enforceWriteConcern(options, query.getEntityClass())
+                .getOptions()));
     }
 
     @SuppressWarnings("unchecked")
@@ -1560,7 +1559,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (!fields.isEmpty()) {
             final MappedField versionMF = fields.get(0);
             DBObject localUpdate = update;
-            if(localUpdate.get("$set") != null) {
+            if (localUpdate.get("$set") != null) {
                 localUpdate = (DBObject) localUpdate.get("$set");
             }
             if (localUpdate.get(versionMF.getNameToStore()) == null) {
@@ -1574,12 +1573,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                             dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
+                dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
         }
 
         return new UpdateResults(dbColl.update(queryObject, update,
-                                               enforceWriteConcern(options, query.getEntityClass())
-                                                   .getOptions()));
+            enforceWriteConcern(options, query.getEntityClass())
+                .getOptions()));
     }
 
     /**

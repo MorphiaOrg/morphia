@@ -14,5 +14,9 @@ public abstract class CoordinateReferenceSystem {
      */
     public abstract CoordinateReferenceSystemType getType();
 
+    /**
+     * Converts this type to the driver type
+     * @return the driver type
+     */
     public abstract com.mongodb.client.model.geojson.CoordinateReferenceSystem convert();
 }

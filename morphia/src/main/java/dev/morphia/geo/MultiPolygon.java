@@ -68,16 +68,16 @@ public class MultiPolygon implements Geometry {
     }
 
     @Override
-      public com.mongodb.client.model.geojson.MultiPolygon convert() {
-          return convert(null);
-      }
+    public com.mongodb.client.model.geojson.MultiPolygon convert() {
+        return convert(null);
+    }
 
-      @Override
-      public com.mongodb.client.model.geojson.MultiPolygon convert(final CoordinateReferenceSystem crs) {
-          List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
-          for (final Polygon list : coordinates) {
-              coords.add(list.convert(crs).getCoordinates());
-          }
-          return new com.mongodb.client.model.geojson.MultiPolygon(crs != null ? crs.convert() : null, coords);
-      }
+    @Override
+    public com.mongodb.client.model.geojson.MultiPolygon convert(final CoordinateReferenceSystem crs) {
+        List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
+        for (final Polygon list : coordinates) {
+            coords.add(list.convert(crs).getCoordinates());
+        }
+        return new com.mongodb.client.model.geojson.MultiPolygon(crs != null ? crs.convert() : null, coords);
+    }
 }

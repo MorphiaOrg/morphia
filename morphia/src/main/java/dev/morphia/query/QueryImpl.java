@@ -11,10 +11,6 @@ import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
-import org.bson.Document;
-import org.bson.types.CodeWScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
@@ -26,9 +22,12 @@ import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.query.internal.MappingIterable;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import org.bson.Document;
+import org.bson.types.CodeWScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +36,9 @@ import java.util.concurrent.TimeUnit;
 import static com.mongodb.CursorType.NonTailable;
 import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static dev.morphia.query.CriteriaJoin.*;
 import static dev.morphia.query.CriteriaJoin.AND;
+import static dev.morphia.query.CriteriaJoin.OR;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 
 /**
@@ -884,7 +883,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         if (dbOptions.isPartial() != that.isPartial()) {
             return false;
         }
-        if (dbOptions.getModifiers() != null ? !dbOptions.getModifiers().equals(that.getModifiers()) : that.getModifiers() != null) {
+        if (!dbOptions.getModifiers().equals(that.getModifiers())) {
             return false;
         }
         if (dbOptions.getProjection() != null ? !dbOptions.getProjection().equals(that.getProjection()) : that.getProjection() != null) {
@@ -914,13 +913,13 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
         int result = options.getBatchSize();
         result = 31 * result + getLimit();
-        result = 31 * result + (options.getModifiers() != null ? options.getModifiers().hashCode() : 0);
+        result = 31 * result + options.getModifiers().hashCode();
         result = 31 * result + (options.getProjection() != null ? options.getProjection().hashCode() : 0);
         result = 31 * result + (int) (options.getMaxTime(MILLISECONDS) ^ options.getMaxTime(MILLISECONDS) >>> 32);
         result = 31 * result + (int) (options.getMaxAwaitTime(MILLISECONDS) ^ options.getMaxAwaitTime(MILLISECONDS) >>> 32);
         result = 31 * result + options.getSkip();
         result = 31 * result + (options.getSortDBObject() != null ? options.getSortDBObject().hashCode() : 0);
-        result = 31 * result + (options.getCursorType() != null ? options.getCursorType().hashCode() : 0);
+        result = 31 * result + options.getCursorType().hashCode();
         result = 31 * result + (options.isNoCursorTimeout() ? 1 : 0);
         result = 31 * result + (options.isOplogReplay() ? 1 : 0);
         result = 31 * result + (options.isPartial() ? 1 : 0);

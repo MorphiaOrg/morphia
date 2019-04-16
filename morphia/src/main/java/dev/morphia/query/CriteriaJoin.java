@@ -12,4 +12,5 @@ public enum CriteriaJoin {
     @Override
     public String toString() {
         return "$" + name().toLowerCase();
-    }}
+    }
+}

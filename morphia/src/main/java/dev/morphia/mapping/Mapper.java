@@ -15,14 +15,9 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import org.bson.BSONEncoder;
-import org.bson.BasicBSONEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.NotSaved;
@@ -44,6 +39,10 @@ import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.ValidationException;
+import org.bson.BSONEncoder;
+import org.bson.BasicBSONEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -62,10 +61,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import static java.lang.String.format;
 import static dev.morphia.utils.ReflectionUtils.getParameterizedClass;
 import static dev.morphia.utils.ReflectionUtils.implementsInterface;
 import static dev.morphia.utils.ReflectionUtils.isPropertyType;
+import static java.lang.String.format;
 
 
 /**
@@ -77,6 +76,7 @@ import static dev.morphia.utils.ReflectionUtils.isPropertyType;
 public class Mapper {
     /**
      * The @{@link dev.morphia.annotations.Id} field name that is stored with mongodb.
+     *
      * @deprecated use "_id" directly
      */
     @Deprecated
@@ -84,6 +84,7 @@ public class Mapper {
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
+     *
      * @morphia.internal
      */
     public static final String IGNORED_FIELDNAME = ".";
@@ -91,6 +92,7 @@ public class Mapper {
     /**
      * Special field used by morphia to support various possibly loading issues; will be replaced when discriminators are implemented to
      * support polymorphism
+     *
      * @deprecated
      */
     @Deprecated
@@ -208,7 +210,6 @@ public class Mapper {
      * Finds any subtypes for the given MappedClass.
      *
      * @param mc the parent type
-     *
      * @return the list of subtypes
      * @since 1.3
      */
@@ -301,7 +302,7 @@ public class Mapper {
                 Object id = dbObject.get("_id");
                 String entityName = entity.getClass().getName();
                 throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
-                                                  datastore.getDB().getName()), e);
+                    datastore.getDB().getName()), e);
             }
 
             if (updated.containsField("_id") && getMappedClass(entity).getIdField() != null) {
@@ -374,9 +375,9 @@ public class Mapper {
         unwrapped = ProxyHelper.unwrap(unwrapped);
         try {
             final MappedClass mappedClass = getMappedClass(unwrapped.getClass());
-            if(mappedClass != null) {
+            if (mappedClass != null) {
                 final Field idField = mappedClass.getIdField();
-                if(idField != null) {
+                if (idField != null) {
                     return idField.get(unwrapped);
                 }
             }
@@ -597,7 +598,7 @@ public class Mapper {
      */
     public <T> Key<T> refToKey(final DBRef ref) {
         return ref == null ? null : new Key<T>((Class<? extends T>) getClassFromCollection(ref.getCollectionName()),
-                                               ref.getCollectionName(), ref.getId());
+            ref.getCollectionName(), ref.getId());
     }
 
     /**
@@ -684,8 +685,8 @@ public class Mapper {
 
                         } else if (mf.getType().equals(Key.class)) {
                             mappedValue = keyToDBRef(valueIsIdType
-                                          ? createKey(mf.getSubClass(), value)
-                                          : value instanceof Key ? (Key<?>) value : getKey(value));
+                                                     ? createKey(mf.getSubClass(), value)
+                                                     : value instanceof Key ? (Key<?>) value : getKey(value));
                             if (mappedValue == value) {
                                 throw new ValidationException("cannot map to Key<T> field: " + value);
                             }
@@ -769,7 +770,7 @@ public class Mapper {
                     if (!dbIdValue.equals(oldIdValue)) {
                         mf.setFieldValue(entity, oldIdValue); //put the value back...
                         throw new RuntimeException(format("@Id mismatch: %s != %s for %s", oldIdValue, dbIdValue,
-                                                          entity.getClass().getName()));
+                            entity.getClass().getName()));
                     }
                 }
             } catch (Exception e) {
@@ -860,8 +861,8 @@ public class Mapper {
 
     private boolean isAssignable(final MappedField mf, final Object value) {
         return mf != null
-            && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
-            || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
+               && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
+                   || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
     }
 
@@ -872,8 +873,8 @@ public class Mapper {
     private boolean isMultiValued(final MappedField mf, final Object value) {
         final Class subClass = mf.getSubClass();
         return value instanceof Iterable
-            && mf.isMultipleValues()
-            && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
+               && mf.isMultipleValues()
+               && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
     private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,

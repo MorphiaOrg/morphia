@@ -64,14 +64,15 @@ public class MultiLineString implements Geometry {
                + "coordinates=" + coordinates
                + '}';
     }
-    @Override
-     public com.mongodb.client.model.geojson.MultiLineString convert() {
-         return convert(null);
-     }
 
-     @Override
-     public com.mongodb.client.model.geojson.MultiLineString convert(final CoordinateReferenceSystem crs) {
-         return new com.mongodb.client.model.geojson.MultiLineString(crs != null ? crs.convert() : null,
-             GeoJson.convertLineStrings(coordinates));
-     }
+    @Override
+    public com.mongodb.client.model.geojson.MultiLineString convert() {
+        return convert(null);
+    }
+
+    @Override
+    public com.mongodb.client.model.geojson.MultiLineString convert(final CoordinateReferenceSystem crs) {
+        return new com.mongodb.client.model.geojson.MultiLineString(crs != null ? crs.convert() : null,
+            GeoJson.convertLineStrings(coordinates));
+    }
 }

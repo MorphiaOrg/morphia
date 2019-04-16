@@ -53,6 +53,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     /**
      * @morphia.internal
+     * @return the stages
      */
     public List<DBObject> getStages() {
         return stages;
@@ -127,19 +128,18 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline group(final List<Group> id, final Group... groupings) {
-        DBObject idGroup = null;
         if (id != null) {
-            idGroup = new BasicDBObject();
+            DBObject idGroup = new BasicDBObject();
             for (Group group : id) {
                 idGroup.putAll(toDBObject(group));
             }
-        }
-        DBObject group = new BasicDBObject("_id", idGroup);
-        for (Group grouping : groupings) {
-            group.putAll(toDBObject(grouping));
+            DBObject group = new BasicDBObject("_id", idGroup);
+            for (Group grouping : groupings) {
+                group.putAll(toDBObject(grouping));
+            }
+            stages.add(new BasicDBObject("$group", group));
         }
 
-        stages.add(new BasicDBObject("$group", group));
         return this;
     }
 

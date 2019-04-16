@@ -1,13 +1,13 @@
 package dev.morphia.mapping;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.ObjectFactory;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.cache.DefaultEntityCacheFactory;
 import dev.morphia.mapping.cache.EntityCacheFactory;
 import dev.morphia.mapping.lazy.DatastoreProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Options to control mapping behavior.
@@ -32,9 +32,10 @@ public class MapperOptions {
 
     /**
      * Creates a default options instance.
-     * @deprecated use the Builder instead
+     *
      * @see #builder()
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public MapperOptions() {
@@ -44,9 +45,9 @@ public class MapperOptions {
      * Copy Constructor
      *
      * @param options the MapperOptions to copy
-     * @deprecated use the Builder instead
      * @see #builder(MapperOptions)
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public MapperOptions(final MapperOptions options) {
@@ -94,8 +95,8 @@ public class MapperOptions {
      * Sets the factory to create an EntityCache
      *
      * @param cacheFactory the factory
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setCacheFactory(final EntityCacheFactory cacheFactory) {
@@ -114,11 +115,11 @@ public class MapperOptions {
     /**
      * Sets the DatastoreProvider Morphia should use
      *
-     * @param ignored the DatastoreProvider to use
+     * @param unused the DatastoreProvider to use
      * @deprecated unused
      */
     @Deprecated
-    public void setDatastoreProvider(final DatastoreProvider ignored) {
+    public void setDatastoreProvider(final DatastoreProvider unused) {
         LOG.warn("DatastoreProviders are no longer needed or used.");
     }
 
@@ -133,8 +134,8 @@ public class MapperOptions {
      * Sets the mapper to use for top level entities
      *
      * @param pDefaultMapper the mapper to use
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setDefaultMapper(final CustomMapper pDefaultMapper) {
@@ -152,8 +153,8 @@ public class MapperOptions {
      * Sets the mapper to use for embedded entities
      *
      * @param pEmbeddedMapper the mapper to use
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setEmbeddedMapper(final CustomMapper pEmbeddedMapper) {
@@ -164,7 +165,7 @@ public class MapperOptions {
      * @return the factory to use when creating new instances
      */
     public ObjectFactory getObjectFactory() {
-        if(objectFactory == null) {
+        if (objectFactory == null) {
             objectFactory = new DefaultCreator(this);
         }
         return objectFactory;
@@ -175,8 +176,8 @@ public class MapperOptions {
      * could be used, e.g., to provide a Guice-based factory such as what morphia-guice provides.
      *
      * @param objectFactory the factory to use
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setObjectFactory(final ObjectFactory objectFactory) {
@@ -196,8 +197,8 @@ public class MapperOptions {
      *
      * @param pReferenceMapper the mapper to use
      * @see Reference
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setReferenceMapper(final CustomMapper pReferenceMapper) {
@@ -215,8 +216,8 @@ public class MapperOptions {
      * Sets the mapper to use when processing values
      *
      * @param pValueMapper the mapper to use
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setValueMapper(final CustomMapper pValueMapper) {
@@ -253,8 +254,8 @@ public class MapperOptions {
      * Sets whether Morphia should cache name -> Class lookups
      *
      * @param cacheClassLookups true if the lookup results should be cached
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setCacheClassLookups(final boolean cacheClassLookups) {
@@ -272,8 +273,8 @@ public class MapperOptions {
      * Controls if final fields are stored.
      *
      * @param ignoreFinals true if Morphia should ignore final fields
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setIgnoreFinals(final boolean ignoreFinals) {
@@ -291,8 +292,8 @@ public class MapperOptions {
      * Controls if Morphia should store empty values for lists/maps/sets/arrays
      *
      * @param storeEmpties true if Morphia should store empty values for lists/maps/sets/arrays
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setStoreEmpties(final boolean storeEmpties) {
@@ -310,8 +311,8 @@ public class MapperOptions {
      * Controls if null are stored.
      *
      * @param storeNulls true if Morphia should store null values
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setStoreNulls(final boolean storeNulls) {
@@ -329,8 +330,8 @@ public class MapperOptions {
      * Controls if default entity collection name should be lowercase.
      *
      * @param useLowerCaseCollectionNames true if Morphia should use lower case values when calculating collection names
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setUseLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
@@ -354,19 +355,28 @@ public class MapperOptions {
 
     /**
      * Controls if classes from sub-packages should be mapped.
+     *
      * @param mapSubPackages true if Morphia should map classes from the sub-packages as well
-     * @deprecated use the Builder instead
      * @see Builder
+     * @deprecated use the Builder instead
      */
     @Deprecated
     public void setMapSubPackages(final boolean mapSubPackages) {
         this.mapSubPackages = mapSubPackages;
     }
 
+    /**
+     * @return the discriminator field name
+     */
     public String getDiscriminatorField() {
         return Mapper.CLASS_NAME_FIELDNAME;
     }
 
+    /**
+     * Disables indexing of embedded types
+     *
+     * @param disableEmbeddedIndexes if true, @Embedded fields will not be scanned for indexing
+     */
     public void setDisableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
         this.disableEmbeddedIndexes = disableEmbeddedIndexes;
     }
@@ -381,36 +391,48 @@ public class MapperOptions {
     /**
      * This is used to determine how Java 8 dates and times are stored in the database.
      *
+     * @param dateStorage the storage scheme to use for dates
      * @deprecated This will be removed in 2.0.  It is intended to bridge the gap when correcting the storage of data/time values in the
-     * database.  {@link DateStorage#UTC} should be used and will be the default in 2.0.  In 1.5 it is {@link DateStorage#SYSTEM_DEFAULT} for
-     * backwards compatibility.
+     * database.  {@link DateStorage#UTC} should be used and will be the default in 2.0.  In 1.5 it is {@link DateStorage#SYSTEM_DEFAULT}
+     * for backwards compatibility.
      */
+    @Deprecated
     public void setDateStorage(final DateStorage dateStorage) {
         this.dateStorage = dateStorage;
     }
 
+    /**
+     * @return a builder to set mapping options
+     */
     public static Builder builder() {
         return new Builder();
     }
 
-    public static Builder builder(final MapperOptions copy) {
+    /**
+     * @param original an existing set of options to use as a starting point
+     * @return a builder to set mapping options
+     */
+    public static Builder builder(final MapperOptions original) {
         Builder builder = new Builder();
-        builder.ignoreFinals = copy.isIgnoreFinals();
-        builder.storeNulls = copy.isStoreNulls();
-        builder.storeEmpties = copy.isStoreEmpties();
-        builder.useLowerCaseCollectionNames = copy.isUseLowerCaseCollectionNames();
-        builder.cacheClassLookups = copy.isCacheClassLookups();
-        builder.mapSubPackages = copy.isMapSubPackages();
-        builder.objectFactory = copy.getObjectFactory();
-        builder.cacheFactory = copy.getCacheFactory();
-        builder.embeddedMapper = copy.getEmbeddedMapper();
-        builder.defaultMapper = copy.getDefaultMapper();
-        builder.referenceMapper = copy.getReferenceMapper();
-        builder.valueMapper = copy.getValueMapper();
-        builder.disableEmbeddedIndexes = copy.isDisableEmbeddedIndexes();
+        builder.ignoreFinals = original.isIgnoreFinals();
+        builder.storeNulls = original.isStoreNulls();
+        builder.storeEmpties = original.isStoreEmpties();
+        builder.useLowerCaseCollectionNames = original.isUseLowerCaseCollectionNames();
+        builder.cacheClassLookups = original.isCacheClassLookups();
+        builder.mapSubPackages = original.isMapSubPackages();
+        builder.objectFactory = original.getObjectFactory();
+        builder.cacheFactory = original.getCacheFactory();
+        builder.embeddedMapper = original.getEmbeddedMapper();
+        builder.defaultMapper = original.getDefaultMapper();
+        builder.referenceMapper = original.getReferenceMapper();
+        builder.valueMapper = original.getValueMapper();
+        builder.disableEmbeddedIndexes = original.isDisableEmbeddedIndexes();
         return builder;
     }
 
+    /**
+     * A builder class for setting mapping options
+     */
     @SuppressWarnings("unused")
     public static final class Builder {
 
@@ -432,84 +454,159 @@ public class MapperOptions {
         private Builder() {
         }
 
+        /**
+         * this method does nothing
+         *
+         * @param actLikeSerializer unused
+         * @return this
+         * @deprecated
+         */
+        @Deprecated
         public Builder actLikeSerializer(final boolean actLikeSerializer) {
             return this;
         }
 
+        /**
+         * @param ignoreFinals if true final fields are ignored
+         * @return this
+         */
         public Builder ignoreFinals(final boolean ignoreFinals) {
             this.ignoreFinals = ignoreFinals;
             return this;
         }
 
+        /**
+         * @param storeNulls if true null values are stored in the database
+         * @return this
+         */
         public Builder storeNulls(final boolean storeNulls) {
             this.storeNulls = storeNulls;
             return this;
         }
 
+        /**
+         * @param storeEmpties if true empty maps and collection types are stored in the database
+         * @return this
+         */
         public Builder storeEmpties(final boolean storeEmpties) {
             this.storeEmpties = storeEmpties;
             return this;
         }
 
+        /**
+         * @param useLowerCaseCollectionNames if true, generated collections names are lower cased
+         * @return this
+         */
         public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
             this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
             return this;
         }
 
+        /**
+         * @param cacheClassLookups if true class lookups are cached
+         * @return this
+         */
         public Builder cacheClassLookups(final boolean cacheClassLookups) {
             this.cacheClassLookups = cacheClassLookups;
             return this;
         }
 
+        /**
+         * @param mapSubPackages if true subpackages are mapped when given a particular package
+         * @return this
+         */
         public Builder mapSubPackages(final boolean mapSubPackages) {
             this.mapSubPackages = mapSubPackages;
             return this;
         }
 
+        /**
+         * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
+         * @return this
+         */
         public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
             this.disableEmbeddedIndexes = disableEmbeddedIndexes;
             return this;
         }
 
+        /**
+         * @param objectFactory the object factory to use when creating instances
+         * @return this
+         */
         public Builder objectFactory(final ObjectFactory objectFactory) {
             this.objectFactory = objectFactory;
             return this;
         }
 
+        /**
+         * @param cacheFactory the cache factory to use
+         * @return this
+         */
         public Builder cacheFactory(final EntityCacheFactory cacheFactory) {
             this.cacheFactory = cacheFactory;
             return this;
         }
 
+        /**
+         * @param embeddedMapper the mapper to use for embedded entities
+         * @return this
+         */
         public Builder embeddedMapper(final CustomMapper embeddedMapper) {
             this.embeddedMapper = embeddedMapper;
             return this;
         }
 
+        /**
+         * @param defaultMapper the default mapper to use
+         * @return this
+         */
         public Builder defaultMapper(final CustomMapper defaultMapper) {
             this.defaultMapper = defaultMapper;
             return this;
         }
 
+        /**
+         * @param referenceMapper the mapper to use for references
+         * @return this
+         */
         public Builder referenceMapper(final CustomMapper referenceMapper) {
             this.referenceMapper = referenceMapper;
             return this;
         }
 
+        /**
+         * @param valueMapper the mapper use for values
+         * @return this
+         */
         public Builder valueMapper(final CustomMapper valueMapper) {
             this.valueMapper = valueMapper;
             return this;
         }
 
+        /**
+         * @param dateStorage the storage format to use for dates
+         * @return this
+         * @deprecated This will be removed in 2.0.  It is intended to bridge the gap when correcting the storage of data/time values in the
+         * database.  {@link DateStorage#UTC} should be used and will be the default in 2.0.  In 1.5 it is
+         * {@link DateStorage#SYSTEM_DEFAULT} for backwards compatibility.
+         */
+        @Deprecated
         public Builder dateForm(final DateStorage dateStorage) {
             this.dateStorage = dateStorage;
             return this;
         }
 
+        /**
+         * @param datastoreProvider the provider to use
+         * @return this
+         */
         public Builder datastoreProvider(final DatastoreProvider datastoreProvider) {
             return this;
         }
 
+        /**
+         * @return the new options instance
+         */
         public MapperOptions build() {
             return new MapperOptions(this);
         }

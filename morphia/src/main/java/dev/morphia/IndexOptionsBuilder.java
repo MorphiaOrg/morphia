@@ -16,22 +16,22 @@
 
 package dev.morphia;
 
-import org.bson.Document;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
+import org.bson.Document;
 
 import java.util.Map.Entry;
 
 @SuppressWarnings("deprecation")
 class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
-    public IndexOptionsBuilder() {
+    IndexOptionsBuilder() {
     }
 
-    public IndexOptionsBuilder(final IndexOptions original, final String prefix) {
+    IndexOptionsBuilder(final IndexOptions original, final String prefix) {
         super(original);
-        if(!"".equals(original.partialFilter())) {
+        if (!"".equals(original.partialFilter())) {
             final Document parse = Document.parse(original.partialFilter());
             final Document filter = new Document();
             for (final Entry<String, Object> entry : parse.entrySet()) {

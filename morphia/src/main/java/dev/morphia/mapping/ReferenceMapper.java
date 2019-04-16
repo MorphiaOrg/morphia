@@ -69,7 +69,7 @@ class ReferenceMapper implements CustomMapper {
             return;
         }
 
-        if(fieldValue instanceof MorphiaReference && !mf.getTypeParameters().isEmpty()) {
+        if (fieldValue instanceof MorphiaReference && !mf.getTypeParameters().isEmpty()) {
             writeMorphiaReferenceValues(dbObject, mf, fieldValue, name, mapper);
         } else {
             final Reference refAnn = mf.getAnnotation(Reference.class);
@@ -318,7 +318,7 @@ class ReferenceMapper implements CustomMapper {
 
         final DBRef dbRef = idOnly ? null : (DBRef) ref;
         final Key key = mapper.createKey(mf.isSingleValue() ? mf.getType() : mf.getSubClass(),
-                                         idOnly ? ref : dbRef.getId());
+            idOnly ? ref : dbRef.getId());
 
         final Object cached = cache.getEntity(key);
         if (cached != null) {
@@ -356,7 +356,8 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    public void readMorphiaReferenceValues(Mapper mapper, Datastore datastore, MappedField mappedField, DBObject dbObject, Object entity) {
+    void readMorphiaReferenceValues(final Mapper mapper, final Datastore datastore, final MappedField mappedField,
+                                           final DBObject dbObject, final Object entity) {
         final Class paramType = mappedField.getTypeParameters().get(0).getType();
         MorphiaReference<?> reference;
         if (Map.class.isAssignableFrom(paramType)) {
@@ -369,9 +370,8 @@ class ReferenceMapper implements CustomMapper {
         mappedField.setFieldValue(entity, reference);
     }
 
-    public void writeMorphiaReferenceValues(final DBObject dbObject,
-                                            final MappedField mf,
-                                            final Object fieldValue, final String name, final Mapper mapper) {
+    void writeMorphiaReferenceValues(final DBObject dbObject, final MappedField mf, final Object fieldValue, final String name,
+                                     final Mapper mapper) {
         final Class paramType = mf.getTypeParameters().get(0).getType();
 
         boolean notEmpty = true;
@@ -384,8 +384,8 @@ class ReferenceMapper implements CustomMapper {
             notEmpty = notNull && !((Collection) value).isEmpty();
         }
 
-        if ((notNull || mapper.getOptions().isStoreNulls()) &&
-             (notEmpty || mapper.getOptions().isStoreEmpties())) {
+        if ((notNull || mapper.getOptions().isStoreNulls())
+            && (notEmpty || mapper.getOptions().isStoreEmpties())) {
             dbObject.put(name, value);
         }
     }

@@ -32,8 +32,9 @@ public class LocalDateTimeConverter extends TypeConverter implements SimpleValue
 
     /**
      * Creates the Converter.
+     * @param mapper the mapper
      */
-    public LocalDateTimeConverter(Mapper mapper) {
+    public LocalDateTimeConverter(final Mapper mapper) {
         super(LocalDateTime.class);
         this.mapper = mapper;
     }

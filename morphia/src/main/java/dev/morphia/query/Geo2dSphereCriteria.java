@@ -1,13 +1,12 @@
 package dev.morphia.query;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
-import org.bson.Document;
 import dev.morphia.geo.CoordinateReferenceSystem;
 import dev.morphia.geo.Geometry;
 import dev.morphia.geo.GeometryQueryConverter;
 import dev.morphia.geo.NamedCoordinateReferenceSystemConverter;
+import org.bson.Document;
 
 import static dev.morphia.query.FilterOperator.NEAR;
 
@@ -43,7 +42,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         if (options == null) {
             options = new Document();
         }
-        if(value == null) {
+        if (value == null) {
             options.remove(key);
         } else {
             options.put(key, value);

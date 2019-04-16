@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package dev.morphia.converters;
+package dev.morphia.converters.experimental;
 
+import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.mapping.experimental.SingleReference;
 
+/**
+ * A converter for MorphiaReference values
+ * @see MorphiaReference
+ * @morphia.internal
+ */
 public class ReferenceConverter extends TypeConverter {
     private Mapper mapper;
 
     /**
      * Creates the Converter.
-     * @param mapper
+     *
+     * @param mapper the mapper
      */
     public ReferenceConverter(final Mapper mapper) {
         super(MorphiaReference.class);

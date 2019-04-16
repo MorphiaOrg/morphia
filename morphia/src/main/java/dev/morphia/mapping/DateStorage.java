@@ -11,7 +11,6 @@ import static java.time.ZoneId.systemDefault;
 
 /**
  * This enum is used to determine how Java 8 dates and times are stored in the database.
- *
  */
 @SuppressWarnings("Since15")
 public enum DateStorage {
@@ -29,7 +28,7 @@ public enum DateStorage {
     SYSTEM_DEFAULT {
         @Override
         public ZoneId getZone() {
-            if(!warningLogged) {
+            if (!warningLogged) {
                 warningLogged = true;
                 LOG.warn("Currently using the system default zoneId for encoding.  This default will change in 2.0 to use UTC which will "
                          + "likely break your application.  Consult the migration guide for mitigation suggestions.");
@@ -40,7 +39,10 @@ public enum DateStorage {
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
-    private static boolean warningLogged = false;
+    private static boolean warningLogged;
 
+    /**
+     * @return the ZoneId for this storage type
+     */
     public abstract ZoneId getZone();
 }

@@ -36,6 +36,9 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
                             final Class<T> clazz, final String collection) {
         this.datastore = datastore;
         this.wrapped = cursor;
+        if(wrapped == null) {
+            throw new IllegalArgumentException("The wrapped cursor can not be null");
+        }
         this.mapper = mapper;
         this.clazz = clazz;
         this.collection = collection;

@@ -136,20 +136,27 @@ public final class GeoJson {
     }
 
     /**
+     * @param values the values to convert
      * @morphia.internal
+     * @return the converted values
      */
-    public static List<Position> convertPoints(List<Point> points) {
+    public static List<Position> convertPoints(final List<Point> values) {
         final ArrayList<Position> positions = new ArrayList<Position>();
-        for (final Point point : points) {
+        for (final Point point : values) {
             positions.add(new Position(point.getLongitude(), point.getLatitude()));
         }
 
         return positions;
     }
 
-    public static List<List<Position>> convertLineStrings(final List<LineString> lineStrings) {
+    /**
+     * @param values the values to convert
+     * @morphia.internal
+     * @return the converted values
+     */
+    public static List<List<Position>> convertLineStrings(final List<LineString> values) {
         final List<List<Position>> positions = new ArrayList<List<Position>>();
-        for (final LineString line : lineStrings) {
+        for (final LineString line : values) {
             positions.add(convertPoints(line.getCoordinates()));
         }
 

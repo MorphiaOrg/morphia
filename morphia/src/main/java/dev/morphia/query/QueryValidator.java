@@ -1,11 +1,7 @@
 package dev.morphia.query;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.validation.AllOperationValidator;
 import dev.morphia.query.validation.DefaultTypeValidator;
 import dev.morphia.query.validation.DoubleTypeValidator;
@@ -25,8 +21,6 @@ import dev.morphia.query.validation.SizeOperationValidator;
 import dev.morphia.query.validation.ValidationFailure;
 
 import java.util.List;
-
-import static java.lang.String.format;
 
 final class QueryValidator {
     private QueryValidator() {

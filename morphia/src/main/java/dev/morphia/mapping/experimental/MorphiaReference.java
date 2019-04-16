@@ -39,19 +39,28 @@ public abstract class MorphiaReference<T> {
         return encoded;
     }
 
+    /**
+     * @return returns the referenced entity if it exists.  May return null.
+     */
     public abstract T get();
 
     /**
+     * @return true if this reference has already been resolved
      * @morphia.internal
      */
     public abstract boolean isResolved();
 
     /**
+     * @param mapper            the mapper
+     * @param value             the value
+     * @param optionalExtraInfo the MappedField
+     * @return the encoded vale
      * @morphia.internal
      */
     public abstract Object encode(final Mapper mapper, Object value, MappedField optionalExtraInfo);
 
     /**
+     * @return the datastore
      * @morphia.internal
      */
     Datastore getDatastore() {
@@ -59,22 +68,29 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
+     * @return the MappedClass of the referenced entity type
      * @morphia.internal
      */
     MappedClass getMappedClass() {
         return mappedClass;
     }
 
-     @SuppressWarnings("unchecked")
-     public static <V> MorphiaReference<V> wrap(final V value) {
-         if(value instanceof List) {
-             return (MorphiaReference<V>) new ListReference<V>((List<V>) value);
-         } else if(value instanceof Set) {
-             return (MorphiaReference<V>) new SetReference<V>((Set<V>)value);
-         } else if(value instanceof Map) {
-             return (MorphiaReference<V>) new MapReference<V>((Map<String, V>)value);
-         } else {
-             return new SingleReference<V>(value);
-         }
-     }
+    /**
+     * Wraps an value in a MorphiaReference to storing on an entity
+     * @param value the value wrap
+     * @param <V> the type of the value
+     * @return the MorphiaReference wrapper
+     */
+    @SuppressWarnings("unchecked")
+    public static <V> MorphiaReference<V> wrap(final V value) {
+        if (value instanceof List) {
+            return (MorphiaReference<V>) new ListReference<V>((List<V>) value);
+        } else if (value instanceof Set) {
+            return (MorphiaReference<V>) new SetReference<V>((Set<V>) value);
+        } else if (value instanceof Map) {
+            return (MorphiaReference<V>) new MapReference<V>((Map<String, V>) value);
+        } else {
+            return new SingleReference<V>(value);
+        }
+    }
 }

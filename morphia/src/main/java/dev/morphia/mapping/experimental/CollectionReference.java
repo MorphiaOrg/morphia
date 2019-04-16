@@ -19,6 +19,10 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
+/**
+ * @param <C>
+ * @morphia.internal
+ */
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private List<Object> ids;
     private Map<String, List<Object>> collections = new HashMap<String, List<Object>>();
@@ -29,7 +33,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore, mappedClass);
         List<Object> unwrapped = ids;
-        if(ids != null) {
+        if (ids != null) {
             for (final Object o : ids) {
                 collate(datastore, collections, o);
             }
@@ -63,12 +67,18 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return list;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final boolean isResolved() {
         return getValues() != null;
     }
 
     abstract Collection<?> getValues();
 
+    /**
+     * {@inheritDoc}
+     */
     public abstract C get();
 
     final List<Object> getIds() {
@@ -122,6 +132,15 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         }
     }
 
+    /**
+     * Decodes a document in to entities
+     * @param datastore the datastore
+     * @param mapper the mapper
+     * @param mappedField the MappedField
+     * @param paramType the type of the underlying entity
+     * @param dbObject the DBObject to decode
+     * @return the entities
+     */
     public static MorphiaReference<?> decode(final Datastore datastore,
                                              final Mapper mapper,
                                              final MappedField mappedField,
@@ -132,12 +151,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         if (dbVal != null) {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             final MappedClass mappedClass = mapper.getMappedClass(subType);
-            String collection = null;
 
-            final boolean usingDbRefs = !dbVal.isEmpty() && dbVal.get(0) instanceof DBRef;
-            if (!usingDbRefs) {
-                collection = mappedClass.getMappedIdField() != null ? mappedClass.getCollectionName() : null;
-            }
             if (Set.class.isAssignableFrom(paramType)) {
                 reference = new SetReference(datastore, mappedClass, dbVal);
             } else {

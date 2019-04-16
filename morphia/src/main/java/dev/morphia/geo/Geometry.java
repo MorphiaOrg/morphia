@@ -14,7 +14,18 @@ public interface Geometry {
      */
     List<?> getCoordinates();
 
+    /**
+     * Converts this type to the driver type
+     *
+     * @return the driver type
+     */
     com.mongodb.client.model.geojson.Geometry convert();
 
+    /**
+     * Converts this type to the driver type
+     *
+     * @param crs the CRS to use
+     * @return the driver type
+     */
     com.mongodb.client.model.geojson.Geometry convert(CoordinateReferenceSystem crs);
 }

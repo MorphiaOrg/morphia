@@ -39,6 +39,9 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     public MorphiaCursor(final Datastore datastore, final Cursor cursor, final Mapper mapper, final Class<T> clazz,
                          final EntityCache cache) {
         wrapped = cursor;
+        if(wrapped == null) {
+            throw new IllegalArgumentException("The wrapped cursor can not be null");
+        }
         this.mapper = mapper;
         this.clazz = clazz;
         this.cache = cache;
@@ -53,24 +56,6 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      */
     public static <E> List<E> toList(final MongoCursor<E> cursor) {
         final List<E> results = new ArrayList<E>();
-        try {
-            while (cursor.hasNext()) {
-                results.add(cursor.next());
-            }
-        } finally {
-            cursor.close();
-        }
-        return results;
-    }
-
-    /**
-     * @morphia.internal
-     * @param cursor
-     * @param <E>
-     * @return
-     */
-    public static <E> Set<E> toSet(final MongoCursor<E> cursor) {
-        final Set<E> results = new HashSet<E>(5);
         try {
             while (cursor.hasNext()) {
                 results.add(cursor.next());

@@ -32,8 +32,10 @@ public class LocalDateConverter extends TypeConverter implements SimpleValueConv
 
     /**
      * Creates the Converter.
+     *
+     * @param mapper the mapper
      */
-    public LocalDateConverter(Mapper mapper) {
+    public LocalDateConverter(final Mapper mapper) {
         super(LocalDate.class);
         this.mapper = mapper;
     }

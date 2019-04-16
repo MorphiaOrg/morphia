@@ -63,7 +63,7 @@ import java.util.regex.Pattern;
 /**
  * Various reflection utility methods, used mainly in the Mapper.
  *
- * @author Olafur Gauti Gudmundsson
+ * @morphia.internal
  */
 public final class ReflectionUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -517,7 +517,7 @@ public final class ReflectionUtils {
                     if (jarPath.contains(":")) {
                         jarPath = jarPath.substring(1);
                     }
-                    if(jarPath.contains("!")) {
+                    if (jarPath.contains("!")) {
                         classes.addAll(readFromNestedJar(loader, jarPath, path, mapSubPackages));
                     } else {
                         classes.addAll(getFromJarFile(loader, jarPath, path, mapSubPackages));
@@ -541,9 +541,9 @@ public final class ReflectionUtils {
      * @morphia.internal
      */
     protected static Set<Class<?>> readFromNestedJar(final ClassLoader loader,
-                                                   final String jarPath,
-                                                   final String packageName,
-                                                   final boolean mapSubPackages) throws IOException, ClassNotFoundException {
+                                                     final String jarPath,
+                                                     final String packageName,
+                                                     final boolean mapSubPackages) throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarFile jarFile = new JarFile(new File(jarPath.substring(0, jarPath.indexOf("!"))));
         final InputStream inputStream = jarFile.getInputStream(jarFile.getEntry(

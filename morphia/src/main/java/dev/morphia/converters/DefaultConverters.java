@@ -2,6 +2,7 @@ package dev.morphia.converters;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import dev.morphia.converters.experimental.ReferenceConverter;
 import dev.morphia.geo.GeometryConverter;
 import dev.morphia.geo.GeometryShapeConverter;
 import dev.morphia.mapping.MappedField;

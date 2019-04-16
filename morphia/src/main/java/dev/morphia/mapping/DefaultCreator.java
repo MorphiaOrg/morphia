@@ -168,7 +168,7 @@ public class DefaultCreator implements ObjectFactory {
             // try to Class.forName(className) as defined in the dbObject first,
             // otherwise return the entityClass
             try {
-                if (options != null && options.isCacheClassLookups()) {
+                if (options.isCacheClassLookups()) {
                     c = classNameCache.get(className);
                     if (c == null) {
                         c = Class.forName(className, true, getClassLoaderForClass());

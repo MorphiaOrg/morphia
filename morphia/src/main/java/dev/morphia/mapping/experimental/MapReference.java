@@ -43,6 +43,9 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         this.values = values;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, T> get() {
         if (values == null && ids != null) {
             values = new LinkedHashMap<String, T>();
@@ -62,8 +65,8 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
 
         final Class<?> collectionType = getMappedClass().getClazz();
         final MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection, collectionType)
-                                                                                          .filter("_id in ", collectionIds)
-                                                                                          .find();
+                                                                                           .filter("_id in ", collectionIds)
+                                                                                           .find();
         try {
             final Map<Object, T> idMap = new HashMap<Object, T>();
             while (cursor.hasNext()) {
@@ -83,10 +86,16 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isResolved() {
         return values != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object encode(final Mapper mapper, final Object value, final MappedField field) {
         if (isResolved()) {
@@ -100,6 +109,15 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         }
     }
 
+    /**
+     * Decodes a document in to entities
+     *
+     * @param datastore   the datastore
+     * @param mapper      the mapper
+     * @param mappedField the MappedField
+     * @param dbObject    the DBObject to decode
+     * @return the entities
+     */
     public static MapReference decode(final Datastore datastore, final Mapper mapper, final MappedField mappedField,
                                       final DBObject dbObject) {
         final Class subType = mappedField.getTypeParameters().get(0).getSubClass();

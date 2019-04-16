@@ -6,9 +6,13 @@ import com.mongodb.DBObject;
 
 /**
  * Internal class for building up query documents.
+ *
  * @morphia.internal
  */
 public interface Criteria {
+    /**
+     * @return the DBObject form of this type
+     */
     DBObject toDBObject();
 
     /**

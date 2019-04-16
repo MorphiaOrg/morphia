@@ -18,13 +18,6 @@ package dev.morphia;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWriter;
-import org.bson.Document;
-import org.bson.codecs.Encoder;
-import org.bson.codecs.EncoderContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
@@ -40,6 +33,13 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.utils.IndexType;
+import org.bson.BsonDocument;
+import org.bson.BsonDocumentWriter;
+import org.bson.Document;
+import org.bson.codecs.Encoder;
+import org.bson.codecs.EncoderContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,12 +48,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static dev.morphia.AnnotationBuilder.toMap;
 import static dev.morphia.internal.MorphiaUtils.join;
 import static dev.morphia.utils.IndexType.fromValue;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
@@ -84,11 +84,11 @@ final class IndexHelper {
 
     Index convert(final Text text, final String nameToStore) {
         return new IndexBuilder()
-            .options(text.options())
-            .fields(Collections.<Field>singletonList(new FieldBuilder()
-                                                         .value(nameToStore)
-                                                         .type(IndexType.TEXT)
-                                                         .weight(text.value())));
+                   .options(text.options())
+                   .fields(Collections.<Field>singletonList(new FieldBuilder()
+                                                                .value(nameToStore)
+                                                                .type(IndexType.TEXT)
+                                                                .weight(text.value())));
     }
 
     @SuppressWarnings("deprecation")
@@ -100,7 +100,7 @@ final class IndexHelper {
         final Map<String, Object> oldOptions = extractOldOptions(indexed);
         if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
             throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
-                                           + "allowed.  Please migrate all settings to @IndexOptions");
+                                       + "allowed.  Please migrate all settings to @IndexOptions");
         }
 
         List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
@@ -108,12 +108,12 @@ final class IndexHelper {
                                                                   .type(fromValue(indexed.value().toIndexValue())));
         return newOptions.isEmpty()
                ? new IndexBuilder()
-                   .options(new IndexOptionsBuilder()
-                                .migrate(indexed))
-                   .fields(fields)
+                     .options(new IndexOptionsBuilder()
+                                  .migrate(indexed))
+                     .fields(fields)
                : new IndexBuilder()
-                   .options(indexed.options())
-                   .fields(fields);
+                     .options(indexed.options())
+                     .fields(fields);
     }
 
     @SuppressWarnings("deprecation")
@@ -136,7 +136,7 @@ final class IndexHelper {
 
         List<Index> indexes = collectTopLevelIndexes(mc);
         indexes.addAll(collectFieldIndexes(mc));
-        if(!mapper.getOptions().isDisableEmbeddedIndexes()) {
+        if (!mapper.getOptions().isDisableEmbeddedIndexes()) {
             indexes.addAll(collectNestedIndexes(mc, parentMCs));
         }
 
@@ -182,9 +182,9 @@ final class IndexHelper {
                         Index updated = index;
                         if (index.fields().length == 0) {
                             LOG.warn(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                                   + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
+                                            + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
                             updated = new IndexBuilder()
-                                .migrate(index);
+                                          .migrate(index);
                         }
                         List<Field> fields = new ArrayList<Field>();
                         for (Field field : updated.fields()) {
@@ -221,7 +221,7 @@ final class IndexHelper {
 
     private Index replaceFields(final Index original, final List<Field> list) {
         return new IndexBuilder(original)
-            .fields(list);
+                   .fields(list);
     }
 
     @SuppressWarnings("unchecked")
@@ -243,7 +243,7 @@ final class IndexHelper {
             } catch (Exception e) {
                 path = field.value();
                 String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                                        path, mc.getClazz().getName());
+                    path, mc.getClazz().getName());
                 if (!index.options().disableValidation()) {
                     throw new MappingException(message);
                 }
@@ -260,9 +260,9 @@ final class IndexHelper {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-            .background(options.background() || background)
-            .sparse(options.sparse())
-            .unique(options.unique());
+                                                                 .background(options.background() || background)
+                                                                 .sparse(options.sparse())
+                                                                 .unique(options.unique());
 
         if (!options.language().equals("")) {
             indexOptions.defaultLanguage(options.language());

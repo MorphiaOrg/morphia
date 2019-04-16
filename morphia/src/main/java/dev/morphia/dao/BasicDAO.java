@@ -5,7 +5,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.InsertOptions;
 import dev.morphia.Key;
 import dev.morphia.Morphia;

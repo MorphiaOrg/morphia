@@ -1,25 +1,39 @@
 package dev.morphia.query;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.geo.CoordinateReferenceSystem;
 import dev.morphia.geo.Geometry;
 import dev.morphia.geo.MultiPolygon;
 import dev.morphia.geo.Point;
 import dev.morphia.geo.Polygon;
 import dev.morphia.utils.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static dev.morphia.query.FilterOperator.ALL;
+import static dev.morphia.query.FilterOperator.ELEMENT_MATCH;
+import static dev.morphia.query.FilterOperator.EQUAL;
+import static dev.morphia.query.FilterOperator.EXISTS;
+import static dev.morphia.query.FilterOperator.GEO_WITHIN;
+import static dev.morphia.query.FilterOperator.GREATER_THAN;
+import static dev.morphia.query.FilterOperator.GREATER_THAN_OR_EQUAL;
+import static dev.morphia.query.FilterOperator.IN;
+import static dev.morphia.query.FilterOperator.INTERSECTS;
+import static dev.morphia.query.FilterOperator.LESS_THAN;
+import static dev.morphia.query.FilterOperator.LESS_THAN_OR_EQUAL;
+import static dev.morphia.query.FilterOperator.MOD;
+import static dev.morphia.query.FilterOperator.NEAR;
+import static dev.morphia.query.FilterOperator.NEAR_SPHERE;
+import static dev.morphia.query.FilterOperator.NOT_EQUAL;
+import static dev.morphia.query.FilterOperator.NOT_IN;
+import static dev.morphia.query.FilterOperator.SIZE;
+import static dev.morphia.query.FilterOperator.TYPE;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
-import static dev.morphia.query.FilterOperator.*;
-import static dev.morphia.query.FilterOperator.EQUAL;
-import static dev.morphia.query.FilterOperator.GEO_WITHIN;
-import static dev.morphia.query.FilterOperator.INTERSECTS;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.  This is an internal
@@ -38,9 +52,9 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     /**
      * Creates a FieldEnd for a particular field.
      *
-     * @param query        the owning query
-     * @param field        the field to consider
-     * @param target       the CriteriaContainer
+     * @param query  the owning query
+     * @param field  the field to consider
+     * @param target the CriteriaContainer
      */
     public FieldEndImpl(final QueryImpl<?> query, final String field, final T target) {
         this.query = query;
@@ -208,8 +222,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T near(final double longitude, final double latitude, final double radius, final boolean spherical) {
         return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR,
-                              new double[]{longitude, latitude},
-                              opts("$maxDistance", radius));
+            new double[]{longitude, latitude},
+            opts("$maxDistance", radius));
     }
 
     @Override
@@ -230,6 +244,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
                                       .minDistance(minDistance));
         return target;
     }
+
     @Override
     public T nearSphere(final Point point) {
         return nearSphere(point, null, null);

@@ -10,8 +10,8 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
 
 /**
- * @morphia.internal
  * @param <T>
+ * @morphia.internal
  */
 @SuppressWarnings("deprecation")
 public class SingleReference<T> extends MorphiaReference<T> {
@@ -30,6 +30,9 @@ public class SingleReference<T> extends MorphiaReference<T> {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     public T get() {
         if (value == null && id != null) {
@@ -57,13 +60,19 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isResolved() {
         return value != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Object encode(Mapper mapper, final Object value, final MappedField optionalExtraInfo) {
-        if(isResolved()) {
+    public Object encode(final Mapper mapper, final Object value, final MappedField optionalExtraInfo) {
+        if (isResolved()) {
             return wrapId(mapper, optionalExtraInfo, get());
         } else {
             return null;
@@ -71,6 +80,15 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
     }
 
+    /**
+     * Decodes a document in to an entity
+     * @param datastore the datastore
+     * @param mapper the mapper
+     * @param mappedField the MappedField
+     * @param paramType the type of the underlying entity
+     * @param dbObject the DBObject to decode
+     * @return the entity
+     */
     public static MorphiaReference<?> decode(final Datastore datastore,
                                              final Mapper mapper,
                                              final MappedField mappedField,
