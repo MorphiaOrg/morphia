@@ -2,8 +2,10 @@ package dev.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -11,18 +13,10 @@ import com.mongodb.MongoInternalException;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
-import dev.morphia.TestDatastore;
-import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
-import org.bson.types.CodeWScope;
-import org.bson.types.ObjectId;
-import org.json.JSONException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
+import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
 import dev.morphia.TestDatastore.KeysKeysKeys;
 import dev.morphia.TestMapper.CustomId;
 import dev.morphia.TestMapper.UsesCustomIdObject;
@@ -39,6 +33,12 @@ import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
+import org.bson.types.CodeWScope;
+import org.bson.types.ObjectId;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +55,10 @@ import java.util.regex.Pattern;
 
 import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.client.model.Collation.builder;
+import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.query.Sort.descending;
+import static dev.morphia.query.Sort.naturalAscending;
+import static dev.morphia.query.Sort.naturalDescending;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
@@ -68,10 +72,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static dev.morphia.query.Sort.ascending;
-import static dev.morphia.query.Sort.descending;
-import static dev.morphia.query.Sort.naturalAscending;
-import static dev.morphia.query.Sort.naturalDescending;
 
 
 /**
@@ -1671,18 +1671,39 @@ public class TestQuery extends TestBase {
         final Query<User> query = getDs().createQuery(User.class)
                                          .disableValidation();
 
-        final CriteriaContainer topAnd = query.and(
-            query.or(
-                query.criteria("fieldA").equal("a"),
-                query.criteria("fieldB").equal("b")),
-            query.and(
-                query.criteria("fieldC").equal("c"),
-                query.or(
-                    query.criteria("fieldD").equal("d"),
-                    query.criteria("fieldE").equal("e"))));
+        query.field("version").equal("latest")
+             .and(
+                 query.or(
+                     query.criteria("fieldA").equal("a"),
+                     query.criteria("fieldB").equal("b")),
+                 query.and(
+                     query.criteria("fieldC").equal("c"),
+                     query.or(
+                         query.criteria("fieldD").equal("d"),
+                         query.criteria("fieldE").equal("e"))));
 
-        DBObject expected = parse("{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}],"
-                                  + " \"fieldC\": \"c\", \"$or\": [{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}");
+        final DBObject queryObject = query.getQueryObject();
+
+        final BasicDBObject parse = parse(
+            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": "
+            + "\"c\", \"$or\": [{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}]}");
+
+        Assert.assertEquals(parse, queryObject);
+    }
+
+    @Test
+    public void testSimpleOr() {
+        Query<Object> query = getDs().createQuery(Object.class).disableValidation();
+
+        query.field("version").equal("latest");
+
+        query.or(query.criteria("adds.id").equal("5cb5fa6f8d7bd65e8276cd48"),
+            query.criteria("deletes.id").equal("5cb5fa6f8d7bd65e8276cd48"),
+            query.criteria("mods.id").equal("5cb5fa6f8d7bd65e8276cd48"));
+
+
+        DBObject expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds.id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes.id\": "
+                                  + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods.id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
         Assert.assertEquals(expected, query.getQueryObject());
     }
 

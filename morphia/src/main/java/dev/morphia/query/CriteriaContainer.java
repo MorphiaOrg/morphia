@@ -8,6 +8,7 @@ public interface CriteriaContainer extends Criteria {
      * Adds Criteria to this container
      *
      * @param criteria the criteria to add
+     * @return
      */
     void add(Criteria... criteria);
 

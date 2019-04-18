@@ -58,7 +58,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private Boolean includeFields;
     private DBObject baseQuery;
     private FindOptions options;
-    private CriteriaContainer criteriaContainer = new CriteriaContainerImpl(this, AND);
+    private CriteriaContainerImpl filterContainer = new CriteriaContainerImpl(this, AND);
+    private CriteriaContainerImpl compoundContainer = new CriteriaContainerImpl(this, AND);
     FindOptions getOptions() {
         if (options == null) {
             options = new FindOptions();
@@ -290,7 +291,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
         n.options = options != null ? options.copy() : null;
-        n.criteriaContainer = criteriaContainer;
+        n.filterContainer = filterContainer;
+        n.compoundContainer = compoundContainer;
         return n;
     }
 
@@ -945,7 +947,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
 //            c.attach(this);
-            criteriaContainer.add(c);
+            filterContainer.add(c);
         }
     }
 
@@ -960,33 +962,34 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
-        final CriteriaContainerImpl parent = new CriteriaContainerImpl(this, cj);
+        compoundContainer = new CriteriaContainerImpl(this, cj);
+        compoundContainer.add(criteria);
 
-        for (final Criteria c : criteria) {
-            parent.add(c);
-        }
-
-        criteriaContainer = parent;
-
-        return criteriaContainer;
+        return compoundContainer;
     }
 
     @Override
     public DBObject toDBObject() {
-        return criteriaContainer.toDBObject();
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
+
+        if (filterContainer != null) {
+            container.add(filterContainer);
+        }
+
+        if(compoundContainer != null) {
+            container.add(compoundContainer);
+        }
+
+        return container.toDBObject();
     }
 
     @Override
     public void remove(final Criteria criteria) {
-        criteriaContainer.remove(criteria);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void attach(final CriteriaContainer container) {
-        if (criteriaContainer != null) {
-            criteriaContainer.remove(this);
-        }
-
-        criteriaContainer = container;
+        throw new UnsupportedOperationException();
     }
 }
