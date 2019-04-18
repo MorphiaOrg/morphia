@@ -9,6 +9,8 @@ import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.mapping.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -76,6 +78,22 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Converts this cursor to a List.  Care should be taken on large datasets as OutOfMemoryErrors are a risk.
+     * @return the list of Entities
+     */
+    public List<Key<T>> toList() {
+        final List<Key<T>> results = new ArrayList<Key<T>>();
+        try {
+            while (wrapped.hasNext()) {
+                results.add(next());
+            }
+        } finally {
+            wrapped.close();
+        }
+        return results;
     }
 
     @Override

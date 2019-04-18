@@ -92,13 +92,8 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
             and.add(childObject);
         }
 
-        if(!duplicates) {
+        if (!duplicates) {
             for (final Object o : and) {
-                for (final String key : ((DBObject) o).keySet()) {
-                    if(dbObject.containsField(key)) {
-
-                    }
-                }
                 dbObject.putAll((Map) o);
             }
         } else {
@@ -107,6 +102,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
         return dbObject;
     }
+
     private DBObject or() {
         DBObject dbObject = new BasicDBObject();
         final BasicDBList or = new BasicDBList();
@@ -156,9 +152,5 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     @Override
     public String toString() {
         return children.toString();
-    }
-
-    public List<Criteria> getChildren() {
-        return children;
     }
 }

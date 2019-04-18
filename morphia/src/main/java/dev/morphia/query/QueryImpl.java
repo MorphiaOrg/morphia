@@ -60,6 +60,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private FindOptions options;
     private CriteriaContainerImpl filterContainer = new CriteriaContainerImpl(this, AND);
     private CriteriaContainerImpl compoundContainer = new CriteriaContainerImpl(this, AND);
+
     FindOptions getOptions() {
         if (options == null) {
             options = new FindOptions();
@@ -121,12 +122,12 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MongoCursor<Key<T>> keys() {
+    public MorphiaKeyCursor<T> keys() {
         return keys(new FindOptions());
     }
 
     @Override
-    public MongoCursor<Key<T>> keys(final FindOptions options) {
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
@@ -141,17 +142,17 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public List<Key<T>> asKeyList(final FindOptions options) {
-        return MorphiaCursor.toList(keys(options));
+        return keys(options).toList();
     }
 
     @Override
     public List<T> asList() {
-        return asList(getOptions());
+        return find(getOptions()).toList();
     }
 
     @Override
     public List<T> asList(final FindOptions options) {
-        return MorphiaCursor.toList(find(options));
+        return find(options).toList();
     }
 
     @Override
@@ -190,12 +191,12 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MongoCursor<T> find() {
+    public MorphiaCursor<T> find() {
         return find(getOptions());
     }
 
     @Override
-    public MongoCursor<T> find(final FindOptions options) {
+    public MorphiaCursor<T> find(final FindOptions options) {
         return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
     }
 
@@ -220,7 +221,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
         QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject("_id", 1));
+        final FindOptions opts = cloned.getOptions();
+        opts.projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
 
         return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
@@ -805,8 +807,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public String toString() {
         return String.format("{ %s %s }", getQueryObject(), getOptions().getProjection() == null
-                                                                   ? ""
-                                                                   : ", projection: " + getFieldsObject());
+                                                            ? ""
+                                                            : ", projection: " + getFieldsObject());
     }
 
     /**
@@ -946,7 +948,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
-//            c.attach(this);
+            //            c.attach(this);
             filterContainer.add(c);
         }
     }
@@ -976,7 +978,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             container.add(filterContainer);
         }
 
-        if(compoundContainer != null) {
+        if (compoundContainer != null) {
             container.add(compoundContainer);
         }
 

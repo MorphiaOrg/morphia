@@ -126,9 +126,9 @@ public class TestQuery extends TestBase {
                                       .find())
                             .size());
         assertEquals(2, getDs().find(Pic.class)
-                               .asList(new FindOptions()
+                               .find(new FindOptions()
                                            .modifier("$maxScan", 2))
-                               .size());
+                               .toList().size());
         assertEquals(4, toList(getDs().find(Pic.class).find()).size());
     }
 

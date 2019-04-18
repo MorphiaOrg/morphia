@@ -47,19 +47,17 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     }
 
     /**
-     * @morphia.internal
-     * @param cursor
-     * @param <E>
-     * @return
+     * Converts this cursor to a List.  Care should be taken on large datasets as OutOfMemoryErrors are a risk.
+     * @return the list of Entities
      */
-    public static <E> List<E> toList(final MongoCursor<E> cursor) {
-        final List<E> results = new ArrayList<E>();
+    public List<T> toList() {
+        final List<T> results = new ArrayList<T>();
         try {
-            while (cursor.hasNext()) {
-                results.add(cursor.next());
+            while (wrapped.hasNext()) {
+                results.add(next());
             }
         } finally {
-            cursor.close();
+            wrapped.close();
         }
         return results;
     }

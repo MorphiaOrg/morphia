@@ -5,10 +5,11 @@ import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
-import org.bson.types.CodeWScope;
 import dev.morphia.Key;
+import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.query.internal.MorphiaKeyCursor;
+import org.bson.types.CodeWScope;
 
 import java.util.List;
 import java.util.Map;
@@ -536,20 +537,20 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     List<Key<T>> asKeyList(FindOptions options);
 
     /**
-     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
+     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
      *
      * @return the keys of the documents returned by this query
      */
-    MongoCursor<Key<T>> keys();
+    MorphiaKeyCursor<T> keys();
 
     /**
-     * Execute the query and get the results (as a {@code MongoCursor<Key<T>>})
+     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
      *
      * @param options the options to apply to the find operation
      * @return the keys of the documents returned by this query
      * @since 1.4
      */
-    MongoCursor<Key<T>> keys(FindOptions options);
+    MorphiaKeyCursor<T> keys(FindOptions options);
 
     /**
      * Execute the query and get the results.
@@ -622,20 +623,20 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * *note* the return type of this will change in 2.0.
      *
-     * @return an MongoCursor
+     * @return a MorphiaCursor
      * @since 1.4
      * @see #find(FindOptions)
      */
-    MongoCursor<T> find();
+    MorphiaCursor<T> find();
 
     /**
      * Execute the query and get the results.
      *
      * @param options the options to apply to the find operation
-     * @return a MongoCursor
+     * @return a MorphiaCursor
      * @since 1.4
      */
-    MongoCursor<T> find(FindOptions options);
+    MorphiaCursor<T> find(FindOptions options);
 
     /**
      * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less

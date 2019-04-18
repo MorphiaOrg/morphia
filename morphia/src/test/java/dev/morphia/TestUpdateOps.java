@@ -18,6 +18,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.query.Sort;
+import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -234,9 +235,9 @@ public class TestUpdateOps extends TestBase {
                                                                 .inc("size");
         getDs().update(finder, updateOperations4, true);
 
-        final List<ContainsPic> iterator = finder.order(Sort.ascending("size")).asList();
+        final MorphiaCursor<ContainsPic> iterator = finder.order(Sort.ascending("size")).find();
         for (int i = 0; i < 3; i++) {
-            Assert.assertEquals(iterator.toString(), i + 1, iterator.get(i).getSize());
+            Assert.assertEquals(i + 1, iterator.next().getSize());
         }
     }
 
