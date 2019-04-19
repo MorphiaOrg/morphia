@@ -57,8 +57,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private Boolean includeFields;
     private DBObject baseQuery;
     private FindOptions options;
-    private CriteriaContainerImpl filterContainer = new CriteriaContainerImpl(this, AND);
-    private CriteriaContainerImpl compoundContainer = new CriteriaContainerImpl(this, AND);
+    private CriteriaContainer compoundContainer = new CriteriaContainerImpl(this, AND);
 
     FindOptions getOptions() {
         if (options == null) {
@@ -292,7 +291,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
         n.options = options != null ? options.copy() : null;
-        n.filterContainer = filterContainer;
         n.compoundContainer = compoundContainer;
         return n;
     }
@@ -948,20 +946,18 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
             c.attach(this);
-            filterContainer.add(c);
+            compoundContainer.add(c);
         }
     }
 
     @Override
     public CriteriaContainer and(final Criteria... criteria) {
         return compoundContainer.and(criteria);
-        //        return collect(AND, criteria);
     }
 
     @Override
     public CriteriaContainer or(final Criteria... criteria) {
         return compoundContainer.or(criteria);
-        //        return collect(OR, criteria);
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
@@ -975,10 +971,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public DBObject toDBObject() {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
 
-        if (filterContainer != null) {
-            container.add(filterContainer);
-        }
-
         if (compoundContainer != null) {
             container.add(compoundContainer);
         }
@@ -988,11 +980,11 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public void remove(final Criteria criteria) {
-        filterContainer.remove(criteria);
+        compoundContainer.remove(criteria);
     }
 
     @Override
     public void attach(final CriteriaContainer container) {
-        filterContainer.attach(container);
+        compoundContainer.attach(container);
     }
 }
