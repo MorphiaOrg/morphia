@@ -37,7 +37,6 @@ import static com.mongodb.CursorType.NonTailable;
 import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
 import static dev.morphia.query.CriteriaJoin.AND;
-import static dev.morphia.query.CriteriaJoin.OR;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 
@@ -948,19 +947,21 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public void add(final Criteria... criteria) {
         for (final Criteria c : criteria) {
-            //            c.attach(this);
+            c.attach(this);
             filterContainer.add(c);
         }
     }
 
     @Override
     public CriteriaContainer and(final Criteria... criteria) {
-        return collect(AND, criteria);
+        return compoundContainer.and(criteria);
+        //        return collect(AND, criteria);
     }
 
     @Override
     public CriteriaContainer or(final Criteria... criteria) {
-        return collect(OR, criteria);
+        return compoundContainer.or(criteria);
+        //        return collect(OR, criteria);
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
@@ -987,11 +988,11 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public void remove(final Criteria criteria) {
-        throw new UnsupportedOperationException();
+        filterContainer.remove(criteria);
     }
 
     @Override
     public void attach(final CriteriaContainer container) {
-        throw new UnsupportedOperationException();
+        filterContainer.attach(container);
     }
 }

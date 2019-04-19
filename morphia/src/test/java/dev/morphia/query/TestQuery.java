@@ -1682,11 +1682,13 @@ public class TestQuery extends TestBase {
                          query.criteria("fieldD").equal("d"),
                          query.criteria("fieldE").equal("e"))));
 
+        query.and(query.criteria("fieldF").equal("f"));
+
         final DBObject queryObject = query.getQueryObject();
 
         final BasicDBObject parse = parse(
-            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": "
-            + "\"c\", \"$or\": [{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}]}");
+            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
+            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"}");
 
         Assert.assertEquals(parse, queryObject);
     }
