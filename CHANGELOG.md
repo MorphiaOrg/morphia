@@ -1,3 +1,23 @@
+## Version 1.5.1 (Apr 18, 2019)
+
+### Notes
+
+### Downloads
+Binaries can be found on maven central.
+
+### Docs
+Full documentation and javadoc can be found at https://github.com/MorphiaOrg/morphia and https://morphia.dev/1.5/javadoc/.
+
+### 3 Issues Resolved
+#### ![](https://placehold.it/15/fc2929/000000?text=+) BUG
+* [Issue #1339](https://github.com/MorphiaOrg/morphia/issues/1339): Search issues with 1.5
+
+#### ![](https://placehold.it/15/fbca04/000000?text=+) DOCS
+* [Issue #1337](https://github.com/MorphiaOrg/morphia/issues/1337): Version 1.5 Migration Guide
+
+#### ![](https://placehold.it/15/84b6eb/000000?text=+) ENHANCEMENT
+* [Issue #1341](https://github.com/MorphiaOrg/morphia/issues/1341): find() methods should return MorphiaCursor to expose toList()
+
 
 ## Version 1.5.0 (Apr 14, 2019)
 
