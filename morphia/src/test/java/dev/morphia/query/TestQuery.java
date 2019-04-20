@@ -138,7 +138,7 @@ public class TestQuery extends TestBase {
         Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class)
                                                     .maxTime(15, TimeUnit.MINUTES);
 
-        assertEquals(900, ((QueryImpl) query).getMaxTime(TimeUnit.SECONDS));
+        assertEquals(900, ((QueryImpl) query).getOptions().getMaxTime(TimeUnit.SECONDS));
     }
 
     @Test

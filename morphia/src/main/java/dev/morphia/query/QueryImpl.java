@@ -507,11 +507,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return this;
     }
 
-    long getMaxTime(final TimeUnit unit) {
-        Long maxTime = (Long) getOptions().getModifiers().get("$maxTimeMS");
-        return unit.convert(maxTime != null ? maxTime : 0, MILLISECONDS);
-    }
-
     @Override
     @Deprecated
     public Query<T> offset(final int value) {
@@ -960,22 +955,9 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return compoundContainer.or(criteria);
     }
 
-    private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
-        compoundContainer = new CriteriaContainerImpl(this, cj);
-        compoundContainer.add(criteria);
-
-        return compoundContainer;
-    }
-
     @Override
     public DBObject toDBObject() {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
-
-        if (compoundContainer != null) {
-            container.add(compoundContainer);
-        }
-
-        return container.toDBObject();
+        return compoundContainer.toDBObject();
     }
 
     @Override
