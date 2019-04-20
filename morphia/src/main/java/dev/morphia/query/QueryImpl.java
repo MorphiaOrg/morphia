@@ -503,7 +503,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Query<T> maxTime(final long value, final TimeUnit unit) {
-        getOptions().modifier("$maxTimeMS", MILLISECONDS.convert(value, unit));
+        getOptions().maxTime(value, unit);
         return this;
     }
 

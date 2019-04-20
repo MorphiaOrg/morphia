@@ -305,8 +305,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param maxTime     must be > 0.  A value < 0 indicates no limit
      * @param maxTimeUnit the unit of time to use
      * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.modifier("$maxTimeMS",
-     * MILLISECONDS.convert(value, unit)) }
+     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.maxTime(value, unit) }
      * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
