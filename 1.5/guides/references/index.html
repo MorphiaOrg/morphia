@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.49" />
+    <meta name="generator" content="Hugo 0.55.1" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>References :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1555727734" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1555727734" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1556307058" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1555727734"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1556307058"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -513,7 +513,8 @@
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
-<p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
+
+This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.
 
 </div>
 
@@ -622,9 +623,10 @@ properly reconstitute these references when you&rsquo;re ready to use them.</p>
 
 <div class="admonition note">
 <h5 class="admonition-title">Note</h5>
-<p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
-you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.  If the type is
-a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
+
+Before we go too much further, it's important to point that, regardless of the type of the references, they are fetched lazily.  So if 
+you multiple fields with referenced entities, they will not be fetched until you call `get()` on the `MorphiaReference`.  If the type is 
+a `Collection` or a `Map`, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential `OutOfMemoryError` problems if you load too many objects in to memory this way.
 
 </div>
 
@@ -650,7 +652,8 @@ complicated.  A <code>Map</code> might look something like this:</p>
 
 <div class="admonition note">
 <h5 class="admonition-title">Note</h5>
-<p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
+
+Currently there is no support for configuring the `ignoreMissing` parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.
 
 </div>
 
@@ -956,20 +959,20 @@ complicated.  A <code>Map</code> might look something like this:</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1555727734"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1555727734"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1555727734"></script>
-    <script src="/1.5/js/jquery.sticky.js?1555727734"></script>
-    <script src="/1.5/js/featherlight.min.js?1555727734"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1555727734"></script>
-    <script src="/1.5/js/highlight.pack.js?1555727734"></script>
+    <script src="/1.5/js/clipboard.min.js?1556307058"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1556307058"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1556307058"></script>
+    <script src="/1.5/js/jquery.sticky.js?1556307058"></script>
+    <script src="/1.5/js/featherlight.min.js?1556307058"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1556307058"></script>
+    <script src="/1.5/js/highlight.pack.js?1556307058"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1555727734"></script>
-    <script src="/1.5/js/learn.js?1555727734"></script>
-    <script src="/1.5/js/hugo-learn.js?1555727734"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1556307058"></script>
+    <script src="/1.5/js/learn.js?1556307058"></script>
+    <script src="/1.5/js/hugo-learn.js?1556307058"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1555727734" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1555727734"></script>
+    <link href="/1.5/mermaid/mermaid.css?1556307058" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1556307058"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
