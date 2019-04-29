@@ -4,12 +4,9 @@
 
 This release is only to reinstate a module that got dropped in the gradle -> maven switch.
 
-### 2 Issues Resolved
+### 1 Issues Resolved
 #### ![](https://placehold.it/15/dde580/000000?text=+) TASK
 * [Issue #1342](https://github.com/MorphiaOrg/morphia/issues/1342): Validation artifact missing from Maven central
-
-#### ![](https://placehold.it/15/cccccc/000000?text=+) DUPLICATE
-* [Issue #1343](https://github.com/MorphiaOrg/morphia/issues/1343): Replace missing validation pom
 
 #### ![](https://placehold.it/15/cc317c/000000?text=+) QUESTION
 * [Issue #1342](https://github.com/MorphiaOrg/morphia/issues/1342): Validation artifact missing from Maven central
