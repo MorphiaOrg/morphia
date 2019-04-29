@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.55.1" />
+    <meta name="generator" content="Hugo 0.49" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1556307058" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1556307058" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1556509103" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1556509103" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1556307058"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1556509103"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -723,11 +723,9 @@ case) would easily be caught by an IDE or compiler.  Which version you use is la
 
 <div class="admonition note">
 <h5 class="admonition-title">Note</h5>
-
-Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-[`@Property`](/1.5/javadoc?dev/morphia/annotations/Property.html
-) annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
-result in an error.
+<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+<a href="/1.5/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+result in an error.</p>
 
 </div>
 
@@ -835,12 +833,10 @@ Assert.assertNull(found.lastName);
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
-
-While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to
+<p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
-  saved. For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using [`Datastore#merge(T)`](/1.5/javadoc?dev/morphia/Datastore#merge-T-.html
-)
+  saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
+  for this entity will be removed.  To save such instances back consider using <a href="/1.5/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
 
 </div>
 
@@ -1221,20 +1217,20 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1556307058"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1556307058"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1556307058"></script>
-    <script src="/1.5/js/jquery.sticky.js?1556307058"></script>
-    <script src="/1.5/js/featherlight.min.js?1556307058"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1556307058"></script>
-    <script src="/1.5/js/highlight.pack.js?1556307058"></script>
+    <script src="/1.5/js/clipboard.min.js?1556509103"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1556509103"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1556509103"></script>
+    <script src="/1.5/js/jquery.sticky.js?1556509103"></script>
+    <script src="/1.5/js/featherlight.min.js?1556509103"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1556509103"></script>
+    <script src="/1.5/js/highlight.pack.js?1556509103"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1556307058"></script>
-    <script src="/1.5/js/learn.js?1556307058"></script>
-    <script src="/1.5/js/hugo-learn.js?1556307058"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1556509103"></script>
+    <script src="/1.5/js/learn.js?1556509103"></script>
+    <script src="/1.5/js/hugo-learn.js?1556509103"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1556307058" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1556307058"></script>
+    <link href="/1.5/mermaid/mermaid.css?1556509103" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1556509103"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
