@@ -1,12 +1,24 @@
+## Version 1.5.2 (Apr 29, 2019)
+
+### Notes
+
+This release is only to reinstate a module that got dropped in the gradle -> maven switch.
+
+### 2 Issues Resolved
+#### ![](https://placehold.it/15/dde580/000000?text=+) TASK
+* [Issue #1342](https://github.com/MorphiaOrg/morphia/issues/1342): Validation artifact missing from Maven central
+
+#### ![](https://placehold.it/15/cccccc/000000?text=+) DUPLICATE
+* [Issue #1343](https://github.com/MorphiaOrg/morphia/issues/1343): Replace missing validation pom
+
+#### ![](https://placehold.it/15/cc317c/000000?text=+) QUESTION
+* [Issue #1342](https://github.com/MorphiaOrg/morphia/issues/1342): Validation artifact missing from Maven central
+
 ## Version 1.5.1 (Apr 18, 2019)
 
 ### Notes
 
-### Downloads
-Binaries can be found on maven central.
-
-### Docs
-Full documentation and javadoc can be found at https://github.com/MorphiaOrg/morphia and https://morphia.dev/1.5/javadoc/.
+This releases fixes a regression is building query structures for more complex query shapes.
 
 ### 3 Issues Resolved
 #### ![](https://placehold.it/15/fc2929/000000?text=+) BUG
@@ -22,12 +34,6 @@ Full documentation and javadoc can be found at https://github.com/MorphiaOrg/mor
 ## Version 1.5.0 (Apr 14, 2019)
 
 ### Notes
-
-### Downloads
-Binaries can be found on maven central.
-
-### Docs
-Full documentation and javadoc can be found at https://github.com/MorphiaOrg/morphia and https://morphia.dev/1.5/javadoc/.
 
 ### 81 Issues Resolved
 #### ![](https://placehold.it/15/dde580/000000?text=+) TASK
