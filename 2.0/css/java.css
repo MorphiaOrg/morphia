@@ -4,7 +4,7 @@
 }
 
 .downloadInfo p {
-  margin: 0px;
+  margin: 0;
 }
 
 /* -- admonitions ----------------------------------------------------------- */
@@ -13,6 +13,12 @@ div.admonition {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 7px;
+    border: #0e2231 dashed;
+}
+
+.important {
+    background-color: rgba(155, 0, 0, 0.46);
+    font-weight: bolder;
 }
 
 div.admonition dt {
@@ -24,7 +30,7 @@ div.admonition dl {
 }
 
 p.admonition-title {
-    margin: 0px 10px 5px 0px;
+    margin: 0 10px 5px 0;
     font-weight: bold;
 }
 
@@ -45,10 +51,18 @@ div.body p.centered {
 /* -- admonitions ----------------------------------------------------------- */
 
 .maven pre code {
-    padding: 0em;
+    padding: 0;
 }
 
 #version-tag {
     display: block;
     font-size: larger;
+}
+
+#top-bar {
+    display: none !important;
+}
+
+#breadcrumbs {
+    display: none !important;
 }

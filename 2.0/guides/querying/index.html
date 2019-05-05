@@ -7,31 +7,35 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/morphia/2.0/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/morphia/2.0/images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/1.5/images/favicon.png" type="image/x-icon" />
+<link rel="icon" href="/1.5/images/favicon.png" type="image/x-icon" />
     <title>Querying :: Morphia</title>
 
     
-    <link href="/morphia/2.0/css/nucleus.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/fontawesome-all.min.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/hybrid.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/featherlight.min.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/perfect-scrollbar.min.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/auto-complete.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/theme.css?1544070911" rel="stylesheet">
-    <link href="/morphia/2.0/css/hugo-theme.css?1544070911" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1557090453" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1557090453" rel="stylesheet">
     
 
-    <script src="/morphia/2.0/js/jquery-2.x.min.js?1544070911"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1557090453"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
       
+        :not(pre) > code + span.copy-to-clipboard {
+            display: none;
+        }
+      
     </style>
-    <link href="/morphia/2.0/css/java.css" rel="stylesheet">
-<link href="/morphia/2.0/css/theme-green.css" rel="stylesheet">
+    <link href="/1.5/css/java.css" rel="stylesheet">
+<link href="/1.5/css/theme-green.css" rel="stylesheet">
 
 <style>
     :root {
@@ -80,35 +84,19 @@
 </style>
 
   </head>
-  <body class="" data-url="/morphia/2.0/guides/querying/">
+  <body class="" data-url="/1.5/guides/querying/">
     <nav id="sidebar" class="">
 
 
 
   <div id="header-wrapper">
     <div id="header">
-      <a id="logo" href="/morphia/2.0">
-    <img src="/morphia/2.0/images/logo.png" alt="Morphia Logo"/>
+      <a id="logo" href="/1.5">
+    <img src="/1.5/images/logo.png" alt="Morphia Logo"/>
 </a>
 <span id="version-tag">Morphia 2.0</span>
 
     </div>
-    
-        <div class="searchbox">
-    <label for="search-by"><i class="fas fa-search"></i></label>
-    <input data-search-input id="search-by" type="text" placeholder="Search...">
-    <span data-search-clear=""><i class="fas fa-close"></i></span>
-</div>
-
-<script type="text/javascript" src="/morphia/2.0/js/lunr.min.js?1544070911"></script>
-<script type="text/javascript" src="/morphia/2.0/js/auto-complete.js?1544070911"></script>
-<script type="text/javascript">
-    
-        var baseurl = '\/morphia\/2.0';
-    
-</script>
-<script type="text/javascript" src="/morphia/2.0/js/search.js?1544070911"></script>
-
     
   </div>
 
@@ -123,12 +111,12 @@
  
   
     
-    <li data-nav-id="/morphia/2.0/getting-started/" title="Getting Started" class="dd-item 
+    <li data-nav-id="/1.5/getting-started/" title="Getting Started" class="dd-item 
         
         
         
         ">
-      <a href="/morphia/2.0/getting-started/">
+      <a href="/1.5/getting-started/">
           Getting Started
           
       </a>
@@ -148,8 +136,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
-        <a href="/morphia/2.0/getting-started/installation-guide/">
+      <li data-nav-id="/1.5/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
+        <a href="/1.5/getting-started/installation-guide/">
         Installation Guide
         
         </a>
@@ -167,9 +155,28 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/getting-started/quick-tour/" title="Quick Tour" class="dd-item ">
-        <a href="/morphia/2.0/getting-started/quick-tour/">
+      <li data-nav-id="/1.5/getting-started/quick-tour/" title="Quick Tour" class="dd-item ">
+        <a href="/1.5/getting-started/quick-tour/">
         Quick Tour
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/1.5/getting-started/migration/" title="Migration Guide" class="dd-item ">
+        <a href="/1.5/getting-started/migration/">
+        Migration Guide
         
         </a>
     </li>
@@ -193,12 +200,12 @@
  
   
     
-    <li data-nav-id="/morphia/2.0/guides/" title="Reference Guides" class="dd-item 
+    <li data-nav-id="/1.5/guides/" title="Reference Guides" class="dd-item 
         parent
         
         
         ">
-      <a href="/morphia/2.0/guides/">
+      <a href="/1.5/guides/">
           Reference Guides
           
       </a>
@@ -218,8 +225,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/annotations/" title="Annotations" class="dd-item ">
-        <a href="/morphia/2.0/guides/annotations/">
+      <li data-nav-id="/1.5/guides/annotations/" title="Annotations" class="dd-item ">
+        <a href="/1.5/guides/annotations/">
         Annotations
         
         </a>
@@ -237,8 +244,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/aggregation/" title="Aggregation" class="dd-item ">
-        <a href="/morphia/2.0/guides/aggregation/">
+      <li data-nav-id="/1.5/guides/aggregation/" title="Aggregation" class="dd-item ">
+        <a href="/1.5/guides/aggregation/">
         Aggregation
         
         </a>
@@ -256,8 +263,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/indexing/" title="Indexing" class="dd-item ">
-        <a href="/morphia/2.0/guides/indexing/">
+      <li data-nav-id="/1.5/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/1.5/guides/indexing/">
         Indexing
         
         </a>
@@ -275,8 +282,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/jrebel/" title="JRebel" class="dd-item ">
-        <a href="/morphia/2.0/guides/jrebel/">
+      <li data-nav-id="/1.5/guides/jrebel/" title="JRebel" class="dd-item ">
+        <a href="/1.5/guides/jrebel/">
         JRebel
         
         </a>
@@ -294,8 +301,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
-        <a href="/morphia/2.0/guides/lifecyclemethods/">
+      <li data-nav-id="/1.5/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
+        <a href="/1.5/guides/lifecyclemethods/">
         Life Cycle Methods
         
         </a>
@@ -313,8 +320,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/querying/" title="Querying" class="dd-item active">
-        <a href="/morphia/2.0/guides/querying/">
+      <li data-nav-id="/1.5/guides/querying/" title="Querying" class="dd-item active">
+        <a href="/1.5/guides/querying/">
         Querying
         
         </a>
@@ -332,8 +339,27 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
-        <a href="/morphia/2.0/guides/schemavalidation/">
+      <li data-nav-id="/1.5/guides/references/" title="References" class="dd-item ">
+        <a href="/1.5/guides/references/">
+        References
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/1.5/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
+        <a href="/1.5/guides/schemavalidation/">
         Schema Validation
         
         </a>
@@ -351,8 +377,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/updating/" title="Updating" class="dd-item ">
-        <a href="/morphia/2.0/guides/updating/">
+      <li data-nav-id="/1.5/guides/updating/" title="Updating" class="dd-item ">
+        <a href="/1.5/guides/updating/">
         Updating
         
         </a>
@@ -370,8 +396,8 @@
  
   
     
-      <li data-nav-id="/morphia/2.0/guides/validationextension/" title="Validation Extension" class="dd-item ">
-        <a href="/morphia/2.0/guides/validationextension/">
+      <li data-nav-id="/1.5/guides/validationextension/" title="Validation Extension" class="dd-item ">
+        <a href="/1.5/guides/validationextension/">
         Validation Extension
         
         </a>
@@ -400,7 +426,7 @@
         <ul>
           
               <li> 
-                  <a class="padding" href="/morphia/2.0/javadoc"><i class='fas fa-book'></i> API Documentation</a>
+                  <a class="padding" href="/1.5/javadoc"><i class='fas fa-book'></i> API Documentation</a>
               </li>
           
               <li> 
@@ -451,13 +477,13 @@
             
           
           
-            <a href='/morphia/2.0/'>Morphia</a> > <a href='/morphia/2.0/guides/'>Reference Guides</a> > Querying
+            <a href='/1.5/'>Morphia</a> > <a href='/1.5/guides/'>Reference Guides</a> > Querying
           
-        
+         
           
-        
+         
           
-        
+           
                   </span>
                 </div>
                 
@@ -469,8 +495,8 @@
 <ul>
 <li><a href="#creating-a-query">Creating a Query</a>
 <ul>
-<li><a href="#filter"><strong>filter()</strong></a></li>
-<li><a href="#field"><strong>field()</strong></a></li>
+<li><a href="#filter"><code>filter()</code></a></li>
+<li><a href="#field"><code>field()</code></a></li>
 </ul></li>
 <li><a href="#complex-queries">Complex Queries</a></li>
 <li><a href="#text-searching">Text Searching</a></li>
@@ -505,27 +531,27 @@
 
 
 <p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
- to provide as much type safety and validation as possible.  To this end, Morphia offers the <strong>Query<T></strong> class which can be parameterized to
+ to provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
 the type of your entity.</p>
 
 <h2 id="creating-a-query">Creating a Query</h2>
 
-<p>The <strong>Datastore</strong> is the key class when using Morphia.  Virtually all operations begin with the <strong>Datastore</strong>.  To create the <strong>Query</strong>, we
+<p>The <code>Datastore</code> is the key class when using Morphia.  Virtually all operations begin with the <code>Datastore</code>.  To create the <code>Query</code>, we
 invoke the following code:</p>
 
 <pre><code class="language-java">Query&lt;Product&gt; query = datastore.createQuery(Product.class);
 </code></pre>
 
-<p><strong>createQuery()</strong> returns an instance of <strong>Query</strong> with which we can build a query.</p>
+<p><code>createQuery()</code> returns an instance of <code>Query</code> with which we can build a query.</p>
 
-<h3 id="filter"><strong>filter()</strong></h3>
+<h3 id="filter"><code>filter()</code></h3>
 
-<p>The first method of interest is <strong>filter()</strong>.  This method takes two values: a condition string and a value.  The <strong>value</strong> parameter is, of
-course, the value to use when applying the <strong>condition</strong> clause.  The <strong>condition</strong> parameter is a bit more complicated.  At its simplest,
+<p>The first method of interest is <code>filter()</code>.  This method takes two values: a condition string and a value.  The <code>value</code> parameter is, of
+course, the value to use when applying the <code>condition</code> clause.  The <code>condition</code> parameter is a bit more complicated.  At its simplest,
 the condition is just a field name.  In this case, the condition is assumed to be an <a href="http://docs.mongodb.org/manual/reference/operator/query/eq/
 ">equality</a> check.  There is a slightly more complicated variant, however.</p>
 
-<p>The <strong>condition</strong> value can also contain an operator.  For example, to compare a numeric field against a value, you might write something
+<p>The <code>condition</code> value can also contain an operator.  For example, to compare a numeric field against a value, you might write something
 like this:</p>
 
 <pre><code class="language-java">query.filter(&quot;price &gt;=&quot;, 1000);
@@ -538,7 +564,7 @@ like this:</p>
 <pre><code class="language-javascript">{ price: { $gte: 1000 } }
 </code></pre>
 
-<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/.x/morphia/src/main/java/xyz/morphia/query/FilterOperator.java
+<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/dev/morphia/query/FilterOperator.java
 ">FilterOperator</a> class.</p>
 
 <table>
@@ -678,35 +704,35 @@ like this:</p>
 </table>
 
 <p>Each filter operator can either be referenced by its MongoDB &ldquo;dollar operator&rdquo; or by the aliases listed afterward.  For example, with
- the equal operator, you can use the canonical <strong>$eq</strong> operator as you would when building a query in the shell or you could opt to use
- either the <strong>=</strong> or <strong>==</strong> aliases which might feel a little more natural to use than the dollar operators.</p>
+ the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use
+ either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
 
-<h3 id="field"><strong>field()</strong></h3>
+<h3 id="field"><code>field()</code></h3>
 
-<p>For those who would prefer more compile time validation of their queries, there is <strong>field()</strong>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/.x/morphia/src/main/java/xyz/morphia/query/FieldEnd.java
+<p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
+returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/dev/morphia/query/FieldEnd.java
 ">class</a> providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
- <strong>filter()</strong> can be.  To perform the same query as above, you&rsquo;d write this:</p>
+ <code>filter()</code> can be.  To perform the same query as above, you&rsquo;d write this:</p>
 
 <pre><code class="language-java">query.field(&quot;price&quot;).greaterThanOrEq(1000);
 </code></pre>
 
-<p>This results in the exact same query as the <strong>filter()</strong> version but has the advantage that any typo in the operation name (method in this
+<p>This results in the exact same query as the <code>filter()</code> version but has the advantage that any typo in the operation name (method in this
 case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.</p>
 
 <div class="admonition note">
 <h5 class="admonition-title">Note</h5>
 <p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<strong>@Property</strong> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+<a href="/1.5/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
 result in an error.</p>
 
 </div>
 
 <h2 id="complex-queries">Complex Queries</h2>
 
-<p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <strong>and()</strong> and <strong>or()</strong> to build up more
-complex queries.  An <strong>and</strong> query might look something like this:</p>
+<p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <code>and()</code> and <code>or()</code> to build up more
+complex queries.  An <code>and</code> query might look something like this:</p>
 
 <pre><code class="language-java">q.and(
     q.criteria(&quot;width&quot;).equal(10),
@@ -714,10 +740,10 @@ complex queries.  An <strong>and</strong> query might look something like this:<
 );
 </code></pre>
 
-<p>An <strong>or</strong> clause looks exactly the same except for using <strong>or()</strong> instead of <strong>and()</strong>, of course.  For these clauses we use the <strong>criteria()</strong>
-method instead of <strong>field()</strong> but it is used in much the same fashion.  <strong>and()</strong> and <strong>or()</strong> take a <a href="https://docs.oracle
-.com/javase/8/docs/technotes/guides/language/varargs.html"><strong>varargs</strong></a> parameter of type <strong>Criteria</strong> so you can include as many filters as necessary.
- If all you need is an <strong>and</strong> clause, you don&rsquo;t need an explicit call to <strong>and()</strong>:</p>
+<p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.  For these clauses we use the <code>criteria()</code>
+method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a <a href="https://docs.oracle
+.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.
+ If all you need is an <code>and</code> clause, you don&rsquo;t need an explicit call to <code>and()</code>:</p>
 
 <pre><code class="language-java">datastore.createQuery(UserLocation.class)
     .field(&quot;x&quot;).lessThan(5)
@@ -725,7 +751,7 @@ method instead of <strong>field()</strong> but it is used in much the same fashi
     .field(&quot;z&quot;).greaterThan(10);
 </code></pre>
 
-<p>This generates an implicit <strong>and</strong> across the field comparisons.</p>
+<p>This generates an implicit <code>and</code> across the field comparisons.</p>
 
 <h2 id="text-searching">Text Searching</h2>
 
@@ -744,8 +770,8 @@ public static class Greeting {
 }
 </code></pre>
 
-<p>The <strong>$**</strong> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/.x/morphia/src/test/java/xyz/morphia/query/TestTextSearching.java
+<p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
 ">test</a> does:</p>
 
 <pre><code class="language-java">morphia.map(Greeting.class);
@@ -766,7 +792,7 @@ List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
 Assert.assertEquals(4, good.size());
 </code></pre>
 
-<p>As you can see here, we create <strong>Greeting</strong> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
+<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
 &ldquo;good&rdquo; in any document.  We created four such documents and our query returns exactly those four.</p>
 
 <h2 id="other-query-options">Other Query Options</h2>
@@ -778,7 +804,7 @@ the query results in different ways.</p>
 
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/.x/morphia/src/test/java/xyz/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 
 <pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
@@ -801,22 +827,22 @@ Assert.assertNull(found.lastName);
 
 <p>As you can see here, we&rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
  the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
- <strong>&ldquo;first_name&rdquo;</strong> and the Java field name <strong>&ldquo;firstName&rdquo;</strong>.</p>
+ <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
 
-<p>The boolean value passed in instructs Morphia to either include (<strong>true</strong>) or exclude (<strong>false</strong>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
+<p>The boolean value passed in instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
 <p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
-  saved. For example, in the example above if <strong>found</strong> is saved back to MongoDB, the <strong>last_name</strong> field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using <a href="/morphia/2.0/javadoc?xyz/morphia/Datastore#merge-T-.html"><strong>Datastore#merge(T)</strong></a></p>
+  saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
+  for this entity will be removed.  To save such instances back consider using <a href="/1.5/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
 
 </div>
 
 <h3 id="limiting-and-skipping">Limiting and Skipping</h3>
 
-<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <strong>Query.limit(int)</strong> and <strong>Query.offset(int)</strong>
+<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
 for these cases.  An example of these methods in action would look like this:</p>
 
 <pre><code class="language-java">datastore.createQuery(Person.class)
@@ -831,9 +857,9 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 
 <h3 id="ordering">Ordering</h3>
 
-<p>Ordering the results of a query is done via <a href="/javadoc/xyz/morphia/query/Query.html#order-java.lang.String-"><strong>Query.order(String)</strong></a>
+<p>Ordering the results of a query is done via <a href="/javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>Query.order(String)</code></a>
 .  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
- for a particular field simply prefix that field with a <strong>-</strong>.  For example, to sort by age (youngest to oldest) and then income (highest
+ for a particular field simply prefix that field with a <code>-</code>.  For example, to sort by age (youngest to oldest) and then income (highest
  to lowest), you would use this:</p>
 
 <pre><code class="language-java">query.order(&quot;age,-income&quot;);
@@ -844,8 +870,8 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/.x/morphia/src/test/java/xyz/morphia/TestQuery.java
-">unit tests</a> in the <strong>testTailableCursors()</strong> test:</p>
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/TestQuery.java
+">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 
 <pre><code class="language-java">getMorphia().map(CappedPic.class);
 getDs().ensureCaps();                                                          // #1
@@ -866,7 +892,7 @@ while(found.size() &lt; 10) {
 <li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
 created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
-<li>Since this <strong>Iterator</strong> is backed by a tailable cursor, <strong>hasNext()</strong> and <strong>next()</strong> will block until a new item is found.  In this
+<li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
 application.</li>
 </ol>
@@ -877,12 +903,14 @@ application.</li>
 
 <p>For example:</p>
 
-<pre><code>Document query = new Document(&quot;albums&quot;,
-    new Document(&quot;$elemMatch&quot;,
-        new Document(&quot;$and&quot;, new Document[] {
-            new Document(&quot;albumId&quot;, albumDto.getAlbumId()),
-            new Document(&quot;album&quot;, new Document(&quot;$exists&quot;, false))
-        })));
+<pre><code>DBObject query = BasicDBObjectBuilder.start()
+	.add(&quot;albums&quot;,
+            new BasicDBObject(&quot;$elemMatch&quot;,
+                    new BasicDBObject(&quot;$and&quot;, new BasicDBObject[] {
+                        new BasicDBObject(&quot;albumId&quot;, albumDto.getAlbumId()),
+                        new BasicDBObject(&quot;album&quot;,
+                            new BasicDBObject(&quot;$exists&quot;, false))})))
+	.get();
 
 Artist result = datastore.createQuery(Artist.class, query).get();
 </code></pre>
@@ -894,7 +922,7 @@ Artist result = datastore.createQuery(Artist.class, query).get();
 
 
         
-        </div>
+        </div> 
         
 
       </div>
@@ -902,7 +930,7 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div id="navigation">
         
         
-
+        
         
             
             
@@ -967,42 +995,6 @@ Artist result = datastore.createQuery(Artist.class, query).get();
             
         
                     
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
                         
             
             
@@ -1018,51 +1010,6 @@ Artist result = datastore.createQuery(Artist.class, query).get();
                     
             
         
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
                     
             
         
@@ -1080,9 +1027,6 @@ Artist result = datastore.createQuery(Artist.class, query).get();
                     
                     
 
-                    
-            
-        
                     
                         
             
@@ -1135,42 +1079,158 @@ Artist result = datastore.createQuery(Artist.class, query).get();
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
             
         
                     
             
         
-
+                    
+            
+        
+        
         
 
 
         
-            <a class="nav nav-prev" href="/morphia/2.0/guides/lifecyclemethods/" title="Life Cycle Methods"> <i class="fas fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="/1.5/guides/lifecyclemethods/" title="Life Cycle Methods"> <i class="fas fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="/morphia/2.0/guides/schemavalidation/" title="Schema Validation" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="/1.5/guides/references/" title="References" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
         
     </div>
 
     </section>
-
+    
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/morphia/2.0/js/clipboard.min.js?1544070911"></script>
-    <script src="/morphia/2.0/js/perfect-scrollbar.min.js?1544070911"></script>
-    <script src="/morphia/2.0/js/perfect-scrollbar.jquery.min.js?1544070911"></script>
-    <script src="/morphia/2.0/js/jquery.sticky.js?1544070911"></script>
-    <script src="/morphia/2.0/js/featherlight.min.js?1544070911"></script>
-    <script src="/morphia/2.0/js/html5shiv-printshiv.min.js?1544070911"></script>
-    <script src="/morphia/2.0/js/highlight.pack.js?1544070911"></script>
+    <script src="/1.5/js/clipboard.min.js?1557090453"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1557090453"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1557090453"></script>
+    <script src="/1.5/js/jquery.sticky.js?1557090453"></script>
+    <script src="/1.5/js/featherlight.min.js?1557090453"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1557090453"></script>
+    <script src="/1.5/js/highlight.pack.js?1557090453"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/morphia/2.0/js/modernizr.custom.71422.js?1544070911"></script>
-    <script src="/morphia/2.0/js/learn.js?1544070911"></script>
-    <script src="/morphia/2.0/js/hugo-learn.js?1544070911"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1557090453"></script>
+    <script src="/1.5/js/learn.js?1557090453"></script>
+    <script src="/1.5/js/hugo-learn.js?1557090453"></script>
 
-    <link href="/morphia/2.0/mermaid/mermaid.css?1544070911" type="text/css" rel="stylesheet" />
-    <script src="/morphia/2.0/mermaid/mermaid.js?1544070911"></script>
+    <link href="/1.5/mermaid/mermaid.css?1557090453" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1557090453"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
