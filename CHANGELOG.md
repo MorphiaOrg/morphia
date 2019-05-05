@@ -50,6 +50,7 @@ This releases fixes a regression is building query structures for more complex q
 * [Issue #1154](https://github.com/MorphiaOrg/morphia/issues/1154): multi is not consistently set in DatastoreImpl update methods
 * [Issue #1175](https://github.com/MorphiaOrg/morphia/issues/1175): AdvancedDatastore.ensureIndexes doesn't handle fields subtypes properly with version 1.3.2
 * [Issue #1197](https://github.com/MorphiaOrg/morphia/issues/1197): doesn't auto create index for entities that's mapped in the subpackage
+* [Issue #1210](https://github.com/MorphiaOrg/morphia/issues/1210): update in DatastoreImpl is not multi anymore
 * [PR #1211](https://github.com/MorphiaOrg/morphia/pull/1211): Fix for ensureIndexes() logic
 * [Issue #1217](https://github.com/MorphiaOrg/morphia/issues/1217): Lazy loading in interfaces
 * [Issue #1255](https://github.com/MorphiaOrg/morphia/issues/1255): Excessive NullPointerException in Mapper.getId()
@@ -121,7 +122,4 @@ This releases fixes a regression is building query structures for more complex q
 #### ![](https://placehold.it/15/cc317c/000000?text=+) QUESTION
 * [Issue #1213](https://github.com/MorphiaOrg/morphia/issues/1213): Query using elemMatch fails when elemMatch-query does specify some restrictions
 * [Issue #1235](https://github.com/MorphiaOrg/morphia/issues/1235): Clarification on Datastore.merge() on versioned item.
-
-#### ![](https://placehold.it/15/null/000000?text=+) UNCATEGORIZED
-* [Issue #1210](https://github.com/MorphiaOrg/morphia/issues/1210): update in DatastoreImpl is not multi anymore
 
