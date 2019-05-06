@@ -24,7 +24,6 @@ import org.bson.Document;
 
 import java.util.Map.Entry;
 
-@SuppressWarnings("deprecation")
 class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
     IndexOptionsBuilder() {
     }

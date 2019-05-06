@@ -45,7 +45,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  *
  * @param <T> The type we will be querying for, and returning.
  */
-@SuppressWarnings("deprecation")
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     private final dev.morphia.DatastoreImpl ds;

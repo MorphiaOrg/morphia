@@ -55,7 +55,7 @@ public class TestInheritanceMappings extends TestBase {
         m.put("Name", "Scott");
         getDs().save(m);
         assertNotNull(m.id);
-        assertEquals(1, getDs().getCount(MapLike.class));
+        assertEquals(1, getDs().find(MapLike.class).count());
 
         m = getDs().find(MapLike.class)
                    .find(new FindOptions().limit(1))
@@ -82,7 +82,7 @@ public class TestInheritanceMappings extends TestBase {
         assertEquals("foo", c.getId());
         assertEquals("eh", c.b);
         assertEquals(12, c.getK().longValue());
-        assertEquals(1, getDs().getCount(ParameterizedEntity.class));
+        assertEquals(1, getDs().find(ParameterizedEntity.class).count());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class TestInheritanceMappings extends TestBase {
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());
-        assertEquals(1, getDs().getCount(ParameterizedIdEntity.class));
+        assertEquals(1, getDs().find(ParameterizedIdEntity.class).count());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class TestInheritanceMappings extends TestBase {
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());
-        assertEquals(1, getDs().getCount(ParameterizedIdEntity2.class));
+        assertEquals(1, getDs().find(ParameterizedIdEntity2.class).count());
     }
 
     @Test
@@ -117,8 +117,8 @@ public class TestInheritanceMappings extends TestBase {
         getDs().save(c);
         assertNotNull(c.getId());
 
-        assertEquals(1, getDs().getCount(Car.class));
-        assertEquals(1, getDs().getCount(AbstractVehicle.class));
+        assertEquals(1, getDs().find(Car.class).count());
+        assertEquals(1, getDs().find(AbstractVehicle.class).count());
 
     }
 

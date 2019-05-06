@@ -136,7 +136,6 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testUpdateFirst() {
         final Datastore datastore = getDs();
 

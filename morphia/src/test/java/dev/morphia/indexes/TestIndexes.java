@@ -19,7 +19,6 @@ package dev.morphia.indexes;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
@@ -48,7 +47,6 @@ import java.util.List;
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static dev.morphia.utils.IndexType.DESC;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
 
@@ -71,7 +69,7 @@ public class TestIndexes extends TestBase {
         assertEquals(0, hashIndexColl.getIndexInfo().size());
 
         if (serverIsAtLeastVersion(3.4)) {
-            datastore.ensureIndexes(TestWithIndexOption.class, true);
+            datastore.ensureIndexes(TestWithIndexOption.class);
             assertEquals(2, indexOptionColl.getIndexInfo().size());
             List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
             assertBackground(indexInfo);
@@ -94,7 +92,7 @@ public class TestIndexes extends TestBase {
             }
         }
 
-        datastore.ensureIndexes(TestWithDeprecatedIndex.class, true);
+        datastore.ensureIndexes(TestWithDeprecatedIndex.class);
         assertEquals(2, depIndexColl.getIndexInfo().size());
         assertBackground(depIndexColl.getIndexInfo());
 
@@ -124,22 +122,6 @@ public class TestIndexes extends TestBase {
         getMorphia().getMapper().setOptions(builder.build());
         getDs().ensureIndexes();
         Assert.assertNull("No indexes should be generated for InboxEvent", inboxEvent.listIndexes().iterator().tryNext());
-    }
-
-    @Test
-    public void optionsFromOldSyntax() {
-        getMorphia().map(MongoSettingsHistory.class);
-        getDs().ensureIndex(MongoSettingsHistory.class, "query_by_key_and_date", "key, newValue, -date", true, false);
-
-        final List<DBObject> indexes = getDs().getCollection(MongoSettingsHistory.class).getIndexInfo();
-        DBObject index = null;
-        for (final DBObject possible : indexes) {
-            if("query_by_key_and_date".equals(possible.get("name"))) {
-                index = possible;
-            }
-        }
-        Assert.assertNotNull(index);
-        assertTrue((Boolean) index.get("unique"));
     }
 
     @Entity
@@ -174,7 +156,8 @@ public class TestIndexes extends TestBase {
         partialFilter = "{ name : { $exists : true } }",
         collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
             caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true,
-            numericOrdering = true, strength = CollationStrength.IDENTICAL)),
+            numericOrdering = true, strength = CollationStrength.IDENTICAL),
+        background = true),
         fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
         private String name;
@@ -182,10 +165,9 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(noClassnameStored = true)
-    @Indexes({@Index("name")})
+    @Indexes({@Index(options = @IndexOptions(background = true),
+        fields = @Field("name"))})
     public static class TestWithDeprecatedIndex {
-
-
         private String name;
 
     }

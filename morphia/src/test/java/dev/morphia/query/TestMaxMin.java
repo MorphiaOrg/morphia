@@ -26,12 +26,6 @@ public class TestMaxMin extends TestBase {
         getDs().ensureIndexes();
     }
 
-    @SuppressWarnings("deprecation")
-    @Test(expected = MongoException.class)
-    public void testExceptionForIndexMismatchOld() {
-        getDs().find(IndexedEntity.class).lowerIndexBound(new BasicDBObject("doesNotExist", 1)).get();
-    }
-
     @Test(expected = MongoException.class)
     public void testExceptionForIndexMismatch() {
         getDs().find(IndexedEntity.class).find(new FindOptions()
@@ -41,7 +35,6 @@ public class TestMaxMin extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testMax() {
         final IndexedEntity a = new IndexedEntity("a");
         final IndexedEntity b = new IndexedEntity("b");
@@ -66,7 +59,6 @@ public class TestMaxMin extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testMaxCompoundIndex() {
         final IndexedEntity a1 = new IndexedEntity("a");
         final IndexedEntity a2 = new IndexedEntity("a");
@@ -100,7 +92,6 @@ public class TestMaxMin extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testMin() {
         final IndexedEntity a = new IndexedEntity("a");
         final IndexedEntity b = new IndexedEntity("b");
@@ -121,7 +112,6 @@ public class TestMaxMin extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testMinCompoundIndex() {
         final IndexedEntity a1 = new IndexedEntity("a");
         final IndexedEntity a2 = new IndexedEntity("a");

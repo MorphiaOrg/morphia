@@ -46,7 +46,6 @@ import static dev.morphia.converters.DefaultConverters.JAVA_8;
 @SuppressWarnings("Since15")
 public class TestSerializedFormat extends TestBase {
     @Test
-    @SuppressWarnings("deprecation")
     public void testQueryFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)

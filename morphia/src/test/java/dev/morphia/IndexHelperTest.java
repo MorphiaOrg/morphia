@@ -266,7 +266,6 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void oldIndexedForm() {
         Indexed indexed = new IndexedBuilder()
             .name("index_name")
@@ -288,7 +287,6 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void convertTextIndex() {
         TextBuilder text = new TextBuilder()
             .value(4)
@@ -315,7 +313,6 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void normalizeIndexed() {
         Indexed indexed = new IndexedBuilder()
             .value(IndexDirection.DESC)

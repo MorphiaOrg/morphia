@@ -20,15 +20,6 @@ import java.io.Serializable;
 public class CompoundIdTest extends TestBase {
 
     @Test
-    public void testDelete() {
-        final CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("test");
-
-        getDs().save(entity);
-        getDs().delete(CompoundIdEntity.class, entity.id);
-    }
-
-    @Test
     public void testFetchKey() {
         getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
         BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
@@ -56,7 +47,8 @@ public class CompoundIdTest extends TestBase {
         entity.id = new CompoundId("test");
 
         getDs().save(entity);
-        ((AdvancedDatastore) getDs()).delete(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class, entity.id);
+        getDs().delete(getAds().find(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class)
+                               .filter("_id", entity.id));
     }
 
     @Test
@@ -74,8 +66,7 @@ public class CompoundIdTest extends TestBase {
         entity.sibling = sibling;
         getDs().save(entity);
 
-        final CompoundIdEntity loaded = getDs().get(entity);
-        Assert.assertEquals(entity, loaded);
+        Assert.assertEquals(entity, getDs().find(entity.getClass()).filter("_id", entity.id).first());
     }
 
     @Embedded

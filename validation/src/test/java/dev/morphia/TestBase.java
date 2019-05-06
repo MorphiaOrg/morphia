@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 
 
-@SuppressWarnings("deprecation")
 public abstract class TestBase {
     private MongoClient mongoClient;
     private DB db;

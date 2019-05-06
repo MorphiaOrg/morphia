@@ -39,23 +39,6 @@ public class TestAdvancedDatastore extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
-    public void testBulkInsertOld() {
-        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
-        String name = "some_collection";
-        MongoCollection<Document> collection = getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name);
-        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, collection.count());
-        collection.drop();
-        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             WriteConcern.ACKNOWLEDGED);
-        Assert.assertEquals(5, collection.count());
-    }
-
-    @Test
     public void testBulkInsert() {
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));

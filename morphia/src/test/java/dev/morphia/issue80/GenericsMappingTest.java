@@ -50,7 +50,7 @@ public class GenericsMappingTest extends TestBase {
 
         getDs().save(ct);
         assertNotNull(ct.id);
-        assertEquals(1, getDs().getCount(ContainsThings.class));
+        assertEquals(1, getDs().find(ContainsThings.class).count());
         final ContainsThings ctLoaded = getDs().find(ContainsThings.class)
                                                .find(new FindOptions().limit(1))
                                                .next();

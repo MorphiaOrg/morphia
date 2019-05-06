@@ -304,7 +304,6 @@ public class TestDocumentValidation extends TestBase {
         return (Document) getValidation().get("validator");
     }
 
-    @SuppressWarnings("deprecation")
     private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
         ((DatastoreImpl) getDs()).process(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
                                                                               .level(level)

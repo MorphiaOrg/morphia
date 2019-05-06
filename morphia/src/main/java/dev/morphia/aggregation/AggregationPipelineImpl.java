@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * Implementation of an AggregationPipeline.
  */
-@SuppressWarnings("deprecation")
 public class AggregationPipelineImpl implements AggregationPipeline {
     private static final Logger LOG = LoggerFactory.getLogger(AggregationPipelineImpl.class);
 
@@ -86,7 +85,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public AggregationPipeline geoNear(final GeoNear geoNear) {
         DBObject geo = new BasicDBObject();
         GeometryShapeConverter.PointConverter pointConverter = new GeometryShapeConverter.PointConverter();

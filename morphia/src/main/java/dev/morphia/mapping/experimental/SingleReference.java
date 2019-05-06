@@ -13,7 +13,6 @@ import dev.morphia.query.Query;
  * @param <T>
  * @morphia.internal
  */
-@SuppressWarnings("deprecation")
 public class SingleReference<T> extends MorphiaReference<T> {
     private Object id;
     private T value;

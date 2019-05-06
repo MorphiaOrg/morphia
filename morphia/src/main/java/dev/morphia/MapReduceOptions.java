@@ -263,7 +263,6 @@ public class MapReduceOptions<T> {
         return resultType;
     }
 
-    @SuppressWarnings("deprecation")
     MapReduceCommand toCommand(final Mapper mapper) {
         if (query.getOffset() != 0 || query.getFieldsObject() != null) {
             throw new QueryException("mapReduce does not allow the offset/retrievedFields query ");

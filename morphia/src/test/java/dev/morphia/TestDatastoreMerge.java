@@ -18,6 +18,7 @@ package dev.morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
+import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class TestDatastoreMerge extends TestBase {
         te.position = 1;
         getDs().save(te);
 
-        assertEquals(1, getDs().getCount(te));
+        assertEquals(1, getDs().find(te.getClass()).count());
 
         //only update the position field with merge, normally save would override the whole object.
         final Merger te2 = new Merger();

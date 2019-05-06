@@ -20,7 +20,6 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
 
-@SuppressWarnings("deprecation")
 class IndexedBuilder extends AnnotationBuilder<Indexed> implements Indexed {
     @Override
     public Class<Indexed> annotationType() {

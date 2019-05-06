@@ -16,16 +16,6 @@ package dev.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.query.Sort;
-import dev.morphia.query.internal.MorphiaCursor;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -33,16 +23,25 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.Sort;
 import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
 import dev.morphia.query.ValidationException;
+import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +52,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static dev.morphia.query.PushOptions.options;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -66,7 +66,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static dev.morphia.query.PushOptions.options;
 
 /**
  * @author Scott Hernandez
@@ -129,7 +128,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testAdd() {
         checkMinServerVersion(2.6);
 
@@ -191,7 +189,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testAddAll() {
         getMorphia().map(EntityLogs.class, EntityLog.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
@@ -206,19 +203,19 @@ public class TestUpdateOps extends TestBase {
         List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
         UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
                                                                   .addAll("logs", latestLogs, false);
-        getDs().update(finder, updateOperationsAll, true);
+        getDs().update(finder, updateOperationsAll, new UpdateOptions().upsert(true));
         validateNoClassName(finder.get());
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
                                                                 .add("logs", new EntityLog("whatever3", new Date()), false);
-        getDs().update(finder, updateOperations3, true);
+        getDs().update(finder, updateOperations3, new UpdateOptions().upsert(true));
         validateNoClassName(finder.get());
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
                                                                 .add("logs", new EntityLog("whatever4", new Date()), false);
-        getDs().update(finder, updateOperations4, true);
+        getDs().update(finder, updateOperations4, new UpdateOptions().upsert(true));
         validateNoClassName(finder.get());
     }
 
@@ -231,9 +228,8 @@ public class TestUpdateOps extends TestBase {
         createContainsPic(1);
         createContainsPic(2);
 
-        UpdateOperations<ContainsPic> updateOperations4 = getDs().createUpdateOperations(ContainsPic.class)
-                                                                .inc("size");
-        getDs().update(finder, updateOperations4, true);
+        UpdateOperations<ContainsPic> updates = getDs().createUpdateOperations(ContainsPic.class).inc("size");
+        getDs().update(finder, updates, new UpdateOptions().multi(true));
 
         final MorphiaCursor<ContainsPic> iterator = finder.order(Sort.ascending("size")).find();
         for (int i = 0; i < 3; i++) {
@@ -287,12 +283,11 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testUpdateFirst() {
         ContainsIntArray cIntArray = new ContainsIntArray();
         ContainsIntArray control = new ContainsIntArray();
         Datastore ds = getDs();
-        ds.save(cIntArray, control);
+        ds.save(asList(cIntArray, control));
 
         assertThat(ds.get(cIntArray).values, is((new ContainsIntArray()).values));
         Query<ContainsIntArray> query = ds.find(ContainsIntArray.class);
@@ -315,7 +310,6 @@ public class TestUpdateOps extends TestBase {
                         .filter("values", new Integer[]{4, 5, 7, 6}));
     }
 
-    @SuppressWarnings("deprecation")
     private void doUpdates(final ContainsIntArray updated, final ContainsIntArray control,
                            final Query<ContainsIntArray> query, final UpdateOperations<ContainsIntArray> operations,
                            final Integer[] target) {
@@ -366,34 +360,34 @@ public class TestUpdateOps extends TestBase {
         final Query<Rectangle> heightOf2 = getDs().find(Rectangle.class).filter("height", 2D);
         final Query<Rectangle> heightOf35 = getDs().find(Rectangle.class).filter("height", 3.5D);
 
-        assertThat(getDs().getCount(heightOf1), is(3L));
-        assertThat(getDs().getCount(heightOf2), is(0L));
+        assertThat(heightOf1.count(), is(3L));
+        assertThat(heightOf2.count(), is(0L));
 
         final UpdateResults results = getDs().update(heightOf1, getDs().createUpdateOperations(Rectangle.class)
                                                                        .inc("height"));
         assertUpdated(results, 3);
 
-        assertThat(getDs().getCount(heightOf1), is(0L));
-        assertThat(getDs().getCount(heightOf2), is(3L));
+        assertThat(heightOf1.count(), is(0L));
+        assertThat(heightOf2.count(), is(3L));
 
         getDs().update(heightOf2, getDs().createUpdateOperations(Rectangle.class).dec("height"));
-        assertThat(getDs().getCount(heightOf1), is(3L));
-        assertThat(getDs().getCount(heightOf2), is(0L));
+        assertThat(heightOf1.count(), is(3L));
+        assertThat(heightOf2.count(), is(0L));
 
         getDs().update(heightOf1, getDs().createUpdateOperations(Rectangle.class).inc("height", 2.5D));
-        assertThat(getDs().getCount(heightOf1), is(0L));
-        assertThat(getDs().getCount(heightOf35), is(3L));
+        assertThat(heightOf1.count(), is(0L));
+        assertThat(heightOf35.count(), is(3L));
 
         getDs().update(heightOf35, getDs().createUpdateOperations(Rectangle.class).dec("height", 2.5D));
-        assertThat(getDs().getCount(heightOf1), is(3L));
-        assertThat(getDs().getCount(heightOf35), is(0L));
+        assertThat(heightOf1.count(), is(3L));
+        assertThat(heightOf35.count(), is(0L));
 
         getDs().update(getDs().find(Rectangle.class).filter("height", 1D),
                        getDs().createUpdateOperations(Rectangle.class)
                               .set("height", 1D)
                               .inc("width", 20D));
 
-        assertThat(getDs().getCount(Rectangle.class), is(5L));
+        assertThat(getDs().find(Rectangle.class).count(), is(5L));
         assertThat(getDs().find(Rectangle.class).filter("height", 1D)
                           .find(new FindOptions().limit(1))
                           .next(), is(notNullValue()));
@@ -422,14 +416,11 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testInsertUpdate() {
         assertInserted(getDs().update(getDs().find(Circle.class).field("radius").equal(0),
-                                      getDs().createUpdateOperations(Circle.class).inc("radius", 1D), true));
-        assertInserted(getDs().update(getDs().find(Circle.class).field("radius").equal(0),
-                                      getDs().createUpdateOperations(Circle.class).inc("radius", 1D),
-                                      new UpdateOptions()
-                                          .upsert(true)));
+            getDs().createUpdateOperations(Circle.class).inc("radius", 1D),
+            new UpdateOptions()
+                .upsert(true)));
     }
 
     @Test
@@ -794,7 +785,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testUpdateFirstNoCreateWithEntity() {
         List<EntityLogs> logs = new ArrayList<EntityLogs>();
         for (int i = 0; i < 100; i++) {

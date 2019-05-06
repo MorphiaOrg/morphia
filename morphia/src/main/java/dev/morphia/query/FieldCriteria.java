@@ -31,7 +31,6 @@ class FieldCriteria extends AbstractCriteria {
         this(query, field, op, value, false);
     }
 
-    @SuppressWarnings("deprecation")
     FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
         //validate might modify prop string to translate java field name to db field name
         this.query = query;

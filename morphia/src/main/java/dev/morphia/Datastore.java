@@ -58,62 +58,6 @@ public interface Datastore {
     <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz);
 
     /**
-     * Deletes the given entity (by id)
-     *
-     * @param clazz the type to delete
-     * @param id    the ID of the entity to delete
-     * @param <T>   the type to delete
-     * @param <V>   the type of the id
-     * @return results of the delete
-     * @deprecated use {@link #delete(Query)} instead
-     */
-    @Deprecated
-    <T, V> WriteResult delete(Class<T> clazz, V id);
-
-    /**
-     * Deletes the given entity (by id)
-     *
-     * @param clazz   the type to delete
-     * @param id      the ID of the entity to delete
-     * @param options the options to use when deleting
-     * @param <T>     the type to delete
-     * @param <V>     the type of the id
-     * @return results of the delete
-     * @since 1.3
-     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
-     */
-    @Deprecated
-    <T, V> WriteResult delete(Class<T> clazz, V id, DeleteOptions options);
-
-    /**
-     * Deletes the given entities (by id)
-     *
-     * @param clazz the type to delete
-     * @param ids   the IDs of the entity to delete
-     * @param <T>   the type to delete
-     * @param <V>   the type of the id
-     * @return results of the delete
-     * @deprecated use {@link #delete(Query)} instead
-     */
-    @Deprecated
-    <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids);
-
-    /**
-     * Deletes the given entities (by id)
-     *
-     * @param clazz   the type to delete
-     * @param ids     the IDs of the entity to delete
-     * @param options the options to use when deleting
-     * @param <T>     the type to delete
-     * @param <V>     the type of the id
-     * @return results of the delete
-     * @since 1.3
-     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
-     */
-    @Deprecated
-    <T, V> WriteResult delete(Class<T> clazz, Iterable<V> ids, DeleteOptions options);
-
-    /**
      * Deletes entities based on the query
      *
      * @param query the query to use when finding documents to delete
@@ -132,18 +76,6 @@ public interface Datastore {
      * @since 1.3
      */
     <T> WriteResult delete(Query<T> query, DeleteOptions options);
-
-    /**
-     * Deletes entities based on the query, with the WriteConcern
-     *
-     * @param query the query to use when finding documents to delete
-     * @param wc    the WriteConcern to use when deleting
-     * @param <T>   the type to delete
-     * @return results of the delete
-     * @deprecated use {@link AdvancedDatastore#delete(Query, DeleteOptions)} instead
-     */
-    @Deprecated
-    <T> WriteResult delete(Query<T> query, WriteConcern wc);
 
     /**
      * Deletes the given entity (by @Id)
@@ -166,18 +98,6 @@ public interface Datastore {
     <T> WriteResult delete(T entity, DeleteOptions options);
 
     /**
-     * Deletes the given entity (by @Id), with the WriteConcern
-     *
-     * @param entity the entity to delete
-     * @param wc     the WriteConcern to use when deleting
-     * @param <T>    the type to delete
-     * @return results of the delete
-     * @deprecated use {@link #delete(Query, DeleteOptions)} instead
-     */
-    @Deprecated
-    <T> WriteResult delete(T entity, WriteConcern wc);
-
-    /**
      * ensure capped collections for {@code Entity}(s)
      */
     void ensureCaps();
@@ -191,37 +111,6 @@ public interface Datastore {
     void enableDocumentValidation();
 
     /**
-     * Ensures (creating if necessary) the index including the field(s) + directions on the given collection name; eg fields = "field1,
-     * -field2" ({field1:1, field2:-1})
-     *
-     * @param clazz  the class from which to get the index definitions
-     * @param fields the fields to index
-     * @param <T>    the type to index
-     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
-     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
-     * methods in the Java driver itself.
-     */
-    @Deprecated
-    <T> void ensureIndex(Class<T> clazz, String fields);
-
-    /**
-     * Ensures (creating if necessary) the index including the field(s) + directions on the given collection name; eg fields = "field1,
-     * -field2" ({field1:1, field2:-1})
-     *
-     * @param clazz            the class from which to get the index definitions
-     * @param name             the name of the index to create
-     * @param fields           the fields to index
-     * @param unique           true if the index should enforce uniqueness on the fields indexed
-     * @param dropDupsOnCreate Support for this has been removed from the server.  This value is ignored.
-     * @param <T>              the type to index
-     * @see MongoCollection#createIndex(org.bson.conversions.Bson, com.mongodb.client.model.IndexOptions)
-     * @deprecated This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
-     * methods in the Java driver itself.
-     */
-    @Deprecated
-    <T> void ensureIndex(Class<T> clazz, String name, String fields, boolean unique, boolean dropDupsOnCreate);
-
-    /**
      * Ensures (creating if necessary) the indexes found during class mapping
      *
      * @see Indexes
@@ -229,20 +118,6 @@ public interface Datastore {
      * @see Text
      */
     void ensureIndexes();
-
-    /**
-     * Ensures (creating if necessary) the indexes found during class mapping (using {@code @Indexed, @Indexes)} on the given collection
-     * name, possibly in the background
-     *
-     * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
-     *                   definition
-     * @see Indexes
-     * @see Indexed
-     * @see Text
-     * @deprecated use {@link #ensureIndexes()} instead
-     */
-    @Deprecated
-    void ensureIndexes(boolean background);
 
     /**
      * Ensures (creating if necessary) the indexes found during class mapping
@@ -254,21 +129,6 @@ public interface Datastore {
      * @see Text
      */
     <T> void ensureIndexes(Class<T> clazz);
-
-    /**
-     * Ensures (creating if necessary) the indexes found during class mapping
-     *
-     * @param clazz      the class from which to get the index definitions
-     * @param background if true, the index will be built in the background.  If false, background indexing is deferred to the annotation
-     *                   definition
-     * @param <T>        the type to index
-     * @see Indexes
-     * @see Indexed
-     * @see Text
-     * @deprecated use {@link #ensureIndexes(Class)} instead
-     */
-    @Deprecated
-    <T> void ensureIndexes(Class<T> clazz, boolean background);
 
     /**
      * Does a query to check if the keyOrEntity exists in mongodb
@@ -288,38 +148,6 @@ public interface Datastore {
      * @return the query
      */
     <T> Query<T> find(Class<T> clazz);
-
-    /**
-     * <p> Find all instances by collectionName, and filter property. </p><p> This is the same as: {@code find(clazzOrEntity).filter
-     * (property, value); } </p>
-     *
-     * @param clazz    the class to use for mapping the results
-     * @param property the document property to query against
-     * @param value    the value to check for
-     * @param <T>      the type to query
-     * @param <V>      the type to filter value
-     * @return the query
-     * @deprecated use {@link Query} instead
-     */
-    @Deprecated
-    <T, V> Query<T> find(Class<T> clazz, String property, V value);
-
-    /**
-     * Find all instances by type in a different collection than what is mapped on the class given skipping some documents and returning a
-     * fixed number of the remaining.
-     *
-     * @param clazz    the class to use for mapping the results
-     * @param property the document property to query against
-     * @param value    the value to check for
-     * @param offset   the number of results to skip
-     * @param size     the maximum number of results to return
-     * @param <T>      the type to query
-     * @param <V>      the type to filter value
-     * @return the query
-     * @deprecated use {@link Query} instead
-     */
-    @Deprecated
-    <T, V> Query<T> find(Class<T> clazz, String property, V value, int offset, int size);
 
     /**
      * Deletes the given entities based on the query (first item only).
@@ -474,54 +302,6 @@ public interface Datastore {
     @Deprecated
     DBCollection getCollection(Class<?> clazz);
 
-    /**
-     * Gets the count this kind ({@link DBCollection})
-     *
-     * @param entity The entity whose type to count
-     * @param <T>    the type to count
-     * @return the count
-     * @deprecated use {@link Query#count()} instead
-     */
-    @Deprecated
-    <T> long getCount(T entity);
-
-    /**
-     * Gets the count this kind ({@link DBCollection})
-     *
-     * @param clazz The clazz type to count
-     * @param <T>   the type to count
-     * @return the count
-     * @deprecated use {@link Query#count()} instead
-     * @morphia.inline
-     */
-    @Deprecated
-    <T> long getCount(Class<T> clazz);
-
-
-    /**
-     * Gets the count of items returned by this query; same as {@code query.countAll()}
-     *
-     * @param query the query to filter the documents to count
-     * @param <T>   the type to count
-     * @return the count
-     * @deprecated use {@link Query#count()} instead
-     * @morphia.inline
-     */
-    @Deprecated
-    <T> long getCount(Query<T> query);
-
-    /**
-     * Gets the count of items returned by this query; same as {@code query.countAll()}
-     *
-     * @param query   the query to filter the documents to count
-     * @param <T>     the type to count
-     * @param options the options to apply to the count
-     * @return the count
-     * @since 1.3
-     * @deprecated use {@link Query#count(CountOptions)} instead
-     */
-    @Deprecated
-    <T> long getCount(Query<T> query, CountOptions options);
 
     /**
      * @return the DB this Datastore uses
@@ -674,33 +454,10 @@ public interface Datastore {
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
-     * @param wc       the WriteConcern to use
-     * @return the keys of the entities
-     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
-     */
-    @Deprecated
-    <T> Iterable<Key<T>> save(Iterable<T> entities, WriteConcern wc);
-
-    /**
-     * Saves the entities (Objects) and updates the @Id field, with the WriteConcern
-     *
-     * @param entities the entities to save
-     * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
      * @return the keys of the entities
      */
     <T> Iterable<Key<T>> save(Iterable<T> entities, InsertOptions options);
-
-    /**
-     * Saves the entities (Objects) and updates the @Id field
-     *
-     * @param entities the entities to save
-     * @param <T>      the type of the entity
-     * @return the keys of the entities
-     * @deprecated use {@link #save(Iterable, InsertOptions)} instead
-     */
-    @Deprecated
-    <T> Iterable<Key<T>> save(T... entities);
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -710,18 +467,6 @@ public interface Datastore {
      * @return the keys of the entity
      */
     <T> Key<T> save(T entity);
-
-    /**
-     * Saves an entity (Object) and updates the @Id field, with the WriteConcern
-     *
-     * @param entity the entity to save
-     * @param wc     the WriteConcern to use
-     * @param <T>    the type of the entity
-     * @return the keys of the entity
-     * @deprecated use {@link #save(Object, InsertOptions)} instead
-     */
-    @Deprecated
-    <T> Key<T> save(T entity, WriteConcern wc);
 
     /**
      * Saves an entity (Object) and updates the @Id field

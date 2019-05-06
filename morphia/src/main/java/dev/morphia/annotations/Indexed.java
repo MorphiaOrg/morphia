@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
  *
  * @author Scott Hernandez
  */
-@SuppressWarnings("deprecation")
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

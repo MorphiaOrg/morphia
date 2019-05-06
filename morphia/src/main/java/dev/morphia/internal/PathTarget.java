@@ -33,7 +33,6 @@ import static dev.morphia.internal.MorphiaUtils.join;
  * @since 1.3
  * @morphia.internal
  */
-@SuppressWarnings("deprecation")
 public class PathTarget {
     private final List<String> segments;
     private boolean validateNames;

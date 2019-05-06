@@ -32,7 +32,6 @@ import static org.junit.Assert.assertTrue;
 
 public class MapReduceOptionsTest extends TestBase {
     @Test
-    @SuppressWarnings("deprecation")
     public void mapReduceCommand() {
         Query<FacebookUser> query = getDs().find(FacebookUser.class);
         MapReduceOptions<FacebookUser> options = new MapReduceOptions<FacebookUser>()

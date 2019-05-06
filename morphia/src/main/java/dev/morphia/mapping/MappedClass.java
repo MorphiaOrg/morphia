@@ -510,7 +510,6 @@ public class MappedClass {
      * Validates this MappedClass
      * @param mapper the Mapper to use for validation
      */
-    @SuppressWarnings("deprecation")
     public void validate(final Mapper mapper) {
         new MappingValidator(mapper.getOptions().getObjectFactory()).validate(mapper, this);
     }

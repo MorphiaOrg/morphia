@@ -91,7 +91,6 @@ final class IndexHelper {
                                                                 .weight(text.value())));
     }
 
-    @SuppressWarnings("deprecation")
     Index convert(final Indexed indexed, final String nameToStore) {
         if (indexed.dropDups() || indexed.options().dropDups()) {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
@@ -116,7 +115,6 @@ final class IndexHelper {
                      .fields(fields);
     }
 
-    @SuppressWarnings("deprecation")
     private List<Index> collectFieldIndexes(final MappedClass mc) {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
@@ -254,7 +252,6 @@ final class IndexHelper {
         return keys;
     }
 
-    @SuppressWarnings("deprecation")
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
         if (options.dropDups()) {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");

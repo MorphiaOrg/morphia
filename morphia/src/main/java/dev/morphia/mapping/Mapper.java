@@ -632,7 +632,6 @@ public class Mapper {
      * @param value the value to convert
      * @return the MongoDB compatible object
      */
-    @SuppressWarnings("deprecation")
     public Object toMongoObject(final MappedField mf, final MappedClass mc, final Object value) {
         if (value == null) {
             return null;

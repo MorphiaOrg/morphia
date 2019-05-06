@@ -176,17 +176,6 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
-    public void testMultipleIndexedFields() {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(Ad.class);
-        getMorphia().map(Ad.class);
-
-        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), doesNotHaveIndexNamed("lastMod_1_active_-1"));
-        getDs().ensureIndex(Ad.class, "lastMod, -active");
-        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("lastMod_1_active_-1"));
-    }
-
-    @Test
     public void testNamedIndexEntity() throws Exception {
         getDs().ensureIndexes();
 

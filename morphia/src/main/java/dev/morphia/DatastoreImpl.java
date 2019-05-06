@@ -35,7 +35,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
-import dev.morphia.query.CountOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
@@ -182,24 +181,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return dbColl.remove(query.getQueryObject(), enforceWriteConcern(options, query.getEntityClass()).getOptions());
     }
 
-    @Override
     public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
         return delete(clazz, id, new DeleteOptions().writeConcern(getWriteConcern(clazz)));
     }
 
-    @Override
-    public <T, V> WriteResult delete(final Class<T> clazz, final V id, final DeleteOptions options) {
+    private <T, V> WriteResult delete(final Class<T> clazz, final V id, final DeleteOptions options) {
         return delete(createQuery(clazz).filter("_id", id), options);
-    }
-
-    @Override
-    public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids) {
-        return delete(find(clazz).filter("_id" + " in", ids));
-    }
-
-    @Override
-    public <T, V> WriteResult delete(final Class<T> clazz, final Iterable<V> ids, final DeleteOptions options) {
-        return delete(find(clazz).filter("_id" + " in", ids), options);
     }
 
     @Override
@@ -208,16 +195,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> WriteResult delete(final Query<T> query, final WriteConcern wc) {
-        return delete(query, new DeleteOptions().writeConcern(wc));
-    }
-
-    @Override
     public <T> WriteResult delete(final T entity) {
         return delete(entity, getWriteConcern(entity));
     }
 
-    @Override
     public <T> WriteResult delete(final T entity, final WriteConcern wc) {
         return delete(entity, new DeleteOptions().writeConcern(wc));
     }
@@ -312,22 +293,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Query<T> find(final Class<T> clazz) {
         return createQuery(clazz);
-    }
-
-    @Override
-    @Deprecated
-    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value) {
-        final Query<T> query = createQuery(clazz);
-        return query.filter(property, value);
-    }
-
-    @Override
-    @Deprecated
-    public <T, V> Query<T> find(final Class<T> clazz, final String property, final V value, final int offset, final int size) {
-        final Query<T> query = createQuery(clazz);
-        query.offset(offset);
-        query.limit(size);
-        return query.filter(property, value);
     }
 
     @Override
@@ -511,24 +476,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         return enforceWriteConcern(collection, clazz);
     }
 
-    @Override
-    public <T> long getCount(final T entity) {
-        return find(ProxyHelper.unwrap(entity).getClass()).count();
-    }
-
-    @Override
     public <T> long getCount(final Class<T> clazz) {
         return find(clazz).count();
     }
 
-    @Override
     public <T> long getCount(final Query<T> query) {
         return query.count();
-    }
-
-    @Override
-    public <T> long getCount(final Query<T> query, final CountOptions options) {
-        return query.count(options);
     }
 
     @Override
@@ -729,8 +682,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                : save(entities, getWriteConcern(iterator.next()));
     }
 
-    @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
+    private <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
         return save(entities, new InsertOptions().writeConcern(wc));
     }
 
@@ -745,21 +697,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @Deprecated
-    public <T> Iterable<Key<T>> save(final T... entities) {
-        return save(asList(entities), new InsertOptions());
-    }
-
-    @Override
     public <T> Key<T> save(final T entity) {
         return save(entity, new InsertOptions());
-    }
-
-    @Override
-    @Deprecated
-    public <T> Key<T> save(final T entity, final WriteConcern wc) {
-        return save(entity, new InsertOptions()
-                                .writeConcern(wc));
     }
 
     @Override
@@ -915,42 +854,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id) {
-        return delete(find(kind, clazz).filter("_id", id));
-    }
-
-    @Override
-    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final DeleteOptions options) {
-        return delete(find(kind, clazz).filter("_id", id), options);
-    }
-
-    @Override
-    @Deprecated
-    public <T, V> WriteResult delete(final String kind, final Class<T> clazz, final V id, final WriteConcern wc) {
-        return delete(find(kind, clazz).filter("_id", id), new DeleteOptions().writeConcern(wc));
-    }
-
-    @Override
-    @Deprecated
-    public <T> void ensureIndex(final Class<T> type, final String fields) {
-        ensureIndex(type, null, fields, false, false);
-    }
-
-    @Override
-    @Deprecated
-    public <T> void ensureIndex(final Class<T> clazz, final String name, final String fields, final boolean unique,
-                                final boolean dropDupsOnCreate) {
-        MappedClass mappedClass = getMapper().getMappedClass(clazz);
-        ensureIndex(mappedClass.getCollectionName(), clazz, name, fields, unique, dropDupsOnCreate);
-    }
-
-    @Override
     public void ensureIndexes() {
         ensureIndexes(false);
     }
 
-    @Override
-    public void ensureIndexes(final boolean background) {
+    private void ensureIndexes(final boolean background) {
         for (final MappedClass mc : mapper.getMappedClasses()) {
             indexHelper.createIndex(getMongoCollection(mc.getClazz()), mc, background);
         }
@@ -961,21 +869,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         ensureIndexes(clazz, false);
     }
 
-    @Override
-    public <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
+    private <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
         indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz), background);
     }
 
-    @Override
     @Deprecated
-    public <T> void ensureIndex(final String collection, final Class<T> type, final String fields) {
-        ensureIndex(collection, type, null, fields, false, false);
-    }
-
-    @Override
-    @Deprecated
-    public <T> void ensureIndex(final String collection, final Class<T> clazz, final String name, final String fields, final boolean unique,
-                                final boolean dropDupsOnCreate) {
+    private <T> void ensureIndex(final String collection,
+                                 final Class<T> clazz,
+                                 final String name,
+                                 final String fields,
+                                 final boolean unique,
+                                 final boolean dropDupsOnCreate) {
         if (dropDupsOnCreate) {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
@@ -994,8 +898,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         ensureIndexes(collection, clazz, false);
     }
 
-    @Override
-    public <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
+    private <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
         indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz), background);
     }
 
@@ -1013,9 +916,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         return createQuery(collection, clazz);
     }
 
-    @Override
-    public <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
-                                final int size) {
+    private <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
+                                 final int size) {
         return find(collection, clazz, property, value, offset, size, true);
     }
 
@@ -1026,27 +928,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T, V> T get(final String collection, final Class<T> clazz, final V id) {
-        final List<T> results = find(collection, clazz, "_id", id, 0, 1).asList();
-        if (results == null || results.isEmpty()) {
-            return null;
-        }
-        return results.get(0);
-    }
-
-    @Override
-    public long getCount(final String collection) {
-        return getCollection(collection).count();
-    }
-
-    @Override
     public DBDecoderFactory getDecoderFact() {
         return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
-    }
-
-    @Override
-    public void setDecoderFact(final DBDecoderFactory fact) {
-        decoderFactory = fact;
     }
 
     @Override
@@ -1066,8 +949,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return insert(entity, getWriteConcern(entity));
     }
 
-    @Override
-    public <T> Key<T> insert(final T entity, final WriteConcern wc) {
+    private <T> Key<T> insert(final T entity, final WriteConcern wc) {
         return insert(entity, new InsertOptions().writeConcern(wc));
     }
 
@@ -1102,12 +984,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final WriteConcern wc) {
-        return insert(getDB().getCollection(collection), entities, new InsertOptions()
-                                                                       .writeConcern(wc));
-    }
-
-    @Override
     public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final InsertOptions options) {
         return insert(getDB().getCollection(collection), entities, options);
     }
@@ -1123,8 +999,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return save(collection, entity, getWriteConcern(unwrapped));
     }
 
-    @Override
-    public <T> Key<T> save(final String collection, final T entity, final WriteConcern wc) {
+    private <T> Key<T> save(final String collection, final T entity, final WriteConcern wc) {
         return save(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOptions().writeConcern(wc));
     }
 

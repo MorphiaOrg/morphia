@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Options to control mapping behavior.
  */
-@SuppressWarnings("deprecation")
 public class MapperOptions {
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
     private boolean ignoreFinals; //ignore final fields.

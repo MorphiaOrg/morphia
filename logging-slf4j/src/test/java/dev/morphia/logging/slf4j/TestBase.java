@@ -8,7 +8,6 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 
 
-@SuppressWarnings("deprecation")
 public abstract class TestBase {
 
     private DB db;

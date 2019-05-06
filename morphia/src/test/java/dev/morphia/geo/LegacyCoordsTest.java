@@ -61,7 +61,6 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void shouldGenerateCorrectQueryForNearSphereWithRadius() {
         // when
         Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
@@ -76,7 +75,6 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void shouldGenerateCorrectQueryForNearWithMaxDistance() {
         // when
         Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)

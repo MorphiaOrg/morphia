@@ -20,19 +20,19 @@ public class TestCapped extends TestBase {
         // when-then
         final CurrentStatus cs = new CurrentStatus("All Good");
         getDs().save(cs);
-        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertEquals(1, getDs().find(CurrentStatus.class).count());
         getDs().save(new CurrentStatus("Kinda Bad"));
-        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertEquals(1, getDs().find(CurrentStatus.class).count());
         assertTrue(getDs().find(CurrentStatus.class)
                           .find(new FindOptions().limit(1))
                           .next()
                        .message.contains("Bad"));
         getDs().save(new CurrentStatus("Kinda Bad2"));
-        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertEquals(1, getDs().find(CurrentStatus.class).count());
         getDs().save(new CurrentStatus("Kinda Bad3"));
-        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertEquals(1, getDs().find(CurrentStatus.class).count());
         getDs().save(new CurrentStatus("Kinda Bad4"));
-        assertEquals(1, getDs().getCount(CurrentStatus.class));
+        assertEquals(1, getDs().find(CurrentStatus.class).count());
     }
 
     @Entity(cap = @CappedAt(count = 1))

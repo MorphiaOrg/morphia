@@ -21,7 +21,6 @@ import java.util.Iterator;
  * @deprecated This feature will not be supported in 2.0
  */
 @NotSaved
-@SuppressWarnings("deprecation")
 @Deprecated
 public class MapreduceResults<T> implements Iterable<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MapreduceResults.class);

@@ -11,7 +11,6 @@ import dev.morphia.utils.Assert;
 import java.util.Collections;
 
 
-@SuppressWarnings("deprecation")
 public class TestQueryParams extends TestBase {
     private FieldEnd<?> e;
 
