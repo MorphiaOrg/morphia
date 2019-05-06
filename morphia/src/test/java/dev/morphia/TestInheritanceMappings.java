@@ -74,7 +74,7 @@ public class TestInheritanceMappings extends TestBase {
         c.b = "eh";
         c.setK(12L);
         getDs().save(c);
-        c = getDs().get(ParameterizedEntity.class, "foo");
+        c = getDs().find(ParameterizedEntity.class).filter("_id", "foo").first();
         assertNotNull(c.getId());
         assertNotNull(c.b);
         assertNotNull(c.getK());
@@ -91,7 +91,7 @@ public class TestInheritanceMappings extends TestBase {
         ParameterizedIdEntity c = new ParameterizedIdEntity();
         c.setId("foo");
         getDs().save(c);
-        c = getDs().get(ParameterizedIdEntity.class, "foo");
+        c = getDs().find(ParameterizedIdEntity.class).filter("_id", "foo").first();
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());
@@ -104,7 +104,7 @@ public class TestInheritanceMappings extends TestBase {
         ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
         c.setId("foo");
         getDs().save(c);
-        c = getDs().get(ParameterizedIdEntity2.class, "foo");
+        c = getDs().find(ParameterizedIdEntity2.class).filter("_id", "foo").first();
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());

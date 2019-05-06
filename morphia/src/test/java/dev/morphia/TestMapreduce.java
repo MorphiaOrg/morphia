@@ -57,8 +57,8 @@ public class TestMapreduce extends TestBase {
 
         //create 100 circles and rectangles
         for (int i = 0; i < 100; i++) {
-            getAds().insert("shapes", new Circle(rnd.nextDouble()));
-            getAds().insert("shapes", new Rectangle(rnd.nextDouble(), rnd.nextDouble()));
+            getAds().insert(new Circle(rnd.nextDouble()));
+            getAds().insert(new Rectangle(rnd.nextDouble(), rnd.nextDouble()));
         }
         final String map = "function () { if(this['radius']) { emit('circle', {count:1}); return; } emit('rect', {count:1}); }";
         final String reduce = "function (key, values) { var total = 0; for ( var i=0; i<values.length; i++ ) {total += values[i].count;} "
@@ -67,7 +67,7 @@ public class TestMapreduce extends TestBase {
         final MapreduceResults<ResultEntity> mrRes =
             getDs().mapReduce(new MapReduceOptions<ResultEntity>()
                                   .outputType(OutputType.REPLACE)
-                                  .query(getAds().find(Shape.class))
+                                  .query(getDs().find(Shape.class))
                                   .map(map)
                                   .reduce(reduce)
                                   .resultType(ResultEntity.class));
@@ -81,7 +81,7 @@ public class TestMapreduce extends TestBase {
         final MapreduceResults<ResultEntity> inline =
             getDs().mapReduce(new MapReduceOptions<ResultEntity>()
                                   .outputType(OutputType.INLINE)
-                                  .query(getAds().find(Shape.class)).map(map).reduce(reduce)
+                                  .query(getDs().find(Shape.class)).map(map).reduce(reduce)
                                   .resultType(ResultEntity.class));
         final Iterator<ResultEntity> iterator = inline.iterator();
         Assert.assertEquals(2, count(iterator));

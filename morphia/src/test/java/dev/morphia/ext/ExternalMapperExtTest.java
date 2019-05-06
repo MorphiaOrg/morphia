@@ -53,7 +53,7 @@ public class ExternalMapperExtTest extends TestBase {
         ent.id = "test";
         final Key<EntityWithNoAnnotations> k = getDs().save(ent);
         assertNotNull(k);
-        ent = getDs().get(EntityWithNoAnnotations.class, "test");
+        ent = getDs().find(EntityWithNoAnnotations.class).filter("_id", "test").first();
         assertNotNull(ent);
         assertEquals("test", ent.id);
     }

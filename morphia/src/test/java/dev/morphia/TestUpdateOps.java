@@ -476,7 +476,7 @@ public class TestUpdateOps extends TestBase {
                       1);
 
 
-        assertThat(ds.get(Circle.class, id).getRadius(), is(originalValue));
+        assertThat(ds.find(Circle.class).filter("_id", id).first().getRadius(), is(originalValue));
     }
 
     @Test
@@ -493,7 +493,7 @@ public class TestUpdateOps extends TestBase {
                                      getDs().createUpdateOperations(Circle.class).min("radius", 5D),
                                      new UpdateOptions().upsert(true)), 1);
 
-        final Circle updatedCircle = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
         assertThat(updatedCircle, is(notNullValue()));
         assertThat(updatedCircle.getRadius(), is(originalValue));
     }
@@ -513,7 +513,7 @@ public class TestUpdateOps extends TestBase {
                                      getDs().createUpdateOperations(Circle.class).min("radius", newLowerValue),
                                      new UpdateOptions().upsert(true)), 1);
 
-        final Circle updatedCircle = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
         assertThat(updatedCircle, is(notNullValue()));
         assertThat(updatedCircle.getRadius(), is(newLowerValue));
     }
@@ -649,7 +649,7 @@ public class TestUpdateOps extends TestBase {
     public void testElemMatchUpdate() {
         // setUp
         Object id = getDs().save(new ContainsIntArray()).getId();
-        assertThat(getDs().get(ContainsIntArray.class, id).values, arrayContaining(1, 2, 3));
+        assertThat(getDs().find(ContainsIntArray.class).filter("_id", id).first().values, arrayContaining(1, 2, 3));
 
         // do patch
         Query<ContainsIntArray> q = getDs().createQuery(ContainsIntArray.class)
@@ -661,7 +661,7 @@ public class TestUpdateOps extends TestBase {
         getDs().update(q, ops);
 
         // expected
-        assertThat(getDs().get(ContainsIntArray.class, id).values, arrayContaining(1, 5, 3));
+        assertThat(getDs().find(ContainsIntArray.class).filter("_id", id).first().values, arrayContaining(1, 5, 3));
     }
 
     @Test
@@ -699,7 +699,7 @@ public class TestUpdateOps extends TestBase {
                                       new UpdateOptions()
                                           .upsert(true)));
 
-        final Circle updatedCircle = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
 
         assertThat(updatedCircle, is(notNullValue()));
         assertThat(updatedCircle.getRadius(), is(2D));
@@ -721,7 +721,7 @@ public class TestUpdateOps extends TestBase {
                                          .upsert(true)),
                       1);
 
-        final Circle updatedCircle = getDs().get(Circle.class, id);
+        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
 
         assertThat(updatedCircle, is(notNullValue()));
         assertThat(updatedCircle.getRadius(), is(1D));

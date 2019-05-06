@@ -323,7 +323,7 @@ public class Mapper {
      * @deprecated no replacement is planned
      */
     @Deprecated
-    public Class<?> getClassFromCollection(final String collection) {
+    public <T> Class<T> getClassFromCollection(final String collection) {
         final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
         if (mcs == null || mcs.isEmpty()) {
             throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
@@ -333,7 +333,7 @@ public class Mapper {
                 LOG.info(format("Found more than one class mapped to collection '%s'%s", collection, mcs));
             }
         }
-        return mcs.iterator().next().getClazz();
+        return (Class<T>) mcs.iterator().next().getClazz();
     }
 
     /**

@@ -1,10 +1,6 @@
 package dev.morphia.mapping;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import dev.morphia.AdvancedDatastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -13,6 +9,9 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Version;
 import dev.morphia.dao.BasicDAO;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.Serializable;
 
@@ -36,7 +35,7 @@ public class CompoundIdTest extends TestBase {
         entity.id = new CompoundId("test");
 
         getDs().save(entity);
-        entity = getDs().get(entity);
+        entity = getDs().find(entity.getClass()).filter("_id", entity.id).first();
         Assert.assertEquals("test", entity.id.name);
         Assert.assertNotNull(entity.id.id);
     }
@@ -47,14 +46,13 @@ public class CompoundIdTest extends TestBase {
         entity.id = new CompoundId("test");
 
         getDs().save(entity);
-        getDs().delete(getAds().find(getDs().getCollection(CompoundIdEntity.class).getName(), CompoundIdEntity.class)
+        getDs().delete(getDs().find(CompoundIdEntity.class)
                                .filter("_id", entity.id));
     }
 
     @Test
     public void testReference() {
         getMorphia().map(CompoundIdEntity.class, CompoundId.class);
-        getDs().getCollection(CompoundIdEntity.class).drop();
 
         final CompoundIdEntity sibling = new CompoundIdEntity();
         sibling.id = new CompoundId("sibling ID");

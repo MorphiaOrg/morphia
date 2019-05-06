@@ -1,6 +1,7 @@
 package dev.morphia.example;
 
 import com.mongodb.MongoClient;
+import dev.morphia.annotations.IndexOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import dev.morphia.Datastore;
@@ -83,7 +84,7 @@ public final class QuickTour {
 }
 
 @Entity("employees")
-@Indexes(@Index(value = "salary", fields = @Field("salary")))
+@Indexes(@Index(options = @IndexOptions(name = "salary"), fields = @Field("salary")))
 class Employee {
     @Id
     private ObjectId id;

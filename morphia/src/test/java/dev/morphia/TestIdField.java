@@ -48,7 +48,7 @@ public class TestIdField extends TestBase {
         getDs().save(a);
         getDs().save(b);
 
-        assertEquals(a.data, getDs().get(EmbeddedId.class, id).data);
+        assertEquals(a.data, getDs().find(EmbeddedId.class).filter("_id", id).first().data);
 
         final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).find().next();
         Assert.assertEquals(a.data, embeddedId.data);
@@ -75,7 +75,7 @@ public class TestIdField extends TestBase {
         //        Key<Rectangle> r2Key = ds.save(r2);
         final KeyAsId kai = new KeyAsId(rKey);
         final Key<KeyAsId> kaiKey = getDs().save(kai);
-        final KeyAsId kaiLoaded = getDs().get(KeyAsId.class, rKey);
+        final KeyAsId kaiLoaded = getDs().find(KeyAsId.class).filter("_id", rKey).first();
         assertNotNull(kaiLoaded);
         assertNotNull(kaiKey);
     }
@@ -87,7 +87,7 @@ public class TestIdField extends TestBase {
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
         final Key<MapAsId> maiKey = getDs().save(mai);
-        final MapAsId maiLoaded = getDs().get(MapAsId.class, new BasicDBObject("test", "string"));
+        final MapAsId maiLoaded = getDs().find(MapAsId.class).filter("_id", new BasicDBObject("test", "string")).first();
         assertNotNull(maiLoaded);
         assertNotNull(maiKey);
     }

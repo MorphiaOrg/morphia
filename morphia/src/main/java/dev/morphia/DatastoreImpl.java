@@ -13,7 +13,6 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
@@ -62,7 +61,6 @@ import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.BasicDBObjectBuilder.start;
 import static com.mongodb.DBCollection.ID_FIELD_NAME;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -377,7 +375,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return find(clazz).disableValidation().filter("_id" + " in", ids).enableValidation();
     }
 
-    @Override
     public <T, V> T get(final Class<T> clazz, final V id) {
         return find(getCollection(clazz).getName(), clazz, "_id", id, 0, 1, true).get();
     }
@@ -426,7 +423,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 objIds.add(key.getId());
             }
             final Class clazzKind = clazz == null ? kindKeys.get(0).getType() : clazz;
-            final List kindResults = find(entry.getKey(), clazzKind).disableValidation().filter("_id in", objIds).asList();
+            final List kindResults = find(entry.getKey()).disableValidation().filter("_id in", objIds).asList();
             entities.addAll(kindResults);
         }
 
@@ -727,7 +724,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> operations) {
         Class<T> clazz = (Class<T>) key.getType();
         if (clazz == null) {
-            clazz = (Class<T>) mapper.getClassFromCollection(key.getCollection());
+            clazz = mapper.getClassFromCollection(key.getCollection());
         }
         return update(createQuery(clazz).disableValidation().filter("_id", key.getId()), operations, new UpdateOptions());
     }
@@ -816,11 +813,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Query<T> createQuery(final String collection, final Class<T> type, final DBObject q) {
-        return newQuery(type, getCollection(collection), q);
-    }
-
-    @Override
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
@@ -858,45 +850,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void ensureIndexes(final String collection, final Class<T> clazz) {
-        indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz));
-    }
-
-    @Override
-    public Key<?> exists(final Object entityOrKey, final ReadPreference readPreference) {
-        final Query<?> query = buildExistsQuery(entityOrKey);
-        if (readPreference != null) {
-            query.useReadPreference(readPreference);
-        }
-        return query.getKey();
-    }
-
-    @Override
-    public <T> Query<T> find(final String collection, final Class<T> clazz) {
-        return createQuery(collection, clazz);
-    }
-
-    @Override
-    public <T> T get(final Class<T> clazz, final DBRef ref) {
-        DBObject object = getDB().getCollection(ref.getCollectionName()).findOne(new BasicDBObject("_id", ref.getId()));
-        return mapper.fromDBObject(this, clazz, object, createCache());
+    public <T> Query<T> find(final String collection) {
+        return newQuery(mapper.<T>getClassFromCollection(collection), getDB().getCollection(collection));
     }
 
     @Override
     public DBDecoderFactory getDecoderFact() {
         return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
-    }
-
-    @Override
-    public <T> Key<T> insert(final String collection, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        return insert(getCollection(collection), unwrapped, new InsertOptions()
-                                                                .writeConcern(getWriteConcern(unwrapped)));
-    }
-
-    @Override
-    public <T> Key<T> insert(final String collection, final T entity, final InsertOptions options) {
-        return insert(getCollection(collection), ProxyHelper.unwrap(entity), options);
     }
 
     @Override
@@ -915,17 +875,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @Deprecated
-    public <T> Iterable<Key<T>> insert(final T... entities) {
-        return insert(asList(entities));
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final WriteConcern wc) {
-        return insert(entities, new InsertOptions().writeConcern(wc));
-    }
-
-    @Override
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final InsertOptions options) {
         Iterator<T> iterator = entities.iterator();
         return !iterator.hasNext()
@@ -934,33 +883,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities) {
-        return insert(collection, entities, new InsertOptions());
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> insert(final String collection, final Iterable<T> entities, final InsertOptions options) {
-        return insert(getDB().getCollection(collection), entities, options);
-    }
-
-    @Override
     public <T> Query<T> queryByExample(final String collection, final T ex) {
         return queryByExample(getDB().getCollection(collection), ex);
-    }
-
-    @Override
-    public <T> Key<T> save(final String collection, final T entity) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(collection, entity, getWriteConcern(unwrapped));
-    }
-
-    private <T> Key<T> save(final String collection, final T entity, final WriteConcern wc) {
-        return save(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOptions().writeConcern(wc));
-    }
-
-    @Override
-    public <T> Key<T> save(final String collection, final T entity, final InsertOptions options) {
-        return save(getCollection(collection), ProxyHelper.unwrap(entity), options);
     }
 
     /**
@@ -980,7 +904,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      */
     public <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
                                 final int size, final boolean validate) {
-        final Query<T> query = find(collection, clazz);
+        final Query<T> query = find(collection);
         if (!validate) {
             query.disableValidation();
         }
@@ -1193,7 +1117,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
-            final Query<?> query = find(dbColl.getName(), entity.getClass())
+            final Query<?> query = find(dbColl.getName())
                                        .disableValidation()
                                        .filter("_id", idValue)
                                        .enableValidation()
@@ -1223,7 +1147,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        return find(key.getCollection(), key.getType()).filter("_id", key.getId());
+        return find(key.getCollection()).filter("_id", key.getId());
     }
 
     private EntityCache createCache() {

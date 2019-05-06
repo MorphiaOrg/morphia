@@ -119,7 +119,7 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().find(Hotel.class).count());
         assertNotNull(borg.getId());
 
-        final Hotel hotelLoaded = getDs().get(Hotel.class, borg.getId());
+        final Hotel hotelLoaded = getDs().find(Hotel.class).filter("_id", borg.getId()).first();
         assertEquals(borg.getName(), hotelLoaded.getName());
         assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
     }
@@ -131,18 +131,8 @@ public class TestDatastore extends TestBase {
         final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
 
         // expect
-        assertNotNull(getDs().get(FacebookUser.class, id));
+        assertNotNull(getDs().find(FacebookUser.class).filter("_id", id).first());
         assertNotNull(getDs().exists(key));
-    }
-
-    @Test
-    @Ignore
-    public void testExistsWhenSecondaryPreferred() {
-        if (isReplicaSet()) {
-            final Key<FacebookUser> key = getDs().save(new FacebookUser(System.currentTimeMillis(), "user 1"),
-                                                       new InsertOptions().writeConcern(W2));
-            assertNotNull("Should exist when using secondaryPreferred", getAds().exists(key, secondaryPreferred()));
-        }
     }
 
 
@@ -151,7 +141,7 @@ public class TestDatastore extends TestBase {
         final FacebookUser facebookUser = new FacebookUser(1, "user one");
         getDs().save(facebookUser);
         assertEquals(1, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().get(FacebookUser.class, 1));
+        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
         assertNotNull(getDs().exists(facebookUser));
         getDs().delete(getDs().find(FacebookUser.class));
         assertEquals(0, getDs().find(FacebookUser.class).count());
@@ -169,7 +159,7 @@ public class TestDatastore extends TestBase {
 
         getDs().save(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().get(FacebookUser.class, 1));
+        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
         List<FacebookUser> res = toList(getDs().get(FacebookUser.class, asList(1L, 2L)).find());
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
@@ -180,7 +170,7 @@ public class TestDatastore extends TestBase {
         getDs().getCollection(FacebookUser.class).remove(new BasicDBObject());
         getAds().insert(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().get(FacebookUser.class, 1));
+        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
         res = toList(getDs().get(FacebookUser.class, asList(1L, 2L)).find());
         assertEquals(2, res.size());
         assertNotNull(res.get(0));

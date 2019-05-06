@@ -16,6 +16,7 @@
 
 package dev.morphia;
 
+import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -29,50 +30,33 @@ import static java.util.Collections.emptyList;
 public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testInsert() {
-        String name = "some_collection";
-        MongoCollection<Document> collection = getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name);
-        this.getAds().insert(name, new TestEntity());
+        DBCollection collection = getDs().getCollection(TestEntity.class);
+        this.getAds().insert(new TestEntity());
         Assert.assertEquals(1, collection.count());
-        this.getAds().insert(name, new TestEntity(), new InsertOptions()
+        this.getAds().insert(new TestEntity(), new InsertOptions()
             .writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(2, collection.count());
     }
 
     @Test
     public void testBulkInsert() {
+
+        DBCollection collection = getDs().getCollection(TestEntity.class);
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
-        String name = "some_collection";
-        MongoCollection<Document> collection = getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name);
-        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(5, collection.count());
+
         collection.drop();
-        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions()
                                  .writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(5, collection.count());
     }
 
     @Test
-    public void testBulkInsertWithNullWC() {
-        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions());
-        Assert.assertEquals(5, getDs().getCollection(TestEntity.class).count());
-
-        String name = "some_collection";
-        this.getAds().insert(name, asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions());
-        Assert.assertEquals(5, getMongoClient().getDatabase(TEST_DB_NAME).getCollection(name).count());
-    }
-
-    @Test
     public void testInsertEmpty() {
         this.getAds().insert(emptyList());
         this.getAds().insert(emptyList(), new InsertOptions()
-            .writeConcern(WriteConcern.ACKNOWLEDGED));
-        this.getAds().insert("some_collection", emptyList(), new InsertOptions()
             .writeConcern(WriteConcern.ACKNOWLEDGED));
     }
 }

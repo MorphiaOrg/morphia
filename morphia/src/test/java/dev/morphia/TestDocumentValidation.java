@@ -24,16 +24,17 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.annotations.Validation;
 import dev.morphia.entities.DocumentValidation;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
+import dev.morphia.testmodel.User;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -217,25 +218,23 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
-    public void saveToNewCollection() {
-        getMorphia().map(DocumentValidation.class);
-        final Document validator = Document.parse("{ \"number\" : { \"$gt\" : 10 } }");
-        String collection = "newdocs";
-        addValidation(validator, collection);
+    public void testBypassDocumentValidation() {
+        checkMinServerVersion(3.2);
+        getMorphia().map(User.class);
+        getDs().enableDocumentValidation();
+
+        final User user = new User("Jim Halpert", new Date());
+        user.age = 5;
 
         try {
-            getAds().save(collection, new DocumentValidation("Harold", 8, new Date()));
-            fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
-            // expected
+            getDs().save(user);
+            fail("Document validation should have rejected the document");
+        } catch (WriteConcernException ignored) {
         }
 
-        getAds().save(collection, new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
-                    .bypassDocumentValidation(true));
+        getDs().save(user, new InsertOptions().bypassDocumentValidation(true));
 
-        Query<DocumentValidation> query = getAds().createQuery(collection, DocumentValidation.class)
-                                                 .field("number").equal(8);
-        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
+        Assert.assertEquals(1, getDs().find(User.class).count());
     }
 
     @Test

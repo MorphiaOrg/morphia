@@ -59,7 +59,7 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(lazyList);
         getDs().save(parent);
 
-        ComplexParent complexParent = getDs().get(ComplexParent.class, parent.id);
+        ComplexParent complexParent = getDs().find(ComplexParent.class).filter("_id", parent.id).first();
         assertEquals(parent, complexParent);
     }
 

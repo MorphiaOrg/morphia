@@ -1083,7 +1083,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonexistentGet() {
-        assertNull(getDs().get(Hotel.class, -1));
+        assertNull(getDs().find(Hotel.class).filter("_id", -1).first());
     }
 
     @Test

@@ -96,7 +96,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
 
-        final MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection, Object.class)
+        final MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
                                                                           .disableValidation()
                                                                           .filter("_id in ", collectionIds)
                                                                           .find();

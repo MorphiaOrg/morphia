@@ -17,7 +17,7 @@ public class TestInheritance extends TestBase {
         getDs().save(jimmy);
 
         // when
-        final Child loaded = getDs().get(Child.class, jimmy.getId());
+        final Child loaded = getDs().find(Child.class).filter("_id", jimmy.getId()).first();
 
         // then
         assertNotNull(loaded);

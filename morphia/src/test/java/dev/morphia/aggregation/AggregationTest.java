@@ -27,6 +27,7 @@ import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
+import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -92,37 +93,6 @@ public class AggregationTest extends TestBase {
                                 .collationStrength(
                                         CollationStrength.SECONDARY)
                                 .build()).build())));
-    }
-
-    @Test
-    public void testBypassDocumentValidation() {
-        checkMinServerVersion(3.2);
-        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
-
-        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
-        database.getCollection("out_users").drop();
-        database.createCollection("out_users", new CreateCollectionOptions()
-            .validationOptions(new ValidationOptions()
-                                   .validator(Document.parse("{ \"age\" : { \"gte\" : 13 } }"))));
-
-        try {
-            getDs()
-                    .createAggregation(User.class)
-                    .match(getDs().find(User.class).field("name").equal("john doe"))
-                    .out("out_users", User.class);
-            fail("Document validation should have complained.");
-        } catch (MongoCommandException e) {
-            // expected
-        }
-
-        getDs()
-                .createAggregation(User.class)
-                .match(getDs().find(User.class).field("name").equal("john doe"))
-                .out("out_users", User.class, builder()
-                        .bypassDocumentValidation(true)
-                        .build());
-
-        Assert.assertEquals(1, getAds().find("out_users", User.class).count());
     }
 
     @Test
@@ -938,31 +908,6 @@ public class AggregationTest extends TestBase {
                     + "id=" + id
                     + ", count=" + count
                     + '}';
-        }
-    }
-
-    @Entity("users")
-    @Validation("{ age : { $gte : 13 } }")
-    private static final class User {
-        @Id
-        private ObjectId id;
-        private String name;
-        private Date joined;
-        private List<String> likes;
-        private int age;
-
-        private User() {
-        }
-
-        private User(final String name, final Date joined, final String... likes) {
-            this.name = name;
-            this.joined = joined;
-            this.likes = asList(likes);
-        }
-
-        @Override
-        public String toString() {
-            return format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
         }
     }
 

@@ -97,22 +97,6 @@ public class TestTextIndexing extends TestBase {
 
     }
 
-    @Test
-    public void testTextIndexOnNamedCollection() {
-        getMorphia().map(TextIndexAll.class);
-        getAds().ensureIndexes("randomCollection", TextIndexAll.class);
-
-        List<DBObject> indexInfo = getDb().getCollection("randomCollection").getIndexInfo();
-        Assert.assertEquals(2, indexInfo.size());
-        for (DBObject dbObject : indexInfo) {
-            if (!dbObject.get("name").equals("_id_")) {
-                Assert.assertEquals(1, ((DBObject) dbObject.get("weights")).get("$**"));
-                Assert.assertEquals("english", dbObject.get("default_language"));
-                Assert.assertEquals("language", dbObject.get("language_override"));
-            }
-        }
-    }
-
     @Entity
     @Indexes(@Index(fields = @Field(value = "$**", type = TEXT)))
     private static class TextIndexAll {

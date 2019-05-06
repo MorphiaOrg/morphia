@@ -84,7 +84,7 @@ public class TestMapping extends TestBase {
         assertEquals(cilLoaded.intList.size(), cil.intList.size());
         assertEquals(cilLoaded.intList.get(0), cil.intList.get(0));
 
-        final ContainsIntegerListNew cilNew = getDs().get(ContainsIntegerListNew.class, cil.id);
+        final ContainsIntegerListNew cilNew = getDs().find(ContainsIntegerListNew.class).filter("_id", cil.id).first();
         assertNotNull(cilNew);
         assertNotNull(cilNew.integers);
         assertEquals(1, cilNew.integers.size());
@@ -165,7 +165,7 @@ public class TestMapping extends TestBase {
     public void testByteArrayMapping() {
         getMorphia().map(ContainsByteArray.class);
         final Key<ContainsByteArray> savedKey = getDs().save(new ContainsByteArray());
-        final ContainsByteArray loaded = getDs().get(ContainsByteArray.class, savedKey.getId());
+        final ContainsByteArray loaded = getDs().find(ContainsByteArray.class).filter("_id", savedKey.getId()).first();
         assertEquals(new String((new ContainsByteArray()).bytes), new String(loaded.bytes));
         assertNotNull(loaded.id);
     }
@@ -174,7 +174,7 @@ public class TestMapping extends TestBase {
     public void testCollectionMapping() {
         getMorphia().map(ContainsCollection.class);
         final Key<ContainsCollection> savedKey = getDs().save(new ContainsCollection());
-        final ContainsCollection loaded = getDs().get(ContainsCollection.class, savedKey.getId());
+        final ContainsCollection loaded = getDs().find(ContainsCollection.class).filter("_id", savedKey.getId()).first();
         assertEquals(loaded.coll, (new ContainsCollection()).coll);
         assertNotNull(loaded.id);
     }
@@ -263,7 +263,7 @@ public class TestMapping extends TestBase {
 
         final Key<?> mapKey = getDs().save(map);
 
-        final ContainsEnum1KeyMap mapLoaded = getDs().get(ContainsEnum1KeyMap.class, mapKey.getId());
+        final ContainsEnum1KeyMap mapLoaded = getDs().find(ContainsEnum1KeyMap.class).filter("_id", mapKey.getId()).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -278,7 +278,7 @@ public class TestMapping extends TestBase {
     public void testFinalField() {
         getMorphia().map(ContainsFinalField.class);
         final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
-        final ContainsFinalField loaded = getDs().get(ContainsFinalField.class, savedKey.getId());
+        final ContainsFinalField loaded = getDs().find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
         assertNotNull(loaded.name);
         assertEquals("blah", loaded.name);
@@ -289,7 +289,7 @@ public class TestMapping extends TestBase {
         getMorphia().getMapper().getOptions().setIgnoreFinals(true);
         getMorphia().map(ContainsFinalField.class);
         final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
-        final ContainsFinalField loaded = getDs().get(ContainsFinalField.class, savedKey.getId());
+        final ContainsFinalField loaded = getDs().find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
         assertNotNull(loaded.name);
         assertEquals("foo", loaded.name);
@@ -299,7 +299,7 @@ public class TestMapping extends TestBase {
     public void testFinalIdField() {
         getMorphia().map(HasFinalFieldId.class);
         final Key<HasFinalFieldId> savedKey = getDs().save(new HasFinalFieldId(12));
-        final HasFinalFieldId loaded = getDs().get(HasFinalFieldId.class, savedKey.getId());
+        final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
         assertNotNull(loaded.id);
         assertEquals(12, loaded.id);
@@ -315,7 +315,7 @@ public class TestMapping extends TestBase {
 
         final Key<ContainsXKeyMap<Integer>> mapKey = getDs().save(map);
 
-        final ContainsXKeyMap<Integer> mapLoaded = getDs().get(ContainsXKeyMap.class, mapKey.getId());
+        final ContainsXKeyMap<Integer> mapLoaded = getDs().find(ContainsXKeyMap.class).filter("_id", mapKey.getId()).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -336,7 +336,9 @@ public class TestMapping extends TestBase {
 
         final Key<?> mapKey = getDs().save(map);
 
-        final ContainsIntKeySetStringMap mapLoaded = getDs().get(ContainsIntKeySetStringMap.class, mapKey.getId());
+        final ContainsIntKeySetStringMap mapLoaded = getDs().find(ContainsIntKeySetStringMap.class)
+                                                            .filter("_id", mapKey.getId())
+                                                            .first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -358,7 +360,7 @@ public class TestMapping extends TestBase {
 
         final Key<?> mapKey = getDs().save(map);
 
-        final ContainsIntKeyMap mapLoaded = getDs().get(ContainsIntKeyMap.class, mapKey.getId());
+        final ContainsIntKeyMap mapLoaded = getDs().find(ContainsIntKeyMap.class).filter("_id", mapKey.getId()).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -509,7 +511,7 @@ public class TestMapping extends TestBase {
 
         final Key<?> mapKey = getDs().save(map);
 
-        final ContainsObjectIdKeyMap mapLoaded = getDs().get(ContainsObjectIdKeyMap.class, mapKey.getId());
+        final ContainsObjectIdKeyMap mapLoaded = getDs().find(ContainsObjectIdKeyMap.class).filter("_id", mapKey.getId()).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -531,7 +533,9 @@ public class TestMapping extends TestBase {
         primMap.values.put("second", 2L);
         final Key<ContainsPrimitiveMap> primMapKey = getDs().save(primMap);
 
-        final ContainsPrimitiveMap primMapLoaded = getDs().get(ContainsPrimitiveMap.class, primMapKey.getId());
+        final ContainsPrimitiveMap primMapLoaded = getDs().find(ContainsPrimitiveMap.class)
+                                                          .filter("_id", primMapKey.getId())
+                                                          .first();
 
         assertNotNull(primMapLoaded);
         assertEquals(2, primMapLoaded.embeddedValues.size());
@@ -547,7 +551,9 @@ public class TestMapping extends TestBase {
         primMap.values.put("second", 2L);
         final Key<ContainsPrimitiveMap> primMapKey = getDs().save(primMap);
 
-        final ContainsPrimitiveMap primMapLoaded = getDs().get(ContainsPrimitiveMap.class, primMapKey.getId());
+        final ContainsPrimitiveMap primMapLoaded = getDs().find(ContainsPrimitiveMap.class)
+                                                          .filter("_id", primMapKey.getId())
+                                                          .first();
 
         assertNotNull(primMapLoaded);
         assertEquals(2, primMapLoaded.embeddedValues.size());
@@ -610,7 +616,7 @@ public class TestMapping extends TestBase {
     public void testSerializedMapping() {
         getMorphia().map(ContainsSerializedData.class);
         final Key<ContainsSerializedData> savedKey = getDs().save(new ContainsSerializedData());
-        final ContainsSerializedData loaded = getDs().get(ContainsSerializedData.class, savedKey.getId());
+        final ContainsSerializedData loaded = getDs().find(ContainsSerializedData.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded.data);
         assertEquals(loaded.data.someString, (new ContainsSerializedData()).data.someString);
         assertNotNull(loaded.id);
@@ -621,7 +627,7 @@ public class TestMapping extends TestBase {
         getMorphia().map(ContainsTimestamp.class);
         final ContainsTimestamp cts = new ContainsTimestamp();
         final Key<ContainsTimestamp> savedKey = getDs().save(cts);
-        final ContainsTimestamp loaded = getDs().get(ContainsTimestamp.class, savedKey.getId());
+        final ContainsTimestamp loaded = getDs().find(ContainsTimestamp.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded.ts);
         assertEquals(loaded.ts.getTime(), cts.ts.getTime());
 
@@ -648,7 +654,7 @@ public class TestMapping extends TestBase {
         final ContainsUuidId uuidId = new ContainsUuidId();
         final UUID before = uuidId.id;
         getDs().save(uuidId);
-        final ContainsUuidId loaded = getDs().get(ContainsUuidId.class, before);
+        final ContainsUuidId loaded = getDs().find(ContainsUuidId.class).filter("_id", before).first();
         assertNotNull(loaded);
         assertNotNull(loaded.id);
         assertEquals(before, loaded.id);

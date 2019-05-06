@@ -61,7 +61,7 @@ public class CustomConverterInEmbedTest extends TestBase {
         bar.foo = new ArrayFoo("firstValue", "secondValue");
         getDs().save(bar);
 
-        ArrayBar fromDb = getDs().get(ArrayBar.class, bar.getId());
+        ArrayBar fromDb = getDs().find(ArrayBar.class).filter("_id", bar.getId()).first();
         assertThat("bar is not null", fromDb, notNullValue());
         assertThat("foo is not null", fromDb.foo, notNullValue());
         assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));
@@ -74,7 +74,7 @@ public class CustomConverterInEmbedTest extends TestBase {
         bar.foo = new ComplexFoo("firstValue", "secondValue");
         getDs().save(bar);
 
-        ComplexBar fromDb = getDs().get(ComplexBar.class, bar.getId());
+        ComplexBar fromDb = getDs().find(ComplexBar.class).filter("_id", bar.getId()).first();
         assertThat("bar is not null", fromDb, notNullValue());
         assertThat("foo is not null", fromDb.foo, notNullValue());
         assertThat("foo has the correct first value", fromDb.foo.first(), equalTo("firstValue"));

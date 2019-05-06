@@ -231,19 +231,6 @@ public interface Datastore {
     <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids);
 
     /**
-     * Find the given entity (by id); shorthand for {@code find("_id ", id)}
-     *
-     * @param clazz the class to use for mapping
-     * @param id    the ID to query
-     * @param <T>   the type to fetch
-     * @param <V>   the type of the ID
-     * @return the matched entity.  may be null.
-     * @deprecated use {@link Query} instead
-     */
-    @Deprecated
-    <T, V> T get(Class<T> clazz, V id);
-
-    /**
      * Find the given entity (by collectionName/id); think of this as refresh
      *
      * @param entity The entity to search for

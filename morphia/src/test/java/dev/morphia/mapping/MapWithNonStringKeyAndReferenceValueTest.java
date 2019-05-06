@@ -31,7 +31,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
         getDs().save(asList(ce1, ce2, pe));
 
-        final ParentEntity fetched = getDs().get(ParentEntity.class, pe.getId());
+        final ParentEntity fetched = getDs().find(ParentEntity.class).filter("_id", pe.getId()).first();
         Assert.assertNotNull(fetched);
         Assert.assertNotNull(fetched.childMap);
         Assert.assertEquals(2, fetched.childMap.size());
@@ -59,7 +59,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
         getDs().save(asList(ce1, ce2, pe));
 
-        final ParentEntity fetched = getDs().get(ParentEntity.class, pe.getId());
+        final ParentEntity fetched = getDs().find(ParentEntity.class).filter("_id", pe.getId()).first();
         Assert.assertNotNull(fetched);
         assertIsProxy(fetched.lazyChildMap);
         assertNotFetched(fetched.lazyChildMap);

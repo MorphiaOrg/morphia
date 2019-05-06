@@ -63,8 +63,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
     @SuppressWarnings("unchecked")
     private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
 
-        final Class<?> collectionType = getMappedClass().getClazz();
-        final MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection, collectionType)
+        final MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection)
                                                                                            .filter("_id in ", collectionIds)
                                                                                            .find();
         try {
