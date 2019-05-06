@@ -252,12 +252,12 @@ final class IndexHelper {
         return keys;
     }
 
-    com.mongodb.client.model.IndexOptions convert(final IndexOptions options, final boolean background) {
+    com.mongodb.client.model.IndexOptions convert(final IndexOptions options) {
         if (options.dropDups()) {
             LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
         }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-                                                                 .background(options.background() || background)
+                                                                 .background(options.background())
                                                                  .sparse(options.sparse())
                                                                  .unique(options.unique());
 
@@ -341,19 +341,19 @@ final class IndexHelper {
         return namePath;
     }
 
-    void createIndex(final MongoCollection collection, final MappedClass mc, final boolean background) {
+    void createIndex(final MongoCollection collection, final MappedClass mc) {
         if (!mc.isInterface() && !mc.isAbstract()) {
             for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
-                createIndex(collection, mc, index, background);
+                createIndex(collection, mc, index);
             }
         }
     }
 
-    void createIndex(final MongoCollection collection, final MappedClass mc, final Index index, final boolean background) {
+    void createIndex(final MongoCollection collection, final MappedClass mc, final Index index) {
         Index normalized = IndexBuilder.normalize(index);
 
         BsonDocument keys = calculateKeys(mc, normalized);
-        com.mongodb.client.model.IndexOptions indexOptions = convert(normalized.options(), background);
+        com.mongodb.client.model.IndexOptions indexOptions = convert(normalized.options());
         calculateWeights(normalized, indexOptions);
 
         collection.createIndex(keys, indexOptions);

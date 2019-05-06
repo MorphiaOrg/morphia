@@ -181,14 +181,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return dbColl.remove(query.getQueryObject(), enforceWriteConcern(options, query.getEntityClass()).getOptions());
     }
 
-    public <T, V> WriteResult delete(final Class<T> clazz, final V id) {
-        return delete(clazz, id, new DeleteOptions().writeConcern(getWriteConcern(clazz)));
-    }
-
-    private <T, V> WriteResult delete(final Class<T> clazz, final V id, final DeleteOptions options) {
-        return delete(createQuery(clazz).filter("_id", id), options);
-    }
-
     @Override
     public <T> WriteResult delete(final Query<T> query) {
         return delete(query, new DeleteOptions().writeConcern(getWriteConcern(query.getEntityClass())));
@@ -196,11 +188,11 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> WriteResult delete(final T entity) {
-        return delete(entity, getWriteConcern(entity));
+        return delete(entity, new DeleteOptions().writeConcern(getWriteConcern(entity)));
     }
 
     public <T> WriteResult delete(final T entity, final WriteConcern wc) {
-        return delete(entity, new DeleteOptions().writeConcern(wc));
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -217,7 +209,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
         try {
-            return delete(wrapped.getClass(), mapper.getId(wrapped), options);
+            return delete(createQuery(wrapped.getClass()).filter("_id", mapper.getId(wrapped)), options);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -855,51 +847,19 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public void ensureIndexes() {
-        ensureIndexes(false);
-    }
-
-    private void ensureIndexes(final boolean background) {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            indexHelper.createIndex(getMongoCollection(mc.getClazz()), mc, background);
+            indexHelper.createIndex(getMongoCollection(mc.getClazz()), mc);
         }
     }
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
-        ensureIndexes(clazz, false);
-    }
-
-    private <T> void ensureIndexes(final Class<T> clazz, final boolean background) {
-        indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz), background);
-    }
-
-    @Deprecated
-    private <T> void ensureIndex(final String collection,
-                                 final Class<T> clazz,
-                                 final String name,
-                                 final String fields,
-                                 final boolean unique,
-                                 final boolean dropDupsOnCreate) {
-        if (dropDupsOnCreate) {
-            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
-        }
-
-        indexHelper.createIndex(getMongoCollection(collection, clazz), getMapper().getMappedClass(clazz),
-            new IndexBuilder()
-                .fields(fields)
-                .options(new IndexOptionsBuilder()
-                             .name(name)
-                             .unique(unique)
-                        ), false);
+        indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz));
     }
 
     @Override
     public <T> void ensureIndexes(final String collection, final Class<T> clazz) {
-        ensureIndexes(collection, clazz, false);
-    }
-
-    private <T> void ensureIndexes(final String collection, final Class<T> clazz, final boolean background) {
-        indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz), background);
+        indexHelper.createIndex(getMongoCollection(collection, clazz), mapper.getMappedClass(clazz));
     }
 
     @Override
@@ -914,11 +874,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Query<T> find(final String collection, final Class<T> clazz) {
         return createQuery(collection, clazz);
-    }
-
-    private <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
-                                 final int size) {
-        return find(collection, clazz, property, value, offset, size, true);
     }
 
     @Override

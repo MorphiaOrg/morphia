@@ -113,7 +113,7 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMorphia().getMapper();
 
-        indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class), false);
+        indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class));
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
         assertEquals("Should have 6 indexes", 6, indexInfo.size());
@@ -140,7 +140,7 @@ public class IndexHelperTest extends TestBase {
         }
 
         collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getName());
-        indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class), false);
+        indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class));
         indexInfo = getDs().getCollection(AbstractParent.class).getIndexInfo();
         assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());
 
@@ -179,7 +179,7 @@ public class IndexHelperTest extends TestBase {
                         .value("text")
                         .type(IndexType.DESC))
             .options(indexOptions());
-        indexHelper.createIndex(indexes, mappedClass, index, false);
+        indexHelper.createIndex(indexes, mappedClass, index);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
         for (DBObject dbObject : indexInfo) {
@@ -223,7 +223,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void indexOptionsConversion() {
         IndexOptionsBuilder indexOptions = indexOptions();
-        com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions, false);
+        com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions);
         assertEquals("index_name", options.getName());
         assertTrue(options.isBackground());
         assertTrue(options.isUnique());
@@ -233,11 +233,11 @@ public class IndexHelperTest extends TestBase {
         assertEquals("de", options.getLanguageOverride());
         assertEquals(indexHelper.convert(indexOptions.collation()), options.getCollation());
 
-        assertTrue(indexHelper.convert(indexOptions, true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(false), true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(true), true).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(true), false).isBackground());
-        assertFalse(indexHelper.convert(indexOptions.background(false), false).isBackground());
+        assertTrue(indexHelper.convert(indexOptions).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(false)).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(true)).isBackground());
+        assertTrue(indexHelper.convert(indexOptions.background(true)).isBackground());
+        assertFalse(indexHelper.convert(indexOptions.background(false)).isBackground());
 
     }
 
@@ -255,7 +255,7 @@ public class IndexHelperTest extends TestBase {
             .sparse(true)
             .unique(true)
             .value("indexName, -text");
-        indexHelper.createIndex(indexes, mappedClass, index, false);
+        indexHelper.createIndex(indexes, mappedClass, index);
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
         for (DBObject dbObject : indexInfo) {
@@ -342,7 +342,7 @@ public class IndexHelperTest extends TestBase {
                         .value("$**")
                         .type(IndexType.TEXT));
 
-        indexHelper.createIndex(indexes, mappedClass, index, false);
+        indexHelper.createIndex(indexes, mappedClass, index);
 
         List<DBObject> wildcard = getDb().getCollection("indexes").getIndexInfo();
         boolean found = false;
@@ -362,7 +362,7 @@ public class IndexHelperTest extends TestBase {
                         .value("name")
                         .weight(10));
 
-        indexHelper.createIndex(indexes, mappedClass, index, false);
+        indexHelper.createIndex(indexes, mappedClass, index);
     }
 
     @Test
@@ -375,7 +375,7 @@ public class IndexHelperTest extends TestBase {
             .options(new IndexOptionsBuilder()
                          .partialFilter("{ name : { $gt : 13 } }"));
 
-        indexHelper.createIndex(collection, mappedClass, index, false);
+        indexHelper.createIndex(collection, mappedClass, index);
         findPartialIndex(BasicDBObject.parse(index.options().partialFilter()));
     }
     @Test
@@ -387,7 +387,7 @@ public class IndexHelperTest extends TestBase {
             .options(new IndexOptionsBuilder()
                          .partialFilter("{ name : { $gt : 13 } }"));
 
-        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(indexed, "text"), false);
+        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(indexed, "text"));
         findPartialIndex(BasicDBObject.parse(indexed.options().partialFilter()));
     }
 
@@ -401,7 +401,7 @@ public class IndexHelperTest extends TestBase {
             .options(new IndexOptionsBuilder()
                          .partialFilter("{ name : { $gt : 13 } }"));
 
-        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(text, "text"), false);
+        indexHelper.createIndex(collection, mappedClass, indexHelper.convert(text, "text"));
         findPartialIndex(BasicDBObject.parse(text.options().partialFilter()));
     }
 
