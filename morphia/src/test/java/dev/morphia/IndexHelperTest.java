@@ -43,6 +43,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -116,21 +117,17 @@ public class IndexHelperTest extends TestBase {
         indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class));
         List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
                                           .getIndexInfo();
-        assertEquals("Should have 6 indexes", 6, indexInfo.size());
+        List<String> names = new ArrayList<String>(asList("latitude_1", "searchme", "indexName_1"));
         for (DBObject dbObject : indexInfo) {
             String name = dbObject.get("name").toString();
             if (name.equals("latitude_1")) {
+                names.remove(name);
                 assertEquals(parse("{ 'latitude' : 1 }"), dbObject.get("key"));
-            } else if (name.equals("behind_interface")) {
-                assertEquals(parse("{ 'nest.name' : -1} "), dbObject.get("key"));
-                assertEquals(parse("{ 'locale' : 'en' , 'caseLevel' : false , 'caseFirst' : 'off' , 'strength' : 2 , 'numericOrdering' :"
-                                       + " false , 'alternate' : 'non-ignorable' , 'maxVariable' : 'punct' , 'normalization' : false , "
-                                       + "'backwards' : false , 'version' : '57.1'}"), dbObject.get("collation"));
-            } else if (name.equals("nest.name_1")) {
-                assertEquals(parse("{ 'nest.name' : 1} "), dbObject.get("key"));
             } else if (name.equals("searchme")) {
+                names.remove(name);
                 assertEquals(parse("{ 'text' : 10 }"), dbObject.get("weights"));
             } else if (name.equals("indexName_1")) {
+                names.remove(name);
                 assertEquals(parse("{'indexName': 1 }"), dbObject.get("key"));
             } else {
                 if (!"_id_".equals(dbObject.get("name"))) {
@@ -138,6 +135,7 @@ public class IndexHelperTest extends TestBase {
                 }
             }
         }
+        Assert.assertTrue("Should be empty: " + names, names.isEmpty());
 
         collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getName());
         indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class));
@@ -234,56 +232,9 @@ public class IndexHelperTest extends TestBase {
         assertEquals(indexHelper.convert(indexOptions.collation()), options.getCollation());
 
         assertTrue(indexHelper.convert(indexOptions).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(false)).isBackground());
-        assertTrue(indexHelper.convert(indexOptions.background(true)).isBackground());
         assertTrue(indexHelper.convert(indexOptions.background(true)).isBackground());
         assertFalse(indexHelper.convert(indexOptions.background(false)).isBackground());
 
-    }
-
-    @Test
-    public void oldIndexForm() {
-        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
-
-        indexes.drop();
-        Index index = new IndexBuilder()
-            .name("index_name")
-            .background(true)
-            .disableValidation(true)
-            .expireAfterSeconds(42)
-            .sparse(true)
-            .unique(true)
-            .value("indexName, -text");
-        indexHelper.createIndex(indexes, mappedClass, index);
-        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
-                                          .getIndexInfo();
-        for (DBObject dbObject : indexInfo) {
-            if (dbObject.get("name").equals("index_indexName")) {
-                checkIndex(dbObject);
-            }
-        }
-    }
-
-    @Test
-    public void oldIndexedForm() {
-        Indexed indexed = new IndexedBuilder()
-            .name("index_name")
-            .background(true)
-            .dropDups(true)
-            .expireAfterSeconds(42)
-            .sparse(true)
-            .unique(true)
-            .value(IndexDirection.DESC);
-        assertEquals(indexed.options().name(), "");
-
-        Index converted = indexHelper.convert(indexed, "oldstyle");
-        assertEquals(converted.options().name(), "index_name");
-        assertTrue(converted.options().background());
-        assertTrue(converted.options().dropDups());
-        assertTrue(converted.options().sparse());
-        assertTrue(converted.options().unique());
-        assertEquals(new FieldBuilder().value("oldstyle").type(IndexType.DESC), converted.fields()[0]);
     }
 
     @Test
@@ -301,7 +252,6 @@ public class IndexHelperTest extends TestBase {
         Index index = indexHelper.convert(text, "search_field");
         assertEquals(index.options().name(), "index_name");
         assertTrue(index.options().background());
-        assertTrue(index.options().dropDups());
         assertTrue(index.options().sparse());
         assertTrue(index.options().unique());
         assertEquals(new FieldBuilder()
@@ -326,7 +276,6 @@ public class IndexHelperTest extends TestBase {
         Index converted = indexHelper.convert(indexed, "oldstyle");
         assertEquals(converted.options().name(), "index_name");
         assertTrue(converted.options().background());
-        assertTrue(converted.options().dropDups());
         assertTrue(converted.options().sparse());
         assertTrue(converted.options().unique());
         assertEquals(new FieldBuilder().value("oldstyle").type(IndexType.DESC), converted.fields()[0]);

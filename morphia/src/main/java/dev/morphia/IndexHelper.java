@@ -24,9 +24,6 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.NotSaved;
-import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -45,10 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static dev.morphia.AnnotationBuilder.toMap;
 import static dev.morphia.internal.MorphiaUtils.join;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.lang.String.format;
@@ -92,27 +87,12 @@ final class IndexHelper {
     }
 
     Index convert(final Indexed indexed, final String nameToStore) {
-        if (indexed.dropDups() || indexed.options().dropDups()) {
-            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
-        }
-        final Map<String, Object> newOptions = extractOptions(indexed.options());
-        final Map<String, Object> oldOptions = extractOldOptions(indexed);
-        if (!oldOptions.isEmpty() && !newOptions.isEmpty()) {
-            throw new MappingException("Mixed usage of deprecated @Indexed values with the new @IndexOption values is not "
-                                       + "allowed.  Please migrate all settings to @IndexOptions");
-        }
-
         List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
                                                                   .value(nameToStore)
                                                                   .type(fromValue(indexed.value().toIndexValue())));
-        return newOptions.isEmpty()
-               ? new IndexBuilder()
-                     .options(new IndexOptionsBuilder()
-                                  .migrate(indexed))
-                     .fields(fields)
-               : new IndexBuilder()
-                     .options(indexed.options())
-                     .fields(fields);
+        return new IndexBuilder()
+                   .options(indexed.options())
+                   .fields(fields);
     }
 
     private List<Index> collectFieldIndexes(final MappedClass mc) {
@@ -134,40 +114,8 @@ final class IndexHelper {
 
         List<Index> indexes = collectTopLevelIndexes(mc);
         indexes.addAll(collectFieldIndexes(mc));
-        if (!mapper.getOptions().isDisableEmbeddedIndexes()) {
-            indexes.addAll(collectNestedIndexes(mc, parentMCs));
-        }
 
         return indexes;
-    }
-
-    @Deprecated
-    private List<Index> collectNestedIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
-        List<Index> list = new ArrayList<Index>();
-        for (final MappedField mf : mc.getPersistenceFields()) {
-            if (!mf.isTypeMongoCompatible() && !mf.hasAnnotation(Reference.class) && !mf.hasAnnotation(Serialized.class)
-                && !mf.hasAnnotation(NotSaved.class) && !mf.isTransient()) {
-
-                final List<MappedClass> parents = new ArrayList<MappedClass>(parentMCs);
-                parents.add(mc);
-
-                List<MappedClass> classes = new ArrayList<MappedClass>();
-                MappedClass mappedClass = mapper.getMappedClass(mf.isSingleValue() ? mf.getType() : mf.getSubClass());
-                classes.add(mappedClass);
-                if (mappedClass.isInterface() || mappedClass.isAbstract()) {
-                    classes.addAll(mapper.getSubTypes(mappedClass));
-                }
-                for (MappedClass aClass : classes) {
-                    for (Index index : collectIndexes(aClass, parents)) {
-                        LOG.warn("Embedded index generation is being removed from 2.0.  Please migrate any index definitions you need to "
-                                 + "the parent entity to ensure these indexes continue to be generated in future versions.");
-                        list.add(new IndexBuilder(index, mf.getNameToStore()));
-                    }
-                }
-            }
-        }
-
-        return list;
     }
 
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {
@@ -177,22 +125,15 @@ final class IndexHelper {
             if (annotations != null) {
                 for (final Indexes indexes : annotations) {
                     for (final Index index : indexes.value()) {
-                        Index updated = index;
-                        if (index.fields().length == 0) {
-                            LOG.warn(format("This index on '%s' is using deprecated configuration options.  Please update to use the "
-                                            + "fields value on @Index: %s", mc.getClazz().getName(), index.toString()));
-                            updated = new IndexBuilder()
-                                          .migrate(index);
-                        }
                         List<Field> fields = new ArrayList<Field>();
-                        for (Field field : updated.fields()) {
+                        for (Field field : index.fields()) {
                             fields.add(new FieldBuilder()
                                            .value(findField(mc, index.options(), asList(field.value().split("\\."))))
                                            .type(field.type())
                                            .weight(field.weight()));
                         }
 
-                        list.add(replaceFields(updated, fields));
+                        list.add(replaceFields(index, fields));
                     }
                 }
             }
@@ -200,17 +141,6 @@ final class IndexHelper {
         }
 
         return list;
-    }
-
-    private Map<String, Object> extractOptions(final IndexOptions options) {
-        return toMap(options);
-    }
-
-    private Map<String, Object> extractOldOptions(final Indexed indexed) {
-        Map<String, Object> map = toMap(indexed);
-        map.remove("options");
-        map.remove("value");
-        return map;
     }
 
     private MappingException pathFail(final MappedClass mc, final List<String> path) {
@@ -253,9 +183,6 @@ final class IndexHelper {
     }
 
     com.mongodb.client.model.IndexOptions convert(final IndexOptions options) {
-        if (options.dropDups()) {
-            LOG.warn("Support for dropDups has been removed from the server.  Please remove this setting.");
-        }
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
                                                                  .background(options.background())
                                                                  .sparse(options.sparse())
@@ -350,11 +277,9 @@ final class IndexHelper {
     }
 
     void createIndex(final MongoCollection collection, final MappedClass mc, final Index index) {
-        Index normalized = IndexBuilder.normalize(index);
-
-        BsonDocument keys = calculateKeys(mc, normalized);
-        com.mongodb.client.model.IndexOptions indexOptions = convert(normalized.options());
-        calculateWeights(normalized, indexOptions);
+        BsonDocument keys = calculateKeys(mc, index);
+        com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
+        calculateWeights(index, indexOptions);
 
         collection.createIndex(keys, indexOptions);
     }

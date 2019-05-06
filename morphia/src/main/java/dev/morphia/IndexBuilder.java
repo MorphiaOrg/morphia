@@ -32,32 +32,6 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
         super(original);
     }
 
-    IndexBuilder(final Index original, final String prefix) {
-        super(original);
-        fields(updateFieldsWithPrefix(prefix, original));
-        options(new IndexOptionsBuilder(original.options(), prefix));
-    }
-
-    private List<Field> updateFieldsWithPrefix(final String prefix, final Index index) {
-        List<Field> fields = new ArrayList<Field>();
-        for (Field field : index.fields()) {
-            fields.add(new FieldBuilder()
-                           .value(field.value().equals("$**")
-                                  ? field.value()
-                                  : prefix + "." + field.value())
-                           .type(field.type())
-                           .weight(field.weight()));
-        }
-        return fields;
-    }
-
-    static Index normalize(final Index index) {
-        return index.fields().length != 0
-               ? index
-               : new IndexBuilder()
-                   .migrate(index);
-    }
-
     @Override
     public Class<Index> annotationType() {
         return Index.class;
@@ -75,46 +49,6 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     @Override
     public IndexOptions options() {
         return get("options");
-    }
-
-    @Override
-    public boolean background() {
-        return get("background");
-    }
-
-    @Override
-    public boolean disableValidation() {
-        return get("disableValidation");
-    }
-
-    @Override
-    public boolean dropDups() {
-        return get("dropDups");
-    }
-
-    @Override
-    public int expireAfterSeconds() {
-        return get("expireAfterSeconds");
-    }
-
-    @Override
-    public String name() {
-        return get("name");
-    }
-
-    @Override
-    public boolean sparse() {
-        return get("sparse");
-    }
-
-    @Override
-    public boolean unique() {
-        return get("unique");
-    }
-
-    @Override
-    public String value() {
-        return get("value");
     }
 
     private List<Field> parseFieldsString(final String str) {
@@ -163,33 +97,6 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     }
 
     /**
-     * disables validation for the field name
-     */
-    IndexBuilder disableValidation(final boolean disableValidation) {
-        put("disableValidation", disableValidation);
-        return this;
-    }
-
-    /**
-     * Tells the unique index to drop duplicates silently when creating; only the first will be kept
-     *
-     * @deprecated this functionality is no longer supported on the server
-     */
-    @Deprecated
-    IndexBuilder dropDups(final boolean dropDups) {
-        put("dropDups", dropDups);
-        return this;
-    }
-
-    /**
-     * defines the time to live for documents in the collection
-     */
-    IndexBuilder expireAfterSeconds(final int expireAfterSeconds) {
-        put("expireAfterSeconds", expireAfterSeconds);
-        return this;
-    }
-
-    /**
      * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
      */
     IndexBuilder name(final String name) {
@@ -219,10 +126,5 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     IndexBuilder value(final String value) {
         put("value", value);
         return this;
-    }
-
-    IndexBuilder migrate(final Index index) {
-        return fields(parseFieldsString(index.value()))
-            .options(new IndexOptionsBuilder().migrate(index));
     }
 }

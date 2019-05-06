@@ -56,11 +56,6 @@ class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements Ind
     }
 
     @Override
-    public boolean dropDups() {
-        return get("dropDups");
-    }
-
-    @Override
     public int expireAfterSeconds() {
         return get("expireAfterSeconds");
     }

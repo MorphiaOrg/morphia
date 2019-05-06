@@ -15,13 +15,9 @@ package dev.morphia.indexes;
 
 import com.mongodb.DBObject;
 import com.mongodb.DuplicateKeyException;
-import dev.morphia.annotations.Collation;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -36,17 +32,20 @@ import dev.morphia.entities.IndexOnValue;
 import dev.morphia.entities.NamedIndexOnValue;
 import dev.morphia.entities.UniqueIndexOnValue;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
+import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
-import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
 
 /**
  * @author Scott Hernandez
@@ -141,15 +140,6 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
-    public void testEmbeddedIndex() {
-        final MappedClass mc = getMorphia().getMapper().addMappedClass(ContainsIndexedEmbed.class);
-
-        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), doesNotHaveIndexNamed("e.name_-1"));
-        getDs().ensureIndexes(ContainsIndexedEmbed.class);
-        assertThat(getDb().getCollection(mc.getCollectionName()).getIndexInfo(), hasIndexNamed("e.name_-1"));
-    }
-
-    @Test
     public void testIndexedEntity() throws Exception {
         getDs().ensureIndexes();
         assertThat(getDs().getCollection(IndexOnValue.class).getIndexInfo(), hasIndexNamed("value_1"));
@@ -190,11 +180,6 @@ public class TestIndexed extends TestBase {
 
         // this should throw...
         getDs().save(new UniqueIndexOnValue("v"));
-    }
-    @Test(expected = MappingException.class)
-    public void testMixedIndexDefinitions() throws Exception {
-        getMorphia().map(MixedIndexDefinitions.class);
-        getDs().ensureIndexes(MixedIndexDefinitions.class);
     }
 
     @Test
@@ -282,14 +267,5 @@ public class TestIndexed extends TestBase {
 
         @NotSaved
         private IndexOnValue indexedClass;
-    }
-
-
-    @Entity
-    private static class MixedIndexDefinitions {
-        @Id
-        private ObjectId id;
-        @Indexed(unique = true, options = @IndexOptions(dropDups = true))
-        private String name;
     }
 }

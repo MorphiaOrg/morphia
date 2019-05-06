@@ -8,7 +8,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
-import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Key;
@@ -22,6 +21,7 @@ import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
@@ -1883,7 +1883,7 @@ public class TestQuery extends TestBase {
         /**
          * The list of keys for this value.
          */
-        @Indexed(unique = true)
+        @Indexed(options = @IndexOptions(unique = true))
         private List<Object> key;
         /**
          * The id of the value document
@@ -1898,7 +1898,7 @@ public class TestQuery extends TestBase {
         @Id
         private ObjectId id;
 
-        @Indexed(unique = true)
+        @Indexed(options = @IndexOptions(unique = true))
         private List<Object> key;
 
         @Embedded
@@ -1912,7 +1912,7 @@ public class TestQuery extends TestBase {
         /**
          * The list of keys for this value.
          */
-        @Indexed(unique = true)
+        @Indexed(options = @IndexOptions(unique = true))
         @Reference
         private List<Pic> key;
         /**

@@ -45,14 +45,6 @@ public @interface IndexOptions {
     boolean disableValidation() default false;
 
     /**
-     * @return if true, tells the unique index to drop duplicates silently when creating; only the first will be kept
-     *
-     * @deprecated Support for this has been removed from the server.  This value is ignored.
-     */
-    @Deprecated
-    boolean dropDups() default false;
-
-    /**
      * @return defines the time to live for documents in the collection
      */
     int expireAfterSeconds() default -1;

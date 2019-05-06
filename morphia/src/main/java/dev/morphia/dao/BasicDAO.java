@@ -124,7 +124,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
 
     @Override
     public WriteResult deleteById(final K id) {
-        return ds.delete(entityClazz, id);
+        return ds.delete(ds.find(entityClazz).filter("_id", id));
     }
 
     @Override

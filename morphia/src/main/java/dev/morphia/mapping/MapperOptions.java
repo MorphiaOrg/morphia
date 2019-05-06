@@ -375,9 +375,11 @@ public class MapperOptions {
      * Disables indexing of embedded types
      *
      * @param disableEmbeddedIndexes if true, @Embedded fields will not be scanned for indexing
+     * @deprecated this option is no longer used
      */
+    @Deprecated
     public void setDisableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
-        this.disableEmbeddedIndexes = disableEmbeddedIndexes;
+        LOG.warn("this option is no longer used");
     }
 
     /**
@@ -524,7 +526,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
-            this.disableEmbeddedIndexes = disableEmbeddedIndexes;
+            LOG.warn("this option is no longer used");
             return this;
         }
 

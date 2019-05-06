@@ -1,17 +1,17 @@
 package dev.morphia.entities;
 
-import org.bson.types.ObjectId;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
+import org.bson.types.ObjectId;
 
 @Entity
 public class UniqueIndexOnValue {
     @Id
     private ObjectId id;
 
-    @Indexed(name = "l_ascending", unique = true)
+    @Indexed(options = @IndexOptions(name = "l_ascending", unique = true))
     private long value;
 
     @Indexed(options = @IndexOptions(unique = true))
