@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@SuppressWarnings("Since15")
 @Entity("java8")
 public class Java8Entity {
     @Id

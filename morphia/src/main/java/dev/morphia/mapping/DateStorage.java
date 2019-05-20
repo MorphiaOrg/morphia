@@ -12,7 +12,6 @@ import static java.time.ZoneId.systemDefault;
 /**
  * This enum is used to determine how Java 8 dates and times are stored in the database.
  */
-@SuppressWarnings("Since15")
 public enum DateStorage {
     UTC {
         @Override

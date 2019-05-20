@@ -16,24 +16,10 @@
 
 package taglets;
 
-import com.sun.tools.doclets.Taglet;
-
-import java.util.Map;
-
 /**
  * Provides a taglet for annotation minimum server version support for a feature.
  */
 public class ServerReleaseTaglet extends DocTaglet {
-
-    /**
-     * Registers this taglet with the javadoc runtime
-     *
-     * @param tagletMap the map of taglets
-     */
-    public static void register(final Map<String, Taglet> tagletMap) {
-        Taglet t = new taglets.ServerReleaseTaglet();
-        tagletMap.put(t.getName(), t);
-    }
 
     @Override
     public String getName() {

@@ -25,7 +25,6 @@ import java.util.Date;
 /**
  * Provides a converter for {@link java.time.LocalDateTime} converting the value to a Date.
  */
-@SuppressWarnings("Since15")
 public class LocalDateTimeConverter extends TypeConverter implements SimpleValueConverter {
 
     private Mapper mapper;

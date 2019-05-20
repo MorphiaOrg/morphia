@@ -23,7 +23,6 @@ import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.Random;
 
-@SuppressWarnings("Since15")
 public class LocalTimeConverterTest extends ConverterTest<LocalTime, Long> {
     public LocalTimeConverterTest() {
         super(new LocalTimeConverter());
@@ -51,7 +50,8 @@ public class LocalTimeConverterTest extends ConverterTest<LocalTime, Long> {
     public void testConversion() throws ParseException {
         final LocalTime time = LocalTime.of(12, 30, 45);
 
-        compare(LocalTime.class, LocalTime.now());
+        final LocalTime now = LocalTime.now();
+        compare(LocalTime.class, now.minusNanos(now.getNano()));
         assertFormat(time, 45045000L);
     }
 

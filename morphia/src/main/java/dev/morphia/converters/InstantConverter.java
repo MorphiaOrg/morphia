@@ -24,7 +24,6 @@ import java.util.Date;
 /**
  * This converter will take a {@link Instant} and convert it to a java.util.Date instance.
  */
-@SuppressWarnings("Since15")
 public class InstantConverter extends TypeConverter implements SimpleValueConverter {
 
     /**

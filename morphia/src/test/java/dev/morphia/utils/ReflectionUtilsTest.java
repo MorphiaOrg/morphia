@@ -78,7 +78,6 @@ public class ReflectionUtilsTest extends TestBase {
         assertThat(result.contains(org.junit.rules.RuleChain.class), is(true));
     }
 
-    @SuppressWarnings("Since15")
     @Test
     public void testGetFromJarFileWithUnicodePath() throws Exception {
         //we need a jar to test with so use JUnit since it will always be there

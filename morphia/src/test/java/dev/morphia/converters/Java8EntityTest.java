@@ -34,7 +34,6 @@ import java.util.TimeZone;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-@SuppressWarnings("Since15")
 public class Java8EntityTest extends TestBase {
 
     @Test

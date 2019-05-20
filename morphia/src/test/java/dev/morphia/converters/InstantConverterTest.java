@@ -22,7 +22,6 @@ import org.junit.Test;
 import java.time.Instant;
 import java.util.Date;
 
-@SuppressWarnings("Since15")
 public class InstantConverterTest extends ConverterTest<Instant, Date> {
     public InstantConverterTest() {
         super(new InstantConverter());

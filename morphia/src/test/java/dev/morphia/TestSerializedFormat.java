@@ -43,7 +43,6 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 import static dev.morphia.converters.DefaultConverters.JAVA_8;
 
-@SuppressWarnings("Since15")
 public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {

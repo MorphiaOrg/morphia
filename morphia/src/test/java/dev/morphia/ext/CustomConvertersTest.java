@@ -21,10 +21,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.DefaultDBEncoder;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Embedded;
@@ -36,9 +32,11 @@ import dev.morphia.converters.TypeConverter;
 import dev.morphia.entities.EntityWithListsAndArrays;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -73,19 +71,6 @@ public class CustomConvertersTest extends TestBase {
 
         final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).find(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
-    }
-
-    @Test
-    public void mimeType() throws MimeTypeParseException {
-        getMorphia().map(MimeTyped.class);
-        getDs().ensureIndexes();
-        MimeTyped entity = new MimeTyped();
-        entity.name = "test name";
-        entity.mimeType = new MimeType("text/plain"); //MimeTypeParseException
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-        assertEquals("text/plain", dbObject.get("mimeType"));
-
-        getDs().save(entity); // FAILS WITH ERROR HERE
     }
 
     @Before
@@ -312,35 +297,6 @@ public class CustomConvertersTest extends TestBase {
             return getClass().getSimpleName() + " [value=" + value + "]";
         }
 
-    }
-
-    @Entity
-    @Converters(MimeTypeConverter.class)
-    private static class MimeTyped {
-        @Id
-        private ObjectId id;
-        private String name;
-        private javax.activation.MimeType mimeType;
-    }
-
-    public static class MimeTypeConverter extends TypeConverter {
-        public MimeTypeConverter() {
-            super(MimeType.class);
-        }
-
-        @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            try {
-                return new MimeType(((BasicDBObject) fromDBObject).getString("mimeType"));
-            } catch (MimeTypeParseException ex) {
-                return new MimeType();
-            }
-        }
-
-        @Override
-        public Object encode(final Object value, final MappedField optionalExtraInfo) {
-            return ((MimeType) value).getBaseType();
-        }
     }
 
     @SuppressWarnings("unchecked")

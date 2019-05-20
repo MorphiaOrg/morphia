@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-@SuppressWarnings("Since15")
 public class LocalDateTimeConverterTest extends ConverterTest<LocalDateTime, Date> {
     public LocalDateTimeConverterTest() {
         super(null);
@@ -45,7 +44,8 @@ public class LocalDateTimeConverterTest extends ConverterTest<LocalDateTime, Dat
 
         assertFormat(LocalDateTime.of(2016, 5, 1, 12, 30, 45, 718004350), cal.getTime());
 
-        compare(LocalDateTime.class, LocalDateTime.now());
+        final LocalDateTime now = LocalDateTime.now();
+        compare(LocalDateTime.class, now.minusNanos(now.getNano()));
         compare(LocalDateTime.class, LocalDateTime.of(12016, 3, 11, 3, 30));
     }
 

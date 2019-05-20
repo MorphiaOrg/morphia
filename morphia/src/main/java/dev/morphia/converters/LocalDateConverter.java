@@ -26,7 +26,6 @@ import java.util.Date;
 /**
  * Provides a converter for {@link LocalDate} converting the value to the Date at the start of that day.
  */
-@SuppressWarnings("Since15")
 public class LocalDateConverter extends TypeConverter implements SimpleValueConverter {
     private Mapper mapper;
 

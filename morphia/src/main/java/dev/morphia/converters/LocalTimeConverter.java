@@ -23,7 +23,6 @@ import java.time.LocalTime;
 /**
  * Provides a converter for {@link LocalTime} and convert it to its numeric form of milliseconds since midnight.
  */
-@SuppressWarnings("Since15")
 public class LocalTimeConverter extends TypeConverter implements SimpleValueConverter {
 
     private static final int MILLI_MODULO = 1000000;
