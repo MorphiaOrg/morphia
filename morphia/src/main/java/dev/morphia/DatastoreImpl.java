@@ -333,7 +333,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                            .update(((UpdateOpsImpl<T>) operations).getOps())
                                                                            .getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
     }
 
