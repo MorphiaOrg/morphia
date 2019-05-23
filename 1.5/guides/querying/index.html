@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.55.1" />
+    <meta name="generator" content="Hugo 0.49" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1558017112" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1558017112" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1558621417" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1558621417" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1558017112"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1558621417"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -564,7 +564,7 @@ like this:</p>
 <pre><code class="language-javascript">{ price: { $gte: 1000 } }
 </code></pre>
 
-<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FilterOperator.java
+<p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/dev/morphia/query/FilterOperator.java
 ">FilterOperator</a> class.</p>
 
 <table>
@@ -710,7 +710,7 @@ like this:</p>
 <h3 id="field"><code>field()</code></h3>
 
 <p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FieldEnd.java
+returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/main/java/dev/morphia/query/FieldEnd.java
 ">class</a> providing methods with which
  to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
  <code>filter()</code> can be.  To perform the same query as above, you&rsquo;d write this:</p>
@@ -723,11 +723,9 @@ case) would easily be caught by an IDE or compiler.  Which version you use is la
 
 <div class="admonition note">
 <h5 class="admonition-title">Note</h5>
-
-Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-[`@Property`](/1.5/javadoc?dev/morphia/annotations/Property.html
-) annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
-result in an error.
+<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+<a href="/1.5/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+result in an error.</p>
 
 </div>
 
@@ -773,7 +771,7 @@ public static class Greeting {
 </code></pre>
 
 <p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
 ">test</a> does:</p>
 
 <pre><code class="language-java">morphia.map(Greeting.class);
@@ -806,7 +804,7 @@ the query results in different ways.</p>
 
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 
 <pre><code class="language-java">ContainsRenamedFields user = new ContainsRenamedFields(&quot;Frank&quot;, &quot;Zappa&quot;);
@@ -835,12 +833,10 @@ Assert.assertNull(found.lastName);
 
 <div class="admonition important">
 <h5 class="admonition-title">important</h5>
-
-While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to
+<p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
  MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
-  saved. For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database
-  for this entity will be removed.  To save such instances back consider using [`Datastore#merge(T)`](/1.5/javadoc?dev/morphia/Datastore#merge-T-.html
-)
+  saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
+  for this entity will be removed.  To save such instances back consider using <a href="/1.5/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
 
 </div>
 
@@ -874,7 +870,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/(HEAD/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 
 <pre><code class="language-java">getMorphia().map(CappedPic.class);
@@ -1221,20 +1217,20 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1558017112"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1558017112"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1558017112"></script>
-    <script src="/1.5/js/jquery.sticky.js?1558017112"></script>
-    <script src="/1.5/js/featherlight.min.js?1558017112"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1558017112"></script>
-    <script src="/1.5/js/highlight.pack.js?1558017112"></script>
+    <script src="/1.5/js/clipboard.min.js?1558621417"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1558621417"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1558621417"></script>
+    <script src="/1.5/js/jquery.sticky.js?1558621417"></script>
+    <script src="/1.5/js/featherlight.min.js?1558621417"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1558621417"></script>
+    <script src="/1.5/js/highlight.pack.js?1558621417"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1558017112"></script>
-    <script src="/1.5/js/learn.js?1558017112"></script>
-    <script src="/1.5/js/hugo-learn.js?1558017112"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1558621417"></script>
+    <script src="/1.5/js/learn.js?1558621417"></script>
+    <script src="/1.5/js/hugo-learn.js?1558621417"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1558017112" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1558017112"></script>
+    <link href="/1.5/mermaid/mermaid.css?1558621417" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1558621417"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
