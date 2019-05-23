@@ -350,7 +350,7 @@ class ReferenceMapper implements CustomMapper {
 
         final boolean ignoreMissing = mf.getAnnotation(Reference.class) != null && mf.getAnnotation(Reference.class).ignoreMissing();
         if (!ignoreMissing) {
-            throw new MappingException("The reference(" + ref.toString() + ") could not be fetched for " + mf.getFullName());
+            throw new MappingException(String.format("The reference (%s) could not be fetched for %s", ref, mf.getFullName()));
         } else {
             return null;
         }

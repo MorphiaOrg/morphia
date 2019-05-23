@@ -199,7 +199,7 @@ public class Mapper {
     @Deprecated
     public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
         if (dbObject == null) {
-            LOG.error("A null reference was passed in for the dbObject", new Throwable());
+            LOG.warn("A null reference was passed in for the dbObject", new Throwable());
             return null;
         }
 

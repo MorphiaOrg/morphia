@@ -726,13 +726,9 @@ public final class ReflectionUtils {
             if (componentClass != null) {
                 return Array.newInstance(componentClass, 0).getClass();
             } else {
-                LOG.debug("************ ReflectionUtils.getClass 1st else");
-                LOG.debug("************ type = " + type);
                 return null;
             }
         } else {
-            LOG.debug("************ ReflectionUtils.getClass final else");
-            LOG.debug("************ type = " + type);
             return null;
         }
     }
