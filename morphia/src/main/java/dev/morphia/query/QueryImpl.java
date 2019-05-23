@@ -226,23 +226,33 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public T first() {
+        final MongoCursor<T> iterator = iterator();
+        try {
+            return iterator.tryNext();
+        } finally {
+            iterator.close();
+        }
+    }
+
+    @Override
     public T first(final FindOptions options) {
-        return null;
-    }
-
-    @Override
-    public T get() {
-        return get(getOptions());
-    }
-
-    @Override
-    public T get(final FindOptions options) {
         final MongoCursor<T> it = find(options.copy().limit(1));
         try {
             return it.tryNext();
         } finally {
             it.close();
         }
+    }
+
+    @Override
+    public T get() {
+        return first(getOptions());
+    }
+
+    @Override
+    public T get(final FindOptions options) {
+        return first(options);
     }
 
     @Override
@@ -693,7 +703,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String getFieldName() {
-        return null;
+        throw new UnsupportedOperationException("this method is unused on a Query");
     }
 
     /**
@@ -722,16 +732,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public MongoCursor<T> iterator() {
         return find();
-    }
-
-    @Override
-    public T first() {
-        final MongoCursor<T> iterator = iterator();
-        try {
-            return iterator.tryNext();
-        } finally {
-            iterator.close();
-        }
     }
 
     /**
