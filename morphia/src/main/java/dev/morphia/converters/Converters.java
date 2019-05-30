@@ -29,16 +29,6 @@ public abstract class Converters {
     private final Map<Class, List<TypeConverter>> tcMap = new ConcurrentHashMap<Class, List<TypeConverter>>();
     private final List<Class<? extends TypeConverter>> registeredConverterClasses = new ArrayList<Class<? extends TypeConverter>>();
 
-    private final Map<Class, TypeConverter> classConverterCache = new HashMap<Class, TypeConverter>();
-    private final Map<MappedField, TypeConverter> mfConverterCache = new HashMap<MappedField, TypeConverter>();
-
-    private static final TypeConverter CONVERTER_CACHE_NULL_PLACEHOLDER = new TypeConverter() {
-        @Override
-        public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            throw new IllegalStateException("Absent can never be used!");
-        }
-    };
-
     /**
      * Creates a bundle with a particular Mapper.
      *
@@ -247,17 +237,6 @@ public abstract class Converters {
     }
 
     protected TypeConverter getEncoder(final Class c) {
-        TypeConverter cached = classConverterCache.get(c);
-        if (cached == null) {
-            TypeConverter encoder = getInternalEnc(c);
-            cached = encoder == null ? CONVERTER_CACHE_NULL_PLACEHOLDER : encoder;
-            classConverterCache.put(c, cached);
-        }
-
-        return cached == CONVERTER_CACHE_NULL_PLACEHOLDER ? null : cached;
-    }
-
-    private TypeConverter getInternalEnc(final Class c) {
         final List<TypeConverter> tcs = tcMap.get(c);
         if (tcs != null) {
             if (tcs.size() > 1) {
@@ -276,7 +255,6 @@ public abstract class Converters {
     }
 
     protected TypeConverter getEncoder(final Object val, final MappedField mf) {
-
         List<TypeConverter> tcs = null;
 
         if (val != null) {
@@ -315,12 +293,6 @@ public abstract class Converters {
     }
 
     private TypeConverter getEncoder(final MappedField mf) {
-        TypeConverter cached = mfConverterCache.get(mf);
-        if (cached == null) {
-            TypeConverter enc = getEncoder(null, mf);
-            cached = enc == null ? CONVERTER_CACHE_NULL_PLACEHOLDER : enc;
-            mfConverterCache.put(mf, cached);
-        }
-        return cached == CONVERTER_CACHE_NULL_PLACEHOLDER ? null : cached;
+        return getEncoder(null, mf);
     }
 }

@@ -434,7 +434,9 @@ public class MappedField {
      *
      * @param ann the annotation to add
      * @return ann the annotation
+     * @deprecated unused
      */
+    @Deprecated
     public Annotation putAnnotation(final Annotation ann) {
         Annotation put = foundAnnotations.put(ann.getClass(), ann);
         discoverNames();

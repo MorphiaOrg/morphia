@@ -52,7 +52,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +70,7 @@ import static java.lang.String.format;
  * @morphia.internal
  * @deprecated this class will be internalized in 2.0
  */
-@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated
 public class Mapper {
     /**
@@ -114,8 +113,6 @@ public class Mapper {
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
     private final dev.morphia.converters.Converters converters;
     private MapperOptions opts = MapperOptions.builder().build();
-
-    private final IdentityHashMap<MappedField, CustomMapper> mapperCache = new IdentityHashMap<MappedField, CustomMapper>();
 
     /**
      * Creates a Mapper with the given options.
@@ -878,16 +875,6 @@ public class Mapper {
 
     private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
                                  final DBObject dbObject) {
-        CustomMapper selectedMapper = mapperCache.get(mf);
-        if (selectedMapper == null) {
-            selectedMapper = selectMapper(mf);
-            mapperCache.put(mf, selectedMapper);
-        }
-
-        selectedMapper.fromDBObject(datastore, dbObject, mf, entity, cache, this);
-    }
-
-    private CustomMapper selectMapper(final MappedField mf) {
         CustomMapper mapper;
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
             || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
@@ -899,7 +886,7 @@ public class Mapper {
         } else {
             mapper = opts.getDefaultMapper();
         }
-        return mapper;
+        mapper.fromDBObject(datastore, dbObject, mf, entity, cache, this);
     }
 
     private void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,
