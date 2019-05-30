@@ -1,13 +1,6 @@
 package dev.morphia;
 
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -18,11 +11,10 @@ import dev.morphia.mapping.EmbeddedMappingTest.Nested;
 import dev.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.EntityCache;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,10 +28,9 @@ import static java.util.Arrays.asList;
  * @author scotthernandez
  */
 public class TestMapper extends TestBase {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestMapper.class);
 
     @Test
-    public void serializableId() throws Exception {
+    public void serializableId() {
         final CustomId cId = new CustomId();
         cId.id = new ObjectId();
         cId.type = "banker";
@@ -50,7 +41,7 @@ public class TestMapper extends TestBase {
     }
 
     @Test
-    public void singleLookup() throws Exception {
+    public void singleLookup() {
         A.loadCount = 0;
         final A a = new A();
         HoldsMultipleA holder = new HoldsMultipleA();
@@ -63,7 +54,7 @@ public class TestMapper extends TestBase {
     }
 
     @Test
-    public void singleProxy() throws Exception {
+    public void singleProxy() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;
@@ -237,90 +228,5 @@ public class TestMapper extends TestBase {
             this.text = text;
         }
     }
-
-    @Test
-    @Ignore
-    public void testMapperPerformance() {
-        Morphia morphia = getMorphia();
-        Mapper mapper = morphia.getMapper();
-        mapper.addMappedClass(Container.class);
-        Datastore ds = morphia.createDatastore(getMongoClient(), "testDB");
-
-        int listSize = 100;
-        int iterations = 100000;
-
-        // create the DbObject
-        BasicDBList aus = new BasicDBList();
-        for (int i = 0; i < listSize; i++) {
-            BasicDBObject au = new BasicDBObject("id", i);
-            au.put("name", "john doe");
-            aus.add(au);
-        }
-        BasicDBObject p = new BasicDBObject("values", aus);
-
-        EntityCache entityCache = mapper.getOptions().getCacheFactory().createCache();
-
-        long total = 0;
-        for (int i = 0; i < iterations; i++) {
-            long start = System.nanoTime();
-            morphia.fromDBObject(ds, Container.class, p, entityCache);
-            long stop = System.nanoTime();
-
-            long delta = stop - start;
-            total = total + delta;
-            if (i % 10000 == 0) {
-                LOGGER.warn("Mapping " + i + " took " + delta + " ns");
-            }
-        }
-
-        double totalMs = ((double) total) / 1000000;
-        LOGGER.warn("Morphia creation took total " + (totalMs) + " ms, avg: " + (totalMs / iterations));
-    }
-
-    private static class Customer {
-        private int id;
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-    }
-
-    private static class Container {
-        @Embedded
-        private List<Customer> values;
-        @Id
-        private ObjectId id;
-
-        public List<Customer> getValues() {
-            return values;
-        }
-
-        public void setValues(final List<Customer> values) {
-            this.values = values;
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-    }
-
-
 
 }
