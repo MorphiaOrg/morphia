@@ -9,7 +9,7 @@
 
     <groupId>dev.morphia.morphia</groupId>
     <artifactId>morphia-parent</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.5.3</version>
     <packaging>pom</packaging>
 
     <name>Morphia</name>
@@ -20,14 +20,6 @@
         <developerConnection>scm:git:git@github.com:MorphiaOrg/morphia.git</developerConnection>
         <url>git@github.com:MorphiaOrg/morphia.git</url>
     </scm>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>snapshots</id>
-            <name>Maven Central Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
