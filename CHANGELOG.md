@@ -1,7 +1,14 @@
+## Version 1.5.3 (May 30, 2019)
+
+### 3 Issues Resolved
+#### ![](https://placehold.it/15/fc2929/000000?text=+) BUG
+* [Issue #1344](https://github.com/MorphiaOrg/morphia/issues/1344): findAndModify Logging lots of stacktraces
+* [Issue #1345](https://github.com/MorphiaOrg/morphia/issues/1345): QueryImpl.first(FindOptions) return null
+* [Issue #1348](https://github.com/MorphiaOrg/morphia/issues/1348): Memory bug with caching
+
 ## Version 1.5.2 (Apr 29, 2019)
 
 ### Notes
-
 This release is only to reinstate a module that got dropped in the gradle -> maven switch.
 
 ### 1 Issue Resolved
