@@ -113,7 +113,6 @@
                 </executions>
                 <configuration>
                     <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                    <oldVersion>1.4.1</oldVersion>
                     <analysisConfigurationFiles>
                         <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                     </analysisConfigurationFiles>
