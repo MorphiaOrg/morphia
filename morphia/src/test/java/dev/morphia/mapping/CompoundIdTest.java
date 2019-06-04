@@ -7,7 +7,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Version;
-import dev.morphia.dao.BasicDAO;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -21,12 +20,11 @@ public class CompoundIdTest extends TestBase {
     @Test
     public void testFetchKey() {
         getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
-        BasicDAO<ConfigEntry, ConfigKey> innerDAO = new BasicDAO<ConfigEntry, ConfigKey>(ConfigEntry.class, getDs());
-        ConfigEntry entry = innerDAO.find()
+        ConfigEntry entry = getDs().find(ConfigEntry.class)
                                     .find(new FindOptions().limit(1))
                                     .next();
         entry.setValue("something");
-        innerDAO.save(entry);
+        getDs().save(entry);
     }
 
     @Test

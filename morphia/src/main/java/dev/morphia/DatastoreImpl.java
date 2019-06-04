@@ -189,10 +189,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(entity, new DeleteOptions().writeConcern(getWriteConcern(entity)));
     }
 
-    public <T> WriteResult delete(final T entity, final WriteConcern wc) {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Deletes the given entity (by @Id), with the WriteConcern
      *
@@ -375,7 +371,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return find(clazz).disableValidation().filter("_id" + " in", ids).enableValidation();
     }
 
-    public <T, V> T get(final Class<T> clazz, final V id) {
+    private <T, V> T get(final Class<T> clazz, final V id) {
         return find(getCollection(clazz).getName(), clazz, "_id", id, 0, 1, true).get();
     }
 
@@ -463,14 +459,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     private <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
         final MongoCollection<T> collection = database.getCollection(name, clazz);
         return enforceWriteConcern(collection, clazz);
-    }
-
-    public <T> long getCount(final Class<T> clazz) {
-        return find(clazz).count();
-    }
-
-    public <T> long getCount(final Query<T> query) {
-        return query.count();
     }
 
     @Override

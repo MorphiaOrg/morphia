@@ -8,7 +8,6 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Serialized;
-import dev.morphia.dao.BasicDAO;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -41,32 +40,6 @@ public class TestMapping extends TestBase {
 
         // then
         assertThat(object.userObject, is(user.userObject));
-    }
-
-    @Test
-    public void testMapping() {
-        final BasicDAO<User, ObjectId> messageDAO = new BasicDAO<User, ObjectId>(User.class, getDs());
-        Assert.assertNotNull(messageDAO);
-
-        Mapper mapper = new Mapper();
-
-        User user = new User();
-        user.id = 1;
-
-        user.userObject = "just a String";
-        DBObject dbObject = mapper.toDBObject(user);
-        Object object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
-        Assert.assertEquals(user.userObject, ((User) object).userObject);
-
-        user.userObject = 33;
-        dbObject = mapper.toDBObject(user);
-        object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
-        Assert.assertEquals(user.userObject, ((User) object).userObject);
-
-        user.userObject = 33.3;
-        dbObject = mapper.toDBObject(user);
-        object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
-        Assert.assertEquals(user.userObject, ((User) object).userObject);
     }
 
     @Test

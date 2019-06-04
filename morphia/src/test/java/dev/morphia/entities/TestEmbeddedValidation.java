@@ -17,6 +17,8 @@
 package dev.morphia.entities;
 
 import com.mongodb.client.MongoCursor;
+import dev.morphia.mapping.CollectionOfValuesTest;
+import dev.morphia.mapping.CollectionOfValuesTest.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +26,6 @@ import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.dao.BasicDAO;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
@@ -44,7 +45,6 @@ public class TestEmbeddedValidation extends TestBase {
     @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() {
         getMorphia().map(TestEntity.class);
-        BasicDAO<TestEntity, ObjectId> dao = new BasicDAO<TestEntity, ObjectId>(TestEntity.class, getDs());
         TestEntity entity = new TestEntity();
 
         Map<String, Object> map = mapOf("type", "text");
@@ -55,12 +55,14 @@ public class TestEmbeddedValidation extends TestBase {
         List<Map<String, Object>> data = asList(map, map1);
 
         entity.setData(data);
-        dao.save(entity);
+        getDs().save(entity);
 
-        TestEntity testEntity = dao.get(entity.getId());
+        TestEntity testEntity = getDs().find(TestEntity.class)
+                                       .filter("_id", entity.getId())
+                                       .first();;
         assertEquals(entity, testEntity);
 
-        Query<TestEntity> query = dao.createQuery();
+        Query<TestEntity> query = getDs().find(TestEntity.class);
         query.disableValidation();
         query.criteria("data.data.id").equal("123");
 

@@ -314,6 +314,7 @@ public class Mapper {
      * Looks up the class mapped to a named collection.
      *
      * @param collection the collection name
+     * @param <T> the class type
      * @return the Class mapped to this collection name
      * @morphia.internal
      * @deprecated no replacement is planned

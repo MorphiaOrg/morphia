@@ -10,7 +10,6 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.dao.BasicDAO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +48,6 @@ public class CollectionOfValuesTest extends TestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() throws Exception {
-        BasicDAO<TestEntity, ObjectId> dao;
-        dao = new BasicDAO<TestEntity, ObjectId>(TestEntity.class, getDs());
 
         TestEntity entity = new TestEntity();
 
@@ -59,9 +56,11 @@ public class CollectionOfValuesTest extends TestBase {
                      .append("data", new BasicDBObject("text", "sometext")));
 
         entity.setData(data);
-        dao.save(entity);
+        getDs().save(entity);
 
-        final TestEntity fetched = dao.get(entity.getId());
+        final TestEntity fetched = getDs().find(TestEntity.class)
+                                          .filter("_id", entity.getId())
+                                          .first();
         Assert.assertEquals(entity, fetched);
     }
 

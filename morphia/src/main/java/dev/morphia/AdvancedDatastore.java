@@ -3,7 +3,6 @@ package dev.morphia;
 import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.WriteConcern;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
