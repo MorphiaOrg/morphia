@@ -87,16 +87,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void cursorTimeOut() {
-        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
-                                                           .enableCursorTimeout();
-        Assert.assertFalse(query.getOptions().isNoCursorTimeout());
-
-        query.disableCursorTimeout();
-        Assert.assertTrue(query.getOptions().isNoCursorTimeout());
-    }
-
-    @Test
     public void genericMultiKeyValueQueries() {
         getMorphia().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);

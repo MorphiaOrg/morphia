@@ -67,31 +67,11 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     FieldEnd<? extends CriteriaContainer> criteria(String field);
 
     /**
-     * Disables cursor timeout on server.
-     *
-     * @return this
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#noCursorTimeout(boolean)
-     */
-    @Deprecated
-    Query<T> disableCursorTimeout();
-
-    /**
      * Turns off validation (for all calls made after)
      *
      * @return this
      */
     Query<T> disableValidation();
-
-    /**
-     * Enables cursor timeout on server.
-     *
-     * @return this
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#noCursorTimeout(boolean)
-     */
-    @Deprecated
-    Query<T> enableCursorTimeout();
 
     /**
      * Turns on validation (for all calls made after); by default validation is on

@@ -194,23 +194,9 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
-    public Query<T> disableCursorTimeout() {
-        getOptions().noCursorTimeout(true);
-        return this;
-    }
-
-    @Override
     public Query<T> disableValidation() {
         validateName = false;
         validateType = false;
-        return this;
-    }
-
-    @Override
-    @Deprecated
-    public Query<T> enableCursorTimeout() {
-        getOptions().noCursorTimeout(false);
         return this;
     }
 
