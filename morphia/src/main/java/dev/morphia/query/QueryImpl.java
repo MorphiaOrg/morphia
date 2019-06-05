@@ -98,7 +98,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
 
-        return new MorphiaKeyCursor<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
+        return new MorphiaKeyCursor<>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
     }
 
     @Override
@@ -132,56 +132,13 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaIterator<T, T> fetch() {
-        return fetch(getOptions());
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetch(final FindOptions options) {
-        final DBCursor cursor = prepareCursor(options);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
-        }
-
-        return new MorphiaIterator<T, T>(ds, prepareCursor(options), ds.getMapper(), clazz, dbColl.getName(), cache);
-    }
-
-    @Override
     public MorphiaCursor<T> find() {
         return find(getOptions());
     }
 
     @Override
     public MorphiaCursor<T> find(final FindOptions options) {
-        return new MorphiaCursor<T>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities() {
-        return fetchEmptyEntities(getOptions());
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities(final FindOptions options) {
-        QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject("_id", 1));
-        cloned.includeFields = true;
-        return cloned.fetch();
-    }
-
-    @Override
-    public MorphiaKeyIterator<T> fetchKeys() {
-        return fetchKeys(getOptions());
-    }
-
-    @Override
-    public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
-        QueryImpl<T> cloned = cloneQuery();
-        final FindOptions opts = cloned.getOptions();
-        opts.projection(new BasicDBObject("_id", 1));
-        cloned.includeFields = true;
-
-        return new MorphiaKeyIterator<T>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
+        return new MorphiaCursor<>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
     }
 
     @Override
@@ -228,9 +185,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public MorphiaIterator<T, T> tail(final boolean awaitData) {
-        return fetch(getOptions()
-                         .copy()
-                         .cursorType(awaitData ? TailableAwait : Tailable));
+        throw new UnsupportedOperationException("needs to be updated");
+//        return this.find(getOptions()
+//                         .copy()
+//                         .cursorType(awaitData ? TailableAwait : Tailable));
     }
 
     @Override
@@ -242,7 +200,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public QueryImpl<T> cloneQuery() {
-        final QueryImpl<T> n = new QueryImpl<T>(clazz, dbColl, ds);
+        final QueryImpl<T> n = new QueryImpl<>(clazz, dbColl, ds);
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
         n.validateName = validateName;
@@ -328,7 +286,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
-        return new FieldEndImpl<QueryImpl<T>>(this, name, this);
+        return new FieldEndImpl<>(this, name, this);
     }
 
     @Override
@@ -510,7 +468,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public Query<T> retrieveKnownFields() {
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
-        final List<String> fields = new ArrayList<String>(mc.getPersistenceFields().size() + 1);
+        final List<String> fields = new ArrayList<>(mc.getPersistenceFields().size() + 1);
         for (final MappedField mf : mc.getPersistenceFields()) {
             fields.add(mf.getNameToStore());
         }
@@ -712,7 +670,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public <U> MongoIterable<U> map(final Function<T, U> mapper) {
-        return new MappingIterable<T, U>(this, mapper);
+        return new MappingIterable<>(this, mapper);
     }
 
     @Override
@@ -729,7 +687,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public <A extends Collection<? super T>> A into(final A target) {
-        forEach(new Block<T>() {
+        forEach(new Block<>() {
             @Override
             public void apply(final T t) {
                 target.add(t);

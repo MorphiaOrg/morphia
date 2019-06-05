@@ -574,26 +574,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Execute the query and get the results.
      *
-     * @return an Iterator of the results
-     * @deprecated use {@link #find(FindOptions)} instead
-     */
-    @Deprecated
-    MorphiaIterator<T, T> fetch();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return an Iterator of the results
-     * @since 1.3
-     * @deprecated use {@link #find(FindOptions)} instead
-     */
-    @Deprecated
-    MorphiaIterator<T, T> fetch(FindOptions options);
-
-    /**
-     * Execute the query and get the results.
-     *
      * *note* the return type of this will change in 2.0.
      *
      * @return a MorphiaCursor
@@ -610,49 +590,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @since 1.4
      */
     MorphiaCursor<T> find(FindOptions options);
-
-    /**
-     * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
-     * data).
-     *
-     * @return an Iterator of the empty entities
-     * @deprecated use {@link #keys()} instead
-     */
-    @Deprecated
-    MorphiaIterator<T, T> fetchEmptyEntities();
-
-    /**
-     * Execute the query and get only the ids of the results.  This is more efficient than fetching the actual results (transfers less
-     * data).
-     *
-     * @param options the options to apply to the find operation
-     * @return an Iterator of the empty entities
-     * @since 1.3
-     * @deprecated use {@link #keys(FindOptions)} instead
-     */
-    @Deprecated
-    MorphiaIterator<T, T> fetchEmptyEntities(FindOptions options);
-
-    /**
-     * Execute the query and get the keys for the objects.
-     *
-     * @return the Key Iterator
-     * @see #fetchEmptyEntities
-     * @deprecated use {@link #keys()}
-     */
-    @Deprecated
-    MorphiaKeyIterator<T> fetchKeys();
-
-    /**
-     * Execute the query and get the keys for the objects.
-     *
-     * @param options the options to apply to the find operation
-     * @return the Key Iterator
-     * @since 1.3
-     * @deprecated use {@link #keys(FindOptions)}
-     */
-    @Deprecated
-    MorphiaKeyIterator<T> fetchKeys(FindOptions options);
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
