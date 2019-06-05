@@ -10,6 +10,7 @@ import com.mongodb.MongoException;
 import com.mongodb.MongoInternalException;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
+import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
@@ -99,7 +100,7 @@ public class TestQuery extends TestBase {
     public void genericMultiKeyValueQueries() {
         getMorphia().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
-        final GenericKeyValue<String> value = new GenericKeyValue<String>();
+        final GenericKeyValue<String> value = new GenericKeyValue<>();
         final List<Object> keys = Arrays.<Object>asList("key1", "key2");
         value.key = keys;
         getDs().save(value);
@@ -467,7 +468,7 @@ public class TestQuery extends TestBase {
     public void testDBObjectOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final List<DBObject> orList = new ArrayList<DBObject>();
+        final List<DBObject> orList = new ArrayList<>();
         orList.add(new BasicDBObject("keywords.keyword", "scott"));
         orList.add(new BasicDBObject("keywords.keyword", "ralph"));
         final BasicDBObject orQuery = new BasicDBObject("$or", orList);
@@ -771,7 +772,7 @@ public class TestQuery extends TestBase {
         final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
         for (final Key<FacebookUser> key : fbKeys) {
             fbUserKeys.add(key);
         }
@@ -802,7 +803,7 @@ public class TestQuery extends TestBase {
         final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
         for (final Key<FacebookUser> key : fbKeys) {
             fbUserKeys.add(key);
         }
@@ -844,7 +845,7 @@ public class TestQuery extends TestBase {
         final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<Key<FacebookUser>>();
+        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
         for (final Key<FacebookUser> key : fbKeys) {
             fbUserKeys.add(key);
         }
@@ -1409,26 +1410,25 @@ public class TestQuery extends TestBase {
     @Test
     public void testTailableCursors() {
         getMorphia().map(CappedPic.class);
-        getDs().ensureCaps();
-        final Query<CappedPic> query = getDs().find(CappedPic.class);
-        final List<CappedPic> found = new ArrayList<CappedPic>();
+        final Datastore ds = getDs();
+        ds.ensureCaps();
+
+        final Query<CappedPic> query = ds.find(CappedPic.class);
+        final List<CappedPic> found = new ArrayList<>();
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
         assertEquals(0, query.count());
 
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                getDs().save(new CappedPic(System.currentTimeMillis() + ""));
-            }
-        }, 0, 500, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(
+            () -> ds.save(new CappedPic()), 0, 500, TimeUnit.MILLISECONDS);
 
-        final Iterator<CappedPic> tail = query.find(new FindOptions().cursorType(CursorType.Tailable));
+        final Iterator<CappedPic> tail = query.find(new FindOptions()
+                                                        .cursorType(CursorType.Tailable));
         Awaitility
             .await()
             .pollDelay(500, TimeUnit.MILLISECONDS)
             .atMost(10, TimeUnit.SECONDS)
-            .until(new Callable<Boolean>() {
+            .until(new Callable<>() {
                 @Override
                 public Boolean call() {
                     if (tail.hasNext()) {
@@ -1438,6 +1438,7 @@ public class TestQuery extends TestBase {
                 }
             });
         executorService.shutdownNow();
+        Assert.assertTrue( found.size() >= 10);
         Assert.assertTrue(query.count() >= 10);
     }
 
@@ -1614,13 +1615,13 @@ public class TestQuery extends TestBase {
         @Id
         private ObjectId id;
         @Embedded
-        private List<Keyword> keywords = new ArrayList<Keyword>();
+        private List<Keyword> keywords = new ArrayList<>();
 
         PhotoWithKeywords() {
         }
 
         PhotoWithKeywords(final String... words) {
-            keywords = new ArrayList<Keyword>(words.length);
+            keywords = new ArrayList<>(words.length);
             for (final String word : words) {
                 keywords.add(new Keyword(word));
             }
@@ -1825,10 +1826,7 @@ public class TestQuery extends TestBase {
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
     public static class CappedPic extends Pic {
         public CappedPic() {
-        }
-
-        CappedPic(final String name) {
-            super(name);
+            super(System.currentTimeMillis() + "");
         }
     }
 

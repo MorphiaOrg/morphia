@@ -156,21 +156,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     @Deprecated
-    public MorphiaIterator<T, T> tail() {
-        return tail(true);
-    }
-
-    @Override
-    @Deprecated
-    public MorphiaIterator<T, T> tail(final boolean awaitData) {
-        throw new UnsupportedOperationException("needs to be updated");
-//        return this.find(getOptions()
-//                         .copy()
-//                         .cursorType(awaitData ? TailableAwait : Tailable));
-    }
-
-    @Override
-    @Deprecated
     public Query<T> batchSize(final int value) {
         getOptions().batchSize(value);
         return this;
