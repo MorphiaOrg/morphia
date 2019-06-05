@@ -9,8 +9,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.DefaultDBDecoder;
 import com.mongodb.DuplicateKeyException;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.WriteConcern;
@@ -43,7 +41,6 @@ import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
-import dev.morphia.utils.Assert;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -498,102 +495,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void setQueryFactory(final QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
-    }
-
-    @Override
-    public <T> MapreduceResults<T> mapReduce(final MapReduceOptions<T> options) {
-        DBCollection collection = options.getQuery().getCollection();
-
-        final EntityCache cache = createCache();
-        MapreduceResults<T> results = new MapreduceResults<>(collection.mapReduce(options.toCommand(getMapper())));
-
-        results.setOutputType(options.getOutputType());
-
-        if (OutputType.INLINE.equals(options.getOutputType())) {
-            results.setInlineRequiredOptions(this, options.getResultType(), getMapper(), cache);
-        } else {
-            results.setQuery(newQuery(options.getResultType(), getDB().getCollection(results.getOutputCollectionName())));
-        }
-
-        return results;
-
-    }
-
-    @Override
-    @Deprecated
-    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final String map, final String reduce,
-                                             final String finalize, final Map<String, Object> scopeFields, final Class<T> outputType) {
-
-        final DBCollection dbColl = query.getCollection();
-
-        final String outColl = mapper.getCollectionName(outputType);
-
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl, map, reduce, outColl, type.toOutputType(), query.getQueryObject());
-
-        if (query.getLimit() > 0) {
-            cmd.setLimit(query.getLimit());
-        }
-        if (query.getSortObject() != null) {
-            cmd.setSort(query.getSortObject());
-        }
-
-        if (finalize != null && !finalize.isEmpty()) {
-            cmd.setFinalize(finalize);
-        }
-
-        if (scopeFields != null && !scopeFields.isEmpty()) {
-            cmd.setScope(scopeFields);
-        }
-
-        return mapReduce(type, query, outputType, cmd);
-    }
-
-    @Override
-    @Deprecated
-    public <T> MapreduceResults<T> mapReduce(final MapreduceType type, final Query query, final Class<T> outputType,
-                                             final MapReduceCommand baseCommand) {
-
-        Assert.parametersNotNull("map", baseCommand.getMap());
-        Assert.parameterNotEmpty("map", baseCommand.getMap());
-        Assert.parametersNotNull("reduce", baseCommand.getReduce());
-        Assert.parameterNotEmpty("reduce", baseCommand.getReduce());
-
-        if (query.getOffset() != 0 || query.getFieldsObject() != null) {
-            throw new QueryException("mapReduce does not allow the offset/retrievedFields query options.");
-        }
-
-        final OutputType outType = type.toOutputType();
-
-        final DBCollection dbColl = query.getCollection();
-
-        final MapReduceCommand cmd = new MapReduceCommand(dbColl, baseCommand.getMap(), baseCommand.getReduce(),
-            baseCommand.getOutputTarget(), outType, query.getQueryObject());
-        cmd.setFinalize(baseCommand.getFinalize());
-        cmd.setScope(baseCommand.getScope());
-
-        if (query.getLimit() > 0) {
-            cmd.setLimit(query.getLimit());
-        }
-        if (query.getSortObject() != null) {
-            cmd.setSort(query.getSortObject());
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.info("Executing " + cmd);
-        }
-
-        final EntityCache cache = createCache();
-        MapreduceResults<T> results = new MapreduceResults<>(dbColl.mapReduce(baseCommand));
-
-        results.setType(type);
-        if (MapreduceType.INLINE.equals(type)) {
-            results.setInlineRequiredOptions(this, outputType, getMapper(), cache);
-        } else {
-            results.setQuery(newQuery(outputType, getDB().getCollection(results.getOutputCollectionName())));
-        }
-
-        return results;
-
     }
 
     @Override

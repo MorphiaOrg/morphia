@@ -3,7 +3,6 @@ package dev.morphia;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.MapReduceCommand;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
@@ -20,7 +19,6 @@ import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateResults;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -352,50 +350,6 @@ public interface Datastore {
      * @see QueryFactory
      */
     void setQueryFactory(QueryFactory queryFactory);
-
-    /**
-     * Runs a map/reduce job at the server
-     *
-     * @param <T>     The type of resulting data
-     * @param options the options to apply to the map/reduce job
-     * @return the results
-     * @since 1.3
-     * @deprecated This feature will not be supported in 2.0
-     */
-    @Deprecated
-    <T> MapreduceResults<T> mapReduce(MapReduceOptions<T> options);
-
-    /**
-     * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
-     *
-     * @param <T>         The type of resulting data
-     * @param outputType  The type of resulting data; inline is not working yet
-     * @param type        MapreduceType
-     * @param q           The query (only the criteria, limit and sort will be used)
-     * @param map         The map function, in javascript, as a string
-     * @param reduce      The reduce function, in javascript, as a string
-     * @param finalize    The finalize function, in javascript, as a string; can be null
-     * @param scopeFields Each map entry will be a global variable in all the functions; can be null
-     * @return counts and stuff
-     * @deprecated This feature will not be supported in 2.0
-     */
-    @Deprecated
-    <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, String map, String reduce, String finalize,
-                                      Map<String, Object> scopeFields, Class<T> outputType);
-
-    /**
-     * Runs a map/reduce job at the server; this should be used with a server version 1.7.4 or higher
-     *
-     * @param <T>         The type of resulting data
-     * @param type        MapreduceType
-     * @param q           The query (only the criteria, limit and sort will be used)
-     * @param outputType  The type of resulting data; inline is not working yet
-     * @param baseCommand The base command to fill in and send to the server
-     * @return counts and stuff
-     * @deprecated This feature will not be supported in 2.0
-     */
-    @Deprecated
-    <T> MapreduceResults<T> mapReduce(MapreduceType type, Query q, Class<T> outputType, MapReduceCommand baseCommand);
 
     /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
