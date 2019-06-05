@@ -12,13 +12,13 @@ import static dev.morphia.query.Sort.ascending;
 public class QueryImplCloneTest extends TestBase {
 
     @Test
-    public void testQueryClone() throws Exception {
-        final Query q = getDs().find(E1.class)
-                               .field("i")
-                               .equal(5)
-                               .filter("a", "value_a")
-                               .filter("b", "value_b")
-                               .order(ascending("a"));
+    public void testQueryClone() {
+        final QueryImpl q = (QueryImpl) getDs().find(E1.class)
+                                               .field("i")
+                                               .equal(5)
+                                               .filter("a", "value_a")
+                                               .filter("b", "value_b")
+                                               .order(ascending("a"));
         q.disableValidation().filter("foo", "bar");
         Assert.assertEquals(q, q.cloneQuery());
     }
