@@ -269,12 +269,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public Key<?> exists(final Object entityOrKey) {
-        final Query<?> query = buildExistsQuery(entityOrKey);
-        return query.getKey();
-    }
-
-    @Override
     public <T> Query<T> find(final Class<T> clazz) {
         return createQuery(clazz);
     }

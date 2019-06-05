@@ -97,7 +97,9 @@ public class TestDatastore extends TestBase {
         getDs().delete(getDs().find(FacebookUser.class));
 
         // then
-        assertNull("Shouldn't exist after delete", getDs().exists(key));
+        assertNull("Shouldn't exist after delete", getDs().find(FacebookUser.class)
+                                                          .filter("_id", key.getId())
+                                                          .first());
     }
 
     @Test
@@ -125,33 +127,9 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testExistsWhenItemSaved() {
-        // given
-        long id = System.currentTimeMillis();
-        final Key<FacebookUser> key = getDs().save(new FacebookUser(id, "user 1"));
-
-        // expect
-        assertNotNull(getDs().find(FacebookUser.class).filter("_id", id).first());
-        assertNotNull(getDs().exists(key));
-    }
-
-
-    @Test
-    public void testExistsWithEntity() {
-        final FacebookUser facebookUser = new FacebookUser(1, "user one");
-        getDs().save(facebookUser);
-        assertEquals(1, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
-        assertNotNull(getDs().exists(facebookUser));
-        getDs().delete(getDs().find(FacebookUser.class));
-        assertEquals(0, getDs().find(FacebookUser.class).count());
-        assertNull(getDs().exists(facebookUser));
-    }
-
-    @Test
     public void testGet() {
         getMorphia().map(FacebookUser.class);
-        List<FacebookUser> fbUsers = new ArrayList<FacebookUser>();
+        List<FacebookUser> fbUsers = new ArrayList<>();
         fbUsers.add(new FacebookUser(1, "user 1"));
         fbUsers.add(new FacebookUser(2, "user 2"));
         fbUsers.add(new FacebookUser(3, "user 3"));
@@ -640,7 +618,7 @@ public class TestDatastore extends TestBase {
         private String username;
         private int loginCount;
         @Reference
-        private List<FacebookUser> friends = new ArrayList<FacebookUser>();
+        private List<FacebookUser> friends = new ArrayList<>();
 
         public FacebookUser(final long id, final String name) {
             this();

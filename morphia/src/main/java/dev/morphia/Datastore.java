@@ -127,16 +127,6 @@ public interface Datastore {
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
-     * Does a query to check if the keyOrEntity exists in mongodb
-     *
-     * @param keyOrEntity the value to check for
-     * @return the key if the entity exists
-     * @deprecated use {@link Query#first()} instead
-     */
-    @Deprecated
-    Key<?> exists(Object keyOrEntity);
-
-    /**
      * Find all instances by type
      *
      * @param clazz the class to use for mapping the results
