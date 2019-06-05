@@ -18,7 +18,6 @@ package dev.morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
@@ -57,12 +56,12 @@ public class TestDatastoreMerge extends TestBase {
         test1.name = "foobar";
         ds.save(test1);
 
-        Test2 test2 = ds.createQuery(Test2.class).get();
+        Test2 test2 = ds.createQuery(Test2.class).first();
         assertNotNull(test2.id);
         test2.blarg = "barfoo";
         ds.merge(test2);
 
-        test1 = ds.createQuery(Test1.class).field("_id").equal(test1.id).get();
+        test1 = ds.createQuery(Test1.class).field("_id").equal(test1.id).first();
 
         assertNotNull(test1.name);//fails
     }

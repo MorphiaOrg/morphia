@@ -689,27 +689,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      */
     T first(FindOptions options);
 
-
-    /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @return the only instance in the result, or null if the result set is empty.
-     * @deprecated use {@link #first()}
-     */
-    @Deprecated
-    T get();
-
-    /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @param options the options to apply to the find operation
-     * @return the only instance in the result, or null if the result set is empty.
-     * @since 1.3
-     * @deprecated use {@link #first(FindOptions)}
-     */
-    @Deprecated
-    T get(FindOptions options);
-
     /**
      * Get the key of the first entity in the result set.  Obeys the {@link Query} offset value.
      *

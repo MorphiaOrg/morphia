@@ -227,7 +227,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T first() {
-        final MongoCursor<T> iterator = iterator();
+        final MongoCursor<T> iterator = find();
         try {
             return iterator.tryNext();
         } finally {
@@ -243,16 +243,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         } finally {
             it.close();
         }
-    }
-
-    @Override
-    public T get() {
-        return first(getOptions());
-    }
-
-    @Override
-    public T get(final FindOptions options) {
-        return first(options);
     }
 
     @Override

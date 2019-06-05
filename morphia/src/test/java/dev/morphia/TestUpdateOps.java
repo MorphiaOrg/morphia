@@ -204,19 +204,19 @@ public class TestUpdateOps extends TestBase {
         UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
                                                                   .addAll("logs", latestLogs, false);
         getDs().update(finder, updateOperationsAll, new UpdateOptions().upsert(true));
-        validateNoClassName(finder.get());
+        validateNoClassName(finder.first());
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
                                                                 .add("logs", new EntityLog("whatever3", new Date()), false);
         getDs().update(finder, updateOperations3, new UpdateOptions().upsert(true));
-        validateNoClassName(finder.get());
+        validateNoClassName(finder.first());
 
         // this entry will NOT have a className attribute
         UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
                                                                 .add("logs", new EntityLog("whatever4", new Date()), false);
         getDs().update(finder, updateOperations4, new UpdateOptions().upsert(true));
-        validateNoClassName(finder.get());
+        validateNoClassName(finder.first());
     }
 
     @Test

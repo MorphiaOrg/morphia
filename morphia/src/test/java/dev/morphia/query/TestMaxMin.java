@@ -49,11 +49,11 @@ public class TestMaxMin extends TestBase {
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class)
                                             .order("-id")
                                             .upperIndexBound(new BasicDBObject("testField", "c"))
-                                            .get()
+                                            .first()
             .id);
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class)
                                             .order("-id")
-                                            .get(new FindOptions()
+                                            .first(new FindOptions()
                                                      .modifier("$max", new BasicDBObject("testField", "c")))
             .id);
     }
@@ -104,10 +104,10 @@ public class TestMaxMin extends TestBase {
         ds.save(c);
 
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order("id")
-                                            .lowerIndexBound(new BasicDBObject("testField", "b")).get().id);
+                                            .lowerIndexBound(new BasicDBObject("testField", "b")).first().id);
 
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order("id")
-                                            .get(new FindOptions().modifier("$min", new BasicDBObject("testField", "b")))
+                                            .first(new FindOptions().modifier("$min", new BasicDBObject("testField", "b")))
             .id);
     }
 
