@@ -153,16 +153,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
-    public long countAll() {
-        final DBObject query = getQueryObject();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Executing count(" + dbColl.getName() + ") for query: " + query);
-        }
-        return dbColl.getCount(query);
-    }
-
-    @Override
     public long count() {
         return dbColl.getCount(getQueryObject());
     }
