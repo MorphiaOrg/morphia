@@ -161,8 +161,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return this;
     }
 
-    @Override
-    public QueryImpl<T> cloneQuery() {
+    /**
+     * @morphia.internal
+     */
+    QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<>(clazz, dbColl, ds);
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;

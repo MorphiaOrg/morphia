@@ -38,14 +38,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     Query<T> batchSize(int value);
 
     /**
-     * Creates and returns a copy of this {@link Query}.
-     *
-     * @return this
-     * @morphia.internal
-     */
-    Query<T> cloneQuery();
-
-    /**
      * Creates a criteria to apply against a field
      *
      * @param field the field
