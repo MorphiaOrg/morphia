@@ -201,14 +201,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
-    public Query<T> disableSnapshotMode() {
-        getOptions().getModifiers().removeField("$snapshot");
-
-        return this;
-    }
-
-    @Override
     public Query<T> disableValidation() {
         validateName = false;
         validateType = false;
@@ -219,13 +211,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Deprecated
     public Query<T> enableCursorTimeout() {
         getOptions().noCursorTimeout(false);
-        return this;
-    }
-
-    @Override
-    @Deprecated
-    public Query<T> enableSnapshotMode() {
-        getOptions().modifier("$snapshot", true);
         return this;
     }
 
@@ -614,10 +599,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(String.format("Running query(%s) : %s, options: %s,", dbColl.getName(), query, findOptions));
-        }
-
-        if (findOptions.isSnapshot() && (findOptions.getSortDBObject() != null || findOptions.hasHint())) {
-            LOG.warn("Snapshotted query should not have hint/sort.");
         }
 
         if (findOptions.getCursorType() != NonTailable && (findOptions.getSortDBObject() != null)) {

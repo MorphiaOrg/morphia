@@ -395,11 +395,6 @@ public class FindOptions {
         return options;
     }
 
-    boolean isSnapshot() {
-        Object snapshot = getModifiers().get("$snapshot");
-        return snapshot != null ? (Boolean) snapshot : false;
-    }
-
     boolean hasHint() {
         return getModifiers().get("$indexHint") != null;
     }

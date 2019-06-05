@@ -166,15 +166,6 @@ public class TestQuery extends TestBase {
         assertEquals(value.id, byKey.id);
     }
 
-    @Test
-    public void snapshot() {
-        Assume.assumeTrue(serverIsAtMostVersion(3.6));
-        getDs().find(Photo.class)
-               .find(new FindOptions()
-                         .modifier("$snapshot", true))
-               .tryNext();
-    }
-
     @Override
     @After
     public void tearDown() {
@@ -1025,31 +1016,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testNonSnapshottedQuery() {
-        Assume.assumeTrue(serverIsAtMostVersion(3.6));
-        getDs().delete(getDs().find(PhotoWithKeywords.class));
-        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
-            new PhotoWithKeywords("scott", "hernandez"),
-            new PhotoWithKeywords("scott", "hernandez")));
-        final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class)
-                                                      .find(new FindOptions()
-                                                                .modifier("$snapshot", true)
-                                                                .batchSize(2)
-                                                           );
-        getDs().save(asList(new PhotoWithKeywords("1", "2"),
-            new PhotoWithKeywords("3", "4"),
-            new PhotoWithKeywords("5", "6")));
-
-        assertNotNull(it.next());
-        assertNotNull(it.next());
-        //okay, now we should getMore...
-        assertTrue(it.hasNext());
-        assertNotNull(it.next());
-        assertTrue(it.hasNext());
-        assertNotNull(it.next());
-    }
-
-    @Test
     public void testNonexistentFindGet() {
         assertNull(getDs().find(Hotel.class).filter("_id", -1)
                           .find(new FindOptions().limit(1))
@@ -1369,30 +1335,6 @@ public class TestQuery extends TestBase {
         assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), getDs().find(PhotoWithKeywords.class)
                                                                                           .field("keywords")
                                                                                           .sizeEq(3).getQueryObject());
-    }
-
-    @Test
-    public void testSnapshottedQuery() {
-        Assume.assumeTrue(serverIsAtMostVersion(3.6));
-        getDs().delete(getDs().find(PhotoWithKeywords.class));
-        getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
-            new PhotoWithKeywords("scott", "hernandez"),
-            new PhotoWithKeywords("scott", "hernandez")));
-        final Iterator<PhotoWithKeywords> it = getDs().find(PhotoWithKeywords.class)
-                                                      .filter("keywords.keyword", "scott")
-                                                      .find(new FindOptions()
-                                                                .modifier("$snapshot", true)
-                                                                .batchSize(2));
-        getDs().save(asList(new PhotoWithKeywords("1", "2"),
-            new PhotoWithKeywords("3", "4"),
-            new PhotoWithKeywords("5", "6")));
-
-        assertNotNull(it.next());
-        assertNotNull(it.next());
-        //okay, now we should getMore...
-        assertTrue(it.hasNext());
-        assertNotNull(it.next());
-        assertTrue(!it.hasNext());
     }
 
     @Test

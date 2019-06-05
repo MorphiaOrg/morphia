@@ -138,26 +138,6 @@ public interface UpdateOperations<T> {
     UpdateOperations<T> inc(String field, Number value);
 
     /**
-     * Enables isolation (so this update happens in one shot, without yielding)
-     *
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
-     * @deprecated this functionality is deprecated in mongodb 3.6 and has been removed from 4.0
-     */
-    @Deprecated
-    UpdateOperations<T> isolated();
-
-    /**
-     * @return true if this update is to be run in isolation
-     *
-     * @mongodb.driver.manual reference/operator/update/isolated/ $isolated
-     * @since 1.3
-     * @deprecated this functionality is deprecated in mongodb 3.6 and has been removed from 4.0
-     */
-    @Deprecated
-    boolean isIsolated();
-
-    /**
      * Sets the numeric field to value if it is greater than the current value.
      *
      * @param field the field to update

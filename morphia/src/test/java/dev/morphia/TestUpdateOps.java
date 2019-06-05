@@ -15,7 +15,6 @@ package dev.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.WriteConcern;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -37,7 +36,6 @@ import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -61,10 +59,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -164,7 +160,7 @@ public class TestUpdateOps extends TestBase {
         cIntArray = ds.getByKey(ContainsIntArray.class, ds.save(new ContainsIntArray()));
 
         //add [4,5]
-        final List<Integer> newValues = new ArrayList<Integer>();
+        final List<Integer> newValues = new ArrayList<>();
         newValues.add(4);
         newValues.add(5);
         assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
@@ -277,7 +273,7 @@ public class TestUpdateOps extends TestBase {
 
         assertUpdated(getDs().update(getDs().find(ContainsIntArray.class),
                 getDs().createUpdateOperations(ContainsIntArray.class)
-                        .addToSet("values", new HashSet<Integer>(asList(10, 11)))),
+                        .addToSet("values", new HashSet<>(asList(10, 11)))),
                 1);
         assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
     }
@@ -765,9 +761,9 @@ public class TestUpdateOps extends TestBase {
     @Test
     public void testUpdateFirstNoCreate() {
         getDs().delete(getDs().find(EntityLogs.class));
-        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        List<EntityLogs> logs = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            logs.add(createEntryLogs("name", "logs" + i));
+            logs.add(createEntryLogs("logs" + i));
         }
         EntityLogs logs1 = logs.get(0);
         Query<EntityLogs> query = getDs().find(EntityLogs.class);
@@ -786,9 +782,9 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testUpdateFirstNoCreateWithEntity() {
-        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        List<EntityLogs> logs = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            logs.add(createEntryLogs("name", "logs" + i));
+            logs.add(createEntryLogs("logs" + i));
         }
         EntityLogs logs1 = logs.get(0);
 
@@ -808,9 +804,9 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testUpdateFirstNoCreateWithWriteConcern() {
-        List<EntityLogs> logs = new ArrayList<EntityLogs>();
+        List<EntityLogs> logs = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            logs.add(createEntryLogs("name", "logs" + i));
+            logs.add(createEntryLogs("logs" + i));
         }
         EntityLogs logs1 = logs.get(0);
 
@@ -970,23 +966,6 @@ public class TestUpdateOps extends TestBase {
                        getDs().createUpdateOperations(Circle.class).inc("r", 1D));
     }
 
-    @Test
-    public void isolated() {
-        Assume.assumeTrue(serverIsAtMostVersion(3.6));
-        UpdateOperations<Circle> updates = getDs().createUpdateOperations(Circle.class)
-                                                  .inc("radius", 1D);
-        assertFalse(updates.isIsolated());
-        updates.isolated();
-        assertTrue(updates.isIsolated());
-
-        getDs().update(getDs().find(Circle.class)
-                              .field("radius").equal(0),
-                       updates,
-                       new UpdateOptions()
-                           .upsert(true)
-                           .writeConcern(WriteConcern.ACKNOWLEDGED));
-    }
-
     private void assertInserted(final UpdateResults res) {
         assertThat(res.getInsertedCount(), is(1));
         assertThat(res.getUpdatedCount(), is(0));
@@ -999,9 +978,9 @@ public class TestUpdateOps extends TestBase {
         assertThat(res.getUpdatedExisting(), is(true));
     }
 
-    private EntityLogs createEntryLogs(final String key, final String value) {
+    private EntityLogs createEntryLogs(final String value) {
         EntityLogs logs = new EntityLogs();
-        logs.raw = new BasicDBObject(key, value);
+        logs.raw = new BasicDBObject("name", value);
         getDs().save(logs);
 
         return logs;
@@ -1043,7 +1022,7 @@ public class TestUpdateOps extends TestBase {
         @Indexed
         private String uuid;
         @Embedded
-        private List<EntityLog> logs = new ArrayList<EntityLog>();
+        private List<EntityLog> logs = new ArrayList<>();
         private DBObject raw;
 
         @PreLoad
@@ -1098,7 +1077,7 @@ public class TestUpdateOps extends TestBase {
 
     private static final class Parent {
         @Embedded
-        private final Set<Child> children = new HashSet<Child>();
+        private final Set<Child> children = new HashSet<>();
         @Id
         private ObjectId id;
     }

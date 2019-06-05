@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 
-import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
@@ -11,7 +10,6 @@ import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.types.CodeWScope;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -79,16 +77,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     Query<T> disableCursorTimeout();
 
     /**
-     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
-     *
-     * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", false)}
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> disableSnapshotMode();
-
-    /**
      * Turns off validation (for all calls made after)
      *
      * @return this
@@ -104,17 +92,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      */
     @Deprecated
     Query<T> enableCursorTimeout();
-
-    /**
-     * Enables snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
-     * compatible with order/sort and hint.
-     *
-     * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", true)}
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> enableSnapshotMode();
 
     /**
      * Turns on validation (for all calls made after); by default validation is on
