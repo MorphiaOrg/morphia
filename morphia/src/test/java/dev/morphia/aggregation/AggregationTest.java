@@ -303,7 +303,7 @@ public class AggregationTest extends TestBase {
                .lookup("inventory", "item", "sku", "inventoryDocs")
                .out("lookups", Order.class);
         List<Order> lookups = toList(getAds().createQuery("lookups", Order.class)
-                                             .order("_id")
+                                             .order(ascending("_id"))
                                              .find());
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));

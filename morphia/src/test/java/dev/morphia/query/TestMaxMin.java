@@ -16,6 +16,9 @@ import dev.morphia.annotations.Indexes;
 
 import java.util.List;
 
+import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.query.Sort.descending;
+
 public class TestMaxMin extends TestBase {
 
     @Override
@@ -47,12 +50,12 @@ public class TestMaxMin extends TestBase {
         ds.save(c);
 
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class)
-                                            .order("-id")
+                                            .order(descending("id"))
                                             .upperIndexBound(new BasicDBObject("testField", "c"))
                                             .first()
             .id);
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class)
-                                            .order("-id")
+                                            .order(descending("id"))
                                             .first(new FindOptions()
                                                      .modifier("$max", new BasicDBObject("testField", "c")))
             .id);
@@ -76,13 +79,13 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.find(IndexedEntity.class).order("testField, id")
+        List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
                                   .upperIndexBound(new BasicDBObject("testField", "b").append("_id", b2.id)).asList();
 
         Assert.assertEquals("size", 3, l.size());
         Assert.assertEquals("item", b1.id, l.get(2).id);
 
-        l = ds.find(IndexedEntity.class).order("testField, id")
+        l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
               .find(new FindOptions()
                           .modifier("$max", new BasicDBObject("testField", "b").append("_id", b2.id)))
               .toList();
@@ -103,10 +106,10 @@ public class TestMaxMin extends TestBase {
         ds.save(b);
         ds.save(c);
 
-        Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order("id")
+        Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order(ascending("id"))
                                             .lowerIndexBound(new BasicDBObject("testField", "b")).first().id);
 
-        Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order("id")
+        Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class).order(ascending("id"))
                                             .first(new FindOptions().modifier("$min", new BasicDBObject("testField", "b")))
             .id);
     }
@@ -129,13 +132,13 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.find(IndexedEntity.class).order("testField, id")
+        List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
                                   .lowerIndexBound(new BasicDBObject("testField", "b").append("_id", b1.id)).asList();
 
         Assert.assertEquals("size", 4, l.size());
         Assert.assertEquals("item", b1.id, l.get(0).id);
 
-        l = ds.find(IndexedEntity.class).order("testField, id")
+        l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
               .find(new FindOptions().modifier("$min", new BasicDBObject("testField", "b").append("_id", b1.id)))
               .toList();
 

@@ -331,23 +331,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     CriteriaContainer or(Criteria... criteria);
 
     /**
-     * Sorts based on a property (defines return order).  Examples:
-     * <p/>
-     * <ul>
-     * <li>{@code order("age")}</li>
-     * <li>{@code order("-age")} (descending order)</li>
-     * <li>{@code order("age, date")}</li>
-     * <li>{@code order("age,-date")} (age ascending, date descending)</li>
-     * </ul>
-     *
-     * @param sort the sort order to apply
-     * @return this
-     * @deprecated use {@link #order(Sort...)}
-     */
-    @Deprecated
-    Query<T> order(String sort);
-
-    /**
      * Sorts based on a metadata (defines return order). Example:
      * {@code order(Meta.textScore())}  ({textScore : { $meta: "textScore" }})
      * @param sort the sort order to apply

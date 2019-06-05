@@ -13,6 +13,7 @@ import dev.morphia.utils.IndexType;
 
 import java.util.List;
 
+import static dev.morphia.query.Sort.*;
 import static java.util.Arrays.asList;
 
 public class TestTextSearching extends TestBase {
@@ -43,7 +44,7 @@ public class TestTextSearching extends TestBase {
 
         List<Greeting> good = toList(getDs().find(Greeting.class)
                                             .search("good")
-                                            .order("_id")
+                                            .order(ascending("_id"))
                                             .find());
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
@@ -53,7 +54,7 @@ public class TestTextSearching extends TestBase {
 
         good = toList(getDs().find(Greeting.class)
                              .search("good", "english")
-                             .order("_id")
+                             .order(ascending("_id"))
                              .find());
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);

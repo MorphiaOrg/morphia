@@ -87,37 +87,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    /**
-     * Parses the string and validates each part
-     *
-     * @param str      the String to parse
-     * @param clazz    the class to use when validating
-     * @param mapper   the Mapper to use
-     * @param validate true if the results should be validated
-     * @return the DBObject
-     * @deprecated this is an internal method and will be removed in the next version
-     */
-    @Deprecated
-    public static BasicDBObject parseFieldsString(final String str, final Class clazz, final Mapper mapper, final boolean validate) {
-        BasicDBObject ret = new BasicDBObject();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            int dir = 1;
-
-            if (s.startsWith("-")) {
-                dir = -1;
-                s = s.substring(1).trim();
-            }
-
-            if (validate) {
-                s = new PathTarget(mapper, clazz, s).translatedPath();
-            }
-            ret.put(s, dir);
-        }
-        return ret;
-    }
-
     @Override
     public MorphiaKeyCursor<T> keys() {
         return keys(new FindOptions());
@@ -500,12 +469,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Deprecated
     public Query<T> offset(final int value) {
         getOptions().skip(value);
-        return this;
-    }
-
-    @Override
-    public Query<T> order(final String sort) {
-        getOptions().sort(parseFieldsString(sort, clazz, ds.getMapper(), validateName));
         return this;
     }
 

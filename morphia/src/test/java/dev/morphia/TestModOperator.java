@@ -1,6 +1,7 @@
 package dev.morphia;
 
 
+import dev.morphia.query.Sort;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +9,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
 import java.util.List;
+
+import static dev.morphia.query.Sort.ascending;
 
 
 public class TestModOperator extends TestBase {
@@ -20,7 +23,7 @@ public class TestModOperator extends TestBase {
 
         List<Inventory> list = toList(getDs().find(Inventory.class)
                                              .filter("quantity mod", new Integer[]{4, 0})
-                                             .order("name")
+                                             .order(ascending("name"))
                                              .find());
 
         Assert.assertEquals(2, list.size());
@@ -29,7 +32,7 @@ public class TestModOperator extends TestBase {
 
         list = toList(getDs().find(Inventory.class)
                              .filter("quantity mod", new Integer[]{4, 2})
-                             .order("name")
+                             .order(ascending("name"))
                              .find());
 
         Assert.assertEquals(1, list.size());
@@ -37,7 +40,7 @@ public class TestModOperator extends TestBase {
 
         list = toList(getDs().find(Inventory.class)
                              .filter("quantity mod", new Integer[]{6, 0})
-                             .order("name")
+                             .order(ascending("name"))
                              .find());
 
         Assert.assertEquals(1, list.size());
@@ -45,7 +48,7 @@ public class TestModOperator extends TestBase {
 
         list = toList(getDs().find(Inventory.class)
                              .field("quantity").mod(4, 0)
-                             .order("name")
+                             .order(ascending("name"))
                              .find());
 
         Assert.assertEquals(2, list.size());
@@ -54,7 +57,7 @@ public class TestModOperator extends TestBase {
 
         list = toList(getDs().find(Inventory.class)
                              .field("quantity").mod(4, 2)
-                             .order("name")
+                             .order(ascending("name"))
                              .find());
 
         Assert.assertEquals(1, list.size());
@@ -62,7 +65,7 @@ public class TestModOperator extends TestBase {
 
         list = toList(getDs().find(Inventory.class)
                              .field("quantity").mod(6, 0)
-                             .order("name")
+                             .order(ascending("name"))
                              .find());
 
         Assert.assertEquals(1, list.size());

@@ -40,7 +40,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -187,7 +186,7 @@ public class TestQuery extends TestBase {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class)
-                              .order("w")
+                              .order(ascending("w"))
                               .find(new FindOptions()
                                         .limit(1))
                               .tryNext();
@@ -195,7 +194,7 @@ public class TestQuery extends TestBase {
         assertEquals(1, r1.getWidth(), 0);
 
         r1 = getDs().find(Rectangle.class)
-                    .order("-w")
+                    .order(descending("w"))
                     .find(new FindOptions().limit(1))
                     .tryNext();
         assertNotNull(r1);
@@ -440,44 +439,19 @@ public class TestQuery extends TestBase {
     public void testCompoundSort() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        Rectangle r1 = getDs().find(Rectangle.class).order("width,-height")
+        Rectangle r1 = getDs().find(Rectangle.class).order(ascending("width"),descending("height"))
                               .find(new FindOptions().limit(1))
                               .tryNext();
         assertNotNull(r1);
         assertEquals(1, r1.getWidth(), 0);
         assertEquals(10, r1.getHeight(), 0);
 
-        r1 = getDs().find(Rectangle.class).order("-height,-width")
+        r1 = getDs().find(Rectangle.class).order(descending("height"),descending("width"))
                     .find(new FindOptions().limit(1))
                     .tryNext();
         assertNotNull(r1);
         assertEquals(10, r1.getWidth(), 0);
         assertEquals(10, r1.getHeight(), 0);
-    }
-
-    @Test
-    public void testCompoundSortWithSortBeans() {
-        List<Rectangle> list =
-            asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1));
-        Collections.shuffle(list);
-        getDs().save(list);
-
-        compareLists(list,
-            getDs().find(Rectangle.class).order("width,-height"),
-            getDs().find(Rectangle.class).order(ascending("width"), descending("height")),
-            new RectangleComparator());
-        compareLists(list,
-            getDs().find(Rectangle.class).order("-height,-width"),
-            getDs().find(Rectangle.class).order(descending("height"), descending("width")),
-            new RectangleComparator1());
-        compareLists(list,
-            getDs().find(Rectangle.class).order("width,height"),
-            getDs().find(Rectangle.class).order(ascending("width"), ascending("height")),
-            new RectangleComparator2());
-        compareLists(list,
-            getDs().find(Rectangle.class).order("width,height"),
-            getDs().find(Rectangle.class).order("width, height"),
-            new RectangleComparator3());
     }
 
     @Test
@@ -1375,14 +1349,14 @@ public class TestQuery extends TestBase {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class)
-                              .order("width")
+                              .order(ascending("width"))
                               .find(new FindOptions().limit(1))
                               .next();
         assertNotNull(r1);
         assertEquals(1, r1.getWidth(), 0);
 
         r1 = getDs().find(Rectangle.class)
-                    .order("-width")
+                    .order(descending("width"))
                     .find(new FindOptions().limit(1))
                     .next();
         assertNotNull(r1);
@@ -2007,13 +1981,6 @@ public class TestQuery extends TestBase {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
         }
-    }
-
-    private void compareLists(final List<Rectangle> list, final Query<Rectangle> query1, final Query<Rectangle> query2,
-                              final Comparator<Rectangle> comparator) {
-        Collections.sort(list, comparator);
-        assertEquals(toList(query1.find()), list);
-        assertEquals(toList(query2.find()), list);
     }
 
     private String getCommentFromProfileRecord(final DBObject profileRecord) {

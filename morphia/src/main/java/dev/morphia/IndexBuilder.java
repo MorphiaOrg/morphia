@@ -19,9 +19,7 @@ package dev.morphia;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
-import dev.morphia.utils.IndexType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class IndexBuilder extends AnnotationBuilder<Index> implements Index {
@@ -37,10 +35,6 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
         return Index.class;
     }
 
-    public IndexBuilder fields(final String fields) {
-        return fields(parseFieldsString(fields));
-    }
-
     @Override
     public Field[] fields() {
         return get("fields");
@@ -49,25 +43,6 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     @Override
     public IndexOptions options() {
         return get("options");
-    }
-
-    private List<Field> parseFieldsString(final String str) {
-        List<Field> fields = new ArrayList<Field>();
-        final String[] parts = str.split(",");
-        for (String s : parts) {
-            s = s.trim();
-            IndexType dir = IndexType.ASC;
-
-            if (s.startsWith("-")) {
-                dir = IndexType.DESC;
-                s = s.substring(1).trim();
-            }
-
-            fields.add(new FieldBuilder()
-                           .value(s)
-                           .type(dir));
-        }
-        return fields;
     }
 
     IndexBuilder fields(final List<Field> fields) {
