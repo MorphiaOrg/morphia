@@ -98,7 +98,7 @@ public class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public Datastore createDatastore(final MongoClient mongoClient, final Mapper mapper, final String dbName) {
-        return new DatastoreImpl(this, mapper, mongoClient, dbName);
+        return new DatastoreImpl(this, mongoClient, dbName);
     }
 
     /**

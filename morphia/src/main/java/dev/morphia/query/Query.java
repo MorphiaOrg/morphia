@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoIterable;
@@ -17,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @param <T> The java type to query against
  */
-public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
+public interface Query<T> extends MongoIterable<T> {
     /**
      * Creates a container to hold 'and' clauses
      *

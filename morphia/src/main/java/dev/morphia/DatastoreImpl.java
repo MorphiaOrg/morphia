@@ -57,9 +57,11 @@ import java.util.Map.Entry;
 import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.BasicDBObjectBuilder.start;
 import static com.mongodb.DBCollection.ID_FIELD_NAME;
+import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -88,35 +90,14 @@ class DatastoreImpl implements AdvancedDatastore {
      * @deprecated This is not meant to be directly instantiated by end user code.  Use
      * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
-    @Deprecated
-    public DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
-        this(morphia, morphia.getMapper(), mongoClient, dbName);
-    }
-
-    /**
-     * Create a new DatastoreImpl
-     *
-     * @param morphia     the Morphia instance
-     * @param mapper      an initialised Mapper
-     * @param mongoClient the connection to the MongoDB instance
-     * @param dbName      the name of the database for this data store.
-     * @deprecated This is not meant to be directly instantiated by end user code.  Use
-     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
-     */
-    @Deprecated
-    public DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final String dbName) {
-        this(morphia, mapper, mongoClient, mongoClient.getDatabase(dbName));
-    }
-
-    private DatastoreImpl(final Morphia morphia, final Mapper mapper, final MongoClient mongoClient, final MongoDatabase database) {
+    DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
         this.morphia = morphia;
-        this.mapper = mapper;
+        this.mapper = morphia.getMapper();
         this.mongoClient = mongoClient;
-        this.database =
-            database.withCodecRegistry(CodecRegistries.fromRegistries(
-                mongoClient.getMongoClientOptions().getCodecRegistry(),
-                MongoClientSettings.getDefaultCodecRegistry()));
-        this.db = mongoClient.getDB(database.getName());
+        this.database = mongoClient.getDatabase(dbName)
+                                   .withCodecRegistry(fromRegistries(mongoClient.getMongoClientOptions().getCodecRegistry(),
+                                       getDefaultCodecRegistry()));
+        this.db = mongoClient.getDB(dbName);
         this.defConcern = mongoClient.getWriteConcern();
         this.indexHelper = new IndexHelper(mapper, database);
     }
@@ -130,7 +111,7 @@ class DatastoreImpl implements AdvancedDatastore {
      */
     @Deprecated
     public DatastoreImpl copy(final String database) {
-        return new DatastoreImpl(morphia, mapper, mongoClient, database);
+        return new DatastoreImpl(morphia, mongoClient, database);
     }
 
     /**

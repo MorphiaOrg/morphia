@@ -26,18 +26,16 @@ class FieldCriteria extends AbstractCriteria {
     private final Object value;
     private final boolean not;
     private final Mapper mapper;
-    private final QueryImpl<?> query;
 
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
-        this(mapper, query, field, op, value, false);
+        this(mapper, query, field, op, value, false, mapper.getMappedClass(query.getEntityClass()));
     }
 
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
-                  final boolean not) {
+                  final boolean not, final MappedClass mappedClass) {
         this.mapper = mapper;
         //validate might modify prop string to translate java field name to db field name
-        this.query = query;
-        final PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(query.getEntityClass()), fieldName,
+        final PathTarget pathTarget = new PathTarget(mapper, mappedClass, fieldName,
             query.isValidatingNames());
         final MappedField mf = pathTarget.getTarget();
 
@@ -80,10 +78,6 @@ class FieldCriteria extends AbstractCriteria {
 
     protected Mapper getMapper() {
         return mapper;
-    }
-
-    protected QueryImpl<?> getQuery() {
-        return query;
     }
 
     @Override

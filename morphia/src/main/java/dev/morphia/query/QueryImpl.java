@@ -285,6 +285,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     /**
      * @morphia.internal
+     * @return the query object
      */
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();

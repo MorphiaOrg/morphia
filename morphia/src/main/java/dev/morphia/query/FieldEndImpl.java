@@ -40,6 +40,7 @@ import static java.util.regex.Pattern.quote;
  * class and subject to change without notice.
  *
  * @param <T> the type of the CriteriaContainer
+ * @morphia.internal
  */
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
@@ -337,7 +338,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
-        target.add(new FieldCriteria(mapper, query, field, op, val, not));
+        target.add(new FieldCriteria(mapper, query, field, op, val, not, mapper.getMappedClass(query.getEntityClass())));
         return target;
     }
 

@@ -1,6 +1,5 @@
 package dev.morphia;
 
-import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.aggregation.AggregationPipeline;
