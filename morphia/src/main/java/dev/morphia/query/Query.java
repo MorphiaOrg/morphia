@@ -46,19 +46,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     Query<T> cloneQuery();
 
     /**
-     * This makes it possible to attach a comment to a query. Because these comments propagate to the profile log, adding comments can make
-     * your profile data much easier to interpret and trace.
-     *
-     * @param comment the comment to add
-     * @return the Query to enable chaining of commands
-     * @see FindOptions#modifier(String, Object)
-     * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$comment", comment)}
-     * @mongodb.driver.manual reference/operator/meta/comment $comment
-     */
-    @Deprecated
-    Query<T> comment(String comment);
-
-    /**
      * Creates a criteria to apply against a field
      *
      * @param field the field

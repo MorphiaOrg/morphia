@@ -179,13 +179,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
-    public Query<T> comment(final String comment) {
-        getOptions().modifier("$comment", comment);
-        return this;
-    }
-
-    @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
         add(container);
