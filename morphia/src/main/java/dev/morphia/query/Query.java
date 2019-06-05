@@ -499,26 +499,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     Query<T> where(CodeWScope js);
 
     /**
-     * Execute the query and get the results (as a {@code List<Key<T>>})  This method is provided as a convenience;
-     *
-     * @return returns a List of the keys of the documents returned by a query
-     * @deprecated use {@link #keys()}
-     */
-    @Deprecated
-    List<Key<T>> asKeyList();
-
-    /**
-     * Execute the query and get the results (as a {@code List<Key<T>>})  This method is provided as a convenience;
-     *
-     * @param options the options to apply to the find operation
-     * @return returns a List of the keys of the documents returned by a query
-     * @since 1.3
-     * @deprecated use {@link #keys(FindOptions)}
-     */
-    @Deprecated
-    List<Key<T>> asKeyList(FindOptions options);
-
-    /**
      * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
      *
      * @return the keys of the documents returned by this query
@@ -533,26 +513,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @since 1.4
      */
     MorphiaKeyCursor<T> keys(FindOptions options);
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @return returns a List of the documents returned by a query
-     * @deprecated use {@link #find(FindOptions)}
-     */
-    @Deprecated
-    List<T> asList();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return returns a List of the documents returned by a query
-     * @since 1.3
-     * @deprecated use {@link #find(FindOptions)}
-     */
-    @Deprecated
-    List<T> asList(FindOptions options);
 
     /**
      * Count the total number of values in the result, ignoring limit and offset

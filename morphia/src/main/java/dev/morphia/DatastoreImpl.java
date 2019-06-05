@@ -407,7 +407,9 @@ public class DatastoreImpl implements AdvancedDatastore {
             for (final Key key : kindKeys) {
                 objIds.add(key.getId());
             }
-            final List kindResults = find(entry.getKey()).disableValidation().filter("_id in", objIds).asList();
+            final List kindResults = find(entry.getKey()).disableValidation().filter("_id in", objIds)
+                                                         .find()
+                                                         .toList();
             entities.addAll(kindResults);
         }
 

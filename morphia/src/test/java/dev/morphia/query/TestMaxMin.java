@@ -80,7 +80,9 @@ public class TestMaxMin extends TestBase {
         ds.save(c2);
 
         List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
-                                  .upperIndexBound(new BasicDBObject("testField", "b").append("_id", b2.id)).asList();
+                                  .upperIndexBound(new BasicDBObject("testField", "b").append("_id", b2.id))
+                                  .find()
+                                  .toList();
 
         Assert.assertEquals("size", 3, l.size());
         Assert.assertEquals("item", b1.id, l.get(2).id);
@@ -133,7 +135,9 @@ public class TestMaxMin extends TestBase {
         ds.save(c2);
 
         List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
-                                  .lowerIndexBound(new BasicDBObject("testField", "b").append("_id", b1.id)).asList();
+                                  .lowerIndexBound(new BasicDBObject("testField", "b").append("_id", b1.id))
+                                  .find()
+                                  .toList();
 
         Assert.assertEquals("size", 4, l.size());
         Assert.assertEquals("item", b1.id, l.get(0).id);

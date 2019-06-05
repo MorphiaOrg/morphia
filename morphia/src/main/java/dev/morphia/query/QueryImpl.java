@@ -34,8 +34,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.CursorType.NonTailable;
-import static com.mongodb.CursorType.Tailable;
-import static com.mongodb.CursorType.TailableAwait;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -99,26 +97,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         cloned.includeFields = true;
 
         return new MorphiaKeyCursor<>(ds, cloned.prepareCursor(options), ds.getMapper(), clazz, dbColl.getName());
-    }
-
-    @Override
-    public List<Key<T>> asKeyList() {
-        return asKeyList(getOptions());
-    }
-
-    @Override
-    public List<Key<T>> asKeyList(final FindOptions options) {
-        return keys(options).toList();
-    }
-
-    @Override
-    public List<T> asList() {
-        return find(getOptions()).toList();
-    }
-
-    @Override
-    public List<T> asList(final FindOptions options) {
-        return find(options).toList();
     }
 
     @Override
