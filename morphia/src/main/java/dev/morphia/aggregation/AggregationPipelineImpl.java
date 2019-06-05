@@ -8,8 +8,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
+import dev.morphia.Datastore;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
+import dev.morphia.query.QueryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.geo.GeometryShapeConverter;
@@ -31,9 +33,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     private final DBCollection collection;
     private final Class source;
-    private final List<DBObject> stages = new ArrayList<DBObject>();
+    private final List<DBObject> stages = new ArrayList<>();
     private final Mapper mapper;
-    private final dev.morphia.DatastoreImpl datastore;
+    private final Datastore datastore;
     private boolean firstStage;
 
     /**
@@ -43,7 +45,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param collection the database collection on which to operate
      * @param source     the source type to aggregate
      */
-    public AggregationPipelineImpl(final dev.morphia.DatastoreImpl datastore, final DBCollection collection, final Class source) {
+    public AggregationPipelineImpl(final Datastore datastore, final DBCollection collection, final Class source) {
         this.datastore = datastore;
         this.collection = collection;
         mapper = datastore.getMapper();
@@ -81,7 +83,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         LOG.debug("stages = " + stages);
 
         Cursor cursor = collection.aggregate(stages, options, readPreference);
-        return new MorphiaCursor<U>(datastore, cursor, mapper, target, mapper.createEntityCache());
+        return new MorphiaCursor<>(datastore, cursor, mapper, target, mapper.createEntityCache());
     }
 
     @Override
@@ -96,7 +98,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "num", geoNear.getMaxDocuments());
         putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
         if (geoNear.getQuery() != null) {
-            geo.put("query", geoNear.getQuery().getQueryObject());
+            geo.put("query", ((QueryImpl) geoNear.getQuery()).getQueryObject());
         }
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
@@ -159,7 +161,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline match(final Query query) {
-        stages.add(new BasicDBObject("$match", query.getQueryObject()));
+        stages.add(new BasicDBObject("$match", ((QueryImpl) query).getQueryObject()));
         return this;
     }
 

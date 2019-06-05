@@ -25,16 +25,18 @@ class FieldCriteria extends AbstractCriteria {
     private final FilterOperator operator;
     private final Object value;
     private final boolean not;
+    private final Mapper mapper;
     private final QueryImpl<?> query;
 
-    FieldCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
-        this(query, field, op, value, false);
+    FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
+        this(mapper, query, field, op, value, false);
     }
 
-    FieldCriteria(final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
+    FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
+                  final boolean not) {
+        this.mapper = mapper;
         //validate might modify prop string to translate java field name to db field name
         this.query = query;
-        final Mapper mapper = query.getDatastore().getMapper();
         final PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(query.getEntityClass()), fieldName,
             query.isValidatingNames());
         final MappedField mf = pathTarget.getTarget();
@@ -76,6 +78,10 @@ class FieldCriteria extends AbstractCriteria {
         this.not = not;
     }
 
+    protected Mapper getMapper() {
+        return mapper;
+    }
+
     protected QueryImpl<?> getQuery() {
         return query;
     }
@@ -96,7 +102,7 @@ class FieldCriteria extends AbstractCriteria {
             final Object object = obj.get(field); // operator within inner object
             Map<String, Object> inner;
             if (!(object instanceof Map)) {
-                inner = new HashMap<String, Object>();
+                inner = new HashMap<>();
                 obj.put(field, inner);
             } else {
                 inner = (Map<String, Object>) object;

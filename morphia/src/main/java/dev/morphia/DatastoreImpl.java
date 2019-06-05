@@ -4,10 +4,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBDecoderFactory;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.DefaultDBDecoder;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
@@ -37,6 +35,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
@@ -66,10 +65,8 @@ import static java.util.Collections.singletonList;
  * A generic (type-safe) wrapper around mongodb collections
  *
  * @morphia.internal
- * @deprecated This is an internal implementation of a published API.  No public alternative planned.
  */
-@Deprecated
-public class DatastoreImpl implements AdvancedDatastore {
+class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
     private final Morphia morphia;
@@ -79,7 +76,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     private DB db;
     private Mapper mapper;
     private WriteConcern defConcern;
-    private DBDecoderFactory decoderFactory;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
@@ -163,23 +159,20 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> WriteResult delete(final Query<T> query, final DeleteOptions options) {
+        final QueryImpl queryImpl = (QueryImpl) query;
 
-        DBCollection dbColl = query.getCollection();
+        DBCollection dbColl = queryImpl.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
+            dbColl = getCollection(queryImpl.getEntityClass());
         }
 
-        if (query.getSortObject() != null || query.getOffset() != 0 || query.getLimit() > 0) {
-            throw new QueryException("Delete does not allow sort/offset/limit query options.");
-        }
-
-        return dbColl.remove(query.getQueryObject(), enforceWriteConcern(options, query.getEntityClass()).getOptions());
+        return dbColl.remove(queryImpl.getQueryObject(), enforceWriteConcern(options, queryImpl.getEntityClass()).getOptions());
     }
 
     @Override
     public <T> WriteResult delete(final Query<T> query) {
-        return delete(query, new DeleteOptions().writeConcern(getWriteConcern(query.getEntityClass())));
+        return delete(query, new DeleteOptions().writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
     }
 
     @Override
@@ -280,48 +273,51 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T findAndDelete(final Query<T> query, final FindAndModifyOptions options) {
-        DBCollection dbColl = query.getCollection();
+        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
+        DBCollection dbColl = queryImpl.getCollection();
         if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
+            dbColl = getCollection(queryImpl.getEntityClass());
         }
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Executing findAndModify(" + dbColl.getName() + ") with delete ...");
         }
 
-        FindAndModifyOptions copy = enforceWriteConcern(options, query.getEntityClass())
+        FindAndModifyOptions copy = enforceWriteConcern(options, queryImpl.getEntityClass())
                                         .copy()
-                                        .projection(query.getFieldsObject())
-                                        .sort(query.getSortObject())
+                                        .projection(queryImpl.getFieldsObject())
+                                        .sort(queryImpl.getSortObject())
                                         .returnNew(false)
                                         .upsert(false)
                                         .remove(true);
 
-        final DBObject result = dbColl.findAndModify(query.getQueryObject(), copy.getOptions());
+        final DBObject result = dbColl.findAndModify(queryImpl.getQueryObject(), copy.getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), result, createCache());
+        return mapper.fromDBObject(this, queryImpl.getEntityClass(), result, createCache());
     }
 
     @Override
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final FindAndModifyOptions options) {
-        DBCollection dbColl = query.getCollection();
+        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
+
+        DBCollection dbColl = queryImpl.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
+            dbColl = getCollection(queryImpl.getEntityClass());
         }
 
         if (LOG.isTraceEnabled()) {
             LOG.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
         }
 
-        updateForVersioning(query, operations);
-        DBObject res = dbColl.findAndModify(query.getQueryObject(), options.copy()
-                                                                           .sort(query.getSortObject())
-                                                                           .projection(query.getFieldsObject())
+        updateForVersioning(queryImpl, operations);
+        DBObject res = dbColl.findAndModify(queryImpl.getQueryObject(), options.copy()
+                                                                           .sort(queryImpl.getSortObject())
+                                                                           .projection(queryImpl.getFieldsObject())
                                                                            .update(((UpdateOpsImpl<T>) operations).getOps())
                                                                            .getOptions());
 
-        return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return mapper.fromDBObject(this, queryImpl.getEntityClass(), res, createCache());
 
     }
 
@@ -349,7 +345,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     }
 
-    private <T> void updateForVersioning(final Query<T> query, final UpdateOperations<T> operations) {
+    private <T> void updateForVersioning(final QueryImpl<T> query, final UpdateOperations<T> operations) {
         final MappedClass mc = mapper.getMappedClass(query.getEntityClass());
 
         if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
@@ -525,7 +521,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         wr = tryVersionedUpdate(dbColl, unwrapped, set, idValue, new InsertOptions().writeConcern(wc), mc);
 
         if (wr == null) {
-            final Query<T> query = (Query<T>) createQuery(unwrapped.getClass()).filter("_id", id);
+            final QueryImpl<T> query = (QueryImpl<T>) createQuery(unwrapped.getClass()).filter("_id", id);
             wr = update(query, set, new UpdateOptions().writeConcern(wc)).getWriteResult();
         }
 
@@ -616,7 +612,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(query, operations, new UpdateOptions()
                                              .upsert(false)
                                              .multi(true)
-                                             .writeConcern(getWriteConcern(query.getEntityClass())));
+                                             .writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
     }
 
     @Override
@@ -625,7 +621,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return update(query, operations, new UpdateOptions()
                                              .upsert(createIfMissing)
                                              .multi(true)
-                                             .writeConcern(getWriteConcern(query.getEntityClass())));
+                                             .writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
     }
 
     @Override
@@ -664,6 +660,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @Deprecated
     public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
+        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
+
         if (getMapper().getMappedClass(entity).getMappedVersionField() != null) {
             throw new UnsupportedOperationException("updateFirst() is not supported with versioned entities");
         }
@@ -671,7 +669,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<>();
         final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
 
-        final UpdateResults res = update(query, dbObj, new UpdateOptions()
+        final UpdateResults res = update(queryImpl, dbObj, new UpdateOptions()
                                                            .upsert(createIfMissing)
                                                            .writeConcern(getWriteConcern(entity)));
 
@@ -737,11 +735,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public DBDecoderFactory getDecoderFact() {
-        return decoderFactory != null ? decoderFactory : DefaultDBDecoder.FACTORY;
-    }
-
-    @Override
     public <T> Key<T> insert(final T entity) {
         return insert(entity, getWriteConcern(entity));
     }
@@ -767,32 +760,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Query<T> queryByExample(final String collection, final T ex) {
         return queryByExample(getDB().getCollection(collection), ex);
-    }
-
-    /**
-     * Find all instances by type in a different collection than what is mapped on the class given skipping some documents and returning a
-     * fixed number of the remaining.
-     *
-     * @param collection The collection use when querying
-     * @param clazz      the class to use for mapping the results
-     * @param property   the document property to query against
-     * @param value      the value to check for
-     * @param offset     the number of results to skip
-     * @param size       the maximum number of results to return
-     * @param validate   if true, validate the query
-     * @param <T>        the type to query
-     * @param <V>        the type to filter value
-     * @return the query
-     */
-    public <T, V> Query<T> find(final String collection, final Class<T> clazz, final String property, final V value, final int offset,
-                                final int size, final boolean validate) {
-        final Query<T> query = find(collection);
-        if (!validate) {
-            query.disableValidation();
-        }
-        query.offset(offset);
-        query.limit(size);
-        return query.filter(property, value).enableValidation();
     }
 
     /**
@@ -999,7 +966,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
-            final Query<?> query = find(dbColl.getName())
+            final QueryImpl<?> query = (QueryImpl<?>) find(dbColl.getName())
                                        .disableValidation()
                                        .filter("_id", idValue)
                                        .enableValidation()
@@ -1019,17 +986,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return wr;
-    }
-
-    private Query<?> buildExistsQuery(final Object entityOrKey) {
-        final Object unwrapped = ProxyHelper.unwrap(entityOrKey);
-        final Key<?> key = getKey(unwrapped);
-        final Object id = key.getId();
-        if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
-        }
-
-        return find(key.getCollection()).filter("_id", key.getId());
     }
 
     private EntityCache createCache() {
@@ -1140,16 +1096,17 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
-        DBCollection dbColl = query.getCollection();
+        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
+        DBCollection dbColl = queryImpl.getCollection();
         // TODO remove this after testing.
         if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
+            dbColl = getCollection(queryImpl.getEntityClass());
         }
 
-        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
+        final MappedClass mc = getMapper().getMappedClass(queryImpl.getEntityClass());
         final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
 
-        DBObject queryObject = query.getQueryObject();
+        DBObject queryObject = queryImpl.getQueryObject();
 
         if (!fields.isEmpty()) {
             operations.inc(fields.get(0).getNameToStore(), 1);
@@ -1162,12 +1119,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return new UpdateResults(dbColl.update(queryObject, update,
-            enforceWriteConcern(options, query.getEntityClass())
+            enforceWriteConcern(options, queryImpl.getEntityClass())
                 .getOptions()));
     }
 
     @SuppressWarnings("unchecked")
-    private <T> UpdateResults update(final Query<T> query, final DBObject update, final UpdateOptions options) {
+    private <T> UpdateResults update(final QueryImpl<T> query, final DBObject update, final UpdateOptions options) {
 
         DBCollection dbColl = query.getCollection();
         // TODO remove this after testing.
@@ -1180,9 +1137,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         if (query.getOffset() > 0) {
             throw new QueryException("a query offset is not allowed for updates.");
-        }
-        if (query.getLimit() > 0) {
-            throw new QueryException("a query limit is not allowed for updates.");
         }
 
         DBObject queryObject = query.getQueryObject();

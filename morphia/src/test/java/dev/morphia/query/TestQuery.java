@@ -442,7 +442,8 @@ public class TestQuery extends TestBase {
                                              .find(PhotoWithKeywords.class)
                                              .field("keywords").not().sizeEq(3);
 
-        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$not", new BasicDBObject("$size", 3))), query.getQueryObject());
+        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$not", new BasicDBObject("$size", 3))),
+            ((QueryImpl) query).getQueryObject());
     }
 
     @Test
@@ -644,7 +645,7 @@ public class TestQuery extends TestBase {
             q.or(q.criteria("keywords.keyword").equal("hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(q.getQueryObject().containsField("$and"));
+        assertTrue(((QueryImpl) q).getQueryObject().containsField("$and"));
     }
 
     @Test
@@ -656,7 +657,7 @@ public class TestQuery extends TestBase {
             q.criteria("keywords.keyword").hasAnyOf(asList("scott", "hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(q.getQueryObject().containsField("$and"));
+        assertTrue(((QueryImpl) q).getQueryObject().containsField("$and"));
 
     }
 
@@ -1023,7 +1024,8 @@ public class TestQuery extends TestBase {
         query.criteria("score")
              .not()
              .greaterThan(7);
-        assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))), query.getQueryObject());
+        assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))),
+            ((QueryImpl) query).getQueryObject());
     }
 
     @Test
@@ -1055,11 +1057,11 @@ public class TestQuery extends TestBase {
             // success!
         }
 
-        DBObject fields = getDs()
-                              .find(ContainsRenamedFields.class)
-                              .project("_id", true)
-                              .project("first_name", true)
-                              .getFieldsObject();
+        final Query<ContainsRenamedFields> project = getDs()
+                                                         .find(ContainsRenamedFields.class)
+                                                         .project("_id", true)
+                                                         .project("first_name", true);
+        DBObject fields = ((QueryImpl) project).getFieldsObject();
         assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
@@ -1279,9 +1281,9 @@ public class TestQuery extends TestBase {
             // success!
         }
 
-        DBObject fields = getDs()
-                              .find(ContainsRenamedFields.class)
-                              .retrievedFields(true, "_id", "first_name").getFieldsObject();
+        final Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class)
+                                                          .retrievedFields(true, "_id", "first_name");
+        DBObject fields = ((QueryImpl) query).getFieldsObject();
         assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
@@ -1322,9 +1324,10 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSizeEqQuery() {
-        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), getDs().find(PhotoWithKeywords.class)
-                                                                                          .field("keywords")
-                                                                                          .sizeEq(3).getQueryObject());
+        final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
+                                                         .field("keywords")
+                                                         .sizeEq(3);
+        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), ((QueryImpl) query).getQueryObject());
     }
 
     @Test
@@ -1485,7 +1488,7 @@ public class TestQuery extends TestBase {
 
         query.and(query.criteria("fieldF").equal("f"));
 
-        final DBObject queryObject = query.getQueryObject();
+        final DBObject queryObject = ((QueryImpl) query).getQueryObject();
 
         final BasicDBObject parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
@@ -1507,7 +1510,7 @@ public class TestQuery extends TestBase {
 
         DBObject expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds.id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes.id\": "
                                   + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods.id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
-        Assert.assertEquals(expected, query.getQueryObject());
+        Assert.assertEquals(expected, ((QueryImpl) query).getQueryObject());
     }
 
     @Entity(value = "user", noClassnameStored = true)

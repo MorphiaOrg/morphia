@@ -6,6 +6,7 @@ import dev.morphia.geo.CoordinateReferenceSystem;
 import dev.morphia.geo.Geometry;
 import dev.morphia.geo.GeometryQueryConverter;
 import dev.morphia.geo.NamedCoordinateReferenceSystemConverter;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
 import static dev.morphia.query.FilterOperator.NEAR;
@@ -19,15 +20,15 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private final Geometry geometry;
     private CoordinateReferenceSystem crs;
 
-    private Geo2dSphereCriteria(final QueryImpl<?> query, final String field, final FilterOperator operator,
+    private Geo2dSphereCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator operator,
                                 final Geometry geometry) {
-        super(query, field, operator, geometry);
+        super(mapper, query, field, operator, geometry);
         this.geometry = geometry;
     }
 
-    static Geo2dSphereCriteria geo(final QueryImpl<?> query, final String field, final FilterOperator operator,
+    static Geo2dSphereCriteria geo(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator operator,
                                    final Geometry value) {
-        return new Geo2dSphereCriteria(query, field, operator, value);
+        return new Geo2dSphereCriteria(mapper, query, field, operator, value);
     }
 
     Geo2dSphereCriteria maxDistance(final Double maxDistance) {
@@ -60,7 +61,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     public DBObject toDBObject() {
         DBObject query;
         FilterOperator operator = getOperator();
-        GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getQuery().getDatastore().getMapper());
+        GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getMapper());
         final DBObject geometryAsDBObject = (DBObject) geometryQueryConverter.encode(geometry, null);
 
         switch (operator) {

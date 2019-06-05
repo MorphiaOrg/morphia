@@ -45,16 +45,17 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
-    private final dev.morphia.DatastoreImpl ds;
+    private final Datastore ds;
     private final DBCollection dbColl;
     private final Class<T> clazz;
+    private final Mapper mapper;
     private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
     private Boolean includeFields;
     private DBObject baseQuery;
     private FindOptions options;
-    private CriteriaContainer compoundContainer = new CriteriaContainerImpl(this, AND);
+    private CriteriaContainer compoundContainer;
 
     FindOptions getOptions() {
         if (options == null) {
@@ -72,17 +73,19 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         this.clazz = clazz;
-        this.ds = ((dev.morphia.DatastoreImpl) ds);
+        this.ds = ds;
         dbColl = coll;
-        cache = this.ds.getMapper().createEntityCache();
+        mapper = this.ds.getMapper();
+        cache = mapper.createEntityCache();
 
-        final MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
+        final MappedClass mc = mapper.getMappedClass(clazz);
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         if (entAn != null) {
-            getOptions().readPreference(this.ds.getMapper().getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
+            getOptions().readPreference(mapper.getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
                                         ? ReadPreference.secondaryPreferred()
                                         : null);
         }
+        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
 
     @Override
@@ -121,21 +124,15 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T first() {
-        final MongoCursor<T> iterator = find();
-        try {
+        try (MongoCursor<T> iterator = find()) {
             return iterator.tryNext();
-        } finally {
-            iterator.close();
         }
     }
 
     @Override
     public T first(final FindOptions options) {
-        final MongoCursor<T> it = find(options.copy().limit(1));
-        try {
+        try (MongoCursor<T> it = find(options.copy().limit(1))) {
             return it.tryNext();
-        } finally {
-            it.close();
         }
     }
 
@@ -146,11 +143,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Key<T> getKey(final FindOptions options) {
-        final MongoCursor<Key<T>> it = keys(options.copy().limit(1));
-        try {
+        try (MongoCursor<Key<T>> it = keys(options.copy().limit(1))) {
             return it.tryNext();
-        } finally {
-            it.close();
         }
     }
 
@@ -182,10 +176,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, AND);
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
         add(container);
 
-        return new FieldEndImpl<CriteriaContainer>(this, field, container);
+        return new FieldEndImpl<CriteriaContainer>(mapper, this, field, container);
     }
 
     @Override
@@ -215,7 +209,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
-        return new FieldEndImpl<>(this, name, this);
+        return new FieldEndImpl<>(mapper, this, name, this);
     }
 
     @Override
@@ -228,7 +222,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         final String prop = parts[0].trim();
         final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
 
-        add(new FieldCriteria(this, prop, op, value));
+        add(new FieldCriteria(mapper, this, prop, op, value));
 
         return this;
     }
@@ -239,19 +233,27 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return getOptions().getBatchSize();
     }
 
-    @Override
-    @Deprecated
+    /**
+     * @return the collection this query targets
+     *
+     * @morphia.internal
+     */
     public DBCollection getCollection() {
         return dbColl;
     }
 
-    @Override
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
     public Class<T> getEntityClass() {
         return clazz;
     }
 
-    @Override
-    @Deprecated
+    /**
+     * @return the Mongo fields {@link DBObject}.
+     * @morphia.internal
+     */
     public DBObject getFieldsObject() {
         DBObject projection = getOptions().getProjection();
         if (projection == null || projection.keySet().isEmpty()) {
@@ -270,9 +272,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return fieldsFilter;
     }
 
-    @Override
     @Deprecated
-    public int getLimit() {
+    private int getLimit() {
         return getOptions().getLimit();
     }
 
@@ -282,8 +283,9 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return getOptions().getSkip();
     }
 
-    @Override
-    @Deprecated
+    /**
+     * @morphia.internal
+     */
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();
 
@@ -305,8 +307,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         baseQuery = new BasicDBObject(query.toMap());
     }
 
-    @Override
-    @Deprecated
+    /**
+     * @return the Mongo sort {@link DBObject}.
+     * @morphia.internal
+     */
     public DBObject getSortObject() {
         DBObject sort = getOptions().getSortDBObject();
         return (sort == null) ? null : new BasicDBObject(sort.toMap());
@@ -537,26 +541,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
-     * @return the Datastore
-     * @deprecated this is an internal method that exposes an internal type and will likely go away soon
-     */
-    @Deprecated
-    public dev.morphia.DatastoreImpl getDatastore() {
-        return ds;
-    }
-
-    /**
      * @return true if field names are being validated
      */
     public boolean isValidatingNames() {
         return validateName;
-    }
-
-    /**
-     * @return true if query parameter value types are being validated against the field types
-     */
-    public boolean isValidatingTypes() {
-        return validateType;
     }
 
     @Override
@@ -589,8 +577,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return dbColl.find(query, findOptions.getOptions()
                                              .copy()
                                              .sort(getSortObject())
-                                             .projection(getFieldsObject()))
-                     .setDecoderFactory(ds.getDecoderFact());
+                                             .projection(getFieldsObject()));
     }
 
     @Override
@@ -600,24 +587,16 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public void forEach(final Block<? super T> block) {
-        MongoCursor<T> cursor = iterator();
-        try {
+        try (MongoCursor<T> cursor = iterator()) {
             while (cursor.hasNext()) {
                 block.apply(cursor.next());
             }
-        } finally {
-            cursor.close();
         }
     }
 
     @Override
     public <A extends Collection<? super T>> A into(final A target) {
-        forEach(new Block<>() {
-            @Override
-            public void apply(final T t) {
-                target.add(t);
-            }
-        });
+        forEach((Block<T>) t -> target.add(t));
         return target;
     }
 

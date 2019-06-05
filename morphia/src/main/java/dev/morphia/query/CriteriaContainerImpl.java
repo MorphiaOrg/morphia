@@ -4,6 +4,7 @@ package dev.morphia.query;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import dev.morphia.mapping.Mapper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,24 +21,15 @@ import static dev.morphia.query.CriteriaJoin.AND;
  */
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private CriteriaJoin joinMethod;
-    private List<Criteria> children;
+    private List<Criteria> children = new ArrayList<>();
 
+    private final Mapper mapper;
     private QueryImpl<?> query;
 
-    protected CriteriaContainerImpl(final QueryImpl<?> query, final CriteriaJoin joinMethod) {
-        this(joinMethod);
-        this.query = query;
-    }
-
-    protected CriteriaContainerImpl(final CriteriaContainerImpl original) {
-        this.joinMethod = original.joinMethod;
-        this.query = original.query;
-        children = new ArrayList<Criteria>(original.children);
-    }
-
-    protected CriteriaContainerImpl(final CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(final Mapper mapper, final QueryImpl<?> query, final CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
-        children = new ArrayList<Criteria>();
+        this.mapper = mapper;
+        this.query = query;
     }
 
     @Override
@@ -55,7 +47,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return new FieldEndImpl<CriteriaContainerImpl>(query, name, this);
+        return new FieldEndImpl<>(mapper, query, name, this);
     }
 
     @Override
@@ -81,7 +73,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     private DBObject and() {
         DBObject dbObject = new BasicDBObject();
         final BasicDBList and = new BasicDBList();
-        Set<String> names = new HashSet<String>();
+        Set<String> names = new HashSet<>();
         boolean duplicates = false;
 
         for (final Criteria child : children) {
@@ -138,7 +130,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
-        final CriteriaContainerImpl parent = new CriteriaContainerImpl(query, cj);
+        final CriteriaContainerImpl parent = new CriteriaContainerImpl(mapper, query, cj);
 
         for (final Criteria c : criteria) {
             parent.add(c);

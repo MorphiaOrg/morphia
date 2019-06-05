@@ -1,14 +1,13 @@
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.testutil.JSONMatcher;
+import org.junit.Test;
 
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.PointBuilder.pointBuilder;
 import static dev.morphia.query.FilterOperator.NEAR;
+import static org.junit.Assert.assertThat;
 
 public class Geo2dSphereCriteriaTest extends TestBase {
     @Test
@@ -19,7 +18,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMorphia().getMapper(), stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build())
@@ -49,7 +48,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
 
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMorphia().getMapper(), stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build());

@@ -127,40 +127,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     int getBatchSize();
 
     /**
-     * @return the collection this query targets
-     *
-     * @deprecated This is an internal method and subject to change or removal.  Do not use.
-     * @morphia.internal
-     */
-    @Deprecated
-    DBCollection getCollection();
-
-    /**
-     * @return the entity {@link Class}.
-     * @deprecated
-     * @morphia.internal
-     */
-    @Deprecated
-    Class<T> getEntityClass();
-
-    /**
-     * @return the Mongo fields {@link DBObject}.
-     * @deprecated
-     * @morphia.internal
-     */
-    @Deprecated
-    DBObject getFieldsObject();
-
-    /**
-     * @return the limit
-     * @see #limit(int)
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#limit(int)
-     */
-    @Deprecated
-    int getLimit();
-
-    /**
      * @return the offset.
      * @see #offset(int)
      * @deprecated use the methods that accept Options directly
@@ -168,22 +134,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      */
     @Deprecated
     int getOffset();
-
-    /**
-     * @return the Mongo query {@link DBObject}.
-     * @deprecated
-     * @morphia.internal
-     */
-    @Deprecated
-    DBObject getQueryObject();
-
-    /**
-     * @return the Mongo sort {@link DBObject}.
-     * @deprecated
-     * @morphia.internal
-     */
-    @Deprecated
-    DBObject getSortObject();
 
     /**
      * Hints as to which index should be used.

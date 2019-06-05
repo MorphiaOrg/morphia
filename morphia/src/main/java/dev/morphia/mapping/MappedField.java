@@ -16,7 +16,6 @@
 
 package dev.morphia.mapping;
 
-
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import org.slf4j.Logger;
@@ -59,10 +58,8 @@ import java.util.Set;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-
 /**
  * @morphia.internal
- * @deprecated
  */
 @SuppressWarnings("unchecked")
 public class MappedField {

@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package dev.morphia.mapping;
-
 
 import com.mongodb.DBObject;
 import org.slf4j.Logger;
@@ -57,12 +55,9 @@ import java.util.Map;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-
 /**
  * @morphia.internal
- * @deprecated
  */
-@Deprecated
 public class MappedClass {
     private static final Logger LOG = LoggerFactory.getLogger(MappedClass.class);
     /**

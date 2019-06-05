@@ -1,6 +1,5 @@
 package dev.morphia.mapping;
 
-import dev.morphia.DatastoreImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public enum DateStorage {
     },
     /**
      * @deprecated This will be removed in 2.0.  It is intended to bridge the gap when correcting the storage of data/time values in the
-     * database.  {@link #UTC} should be used and will be the default in 2.0.  In 1.5 it is {@link #SYSTEM_DEFAULT} for backwards
+     * database.  {@link #UTC} should be used and will be the default in 2.0.  In 1.5 it is {@see #SYSTEM_DEFAULT} for backwards
      * compatibility.
      */
     SYSTEM_DEFAULT {
@@ -37,7 +36,7 @@ public enum DateStorage {
         }
     };
 
-    private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DateStorage.class);
     private static boolean warningLogged;
 
     /**

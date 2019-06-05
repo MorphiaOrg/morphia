@@ -16,15 +16,6 @@ import dev.morphia.query.UpdateOperations;
 public interface AdvancedDatastore extends Datastore {
 
     /**
-     * Returns the DBDecoderFactory used by this Datastore
-     *
-     * @return the decoder factory
-     * @see DBDecoderFactory
-     * @morphia.internal
-     */
-    DBDecoderFactory getDecoderFact();
-
-    /**
      * Returns an {@link AggregationPipeline} bound to the given collection and class.
      *
      * @param collection the collection to query

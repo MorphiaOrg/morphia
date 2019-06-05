@@ -6,11 +6,11 @@ import dev.morphia.geo.Geometry;
 import dev.morphia.geo.MultiPolygon;
 import dev.morphia.geo.Point;
 import dev.morphia.geo.Polygon;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static dev.morphia.query.FilterOperator.ALL;
@@ -44,6 +44,7 @@ import static java.util.regex.Pattern.quote;
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
 
+    private Mapper mapper;
     private final QueryImpl<?> query;
     private final String field;
     private final T target;
@@ -56,7 +57,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
      * @param field  the field to consider
      * @param target the CriteriaContainer
      */
-    public FieldEndImpl(final QueryImpl<?> query, final String field, final T target) {
+    public FieldEndImpl(final Mapper mapper, final QueryImpl<?> query, final String field, final T target) {
+        this.mapper = mapper;
         this.query = query;
         this.field = field;
         this.target = target;
@@ -176,13 +178,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T intersects(final Geometry geometry) {
-        target.add(Geo2dSphereCriteria.geo(query, field, INTERSECTS, geometry));
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry));
         return target;
     }
 
     @Override
     public T intersects(final Geometry geometry, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(query, field, INTERSECTS, geometry)
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -223,7 +225,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     public T near(final double longitude, final double latitude, final double radius, final boolean spherical) {
         return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR,
             new double[]{longitude, latitude},
-            opts("$maxDistance", radius));
+            Map.of("$maxDistance", radius));
     }
 
     @Override
@@ -233,13 +235,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final Point point) {
-        target.add(Geo2dSphereCriteria.geo(query, field, NEAR, point));
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR, point));
         return target;
     }
 
     @Override
     public T near(final Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(query, field, NEAR, point)
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -252,7 +254,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T nearSphere(final Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(query, field, NEAR_SPHERE, point)
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR_SPHERE, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -306,26 +308,26 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T within(final Polygon boundary) {
-        target.add(Geo2dSphereCriteria.geo(query, field, GEO_WITHIN, boundary));
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries) {
-        target.add(Geo2dSphereCriteria.geo(query, field, GEO_WITHIN, boundaries));
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries));
         return target;
     }
 
     @Override
     public T within(final Polygon boundary, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(query, field, GEO_WITHIN, boundary)
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(query, field, GEO_WITHIN, boundaries)
+        target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -335,7 +337,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
-        target.add(new FieldCriteria(query, field, op, val, not));
+        target.add(new FieldCriteria(mapper, query, field, op, val, not));
         return target;
     }
 
@@ -344,13 +346,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
             throw new QueryException("Geospatial queries cannot be negated with 'not'.");
         }
 
-        target.add(new Geo2dCriteria(query, field, op, val, opts));
+        target.add(new Geo2dCriteria(mapper, query, field, op, val, opts));
         return target;
-    }
-
-    private Map<String, Object> opts(final String s, final Object v) {
-        final Map<String, Object> opts = new HashMap<String, Object>();
-        opts.put(s, v);
-        return opts;
     }
 }

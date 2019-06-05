@@ -2,6 +2,7 @@ package dev.morphia.geo;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import dev.morphia.query.QueryImpl;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
@@ -68,7 +69,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(42.08563, -87.99822, 2, true);
 
         // then
-        assertThat(query.getQueryObject().toString(),
+        assertThat(((QueryImpl) query).getQueryObject().toString(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));
@@ -82,7 +83,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(42.08563, -87.99822, 2);
 
         // then
-        assertThat(query.getQueryObject().toString(),
+        assertThat(((QueryImpl) query).getQueryObject().toString(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$near\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));

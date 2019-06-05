@@ -4,6 +4,7 @@ package dev.morphia.query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
+import dev.morphia.mapping.Mapper;
 
 import java.util.Map;
 
@@ -14,9 +15,9 @@ class Geo2dCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
 
-    Geo2dCriteria(final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
+    Geo2dCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
                   final Map<String, Object> opts) {
-        super(query, field, op, value);
+        super(mapper, query, field, op, value);
         this.opts = opts;
     }
 
@@ -32,11 +33,7 @@ class Geo2dCriteria extends FieldCriteria {
                 query = BasicDBObjectBuilder.start(FilterOperator.NEAR_SPHERE.val(), getValue());
                 break;
             case WITHIN_BOX:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
-                break;
             case WITHIN_CIRCLE:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
-                break;
             case WITHIN_CIRCLE_SPHERE:
                 query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
                 break;
