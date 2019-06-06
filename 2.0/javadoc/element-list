@@ -4,8 +4,6 @@ dev.morphia.annotations
 dev.morphia.converters
 dev.morphia.converters.experimental
 dev.morphia.geo
-dev.morphia.logging
-dev.morphia.logging.jdk
 dev.morphia.mapping
 dev.morphia.mapping.cache
 dev.morphia.mapping.experimental
