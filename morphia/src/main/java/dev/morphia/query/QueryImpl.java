@@ -548,11 +548,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return validateName;
     }
 
-    @Override
-    public MongoCursor<T> iterator() {
-        return find();
-    }
-
     /**
      * Prepares cursor for iteration
      *
@@ -579,26 +574,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
                                              .copy()
                                              .sort(getSortObject())
                                              .projection(getFieldsObject()));
-    }
-
-    @Override
-    public <U> MongoIterable<U> map(final Function<T, U> mapper) {
-        return new MappingIterable<>(this, mapper);
-    }
-
-    @Override
-    public void forEach(final Block<? super T> block) {
-        try (MongoCursor<T> cursor = iterator()) {
-            while (cursor.hasNext()) {
-                block.apply(cursor.next());
-            }
-        }
-    }
-
-    @Override
-    public <A extends Collection<? super T>> A into(final A target) {
-        forEach((Block<T>) t -> target.add(t));
-        return target;
     }
 
     @Override

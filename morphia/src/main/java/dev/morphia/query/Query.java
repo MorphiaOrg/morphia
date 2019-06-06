@@ -3,7 +3,6 @@ package dev.morphia.query;
 
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-import com.mongodb.client.MongoIterable;
 import dev.morphia.Key;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @param <T> The java type to query against
  */
-public interface Query<T> extends MongoIterable<T> {
+public interface Query<T> {
     /**
      * Creates a container to hold 'and' clauses
      *
@@ -435,6 +434,14 @@ public interface Query<T> extends MongoIterable<T> {
      * @since 1.4
      */
     MorphiaCursor<T> find(FindOptions options);
+
+    /**
+     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
+     *
+     * @return the only instance in the result, or null if the result set is empty.
+     * @since 1.5
+     */
+    T first();
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
