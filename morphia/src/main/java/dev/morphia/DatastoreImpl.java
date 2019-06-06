@@ -8,7 +8,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
@@ -40,7 +39,6 @@ import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
-import org.bson.codecs.configuration.CodecRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

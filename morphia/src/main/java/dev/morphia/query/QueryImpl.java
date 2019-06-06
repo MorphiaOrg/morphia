@@ -2,14 +2,11 @@ package dev.morphia.query;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Function;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
@@ -19,7 +16,6 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.cache.EntityCache;
-import dev.morphia.query.internal.MappingIterable;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
@@ -28,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
