@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.annotations.Indexed;
@@ -59,7 +60,9 @@ public interface Datastore {
      * @param query the query to use when finding documents to delete
      * @param <T>   the type to delete
      * @return results of the delete
+     * @deprecated use {@link Query#remove()} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> WriteResult delete(Query<T> query);
 
     /**
@@ -70,7 +73,9 @@ public interface Datastore {
      * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
+     * @deprecated use {@link Query#remove(DeleteOptions)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> WriteResult delete(Query<T> query, DeleteOptions options);
 
     /**
@@ -292,22 +297,6 @@ public interface Datastore {
      * @morphia.internal
      */
     MongoDatabase getDatabase();
-
-    /**
-     * @return the default WriteConcern used by this Datastore
-     * @deprecated {@link MongoClient#setWriteConcern(WriteConcern)}
-     */
-    @Deprecated
-    WriteConcern getDefaultWriteConcern();
-
-    /**
-     * Sets the default WriteConcern for this Datastore
-     *
-     * @param wc the default WriteConcern to be used by this Datastore
-     * @deprecated {@link MongoClient#setWriteConcern(WriteConcern)}
-     */
-    @Deprecated
-    void setDefaultWriteConcern(WriteConcern wc);
 
     /**
      * Creates a (type-safe) reference to the entity; if stored this will become a {@link com.mongodb.DBRef}

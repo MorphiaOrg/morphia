@@ -3,6 +3,8 @@ package dev.morphia.query;
 
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.WriteResult;
+import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -472,4 +474,9 @@ public interface Query<T> {
     @Deprecated
     Key<T> getKey(FindOptions options);
 
+    default WriteResult remove() {
+        return remove(new DeleteOptions());
+    }
+
+    WriteResult remove(DeleteOptions options);
 }

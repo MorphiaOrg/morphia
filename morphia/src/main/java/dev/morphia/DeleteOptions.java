@@ -93,7 +93,11 @@ public final class DeleteOptions {
         return this;
     }
 
-    DBCollectionRemoveOptions getOptions() {
+    /**
+     * @morphia.internal
+     * @return the internal options implementation
+     */
+    public DBCollectionRemoveOptions getOptions() {
         return options;
     }
 }

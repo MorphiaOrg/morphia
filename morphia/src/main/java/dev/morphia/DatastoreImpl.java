@@ -75,7 +75,6 @@ class DatastoreImpl implements AdvancedDatastore {
     private final IndexHelper indexHelper;
     private DB db;
     private Mapper mapper;
-    private WriteConcern defConcern;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
@@ -96,7 +95,6 @@ class DatastoreImpl implements AdvancedDatastore {
                                    .withCodecRegistry(fromRegistries(mongoClient.getMongoClientOptions().getCodecRegistry(),
                                        getDefaultCodecRegistry()));
         this.db = mongoClient.getDB(dbName);
-        this.defConcern = mongoClient.getWriteConcern();
         this.indexHelper = new IndexHelper(mapper, database);
     }
 
@@ -138,20 +136,12 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> WriteResult delete(final Query<T> query, final DeleteOptions options) {
-        final QueryImpl queryImpl = (QueryImpl) query;
-
-        DBCollection dbColl = queryImpl.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(queryImpl.getEntityClass());
-        }
-
-        return dbColl.remove(queryImpl.getQueryObject(), enforceWriteConcern(options, queryImpl.getEntityClass()).getOptions());
+        return query.remove(options);
     }
 
     @Override
     public <T> WriteResult delete(final Query<T> query) {
-        return delete(query, new DeleteOptions().writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
+        return query.remove(new DeleteOptions().writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
     }
 
     @Override
@@ -172,11 +162,7 @@ class DatastoreImpl implements AdvancedDatastore {
         if (wrapped instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
-        try {
-            return delete(createQuery(wrapped.getClass()).filter("_id", mapper.getId(wrapped)), options);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return find(wrapped.getClass()).filter("_id", mapper.getId(wrapped)).remove(options);
     }
 
     @Override
@@ -434,16 +420,6 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public MongoDatabase getDatabase() {
         return database;
-    }
-
-    @Override
-    public WriteConcern getDefaultWriteConcern() {
-        return defConcern;
-    }
-
-    @Override
-    public void setDefaultWriteConcern(final WriteConcern wc) {
-        defConcern = wc;
     }
 
     @Override
@@ -758,19 +734,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     /**
-     * Inserts entities in to the database
-     *
-     * @param entities the entities to insert
-     * @param <T>      the type of the entities
-     * @return the keys of entities
-     */
-    @Override
-    public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
-        return insert(entities, new InsertOptions()
-                                    .writeConcern(defConcern));
-    }
-
-    /**
      * Inserts an entity in to the database
      *
      * @param collection the collection to query against
@@ -829,15 +792,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
-        if (options.getWriteConcern() == null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
-    <T> DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                        .copy()
@@ -1153,7 +1107,7 @@ class DatastoreImpl implements AdvancedDatastore {
      * @param clazzOrEntity the class or entity to use when looking up the WriteConcern
      */
     private WriteConcern getWriteConcern(final Object clazzOrEntity) {
-        WriteConcern wc = defConcern;
+        WriteConcern wc = getMongo().getWriteConcern();
         if (clazzOrEntity != null) {
             final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
             if (entityAnn != null && !entityAnn.concern().isEmpty()) {

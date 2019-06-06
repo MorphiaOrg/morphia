@@ -15,7 +15,6 @@ package dev.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import dev.morphia.annotations.Entity;
@@ -39,7 +38,6 @@ import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -49,7 +47,6 @@ import java.util.List;
 import static com.mongodb.ReadPreference.secondaryPreferred;
 import static com.mongodb.WriteConcern.ACKNOWLEDGED;
 import static com.mongodb.WriteConcern.MAJORITY;
-import static com.mongodb.WriteConcern.W2;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -145,7 +142,7 @@ public class TestDatastore extends TestBase {
         assertNotNull(res.get(1));
         assertNotNull(res.get(1).username);
 
-        getDs().getCollection(FacebookUser.class).remove(new BasicDBObject());
+        getDs().find(FacebookUser.class).remove();
         getAds().insert(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
         assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
@@ -500,32 +497,6 @@ public class TestDatastore extends TestBase {
                                      .getWriteConcern());
         assertEquals(MAJORITY, ds.enforceWriteConcern(updateOptions.writeConcern(MAJORITY), FacebookUser.class)
                                  .getWriteConcern());
-
-        DeleteOptions deleteOptions = new DeleteOptions();
-        assertNull(deleteOptions.getWriteConcern());
-
-        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(deleteOptions, FacebookUser.class)
-                                     .getWriteConcern());
-        assertEquals(MAJORITY, ds.enforceWriteConcern(deleteOptions.writeConcern(MAJORITY), FacebookUser.class)
-                                 .getWriteConcern());
-    }
-
-    @Test
-    public void entityWriteConcern() {
-        ensureEntityWriteConcern();
-
-        getDs().setDefaultWriteConcern(WriteConcern.UNACKNOWLEDGED);
-        ensureEntityWriteConcern();
-    }
-
-    private void ensureEntityWriteConcern() {
-        DatastoreImpl datastore = (DatastoreImpl) getAds();
-        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new InsertOptions(), Simple.class)
-                                            .getWriteConcern());
-        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new UpdateOptions(), Simple.class)
-                                            .getWriteConcern());
-        assertEquals(ACKNOWLEDGED, datastore.enforceWriteConcern(new FindAndModifyOptions(), Simple.class)
-                                            .getWriteConcern());
     }
 
     @Test

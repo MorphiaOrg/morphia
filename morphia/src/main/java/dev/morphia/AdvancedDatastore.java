@@ -107,7 +107,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
      */
-    <T> Iterable<Key<T>> insert(Iterable<T> entities);
+    default <T> Iterable<Key<T>> insert(Iterable<T> entities) {
+        return insert(entities, new InsertOptions());
+    }
 
     /**
      * Inserts entities in to the mapped collection.

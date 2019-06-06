@@ -337,9 +337,7 @@ public class Mapper {
      * @param object the object to process
      * @return the collection name
      * @morphia.internal
-     * @deprecated no replacement is planned
      */
-    @Deprecated
     public String getCollectionName(final Object object) {
         if (object == null) {
             throw new IllegalArgumentException();

@@ -6,9 +6,12 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
@@ -230,7 +233,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     /**
      * @return the collection this query targets
-     *
      * @morphia.internal
      */
     public DBCollection getCollection() {
@@ -279,8 +281,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
-     * @morphia.internal
      * @return the query object
+     * @morphia.internal
      */
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();
@@ -532,6 +534,12 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public WriteResult remove(final DeleteOptions options) {
+        return getCollection()
+                   .remove(getQueryObject(), enforceWriteConcern(options, getEntityClass()).getOptions());
+    }
+
+    @Override
     public String getFieldName() {
         throw new UnsupportedOperationException("this method is unused on a Query");
     }
@@ -743,5 +751,26 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public void attach(final CriteriaContainer container) {
         compoundContainer.attach(container);
+    }
+
+    private DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
+        if (options.getWriteConcern() == null) {
+            return options
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
+        }
+        return options;
+    }
+
+    private WriteConcern getWriteConcern(final Object clazzOrEntity) {
+        WriteConcern wc = ds.getMongo().getWriteConcern();
+        if (clazzOrEntity != null) {
+            final Entity entityAnn = mapper.getMappedClass(clazzOrEntity).getEntityAnnotation();
+            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
+                wc = WriteConcern.valueOf(entityAnn.concern());
+            }
+        }
+
+        return wc;
     }
 }
