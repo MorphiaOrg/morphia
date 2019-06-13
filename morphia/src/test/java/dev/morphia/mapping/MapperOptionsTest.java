@@ -165,7 +165,7 @@ public class MapperOptionsTest extends TestBase {
         final DBObject dbObj = getDs().getCollection(HasList.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("names"));
         Assert.assertEquals(expected, getDs().find(HasList.class)
-                                             .find(new FindOptions().limit(1))
+                                             .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .names);
     }
@@ -176,7 +176,7 @@ public class MapperOptionsTest extends TestBase {
         dbObj = getDs().getCollection(HasMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
         Assert.assertEquals(expected, getDs().find(HasMap.class)
-                                             .find(new FindOptions().limit(1))
+                                             .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
     }
@@ -187,7 +187,7 @@ public class MapperOptionsTest extends TestBase {
         dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
         Assert.assertEquals(expected, getDs().find(HasCollectionValuedMap.class)
-                                             .find(new FindOptions().limit(1))
+                                             .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
     }
@@ -198,7 +198,7 @@ public class MapperOptionsTest extends TestBase {
         dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
         Assert.assertTrue("Should find the field", dbObj.containsField("properties"));
         Assert.assertEquals(expected, getDs().find(HasComplexObjectValuedMap.class)
-                                             .find(new FindOptions().limit(1))
+                                             .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
     }
@@ -208,7 +208,7 @@ public class MapperOptionsTest extends TestBase {
         DBObject dbObj = getDs().getCollection(HasMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
         Assert.assertNull(getDs().find(HasMap.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
     }
@@ -218,7 +218,7 @@ public class MapperOptionsTest extends TestBase {
         DBObject dbObj = getDs().getCollection(HasList.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("names"), dbObj.containsField("names"));
         Assert.assertNull(getDs().find(HasList.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .names);
     }
@@ -228,7 +228,7 @@ public class MapperOptionsTest extends TestBase {
         DBObject dbObj = getDs().getCollection(HasCollectionValuedMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
         Assert.assertNull(getDs().find(HasCollectionValuedMap.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
     }
@@ -238,7 +238,7 @@ public class MapperOptionsTest extends TestBase {
         DBObject dbObj = getDs().getCollection(HasComplexObjectValuedMap.class).findOne();
         Assert.assertFalse("field should not exist, value = " + dbObj.get("properties"), dbObj.containsField("properties"));
         Assert.assertNull(getDs().find(HasComplexObjectValuedMap.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
     }

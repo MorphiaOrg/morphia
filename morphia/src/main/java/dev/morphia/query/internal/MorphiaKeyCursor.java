@@ -85,7 +85,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * @return the list of Entities
      */
     public List<Key<T>> toList() {
-        final List<Key<T>> results = new ArrayList<Key<T>>();
+        final List<Key<T>> results = new ArrayList<>();
         try {
             while (wrapped.hasNext()) {
                 results.add(next());
@@ -118,6 +118,6 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
             Class type = mapper.getMappedClass(clazz).getMappedIdField().getType();
             id = mapper.fromDBObject(datastore, type, (DBObject) id, mapper.createEntityCache());
         }
-        return new Key<T>(clazz, collection, id);
+        return new Key<>(clazz, collection, id);
     }
 }

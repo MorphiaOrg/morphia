@@ -51,7 +51,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      * @return the list of Entities
      */
     public List<T> toList() {
-        final List<T> results = new ArrayList<T>();
+        final List<T> results = new ArrayList<>();
         try {
             while (wrapped.hasNext()) {
                 results.add(next());

@@ -70,10 +70,9 @@ public final class QuickTour {
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter("salary <=", 30000);
-        final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperations(Employee.class)
-                                                                     .inc("salary", 10000);
-
-        final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
+        final UpdateResults results = underPaidQuery.update()
+                                                    .inc("salary", 10000)
+                                                    .execute();
 
         Assert.assertEquals(1, results.getUpdatedCount());
 

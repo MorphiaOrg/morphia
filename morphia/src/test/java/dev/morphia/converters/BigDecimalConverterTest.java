@@ -97,7 +97,7 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
         getDs().save(foo);
 
         assertEquals(foo, getDs().find(Foo.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .next());
     }
 

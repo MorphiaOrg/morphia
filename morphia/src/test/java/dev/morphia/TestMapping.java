@@ -30,7 +30,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.DefaultCreator;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.query.FindOptions;
@@ -224,7 +223,7 @@ public class TestMapping extends TestBase {
         getMorphia().map(ContainsDBObject.class);
         getDs().save(new ContainsDBObject());
         assertNotNull(getDs().find(ContainsDBObject.class)
-                             .find(new FindOptions().limit(1))
+                             .execute(new FindOptions().limit(1))
                              .next());
     }
 
@@ -233,7 +232,7 @@ public class TestMapping extends TestBase {
         getMorphia().map(ContainsEmbeddedEntity.class);
         getDs().save(new ContainsEmbeddedEntity());
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
-                                                        .find(new FindOptions().limit(1))
+                                                        .execute(new FindOptions().limit(1))
                                                         .next();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
@@ -406,7 +405,7 @@ public class TestMapping extends TestBase {
         getMorphia().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
         ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class)
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .next();
         assertArrayEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
         assertArrayEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
@@ -428,7 +427,7 @@ public class TestMapping extends TestBase {
         ml.m.put("first", "test");
         getDs().save(ml);
         final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class)
-                                                .find(new FindOptions().limit(1))
+                                                .execute(new FindOptions().limit(1))
                                                 .next();
         assertNotNull(mlLoaded);
         assertNotNull(mlLoaded.m);
@@ -446,7 +445,7 @@ public class TestMapping extends TestBase {
         getDs().save(aMap);
 
         final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class)
-                                                                  .find(new FindOptions().limit(1))
+                                                                  .execute(new FindOptions().limit(1))
                                                                   .next();
 
         assertNotNull(mapLoaded);
@@ -640,7 +639,7 @@ public class TestMapping extends TestBase {
         final UUID before = uuid.uuid;
         getDs().save(uuid);
         final ContainsUUID loaded = getDs().find(ContainsUUID.class)
-                                           .find(new FindOptions().limit(1))
+                                           .execute(new FindOptions().limit(1))
                                            .next();
         assertNotNull(loaded);
         assertNotNull(loaded.id);

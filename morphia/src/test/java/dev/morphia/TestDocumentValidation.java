@@ -150,7 +150,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().findAndModify(query, updates, options);
 
         Assert.assertNotNull(query.field("number").equal(5)
-                                  .find(new FindOptions().limit(1))
+                                  .execute(new FindOptions().limit(1))
                                   .next());
     }
 
@@ -177,7 +177,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().update(query, updates, options);
 
         Assert.assertNotNull(query.field("number").equal(5)
-                                  .find(new FindOptions().limit(1))
+                                  .execute(new FindOptions().limit(1))
                                   .tryNext());
     }
 
@@ -198,7 +198,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
-        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                                                new DocumentValidation("Harold", 8, new Date()),
@@ -214,7 +214,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.field("number").equal(8).find().hasNext());
+        Assert.assertTrue(query.field("number").equal(8).execute().hasNext());
     }
 
     @Test
@@ -254,7 +254,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
-        Assert.assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                                                new DocumentValidation("John", 8, new Date()),
@@ -271,7 +271,7 @@ public class TestDocumentValidation extends TestBase {
         getAds().insert(list, new InsertOptions()
             .bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.field("number").equal(8).find().hasNext());
+        Assert.assertTrue(query.field("number").equal(8).execute().hasNext());
     }
 
 

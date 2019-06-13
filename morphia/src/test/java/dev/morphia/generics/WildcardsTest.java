@@ -19,7 +19,7 @@ public class WildcardsTest extends TestBase {
         getDs().save(entity);
 
         ChildEntity childEntity = getDs().find(ChildEntity.class)
-                                         .find(new FindOptions().limit(1))
+                                         .execute(new FindOptions().limit(1))
                                          .next();
 
         Assert.assertEquals(entity, childEntity);

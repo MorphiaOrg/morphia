@@ -42,7 +42,7 @@ public class TestJavaMaps extends TestBase {
         ds.save(employee);
 
         Employee loaded = ds.find(Employee.class)
-                            .find(new FindOptions().limit(1))
+                            .execute(new FindOptions().limit(1))
                             .next();
 
         assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
@@ -60,7 +60,7 @@ public class TestJavaMaps extends TestBase {
         model.wrapped.text = "textWrapper";
         getDs().save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
-                                       .find(new FindOptions().limit(1))
+                                       .execute(new FindOptions().limit(1))
                                        .next();
         Assert.assertNull(model.wrapped.others);
         Assert.assertNull(model2.wrapped.others);
@@ -75,7 +75,7 @@ public class TestJavaMaps extends TestBase {
         }
         getDs().save(expectedEntity);
         LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class)
-                                                      .find(new FindOptions().limit(1))
+                                                      .execute(new FindOptions().limit(1))
                                                       .next();
         Assert.assertNotNull(storedEntity);
         Assert.assertEquals(expectedEntity.getLinkedHashMap(), storedEntity.getLinkedHashMap());

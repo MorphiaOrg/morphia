@@ -22,11 +22,11 @@ public class TestQueriesOnReferences extends TestBase {
 
         Assert.assertNotNull(getDs().find(ContainsPic.class)
                                     .field("pic").exists()
-                                    .project("pic", true).find(new FindOptions().limit(1))
+                                    .project("pic", true).execute(new FindOptions().limit(1))
                                     .tryNext());
         Assert.assertNull(getDs().find(ContainsPic.class)
                                  .field("pic").doesNotExist()
-                                 .project("pic", true).find(new FindOptions().limit(1))
+                                 .project("pic", true).execute(new FindOptions().limit(1))
                                  .tryNext());
     }
 
@@ -40,7 +40,7 @@ public class TestQueriesOnReferences extends TestBase {
 
         getDs().delete(p);
 
-        toList(getDs().find(ContainsPic.class).find());
+        toList(getDs().find(ContainsPic.class).execute());
     }
 
     @Test
@@ -58,13 +58,13 @@ public class TestQueriesOnReferences extends TestBase {
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         Assert.assertNotNull(query.field("lazyPic")
                                   .equal(p)
-                                  .find(new FindOptions().limit(1))
+                                  .execute(new FindOptions().limit(1))
                                   .tryNext());
 
         query = getDs().find(ContainsPic.class);
         Assert.assertNotNull(query.field("lazyObjectIdPic")
                                   .equal(withObjectId)
-                                  .find(new FindOptions().limit(1))
+                                  .execute(new FindOptions().limit(1))
                                   .tryNext());
     }
 
@@ -80,7 +80,7 @@ public class TestQueriesOnReferences extends TestBase {
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
         final ContainsPic object = query.field("pic")
                                         .equal(p)
-                                        .find(new FindOptions().limit(1))
+                                        .execute(new FindOptions().limit(1))
                                         .tryNext();
         Assert.assertNotNull(object);
 
@@ -96,12 +96,12 @@ public class TestQueriesOnReferences extends TestBase {
 
         ContainsPic containsPic = getDs().find(ContainsPic.class)
                                          .field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
-                                         .find(new FindOptions().limit(1))
+                                         .execute(new FindOptions().limit(1))
                                          .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
 
         containsPic = getDs().find(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
-                             .find(new FindOptions().limit(1))
+                             .execute(new FindOptions().limit(1))
                              .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
     }

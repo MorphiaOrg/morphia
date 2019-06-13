@@ -45,7 +45,7 @@ public class TestTextSearching extends TestBase {
         List<Greeting> good = toList(getDs().find(Greeting.class)
                                             .search("good")
                                             .order(ascending("_id"))
-                                            .find());
+                                            .execute());
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
         Assert.assertEquals("good afternoon", good.get(1).value);
@@ -55,7 +55,7 @@ public class TestTextSearching extends TestBase {
         good = toList(getDs().find(Greeting.class)
                              .search("good", "english")
                              .order(ascending("_id"))
-                             .find());
+                             .execute());
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
         Assert.assertEquals("good afternoon", good.get(1).value);
@@ -64,13 +64,13 @@ public class TestTextSearching extends TestBase {
 
         Assert.assertEquals(1, toList(getDs().find(Greeting.class)
                                       .search("riddance")
-                                      .find()).size());
+                                      .execute()).size());
         Assert.assertEquals(1, toList(getDs().find(Greeting.class)
                                       .search("noches", "spanish")
-                                      .find()).size());
+                                      .execute()).size());
         Assert.assertEquals(1, toList(getDs().find(Greeting.class)
                                       .search("Tag")
-                                      .find()).size());
+                                      .execute()).size());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TestTextSearching extends TestBase {
         List<Book> books = toList(getDs().find(Book.class)
                                          .search("Dante Comedy").project(Meta.textScore("score"))
                                          .order(Meta.textScore("score"))
-                                         .find());
+                                         .execute());
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Divine Comedy", books.get(0).title);
     }
@@ -106,7 +106,7 @@ public class TestTextSearching extends TestBase {
         List<Book> books = toList(getDs().find(Book.class)
                                          .search("Dante").project(Meta.textScore())
                                          .order(Meta.textScore())
-                                         .find());
+                                         .execute());
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Dante", books.get(0).author);
     }
@@ -125,7 +125,7 @@ public class TestTextSearching extends TestBase {
         List<Book> books = toList(getDs().find(Book.class)
                                          .search("Dante").project(Meta.textScore("score"))
                                          .order(Meta.textScore("score"))
-                                         .find());
+                                         .execute());
         Assert.assertEquals(3, books.size());
         for (Book book : books) {
             Assert.assertEquals("Dante", book.author);

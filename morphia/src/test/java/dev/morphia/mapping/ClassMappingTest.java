@@ -26,7 +26,7 @@ public class ClassMappingTest extends TestBase {
         e.testClass2 = LinkedList.class;
         getDs().save(e);
 
-        Assert.assertNull(getDs().find(E.class).field("testClass2").equal(ArrayList.class).find(new FindOptions().limit(1)).tryNext());
+        Assert.assertNull(getDs().find(E.class).field("testClass2").equal(ArrayList.class).execute(new FindOptions().limit(1)).tryNext());
     }
 
     @Test

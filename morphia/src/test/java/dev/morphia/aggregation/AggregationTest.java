@@ -20,15 +20,10 @@ import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoCommandException;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.CollationStrength;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.ValidationOptions;
 import dev.morphia.testmodel.User;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +34,6 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Validation;
 import dev.morphia.geo.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.geo.Point;
@@ -304,7 +298,7 @@ public class AggregationTest extends TestBase {
                .out("lookups", Order.class);
         List<Order> lookups = toList(getAds().createQuery("lookups", Order.class)
                                              .order(ascending("_id"))
-                                             .find());
+                                             .execute());
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));

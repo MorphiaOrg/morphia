@@ -6,6 +6,7 @@ import com.mongodb.ReadPreference;
 import com.mongodb.WriteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
+import dev.morphia.query.QueryImpl.Update;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.types.CodeWScope;
@@ -424,9 +425,9 @@ public interface Query<T> {
      *
      * @return a MorphiaCursor
      * @since 1.4
-     * @see #find(FindOptions)
+     * @see #execute(FindOptions)
      */
-    MorphiaCursor<T> find();
+    MorphiaCursor<T> execute();
 
     /**
      * Execute the query and get the results.
@@ -435,7 +436,35 @@ public interface Query<T> {
      * @return a MorphiaCursor
      * @since 1.4
      */
-    MorphiaCursor<T> find(FindOptions options);
+    MorphiaCursor<T> execute(FindOptions options);
+
+    /**
+     * Execute the query and get the results.
+     *
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @since 1.4
+     * @see #execute(FindOptions)
+     * @deprecated use {@link #execute()}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find() {
+        return execute();
+    }
+
+    /**
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 1.4
+     * @deprecated use {@link #execute(FindOptions)}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find(FindOptions options) {
+        return execute(options);
+    }
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
@@ -479,4 +508,19 @@ public interface Query<T> {
     }
 
     WriteResult remove(DeleteOptions options);
+
+    Update update();
+
+    Update update(DBObject dbObject);
+
+    /**
+     * This is only intended for use as a bridge for the deprecated update methods.  Any use will break in the future.
+     * @morphia.internal
+     * @param operations the prebuilt operations
+     * @return the Updates instance
+     * @since 2.0
+     * @deprecated
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    Update update(UpdateOperations operations);
 }

@@ -47,7 +47,7 @@ public class CustomConverterInEmbedTest extends TestBase {
         Assert.assertTrue(fc.didConversion());
 
         e = getDs().find(E2.class)
-                   .find(new FindOptions().limit(1))
+                   .execute(new FindOptions().limit(1))
                    .next();
         Assert.assertNotNull(e.foo);
         Assert.assertFalse(e.foo.isEmpty());

@@ -33,21 +33,21 @@ public class TestNotSaved extends TestBase {
     public void testBasic() throws Exception {
         getDs().save(new Normal("value"));
         Normal n = getDs().find(Normal.class)
-                          .find(new FindOptions().limit(1))
+                          .execute(new FindOptions().limit(1))
                           .next();
         Assert.assertNotNull(n);
         Assert.assertNotNull(n.name);
         getDs().delete(n);
         getDs().save(new NormalWithNotSaved());
         n = getDs().find(Normal.class)
-                   .find(new FindOptions().limit(1))
+                   .execute(new FindOptions().limit(1))
                    .next();
         Assert.assertNotNull(n);
         Assert.assertNull(n.name);
         getDs().delete(n);
         getDs().save(new Normal("value21"));
         final NormalWithNotSaved notSaved = getDs().find(NormalWithNotSaved.class)
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .next();
         Assert.assertNotNull(notSaved);
         Assert.assertNotNull(notSaved.name);

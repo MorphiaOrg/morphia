@@ -53,7 +53,7 @@ public class LegacyCoordsTest extends TestBase {
         List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
                                                           .field("location")
                                                           .equal(new double[]{1.1, 2.3})
-                                                          .find());
+                                                          .execute());
 
         // then
         assertThat(found, is(notNullValue()));
@@ -103,7 +103,7 @@ public class LegacyCoordsTest extends TestBase {
                                                             .near(1.0, 2.0, 0.1);
         // then
         assertThat(locationQuery.count(), is(0L));
-        assertThat(locationQuery.find(new FindOptions().limit(1)).tryNext(), is(nullValue()));
+        assertThat(locationQuery.execute(new FindOptions().limit(1)).tryNext(), is(nullValue()));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class LegacyCoordsTest extends TestBase {
         final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
                                                                 .field("location")
                                                                 .near(1.0, 2.0)
-                                                                .find());
+                                                                .execute());
 
         // then
         assertThat(found, is(notNullValue()));
@@ -141,7 +141,7 @@ public class LegacyCoordsTest extends TestBase {
         final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
                                                                 .field("location")
                                                                 .near(1.0, 2.0, 1.5)
-                                                                .find());
+                                                                .execute());
         // then
         assertThat(found, is(notNullValue()));
         assertThat(found.size(), is(1));
@@ -160,7 +160,7 @@ public class LegacyCoordsTest extends TestBase {
         getDs().find(PlaceWithLegacyCoords.class)
                .field("location")
                .near(0, 0)
-               .find(new FindOptions().limit(1))
+               .execute(new FindOptions().limit(1))
                .tryNext();
 
         // then expect the Exception

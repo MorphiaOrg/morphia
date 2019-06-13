@@ -52,7 +52,7 @@ public class EmbeddedMappingTest extends TestBase {
 
         final AuditEntry fetched = getDs().find(AuditEntry.class)
                                           .filter("id = ", entry.id)
-                                          .find(new FindOptions().limit(1))
+                                          .execute(new FindOptions().limit(1))
                                           .next();
 
         Assert.assertEquals(entry, fetched);
@@ -77,7 +77,7 @@ public class EmbeddedMappingTest extends TestBase {
         try {
             getDs().find(WithNested.class)
                    .field("nested.field").equal("nested value")
-                   .find(new FindOptions().limit(1))
+                   .execute(new FindOptions().limit(1))
                    .next();
         } catch (ValidationException ignore) {
             Assert.fail("Should be able to resolve against the implementations found.");
@@ -85,7 +85,7 @@ public class EmbeddedMappingTest extends TestBase {
         found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field").equal("nested value")
-                       .find(new FindOptions().limit(1))
+                       .execute(new FindOptions().limit(1))
                        .next();
         Assert.assertNotNull(found);
         Assert.assertEquals(nested, found);
@@ -93,7 +93,7 @@ public class EmbeddedMappingTest extends TestBase {
         found = getDs().find(WithNested.class)
                        .disableValidation()
                        .field("nested.field.fails").equal("nested value")
-                       .find(new FindOptions().limit(1))
+                       .execute(new FindOptions().limit(1))
                        .tryNext();
         Assert.assertNull(found);
     }

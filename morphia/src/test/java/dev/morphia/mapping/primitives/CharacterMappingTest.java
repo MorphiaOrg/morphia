@@ -132,7 +132,7 @@ public class CharacterMappingTest extends TestBase {
         final DBCollection collection = getDs().getCollection(Characters.class);
         collection.insert(new BasicDBObject(field, value));
 
-        return getDs().find(Characters.class).find(new FindOptions().limit(1)).tryNext();
+        return getDs().find(Characters.class).execute(new FindOptions().limit(1)).tryNext();
     }
 
     public static class Characters {

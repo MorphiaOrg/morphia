@@ -27,7 +27,7 @@ public class TestEmbeddedClassname extends TestBase {
         r.singleA = new A();
         ds.save(r);
 
-        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new A()));
+        ds.find(Root.class).update().addToSet("aList", new A()).execute();
         r = ds.find(Root.class).filter("_id", "id").first();
         DBObject aRaw = r.singleA.raw;
 
@@ -40,7 +40,7 @@ public class TestEmbeddedClassname extends TestBase {
         Assert.assertFalse(aRaw.containsField(discriminatorField));
 
         // Test that bList does not contain the class name of the subclass
-        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("bList", new B()));
+        ds.find(Root.class).update().addToSet("bList", new B()).execute();
         r = ds.find(Root.class).filter("_id", "id").first();
 
         aRaw = r.aList.get(0).raw;
@@ -55,7 +55,7 @@ public class TestEmbeddedClassname extends TestBase {
         Root entity = new Root();
         entity.singleA = new B();
         ds.save(entity);
-        ds.update(ds.find(Root.class), ds.createUpdateOperations(Root.class).addToSet("aList", new B()));
+        ds.find(Root.class).update().addToSet("aList", new B()).execute();
         r = ds.find(Root.class).filter("_id", "id").first();
 
         // test that singleA.raw *does* contain the classname because we stored a subclass there
@@ -68,9 +68,9 @@ public class TestEmbeddedClassname extends TestBase {
     @Entity(noClassnameStored = true)
     private static class Root {
         @Embedded
-        private final List<A> aList = new ArrayList<A>();
+        private final List<A> aList = new ArrayList<>();
         @Embedded
-        private final List<B> bList = new ArrayList<B>();
+        private final List<B> bList = new ArrayList<>();
         @Id
         private String id = "id";
         @Embedded

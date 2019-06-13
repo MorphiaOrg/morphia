@@ -44,7 +44,7 @@ public class TestJavaLists extends TestBase {
         model.wrapped.text = "textWrapper";
         getDs().save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
-                                       .find(new FindOptions().limit(1))
+                                       .execute(new FindOptions().limit(1))
                                        .next();
         assertNull(model.wrapped.others);
         assertNull(model2.wrapped.others);
@@ -79,7 +79,7 @@ public class TestJavaLists extends TestBase {
         ds.save(employee);
 
         Employee loaded = ds.find(Employee.class)
-                            .find(new FindOptions().limit(1))
+                            .execute(new FindOptions().limit(1))
                             .next();
 
         assertEquals(employee.byteList, loaded.byteList);

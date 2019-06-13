@@ -59,7 +59,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                               .near(pointBuilder()
                                                                         .latitude(51.5286416)
                                                                         .longitude(-0.1015987).build(), 20000)
-                                                              .find());
+                                                              .execute());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(1));
@@ -93,7 +93,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                               .near(pointBuilder()
                                                                         .latitude(51.5286416)
                                                                         .longitude(-0.1015987).build())
-                                                              .find());
+                                                              .execute());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(3));
@@ -122,7 +122,7 @@ public class GeoNearQueriesTest extends TestBase {
         List<City> cities = toList(datastore.find(City.class)
                                             .field("location")
                                             .near(searchPoint, 200000)
-                                            .find());
+                                            .execute());
 
         assertThat(cities.size(), is(1));
         assertThat(cities.get(0), is(london));
@@ -130,7 +130,7 @@ public class GeoNearQueriesTest extends TestBase {
         cities = toList(datastore.find(City.class)
                                             .field("location")
                                             .nearSphere(searchPoint, 200000D, null)
-                                            .find());
+                                            .execute());
 
         assertThat(cities.size(), is(1));
         assertThat(cities.get(0), is(london));
@@ -138,12 +138,12 @@ public class GeoNearQueriesTest extends TestBase {
         assertThat(toList(datastore.find(City.class)
                                    .field("location")
                                    .near(searchPoint, 200000D, 195000D)
-                                   .find()).size(), is(0));
+                                   .execute()).size(), is(0));
 
         assertThat(toList(datastore.find(City.class)
                                    .field("location")
                                    .nearSphere(searchPoint, 200000D, 195000D)
-                                   .find()).size(), is(0));
+                                   .execute()).size(), is(0));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class GeoNearQueriesTest extends TestBase {
                                           .near(pointBuilder()
                                                     .latitude(latitudeLondon)
                                                     .longitude(longitudeLondon).build())
-                                          .find());
+                                          .execute());
 
         assertThat(cities.size(), is(3));
         assertThat(cities.get(0), is(london));
@@ -176,7 +176,7 @@ public class GeoNearQueriesTest extends TestBase {
                                           .nearSphere(pointBuilder()
                                                     .latitude(latitudeLondon)
                                                     .longitude(longitudeLondon).build())
-                                          .find());
+                                          .execute());
 
         assertThat(cities.size(), is(3));
         assertThat(cities.get(0), is(london));
@@ -230,7 +230,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                 .near(pointBuilder()
                                                           .latitude(37.3753707)
                                                           .longitude(-5.9550583).build(), 20000)
-                                                .find());
+                                                .execute());
 
         // then
         assertThat(list.size(), is(1));
@@ -283,7 +283,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                                               .near(pointBuilder()
                                                                                         .latitude(51.5286416)
                                                                                         .longitude(-0.1015987).build())
-                                                                              .find());
+                                                                              .execute());
 
         // then
         assertThat(resultsOrderedByDistanceFromLondon.size(), is(2));
@@ -333,7 +333,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                                          .near(pointBuilder()
                                                                                    .latitude(51.5286416)
                                                                                    .longitude(-0.1015987).build(), 20000)
-                                                                         .find());
+                                                                         .execute());
 
         // then
         assertThat(regionsOrderedByDistanceFromLondon.size(), is(1));
@@ -382,7 +382,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                                          .near(pointBuilder()
                                                                                    .latitude(51.5286416)
                                                                                    .longitude(-0.1015987).build())
-                                                                         .find());
+                                                                         .execute());
 
         // then
         assertThat(regionsOrderedByDistanceFromLondon.size(), is(3));
@@ -414,7 +414,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                                       .near(pointBuilder()
                                                                                 .latitude(51.5286416)
                                                                                 .longitude(-0.1015987).build(), 20000)
-                                                                      .find());
+                                                                      .execute());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(1));
@@ -444,7 +444,7 @@ public class GeoNearQueriesTest extends TestBase {
                                                                       .near(pointBuilder()
                                                                                 .latitude(51.5286416)
                                                                                 .longitude(-0.1015987).build())
-                                                                      .find());
+                                                                      .execute());
 
         // then
         assertThat(routesOrderedByDistanceFromLondon.size(), is(3));

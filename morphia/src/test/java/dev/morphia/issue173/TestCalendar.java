@@ -22,7 +22,7 @@ public class TestCalendar extends TestBase {
             .writeConcern(WriteConcern.ACKNOWLEDGED));
         // occasionally failed, so i suspected a race cond.
         final A loaded = getDs().find(A.class)
-                                .find(new FindOptions().limit(1))
+                                .execute(new FindOptions().limit(1))
                                 .tryNext();
         Assert.assertNotNull(loaded.c);
         Assert.assertEquals(a.c, loaded.c);

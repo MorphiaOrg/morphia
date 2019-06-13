@@ -101,7 +101,7 @@ public class Java8EntityTest extends TestBase {
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {
-        Java8Entity actual = datastore.find(Java8Entity.class).field(field).equal(value).find(new FindOptions().limit(1)).tryNext();
+        Java8Entity actual = datastore.find(Java8Entity.class).field(field).equal(value).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity, actual);
     }
 

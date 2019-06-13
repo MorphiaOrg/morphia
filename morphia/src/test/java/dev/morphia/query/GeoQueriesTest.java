@@ -42,7 +42,7 @@ public class GeoQueriesTest extends TestBase {
                                                                        .field("location")
                                                                        .near(pointBuilder().latitude(latitude)
                                                                                            .longitude(longitude).build(), 200000)
-                                                                       .find());
+                                                                       .execute());
 
         // then
         assertThat(citiesOrderedByDistanceFromLondon.size(), is(1));

@@ -21,7 +21,7 @@ public class CompoundIdTest extends TestBase {
     public void testFetchKey() {
         getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
         ConfigEntry entry = getDs().find(ConfigEntry.class)
-                                    .find(new FindOptions().limit(1))
+                                    .execute(new FindOptions().limit(1))
                                     .next();
         entry.setValue("something");
         getDs().save(entry);

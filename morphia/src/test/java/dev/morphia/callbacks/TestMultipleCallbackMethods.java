@@ -25,7 +25,7 @@ public class TestMultipleCallbackMethods extends TestBase {
         Assert.assertEquals(0, loading);
 
         final SomeEntity someEntity = getDs().find(SomeEntity.class).filter("_id", entity.getId())
-                                             .find(new FindOptions().limit(1))
+                                             .execute(new FindOptions().limit(1))
                                              .next();
 
         Assert.assertEquals(4, entity.getFoo());

@@ -22,7 +22,7 @@ public class CustomConverterDefaultTest extends TestBase {
 
         Assert.assertTrue(fc.didConversion());
 
-        e = getDs().find(E.class).find(new FindOptions().limit(1)).tryNext();
+        e = getDs().find(E.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(e.foo);
         Assert.assertEquals("test", e.foo.string);
     }

@@ -34,7 +34,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.center(new Shape.Point(2, 2), 0.5))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(nullValue()));
@@ -53,7 +53,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(0.5, 0.5)))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(nullValue()));
@@ -75,7 +75,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
                                                                          new Shape.Point(0, 5),
                                                                          new Shape.Point(2, 3),
                                                                          new Shape.Point(1, 0)))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(nullValue()));
@@ -97,7 +97,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
                                                                          new Shape.Point(0, 5),
                                                                          new Shape.Point(2, 3),
                                                                          new Shape.Point(1, 0)))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(expectedPoint));
@@ -118,7 +118,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
                                                                 .field("location")
                                                                 .within(Shape.center(new Shape.Point(1, 2), 1.1))
-                                                                .find());
+                                                                .execute());
 
         // then
         assertThat(found.size(), is(1));
@@ -138,7 +138,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.center(new Shape.Point(0, 1), 1))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(expectedPoint));
@@ -157,7 +157,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.centerSphere(new Shape.Point(0, 1), 1))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(expectedPoint));
@@ -176,7 +176,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
                                                    .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(2, 2)))
-                                                   .find(new FindOptions().limit(1))
+                                                   .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
         assertThat(found, is(expectedPoint));

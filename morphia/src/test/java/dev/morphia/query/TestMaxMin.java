@@ -31,7 +31,7 @@ public class TestMaxMin extends TestBase {
 
     @Test(expected = MongoException.class)
     public void testExceptionForIndexMismatch() {
-        getDs().find(IndexedEntity.class).find(new FindOptions()
+        getDs().find(IndexedEntity.class).execute(new FindOptions()
                                                    .limit(1)
                                                    .modifier("$min", new BasicDBObject("doesNotExist", 1)))
                .next();
@@ -81,14 +81,14 @@ public class TestMaxMin extends TestBase {
 
         List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
                                   .upperIndexBound(new BasicDBObject("testField", "b").append("_id", b2.id))
-                                  .find()
+                                  .execute()
                                   .toList();
 
         Assert.assertEquals("size", 3, l.size());
         Assert.assertEquals("item", b1.id, l.get(2).id);
 
         l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
-              .find(new FindOptions()
+              .execute(new FindOptions()
                           .modifier("$max", new BasicDBObject("testField", "b").append("_id", b2.id)))
               .toList();
 
@@ -136,14 +136,14 @@ public class TestMaxMin extends TestBase {
 
         List<IndexedEntity> l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
                                   .lowerIndexBound(new BasicDBObject("testField", "b").append("_id", b1.id))
-                                  .find()
+                                  .execute()
                                   .toList();
 
         Assert.assertEquals("size", 4, l.size());
         Assert.assertEquals("item", b1.id, l.get(0).id);
 
         l = ds.find(IndexedEntity.class).order(ascending("testField"), ascending("id"))
-              .find(new FindOptions().modifier("$min", new BasicDBObject("testField", "b").append("_id", b1.id)))
+              .execute(new FindOptions().modifier("$min", new BasicDBObject("testField", "b").append("_id", b1.id)))
               .toList();
 
         Assert.assertEquals("size", 4, l.size());

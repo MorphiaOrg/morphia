@@ -34,7 +34,7 @@ public class EmbeddedAndSerializableTest extends TestBase {
         }
         getDs().save(project);
 
-        Project project1 = getDs().find(Project.class).find(new FindOptions().limit(1)).tryNext();
+        Project project1 = getDs().find(Project.class).execute(new FindOptions().limit(1)).tryNext();
 
         final List<Period> periods = project1.periods;
         for (int i = 0; i < periods.size(); i++) {

@@ -77,7 +77,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         List<Area> areasInTheUK = toList(getDs().find(Area.class)
                                          .field("area")
                                          .within(requiredEuropeanCountries)
-                                         .find());
+                                         .execute());
 
         // then
         assertThat(areasInTheUK.size(), is(2));
@@ -105,7 +105,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         citiesInTheUK = toList(getDs().find(City.class)
                                .field("location")
                                .within(europeanCountries)
-                               .find());
+                               .execute());
 
         // then
         assertThat(citiesInTheUK.size(), is(3));
@@ -158,7 +158,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
                                                       .field("everything")
                                                       .within(europeanCountries)
-                                                      .find());
+                                                      .execute());
 
         // then
         assertThat(everythingInTheUK.size(), is(2));
@@ -205,7 +205,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
                                               .field("regions")
                                               .within(europeanCountries)
-                                              .find());
+                                              .execute());
 
         // then
         assertThat(regionsInTheUK.size(), is(2));
@@ -237,7 +237,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         List<Route> routesInTheUK = toList(getDs().find(Route.class)
                                            .field("route")
                                            .within(requiredEuropeanCountries)
-                                           .find());
+                                           .execute());
 
         // then
         assertThat(routesInTheUK.size(), is(2));

@@ -25,7 +25,7 @@ public class TestEmptyEntityMapping extends TestBase {
         Assert.assertNotNull(a.b);
 
         a = getDs().find(A.class).filter("_id", a.getId())
-                   .find(new FindOptions().limit(1))
+                   .execute(new FindOptions().limit(1))
                    .tryNext();
         Assert.assertNull(a.b);
     }
@@ -38,13 +38,13 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(u);
 
         Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0)
-                                                              .find(new FindOptions().limit(1))
+                                                              .execute(new FindOptions().limit(1))
                                                               .tryNext());
         Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0)
-                                                              .find(new FindOptions().limit(1))
+                                                              .execute(new FindOptions().limit(1))
                                                               .tryNext());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist()
-                                                             .find(new FindOptions().limit(1))
+                                                             .execute(new FindOptions().limit(1))
                                                              .next());
         getDs().delete(getDs().find(User.class));
 
@@ -55,13 +55,13 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(u);
 
         Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1)
-                                                             .find(new FindOptions().limit(1))
+                                                             .execute(new FindOptions().limit(1))
                                                              .next());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1)
-                                                             .find(new FindOptions().limit(1))
+                                                             .execute(new FindOptions().limit(1))
                                                              .next());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists()
-                                                             .find(new FindOptions().limit(1))
+                                                             .execute(new FindOptions().limit(1))
                                                              .next());
     }
 

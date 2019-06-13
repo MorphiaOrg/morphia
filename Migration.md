@@ -32,3 +32,6 @@ getDs().find(SomeEntity.class)
 ```
 
 * `Query#find()` is being renamed to `execute()` for consistency with the update/delete operations started via a query.
+* Some of the old `update()` methods made certain assumptions with `multi` update being the default.  In keeping with the change of the 
+server defaulting to single document updates, Morphia defaults to single document updates as well unless explicitly set to update 
+multiple documents.  See the [`update()`](https://docs.mongodb.com/manual/reference/method/db.collection.update/) documentation for details.

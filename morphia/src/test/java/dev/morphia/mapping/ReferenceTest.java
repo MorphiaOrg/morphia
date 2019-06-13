@@ -73,7 +73,7 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class).filter("singleRef", ref)
-                                    .find(new FindOptions().limit(1))
+                                    .execute(new FindOptions().limit(1))
                                     .next());
     }
 
@@ -159,7 +159,7 @@ public class ReferenceTest extends ProxyTestBase {
         final Query<Container> query = getDs().find(Container.class)
                                                .disableValidation()
                                               .field("singleRef").equal(ref);
-        Assert.assertNotNull(query.find(new FindOptions().limit(1)).next());
+        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).next());
     }
 
     @Test
@@ -171,14 +171,14 @@ public class ReferenceTest extends ProxyTestBase {
         parent1.children.add(child1);
         getDs().save(parent1);
 
-        List<Parent> parentList = toList(getDs().find(Parent.class).find());
+        List<Parent> parentList = toList(getDs().find(Parent.class).execute());
         Assert.assertEquals(1, parentList.size());
 
         // reset Datastore to reset internal Mapper cache, so Child class
         // already cached by previous save is cleared
         Datastore localDs = getMorphia().createDatastore(getMongoClient(), new Mapper(), getDb().getName());
 
-        parentList = toList(localDs.find(Parent.class).find());
+        parentList = toList(localDs.find(Parent.class).execute());
         Assert.assertEquals(1, parentList.size());
     }
 

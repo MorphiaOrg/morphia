@@ -58,7 +58,7 @@ public class TestInheritanceMappings extends TestBase {
         assertEquals(1, getDs().find(MapLike.class).count());
 
         m = getDs().find(MapLike.class)
-                   .find(new FindOptions().limit(1))
+                   .execute(new FindOptions().limit(1))
                    .next();
         assertNotNull(m.id);
         assertTrue(m.containsKey("Name"));

@@ -70,7 +70,7 @@ public class CurrencyConverterTest extends ConverterTest<Currency, String> {
         getDs().save(foo);
 
         assertEquals(foo, getDs().find(Foo.class)
-                                 .find(new FindOptions().limit(1))
+                                 .execute(new FindOptions().limit(1))
                                  .next());
     }
 

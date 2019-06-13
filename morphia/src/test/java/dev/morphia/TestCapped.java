@@ -24,7 +24,7 @@ public class TestCapped extends TestBase {
         getDs().save(new CurrentStatus("Kinda Bad"));
         assertEquals(1, getDs().find(CurrentStatus.class).count());
         assertTrue(getDs().find(CurrentStatus.class)
-                          .find(new FindOptions().limit(1))
+                          .execute(new FindOptions().limit(1))
                           .next()
                        .message.contains("Bad"));
         getDs().save(new CurrentStatus("Kinda Bad2"));

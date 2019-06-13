@@ -35,7 +35,7 @@ public class TestConstructorArgs extends TestBase {
         final ObjectId acId = n.ac.id;
 
         getDs().save(n);
-        n = getDs().find(Normal.class).find(new FindOptions().limit(1)).tryNext();
+        n = getDs().find(Normal.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(n);
         Assert.assertNotNull(n.ac);
         Assert.assertEquals(acId, n.ac.id);

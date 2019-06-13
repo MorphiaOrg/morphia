@@ -65,7 +65,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
 
         final MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection)
                                                                                            .filter("_id in ", collectionIds)
-                                                                                           .find();
+                                                                                           .execute();
         try {
             final Map<Object, T> idMap = new HashMap<Object, T>();
             while (cursor.hasNext()) {

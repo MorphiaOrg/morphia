@@ -33,7 +33,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
         Query<E> query = getDs().find(E.class);
         final long countAll = query.count();
         query = getDs().find(E.class);
-        final List<E> list = toList(query.find());
+        final List<E> list = toList(query.execute());
         Assert.assertEquals(documentsNb, countAll);
         Assert.assertEquals(documentsNb, list.size());
     }

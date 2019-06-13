@@ -6,7 +6,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.annotations.Indexed;
@@ -42,7 +41,9 @@ public interface Datastore {
      * @param collection The collection to query
      * @param <T>        the type of the query
      * @return the query
+     * @deprecated use {@link #find(Class)}
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> Query<T> createQuery(Class<T> collection);
 
     /**
@@ -51,7 +52,9 @@ public interface Datastore {
      * @param clazz the type to update
      * @param <T>   the type to update
      * @return the new UpdateOperations instance
+     * @deprecated use {@link Query#update()} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz);
 
     /**
@@ -233,7 +236,10 @@ public interface Datastore {
      * @morphia.inline
      */
     @Deprecated
-    <T> T get(T entity);
+    default <T> T get(T entity){
+        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
+
+    }
 
     /**
      * Find the given entity (by collectionName/id);
@@ -396,32 +402,6 @@ public interface Datastore {
      */
     <T> Key<T> save(T entity, InsertOptions options);
 
-    /**
-     * Updates an entity with the operations; this is an atomic operation
-     *
-     * @param entity     the entity to update
-     * @param operations the update operations to perform
-     * @param <T>        the type of the entity
-     * @return the update results
-     * @see UpdateResults
-     * @deprecated use {@link #update(Query, UpdateOperations)} instead
-     */
-    @Deprecated
-    <T> UpdateResults update(T entity, UpdateOperations<T> operations);
-
-    /**
-     * Updates an entity with the operations; this is an atomic operation
-     *
-     * @param key        the key of entity to update
-     * @param operations the update operations to perform
-     * @param <T>        the type of the entity
-     * @return the update results
-     * @see UpdateResults
-     * @deprecated use {@link #update(Query, UpdateOperations)} instead
-     */
-    @Deprecated
-    <T> UpdateResults update(Key<T> key, UpdateOperations<T> operations);
-
 
     /**
      * Updates all entities found with the operations; this is an atomic operation per entity
@@ -430,7 +410,9 @@ public interface Datastore {
      * @param operations the update operations to perform
      * @param <T>        the type of the entity
      * @return the results of the updates
+     * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations);
 
     /**
@@ -442,41 +424,12 @@ public interface Datastore {
      * @param <T>        the type of the entity
      * @return the results of the updates
      * @since 1.3
+     * @deprecated use {@link Query#update()} instead
      */
-    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options);
-
-    /**
-     * Updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;
-     * this
-     * is an atomic operation per entity
-     *
-     * @param query           the query used to match the documents to update
-     * @param operations      the update operations to perform
-     * @param createIfMissing if true, a document will be created if none can be found that match the query
-     * @param <T>             the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of
-     * createIfMissing
-     */
-    @Deprecated
-    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing);
-
-    /**
-     * Updates all entities found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true;
-     * this
-     * is an atomic operation per entity
-     *
-     * @param query           the query used to match the documents to update
-     * @param operations      the update operations to perform
-     * @param createIfMissing if true, a document will be created if none can be found that match the query
-     * @param wc              the WriteConcern to use
-     * @param <T>             the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link AdvancedDatastore#update(Query, UpdateOperations, UpdateOptions)}
-     * with upsert set to the value of createIfMissing
-     */
-    @Deprecated
-    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing, WriteConcern wc);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
+        return query.update(operations).execute(options);
+    }
 
     /**
      * Updates the first entity found with the operations; this is an atomic operation

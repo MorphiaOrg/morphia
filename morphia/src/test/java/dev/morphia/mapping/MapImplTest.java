@@ -39,8 +39,8 @@ public class MapImplTest extends TestBase {
         assertFalse(goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
-    @Test //@Ignore("waiting on issue 184")
-    public void testEmbeddedMapUpdateOperations() throws Exception {
+    @Test
+    public void testEmbeddedMapUpdateOperations() {
         getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
@@ -48,8 +48,11 @@ public class MapImplTest extends TestBase {
         final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
         cmoeg.values.put("first", g1);
         getDs().save(cmoeg);
-        getDs().update(cmoeg, getDs().createUpdateOperations(ContainsMapOfEmbeddedGoos.class).set("values.second", g2));
-        //check className in the map values.
+        getDs().find(ContainsMapOfEmbeddedGoos.class)
+               .filter("_id", cmoeg.id)
+               .update()
+               .set("values.second", g2)
+               .execute();
 
         final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
                                                                           .findOne()
@@ -68,7 +71,12 @@ public class MapImplTest extends TestBase {
         final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
-        getDs().update(cmoei, getDs().createUpdateOperations(ContainsMapOfEmbeddedInterfaces.class).set("values.second", g2));
+               getDs().find(ContainsMapOfEmbeddedInterfaces.class)
+               .filter("_id", cmoei.id)
+               .update()
+               .set("values.second", g2)
+               .execute();
+
         //check className in the map values.
         final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
                                                                           .findOne()

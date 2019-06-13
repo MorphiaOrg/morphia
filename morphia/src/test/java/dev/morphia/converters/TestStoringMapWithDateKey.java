@@ -52,7 +52,7 @@ public class TestStoringMapWithDateKey extends TestBase {
         expectedUser.addValue(new Date(), 10d);
 
         getDs().save(expectedUser);
-        Assert.assertNotNull(getDs().find(User.class).find(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(getDs().find(User.class).execute(new FindOptions().limit(1)).tryNext());
     }
 }
 

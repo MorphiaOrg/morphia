@@ -48,7 +48,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         MongoCursor<City> matchingCity = getDs().find(City.class)
                                                 .field("location")
                                                 .intersects(spanishLine)
-                                                .find();
+                                                .execute();
 
         // then
         assertThat(matchingCity.next(), is(sevilla));
@@ -84,7 +84,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
                                                        .field("area")
                                                        .intersects(lineString(point(37.4056048, -5.9666089),
                                                                        point(37.404497, -5.9640557)))
-                                                       .find();
+                                                       .execute();
 
         // then
         assertThat(areaContainingPoint.next(), is(sevilla));
@@ -138,7 +138,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
                                                              .field("everything")
                                                              .intersects(lineString(point(37.4056048, -5.9666089),
                                                                              point(37.404497, -5.9640557)))
-                                                             .find();
+                                                             .execute();
 
         // then
         assertThat(everythingInTheUK.next(), is(sevilla));
@@ -186,7 +186,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
                                                      .field("regions")
                                                      .intersects(lineString(point(37.4056048, -5.9666089),
                                                                      point(37.404497, -5.9640557)))
-                                                     .find();
+                                                     .execute();
 
         // then
         assertThat(regionsInTheUK.next(), is(sevilla));
@@ -217,7 +217,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
                                                          .field("route")
                                                          .intersects(lineString(point(37.4043709, -5.9643244),
                                                                          point(37.4045286, -5.9642332)))
-                                                         .find();
+                                                         .execute();
 
         // then
         assertThat(routeContainingPoint.next(), is(sevilla));

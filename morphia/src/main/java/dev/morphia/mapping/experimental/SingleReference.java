@@ -35,7 +35,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         if (value == null && id != null) {
-            value = (T) buildQuery().find().tryNext();
+            value = (T) buildQuery().execute().tryNext();
         }
         return value;
     }

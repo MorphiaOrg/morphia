@@ -53,7 +53,7 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
         getDs().save(u);
 
         final User uLoaded = getDs().find(User.class)
-                                    .find(new FindOptions().limit(1))
+                                    .execute(new FindOptions().limit(1))
                                     .next();
         Assert.assertEquals("never, never", uLoaded.ignored);
     }

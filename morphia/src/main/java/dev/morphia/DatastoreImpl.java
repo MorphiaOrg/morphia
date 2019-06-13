@@ -130,6 +130,16 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> Query<T> createQuery(final String collection, final Class<T> type) {
+        return newQuery(type, getDB().getCollection(collection));
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final Class<T> clazz, final DBObject q) {
+        return newQuery(clazz, getCollection(clazz), q);
+    }
+
+    @Override
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> clazz) {
         return new UpdateOpsImpl<>(clazz, getMapper());
     }
@@ -228,7 +238,12 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> find(final Class<T> clazz) {
-        return createQuery(clazz);
+        return newQuery(clazz, getCollection(clazz));
+    }
+
+    @Override
+    public <T> Query<T> find(final String collection) {
+        return newQuery(mapper.getClassFromCollection(collection), getDB().getCollection(collection));
     }
 
     @Override
@@ -325,12 +340,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(final T entity) {
-        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
-    }
-
-    @Override
     public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
         final String collectionName = mapper.getCollectionName(clazz);
         final String keyCollection = mapper.updateCollection(key);
@@ -369,7 +378,7 @@ class DatastoreImpl implements AdvancedDatastore {
                 objIds.add(key.getId());
             }
             final List kindResults = find(entry.getKey()).disableValidation().filter("_id in", objIds)
-                                                         .find()
+                                                         .execute()
                                                          .toList();
             entities.addAll(kindResults);
         }
@@ -534,59 +543,11 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> UpdateResults update(final T entity, final UpdateOperations<T> operations) {
-        if (entity instanceof Query) {
-            return update((Query<T>) entity, operations);
-        }
-
-        final MappedClass mc = mapper.getMappedClass(entity);
-        Query<?> query = createQuery(mapper.getMappedClass(entity).getClazz())
-                             .disableValidation()
-                             .filter("_id", mapper.getId(entity));
-        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            final MappedField field = mc.getFieldsAnnotatedWith(Version.class).get(0);
-            query.field(field.getNameToStore()).equal(field.getFieldValue(entity));
-        }
-
-        return update((Query<T>) query, operations);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> UpdateResults update(final Key<T> key, final UpdateOperations<T> operations) {
-        Class<T> clazz = (Class<T>) key.getType();
-        if (clazz == null) {
-            clazz = mapper.getClassFromCollection(key.getCollection());
-        }
-        return update(createQuery(clazz).disableValidation().filter("_id", key.getId()), operations, new UpdateOptions());
-    }
-
-    @Override
     public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations) {
-        return update(query, operations, new UpdateOptions()
+        return query.update(operations).execute(new UpdateOptions()
                                              .upsert(false)
                                              .multi(true)
                                              .writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, new UpdateOptions()
-                                             .upsert(createIfMissing)
-                                             .multi(true)
-                                             .writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
-                                    final WriteConcern wc) {
-        return update(query, operations, new UpdateOptions()
-                                             .upsert(createIfMissing)
-                                             .multi(true)
-                                             .writeConcern(wc));
     }
 
     @Override
@@ -638,16 +599,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Query<T> createQuery(final String collection, final Class<T> type) {
-        return newQuery(type, getDB().getCollection(collection));
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final Class<T> clazz, final DBObject q) {
-        return newQuery(clazz, getCollection(clazz), q);
-    }
-
-    @Override
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
@@ -682,11 +633,6 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
         indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz));
-    }
-
-    @Override
-    public <T> Query<T> find(final String collection) {
-        return newQuery(mapper.getClassFromCollection(collection), getDB().getCollection(collection));
     }
 
     @Override
@@ -1025,35 +971,6 @@ class DatastoreImpl implements AdvancedDatastore {
             }
         }
         return dbObject;
-    }
-
-    @Override
-    public <T> UpdateResults update(final Query<T> query, final UpdateOperations<T> operations, final UpdateOptions options) {
-        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
-        DBCollection dbColl = queryImpl.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(queryImpl.getEntityClass());
-        }
-
-        final MappedClass mc = getMapper().getMappedClass(queryImpl.getEntityClass());
-        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
-
-        DBObject queryObject = queryImpl.getQueryObject();
-
-        if (!fields.isEmpty()) {
-            operations.inc(fields.get(0).getNameToStore(), 1);
-        }
-
-        final BasicDBObject update = (BasicDBObject) ((UpdateOpsImpl) operations).getOps();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                dbColl.getName(), queryObject, update, options.isMulti(), options.isUpsert()));
-        }
-
-        return new UpdateResults(dbColl.update(queryObject, update,
-            enforceWriteConcern(options, queryImpl.getEntityClass())
-                .getOptions()));
     }
 
     @SuppressWarnings("unchecked")

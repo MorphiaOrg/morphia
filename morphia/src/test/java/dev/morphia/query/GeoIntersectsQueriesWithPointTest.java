@@ -48,7 +48,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         List<City> matchingCity = toList(getDs().find(City.class)
                                                 .field("location")
                                                 .intersects(coordsOfManchester)
-                                                .find());
+                                                .execute());
 
         // then
         assertThat(matchingCity.size(), is(1));
@@ -83,7 +83,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         List<Area> areaContainingPoint = toList(getDs().find(Area.class)
                                                        .field("area")
                                                        .intersects(point(51.507780365645885, -0.21786745637655258))
-                                                       .find());
+                                                       .execute());
 
         // then
         assertThat(areaContainingPoint.size(), is(1));
@@ -134,7 +134,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
                                                              .field("everything")
                                                              .intersects(point(51.50802478194237, -0.21474729292094707))
-                                                             .find());
+                                                             .execute());
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -181,7 +181,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
                                                      .field("regions")
                                                      .intersects(point(51.498216362670064, 0.0074849557131528854))
-                                                     .find());
+                                                     .execute());
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -216,7 +216,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         List<Route> routeContainingPoint = toList(getDs().find(Route.class)
                                                          .field("route")
                                                          .intersects(point(37.40759155713022, -5.964911067858338))
-                                                         .find());
+                                                         .execute());
 
         // then
         assertThat(routeContainingPoint.size(), is(1));

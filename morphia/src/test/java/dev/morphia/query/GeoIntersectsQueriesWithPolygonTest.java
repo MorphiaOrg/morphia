@@ -48,7 +48,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                              point(37.40341208875179, -5.9643941558897495),
                                                              point(37.40297396667302, -5.970452763140202),
                                                              point(37.40759155713022, -5.964911067858338)))
-                                         .find());
+                                         .execute());
 
         // then
         assertThat(matchingCity.size(), is(1));
@@ -86,7 +86,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                            point(37.404497, -5.9640557),
                                                            point(37.407239, -5.962988),
                                                            point(37.4056048, -5.9666089)))
-                                                       .find());
+                                                       .execute());
 
         // then
         assertThat(areaContainingPoint.size(), is(1));
@@ -142,7 +142,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                                  point(37.404497, -5.9640557),
                                                                  point(37.407239, -5.962988),
                                                                  point(37.4056048, -5.9666089)))
-                                                             .find());
+                                                             .execute());
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -192,7 +192,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                          point(37.404497, -5.9640557),
                                                          point(37.407239, -5.962988),
                                                          point(37.4056048, -5.9666089)))
-                                                     .find());
+                                                     .execute());
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -225,7 +225,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                              point(37.40341208875179, -5.9643941558897495),
                                                              point(37.40297396667302, -5.970452763140202),
                                                              point(37.40759155713022, -5.964911067858338)))
-                                                         .find());
+                                                         .execute());
 
         // then
         assertThat(routeContainingPoint.size(), is(1));

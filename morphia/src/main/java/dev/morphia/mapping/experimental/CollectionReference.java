@@ -99,7 +99,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         final MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
                                                                           .disableValidation()
                                                                           .filter("_id in ", collectionIds)
-                                                                          .find();
+                                                                          .execute();
         try {
             final Map<Object, Object> idMap = new HashMap<Object, Object>();
             while (cursor.hasNext()) {

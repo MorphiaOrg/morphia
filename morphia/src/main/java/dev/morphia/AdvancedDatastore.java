@@ -66,7 +66,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param type The type of the entity
      * @param ops  The operations to perform
      * @return the UpdateOperations instance
+     * @deprecated use {@link Query#update()} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> UpdateOperations<T> createUpdateOperations(Class<T> type, DBObject ops);
 
     /**

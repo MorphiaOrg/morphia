@@ -49,7 +49,7 @@ public class NewAnnotationTest extends TestBase {
         getDs().save(u);
 
         final User uScott = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase())
-                                   .find(new FindOptions().limit(1))
+                                   .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNotNull(uScott);
     }

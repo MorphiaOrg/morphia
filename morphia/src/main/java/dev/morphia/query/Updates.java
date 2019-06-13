@@ -1,59 +1,8 @@
 package dev.morphia.query;
 
-
 import java.util.List;
 
-
-/**
- * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and
- * client
- * version of the Entity to be different </p>
- *
- * @param <T> The Java type used in the updates
- * @deprecated updates should be performed using the {@link Query#update()} instead of this class directly
- */
-@Deprecated(since = "2.0", forRemoval = true)
-public interface UpdateOperations<T> {
-    /**
-     * adds the value to an array field
-     *
-     * @param field the field to update
-     * @param value the value to add
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @deprecated use {@link #addToSet(String, Object)} instead
-     */
-    @Deprecated
-    UpdateOperations<T> add(String field, Object value);
-
-    /**
-     * adds the value to an array field
-     *
-     * @param field   the field to update
-     * @param value   the value to add
-     * @param addDups if true, the value will be added even if it already exists in the array ($push)
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @deprecated use {@link #push(String, Object)} if addDups is false or {@link #addToSet(String, Object)} instead
-     */
-    @Deprecated
-    UpdateOperations<T> add(String field, Object value, boolean addDups);
-
-    /**
-     * adds the values to an array field
-     *
-     * @param field   the field to update
-     * @param values  the values to add
-     * @param addDups if true, the values will be added even if they already exists in the array ($push)
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, List)}
-     */
-    @Deprecated
-    UpdateOperations<T> addAll(String field, List<?> values, boolean addDups);
-
+public interface Updates<Updater extends Updates> {
     /**
      * adds the value to an array field if it doesn't already exist in the array
      *
@@ -62,7 +11,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      */
-    UpdateOperations<T> addToSet(String field, Object value);
+    Updater addToSet(String field, Object value);
 
     /**
      * adds the values to an array field if they doesn't already exist in the array
@@ -72,7 +21,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      */
-    UpdateOperations<T> addToSet(String field, List<?> values);
+    Updater addToSet(String field, List<?> values);
 
     /**
      * adds the values to an array field if they doesn't already exist in the array
@@ -82,7 +31,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
      */
-    UpdateOperations<T> addToSet(String field, Iterable<?> values);
+    Updater addToSet(String field, Iterable<?> values);
 
     /**
      * Decrements the numeric field by 1
@@ -91,7 +40,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
-    UpdateOperations<T> dec(String field);
+    Updater dec(String field);
 
     /**
      * Decrements the numeric field by value (must be a positive Double,
@@ -104,21 +53,21 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
-    UpdateOperations<T> dec(String field, Number value);
+    Updater dec(String field, Number value);
 
     /**
      * Turns off validation (for all calls made after)
      *
      * @return this
      */
-    UpdateOperations<T> disableValidation();
+    Updater disableValidation();
 
     /**
      * Turns on validation (for all calls made after); by default validation is on
      *
      * @return this
      */
-    UpdateOperations<T> enableValidation();
+    Updater enableValidation();
 
     /**
      * Increments the numeric field by 1
@@ -127,7 +76,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
-    UpdateOperations<T> inc(String field);
+    Updater inc(String field);
 
     /**
      * increments the numeric field by value (negatives are allowed)
@@ -137,7 +86,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
-    UpdateOperations<T> inc(String field, Number value);
+    Updater inc(String field, Number value);
 
     /**
      * Sets the numeric field to value if it is greater than the current value.
@@ -147,7 +96,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/max/ $max
      */
-    UpdateOperations<T> max(String field, Number value);
+    Updater max(String field, Number value);
 
     /**
      * sets the numeric field to value if it is less than the current value.
@@ -157,7 +106,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/min/ $min
      */
-    UpdateOperations<T> min(String field, Number value);
+    Updater min(String field, Number value);
 
     /**
      * Adds new values to an array field.
@@ -167,7 +116,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    UpdateOperations<T> push(String field, Object value);
+    Updater push(String field, Object value);
 
     /**
      * Adds new values to an array field at the given position
@@ -178,7 +127,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    UpdateOperations<T> push(String field, Object value, final PushOptions options);
+    Updater push(String field, Object value, final PushOptions options);
 
     /**
      * Adds new values to an array field.
@@ -188,7 +137,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    UpdateOperations<T> push(String field, List<?> values);
+    Updater push(String field, List<?> values);
 
     /**
      * Adds new values to an array field at the given position
@@ -199,7 +148,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    UpdateOperations<T> push(String field, List<?> values, PushOptions options);
+    Updater push(String field, List<?> values, PushOptions options);
 
     /**
      * removes the value from the array field
@@ -209,7 +158,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/pull/ $pull
      */
-    UpdateOperations<T> removeAll(String field, Object value);
+    Updater removeAll(String field, Object value);
 
     /**
      * removes the values from the array field
@@ -219,7 +168,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/pullAll/ $pullAll
      */
-    UpdateOperations<T> removeAll(String field, List<?> values);
+    Updater removeAll(String field, List<?> values);
 
     /**
      * removes the first value from the array
@@ -228,7 +177,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/pop/ $pop
      */
-    UpdateOperations<T> removeFirst(String field);
+    Updater removeFirst(String field);
 
     /**
      * removes the last value from the array
@@ -237,7 +186,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/pop/ $pop
      */
-    UpdateOperations<T> removeLast(String field);
+    Updater removeLast(String field);
 
     /**
      * sets the field value
@@ -247,7 +196,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/set/ $set
      */
-    UpdateOperations<T> set(String field, Object value);
+    Updater set(String field, Object value);
 
     /**
      * sets the field on insert.
@@ -257,7 +206,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/setOnInsert/ $setOnInsert
      */
-    UpdateOperations<T> setOnInsert(String field, Object value);
+    Updater setOnInsert(String field, Object value);
 
     /**
      * removes the field
@@ -266,5 +215,5 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/unset/ $unset
      */
-    UpdateOperations<T> unset(String field);
+    Updater unset(String field);
 }

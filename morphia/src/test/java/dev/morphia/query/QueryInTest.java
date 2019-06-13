@@ -39,7 +39,7 @@ public class QueryInTest extends TestBase {
             query.criteria("otherIds").hasAnyOf(memberships)
         );
 
-        Assert.assertFalse(query.find().hasNext());
+        Assert.assertFalse(query.execute().hasNext());
     }
 
     @Test
@@ -70,12 +70,12 @@ public class QueryInTest extends TestBase {
         getDs().save(doc);
 
         // this works
-        getDs().find(Doc.class).field("_id").equal(1).find();
+        getDs().find(Doc.class).field("_id").equal(1).execute();
 
         final List<Long> idList = new ArrayList<Long>();
         idList.add(1L);
         // this causes an NPE
-        getDs().find(Doc.class).field("_id").in(idList).find();
+        getDs().find(Doc.class).field("_id").in(idList).execute();
 
     }
 

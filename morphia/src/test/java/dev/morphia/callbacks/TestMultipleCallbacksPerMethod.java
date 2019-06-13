@@ -20,7 +20,7 @@ public class TestMultipleCallbacksPerMethod extends TestBase {
         getDs().save(entity);
         Assert.assertTrue(entity.isPersistent());
         final SomeEntity reloaded = getDs().find(SomeEntity.class).filter("id", entity.getId())
-                                           .find(new FindOptions().limit(1))
+                                           .execute(new FindOptions().limit(1))
                                            .tryNext();
         Assert.assertTrue(reloaded.isPersistent());
     }

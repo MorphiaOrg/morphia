@@ -60,9 +60,9 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter("id", entity.getId());
-        UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
-        ops.set("name", "Value 3");
-        datastore.update(query, ops);
+        query.update()
+             .set("name", "Value 3")
+             .execute();
 
         entity = datastore.find(Versioned.class).filter("_id", entity.getId()).first();
         Assert.assertEquals("Value 3", entity.getName());
@@ -98,46 +98,6 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
-    public void testEntityUpdate() {
-        final Datastore datastore = getDs();
-
-        Versioned entity = new Versioned();
-        entity.setName("Value 1");
-
-        datastore.save(entity);
-
-        final Query<Versioned> query = datastore.find(Versioned.class).filter("_id", entity.getId());
-
-        entity = query.first();
-        Assert.assertEquals("Value 1", entity.getName());
-        Assert.assertEquals(1, entity.getVersion().longValue());
-
-        entity.setName("Value 2");
-        datastore.save(entity);
-
-        entity = query.first();
-        Assert.assertEquals("Value 2", entity.getName());
-        Assert.assertEquals(2, entity.getVersion().longValue());
-
-        UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
-        ops.set("name", "Value 3");
-        Assert.assertEquals(1, datastore.update(entity, ops).getUpdatedCount());
-        Assert.assertEquals(0, datastore.update(entity, ops).getUpdatedCount());
-
-        entity = query.first();
-        Assert.assertEquals("Value 3", entity.getName());
-        Assert.assertEquals(3, entity.getVersion().longValue());
-
-        ops = datastore.createUpdateOperations(Versioned.class);
-        ops.set("name", "Value 4");
-        datastore.update(datastore.getKey(entity), ops);
-
-        entity = query.first();
-        Assert.assertEquals("Value 4", entity.getName());
-        Assert.assertEquals(4, entity.getVersion().longValue());
-    }
-
-    @Test
     public void testUpdateFirst() {
         final Datastore datastore = getDs();
 
@@ -161,7 +121,7 @@ public class TestVersionAnnotation extends TestBase {
         datastore.updateFirst(
             query,
             datastore.createUpdateOperations(Versioned.class).inc("count"), true);
-        assertEquals(43, query.find(new FindOptions().limit(1)).tryNext().getCount());
+        assertEquals(43, query.execute(new FindOptions().limit(1)).tryNext().getCount());
     }
 
     @Test
@@ -246,7 +206,7 @@ public class TestVersionAnnotation extends TestBase {
         ops.set("name", "Value 3");
         datastore.update(query, ops, new UpdateOptions().upsert(true));
 
-        entity = datastore.find(Versioned.class).find(new FindOptions().limit(1)).tryNext();
+        entity = datastore.find(Versioned.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(1, entity.getVersion().longValue());
     }

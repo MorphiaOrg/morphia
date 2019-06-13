@@ -29,14 +29,14 @@ public class UpdateRetainsClassInfoTest extends TestBase {
         getDs().save(x);
 
         final Query<X> query = getDs().find(X.class);
-        final UpdateOperations<X> update = getDs().createUpdateOperations(X.class);
-        update.set("map.k2", e2);
+        query.update()
+             .set("map.k2", e2)
+             .execute();
 
-        getDs().update(query, update);
 
         // fails due to type now missing
         getDs().find(X.class)
-               .find(new FindOptions().limit(1))
+               .execute(new FindOptions().limit(1))
                .next();
     }
 

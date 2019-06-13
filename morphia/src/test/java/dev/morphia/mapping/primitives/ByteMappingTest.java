@@ -20,7 +20,7 @@ public class ByteMappingTest extends TestBase {
         final String data = "{ \"primitiveArray\": BinData(0, "
                             + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
         getDb().eval("db.Bytes.insert(" + data + ")");
-        final Bytes loaded = getDs().find(Bytes.class).find(new FindOptions().limit(1)).tryNext();
+        final Bytes loaded = getDs().find(Bytes.class).execute(new FindOptions().limit(1)).tryNext();
     }
 
     @Test

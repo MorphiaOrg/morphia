@@ -20,11 +20,11 @@ public class KeyMappingTest extends TestBase {
         insertData();
 
         final Datastore datastore = getDs();
-        User user = datastore.find(User.class).find(new FindOptions().limit(1)).tryNext();
+        User user = datastore.find(User.class).execute(new FindOptions().limit(1)).tryNext();
         List<Key<Channel>> followedChannels = user.followedChannels;
 
         Channel channel = datastore.find(Channel.class).filter("name", "Sport channel")
-                                   .find(new FindOptions().limit(1))
+                                   .execute(new FindOptions().limit(1))
                                    .tryNext();
 
         Key<Channel> key = datastore.getKey(channel);

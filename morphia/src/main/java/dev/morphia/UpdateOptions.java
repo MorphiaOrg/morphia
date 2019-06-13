@@ -32,16 +32,6 @@ import com.mongodb.client.model.DBCollectionUpdateOptions;
 public class UpdateOptions {
     private DBCollectionUpdateOptions options = new DBCollectionUpdateOptions();
 
-    DBCollectionUpdateOptions getOptions() {
-        return options;
-    }
-
-    /**
-     * Creates a new options instance.
-     */
-    public UpdateOptions() {
-    }
-
     /**
      * Create a copy of the options instance.
      *
@@ -158,5 +148,13 @@ public class UpdateOptions {
     public UpdateOptions writeConcern(final WriteConcern writeConcern) {
         options.writeConcern(writeConcern);
         return this;
+    }
+
+    /**
+     * @morphia.internal
+     * @return the options implementation
+     */
+    public DBCollectionUpdateOptions getOptions() {
+        return options;
     }
 }

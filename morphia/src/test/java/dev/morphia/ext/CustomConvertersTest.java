@@ -69,7 +69,7 @@ public class CustomConvertersTest extends TestBase {
         final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
         Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
 
-        final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).find(new FindOptions().limit(1)).tryNext();
+        final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
     }
 
@@ -92,7 +92,7 @@ public class CustomConvertersTest extends TestBase {
         assertThat(dbObj.getInt("c"), is((int) 'a'));
 
         // then check CharEntity can be decoded from the database
-        final CharEntity ce = getDs().find(CharEntity.class).find(new FindOptions().limit(1)).tryNext();
+        final CharEntity ce = getDs().find(CharEntity.class).execute(new FindOptions().limit(1)).tryNext();
         assertThat(ce.c, is(notNullValue()));
         assertThat(ce.c.charValue(), is('a'));
     }

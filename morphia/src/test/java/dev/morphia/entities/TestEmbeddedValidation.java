@@ -17,8 +17,6 @@
 package dev.morphia.entities;
 
 import com.mongodb.client.MongoCursor;
-import dev.morphia.mapping.CollectionOfValuesTest;
-import dev.morphia.mapping.CollectionOfValuesTest.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -66,7 +64,7 @@ public class TestEmbeddedValidation extends TestBase {
         query.disableValidation();
         query.criteria("data.data.id").equal("123");
 
-        assertNotNull(query.find(new FindOptions().limit(1)).tryNext());
+        assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -85,7 +83,7 @@ public class TestEmbeddedValidation extends TestBase {
                                     .disableValidation()
                                     .field("embedded.flag").equal(true);
 
-        Assert.assertEquals(parentType, query.find(new FindOptions().limit(1)).tryNext());
+        Assert.assertEquals(parentType, query.execute(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -97,22 +95,21 @@ public class TestEmbeddedValidation extends TestBase {
 
         Query<EntityWithListsAndArrays> query = getDs().find(EntityWithListsAndArrays.class)
                                                           .field("listEmbeddedType.number").equal(42L);
-        MongoCursor<EntityWithListsAndArrays> cursor = query.find();
+        MongoCursor<EntityWithListsAndArrays> cursor = query.execute();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
         Assert.assertFalse(cursor.hasNext());
 
-        UpdateOperations<EntityWithListsAndArrays> operations = getDs()
-            .createUpdateOperations(EntityWithListsAndArrays.class)
-            .set("listEmbeddedType.$.number", 0);
-        getDs().update(query, operations);
+        query.update()
+             .set("listEmbeddedType.$.number", 0)
+             .execute();
 
         Assert.assertEquals(0, query.count());
 
         fortyTwo.setNumber(0L);
         query = getDs().find(EntityWithListsAndArrays.class)
                        .field("listEmbeddedType.number").equal(0);
-        cursor = query.find();
+        cursor = query.execute();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
         Assert.assertFalse(cursor.hasNext());

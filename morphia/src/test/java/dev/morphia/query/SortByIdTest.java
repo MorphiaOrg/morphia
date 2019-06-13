@@ -24,11 +24,11 @@ public class SortByIdTest extends TestBase {
         getDs().save(a3);
 
         Assert.assertEquals("last id", a3.id, getDs().find(A.class).order(descending("id"))
-                                                     .find(new FindOptions().limit(1))
+                                                     .execute(new FindOptions().limit(1))
                                                      .next()
                                                   .id);
         Assert.assertEquals("last id", a3.id, getDs().find(A.class).disableValidation().order(descending("_id"))
-                                                     .find(new FindOptions().limit(1))
+                                                     .execute(new FindOptions().limit(1))
                                                      .next()
                                                   .id);
     }
