@@ -3,6 +3,8 @@ package dev.morphia.query;
 
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+
 
 /**
  * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and
@@ -38,7 +40,14 @@ public interface UpdateOperations<T> {
      * @deprecated use {@link #push(String, Object)} if addDups is false or {@link #addToSet(String, Object)} instead
      */
     @Deprecated
-    UpdateOperations<T> add(String field, Object value, boolean addDups);
+    default UpdateOperations<T> add(String field, Object value, boolean addDups){
+        if (addDups) {
+            push(field, value instanceof List ? (List<?>) value : singletonList(value));
+        } else {
+            addToSet(field, value instanceof List ? (List<?>) value : singletonList(value));
+        }
+        return this;
+    }
 
     /**
      * adds the values to an array field
@@ -52,7 +61,9 @@ public interface UpdateOperations<T> {
      * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, List)}
      */
     @Deprecated
-    UpdateOperations<T> addAll(String field, List<?> values, boolean addDups);
+    default UpdateOperations<T> addAll(String field, List<?> values, boolean addDups) {
+        return (addDups) ? push(field, values) : addToSet(field, values);
+    }
 
     /**
      * adds the value to an array field if it doesn't already exist in the array

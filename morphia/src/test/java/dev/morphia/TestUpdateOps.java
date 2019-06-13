@@ -133,26 +133,21 @@ public class TestUpdateOps extends TestBase {
 
         assertThat(ds.get(cIntArray).values, is((new ContainsIntArray()).values));
 
+        Query<ContainsIntArray> query = ds.createQuery(ContainsIntArray.class);
         //add 4 to array
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                     ds.createUpdateOperations(ContainsIntArray.class)
-                                            .add("values", 4, false)),
-                      1);
+        assertUpdated(query.update()
+                           .addToSet("values", 4)
+                           .execute(),
+            1);
 
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
 
         //add unique (4) -- noop
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                     ds.createUpdateOperations(ContainsIntArray.class)
-                                            .add("values", 4, false)),
-                      1);
+        assertUpdated(query.update().addToSet("values", 4).execute(), 1);
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
 
         //add dup 4
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                     ds.createUpdateOperations(ContainsIntArray.class)
-                                            .add("values", 4, true)),
-                      1);
+        assertUpdated(query.update().push("values", 4).execute(), 1);
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 4}));
 
         //cleanup for next tests
@@ -163,24 +158,16 @@ public class TestUpdateOps extends TestBase {
         final List<Integer> newValues = new ArrayList<>();
         newValues.add(4);
         newValues.add(5);
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                     ds.createUpdateOperations(ContainsIntArray.class)
-                                            .addAll("values", newValues, false)),
-                      1);
+
+        assertUpdated(query.update().addToSet("values", newValues).execute(), 1);
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add them again... noop
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                     ds.createUpdateOperations(ContainsIntArray.class)
-                                            .addAll("values", newValues, false)),
-                      1);
+        assertUpdated(query.update().addToSet("values", newValues).execute(), 1);
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add dups [4,5]
-        assertUpdated(ds.update(ds.createQuery(ContainsIntArray.class),
-                                ds.createUpdateOperations(ContainsIntArray.class)
-                                  .addAll("values", newValues, true)),
-                      1);
+        assertUpdated(query.update().push("values", newValues).execute(), 1);
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
     }
 

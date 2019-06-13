@@ -47,16 +47,10 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     @Override
     @Deprecated
     public UpdateOperations<T> add(final String field, final Object value, final boolean addDups) {
-        if (value == null) {
-            throw new QueryException("Value cannot be null.");
-        }
-
         if (addDups) {
-            List<?> values = value instanceof List ? (List<?>) value : singletonList(value);
-            push(field, values);
+            push(field, value instanceof List ? (List<?>) value : singletonList(value));
         } else {
-            List<?> values = value instanceof List ? (List<?>) value : singletonList(value);
-            addToSet(field, values);
+            addToSet(field, value instanceof List ? (List<?>) value : singletonList(value));
         }
         return this;
     }
