@@ -98,33 +98,6 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
-    public void testUpdateFirst() {
-        final Datastore datastore = getDs();
-
-        Versioned original = new Versioned();
-        original.setName("Value 1");
-        original.setCount(42);
-        getDs().save(original);
-
-        Versioned update = new Versioned();
-        update.setName("Value 2");
-
-        Query<Versioned> query = datastore.find(Versioned.class).field("name").equal("Value 1");
-        try {
-            datastore.updateFirst(
-                query,
-                update, true);
-            fail("This call should have been rejected");
-        } catch (UnsupportedOperationException ignored) {
-        }
-
-        datastore.updateFirst(
-            query,
-            datastore.createUpdateOperations(Versioned.class).inc("count"), true);
-        assertEquals(43, query.execute(new FindOptions().limit(1)).tryNext().getCount());
-    }
-
-    @Test
     public void testIncVersionNotOverridingOtherInc() {
         final Versioned version1 = new Versioned();
         version1.setCount(0);

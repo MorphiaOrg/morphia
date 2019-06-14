@@ -551,54 +551,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @Deprecated
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations) {
-        return update(query, operations, new UpdateOptions());
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing) {
-        return update(query, operations, new UpdateOptions()
-                                             .upsert(createIfMissing));
-
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> operations, final boolean createIfMissing,
-                                         final WriteConcern wc) {
-        return update(query, operations, new UpdateOptions()
-                                             .upsert(createIfMissing)
-                                             .writeConcern(wc));
-    }
-
-    @Override
-    @Deprecated
-    public <T> UpdateResults updateFirst(final Query<T> query, final T entity, final boolean createIfMissing) {
-        final QueryImpl<T> queryImpl = (QueryImpl<T>) query;
-
-        if (getMapper().getMappedClass(entity).getMappedVersionField() != null) {
-            throw new UnsupportedOperationException("updateFirst() is not supported with versioned entities");
-        }
-
-        final LinkedHashMap<Object, DBObject> involvedObjects = new LinkedHashMap<>();
-        final DBObject dbObj = mapper.toDBObject(entity, involvedObjects);
-
-        final UpdateResults res = update(queryImpl, dbObj, new UpdateOptions()
-                                                           .upsert(createIfMissing)
-                                                           .writeConcern(getWriteConcern(entity)));
-
-        // update _id field
-        if (res.getInsertedCount() > 0) {
-            dbObj.put("_id", res.getNewId());
-        }
-
-        postSaveOperations(singletonList(entity), involvedObjects, false, getCollection(entity).getName());
-        return res;
-    }
-
-    @Override
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());

@@ -717,48 +717,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testUpdateFirstNoCreateWithEntity() {
-        List<EntityLogs> logs = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            logs.add(createEntryLogs("logs" + i));
-        }
-        EntityLogs logs1 = logs.get(0);
-
-        Query<EntityLogs> query = getDs().find(EntityLogs.class);
-        DBObject object = new BasicDBObject("new", "value");
-        EntityLogs newLogs = new EntityLogs();
-        newLogs.raw = object;
-
-        getDs().updateFirst(query, newLogs, false);
-
-        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).execute());
-        for (int i = 0; i < list.size(); i++) {
-            final EntityLogs entityLogs = list.get(i);
-            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
-        }
-    }
-
-    @Test
-    public void testUpdateFirstNoCreateWithWriteConcern() {
-        List<EntityLogs> logs = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            logs.add(createEntryLogs("logs" + i));
-        }
-        EntityLogs logs1 = logs.get(0);
-
-        getDs().find(EntityLogs.class)
-               .update()
-               .set("raw", new BasicDBObject("new", "value"))
-               .execute(new UpdateOptions());
-
-        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).execute());
-        for (int i = 0; i < list.size(); i++) {
-            final EntityLogs entityLogs = list.get(i);
-            assertEquals(entityLogs.id.equals(logs1.id) ? new BasicDBObject("new", "value") : logs.get(i).raw, entityLogs.raw);
-        }
-    }
-
-    @Test
     public void testUpdateKeyRef() {
         final ContainsPicKey cpk = new ContainsPicKey();
         cpk.name = "cpk one";

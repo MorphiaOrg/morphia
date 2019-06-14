@@ -432,61 +432,6 @@ public interface Datastore {
     }
 
     /**
-     * Updates the first entity found with the operations; this is an atomic operation
-     *
-     * @param query      the query used to match the document to update
-     * @param operations the update operations to perform
-     * @param <T>        the type of the entity
-     * @return the results of the update
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)}
-     */
-    @Deprecated
-    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations);
-
-    /**
-     * Updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true.
-     *
-     * @param query           the query used to match the documents to update
-     * @param operations      the update operations to perform
-     * @param createIfMissing if true, a document will be created if none can be found that match the query
-     * @param <T>             the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
-     */
-    @Deprecated
-    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing);
-
-    /**
-     * Updates the first entity found with the operations, if nothing is found insert the update as an entity if "createIfMissing" is true.
-     *
-     * @param query           the query used to match the documents to update
-     * @param operations      the update operations to perform
-     * @param createIfMissing if true, a document will be created if none can be found that match the query
-     * @param wc              the WriteConcern to use
-     * @param <T>             the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
-     */
-    @Deprecated
-    <T> UpdateResults updateFirst(Query<T> query, UpdateOperations<T> operations, boolean createIfMissing, WriteConcern wc);
-
-    /**
-     * updates the first entity found using the entity as a template, if nothing is found insert the update as an entity if
-     * "createIfMissing" is true.
-     * <p>
-     * If the entity is a versioned entity, an UnsupportedOperationException is thrown.
-     *
-     * @param query           the query used to match the documents to update
-     * @param entity          the entity whose state will be used as an update template for any matching documents
-     * @param createIfMissing if true, a document will be created if none can be found that match the query
-     * @param <T>             the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link #update(Query, UpdateOperations, UpdateOptions)} with upsert set to the value of createIfMissing
-     */
-    @Deprecated
-    <T> UpdateResults updateFirst(Query<T> query, T entity, boolean createIfMissing);
-
-    /**
      * @return the Mapper used by this Datastore
      * @since 1.5
      * @morphia.internal
