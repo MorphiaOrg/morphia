@@ -29,6 +29,7 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.generics.model.ChildEmbedded;
 import dev.morphia.generics.model.ChildEntity;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl.Update;
 import dev.morphia.query.UpdateException;
@@ -334,9 +335,9 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                                            .field("username").equal("john doe");
-        UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
-            .inc("loginCount");
-        FacebookUser results = getDs().findAndModify(query, updateOperations);
+        Modify<FacebookUser> modify = query.modify().inc("loginCount");
+        FacebookUser results = modify.execute();
+
         assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
                                .execute(new FindOptions().limit(1))
                                .next()
@@ -347,8 +348,7 @@ public class TestDatastore extends TestBase {
                             .loginCount);
         assertEquals(1, results.loginCount);
 
-        results = getDs().findAndModify(query, updateOperations, new FindAndModifyOptions()
-            .returnNew(false));
+        results = modify.execute(new FindAndModifyOptions().returnNew(false));
         assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
                                .execute(new FindOptions().limit(1))
                                .next()
@@ -359,11 +359,11 @@ public class TestDatastore extends TestBase {
                             .loginCount);
         assertEquals(1, results.loginCount);
 
-        results = getDs().findAndModify(getDs().find(FacebookUser.class)
-                                               .field("id").equal(3L)
-                                               .field("username").equal("Jon Snow"), updateOperations, new FindAndModifyOptions()
-                                            .returnNew(false)
-                                            .upsert(true));
+        query = getDs().find(FacebookUser.class)
+                       .field("id").equal(3L)
+                       .field("username").equal("Jon Snow");
+        results = query.modify().inc("loginCount").execute(new FindAndModifyOptions().returnNew(false).upsert(true));
+
         assertNull(results);
         FacebookUser user = getDs().find(FacebookUser.class).filter("id", 3)
                                    .execute(new FindOptions().limit(1))
@@ -372,11 +372,11 @@ public class TestDatastore extends TestBase {
         assertEquals("Jon Snow", user.username);
 
 
-        results = getDs().findAndModify(getDs().find(FacebookUser.class)
-                                               .field("id").equal(4L)
-                                               .field("username").equal("Ron Swanson"), updateOperations, new FindAndModifyOptions()
-                                                                                           .returnNew(true)
-                                                                                           .upsert(true));
+        query = getDs().find(FacebookUser.class)
+                       .field("id").equal(4L)
+                       .field("username").equal("Ron Swanson");
+        results = query.modify().inc("loginCount").execute(new FindAndModifyOptions().returnNew(true).upsert(true));
+
         assertNotNull(results);
         user = getDs().find(FacebookUser.class).filter("id", 4)
                       .execute(new FindOptions().limit(1))
@@ -396,9 +396,10 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                                            .field("username").equal("john doe");
-        UpdateOperations<FacebookUser> updateOperations = getDs().createUpdateOperations(FacebookUser.class)
-            .inc("loginCount");
-        FacebookUser results = getDs().findAndModify(query, updateOperations, new FindAndModifyOptions());
+        Modify<FacebookUser> modify = query.modify()
+                                               .inc("loginCount");
+        FacebookUser results = modify.execute();
+
         assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
                                .execute(new FindOptions().limit(1))
                                .next()
@@ -409,12 +410,12 @@ public class TestDatastore extends TestBase {
                             .loginCount);
         assertEquals(1, results.loginCount);
 
-        results = getDs().findAndModify(query, updateOperations, new FindAndModifyOptions()
-            .returnNew(false)
-            .collation(Collation.builder()
-                                .locale("en")
-                                .collationStrength(CollationStrength.SECONDARY)
-                                .build()));
+        results = modify.execute(new FindAndModifyOptions()
+                                     .returnNew(false)
+                                     .collation(Collation.builder()
+                                                         .locale("en")
+                                                         .collationStrength(CollationStrength.SECONDARY)
+                                                         .build()));
         assertEquals(1, getDs().find(FacebookUser.class).filter("id", 1)
                                .execute(new FindOptions().limit(1))
                                .next()
@@ -425,12 +426,15 @@ public class TestDatastore extends TestBase {
                                .next()
                             .loginCount);
 
-        results = getDs().findAndModify(getDs().find(FacebookUser.class)
-                                               .field("id").equal(3L)
-                                               .field("username").equal("Jon Snow"),
-                                        updateOperations, new FindAndModifyOptions()
-                                            .returnNew(false)
-                                            .upsert(true));
+        results = getDs().find(FacebookUser.class)
+                         .field("id").equal(3L)
+                         .field("username").equal("Jon Snow")
+                         .modify()
+                         .inc("loginCount")
+                         .execute(new FindAndModifyOptions()
+                                      .returnNew(false)
+                                      .upsert(true));
+
         assertNull(results);
         FacebookUser user = getDs().find(FacebookUser.class).filter("id", 3)
                                    .execute(new FindOptions().limit(1))
@@ -439,11 +443,13 @@ public class TestDatastore extends TestBase {
         assertEquals("Jon Snow", user.username);
 
 
-        results = getDs().findAndModify(getDs().find(FacebookUser.class)
-                                               .field("id").equal(4L)
-                                               .field("username").equal("Ron Swanson"),
-                                        updateOperations, new FindAndModifyOptions()
-                                            .upsert(true));
+        results = getDs().find(FacebookUser.class)
+                         .field("id").equal(4L)
+                         .field("username").equal("Ron Swanson")
+                         .modify()
+                         .inc("loginCount")
+                         .execute(new FindAndModifyOptions().upsert(true));
+
         assertNotNull(results);
         user = getDs().find(FacebookUser.class).filter("id", 4)
                       .execute(new FindOptions().limit(1))

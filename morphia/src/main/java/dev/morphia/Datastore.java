@@ -13,6 +13,7 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateOperations;
@@ -172,7 +173,9 @@ public interface Datastore {
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
      * @since 1.3
+     * @deprecated use {@link Query#modify()} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
 
     /**
@@ -182,35 +185,13 @@ public interface Datastore {
      * @param operations the updates to apply to the matched documents
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
+     * @deprecated use {@link Query#modify()} instead
      */
-    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations);
-
-    /**
-     * Find the first Entity from the Query, and modify it.
-     *
-     * @param query      the query to find the Entity with; You are not allowed to offset/skip in the query.
-     * @param operations the updates to apply to the matched documents
-     * @param oldVersion indicated the old version of the Entity should be returned
-     * @param <T>        the type to query
-     * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
-     */
-    @Deprecated
-    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion);
-
-    /**
-     * Find the first Entity from the Query, and modify it.
-     *
-     * @param query           the query to find the Entity with; You are not allowed to offset/skip in the query.
-     * @param operations      the updates to apply to the matched documents
-     * @param oldVersion      indicated the old version of the Entity should be returned
-     * @param createIfMissing if the query returns no results, then a new object will be created (sets upsert=true)
-     * @param <T>             the type of the entity
-     * @return The Entity (the result of the update if oldVersion is false)
-     * @deprecated use {@link #findAndModify(Query, UpdateOperations, FindAndModifyOptions)}
-     */
-    @Deprecated
-    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, boolean oldVersion, boolean createIfMissing);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> T findAndModify(Query<T> query, UpdateOperations<T> operations) {
+        return query.modify(operations).execute(new FindAndModifyOptions()
+                                                    .returnNew(true));
+    }
 
     /**
      * Find the given entities (by id); shorthand for {@code find("_id in", ids)}

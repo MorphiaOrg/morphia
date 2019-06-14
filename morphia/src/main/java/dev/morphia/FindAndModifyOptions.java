@@ -40,7 +40,7 @@ public final class FindAndModifyOptions {
     public FindAndModifyOptions() {
     }
 
-    FindAndModifyOptions copy() {
+    public FindAndModifyOptions copy() {
         FindAndModifyOptions copy = new FindAndModifyOptions();
         copy.bypassDocumentValidation(getBypassDocumentValidation());
         copy.collation(getCollation());
@@ -55,7 +55,11 @@ public final class FindAndModifyOptions {
         return copy;
     }
 
-    DBCollectionFindAndModifyOptions getOptions() {
+    /**
+     * @return
+     * @morphia.internal
+     */
+    public DBCollectionFindAndModifyOptions getOptions() {
         return copy().options;
     }
 
@@ -63,7 +67,12 @@ public final class FindAndModifyOptions {
         return options.getProjection();
     }
 
-    FindAndModifyOptions projection(final DBObject projection) {
+    /**
+     * @param projection
+     * @return
+     * @morphia.internal
+     */
+    public FindAndModifyOptions projection(final DBObject projection) {
         options.projection(projection);
         return this;
     }
@@ -82,8 +91,9 @@ public final class FindAndModifyOptions {
      *
      * @param sort the sort
      * @return this
+     * @morphia.internal
      */
-    FindAndModifyOptions sort(final DBObject sort) {
+    public FindAndModifyOptions sort(final DBObject sort) {
         options.sort(sort);
         return this;
     }
@@ -122,8 +132,9 @@ public final class FindAndModifyOptions {
      *
      * @param update the update
      * @return this
+     * @morphia.internal
      */
-    FindAndModifyOptions update(final DBObject update) {
+    public FindAndModifyOptions update(final DBObject update) {
         options.update(update);
         return this;
     }

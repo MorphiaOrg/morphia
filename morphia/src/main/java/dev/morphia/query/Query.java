@@ -503,6 +503,18 @@ public interface Query<T> {
     @Deprecated
     Key<T> getKey(FindOptions options);
 
+    Modify<T> modify();
+
+    /**
+     * This is only intended for use as a bridge for the deprecated methods.  Any use will break in the future.
+     * @morphia.internal
+     * @param operations the prebuilt operations
+     * @return the Modify instance
+     * @since 2.0
+     * @deprecated
+     */
+    Modify<T> modify(UpdateOperations<T> operations);
+
     default WriteResult remove() {
         return remove(new DeleteOptions());
     }
@@ -514,7 +526,7 @@ public interface Query<T> {
     Update update(DBObject dbObject);
 
     /**
-     * This is only intended for use as a bridge for the deprecated update methods.  Any use will break in the future.
+     * This is only intended for use as a bridge for the deprecated methods.  Any use will break in the future.
      * @morphia.internal
      * @param operations the prebuilt operations
      * @return the Updates instance

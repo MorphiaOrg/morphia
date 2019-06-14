@@ -46,7 +46,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
-    private final Datastore ds;
+    final Datastore ds;
     final DBCollection dbColl;
     final Class<R> clazz;
     final Mapper mapper;
@@ -537,6 +537,19 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
+    public Modify modify() {
+        return new Modify(this);
+    }
+
+    @Override
+    public Modify modify(final UpdateOperations<R> operations) {
+        Modify modify = modify();
+        modify.setOps(((UpdateOpsImpl) operations).getOps());
+
+        return modify;
+    }
+
+    @Override
     public WriteResult remove(final DeleteOptions options) {
         return getCollection()
                    .remove(getQueryObject(), enforceWriteConcern(options, getEntityClass()).getOptions());
@@ -828,5 +841,6 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
         }
 
     }
+
 }
 

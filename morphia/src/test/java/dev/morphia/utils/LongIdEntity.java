@@ -62,8 +62,7 @@ public abstract class LongIdEntity {
         if (myLongId == null) {
             final String collName = ds.getCollection(getClass()).getName();
             final Query<StoredId> q = ds.find(StoredId.class).filter("_id", collName);
-            final UpdateOperations<StoredId> uOps = ds.createUpdateOperations(StoredId.class).inc("value");
-            StoredId newId = ds.findAndModify(q, uOps);
+            StoredId newId = q.modify().inc("value").execute();
             if (newId == null) {
                 newId = new StoredId(collName);
                 ds.save(newId);

@@ -301,30 +301,6 @@ class DatastoreImpl implements AdvancedDatastore {
 
     }
 
-    @Override
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations) {
-        return findAndModify(query, operations, new FindAndModifyOptions()
-                                                    .returnNew(true));
-    }
-
-    @Override
-    @Deprecated
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion) {
-        return findAndModify(query, operations, new FindAndModifyOptions()
-                                                    .returnNew(!oldVersion)
-                                                    .upsert(false));
-    }
-
-    @Override
-    @Deprecated
-    public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final boolean oldVersion,
-                               final boolean createIfMissing) {
-        return findAndModify(query, operations, new FindAndModifyOptions()
-                                                    .returnNew(!oldVersion)
-                                                    .upsert(createIfMissing));
-
-    }
-
     private <T> void updateForVersioning(final QueryImpl<T> query, final UpdateOperations<T> operations) {
         final MappedClass mc = mapper.getMappedClass(query.getEntityClass());
 

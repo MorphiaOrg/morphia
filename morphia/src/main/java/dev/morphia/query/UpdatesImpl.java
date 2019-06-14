@@ -22,7 +22,7 @@ import static java.util.Collections.singletonList;
 @SuppressWarnings("unchecked")
 abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater>  {
 
-    private Datastore datastore;
+    protected Datastore datastore;
     protected final Mapper mapper;
     protected final Class clazz;
     private Map<String, Map<String, Object>> ops = new HashMap<>();
@@ -202,7 +202,7 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
     /**
      * @return the operations listed
      */
-    public DBObject getOps() {
+    protected DBObject getOps() {
         return new BasicDBObject(ops);
     }
 

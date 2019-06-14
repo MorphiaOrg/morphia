@@ -108,10 +108,10 @@ public class VersionTest extends TestBase {
         ds.save(initial);
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
-                                     .field("id").equal(initial.getId());
-        UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
-                                                    .set("text", "some new value");
-        ALongPrimitive postUpdate = ds.findAndModify(query, update);
+                                        .field("id").equal(initial.getId());
+        ALongPrimitive postUpdate = query.modify()
+                                         .set("text", "some new value")
+                                         .execute();
 
         Assert.assertEquals(initial.version + 1, postUpdate.version);
     }

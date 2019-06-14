@@ -185,4 +185,21 @@ public class TestVersionAnnotation extends TestBase {
         Assert.assertEquals(1, entity.getVersion().longValue());
     }
 
+    @Test
+    public void testFindAndModify() {
+        final Datastore datastore = getDs();
+
+        Versioned entity = new Versioned();
+        entity.setName("Value 1");
+
+        Query<Versioned> query = datastore.find(Versioned.class);
+        query.filter("name", "Value 1");
+        entity = query.modify()
+                      .set("name", "Value 3")
+                      .execute(new FindAndModifyOptions().upsert(true));
+
+        Assert.assertEquals("Value 3", entity.getName());
+        Assert.assertEquals(1, entity.getVersion().longValue());
+        Assert.assertNotNull(entity.getId());
+    }
 }
