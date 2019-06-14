@@ -135,9 +135,10 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.field("_id").equal(version1.getId());
-        UpdateOperations<Versioned> up = getDs().createUpdateOperations(Versioned.class).inc("count");
+        query.update()
+             .inc("count")
+             .execute(new UpdateOptions().upsert(true));
 
-        getDs().update(query, up, new UpdateOptions().upsert(true));
 
         final Versioned version2 = getDs().find(Versioned.class).filter("_id", version1.getId()).first();
 
@@ -202,9 +203,9 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter("name", "Value 1");
-        UpdateOperations<Versioned> ops = datastore.createUpdateOperations(Versioned.class);
-        ops.set("name", "Value 3");
-        datastore.update(query, ops, new UpdateOptions().upsert(true));
+        query.update()
+             .set("name", "Value 3")
+             .execute(new UpdateOptions().upsert(true));
 
         entity = datastore.find(Versioned.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals("Value 3", entity.getName());
