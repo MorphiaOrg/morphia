@@ -12,6 +12,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.DBCollectionFindOptions;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
@@ -42,13 +43,13 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 /**
  * Implementation of Query
  *
- * @param <R> The type we will be querying for, and returning.
+ * @param <T> The type we will be querying for, and returning.
  */
-public class QueryImpl<R> implements CriteriaContainer, Query<R> {
+public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     final Datastore ds;
     final DBCollection dbColl;
-    final Class<R> clazz;
+    final Class<T> clazz;
     final Mapper mapper;
     private EntityCache cache;
     private boolean validateName = true;
@@ -72,7 +73,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
      * @param coll  the collection to query
      * @param ds    the Datastore to use
      */
-    public QueryImpl(final Class<R> clazz, final DBCollection coll, final Datastore ds) {
+    public QueryImpl(final Class<T> clazz, final DBCollection coll, final Datastore ds) {
         this.clazz = clazz;
         this.ds = ds;
         dbColl = coll;
@@ -90,13 +91,13 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public MorphiaKeyCursor<R> keys() {
+    public MorphiaKeyCursor<T> keys() {
         return keys(new FindOptions());
     }
 
     @Override
-    public MorphiaKeyCursor<R> keys(final FindOptions options) {
-        QueryImpl<R> cloned = cloneQuery();
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+        QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
 
@@ -114,44 +115,44 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public MorphiaCursor<R> execute() {
+    public MorphiaCursor<T> execute() {
         return this.execute(getOptions());
     }
 
     @Override
-    public MorphiaCursor<R> execute(final FindOptions options) {
+    public MorphiaCursor<T> execute(final FindOptions options) {
         return new MorphiaCursor<>(ds, prepareCursor(options), ds.getMapper(), clazz, cache);
     }
 
     @Override
-    public R first() {
-        try (MongoCursor<R> iterator = this.execute()) {
+    public T first() {
+        try (MongoCursor<T> iterator = this.execute()) {
             return iterator.tryNext();
         }
     }
 
     @Override
-    public R first(final FindOptions options) {
-        try (MongoCursor<R> it = this.execute(options.copy().limit(1))) {
+    public T first(final FindOptions options) {
+        try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
             return it.tryNext();
         }
     }
 
     @Override
-    public Key<R> getKey() {
+    public Key<T> getKey() {
         return getKey(getOptions());
     }
 
     @Override
-    public Key<R> getKey(final FindOptions options) {
-        try (MongoCursor<Key<R>> it = keys(options.copy().limit(1))) {
+    public Key<T> getKey(final FindOptions options) {
+        try (MongoCursor<Key<T>> it = keys(options.copy().limit(1))) {
             return it.tryNext();
         }
     }
 
     @Override
     @Deprecated
-    public Query<R> batchSize(final int value) {
+    public Query<T> batchSize(final int value) {
         getOptions().batchSize(value);
         return this;
     }
@@ -159,8 +160,8 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     /**
      * @morphia.internal
      */
-    QueryImpl<R> cloneQuery() {
-        final QueryImpl<R> n = new QueryImpl<>(clazz, dbColl, ds);
+    QueryImpl<T> cloneQuery() {
+        final QueryImpl<T> n = new QueryImpl<>(clazz, dbColl, ds);
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
         n.validateName = validateName;
@@ -184,14 +185,14 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Query<R> disableValidation() {
+    public Query<T> disableValidation() {
         validateName = false;
         validateType = false;
         return this;
     }
 
     @Override
-    public Query<R> enableValidation() {
+    public Query<T> enableValidation() {
         validateName = true;
         validateType = true;
         return this;
@@ -209,12 +210,12 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public FieldEnd<? extends Query<R>> field(final String name) {
+    public FieldEnd<? extends Query<T>> field(final String name) {
         return new FieldEndImpl<>(mapper, this, name, this);
     }
 
     @Override
-    public Query<R> filter(final String condition, final Object value) {
+    public Query<T> filter(final String condition, final Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
             throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
@@ -246,7 +247,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
      * @return the entity {@link Class}.
      * @morphia.internal
      */
-    public Class<R> getEntityClass() {
+    public Class<T> getEntityClass() {
         return clazz;
     }
 
@@ -319,14 +320,14 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> hintIndex(final String idxName) {
+    public Query<T> hintIndex(final String idxName) {
         getOptions().modifier("$hint", idxName);
         return this;
     }
 
     @Override
     @Deprecated
-    public Query<R> limit(final int value) {
+    public Query<T> limit(final int value) {
         getOptions().limit(value);
         return this;
     }
@@ -334,7 +335,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     @Override
     @Deprecated
     @SuppressWarnings("unchecked")
-    public Query<R> lowerIndexBound(final DBObject lowerBound) {
+    public Query<T> lowerIndexBound(final DBObject lowerBound) {
         if (lowerBound != null) {
             getOptions().modifier("$min", new Document(lowerBound.toMap()));
         }
@@ -343,7 +344,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> maxScan(final int value) {
+    public Query<T> maxScan(final int value) {
         if (value > 0) {
             getOptions().modifier("$maxScan", value);
         }
@@ -352,27 +353,27 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> maxTime(final long value, final TimeUnit unit) {
+    public Query<T> maxTime(final long value, final TimeUnit unit) {
         getOptions().maxTime(value, unit);
         return this;
     }
 
     @Override
     @Deprecated
-    public Query<R> offset(final int value) {
+    public Query<T> offset(final int value) {
         getOptions().skip(value);
         return this;
     }
 
     @Override
-    public Query<R> order(final Meta sort) {
+    public Query<T> order(final Meta sort) {
         getOptions().sort(sort.toDatabase());
 
         return this;
     }
 
     @Override
-    public Query<R> order(final Sort... sorts) {
+    public Query<T> order(final Sort... sorts) {
         BasicDBObject sortList = new BasicDBObject();
         for (Sort sort : sorts) {
             String s = sort.getField();
@@ -387,20 +388,20 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> queryNonPrimary() {
+    public Query<T> queryNonPrimary() {
         getOptions().readPreference(ReadPreference.secondaryPreferred());
         return this;
     }
 
     @Override
     @Deprecated
-    public Query<R> queryPrimaryOnly() {
+    public Query<T> queryPrimaryOnly() {
         getOptions().readPreference(ReadPreference.primary());
         return this;
     }
 
     @Override
-    public Query<R> retrieveKnownFields() {
+    public Query<T> retrieveKnownFields() {
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
         final List<String> fields = new ArrayList<>(mc.getPersistenceFields().size() + 1);
         for (final MappedField mf : mc.getPersistenceFields()) {
@@ -411,7 +412,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Query<R> project(final String field, final boolean include) {
+    public Query<T> project(final String field, final boolean include) {
         final Mapper mapper = ds.getMapper();
         String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateName).translatedPath();
         validateProjections(fieldName, include);
@@ -438,7 +439,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Query<R> project(final String field, final ArraySlice slice) {
+    public Query<T> project(final String field, final ArraySlice slice) {
         final Mapper mapper = ds.getMapper();
         String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateName).translatedPath();
         validateProjections(fieldName, true);
@@ -447,7 +448,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Query<R> project(final Meta meta) {
+    public Query<T> project(final Meta meta) {
         final Mapper mapper = ds.getMapper();
         String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
         validateProjections(fieldName, true);
@@ -469,7 +470,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> retrievedFields(final boolean include, final String... list) {
+    public Query<T> retrievedFields(final boolean include, final String... list) {
         if (includeFields != null && include != includeFields) {
             throw new IllegalStateException("You cannot mix included and excluded fields together");
         }
@@ -481,13 +482,13 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> returnKey() {
+    public Query<T> returnKey() {
         getOptions().getModifiers().put("$returnKey", true);
         return this;
     }
 
     @Override
-    public Query<R> search(final String search) {
+    public Query<T> search(final String search) {
 
         final BasicDBObject op = new BasicDBObject("$search", search);
 
@@ -497,7 +498,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Query<R> search(final String search, final String language) {
+    public Query<T> search(final String search, final String language) {
 
         final BasicDBObject op = new BasicDBObject("$search", search)
                                      .append("$language", language);
@@ -509,7 +510,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> upperIndexBound(final DBObject upperBound) {
+    public Query<T> upperIndexBound(final DBObject upperBound) {
         if (upperBound != null) {
             getOptions().getModifiers().put("$max", new BasicDBObject(upperBound.toMap()));
         }
@@ -519,21 +520,40 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
     @Override
     @Deprecated
-    public Query<R> useReadPreference(final ReadPreference readPref) {
+    public Query<T> useReadPreference(final ReadPreference readPref) {
         getOptions().readPreference(readPref);
         return this;
     }
 
     @Override
-    public Query<R> where(final String js) {
+    public Query<T> where(final String js) {
         add(new WhereCriteria(js));
         return this;
     }
 
     @Override
-    public Query<R> where(final CodeWScope js) {
+    public Query<T> where(final CodeWScope js) {
         add(new WhereCriteria(js));
         return this;
+    }
+
+    public T delete() {
+        return delete(new FindAndModifyOptions());
+    }
+
+    public T delete(final FindAndModifyOptions options) {
+        FindAndModifyOptions copy = enforceWriteConcern(options, clazz)
+                                        .copy()
+                                        .projection(getFieldsObject())
+                                        .sort(getSortObject())
+                                        .returnNew(false)
+                                        .upsert(false)
+                                        .remove(true);
+
+        final DBObject result = dbColl.findAndModify(getQueryObject(), copy.getOptions());
+
+        return mapper.fromDBObject(ds, getEntityClass(), result, mapper.createEntityCache());
+
     }
 
     @Override
@@ -542,7 +562,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
     }
 
     @Override
-    public Modify modify(final UpdateOperations<R> operations) {
+    public Modify modify(final UpdateOperations<T> operations) {
         Modify modify = modify();
         modify.setOps(((UpdateOpsImpl) operations).getOps());
 
@@ -791,7 +811,7 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
         compoundContainer.attach(container);
     }
 
-    private DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<R> klass) {
+    private DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
         if (options.getWriteConcern() == null) {
             return options
                        .copy()
@@ -811,6 +831,16 @@ public class QueryImpl<R> implements CriteriaContainer, Query<R> {
 
         return wc;
     }
+
+    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Class<T> klass) {
+        if (options.getWriteConcern() == null) {
+            return options
+                       .copy()
+                       .writeConcern(getWriteConcern(klass));
+        }
+        return options;
+    }
+
 
     public static class Update extends UpdatesImpl<Update> {
         private DBObject queryObject;

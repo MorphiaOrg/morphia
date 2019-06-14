@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteResult;
 import dev.morphia.DeleteOptions;
+import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
 import dev.morphia.query.QueryImpl.Update;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -502,6 +503,10 @@ public interface Query<T> {
      */
     @Deprecated
     Key<T> getKey(FindOptions options);
+
+    T delete();
+
+    T delete(FindAndModifyOptions options);
 
     Modify<T> modify();
 

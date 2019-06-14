@@ -150,8 +150,12 @@ public interface Datastore {
      * @param query the query to use when finding entities to delete
      * @param <T>   the type to query
      * @return the deleted Entity
+     * @deprecated use {@link Query#delete()} instead
      */
-    <T> T findAndDelete(Query<T> query);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> T findAndDelete(Query<T> query) {
+        return query.delete();
+    }
 
     /**
      * Deletes the given entities based on the query (first item only).
@@ -161,22 +165,12 @@ public interface Datastore {
      * @param <T>     the type to query
      * @return the deleted Entity
      * @since 1.3
-     */
-    <T> T findAndDelete(Query<T> query, FindAndModifyOptions options);
-
-    /**
-     * Find the first Entity from the Query, and modify it.
-     *
-     * @param query      the query to use when finding entities to update
-     * @param operations the updates to apply to the matched documents
-     * @param options    the options to apply to the update
-     * @param <T>        the type to query
-     * @return The modified Entity (the result of the update)
-     * @since 1.3
-     * @deprecated use {@link Query#modify()} instead
+     * @deprecated use {@link Query#delete(FindAndModifyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options);
+    default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
+        return query.delete(options);
+    }
 
     /**
      * Find the first Entity from the Query, and modify it.

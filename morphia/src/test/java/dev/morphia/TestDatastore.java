@@ -516,24 +516,24 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                                            .field("username").equal("john doe");
-        assertNotNull(getDs().findAndDelete(query));
-        assertNull(getDs().findAndDelete(query));
+        assertNotNull(query.delete());
+        assertNull(query.delete());
 
         FindAndModifyOptions options = new FindAndModifyOptions()
             .collation(Collation.builder()
                                 .locale("en")
                                 .collationStrength(CollationStrength.SECONDARY)
                                 .build());
-        assertNotNull(getDs().findAndDelete(query, options));
+        assertNotNull(query.delete(options));
         assertTrue("Options should not be modified by the datastore", options.isReturnNew());
         assertFalse("Options should not be modified by the datastore", options.isRemove());
     }
 
     @Test
     public void testFindAndDeleteWithNoQueryMatch() {
-        assertNull(getDs().findAndDelete(getDs()
-                                             .find(FacebookUser.class)
-                                             .field("username").equal("David S. Pumpkins")));
+        assertNull(getDs().find(FacebookUser.class)
+                          .field("username").equal("David S. Pumpkins")
+                          .delete());
     }
 
     private void testFirstDatastore(final Datastore ds1) {
