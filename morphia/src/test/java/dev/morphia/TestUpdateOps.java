@@ -184,21 +184,23 @@ public class TestUpdateOps extends TestBase {
 
         // both of these entries will have a className attribute
         List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
-        UpdateOperations<EntityLogs> updateOperationsAll = getDs().createUpdateOperations(EntityLogs.class)
-                                                                  .addAll("logs", latestLogs, false);
-        getDs().update(finder, updateOperationsAll, new UpdateOptions().upsert(true));
+
+        finder.update()
+              .addToSet("logs", latestLogs).execute(new UpdateOptions().upsert(true));
         validateNoClassName(finder.first());
 
         // this entry will NOT have a className attribute
-        UpdateOperations<EntityLogs> updateOperations3 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever3", new Date()), false);
-        getDs().update(finder, updateOperations3, new UpdateOptions().upsert(true));
+        EntityLog log = new EntityLog("whatever3", new Date());
+        finder
+            .update()
+            .addToSet("logs", log)
+            .execute(new UpdateOptions().upsert(true));
         validateNoClassName(finder.first());
 
         // this entry will NOT have a className attribute
-        UpdateOperations<EntityLogs> updateOperations4 = getDs().createUpdateOperations(EntityLogs.class)
-                                                                .add("logs", new EntityLog("whatever4", new Date()), false);
-        getDs().update(finder, updateOperations4, new UpdateOptions().upsert(true));
+        finder.update()
+              .addToSet("logs", new EntityLog("whatever4", new Date()))
+              .execute(new UpdateOptions().upsert(true));
         validateNoClassName(finder.first());
     }
 
