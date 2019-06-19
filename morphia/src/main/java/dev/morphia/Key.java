@@ -2,7 +2,6 @@ package dev.morphia;
 
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * <p> The key object; this class is take from the app-engine datastore (mostly) implementation. It is also Serializable and GWT-safe,
@@ -22,7 +21,6 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      * Id value
      */
     private Object id;
-    private byte[] idBytes;
 
     /**
      * For GWT serialization
@@ -48,12 +46,10 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      *
      * @param type       the type of the entity
      * @param collection the collection in which the entity lives
-     * @param idBytes    the value of the entity's ID
      */
-    public Key(final Class<? extends T> type, final String collection, final byte[] idBytes) {
+    public Key(final Class<? extends T> type, final String collection) {
         this.type = type;
         this.collection = collection;
-        this.idBytes = Arrays.copyOf(idBytes, idBytes.length);
     }
 
     /** */
@@ -178,7 +174,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
         if (k.type == null && k.collection == null) {
             throw new IllegalStateException("Collection must be specified (or a class).");
         }
-        if (k.id == null && k.idBytes == null) {
+        if (k.id == null) {
             throw new IllegalStateException("id must be specified");
         }
     }

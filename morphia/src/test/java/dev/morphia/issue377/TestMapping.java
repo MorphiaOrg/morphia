@@ -1,9 +1,5 @@
 package dev.morphia.issue377;
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -12,6 +8,8 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.cache.DefaultEntityCache;
+import org.bson.Document;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,8 +33,8 @@ public class TestMapping extends TestBase {
         user.userObject = new SerializableObject();
 
         // when
-        DBObject dbObject = mapper.toDBObject(user);
-        User object = mapper.fromDBObject(getDs(), User.class, dbObject, new DefaultEntityCache());
+        Document dbObject = mapper.toDocument(user);
+        User object = mapper.fromDocument(getDs(), User.class, dbObject, new DefaultEntityCache());
 
         // then
         assertThat(object.userObject, is(user.userObject));
@@ -69,7 +67,7 @@ public class TestMapping extends TestBase {
 
         ListEntity user = new ListEntity();
         user.id = 1;
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         list.add("value");
         user.list = list;
 

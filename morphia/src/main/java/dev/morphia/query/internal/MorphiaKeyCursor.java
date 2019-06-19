@@ -1,13 +1,12 @@
 package dev.morphia.query.internal;
 
-import com.mongodb.Cursor;
-import com.mongodb.DBObject;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.NoSuchElementException;
  * @param <T> the entity type
  */
 public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
-    private final Cursor wrapped;
+    private final MongoCursor<Document> wrapped;
     private final Mapper mapper;
     private final Class<T> clazz;
     private final String collection;
@@ -34,7 +33,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      */
-    public MorphiaKeyCursor(final Datastore datastore, final Cursor cursor, final Mapper mapper,
+    public MorphiaKeyCursor(final Datastore datastore, final MongoCursor cursor, final Mapper mapper,
                             final Class<T> clazz, final String collection) {
         this.datastore = datastore;
         this.wrapped = cursor;
@@ -98,7 +97,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
 
     @Override
     public ServerCursor getServerCursor() {
-        return new ServerCursor(wrapped.getCursorId(), wrapped.getServerAddress());
+        return wrapped.getServerCursor();
     }
 
     @Override
@@ -112,11 +111,11 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    private Key<T> convertItem(final DBObject dbObj) {
+    private Key<T> convertItem(final Document dbObj) {
         Object id = dbObj.get("_id");
-        if (id instanceof DBObject) {
+        if (id instanceof Document) {
             Class type = mapper.getMappedClass(clazz).getMappedIdField().getType();
-            id = mapper.fromDBObject(datastore, type, (DBObject) id, mapper.createEntityCache());
+            id = mapper.fromDocument(datastore, type, (Document) id, mapper.createEntityCache());
         }
         return new Key<>(clazz, collection, id);
     }

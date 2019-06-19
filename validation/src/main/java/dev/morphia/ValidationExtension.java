@@ -1,8 +1,8 @@
 package dev.morphia;
 
 
-import com.mongodb.DBObject;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import javax.validation.Configuration;
 import javax.validation.Validation;
@@ -37,7 +37,7 @@ public class ValidationExtension extends AbstractEntityInterceptor {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+    public void prePersist(final Object ent, final Document document, final Mapper mapper) {
         final Set validate = validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);

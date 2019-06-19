@@ -1,23 +1,26 @@
 package dev.morphia;
 
 
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
-import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.Modify;
+import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
+import dev.morphia.query.UpdateOpsImpl;
+import org.bson.Document;
 
 import java.util.List;
 
@@ -39,13 +42,15 @@ public interface Datastore {
     /**
      * Returns a new query bound to the collection (a specific {@link DBCollection})
      *
-     * @param collection The collection to query
+     * @param type The collection to query
      * @param <T>        the type of the query
      * @return the query
      * @deprecated use {@link #find(Class)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> Query<T> createQuery(Class<T> collection);
+    default <T> Query<T> createQuery(Class<T> type) {
+        return find(type);
+    }
 
     /**
      * The builder for all update operations
@@ -56,51 +61,57 @@ public interface Datastore {
      * @deprecated use {@link Query#update()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz);
+    default <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
+        return new UpdateOpsImpl<>(clazz, getMapper());
+    }
 
     /**
      * Deletes entities based on the query
      *
-     * @param query the query to use when finding documents to delete
      * @param <T>   the type to delete
+     * @param query the query to use when finding documents to delete
      * @return results of the delete
      * @deprecated use {@link Query#remove()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> WriteResult delete(Query<T> query);
+    default <T> DeleteResult delete(Query<T> query) {
+        return query.remove(new DeleteOptions());
+    }
 
     /**
      * Deletes entities based on the query
      *
+     * @param <T>     the type to delete
      * @param query   the query to use when finding documents to delete
      * @param options the options to apply to the delete
-     * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
      * @deprecated use {@link Query#remove(DeleteOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> WriteResult delete(Query<T> query, DeleteOptions options);
+    default <T> DeleteResult delete(Query<T> query, DeleteOptions options){
+        return query.remove(options);
+    }
 
     /**
      * Deletes the given entity (by @Id)
      *
-     * @param entity the entity to delete
      * @param <T>    the type to delete
+     * @param entity the entity to delete
      * @return results of the delete
      */
-    <T> WriteResult delete(T entity);
+    <T> DeleteResult delete(T entity);
 
     /**
      * Deletes the given entity (by @Id), with the WriteConcern
      *
+     * @param <T>     the type to delete
      * @param entity  the entity to delete
      * @param options the options to use when deleting
-     * @param <T>     the type to delete
      * @return results of the delete
      * @since 1.3
      */
-    <T> WriteResult delete(T entity, DeleteOptions options);
+    <T> DeleteResult delete(T entity, DeleteOptions options);
 
     /**
      * ensure capped collections for {@code Entity}(s)
@@ -165,7 +176,7 @@ public interface Datastore {
      * @param <T>     the type to query
      * @return the deleted Entity
      * @since 1.3
-     * @deprecated use {@link Query#delete(FindAndModifyOptions)} instead
+     * @deprecated use {@link Query#delete(FindAndDeleteOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
@@ -184,7 +195,7 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, UpdateOperations<T> operations) {
         return query.modify(operations).execute(new FindAndModifyOptions()
-                                                    .returnNew(true));
+                                                    .returnDocument(ReturnDocument.AFTER));
     }
 
     /**
@@ -199,7 +210,9 @@ public interface Datastore {
      * @morphia.inline
      */
     @Deprecated
-    <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids);
+    default <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
+        return find(clazz).filter("_id in", ids);
+    }
 
     /**
      * Find the given entity (by collectionName/id); think of this as refresh
@@ -255,22 +268,10 @@ public interface Datastore {
     /**
      * @param clazz the class to use for mapping
      * @return the mapped collection for the collection
-     * @deprecated the return type for this method will change in 2.0
      * @morphia.internal
      */
-    @Deprecated
-    DBCollection getCollection(Class<?> clazz);
+    MongoCollection<Document> getCollection(Class<?> clazz);
 
-
-    /**
-     * @return the DB this Datastore uses
-     * @see MongoClient#getDB(String)
-     * @see MongoDatabase
-     * @deprecated use #getDatabase(). In general, should you need a DB reference, please use the MongoClient used to create this
-     * Datastore to retrieve it.
-     */
-    @Deprecated
-    DB getDB();
 
     /**
      * @return the MongoDatabase used by this DataStore
@@ -388,21 +389,21 @@ public interface Datastore {
      * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations);
+    <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations);
 
     /**
      * Updates all entities found with the operations; this is an atomic operation per entity
      *
+     * @param <T>        the type of the entity
      * @param query      the query used to match the documents to update
      * @param operations the update operations to perform
      * @param options    the options to apply to the update
-     * @param <T>        the type of the entity
      * @return the results of the updates
      * @since 1.3
      * @deprecated use {@link Query#update()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
+    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);
     }
 
@@ -412,4 +413,14 @@ public interface Datastore {
      * @morphia.internal
      */
     Mapper getMapper();
+
+    /**
+     * @morphia.internal
+     * @param collection
+     * @param clazz
+     * @param writeConcern
+     * @param <T>
+     * @return
+     */
+    <T> MongoCollection<T> enforceWriteConcern(MongoCollection<T> collection, Class<T> clazz, WriteConcern writeConcern);
 }

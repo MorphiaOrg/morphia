@@ -5,10 +5,13 @@ import com.mongodb.DBRef;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
+import org.bson.Document;
+
+import java.util.List;
 
 /**
- * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
- * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (DBObject).
+ * This interface exposes advanced {@link Datastore} features, like interacting with Document and low-level options. It implements matching
+ * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (Document).
  *
  * @author ScottHernandez
  */
@@ -37,7 +40,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param q     the query which will be passed to a {@link dev.morphia.query.QueryFactory}
      * @return Query for the specified class clazz
      */
-    <T> Query<T> createQuery(Class<T> clazz, DBObject q);
+    <T> Query<T> createQuery(Class<T> clazz, Document q);
 
     /**
      * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)
@@ -69,7 +72,21 @@ public interface AdvancedDatastore extends Datastore {
      * @deprecated use {@link Query#update()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> UpdateOperations<T> createUpdateOperations(Class<T> type, DBObject ops);
+    default <T> UpdateOperations<T> createUpdateOperations(Class<T> type, DBObject ops) {
+        return createUpdateOperations(type, new Document(ops.toMap()));
+    }
+
+    /**
+     * Creates an UpdateOperations instance for the given type.
+     *
+     * @param <T>  The type of the entity
+     * @param type The type of the entity
+     * @param ops  The operations to perform
+     * @return the UpdateOperations instance
+     * @deprecated use {@link Query#update()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    <T> UpdateOperations<T> createUpdateOperations(Class<T> type, Document ops);
 
     /**
      * Find all instances by type in a different collection than what is mapped on the class given.
@@ -99,8 +116,15 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new key of the inserted entity
      * @morphia.inline
      * @since 1.3
+     * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
-    <T> Key<T> insert(T entity, InsertOptions options);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default
+    <T> Key<T> insert(T entity, InsertOptions options) {
+        return insert(entity, options.toInsertOneOptions());
+    }
+
+    <T> Key<T> insert(T entity, InsertOneOptions options);
 
     /**
      * Inserts entities in to the mapped collection.
@@ -109,7 +133,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
      */
-    default <T> Iterable<Key<T>> insert(Iterable<T> entities) {
+    default <T> Iterable<Key<T>> insert(List<T> entities) {
         return insert(entities, new InsertOptions());
     }
 
@@ -122,8 +146,14 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new keys of the inserted entities
      * @morphia.inline
      * @since 1.3
+     * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
-    <T> Iterable<Key<T>> insert(Iterable<T> entities, InsertOptions options);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> Iterable<Key<T>> insert(List<T> entities, InsertOptions options) {
+        return insert(entities, options.toInsertManyOptions());
+    }
+
+    <T> Iterable<Key<T>> insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Returns a new query based on the example object

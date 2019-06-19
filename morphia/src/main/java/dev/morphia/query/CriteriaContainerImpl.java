@@ -1,10 +1,8 @@
 package dev.morphia.query;
 
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,7 +59,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public DBObject toDBObject() {
+    public Document toDocument() {
         if (joinMethod == AND) {
             return and();
         } else {
@@ -70,14 +68,14 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
 
-    private DBObject and() {
-        DBObject dbObject = new BasicDBObject();
-        final BasicDBList and = new BasicDBList();
+    private Document and() {
+        Document dbObject = new Document();
+        final List<Document> and = new ArrayList<>();
         Set<String> names = new HashSet<>();
         boolean duplicates = false;
 
         for (final Criteria child : children) {
-            final DBObject childObject = child.toDBObject();
+            final Document childObject = child.toDocument();
             for (final String s : childObject.keySet()) {
                 duplicates |= !names.add(s);
             }
@@ -95,12 +93,12 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         return dbObject;
     }
 
-    private DBObject or() {
-        DBObject dbObject = new BasicDBObject();
-        final BasicDBList or = new BasicDBList();
+    private Document or() {
+        Document dbObject = new Document();
+        final List<Document> or = new ArrayList<>();
 
         for (final Criteria child : children) {
-            or.add(child.toDBObject());
+            or.add(child.toDocument());
         }
 
         dbObject.put("$or", or);

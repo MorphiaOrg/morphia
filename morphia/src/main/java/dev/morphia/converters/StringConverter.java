@@ -20,24 +20,24 @@ public class StringConverter extends TypeConverter implements SimpleValueConvert
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (fromDocument == null) {
             return null;
         }
 
-        if (targetClass.equals(fromDBObject.getClass())) {
-            return fromDBObject;
+        if (targetClass.equals(fromDocument.getClass())) {
+            return fromDocument;
         }
 
-        if (fromDBObject instanceof List) {
+        if (fromDocument instanceof List) {
             final Class<?> type = targetClass.isArray() ? targetClass.getComponentType() : targetClass;
-            return ReflectionUtils.convertToArray(type, (List<?>) fromDBObject);
+            return ReflectionUtils.convertToArray(type, (List<?>) fromDocument);
         }
 
         if (targetClass.equals(String[].class)) {
-            return new String[]{fromDBObject.toString()};
+            return new String[]{fromDocument.toString()};
         }
 
-        return fromDBObject.toString();
+        return fromDocument.toString();
     }
 }

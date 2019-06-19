@@ -34,7 +34,7 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
         Assert.assertNotNull(reloadedContainer.refs);
         Assert.assertEquals(1, reloadedContainer.refs.length);
 
-        final List<Container> cs = toList(getDs().find(Container.class).execute());
+        final List<Container> cs = getDs().find(Container.class).execute().toList();
         Assert.assertNotNull(cs);
         Assert.assertEquals(1, cs.size());
 

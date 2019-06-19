@@ -40,7 +40,7 @@ public class TestQueriesOnReferences extends TestBase {
 
         getDs().delete(p);
 
-        toList(getDs().find(ContainsPic.class).execute());
+        getDs().find(ContainsPic.class).execute().toList();
     }
 
     @Test

@@ -16,9 +16,6 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
@@ -56,28 +53,28 @@ public class TestIndexes extends TestBase {
         final Datastore datastore = getDs();
         datastore.delete(datastore.find(TestWithIndexOption.class));
 
-        final DBCollection indexOptionColl = getDs().getCollection(TestWithIndexOption.class);
+        final MongoCollection<Document> indexOptionColl = getDs().getCollection(TestWithIndexOption.class);
         indexOptionColl.drop();
-        assertEquals(0, indexOptionColl.getIndexInfo().size());
+        assertEquals(0, getIndexInfo(TestWithIndexOption.class).size());
 
-        final DBCollection depIndexColl = getDs().getCollection(TestWithDeprecatedIndex.class);
+        final MongoCollection<Document> depIndexColl = getDs().getCollection(TestWithDeprecatedIndex.class);
         depIndexColl.drop();
-        assertEquals(0, depIndexColl.getIndexInfo().size());
+        assertEquals(0, getIndexInfo(TestWithDeprecatedIndex.class).size());
 
-        final DBCollection hashIndexColl = getDs().getCollection(TestWithHashedIndex.class);
+        final MongoCollection<Document> hashIndexColl = getDs().getCollection(TestWithHashedIndex.class);
         hashIndexColl.drop();
-        assertEquals(0, hashIndexColl.getIndexInfo().size());
+        assertEquals(0, getIndexInfo(TestWithHashedIndex.class).size());
 
         if (serverIsAtLeastVersion(3.4)) {
             datastore.ensureIndexes(TestWithIndexOption.class);
-            assertEquals(2, indexOptionColl.getIndexInfo().size());
-            List<DBObject> indexInfo = indexOptionColl.getIndexInfo();
+            List<Document> indexInfo = getIndexInfo(TestWithIndexOption.class);
+            assertEquals(2, indexInfo.size());
             assertBackground(indexInfo);
-            for (DBObject dbObject : indexInfo) {
-                if (dbObject.get("name").equals("collated")) {
-                    assertEquals(BasicDBObject.parse("{ name : { $exists : true } }"),
-                        dbObject.get("partialFilterExpression"));
-                    BasicDBObject collation = (BasicDBObject) dbObject.get("collation");
+            for (Document document : indexInfo) {
+                if (document.get("name").equals("collated")) {
+                    assertEquals(Document.parse("{ name : { $exists : true } }"),
+                        document.get("partialFilterExpression"));
+                    Document collation = (Document) document.get("collation");
                     assertEquals("en_US", collation.get("locale"));
                     assertEquals("upper", collation.get("caseFirst"));
                     assertEquals("shifted", collation.get("alternate"));
@@ -93,12 +90,12 @@ public class TestIndexes extends TestBase {
         }
 
         datastore.ensureIndexes(TestWithDeprecatedIndex.class);
-        assertEquals(2, depIndexColl.getIndexInfo().size());
-        assertBackground(depIndexColl.getIndexInfo());
+        assertEquals(2, getIndexInfo(TestWithDeprecatedIndex.class).size());
+        assertBackground(getIndexInfo(TestWithDeprecatedIndex.class));
 
         datastore.ensureIndexes(TestWithHashedIndex.class);
-        assertEquals(2, hashIndexColl.getIndexInfo().size());
-        assertHashed(hashIndexColl.getIndexInfo());
+        assertEquals(2, getIndexInfo(TestWithHashedIndex.class).size());
+        assertHashed(getIndexInfo(TestWithHashedIndex.class));
     }
 
     @Test
@@ -133,20 +130,20 @@ public class TestIndexes extends TestBase {
         Integer newValue;
     }
 
-    private void assertBackground(final List<DBObject> indexInfo) {
-        for (final DBObject dbObject : indexInfo) {
-            BasicDBObject index = (BasicDBObject) dbObject;
+    private void assertBackground(final List<Document> indexInfo) {
+        for (final Document document : indexInfo) {
+            Document index = (Document) document;
             if (!index.getString("name").equals("_id_")) {
                 Assert.assertTrue(index.getBoolean("background"));
             }
         }
     }
 
-    private void assertHashed(final List<DBObject> indexInfo) {
-        for (final DBObject dbObject : indexInfo) {
-            BasicDBObject index = (BasicDBObject) dbObject;
+    private void assertHashed(final List<Document> indexInfo) {
+        for (final Document document : indexInfo) {
+            Document index = (Document) document;
             if (!index.getString("name").equals("_id_")) {
-                assertEquals(((DBObject) index.get("key")).get("hashedValue"), "hashed");
+                assertEquals(((Document) index.get("key")).get("hashedValue"), "hashed");
             }
         }
     }

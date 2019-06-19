@@ -17,19 +17,19 @@ import static java.lang.String.format;
  */
 public class SerializedObjectConverter extends TypeConverter {
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField f) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField f) {
+        if (fromDocument == null) {
             return null;
         }
 
-        if (!((fromDBObject instanceof Binary) || (fromDBObject instanceof byte[]))) {
+        if (!((fromDocument instanceof Binary) || (fromDocument instanceof byte[]))) {
             throw new MappingException(format("The stored data is not a DBBinary or byte[] instance for %s ; it is a %s",
-                                              f.getFullName(), fromDBObject.getClass().getName()));
+                                              f.getFullName(), fromDocument.getClass().getName()));
         }
 
         try {
             final boolean useCompression = !f.getAnnotation(Serialized.class).disableCompression();
-            return Serializer.deserialize(fromDBObject, useCompression);
+            return Serializer.deserialize(fromDocument, useCompression);
         } catch (IOException e) {
             throw new MappingException("While deserializing to " + f.getFullName(), e);
         } catch (ClassNotFoundException e) {

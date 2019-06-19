@@ -1,7 +1,7 @@
 package dev.morphia.issue325;
 
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.Datastore;
@@ -29,25 +29,25 @@ public class TestEmbeddedClassname extends TestBase {
 
         ds.find(Root.class).update().addToSet("aList", new A()).execute();
         r = ds.find(Root.class).filter("_id", "id").first();
-        DBObject aRaw = r.singleA.raw;
+        Document aRaw = r.singleA.raw;
 
         // Test that singleA does not contain the class name
         final String discriminatorField = getMorphia().getMapper().getOptions().getDiscriminatorField();
-        Assert.assertFalse(aRaw.containsField(discriminatorField));
+        Assert.assertFalse(aRaw.containsKey(discriminatorField));
 
         // Test that aList does not contain the class name
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(discriminatorField));
+        Assert.assertFalse(aRaw.containsKey(discriminatorField));
 
         // Test that bList does not contain the class name of the subclass
         ds.find(Root.class).update().addToSet("bList", new B()).execute();
         r = ds.find(Root.class).filter("_id", "id").first();
 
         aRaw = r.aList.get(0).raw;
-        Assert.assertFalse(aRaw.containsField(discriminatorField));
+        Assert.assertFalse(aRaw.containsKey(discriminatorField));
 
-        DBObject bRaw = r.bList.get(0).getRaw();
-        Assert.assertFalse(bRaw.containsField(discriminatorField));
+        Document bRaw = r.bList.get(0).getRaw();
+        Assert.assertFalse(bRaw.containsKey(discriminatorField));
 
         ds.delete(ds.find(Root.class));
 
@@ -60,9 +60,9 @@ public class TestEmbeddedClassname extends TestBase {
 
         // test that singleA.raw *does* contain the classname because we stored a subclass there
         aRaw = r.singleA.raw;
-        Assert.assertTrue(aRaw.containsField(discriminatorField));
-        DBObject bRaw2 = r.aList.get(0).raw;
-        Assert.assertTrue(bRaw2.containsField(discriminatorField));
+        Assert.assertTrue(aRaw.containsKey(discriminatorField));
+        Document bRaw2 = r.aList.get(0).raw;
+        Assert.assertTrue(bRaw2.containsKey(discriminatorField));
     }
 
     @Entity(noClassnameStored = true)
@@ -82,7 +82,7 @@ public class TestEmbeddedClassname extends TestBase {
         private String name = "some name";
 
         @Transient
-        private DBObject raw;
+        private Document raw;
 
         public String getName() {
             return name;
@@ -92,17 +92,17 @@ public class TestEmbeddedClassname extends TestBase {
             this.name = name;
         }
 
-        public DBObject getRaw() {
+        public Document getRaw() {
             return raw;
         }
 
-        public void setRaw(final DBObject raw) {
+        public void setRaw(final Document raw) {
             this.raw = raw;
         }
 
         @PreLoad
-        void preLoad(final DBObject dbObj) {
-            raw = dbObj;
+        void preLoad(final Document document) {
+            raw = document;
         }
     }
 

@@ -18,7 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionRemoveOptions;
+import com.mongodb.client.model.FindOneAndDeleteOptions;
 
 /**
  * The options to apply when removing documents from the DBCollection
@@ -26,50 +26,22 @@ import com.mongodb.client.model.DBCollectionRemoveOptions;
  * @since 1.3
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  */
-public final class DeleteOptions {
-    private final DBCollectionRemoveOptions options = new DBCollectionRemoveOptions();
+public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions{
+    private boolean multi;
+    private WriteConcern writeConcern;
 
-    /**
-     * Creates a new options instance.
-     */
-    public DeleteOptions() {
+    public boolean isMulti() {
+        return multi;
     }
 
-    /**
-     * Copies this instance to a new one.
-     *
-     * @return the new instance
-     */
-    public DeleteOptions copy() {
-        DeleteOptions deleteOptions = new DeleteOptions()
-            .writeConcern(getWriteConcern());
-
-        if (getCollation() != null) {
-            deleteOptions.collation(Collation.builder(getCollation()).build());
-        }
-
-        return deleteOptions;
+    public DeleteOptions multi(final boolean multi) {
+        this.multi = multi;
+        return this;
     }
 
-    /**
-     * Returns the collation options
-     *
-     * @return the collation options
-     * @mongodb.server.release 3.4
-     */
-    public Collation getCollation() {
-        return options.getCollation();
-    }
-
-    /**
-     * Sets the collation
-     *
-     * @param collation the collation
-     * @return this
-     * @mongodb.server.release 3.4
-     */
+    @Override
     public DeleteOptions collation(final Collation collation) {
-        options.collation(collation);
+        super.collation(collation);
         return this;
     }
 
@@ -79,7 +51,7 @@ public final class DeleteOptions {
      * @return the write concern, or null if the default will be used.
      */
     public WriteConcern getWriteConcern() {
-        return options.getWriteConcern();
+        return writeConcern;
     }
 
     /**
@@ -89,15 +61,7 @@ public final class DeleteOptions {
      * @return this
      */
     public DeleteOptions writeConcern(final WriteConcern writeConcern) {
-        options.writeConcern(writeConcern);
+        this.writeConcern = writeConcern;
         return this;
-    }
-
-    /**
-     * @morphia.internal
-     * @return the internal options implementation
-     */
-    public DBCollectionRemoveOptions getOptions() {
-        return options;
     }
 }

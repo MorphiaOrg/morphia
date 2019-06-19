@@ -70,8 +70,8 @@ public class CustomConverterDefaultTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            return new Foo((String) fromDBObject);
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            return new Foo((String) fromDocument);
         }
 
         @Override

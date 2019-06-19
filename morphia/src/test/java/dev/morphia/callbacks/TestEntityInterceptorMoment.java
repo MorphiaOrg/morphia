@@ -1,7 +1,7 @@
 package dev.morphia.callbacks;
 
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,24 +39,24 @@ public class TestEntityInterceptorMoment extends TestBase {
 
     public static class Interceptor extends AbstractEntityInterceptor {
         @Override
-        public void postLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void postLoad(final Object ent, final Document document, final Mapper mapper) {
         }
 
         @Override
-        public void postPersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void postPersist(final Object ent, final Document document, final Mapper mapper) {
         }
 
         @Override
-        public void preLoad(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void preLoad(final Object ent, final Document document, final Mapper mapper) {
         }
 
         @Override
-        public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void prePersist(final Object ent, final Document document, final Mapper mapper) {
             Assert.assertTrue(((E) ent).called);
         }
 
         @Override
-        public void preSave(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void preSave(final Object ent, final Document document, final Mapper mapper) {
         }
 
     }

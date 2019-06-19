@@ -38,16 +38,16 @@ public class CurrencyConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        if (fromDBObject == null) {
+    public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (fromDocument == null) {
             return null;
         }
 
-        if (fromDBObject instanceof Locale) {
-            return Currency.getInstance((Locale) fromDBObject);
+        if (fromDocument instanceof Locale) {
+            return Currency.getInstance((Locale) fromDocument);
         }
 
-        return Currency.getInstance((String) fromDBObject);
+        return Currency.getInstance((String) fromDocument);
     }
 
     private boolean isValidCurrency(final Object potentialCurrency) {

@@ -35,7 +35,9 @@ package dev.morphia.query;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionCountOptions;
+import org.bson.BsonString;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,59 +49,16 @@ import static com.mongodb.assertions.Assertions.notNull;
  * @mongodb.driver.manual reference/command/count/ Count
  * @since 1.3
  */
-public class CountOptions {
-    private DBCollectionCountOptions options = new DBCollectionCountOptions();
+public class CountOptions extends com.mongodb.client.model.CountOptions {
+    private ReadPreference readPreference;
+    private ReadConcern readConcern;
 
     /**
-     * Sets the collation
-     *
-     * @param collation the collation
-     * @return this
-     * @mongodb.server.release 3.4
+     * @inheritDoc
      */
     public CountOptions collation(final Collation collation) {
-        options.collation(collation);
+        super.collation(collation);
         return this;
-    }
-
-    /**
-     * Returns the collation options
-     *
-     * @return the collation options
-     * @mongodb.server.release 3.4
-     */
-    public Collation getCollation() {
-        return options.getCollation();
-    }
-
-    /**
-     * Gets the hint to apply.
-     *
-     * @return the hint, which should describe an existing
-     */
-    public String getHint() {
-        return options.getHintString();
-    }
-
-    /**
-     * Gets the limit to apply.  The default is 0, which means there is no limit.
-     *
-     * @return the limit
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
-     */
-    public int getLimit() {
-        return options.getLimit();
-    }
-
-    /**
-     * Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum execution time in the given time unit
-     */
-    public long getMaxTime(final TimeUnit timeUnit) {
-        notNull("timeUnit", timeUnit);
-        return options.getMaxTime(timeUnit);
     }
 
     /**
@@ -109,7 +68,7 @@ public class CountOptions {
      * @mongodb.server.release 3.2
      */
     public ReadConcern getReadConcern() {
-        return options.getReadConcern();
+        return readConcern;
     }
 
     /**
@@ -118,52 +77,39 @@ public class CountOptions {
      * @return the readPreference
      */
     public ReadPreference getReadPreference() {
-        return options.getReadPreference();
+        return readPreference;
     }
 
     /**
-     * Gets the number of documents to skip.  The default is 0.
-     *
-     * @return the number of documents to skip
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
-     */
-    public int getSkip() {
-        return options.getSkip();
-    }
-
-    /**
-     * Sets the hint to apply.
-     *
-     * @param hint the name of the index which should be used for the operation
-     * @return this
+     * @inheritDoc
      */
     public CountOptions hint(final String hint) {
-        options.hintString(hint);
+        super.hint(new Document(hint, 1));
         return this;
     }
 
     /**
-     * Sets the limit to apply.
-     *
-     * @param limit the limit
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
+     * @inheritDoc
+     */
+    @Override
+    public CountOptions hint(final Bson hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
+     * @inheritDoc
      */
     public CountOptions limit(final int limit) {
-        options.limit(limit);
+        super.limit(limit);
         return this;
     }
 
     /**
-     * Sets the maximum execution time on the server for this operation.
-     *
-     * @param maxTime  the max time
-     * @param timeUnit the time unit, which may not be null
-     * @return this
+     * @inheritDoc
      */
     public CountOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
-        notNull("timeUnit", timeUnit);
-        options.maxTime(maxTime, timeUnit);
+        super.maxTime(maxTime, timeUnit);
         return this;
     }
 
@@ -175,7 +121,7 @@ public class CountOptions {
      * @mongodb.server.release 3.2
      */
     public CountOptions readConcern(final ReadConcern readConcern) {
-        options.readConcern(readConcern);
+        this.readConcern = readConcern;
         return this;
     }
 
@@ -186,24 +132,16 @@ public class CountOptions {
      * @return this
      */
     public CountOptions readPreference(final ReadPreference readPreference) {
-        options.readPreference(readPreference);
+        this.readPreference = readPreference;
         return this;
     }
 
     /**
-     * Sets the number of documents to skip.
-     *
-     * @param skip the number of documents to skip
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
+     * @inheritDoc
      */
     public CountOptions skip(final int skip) {
-        options.skip(skip);
+        super.skip(skip);
         return this;
-    }
-
-    DBCollectionCountOptions getOptions() {
-        return options;
     }
 }
 

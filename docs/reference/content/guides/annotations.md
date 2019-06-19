@@ -142,9 +142,9 @@ field name is desired, a name can be passed to this annotation to change the doc
 
 There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.
 
-- `@PreLoad` - Called before mapping the datastore object to the entity (POJO); the DBObject is passed as an argument (you can add/remove/change values)
+- `@PreLoad` - Called before mapping the datastore object to the entity (POJO); the Document is passed as an argument (you can add/remove/change values)
 - `@PostLoad` - Called after mapping to the entity
-- `@PrePersist` - Called before save, it can return a DBObject in place of an empty one.
+- `@PrePersist` - Called before save, it can return a Document in place of an empty one.
 - `@PreSave` - Called before the save call to the datastore
 - `@PostPersist` - Called after the save call to the datastore
 

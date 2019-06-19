@@ -1,15 +1,15 @@
 package dev.morphia.query.validation;
 
-import com.mongodb.DBObject;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FilterOperator;
+import org.bson.Document;
 
 import java.util.List;
 
-import static java.lang.String.format;
 import static dev.morphia.query.FilterOperator.GEO_WITHIN;
 import static dev.morphia.query.validation.MappedFieldTypeValidator.isArrayOfNumbers;
 import static dev.morphia.query.validation.MappedFieldTypeValidator.isIterableOfNumbers;
+import static java.lang.String.format;
 
 /**
  * Supports validation for queries using the {@code FilterOperator.GEO_WITHIN} operator.
@@ -31,8 +31,8 @@ public final class GeoWithinOperationValidator extends OperationValidator {
 
     // this could be a lot more rigorous
     private static boolean isValueAValidGeoQuery(final Object value) {
-        if (value instanceof DBObject) {
-            String key = ((DBObject) value).keySet().iterator().next();
+        if (value instanceof Document) {
+            String key = ((Document) value).keySet().iterator().next();
             return key.equals("$box") || key.equals("$center") || key.equals("$centerSphere") || key.equals("$polygon");
         }
         return false;

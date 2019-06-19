@@ -3,13 +3,13 @@ package dev.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.UnwindOptions;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,11 +26,11 @@ public interface AggregationPipeline {
      * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
-     * @param target The class to use when iterating over the results
      * @param <U>    type of the results
+     * @param target The class to use when iterating over the results
      * @return an iterator of the computed results
      */
-    <U> Iterator<U> aggregate(Class<U> target);
+    <U> MongoIterable<U> aggregate(Class<U> target);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -38,12 +38,12 @@ public interface AggregationPipeline {
      * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
+     * @param <U>     type of the results
      * @param target  The class to use when iterating over the results
      * @param options The options to apply to this aggregation
-     * @param <U>     type of the results
      * @return an iterator of the computed results
      */
-    <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options);
+    <U> MongoIterable<U> aggregate(Class<U> target, AggregationOptions options);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -51,14 +51,14 @@ public interface AggregationPipeline {
      * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
+     * @param <U>            type of the results
      * @param target         The class to use when iterating over the results
      * @param options        The options to apply to this aggregation
      * @param readPreference The read preference to apply to this pipeline
-     * @param <U>            type of the results
      * @return an iterator of the computed results
      */
-    <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options,
-                              ReadPreference readPreference);
+    <U> MongoIterable<U> aggregate(Class<U> target, AggregationOptions options,
+                                   ReadPreference readPreference);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
@@ -73,7 +73,7 @@ public interface AggregationPipeline {
      * @param <U>            type of the results
      * @return an iterator of the computed results
      */
-    <U> Iterator<U> aggregate(String collectionName, Class<U> target, AggregationOptions options, ReadPreference readPreference);
+    <U> MongoIterable<U> aggregate(String collectionName, Class<U> target, AggregationOptions options, ReadPreference readPreference);
 
     /**
      * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match,
@@ -166,47 +166,47 @@ public interface AggregationPipeline {
      * Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
      * {@link AggregationOptions}.
      *
-     * @param target The class to use when iterating over the results
      * @param <U>    type of the results
+     * @param target The class to use when iterating over the results
      * @return an iterator of the computed results
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
-    <U> Iterator<U> out(Class<U> target);
+    <U> MongoIterable<U> out(Class<U> target);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type.
      *
+     * @param <U>     type of the results
      * @param target  The class to use when iterating over the results
      * @param options The options to apply to this aggregation
-     * @param <U>     type of the results
      * @return an iterator of the computed results
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
-    <U> Iterator<U> out(Class<U> target, AggregationOptions options);
+    <U> MongoIterable<U> out(Class<U> target, AggregationOptions options);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
      * {@link AggregationOptions}.
      *
+     * @param <U>            type of the results
      * @param collectionName The collection in which to store the results of the aggregation overriding the mapped value in target
      * @param target         The class to use when iterating over the results
-     * @param <U>            type of the results
      * @return an iterator of the computed results
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
-    <U> Iterator<U> out(String collectionName, Class<U> target);
+    <U> MongoIterable<U> out(String collectionName, Class<U> target);
 
     /**
      * Places the output of the aggregation in the collection mapped by the target type.
      *
+     * @param <U>            type of the results
      * @param collectionName The collection in which to store the results of the aggregation overriding the mapped value in target
      * @param target         The class to use when iterating over the results
      * @param options        The options to apply to this aggregation
-     * @param <U>            type of the results
      * @return an iterator of the computed results
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
-    <U> Iterator<U> out(String collectionName, Class<U> target, AggregationOptions options);
+    <U> MongoIterable<U> out(String collectionName, Class<U> target, AggregationOptions options);
 
     /**
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one

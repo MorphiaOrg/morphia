@@ -22,24 +22,10 @@ import com.mongodb.WriteConcern;
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 1.3
- * @deprecated use {@link dev.morphia.InsertOneOptions} or {@link dev.morphia.InsertManyOptions} instead
  */
-@Deprecated(since = "2.0", forRemoval = true)
-public class InsertOptions {
+public class InsertManyOptions {
+    private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
     private WriteConcern writeConcern;
-    private boolean ordered = true;
-    private Boolean bypassDocumentValidation;
-
-    InsertOneOptions toInsertOneOptions() {
-        return new InsertOneOptions()
-            .bypassDocumentValidation(bypassDocumentValidation);
-    }
-
-    InsertManyOptions toInsertManyOptions() {
-        return new InsertManyOptions()
-            .bypassDocumentValidation(bypassDocumentValidation)
-            .ordered(ordered);
-    }
 
     /**
      * Set the write concern to use for the insert.
@@ -47,7 +33,7 @@ public class InsertOptions {
      * @param writeConcern the write concern
      * @return this
      */
-    public InsertOptions writeConcern(final WriteConcern writeConcern) {
+    public InsertManyOptions writeConcern(final WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -68,7 +54,7 @@ public class InsertOptions {
      * @mongodb.server.release 3.2
      */
     public Boolean getBypassDocumentValidation() {
-        return bypassDocumentValidation;
+        return options.getBypassDocumentValidation();
     }
 
     /**
@@ -78,8 +64,8 @@ public class InsertOptions {
      * @return this
      * @mongodb.server.release 3.2
      */
-    public InsertOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        this.bypassDocumentValidation = bypassDocumentValidation;
+    public InsertManyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+        options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
@@ -89,8 +75,8 @@ public class InsertOptions {
      * @param ordered true if documents should be inserted in order
      * @return this
      */
-    public InsertOptions ordered(final boolean ordered) {
-        this.ordered = ordered;
+    public InsertManyOptions ordered(final boolean ordered) {
+        options.ordered(ordered);
         return this;
     }
 
@@ -101,6 +87,10 @@ public class InsertOptions {
      * @return whether the the documents should be inserted in order
      */
     public boolean isOrdered() {
-        return ordered;
+        return options.isOrdered();
+    }
+
+    public com.mongodb.client.model.InsertManyOptions getOptions() {
+        return options;
     }
 }

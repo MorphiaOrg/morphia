@@ -1,12 +1,11 @@
 package dev.morphia.converters;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.converters.experimental.ReferenceConverter;
 import dev.morphia.geo.GeometryConverter;
 import dev.morphia.geo.GeometryShapeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 /**
  * Default encoders
@@ -37,7 +36,7 @@ public class DefaultConverters extends Converters {
      */
     public DefaultConverters(final Mapper mapper) {
         super(mapper);
-        addConverter(new IdentityConverter(DBObject.class, BasicDBObject.class));
+        addConverter(new IdentityConverter(Document.class, Document.class));
         addConverter(new EnumSetConverter());
         addConverter(new EnumConverter());
         addConverter(new StringConverter());

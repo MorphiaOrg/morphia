@@ -12,8 +12,6 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
@@ -39,8 +37,7 @@ import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.ValidationException;
-import org.bson.BSONEncoder;
-import org.bson.BasicBSONEncoder;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,24 +177,24 @@ public class Mapper {
     }
 
     /**
-     * Converts a DBObject back to a type-safe java object (POJO)
+     * Converts a Document back to a type-safe java object (POJO)
      *
      * @param <T>         the type of the entity
      * @param datastore   the Datastore to use when fetching this reference
-     * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the DBObject
-     * @param dbObject    the DBObject containing the document from mongodb
+     * @param entityClass The type to return, or use; can be overridden by the @see Mapper.CLASS_NAME_FIELDNAME in the Document
+     * @param document    the Document containing the document from mongodb
      * @param cache       the EntityCache to use
      * @return the new entity
      * @morphia.internal
      * @deprecated no replacement is planned
      */
     @Deprecated
-    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
-        if (dbObject == null) {
+    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document, final EntityCache cache) {
+        if (document == null) {
             return null;
         }
 
-        return fromDb(datastore, dbObject, opts.getObjectFactory().createInstance(entityClass, dbObject), cache);
+        return fromDb(datastore, document, opts.getObjectFactory().createInstance(entityClass, document), cache);
     }
 
     /**
@@ -219,34 +216,34 @@ public class Mapper {
     }
 
     /**
-     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
      *
      * @param datastore the Datastore to use when fetching this reference
-     * @param dbObject  the DBObject
+     * @param document  the Document
      * @param <T>       the type of the referenced entity
      * @return the entity
      * @morphia.internal
      * @deprecated no replacement is planned
      */
     @Deprecated
-    <T> T fromDBObject(final Datastore datastore, final DBObject dbObject) {
-        if (dbObject.containsField(opts.getDiscriminatorField())) {
-            T entity = opts.getObjectFactory().createInstance(null, dbObject);
-            entity = fromDb(datastore, dbObject, entity, createEntityCache());
+    <T> T fromDocument(final Datastore datastore, final Document document) {
+        if (document.containsKey(opts.getDiscriminatorField())) {
+            T entity = opts.getObjectFactory().createInstance(null, document);
+            entity = fromDb(datastore, document, entity, createEntityCache());
 
             return entity;
         } else {
-            throw new MappingException(format("The DBObject does not contain a %s key.  Determining entity type is impossible.",
+            throw new MappingException(format("The Document does not contain a %s key.  Determining entity type is impossible.",
                 opts.getDiscriminatorField()));
         }
     }
 
     /**
-     * Converts a DBObject back to a type-safe java object (POJO)
+     * Converts a Document back to a type-safe java object (POJO)
      *
      * @param <T>       the type of the entity
      * @param datastore the Datastore to use when fetching this reference
-     * @param dbObject  the DBObject containing the document from mongodb
+     * @param document  the Document containing the document from mongodb
      * @param entity    the instance to populate
      * @param cache     the EntityCache to use
      * @return the entity
@@ -254,18 +251,18 @@ public class Mapper {
      * @deprecated no replacement is planned
      */
     @Deprecated
-    public <T> T fromDb(final Datastore datastore, final DBObject dbObject, final T entity, final EntityCache cache) {
+    public <T> T fromDb(final Datastore datastore, final Document document, final T entity, final EntityCache cache) {
         //hack to bypass things and just read the value.
         if (entity instanceof MappedField) {
-            readMappedField(datastore, (MappedField) entity, entity, cache, dbObject);
+            readMappedField(datastore, (MappedField) entity, entity, cache, document);
             return entity;
         }
 
         // check the history key (a key is the namespace + id)
 
-        if (dbObject.containsField("_id") && getMappedClass(entity).getIdField() != null
+        if (document.containsKey("_id") && getMappedClass(entity).getIdField() != null
             && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), dbObject.get("_id"));
+            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), document.get("_id"));
             final T cachedInstance = cache.getEntity(key);
             if (cachedInstance != null) {
                 return cachedInstance;
@@ -276,30 +273,30 @@ public class Mapper {
 
         if (entity instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) entity;
-            for (String key : dbObject.keySet()) {
-                Object o = dbObject.get(key);
-                map.put(key, (o instanceof DBObject) ? fromDBObject(datastore, (DBObject) o) : o);
+            for (String key : document.keySet()) {
+                Object o = document.get(key);
+                map.put(key, (o instanceof Document) ? fromDocument(datastore, (Document) o) : o);
             }
         } else if (entity instanceof Collection) {
             Collection<Object> collection = (Collection<Object>) entity;
-            for (Object o : ((List) dbObject)) {
-                collection.add((o instanceof DBObject) ? fromDBObject(datastore, (DBObject) o) : o);
+            for (Object o : ((List) document)) {
+                collection.add((o instanceof Document) ? fromDocument(datastore, (Document) o) : o);
             }
         } else {
             final MappedClass mc = getMappedClass(entity);
-            final DBObject updated = mc.callLifecycleMethods(PreLoad.class, entity, dbObject, this);
+            final Document updated = mc.callLifecycleMethods(PreLoad.class, entity, document, this);
             try {
                 for (final MappedField mf : mc.getPersistenceFields()) {
                     readMappedField(datastore, mf, entity, cache, updated);
                 }
             } catch (final MappingException e) {
-                Object id = dbObject.get("_id");
+                Object id = document.get("_id");
                 String entityName = entity.getClass().getName();
                 throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
-                    datastore.getDB().getName()), e);
+                    datastore.getDatabase().getName()), e);
             }
 
-            if (updated.containsField("_id") && getMappedClass(entity).getIdField() != null) {
+            if (updated.containsKey("_id") && getMappedClass(entity).getIdField() != null) {
                 final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), updated.get("_id"));
                 cache.putEntity(key, entity);
             }
@@ -596,29 +593,29 @@ public class Mapper {
 
     /**
      * /**
-     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
      *
      * @param entity The POJO
-     * @return the DBObject
+     * @return the Document
      */
-    public DBObject toDBObject(final Object entity) {
-        return toDBObject(entity, null);
+    public Document toDocument(final Object entity) {
+        return toDocument(entity, null);
     }
 
     /**
-     * Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
      *
      * @param entity          The POJO
      * @param involvedObjects A Map of (already converted) POJOs
-     * @return the DBObject
+     * @return the Document
      */
-    public DBObject toDBObject(final Object entity, final Map<Object, DBObject> involvedObjects) {
-        return toDBObject(entity, involvedObjects, true);
+    public Document toDocument(final Object entity, final Map<Object, Document> involvedObjects) {
+        return toDocument(entity, involvedObjects, true);
     }
 
     /**
-     * Converts a java object to a mongo-compatible object (possibly a DBObject for complex mappings).  Very similar to {@link
-     * Mapper#toDBObject}.  Used (mainly) by query/update operations.
+     * Converts a java object to a mongo-compatible object (possibly a Document for complex mappings).  Very similar to {@link
+     * Mapper#toDocument}.  Used (mainly) by query/update operations.
      *
      * @param mf    the MappedField for this value
      * @param mc    the MappedClass for this value
@@ -633,7 +630,7 @@ public class Mapper {
         Object mappedValue = value;
 
         if (value instanceof Query) {
-            mappedValue = ((QueryImpl) value).getQueryObject();
+            mappedValue = ((QueryImpl) value).getQueryDocument();
         } else if (isAssignable(mf, value) || isEntity(mc)) {
             //convert the value to Key (DBRef) if the field is @Reference or type is Key/DBRef, or if the destination class is an @Entity
             try {
@@ -699,7 +696,7 @@ public class Mapper {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } else if (value instanceof DBObject) {  //pass-through
+        } else if (value instanceof Document) {  //pass-through
             mappedValue = value;
         } else {
             mappedValue = toMongoObject(value, EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf));
@@ -708,14 +705,14 @@ public class Mapper {
                 if (list.size() != 0) {
                     if (!EmbeddedMapper.shouldSaveClassName(extractFirstElement(value), list.get(0), mf)) {
                         for (Object o : list) {
-                            if (o instanceof DBObject) {
-                                ((DBObject) o).removeField(opts.getDiscriminatorField());
+                            if (o instanceof Document) {
+                                ((Document) o).remove(opts.getDiscriminatorField());
                             }
                         }
                     }
                 }
-            } else if (mappedValue instanceof DBObject && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
-                ((DBObject) mappedValue).removeField(opts.getDiscriminatorField());
+            } else if (mappedValue instanceof Document && !EmbeddedMapper.shouldSaveClassName(value, mappedValue, mf)) {
+                ((Document) mappedValue).remove(opts.getDiscriminatorField());
             }
         }
 
@@ -746,7 +743,7 @@ public class Mapper {
      * @param cache     the EntityCache
      * @param entity    The object to update
      */
-    public void updateKeyAndVersionInfo(final Datastore datastore, final DBObject dbObj, final EntityCache cache, final Object entity) {
+    public void updateKeyAndVersionInfo(final Datastore datastore, final Document dbObj, final EntityCache cache, final Object entity) {
         final MappedClass mc = getMappedClass(entity);
 
         // update id field, if there.
@@ -870,7 +867,7 @@ public class Mapper {
     }
 
     private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
-                                 final DBObject dbObject) {
+                                 final Document document) {
         CustomMapper mapper;
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
             || mf.isTypeMongoCompatible() || getConverters().hasSimpleValueConverter(mf)) {
@@ -882,11 +879,11 @@ public class Mapper {
         } else {
             mapper = opts.getDefaultMapper();
         }
-        mapper.fromDBObject(datastore, dbObject, mf, entity, cache, this);
+        mapper.fromDocument(datastore, document, mf, entity, cache, this);
     }
 
-    private void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,
-                                  final Map<Object, DBObject> involvedObjects) {
+    private void writeMappedField(final Document document, final MappedField mf, final Object entity,
+                                  final Map<Object, Document> involvedObjects) {
 
         //skip not saved fields.
         if (mf.hasAnnotation(NotSaved.class)) {
@@ -898,16 +895,16 @@ public class Mapper {
 
         if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
             || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
-            opts.getValueMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
+            opts.getValueMapper().toDocument(entity, mf, document, involvedObjects, this);
         } else if (Reference.class.equals(annType) || MorphiaReference.class == mf.getConcreteType()) {
-            opts.getReferenceMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
+            opts.getReferenceMapper().toDocument(entity, mf, document, involvedObjects, this);
         } else if (Embedded.class.equals(annType)) {
-            opts.getEmbeddedMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
+            opts.getEmbeddedMapper().toDocument(entity, mf, document, involvedObjects, this);
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No annotation was found, using default mapper " + opts.getDefaultMapper() + " for " + mf);
             }
-            opts.getDefaultMapper().toDBObject(entity, mf, dbObject, involvedObjects, this);
+            opts.getDefaultMapper().toDocument(entity, mf, document, involvedObjects, this);
         }
 
     }
@@ -921,8 +918,8 @@ public class Mapper {
     }
 
     /**
-     * <p> Converts a java object to a mongo-compatible object (possibly a DBObject for complex mappings). Very similar to {@link
-     * Mapper#toDBObject} </p> <p> Used (mainly) by query/update operations </p>
+     * <p> Converts a java object to a mongo-compatible object (possibly a Document for complex mappings). Very similar to {@link
+     * Mapper#toDocument} </p> <p> Used (mainly) by query/update operations </p>
      */
     Object toMongoObject(final Object javaObj, final boolean includeClassName) {
         if (javaObj == null) {
@@ -960,16 +957,16 @@ public class Mapper {
             }
 
             if (isSingleValue && !isPropertyType(type)) {
-                final DBObject dbObj = toDBObject(newObj);
+                final Document dbObj = toDocument(newObj);
                 if (!includeClassName) {
-                    dbObj.removeField(opts.getDiscriminatorField());
+                    dbObj.remove(opts.getDiscriminatorField());
                 }
                 return dbObj;
-            } else if (newObj instanceof DBObject) {
+            } else if (newObj instanceof Document) {
                 return newObj;
             } else if (isMap) {
                 if (isPropertyType(subType)) {
-                    return toDBObject(newObj);
+                    return toDocument(newObj);
                 } else {
                     final LinkedHashMap m = new LinkedHashMap();
                     for (final Map.Entry e : (Iterable<Map.Entry>) ((Map) newObj).entrySet()) {
@@ -998,35 +995,35 @@ public class Mapper {
         }
     }
 
-    DBObject toDBObject(final Object entity, final Map<Object, DBObject> involvedObjects, final boolean lifecycle) {
+    Document toDocument(final Object entity, final Map<Object, Document> involvedObjects, final boolean lifecycle) {
 
-        DBObject dbObject = new BasicDBObject();
+        Document document = new Document();
         final MappedClass mc = getMappedClass(entity);
 
         if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored()) {
-            dbObject.put(opts.getDiscriminatorField(), entity.getClass().getName());
+            document.put(opts.getDiscriminatorField(), entity.getClass().getName());
         }
 
         if (lifecycle) {
-            dbObject = mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
+            document = mc.callLifecycleMethods(PrePersist.class, entity, document, this);
         }
 
         for (final MappedField mf : mc.getPersistenceFields()) {
             try {
-                writeMappedField(dbObject, mf, entity, involvedObjects);
+                writeMappedField(document, mf, entity, involvedObjects);
             } catch (Exception e) {
                 throw new MappingException("Error mapping field:" + mf.getFullName(), e);
             }
         }
         if (involvedObjects != null) {
-            involvedObjects.put(entity, dbObject);
+            involvedObjects.put(entity, document);
         }
 
         if (lifecycle) {
-            mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
+            mc.callLifecycleMethods(PreSave.class, entity, document, this);
         }
 
-        return dbObject;
+        return document;
     }
 
     <T> Key<T> createKey(final Class<T> clazz, final Serializable id) {
@@ -1038,8 +1035,6 @@ public class Mapper {
             return createKey(clazz, (Serializable) id);
         }
 
-        //TODO: cache the encoders, maybe use the pool version of the buffer that the driver does.
-        final BSONEncoder enc = new BasicBSONEncoder();
-        return new Key<>(clazz, getCollectionName(clazz), enc.encode(toDBObject(id)));
+        return new Key<>(clazz, getCollectionName(clazz), id);
     }
 }

@@ -18,7 +18,9 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionUpdateOptions;
+import org.bson.conversions.Bson;
+
+import java.util.List;
 
 /**
  * The options to apply when updating documents in the DBCollection
@@ -26,107 +28,27 @@ import com.mongodb.client.model.DBCollectionUpdateOptions;
  * @mongodb.driver.manual tutorial/modify-documents/ Updates
  * @mongodb.driver.manual reference/operator/update/ Update Operators
  * @mongodb.driver.manual reference/command/update/ Update Command
- *
  * @since 1.3
  */
-public class UpdateOptions {
-    private DBCollectionUpdateOptions options = new DBCollectionUpdateOptions();
+public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
+    private WriteConcern writeConcern;
+    private boolean multi;
 
     /**
-     * Create a copy of the options instance.
-     *
-     * @return the copy
+     * @return true if the update should affect all entities
      */
-    public UpdateOptions copy() {
-        return new UpdateOptions()
-            .bypassDocumentValidation(getBypassDocumentValidation())
-            .collation(getCollation())
-            .multi(isMulti())
-            .upsert(isUpsert())
-            .writeConcern(getWriteConcern());
+    public boolean isMulti() {
+        return multi;
     }
 
     /**
-     * Returns true if a new document should be inserted if there are no matches to the query filter.  The default is false.
+     * If true, sets this update to affect all matched documents.
      *
-     * @return true if a new document should be inserted if there are no matches to the query filter
-     */
-    public boolean isUpsert() {
-        return options.isUpsert();
-    }
-
-    /**
-     * Set to true if a new document should be inserted if there are no matches to the query filter.
-     *
-     * @param isUpsert true if a new document should be inserted if there are no matches to the query filter
-     * @return this
-     */
-    public UpdateOptions upsert(final boolean isUpsert) {
-        options.upsert(isUpsert);
-        return this;
-    }
-
-    /**
-     * Gets the the bypass document level validation flag
-     *
-     * @return the bypass document level validation flag
-     * @mongodb.server.release 3.2
-     */
-    public Boolean getBypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
-    /**
-     * Sets the bypass document level validation flag.
-     *
-     * @param bypassDocumentValidation If true, allows the write to opt-out of document level validation.
-     * @return this
-     * @mongodb.server.release 3.2
-     */
-    public UpdateOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        options.bypassDocumentValidation(bypassDocumentValidation);
-        return this;
-    }
-
-    /**
-     * Sets whether all documents matching the query filter will be removed.
-     *
-     * @param multi true if all documents matching the query filter will be removed
+     * @param multi true for multiple updates
      * @return this
      */
     public UpdateOptions multi(final boolean multi) {
-        options.multi(multi);
-        return this;
-    }
-
-    /**
-     * Gets whether all documents matching the query filter will be removed.  The default is true.
-     *
-     * @return whether all documents matching the query filter will be removed
-     */
-    public boolean isMulti() {
-        return options.isMulti();
-    }
-
-    /**
-     * Returns the collation options
-     *
-     * @return the collation options
-     * @mongodb.server.release 3.4
-     */
-    public Collation getCollation() {
-        return options.getCollation();
-    }
-
-    /**
-     * Sets the collation
-     *
-     * @param collation the collation
-     * @return this
-     * @mongodb.server.release 3.4
-     */
-    public UpdateOptions collation(final Collation collation) {
-        options.collation(collation);
+        this.multi = multi;
         return this;
     }
 
@@ -136,7 +58,7 @@ public class UpdateOptions {
      * @return the write concern, or null if the default will be used.
      */
     public WriteConcern getWriteConcern() {
-        return options.getWriteConcern();
+        return writeConcern;
     }
 
     /**
@@ -146,15 +68,43 @@ public class UpdateOptions {
      * @return this
      */
     public UpdateOptions writeConcern(final WriteConcern writeConcern) {
-        options.writeConcern(writeConcern);
+        this.writeConcern = writeConcern;
         return this;
     }
 
     /**
-     * @morphia.internal
-     * @return the options implementation
+     * @inheritDoc
      */
-    public DBCollectionUpdateOptions getOptions() {
-        return options;
+    @Override
+    public UpdateOptions arrayFilters(final List<? extends Bson> arrayFilters) {
+        super.arrayFilters(arrayFilters);
+        return this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public UpdateOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+        super.bypassDocumentValidation(bypassDocumentValidation);
+        return this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public UpdateOptions collation(final Collation collation) {
+        super.collation(collation);
+        return this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public UpdateOptions upsert(final boolean upsert) {
+        super.upsert(upsert);
+        return this;
     }
 }

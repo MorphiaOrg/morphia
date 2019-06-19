@@ -1,11 +1,11 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.DBObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.ObjectFactory;
 import dev.morphia.annotations.ConstructorArgs;
+import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ public class DefaultCreator implements ObjectFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultCreator.class);
 
-    private Map<String, Class> classNameCache = new ConcurrentHashMap<String, Class>();
+    private Map<String, Class> classNameCache = new ConcurrentHashMap<>();
 
-    private MapperOptions options = null;
+    private MapperOptions options;
 
     /**
      * Creates a new DefaultCreator with no options
@@ -83,8 +83,8 @@ public class DefaultCreator implements ObjectFactory {
     }
 
     @Override
-    public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
-        Class<T> c = getClass(dbObj);
+    public <T> T createInstance(final Class<T> clazz, final Document document) {
+        Class<T> c = getClass(document);
         if (c == null) {
             c = clazz;
         }
@@ -93,8 +93,8 @@ public class DefaultCreator implements ObjectFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
-        Class c = getClass(dbObj);
+    public Object createInstance(final Mapper mapper, final MappedField mf, final Document document) {
+        Class c = getClass(document);
         if (c == null) {
             c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
             if (c.equals(Object.class)) {
@@ -102,7 +102,7 @@ public class DefaultCreator implements ObjectFactory {
             }
         }
         try {
-            return createInstance(c, dbObj);
+            return createInstance(c, document);
         } catch (RuntimeException e) {
             final ConstructorArgs argAnn = mf.getAnnotation(ConstructorArgs.class);
             if (argAnn == null) {
@@ -114,7 +114,7 @@ public class DefaultCreator implements ObjectFactory {
             for (int i = 0; i < argAnn.value().length; i++) {
                 // TODO: run converters and stuff against these. Kinda like the List of List stuff,
                 // using a fake MappedField to hold the value
-                final Object val = dbObj.get(argAnn.value()[i]);
+                final Object val = document.get(argAnn.value()[i]);
                 args[i] = val;
                 argTypes[i] = val.getClass();
             }
@@ -150,7 +150,7 @@ public class DefaultCreator implements ObjectFactory {
      * @return the cache of classnames
      */
     public Map<String, Class> getClassNameCache() {
-        HashMap<String, Class> copy = new HashMap<String, Class>();
+        HashMap<String, Class> copy = new HashMap<>();
         copy.putAll(classNameCache);
         return copy;
     }
@@ -160,12 +160,12 @@ public class DefaultCreator implements ObjectFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Class<T> getClass(final DBObject dbObj) {
+    private <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
-        if (dbObj.containsField(options.getDiscriminatorField())) {
-            final String className = (String) dbObj.get(options.getDiscriminatorField());
-            // try to Class.forName(className) as defined in the dbObject first,
+        if (document.containsKey(options.getDiscriminatorField())) {
+            final String className = (String) document.get(options.getDiscriminatorField());
+            // try to Class.forName(className) as defined in the documentect first,
             // otherwise return the entityClass
             try {
                 if (options.isCacheClassLookups()) {
@@ -179,7 +179,7 @@ public class DefaultCreator implements ObjectFactory {
                 }
             } catch (ClassNotFoundException e) {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Class not found defined in dbObj: ", e);
+                    LOG.warn("Class not found defined in document: ", e);
                 }
             }
         }

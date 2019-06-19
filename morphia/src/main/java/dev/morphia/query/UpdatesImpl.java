@@ -1,18 +1,13 @@
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.WriteConcern;
 import dev.morphia.Datastore;
-import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +20,7 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
     protected Datastore datastore;
     protected final Mapper mapper;
     protected final Class clazz;
-    private Map<String, Map<String, Object>> ops = new HashMap<>();
+    private Map<String, Object> ops = new HashMap<>();
     private boolean validateNames = true;
 
     UpdatesImpl(final Datastore datastore, final Mapper mapper, final Class clazz) {
@@ -82,7 +77,7 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
 
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
+        Document dbObject = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
         options.update(dbObject);
         addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), dbObject);
 
@@ -202,8 +197,8 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
     /**
      * @return the operations listed
      */
-    protected DBObject getOps() {
-        return new BasicDBObject(ops);
+    protected Document getOps() {
+        return new Document(ops);
     }
 
     /**
@@ -212,8 +207,8 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
      * @param ops the operations
      */
     @SuppressWarnings("unchecked")
-    void setOps(final DBObject ops) {
-        this.ops = (Map<String, Map<String, Object>>) ops;
+    void setOps(final Document ops) {
+        this.ops = ops;
     }
 
     //TODO Clean this up a little.
@@ -236,7 +231,7 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
 
 
         if (UpdateOperator.ADD_TO_SET_EACH.equals(op)) {
-            val = new BasicDBObject(UpdateOperator.EACH.val(), val);
+            val = new Document(UpdateOperator.EACH.val(), val);
         }
 
         addOperation(op, pathTarget.translatedPath(), val);
@@ -265,30 +260,9 @@ abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater> 
         final String opString = op.val();
 
         if (!ops.containsKey(opString)) {
-            ops.put(opString, new LinkedHashMap<>());
+            ops.put(opString, new Document());
         }
-        ops.get(opString).put(fieldName, val);
-    }
-
-    UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<?> klass) {
-        if (options.getWriteConcern() == null && getWriteConcern(klass) != null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
-    WriteConcern getWriteConcern(final Object clazzOrEntity) {
-        WriteConcern wc = datastore.getMongo().getWriteConcern();
-        if (clazzOrEntity != null) {
-            final Entity entityAnn = mapper.getMappedClass(clazzOrEntity).getEntityAnnotation();
-            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
-            }
-        }
-
-        return wc;
+        ((Document) ops.get(opString)).put(fieldName, val);
     }
 
 }

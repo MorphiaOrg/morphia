@@ -11,17 +11,17 @@ public class TriangleConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (fromDocument == null) {
             return null;
         }
 
-        if (fromDBObject instanceof String) {
+        if (fromDocument instanceof String) {
             return new Triangle();
         }
 
         throw new RuntimeException(
-                                      "Did not expect " + fromDBObject.getClass().getName());
+                                      "Did not expect " + fromDocument.getClass().getName());
     }
 
     @Override

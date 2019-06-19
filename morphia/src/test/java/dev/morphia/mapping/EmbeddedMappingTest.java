@@ -16,10 +16,6 @@
 
 package dev.morphia.mapping;
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -30,6 +26,10 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.ValidationException;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,14 +40,14 @@ public class EmbeddedMappingTest extends TestBase {
     public void mapGenericEmbeds() {
         getMorphia().map(AuditEntry.class, Delta.class);
 
-        final AuditEntry<String> entry = new AuditEntry<String>();
+        final AuditEntry<String> entry = new AuditEntry<>();
 
-        final HashMap<String, Object> before = new HashMap<String, Object>();
-        final HashMap<String, Object> after = new HashMap<String, Object>();
+        final HashMap<String, Object> before = new HashMap<>();
+        final HashMap<String, Object> after = new HashMap<>();
         before.put("before", 42);
         after.put("after", 84);
 
-        entry.delta = new Delta<String>(before, after);
+        entry.delta = new Delta<>(before, after);
         getDs().save(entry);
 
         final AuditEntry fetched = getDs().find(AuditEntry.class)
@@ -63,10 +63,10 @@ public class EmbeddedMappingTest extends TestBase {
         getMorphia().map(WithNested.class, NestedImpl.class);
         getDs().ensureIndexes();
 
-        final List<DBObject> indexInfo = getDs().getCollection(WithNested.class).getIndexInfo();
+        final List<Document> indexInfo = getIndexInfo(WithNested.class);
         boolean indexFound = false;
-        for (DBObject dbObject : indexInfo) {
-            indexFound |= "nested.field.fail".equals(((DBObject) dbObject.get("key")).keySet().iterator().next());
+        for (Document document : indexInfo) {
+            indexFound |= "nested.field.fail".equals(((Document) document.get("key")).keySet().iterator().next());
         }
         Assert.assertTrue("Should find the nested field index", indexFound);
         WithNested nested = new WithNested();
@@ -108,10 +108,10 @@ public class EmbeddedMappingTest extends TestBase {
                                     + ".EmbeddedMappingTest$WithNestedValidated'.", e.getMessage());
         }
 
-        final List<DBObject> indexInfo = getDs().getCollection(WithNestedValidated.class).getIndexInfo();
+        final List<Document> indexInfo = getIndexInfo(WithNestedValidated.class);
         boolean indexFound = false;
-        for (DBObject dbObject : indexInfo) {
-            indexFound |= "nested.field.fail".equals(((DBObject) dbObject.get("key")).keySet().iterator().next());
+        for (Document document : indexInfo) {
+            indexFound |= "nested.field.fail".equals(((Document) document.get("key")).keySet().iterator().next());
         }
         Assert.assertFalse("Should not find the nested field index", indexFound);
     }

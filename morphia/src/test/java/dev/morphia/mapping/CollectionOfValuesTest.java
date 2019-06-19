@@ -2,14 +2,14 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,13 +47,13 @@ public class CollectionOfValuesTest extends TestBase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testCreateEntityWithBasicDBList() throws Exception {
+    public void testCreateEntityWithBasicDBList() {
 
         TestEntity entity = new TestEntity();
 
-        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        data.add(new BasicDBObject("type", "text")
-                     .append("data", new BasicDBObject("text", "sometext")));
+        List<Map<String, Object>> data = new ArrayList<>();
+        data.add(new Document("type", "text")
+                     .append("data", new Document("text", "sometext")));
 
         entity.setData(data);
         getDs().save(entity);
@@ -65,15 +65,15 @@ public class CollectionOfValuesTest extends TestBase {
     }
 
     @Test
-    public void testListOfListMapping() throws Exception {
+    public void testListOfListMapping() {
         getMorphia().map(ContainsListOfList.class);
-        getDs().delete(getDs().find(ContainsListOfList.class));
+        getDs().find(ContainsListOfList.class).delete();
         final ContainsListOfList entity = new ContainsListOfList();
 
-        entity.strings = new ArrayList<List<String>>();
+        entity.strings = new ArrayList<>();
         entity.strings.add(Arrays.asList("element1", "element2"));
         entity.strings.add(Collections.singletonList("element3"));
-        entity.integers = new ArrayList<List<Integer>>();
+        entity.integers = new ArrayList<>();
         entity.integers.add(Arrays.asList(1, 2));
         entity.integers.add(Collections.singletonList(3));
         getDs().save(entity);
@@ -94,7 +94,7 @@ public class CollectionOfValuesTest extends TestBase {
     }
 
     @Test
-    public void testTwoDimensionalArrayMapping() throws Exception {
+    public void testTwoDimensionalArrayMapping() {
         getMorphia().map(ContainsTwoDimensionalArray.class);
         final ContainsTwoDimensionalArray entity = new ContainsTwoDimensionalArray();
         entity.oneDimArray = "Joseph".getBytes();

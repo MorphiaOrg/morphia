@@ -1,15 +1,14 @@
 package dev.morphia.query;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.ReflectionUtils;
+import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,16 +81,15 @@ class FieldCriteria extends AbstractCriteria {
 
     @Override
     @SuppressWarnings("unchecked")
-    public DBObject toDBObject() {
-        final DBObject obj = new BasicDBObject();
+    public Document toDocument() {
+        final Document obj = new Document();
         if (FilterOperator.EQUAL.equals(operator)) {
             // no operator, prop equals (or NOT equals) value
             if (not) {
-                obj.put(field, new BasicDBObject("$not", value));
+                obj.put(field, new Document("$not", value));
             } else {
                 obj.put(field, value);
             }
-
         } else {
             final Object object = obj.get(field); // operator within inner object
             Map<String, Object> inner;
@@ -103,7 +101,7 @@ class FieldCriteria extends AbstractCriteria {
             }
 
             if (not) {
-                inner.put("$not", new BasicDBObject(operator.val(), value));
+                inner.put("$not", new Document(operator.val(), value));
             } else {
                 inner.put(operator.val(), value);
             }

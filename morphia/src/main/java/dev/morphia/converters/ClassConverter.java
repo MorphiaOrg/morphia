@@ -19,12 +19,12 @@ public class ClassConverter extends TypeConverter implements SimpleValueConverte
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (fromDocument == null) {
             return null;
         }
 
-        final String l = fromDBObject.toString();
+        final String l = fromDocument.toString();
         try {
             return Class.forName(l);
         } catch (ClassNotFoundException e) {

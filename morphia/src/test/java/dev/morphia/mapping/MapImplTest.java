@@ -1,7 +1,7 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.BasicDBObject;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,11 +32,12 @@ public class MapImplTest extends TestBase {
         getDs().save(cmoeg);
         //check className in the map values.
 
-        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
-                                                                          .findOne()
-                                                                          .get("values"))
-                                                      .get("first");
-        assertFalse(goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
+                                                           .find()
+                                                           .first()
+                                                           .get("values"))
+                                            .get("first");
+        assertFalse(goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -54,11 +55,12 @@ public class MapImplTest extends TestBase {
                .set("values.second", g2)
                .execute();
 
-        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
-                                                                          .findOne()
-                                                                          .get("values")).get(
-                                                                                                 "second");
-        assertFalse("className should not be here.", goo.containsField(
+        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
+                                                           .find()
+                                                           .first()
+                                                           .get("values")).get(
+            "second");
+        assertFalse("className should not be here.", goo.containsKey(
             getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
@@ -71,18 +73,19 @@ public class MapImplTest extends TestBase {
         final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
-               getDs().find(ContainsMapOfEmbeddedInterfaces.class)
+        getDs().find(ContainsMapOfEmbeddedInterfaces.class)
                .filter("_id", cmoei.id)
                .update()
                .set("values.second", g2)
                .execute();
 
         //check className in the map values.
-        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
-                                                                          .findOne()
-                                                                          .get("values"))
-                                                      .get("second");
-        assertTrue("className should be here.", goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+                                                           .find()
+                                                           .first()
+                                                           .get("values"))
+                                            .get("second");
+        assertTrue("className should be here.", goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -94,11 +97,12 @@ public class MapImplTest extends TestBase {
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
         //check className in the map values.
-        final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
-                                                                          .findOne()
-                                                                          .get("values"))
-                                                      .get("first");
-        assertTrue(goo.containsField(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+                                                           .find()
+                                                           .first()
+                                                           .get("values"))
+                                            .get("first");
+        assertTrue(goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test

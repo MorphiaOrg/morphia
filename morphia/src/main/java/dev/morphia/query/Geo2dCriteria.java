@@ -1,10 +1,8 @@
 package dev.morphia.query;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -22,20 +20,20 @@ class Geo2dCriteria extends FieldCriteria {
     }
 
     @Override
-    public DBObject toDBObject() {
-        final DBObject obj = new BasicDBObject();
-        final BasicDBObjectBuilder query;
+    public Document toDocument() {
+        final Document obj = new Document();
+        final Document query;
         switch (getOperator()) {
             case NEAR:
-                query = BasicDBObjectBuilder.start(FilterOperator.NEAR.val(), getValue());
+                query = new Document(FilterOperator.NEAR.val(), getValue());
                 break;
             case NEAR_SPHERE:
-                query = BasicDBObjectBuilder.start(FilterOperator.NEAR_SPHERE.val(), getValue());
+                query = new Document(FilterOperator.NEAR_SPHERE.val(), getValue());
                 break;
             case WITHIN_BOX:
             case WITHIN_CIRCLE:
             case WITHIN_CIRCLE_SPHERE:
-                query = BasicDBObjectBuilder.start().push(FilterOperator.GEO_WITHIN.val()).add(getOperator().val(), getValue());
+                query = new Document(FilterOperator.GEO_WITHIN.val(), new Document(getOperator().val(), getValue()));
                 break;
             default:
                 throw new UnsupportedOperationException(getOperator() + " not supported for geo-query");
@@ -48,7 +46,7 @@ class Geo2dCriteria extends FieldCriteria {
             }
         }
 
-        obj.put(getField(), query.get());
+        obj.put(getField(), query);
 
         return obj;
     }

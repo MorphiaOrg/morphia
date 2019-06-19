@@ -1,9 +1,8 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
@@ -21,6 +20,7 @@ import dev.morphia.utils.IterHelper;
 import dev.morphia.utils.IterHelper.IterCallback;
 import dev.morphia.utils.IterHelper.MapIterCallback;
 import dev.morphia.utils.ReflectionUtils;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,27 +39,27 @@ class ReferenceMapper implements CustomMapper {
     public static final Logger LOG = LoggerFactory.getLogger(ReferenceMapper.class);
 
     @Override
-    public void fromDBObject(final Datastore datastore, final DBObject dbObject, final MappedField mf, final Object entity,
+    public void fromDocument(final Datastore datastore, final Document document, final MappedField mf, final Object entity,
                              final EntityCache cache, final Mapper mapper) {
         final Class fieldType = mf.getType();
 
         if (mf.getType().equals(MorphiaReference.class) && !mf.getTypeParameters().isEmpty()) {
-            readMorphiaReferenceValues(mapper, datastore, mf, dbObject, entity);
+            readMorphiaReferenceValues(mapper, datastore, mf, document, entity);
         } else {
             final Reference refAnn = mf.getAnnotation(Reference.class);
             if (mf.isMap()) {
-                readMap(datastore, mapper, entity, refAnn, cache, mf, dbObject);
+                readMap(datastore, mapper, entity, refAnn, cache, mf, document);
             } else if (mf.isMultipleValues()) {
-                readCollection(datastore, mapper, dbObject, mf, entity, refAnn, cache);
+                readCollection(datastore, mapper, document, mf, entity, refAnn, cache);
             } else {
-                readSingle(datastore, mapper, entity, fieldType, refAnn, cache, mf, dbObject);
+                readSingle(datastore, mapper, entity, fieldType, refAnn, cache, mf, document);
             }
         }
 
     }
 
     @Override
-    public void toDBObject(final Object entity, final MappedField mf, final DBObject dbObject, final Map<Object, DBObject> involvedObjects,
+    public void toDocument(final Object entity, final MappedField mf, final Document document, final Map<Object, Document> involvedObjects,
                            final Mapper mapper) {
         final String name = mf.getNameToStore();
 
@@ -70,15 +70,15 @@ class ReferenceMapper implements CustomMapper {
         }
 
         if (fieldValue instanceof MorphiaReference && !mf.getTypeParameters().isEmpty()) {
-            writeMorphiaReferenceValues(dbObject, mf, fieldValue, name, mapper);
+            writeMorphiaReferenceValues(document, mf, fieldValue, name, mapper);
         } else {
             final Reference refAnn = mf.getAnnotation(Reference.class);
             if (mf.isMap()) {
-                writeMap(mf, dbObject, name, fieldValue, refAnn, mapper);
+                writeMap(mf, document, name, fieldValue, refAnn, mapper);
             } else if (mf.isMultipleValues()) {
-                writeCollection(mf, dbObject, name, fieldValue, refAnn, mapper);
+                writeCollection(mf, document, name, fieldValue, refAnn, mapper);
             } else {
-                writeSingle(dbObject, name, fieldValue, refAnn, mapper);
+                writeSingle(document, name, fieldValue, refAnn, mapper);
             }
         }
 
@@ -127,7 +127,7 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    private void readCollection(final Datastore datastore, final Mapper mapper, final DBObject dbObject, final MappedField mf,
+    private void readCollection(final Datastore datastore, final Mapper mapper, final Document document, final MappedField mf,
                                 final Object entity,
                                 final Reference refAnn,
                                 final EntityCache cache) {
@@ -139,7 +139,7 @@ class ReferenceMapper implements CustomMapper {
                                            : mapper.getOptions().getObjectFactory().createList(mf);
 
         if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-            final Object dbVal = mf.getDbObjectValue(dbObject);
+            final Object dbVal = mf.getDocumentValue(document);
             if (dbVal != null) {
                 references = mapper.getProxyFactory()
                                    .createListProxy(datastore, references, referenceObjClass, refAnn.ignoreMissing());
@@ -156,7 +156,7 @@ class ReferenceMapper implements CustomMapper {
                 }
             }
         } else {
-            final Object dbVal = mf.getDbObjectValue(dbObject);
+            final Object dbVal = mf.getDocumentValue(document);
             final Collection refs = references;
             new IterHelper<String, Object>().loopOrSingle(dbVal, new IterCallback<Object>() {
                 @Override
@@ -179,11 +179,11 @@ class ReferenceMapper implements CustomMapper {
     }
 
     private void readMap(final Datastore datastore, final Mapper mapper, final Object entity, final Reference refAnn,
-                         final EntityCache cache, final MappedField mf, final DBObject dbObject) {
+                         final EntityCache cache, final MappedField mf, final Document document) {
         final Class referenceObjClass = mf.getSubClass();
         Map m = mapper.getOptions().getObjectFactory().createMap(mf);
 
-        final DBObject dbVal = (DBObject) mf.getDbObjectValue(dbObject);
+        final Document dbVal = (Document) mf.getDocumentValue(document);
         if (dbVal != null) {
             if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
                 // replace map by proxy to it.
@@ -212,9 +212,9 @@ class ReferenceMapper implements CustomMapper {
     }
 
     private void readSingle(final Datastore datastore, final Mapper mapper, final Object entity, final Class fieldType,
-                            final Reference annotation, final EntityCache cache, final MappedField mf, final DBObject dbObject) {
+                            final Reference annotation, final EntityCache cache, final MappedField mf, final Document document) {
 
-        final Object ref = mf.getDbObjectValue(dbObject);
+        final Object ref = mf.getDocumentValue(document);
         if (ref != null) {
             Object resolvedObject;
             if (annotation.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
@@ -230,7 +230,7 @@ class ReferenceMapper implements CustomMapper {
         }
     }
 
-    private void writeCollection(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,
+    private void writeCollection(final MappedField mf, final Document document, final String name, final Object fieldValue,
                                  final Reference refAnn, final Mapper mapper) {
         if (fieldValue != null) {
             final List values = new ArrayList();
@@ -254,12 +254,12 @@ class ReferenceMapper implements CustomMapper {
                 }
             }
             if (!values.isEmpty() || mapper.getOptions().isStoreEmpties()) {
-                dbObject.put(name, values);
+                document.put(name, values);
             }
         }
     }
 
-    private void writeMap(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,
+    private void writeMap(final MappedField mf, final Document document, final String name, final Object fieldValue,
                           final Reference refAnn, final Mapper mapper) {
         final Map<Object, Object> map = (Map<Object, Object>) fieldValue;
         if (map != null) {
@@ -284,16 +284,16 @@ class ReferenceMapper implements CustomMapper {
                 }
             }
             if (!values.isEmpty() || mapper.getOptions().isStoreEmpties()) {
-                dbObject.put(name, values);
+                document.put(name, values);
             }
         }
     }
 
-    private void writeSingle(final DBObject dbObject, final String name, final Object fieldValue, final Reference refAnn,
+    private void writeSingle(final Document document, final String name, final Object fieldValue, final Reference refAnn,
                              final Mapper mapper) {
         if (fieldValue == null) {
             if (mapper.getOptions().isStoreNulls()) {
-                dbObject.put(name, null);
+                document.put(name, null);
             }
         } else {
             Key<?> key = getKey(fieldValue, mapper);
@@ -303,9 +303,9 @@ class ReferenceMapper implements CustomMapper {
                     id = mapper.toMongoObject(id, true);
                 }
 
-                dbObject.put(name, id);
+                document.put(name, id);
             } else {
-                dbObject.put(name, mapper.keyToDBRef(key));
+                document.put(name, mapper.keyToDBRef(key));
             }
         }
     }
@@ -325,25 +325,25 @@ class ReferenceMapper implements CustomMapper {
             return cached;
         }
 
-        final DBObject refDbObject;
-        DBCollection collection;
+        final Document refDocument;
+        MongoCollection collection;
         Object id;
 
         if (idOnly) {
             collection = datastore.getCollection(key.getType());
             id = ref;
         } else {
-            collection = datastore.getDB().getCollection(dbRef.getCollectionName());
+            collection = datastore.getDatabase().getCollection(dbRef.getCollectionName());
             id = dbRef.getId();
         }
-        if (id instanceof DBObject) {
-            ((DBObject) id).removeField(mapper.getOptions().getDiscriminatorField());
+        if (id instanceof Document) {
+            ((Document) id).remove(mapper.getOptions().getDiscriminatorField());
         }
-        refDbObject = collection.findOne(id);
+        refDocument = (Document) collection.find(new Document("_id", id)).first();
 
-        if (refDbObject != null) {
-            Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDbObject);
-            refObj = mapper.fromDb(datastore, refDbObject, refObj, cache);
+        if (refDocument != null) {
+            Object refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, refDocument);
+            refObj = mapper.fromDb(datastore, refDocument, refObj, cache);
             cache.putEntity(key, refObj);
             return refObj;
         }
@@ -357,20 +357,20 @@ class ReferenceMapper implements CustomMapper {
     }
 
     void readMorphiaReferenceValues(final Mapper mapper, final Datastore datastore, final MappedField mappedField,
-                                           final DBObject dbObject, final Object entity) {
+                                           final Document document, final Object entity) {
         final Class paramType = mappedField.getTypeParameters().get(0).getType();
         MorphiaReference<?> reference;
         if (Map.class.isAssignableFrom(paramType)) {
-            reference = MapReference.decode(datastore, mapper, mappedField, dbObject);
+            reference = MapReference.decode(datastore, mapper, mappedField, document);
         } else if (Collection.class.isAssignableFrom(paramType)) {
-            reference = CollectionReference.decode(datastore, mapper, mappedField, paramType, dbObject);
+            reference = CollectionReference.decode(datastore, mapper, mappedField, paramType, document);
         } else {
-            reference = SingleReference.decode(datastore, mapper, mappedField, paramType, dbObject);
+            reference = SingleReference.decode(datastore, mapper, mappedField, paramType, document);
         }
         mappedField.setFieldValue(entity, reference);
     }
 
-    void writeMorphiaReferenceValues(final DBObject dbObject, final MappedField mf, final Object fieldValue, final String name,
+    void writeMorphiaReferenceValues(final Document document, final MappedField mf, final Object fieldValue, final String name,
                                      final Mapper mapper) {
         final Class paramType = mf.getTypeParameters().get(0).getType();
 
@@ -386,7 +386,7 @@ class ReferenceMapper implements CustomMapper {
 
         if ((notNull || mapper.getOptions().isStoreNulls())
             && (notEmpty || mapper.getOptions().isStoreEmpties())) {
-            dbObject.put(name, value);
+            document.put(name, value);
         }
     }
 }

@@ -2,8 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 /**
  * This encapsulates the data necessary to define a shape for queries.
@@ -83,17 +82,17 @@ public class Shape {
     }
 
     /**
-     * Creates a DBObject from this Shape
+     * Creates a Document from this Shape
      *
-     * @return the DBObject
+     * @return the Document
      */
-    public DBObject toDBObject() {
+    public Document toDocument() {
         final BasicDBList list = new BasicDBList();
         for (final Point point : points) {
-            list.add(point.toDBObject());
+            list.add(point.toDocument());
         }
 
-        return new BasicDBObject(geometry, list);
+        return new Document(geometry, list);
     }
 
     private Point[] copy(final Point[] array) {
@@ -121,15 +120,16 @@ public class Shape {
         }
 
         /**
-         * Creates a DBObject from this Point
+         * Creates a Document from this Point
          *
-         * @return the DBObject
+         * @return the Document
          */
-        public DBObject toDBObject() {
-            final BasicDBList list = new BasicDBList();
-            list.add(longitude);
-            list.add(latitude);
-            return list;
+        public Document toDocument() {
+            throw new UnsupportedOperationException();
+//            final BasicDBList list = new BasicDBList();
+//            list.add(longitude);
+//            list.add(latitude);
+//            return list;
         }
     }
 
@@ -144,12 +144,12 @@ public class Shape {
         }
 
         @Override
-        public DBObject toDBObject() {
+        public Document toDocument() {
             final BasicDBList list = new BasicDBList();
-            list.add(center.toDBObject());
+            list.add(center.toDocument());
             list.add(radius);
 
-            return new BasicDBObject(this.getGeometry(), list);
+            return new Document(this.getGeometry(), list);
         }
     }
 }

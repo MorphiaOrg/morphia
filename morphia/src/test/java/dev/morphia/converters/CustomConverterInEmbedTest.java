@@ -2,15 +2,14 @@ package dev.morphia.converters;
 
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Converters;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.TestEntity;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -84,11 +83,11 @@ public class CustomConverterInEmbedTest extends TestBase {
     //FIXME issue 101
 
     public static class E1 extends TestEntity {
-        private final List<Foo> foo = new LinkedList<Foo>();
+        private final List<Foo> foo = new LinkedList<>();
     }
 
     public static class E2 extends TestEntity {
-        private final Map<String, Foo> foo = new HashMap<String, Foo>();
+        private final Map<String, Foo> foo = new HashMap<>();
     }
 
     // unknown type to convert
@@ -117,8 +116,8 @@ public class CustomConverterInEmbedTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            return new Foo((String) fromDBObject);
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            return new Foo((String) fromDocument);
         }
 
         public boolean didConversion() {
@@ -216,15 +215,15 @@ public class CustomConverterInEmbedTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            DBObject dbObject = (DBObject) fromDBObject;
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            Document dbObject = (Document) fromDocument;
             return new ComplexFoo((String) dbObject.get("first"), (String) dbObject.get("second"));
         }
 
         @Override
         public Object encode(final Object value, final MappedField optionalExtraInfo) {
             ComplexFoo complex = (ComplexFoo) value;
-            BasicDBObject dbObject = new BasicDBObject();
+            Document dbObject = new Document();
             dbObject.put("first", complex.first());
             dbObject.put("second", complex.second());
             return dbObject;
@@ -242,8 +241,8 @@ public class CustomConverterInEmbedTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            BasicDBList dbObject = (BasicDBList) fromDBObject;
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            BasicDBList dbObject = (BasicDBList) fromDocument;
             return new ArrayFoo((String) dbObject.get(1), (String) dbObject.get(2));
         }
 

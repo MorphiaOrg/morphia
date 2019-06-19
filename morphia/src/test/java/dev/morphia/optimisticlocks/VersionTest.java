@@ -1,6 +1,7 @@
 package dev.morphia.optimisticlocks;
 
 
+import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,8 +13,6 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
 import dev.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
@@ -124,10 +123,10 @@ public class VersionTest extends TestBase {
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
                                      .field("id").equal(initial.getId());
-        UpdateResults results = query.update()
-                                     .set("text", "some new value")
-                                     .execute();
-        assertEquals(1, results.getUpdatedCount());
+        UpdateResult results = query.update()
+                                    .set("text", "some new value")
+                                    .execute();
+        assertEquals(1, results.getModifiedCount());
         ALongPrimitive postUpdate = ds.find(ALongPrimitive.class).filter("_id", initial.getId()).first();
 
         Assert.assertEquals(initial.version + 1, postUpdate.version);

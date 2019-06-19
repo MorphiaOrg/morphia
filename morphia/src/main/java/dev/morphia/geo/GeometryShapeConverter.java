@@ -1,10 +1,9 @@
 package dev.morphia.geo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,19 +30,19 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
     GeometryShapeConverter(final GeoJsonType... geoJsonTypes) {
         super(geoJsonTypes[0].getTypeClass());
         geoJsonType = geoJsonTypes[0];
-        this.factories = Arrays.<GeometryFactory>asList(geoJsonTypes);
+        this.factories = Arrays.asList(geoJsonTypes);
     }
 
     @Override
-    public Geometry decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        return decodeObject((List) ((DBObject) fromDBObject).get("coordinates"), factories);
+    public Geometry decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        return decodeObject((List) ((Document) fromDocument).get("coordinates"), factories);
     }
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         if (value != null) {
             Object encodedObjects = encodeObjects(((Geometry) value).getCoordinates());
-            return new BasicDBObject("type", geoJsonType.getType())
+            return new Document("type", geoJsonType.getType())
                        .append("coordinates", encodedObjects);
         } else {
             return null;
@@ -60,7 +59,7 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
             // This should be the last list, so no need to decode further
             return factory.createGeometry(mongoDBGeometry);
         } else {
-            List<Geometry> decodedObjects = new ArrayList<Geometry>();
+            List<Geometry> decodedObjects = new ArrayList<>();
             for (final Object objectThatNeedsDecoding : mongoDBGeometry) {
                 // MongoDB geometries are lists of lists of lists...
                 decodedObjects.add(decodeObject((List) objectThatNeedsDecoding,
@@ -71,7 +70,7 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
     }
 
     private Object encodeObjects(final List value) {
-        List<Object> encodedObjects = new ArrayList<Object>();
+        List<Object> encodedObjects = new ArrayList<>();
         for (final Object object : value) {
             if (object instanceof Geometry) {
                 //iterate through the list of geometry objects recursively until you find the lowest-level

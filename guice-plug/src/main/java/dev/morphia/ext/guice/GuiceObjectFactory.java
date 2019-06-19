@@ -3,7 +3,7 @@ package dev.morphia.ext.guice;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.mongodb.DBObject;
+import com.mongodb.Document;
 import dev.morphia.ObjectFactory;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -68,7 +68,7 @@ public class GuiceObjectFactory implements ObjectFactory {
     }
 
     @Override
-    public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
+    public <T> T createInstance(final Class<T> clazz, final Document document) {
         if (injectOnConstructor(clazz)) {
             return injector.getInstance(clazz);
         }
@@ -78,7 +78,7 @@ public class GuiceObjectFactory implements ObjectFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
+    public Object createInstance(final Mapper mapper, final MappedField mf, final Document document) {
         final Class clazz = mf.getType();
         if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
             // there is no good way to find the clazz to use, yet, so delegate

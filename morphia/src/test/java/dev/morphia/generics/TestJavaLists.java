@@ -16,15 +16,14 @@
 
 package dev.morphia.generics;
 
-import com.mongodb.BasicDBObject;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -53,9 +52,9 @@ public class TestJavaLists extends TestBase {
     @Test
     public void jsonObjects() {
         getMorphia().map(JsonList.class);
-        populate(new BasicDBObject(Document.parse("{\"jsonObject\": { \"array\": [{ \"foo\": \"bar\" }]},}")));
-        populate(new BasicDBObject(Document.parse("{\"jsonList\" : [ 1, \"string\", true, null ],}")));
-        populate(new BasicDBObject(Document.parse("{\"jsonList\" : [ {  \"foo\" : \"bar\" }],}")));
+        populate(new Document(Document.parse("{\"jsonObject\": { \"array\": [{ \"foo\": \"bar\" }]},}")));
+        populate(new Document(Document.parse("{\"jsonList\" : [ 1, \"string\", true, null ],}")));
+        populate(new Document(Document.parse("{\"jsonList\" : [ {  \"foo\" : \"bar\" }],}")));
     }
 
     @Test
@@ -86,8 +85,8 @@ public class TestJavaLists extends TestBase {
         assertNull(loaded.floatList);
     }
 
-    private void populate(final BasicDBObject jsonObject) {
-        getMorphia().fromDBObject(null, JsonList.class, jsonObject);
+    private void populate(final Document jsonObject) {
+        getMorphia().fromDocument(null, JsonList.class, jsonObject);
     }
 
     @Entity

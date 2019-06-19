@@ -16,17 +16,7 @@
 
 package dev.morphia;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -42,12 +32,19 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static com.mongodb.client.model.CollationCaseFirst.UPPER;
 import static com.mongodb.client.model.CollationMaxVariable.SPACE;
@@ -55,6 +52,7 @@ import static com.mongodb.client.model.CollationStrength.IDENTICAL;
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -110,36 +108,35 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void createIndex() {
         checkMinServerVersion(3.4);
-        String collectionName = getDs().getCollection(IndexedClass.class).getName();
+        String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMorphia().getMapper();
 
         indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class));
-        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
-                                          .getIndexInfo();
-        List<String> names = new ArrayList<String>(asList("latitude_1", "searchme", "indexName_1"));
-        for (DBObject dbObject : indexInfo) {
-            String name = dbObject.get("name").toString();
+        List<Document> indexInfo = getIndexInfo(IndexedClass.class);
+        List<String> names = new ArrayList<>(asList("latitude_1", "searchme", "indexName_1"));
+        for (Document document : indexInfo) {
+            String name = document.get("name").toString();
             if (name.equals("latitude_1")) {
                 names.remove(name);
-                assertEquals(parse("{ 'latitude' : 1 }"), dbObject.get("key"));
+                assertEquals(parse("{ 'latitude' : 1 }"), document.get("key"));
             } else if (name.equals("searchme")) {
                 names.remove(name);
-                assertEquals(parse("{ 'text' : 10 }"), dbObject.get("weights"));
+                assertEquals(parse("{ 'text' : 10 }"), document.get("weights"));
             } else if (name.equals("indexName_1")) {
                 names.remove(name);
-                assertEquals(parse("{'indexName': 1 }"), dbObject.get("key"));
+                assertEquals(parse("{'indexName': 1 }"), document.get("key"));
             } else {
-                if (!"_id_".equals(dbObject.get("name"))) {
-                    throw new MappingException("Found an index I wasn't expecting:  " + dbObject);
+                if (!"_id_".equals(document.get("name"))) {
+                    throw new MappingException("Found an index I wasn't expecting:  " + document);
                 }
             }
         }
         Assert.assertTrue("Should be empty: " + names, names.isEmpty());
 
-        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getName());
+        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getNamespace().getCollectionName());
         indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class));
-        indexInfo = getDs().getCollection(AbstractParent.class).getIndexInfo();
+        indexInfo = getIndexInfo(AbstractParent.class);
         assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());
 
     }
@@ -178,16 +175,15 @@ public class IndexHelperTest extends TestBase {
                         .type(IndexType.DESC))
             .options(indexOptions());
         indexHelper.createIndex(indexes, mappedClass, index);
-        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
-                                          .getIndexInfo();
-        for (DBObject dbObject : indexInfo) {
-            if (dbObject.get("name").equals("indexName")) {
-                checkIndex(dbObject);
+        List<Document> indexInfo = getIndexInfo(IndexedClass.class);
+        for (Document document : indexInfo) {
+            if (document.get("name").equals("indexName")) {
+                checkIndex(document);
 
-                assertEquals("en", dbObject.get("default_language"));
-                assertEquals("de", dbObject.get("language_override"));
+                assertEquals("en", document.get("default_language"));
+                assertEquals("de", document.get("language_override"));
 
-                assertEquals(new BasicDBObject()
+                assertEquals(new Document()
                                  .append("locale", "en")
                                  .append("caseLevel", true)
                                  .append("caseFirst", "upper")
@@ -198,7 +194,7 @@ public class IndexHelperTest extends TestBase {
                                  .append("backwards", true)
                                  .append("normalization", true)
                                  .append("version", "57.1"),
-                             dbObject.get("collation"));
+                             document.get("collation"));
             }
         }
     }
@@ -293,10 +289,10 @@ public class IndexHelperTest extends TestBase {
 
         indexHelper.createIndex(indexes, mappedClass, index);
 
-        List<DBObject> wildcard = getDb().getCollection("indexes").getIndexInfo();
+        List<Document> wildcard = getIndexInfo(IndexedClass.class);
         boolean found = false;
-        for (DBObject dbObject : wildcard) {
-            found |= dbObject.get("name").equals("$**_text");
+        for (Document document : wildcard) {
+            found |= document.get("name").equals("$**_text");
         }
         assertTrue("Should have found the wildcard index", found);
     }
@@ -325,7 +321,7 @@ public class IndexHelperTest extends TestBase {
                          .partialFilter("{ name : { $gt : 13 } }"));
 
         indexHelper.createIndex(collection, mappedClass, index);
-        findPartialIndex(BasicDBObject.parse(index.options().partialFilter()));
+        findPartialIndex(Document.parse(index.options().partialFilter()));
     }
     @Test
     public void indexedPartialFilters() {
@@ -337,7 +333,7 @@ public class IndexHelperTest extends TestBase {
                          .partialFilter("{ name : { $gt : 13 } }"));
 
         indexHelper.createIndex(collection, mappedClass, indexHelper.convert(indexed, "text"));
-        findPartialIndex(BasicDBObject.parse(indexed.options().partialFilter()));
+        findPartialIndex(Document.parse(indexed.options().partialFilter()));
     }
 
     @Test
@@ -351,23 +347,22 @@ public class IndexHelperTest extends TestBase {
                          .partialFilter("{ name : { $gt : 13 } }"));
 
         indexHelper.createIndex(collection, mappedClass, indexHelper.convert(text, "text"));
-        findPartialIndex(BasicDBObject.parse(text.options().partialFilter()));
+        findPartialIndex(Document.parse(text.options().partialFilter()));
     }
 
-    private void checkIndex(final DBObject dbObject) {
-        assertTrue((Boolean) dbObject.get("background"));
-        assertTrue((Boolean) dbObject.get("unique"));
-        assertTrue((Boolean) dbObject.get("sparse"));
-        assertEquals(42L, dbObject.get("expireAfterSeconds"));
-        assertEquals(new BasicDBObject("name", 1).append("text", -1), dbObject.get("key"));
+    private void checkIndex(final Document document) {
+        assertTrue((Boolean) document.get("background"));
+        assertTrue((Boolean) document.get("unique"));
+        assertTrue((Boolean) document.get("sparse"));
+        assertEquals(42L, document.get("expireAfterSeconds"));
+        assertEquals(new Document("name", 1).append("text", -1), document.get("key"));
     }
 
-    private void findPartialIndex(final BasicDBObject expected) {
-        List<DBObject> indexInfo = getDs().getCollection(IndexedClass.class)
-                                          .getIndexInfo();
-        for (DBObject dbObject : indexInfo) {
-            if (!dbObject.get("name").equals("_id_")) {
-                Assert.assertEquals(expected, dbObject.get("partialFilterExpression"));
+    private void findPartialIndex(final Document expected) {
+        List<Document> indexInfo = getIndexInfo(IndexedClass.class);
+        for (Document document : indexInfo) {
+            if (!document.get("name").equals("_id_")) {
+                Assert.assertEquals(expected, document.get("partialFilterExpression"));
             }
         }
     }

@@ -2,12 +2,9 @@ package dev.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
-import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
 import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-import com.mongodb.MongoInternalException;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
@@ -32,10 +29,12 @@ import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
+import org.bson.Document;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import static com.mongodb.BasicDBObject.parse;
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
@@ -59,6 +57,7 @@ import static dev.morphia.query.Sort.naturalDescending;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
+import static org.bson.Document.parse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -78,14 +77,6 @@ import static org.junit.Assert.fail;
 public class TestQuery extends TestBase {
 
     @Test
-    public void batchSize() {
-        QueryImpl<Photo> query = (QueryImpl<Photo>) getDs().find(Photo.class)
-                                                           .batchSize(42);
-        Assert.assertEquals(42, query.getBatchSize());
-        Assert.assertEquals(42, query.getOptions().getBatchSize());
-    }
-
-    @Test
     public void genericMultiKeyValueQueries() {
         getMorphia().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
@@ -99,29 +90,6 @@ public class TestQuery extends TestBase {
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
                          .id, value.id);
-    }
-
-    @Test
-    public void maxScan() {
-        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
-
-        assertEquals(2, toList(getDs().find(Pic.class)
-                                      .maxScan(2)
-                                      .execute())
-                            .size());
-        assertEquals(2, getDs().find(Pic.class)
-                               .execute(new FindOptions()
-                                         .modifier("$maxScan", 2))
-                               .toList().size());
-        assertEquals(4, toList(getDs().find(Pic.class).execute()).size());
-    }
-
-    @Test
-    public void maxTime() {
-        Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class)
-                                                    .maxTime(15, TimeUnit.MINUTES);
-
-        assertEquals(900, ((QueryImpl) query).getOptions().getMaxTime(TimeUnit.SECONDS));
     }
 
     @Test
@@ -289,12 +257,13 @@ public class TestQuery extends TestBase {
 
         Query query = getDs().find(ContainsRenamedFields.class)
                              .field("last_name").equal("last");
-        assertEquals(1, toList(query.execute()).size());
-        assertEquals(2, toList(query.execute(new FindOptions()
+        assertEquals(1, query.execute().toList().size());
+        assertEquals(2, query.execute(new FindOptions()
                                               .collation(builder()
                                                              .locale("en")
                                                              .collationStrength(CollationStrength.SECONDARY)
-                                                             .build())))
+                                                             .build()))
+                             .toList()
                             .size());
         assertEquals(1, query.count());
         assertEquals(2, query.count(new CountOptions()
@@ -325,17 +294,21 @@ public class TestQuery extends TestBase {
     public void testCommentsShowUpInLogs() {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
-        getDb().command(new BasicDBObject("profile", 2));
+        getDatabase().runCommand(new Document("profile", 2));
         String expectedComment = "test comment";
 
-        toList(getDs().find(Pic.class)
-                      .execute(new FindOptions()
-                                .modifier("$comment", expectedComment)));
+        getDs().find(Pic.class)
+               .execute(new FindOptions()
+                            .comment(expectedComment))
+               .toList();
 
-        DBCollection profileCollection = getDb().getCollection("system.profile");
+        MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
-        DBObject profileRecord = profileCollection.findOne(new BasicDBObject("op", "query")
-                                                               .append("ns", getDs().getCollection(Pic.class).getFullName()));
+
+        Document query = new Document("op", "query")
+                              .append("ns", getDs().getCollection(Pic.class).getNamespace().getFullName());
+        Document profileRecord = profileCollection.find(query).first();
+
         assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
 
         turnOffProfilingAndDropProfileCollection();
@@ -354,13 +327,13 @@ public class TestQuery extends TestBase {
                           .execute(new FindOptions().limit(1))
                           .tryNext());
 
-        List<PhotoWithKeywords> keywords = toList(getDs().find(PhotoWithKeywords.class)
-                                                         .field("keywords")
-                                                         .elemMatch(getDs()
-                                                                        .find(Keyword.class)
-                                                                        .filter("score > ", 20)
-                                                                        .filter("score < ", 100))
-                                                         .execute());
+        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
+                                                  .field("keywords")
+                                                  .elemMatch(getDs()
+                                                                 .find(Keyword.class)
+                                                                 .filter("score > ", 20)
+                                                                 .filter("score < ", 100))
+                                                  .execute().toList();
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
     }
@@ -441,18 +414,18 @@ public class TestQuery extends TestBase {
                                              .find(PhotoWithKeywords.class)
                                              .field("keywords").not().sizeEq(3);
 
-        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$not", new BasicDBObject("$size", 3))),
-            ((QueryImpl) query).getQueryObject());
+        assertEquals(new Document("keywords", new Document("$not", new Document("$size", 3))),
+            ((QueryImpl) query).getQueryDocument());
     }
 
     @Test
-    public void testDBObjectOrQuery() {
+    public void testDocumentOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final List<DBObject> orList = new ArrayList<>();
-        orList.add(new BasicDBObject("keywords.keyword", "scott"));
-        orList.add(new BasicDBObject("keywords.keyword", "ralph"));
-        final BasicDBObject orQuery = new BasicDBObject("$or", orList);
+        final List<Document> orList = new ArrayList<>();
+        orList.add(new Document("keywords.keyword", "scott"));
+        orList.add(new Document("keywords.keyword", "ralph"));
+        final Document orQuery = new Document("$or", orList);
 
         Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class, orQuery);
         assertEquals(1, q.count());
@@ -644,7 +617,7 @@ public class TestQuery extends TestBase {
             q.or(q.criteria("keywords.keyword").equal("hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(((QueryImpl) q).getQueryObject().containsField("$and"));
+        assertTrue(((QueryImpl) q).getQueryDocument().containsKey("$and"));
     }
 
     @Test
@@ -656,7 +629,7 @@ public class TestQuery extends TestBase {
             q.criteria("keywords.keyword").hasAnyOf(asList("scott", "hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(((QueryImpl) q).getQueryObject().containsField("$and"));
+        assertTrue(((QueryImpl) q).getQueryDocument().containsKey("$and"));
 
     }
 
@@ -921,7 +894,7 @@ public class TestQuery extends TestBase {
     public void testNaturalSortAscending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = toList(getDs().find(Rectangle.class).order(naturalAscending()).execute());
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalAscending()).execute().toList();
 
         assertEquals(4, results.size());
 
@@ -947,7 +920,7 @@ public class TestQuery extends TestBase {
     public void testNaturalSortDescending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = toList(getDs().find(Rectangle.class).order(naturalDescending()).execute());
+        List<Rectangle> results = getDs().find(Rectangle.class).order(naturalDescending()).execute().toList();
 
         assertEquals(4, results.size());
 
@@ -978,10 +951,10 @@ public class TestQuery extends TestBase {
             new PhotoWithKeywords("1", "2"),
             new PhotoWithKeywords("3", "4"),
             new PhotoWithKeywords("5", "6")));
-        assertEquals(2, toList(getDs().find(PhotoWithKeywords.class)
-                                      .execute(new FindOptions()
-                                                .batchSize(-2)))
-                            .size());
+        assertEquals(2, getDs().find(PhotoWithKeywords.class)
+                               .execute(new FindOptions()
+                                            .batchSize(-2)).toList()
+                               .size());
     }
 
     @Test
@@ -1023,8 +996,8 @@ public class TestQuery extends TestBase {
         query.criteria("score")
              .not()
              .greaterThan(7);
-        assertEquals(new BasicDBObject("score", new BasicDBObject("$not", new BasicDBObject("$gt", 7))),
-            ((QueryImpl) query).getQueryObject());
+        assertEquals(new Document("score", new Document("$not", new Document("$gt", 7))),
+            ((QueryImpl) query).getQueryDocument());
     }
 
     @Test
@@ -1060,7 +1033,7 @@ public class TestQuery extends TestBase {
                                                          .find(ContainsRenamedFields.class)
                                                          .project("_id", true)
                                                          .project("first_name", true);
-        DBObject fields = ((QueryImpl) project).getFieldsObject();
+        Document fields = ((QueryImpl) project).getFieldsObject();
         assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
@@ -1255,16 +1228,18 @@ public class TestQuery extends TestBase {
 
         ContainsRenamedFields found = getDs()
                                           .find(ContainsRenamedFields.class)
-                                          .retrievedFields(true, "first_name")
-                                          .execute(new FindOptions().limit(1))
+                                          .execute(new FindOptions()
+                                                       .projection().include("first_name")
+                                                       .limit(1))
                                           .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         found = getDs()
                     .find(ContainsRenamedFields.class)
-                    .retrievedFields(true, "firstName")
-                    .execute(new FindOptions().limit(1))
+                    .execute(new FindOptions()
+                                 .projection().include("firstName")
+                                 .limit(1))
                     .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
@@ -1272,18 +1247,14 @@ public class TestQuery extends TestBase {
         try {
             getDs()
                 .find(ContainsRenamedFields.class)
-                .retrievedFields(true, "bad field name")
-                .execute(new FindOptions().limit(1))
+                .execute(new FindOptions()
+                             .projection().include("bad field name")
+                             .limit(1))
                 .tryNext();
             fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
             // success!
         }
-
-        final Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class)
-                                                          .retrievedFields(true, "_id", "first_name");
-        DBObject fields = ((QueryImpl) query).getFieldsObject();
-        assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -1294,9 +1265,9 @@ public class TestQuery extends TestBase {
 
         Pic foundItem = getDs().find(Pic.class)
                                .field("name").equal("pic2")
-                               .execute(new FindOptions().limit(1)
-                                                         .modifier("$returnKey", true))
-                               .tryNext();
+                               .first(new FindOptions()
+                                          .limit(1)
+                                          .returnKey(true));
         assertNotNull(foundItem);
         assertThat("Name should be populated", foundItem.getName(), is("pic2"));
         assertNull("ID should not be populated", foundItem.getId());
@@ -1326,7 +1297,7 @@ public class TestQuery extends TestBase {
         final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
                                                          .field("keywords")
                                                          .sizeEq(3);
-        assertEquals(new BasicDBObject("keywords", new BasicDBObject("$size", 3)), ((QueryImpl) query).getQueryObject());
+        assertEquals(new Document("keywords", new Document("$size", 3)), ((QueryImpl) query).getQueryDocument());
     }
 
     @Test
@@ -1415,14 +1386,17 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Ignore("the new driver API doesn't include the types necessary for this.  rectify once the new code is in place")
     public void testWhereCodeWScopeQuery() {
+/*
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;
-        // ", new BasicDBObject("kwd","california"));
-        final CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new BasicDBObject());
+        // ", new Document("kwd","california"));
+        final CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new Document());
         assertNotNull(getDs().find(PhotoWithKeywords.class).where(hasKeyword)
                              .execute(new FindOptions().limit(1))
                              .next());
+*/
     }
 
     @Test
@@ -1434,9 +1408,11 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Ignore("the new driver API doesn't include the types necessary for this.  rectify once the new code is in place")
     public void testWhereWithInvalidStringQuery() {
+/*
         getDs().save(new PhotoWithKeywords());
-        final CodeWScope hasKeyword = new CodeWScope("keywords != null", new BasicDBObject());
+        final CodeWScope hasKeyword = new CodeWScope("keywords != null", new Document());
         try {
             // must fail
             assertNotNull(getDs().find(PhotoWithKeywords.class).where(hasKeyword.getCode())
@@ -1448,6 +1424,7 @@ public class TestQuery extends TestBase {
         } catch (MongoException e) {
             // fine
         }
+*/
 
     }
 
@@ -1456,11 +1433,11 @@ public class TestQuery extends TestBase {
         getMorphia().map(Class1.class);
         getDs().ensureIndexes();
 
-        getDs().getDB().getCollection("user").save(
-            new BasicDBObject()
+        getDs().getDatabase().getCollection("user").insertOne(
+            new Document()
                 .append("@class", Class1.class.getName())
                 .append("value1", "foo")
-                .append("someMap", new BasicDBObject("someKey", "value")));
+                .append("someMap", new Document("someKey", "value")));
 
         Query<Class1> query = getDs().createQuery(Class1.class);
         query.disableValidation().criteria("someMap.someKey").equal("value");
@@ -1487,9 +1464,9 @@ public class TestQuery extends TestBase {
 
         query.and(query.criteria("fieldF").equal("f"));
 
-        final DBObject queryObject = ((QueryImpl) query).getQueryObject();
+        final Document queryObject = ((QueryImpl) query).getQueryDocument();
 
-        final BasicDBObject parse = parse(
+        final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
             + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"}");
 
@@ -1507,9 +1484,9 @@ public class TestQuery extends TestBase {
             query.criteria("mods.id").equal("5cb5fa6f8d7bd65e8276cd48"));
 
 
-        DBObject expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds.id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes.id\": "
+        Document expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds.id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes.id\": "
                                   + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods.id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
-        Assert.assertEquals(expected, ((QueryImpl) query).getQueryObject());
+        Assert.assertEquals(expected, ((QueryImpl) query).getQueryDocument());
     }
 
     @Entity(value = "user", noClassnameStored = true)
@@ -1526,8 +1503,8 @@ public class TestQuery extends TestBase {
     }
 
     private void turnOffProfilingAndDropProfileCollection() {
-        getDb().command(new BasicDBObject("profile", 0));
-        DBCollection profileCollection = getDb().getCollection("system.profile");
+        getDatabase().runCommand(new Document("profile", 0));
+        MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
     }
 
@@ -1915,18 +1892,18 @@ public class TestQuery extends TestBase {
         }
     }
 
-    private String getCommentFromProfileRecord(final DBObject profileRecord) {
-        if (profileRecord.containsField("command")) {
-            DBObject commandDocument = ((DBObject) profileRecord.get("command"));
-            if (commandDocument.containsField("comment")) {
+    private String getCommentFromProfileRecord(final Document profileRecord) {
+        if (profileRecord.containsKey("command")) {
+            Document commandDocument = ((Document) profileRecord.get("command"));
+            if (commandDocument.containsKey("comment")) {
                 return (String) commandDocument.get("comment");
             }
         }
-        if (profileRecord.containsField("query")) {
-            DBObject queryDocument = ((DBObject) profileRecord.get("query"));
-            if (queryDocument.containsField("comment")) {
+        if (profileRecord.containsKey("query")) {
+            Document queryDocument = ((Document) profileRecord.get("query"));
+            if (queryDocument.containsKey("comment")) {
                 return (String) queryDocument.get("comment");
-            } else if (queryDocument.containsField("$comment")) {
+            } else if (queryDocument.containsKey("$comment")) {
                 return (String) queryDocument.get("$comment");
             }
         }

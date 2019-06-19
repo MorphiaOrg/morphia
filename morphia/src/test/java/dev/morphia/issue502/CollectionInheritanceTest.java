@@ -1,10 +1,10 @@
 package dev.morphia.issue502;
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,15 +28,15 @@ public class CollectionInheritanceTest extends TestBase {
      * Issue's details...
      */
     @Test
-    public void testMappingBook() throws Exception {
+    public void testMappingBook() {
         // Mapping...
         getMorphia().map(Book.class /* , Authors.class, Author.class */);
 
-        // Test mapping : author objects must be converted into DBObject (but wasn't)
-        final DBObject dbBook = getMorphia().getMapper().toDBObject(newBook());
+        // Test mapping : author objects must be converted into Document (but wasn't)
+        final Document dbBook = getMorphia().getMapper().toDocument(newBook());
         final Object firstBook = ((List<?>) dbBook.get("authors")).iterator().next();
-        assertTrue("Author wasn't converted : expected instanceof <DBObject>, but was <" + firstBook.getClass() + ">",
-                   firstBook instanceof DBObject);
+        assertTrue("Author wasn't converted : expected instanceof <Document>, but was <" + firstBook.getClass() + ">",
+                   firstBook instanceof Document);
 
     }
 
@@ -44,11 +44,11 @@ public class CollectionInheritanceTest extends TestBase {
      * Real test
      */
     @Test
-    public void testSavingBook() throws Exception {
+    public void testSavingBook() {
         // Test saving
         getDs().save(newBook());
 
-        assertEquals(1, getDs().getCollection(Book.class).count());
+        assertEquals(1, getDs().getCollection(Book.class).countDocuments());
     }
 
     private static class Author {

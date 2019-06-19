@@ -1,11 +1,11 @@
 package dev.morphia.query;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import org.junit.Assert;
-import org.junit.Test;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,8 +29,8 @@ public class QueryFactoryTest extends TestBase {
 
         final QueryFactory queryFactory = new DefaultQueryFactory() {
             @Override
-            public <T> Query<T> createQuery(final Datastore datastore, final DBCollection collection, final Class<T> type,
-                                            final DBObject query) {
+            public <T> Query<T> createQuery(final Datastore datastore, final MongoCollection collection, final Class<T> type,
+                                            final Document query) {
 
                 counter.incrementAndGet();
                 return super.createQuery(datastore, collection, type, query);

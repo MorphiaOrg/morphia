@@ -16,12 +16,12 @@
 
 package dev.morphia.converters;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.query.FindOptions;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -77,18 +77,18 @@ public class Java8EntityTest extends TestBase {
         LocalDate localDate = LocalDate.of(1995, 10, 15);
         LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 2, 15, 16, 123 * 1000000);
 
-        final DBCollection collection = getDs().getCollection(Java8Entity.class);
+        final MongoCollection collection = getDs().getCollection(Java8Entity.class);
 
         Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
-        final Java8Entity loaded = getDs().createQuery(Java8Entity.class).first();
+        final Java8Entity loaded = getDs().find(Java8Entity.class).first();
 
         getDs().getMapper().getOptions().setDateStorage(DateStorage.UTC);
-        final Java8Entity loaded3 = getDs().createQuery(Java8Entity.class).first();
+        final Java8Entity loaded3 = getDs().find(Java8Entity.class).first();
 
-        collection.remove(new BasicDBObject());
+        collection.deleteMany(new Document());
 
         Java8Entity created2 = createEntity(getDs(), null, localDate, localDateTime, null);
-        final Java8Entity loaded2 = getDs().createQuery(Java8Entity.class).first();
+        final Java8Entity loaded2 = getDs().find(Java8Entity.class).first();
 
         Assert.assertNotEquals(created, created2);
         Assert.assertEquals(loaded.getLocalDate(), loaded2.getLocalDate());

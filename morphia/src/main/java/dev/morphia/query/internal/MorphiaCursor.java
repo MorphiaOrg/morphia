@@ -1,14 +1,13 @@
 package dev.morphia.query.internal;
 
 
-import com.mongodb.Cursor;
-import com.mongodb.DBObject;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.cache.EntityCache;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.NoSuchElementException;
  * @param <T> the original type being iterated
  */
 public class MorphiaCursor<T> implements MongoCursor<T> {
-    private final Cursor wrapped;
+    private final MongoCursor wrapped;
     private final Mapper mapper;
     private final Class<T> clazz;
     private final EntityCache cache;
@@ -34,7 +33,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      * @param clazz      the original type being iterated
      * @param cache      the EntityCache
      */
-    public MorphiaCursor(final Datastore datastore, final Cursor cursor, final Mapper mapper, final Class<T> clazz,
+    public MorphiaCursor(final Datastore datastore, final MongoCursor cursor, final Mapper mapper, final Class<T> clazz,
                          final EntityCache cache) {
         wrapped = cursor;
         if(wrapped == null) {
@@ -84,7 +83,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return mapper.fromDBObject(datastore, clazz, wrapped.next(), cache);
+        return mapper.fromDocument(datastore, clazz, getNext(), cache);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
 
     @Override
     public ServerCursor getServerCursor() {
-        return new ServerCursor(wrapped.getCursorId(), wrapped.getServerAddress());
+        return wrapped.getServerCursor();
     }
 
     @Override
@@ -111,7 +110,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         wrapped.remove();
     }
 
-    protected DBObject getNext() {
-        return wrapped.next();
+    protected Document getNext() {
+        return (Document) wrapped.next();
     }
 }

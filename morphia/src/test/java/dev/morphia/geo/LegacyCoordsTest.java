@@ -1,8 +1,8 @@
 package dev.morphia.geo;
 
-import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import dev.morphia.query.QueryImpl;
+import org.bson.Document;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
@@ -38,7 +38,7 @@ public class LegacyCoordsTest extends TestBase {
         getDs().ensureIndexes();
 
         // then
-        List<DBObject> indexes = getDs().getCollection(PlaceWithLegacyCoords.class).getIndexInfo();
+        List<Document> indexes = getIndexInfo(PlaceWithLegacyCoords.class);
         assertThat(indexes, hasIndexNamed("location_2d"));
     }
 
@@ -50,10 +50,10 @@ public class LegacyCoordsTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
-                                                          .field("location")
-                                                          .equal(new double[]{1.1, 2.3})
-                                                          .execute());
+        List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
+                                                   .field("location")
+                                                   .equal(new double[]{1.1, 2.3})
+                                                   .execute().toList();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -69,7 +69,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(42.08563, -87.99822, 2, true);
 
         // then
-        assertThat(((QueryImpl) query).getQueryObject().toString(),
+        assertThat(((QueryImpl) query).getQueryDocument().toString(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));
@@ -83,7 +83,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(42.08563, -87.99822, 2);
 
         // then
-        assertThat(((QueryImpl) query).getQueryObject().toString(),
+        assertThat(((QueryImpl) query).getQueryDocument().toString(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$near\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));
@@ -116,10 +116,10 @@ public class LegacyCoordsTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
-                                                                .field("location")
-                                                                .near(1.0, 2.0)
-                                                                .execute());
+        final List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
+                                                         .field("location")
+                                                         .near(1.0, 2.0)
+                                                         .execute().toList();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -138,10 +138,10 @@ public class LegacyCoordsTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        final List<PlaceWithLegacyCoords> found = toList(getDs().find(PlaceWithLegacyCoords.class)
-                                                                .field("location")
-                                                                .near(1.0, 2.0, 1.5)
-                                                                .execute());
+        final List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
+                                                         .field("location")
+                                                         .near(1.0, 2.0, 1.5)
+                                                         .execute().toList();
         // then
         assertThat(found, is(notNullValue()));
         assertThat(found.size(), is(1));
@@ -153,7 +153,7 @@ public class LegacyCoordsTest extends TestBase {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");
         getDs().save(nearbyPlace);
-        List<DBObject> indexes = getDs().getCollection(PlaceWithLegacyCoords.class).getIndexInfo();
+        List<Document> indexes = getIndexInfo(PlaceWithLegacyCoords.class);
         assertThat(indexes, doesNotHaveIndexNamed("location_2d"));
 
         // when

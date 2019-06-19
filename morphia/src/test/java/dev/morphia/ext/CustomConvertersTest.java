@@ -16,11 +16,6 @@ package dev.morphia.ext;
 
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DefaultDBDecoder;
-import com.mongodb.DefaultDBEncoder;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Embedded;
@@ -32,6 +27,7 @@ import dev.morphia.converters.TypeConverter;
 import dev.morphia.entities.EntityWithListsAndArrays;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FindOptions;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +43,6 @@ import java.util.Map.Entry;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
@@ -66,8 +61,8 @@ public class CustomConvertersTest extends TestBase {
         entity.setListOfStrings(Arrays.asList("string 1", "string 2", "string 3"));
         getDs().save(entity);
 
-        final DBObject dbObject = getDs().getCollection(EntityWithListsAndArrays.class).findOne();
-        Assert.assertFalse(dbObject.get("listOfStrings") instanceof BasicDBList);
+        final Document document = getDs().getCollection(EntityWithListsAndArrays.class).find().first();
+        Assert.assertFalse(document.get("listOfStrings") instanceof BasicDBList);
 
         final EntityWithListsAndArrays loaded = getDs().find(EntityWithListsAndArrays.class).execute(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals(entity.getListOfStrings(), loaded.getListOfStrings());
@@ -87,44 +82,14 @@ public class CustomConvertersTest extends TestBase {
         getDs().save(new CharEntity());
 
         // then check the representation in the database is a number
-        final BasicDBObject dbObj = (BasicDBObject) getDs().getCollection(CharEntity.class).findOne();
+        final Document dbObj = getDs().getCollection(CharEntity.class).find().first();
         assertThat(dbObj.get("c"), is(instanceOf(int.class)));
-        assertThat(dbObj.getInt("c"), is((int) 'a'));
+        assertThat(dbObj.getInteger("c"), is((int) 'a'));
 
         // then check CharEntity can be decoded from the database
         final CharEntity ce = getDs().find(CharEntity.class).execute(new FindOptions().limit(1)).tryNext();
         assertThat(ce.c, is(notNullValue()));
         assertThat(ce.c.charValue(), is('a'));
-    }
-
-    /**
-     * This test is green when {@link MyEntity#valueObject} is annotated with {@code @Property}, as in this case the field is not
-     * serialized
-     * at all. However, the bson encoder would fail to encode the object of type ValueObject (as shown by {@link
-     * #testFullBSONSerialization()}).
-     */
-    @Test
-    public void testDBObjectSerialization() {
-        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-
-        assertEquals(new BasicDBObject("_id", 1L).append("valueObject", 2L), dbObject);
-        assertEquals(entity, getMorphia().fromDBObject(getDs(), MyEntity.class, dbObject));
-    }
-
-    /**
-     * This test shows the full serialization, including bson encoding/decoding.
-     */
-    @Test
-    public void testFullBSONSerialization() {
-        final MyEntity entity = new MyEntity(1L, new ValueObject(2L));
-        final DBObject dbObject = getMorphia().toDBObject(entity);
-
-        final byte[] data = new DefaultDBEncoder().encode(dbObject);
-
-        final DBObject decoded = new DefaultDBDecoder().decode(data, (DBCollection) null);
-        final MyEntity actual = getMorphia().fromDBObject(getDs(), MyEntity.class, decoded);
-        assertEquals(entity, actual);
     }
 
     static class CharacterToByteConverter extends TypeConverter implements SimpleValueConverter {
@@ -133,12 +98,12 @@ public class CustomConvertersTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            if (fromDBObject == null) {
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            if (fromDocument == null) {
                 return null;
             }
             final IntegerConverter intConverter = new IntegerConverter();
-            final Integer i = (Integer) intConverter.decode(targetClass, fromDBObject, optionalExtraInfo);
+            final Integer i = (Integer) intConverter.decode(targetClass, fromDocument, optionalExtraInfo);
             return (char) i.intValue();
         }
 
@@ -249,11 +214,11 @@ public class CustomConvertersTest extends TestBase {
             }
 
             @Override
-            public ValueObject decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-                if (fromDBObject == null) {
+            public ValueObject decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+                if (fromDocument == null) {
                     return null;
                 }
-                return create((Long) fromDBObject);
+                return create((Long) fromDocument);
             }
 
 
@@ -307,9 +272,9 @@ public class CustomConvertersTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            if (fromDBObject != null) {
-                Map<String, Object> map = (Map<String, Object>) fromDBObject;
+        public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            if (fromDocument != null) {
+                Map<String, Object> map = (Map<String, Object>) fromDocument;
                 List<Object> list = new ArrayList<Object>(map.size());
                 for (Entry<String, Object> entry : map.entrySet()) {
                     list.add(Integer.parseInt(entry.getKey()), entry.getValue());

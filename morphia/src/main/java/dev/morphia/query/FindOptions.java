@@ -17,11 +17,13 @@
 package dev.morphia.query;
 
 import com.mongodb.CursorType;
-import com.mongodb.DBObject;
-import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
+import com.mongodb.assertions.Assertions;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionFindOptions;
+import com.mongodb.lang.Nullable;
+import org.bson.Document;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,370 +34,410 @@ import java.util.concurrent.TimeUnit;
  * @mongodb.driver.manual tutorial/query-documents/ Find
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
  */
-public class FindOptions {
-    private DBCollectionFindOptions options = new DBCollectionFindOptions();
+public final class FindOptions {
+    private int batchSize;
+    private int limit;
+    private Document modifiers;
+    private long maxTimeMS;
+    private long maxAwaitTimeMS;
+    private int skip;
+    private Document sort;
+    private CursorType cursorType;
+    private boolean noCursorTimeout;
+    private boolean oplogReplay;
+    private boolean partial;
+    private Collation collation;
+    private String comment;
+    private Document hint;
+    private Document max;
+    private Document min;
+    private long maxScan;
+    private boolean returnKey;
+    private boolean showRecordId;
+    private boolean snapshot;
+    private ReadPreference readPreference;
+    private WriteConcern writeConcern;
+    private Projection projection;
 
-    /**
-     * Creates an empty options instance.
-     */
     public FindOptions() {
     }
 
-    private FindOptions(final DBCollectionFindOptions copy) {
-        options = copy.copy();
+    FindOptions(FindOptions original) {
+        this.batchSize = original.batchSize;
+        this.limit = original.limit;
+        this.modifiers = original.modifiers;
+        this.maxTimeMS = original.maxTimeMS;
+        this.maxAwaitTimeMS = original.maxAwaitTimeMS;
+        this.skip = original.skip;
+        this.sort = original.sort;
+        this.cursorType = original.cursorType;
+        this.noCursorTimeout = original.noCursorTimeout;
+        this.oplogReplay = original.oplogReplay;
+        this.partial = original.partial;
+        this.collation = original.collation;
+        this.comment = original.comment;
+        this.hint = original.hint;
+        this.max = original.max;
+        this.min = original.min;
+        this.maxScan = original.maxScan;
+        this.returnKey = original.returnKey;
+        this.showRecordId = original.showRecordId;
+        this.snapshot = original.snapshot;
+        this.readPreference = original.readPreference;
+        this.writeConcern = original.writeConcern;
+        this.projection = original.projection;
     }
-
-    /**
-     * Makes a copy of these find options
-     * @return the new copy
-     */
-    public FindOptions copy() {
-        return new FindOptions(options.copy());
-    }
-
-    /**
-     * Gets the limit to apply.  The default is null.
-     *
-     * @return the limit
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
-     */
     public int getLimit() {
-        return options.getLimit();
+        return this.limit;
     }
 
-    /**
-     * Sets the limit to apply.
-     *
-     * @param limit the limit, which may be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
-     */
-    public FindOptions limit(final int limit) {
-        options.limit(limit);
+    public FindOptions limit(int limit) {
+        this.limit = limit;
         return this;
     }
 
-    /**
-     * Gets the number of documents to skip.  The default is 0.
-     *
-     * @return the number of documents to skip, which may be null
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
-     */
     public int getSkip() {
-        return options.getSkip();
+        return this.skip;
     }
 
-    /**
-     * Sets the number of documents to skip.
-     *
-     * @param skip the number of documents to skip
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
-     */
-    public FindOptions skip(final int skip) {
-        options.skip(skip);
+    public FindOptions skip(int skip) {
+        this.skip = skip;
         return this;
     }
 
-    /**
-     * Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum execution time in the given time unit
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public long getMaxTime(final TimeUnit timeUnit) {
-        return options.getMaxTime(timeUnit);
+    public long getMaxTime(TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Sets the maximum execution time on the server for this operation.
-     *
-     * @param maxTime  the max time
-     * @param timeUnit the time unit, which may not be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
-        options.maxTime(maxTime, timeUnit);
+    public FindOptions maxTime(long maxTime, TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
+        this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
         return this;
     }
 
-    /**
-     * The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
-     * query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a TAILABLE_AWAIT cursor,
-     * this option is ignored.
-     *
-     * On servers &gt;= 3.2, this option will be specified on the getMore command as "maxTimeMS". The default
-     * is no value: no "maxTimeMS" is sent to the server with the getMore command.
-     *
-     * On servers &lt; 3.2, this option is ignored, and indicates that the driver should respect the server's default value
-     *
-     * A zero value will be ignored.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum await execution time in the given time unit
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public long getMaxAwaitTime(final TimeUnit timeUnit) {
-        return options.getMaxAwaitTime(timeUnit);
+    public long getMaxAwaitTime(TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Sets the maximum await execution time on the server for this operation.
-     *
-     * @param maxAwaitTime  the max await time.  A zero value will be ignored, and indicates that the driver should respect the server's
-     *                      default value
-     * @param timeUnit the time unit, which may not be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
-        options.maxAwaitTime(maxAwaitTime, timeUnit);
+    public FindOptions maxAwaitTime(long maxAwaitTime, TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
+        this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
         return this;
     }
 
-    /**
-     * Gets the number of documents to return per batch.  Default to 0, which indicates that the server chooses an appropriate batch
-     * size.
-     *
-     * @return the batch size, which may be null
-     * @mongodb.driver.manual reference/method/cursor.batchSize/#cursor.batchSize Batch Size
-     */
     public int getBatchSize() {
-        return options.getBatchSize();
+        return this.batchSize;
     }
 
-    /**
-     * Sets the number of documents to return per batch.
-     *
-     * @param batchSize the batch size
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.batchSize/#cursor.batchSize Batch Size
-     */
-    public FindOptions batchSize(final int batchSize) {
-        options.batchSize(batchSize);
+    public FindOptions batchSize(int batchSize) {
+        this.batchSize = batchSize;
         return this;
     }
 
-    /**
-     * Gets the query modifiers to apply to this operation.  The default is not to apply any modifiers.
-     *
-     * @return the query modifiers, which may be null
-     * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
-     */
-    DBObject getModifiers() {
-        return options.getModifiers();
+    /** @deprecated */
+    @Deprecated
+    @Nullable
+    public Document getModifiers() {
+        return this.modifiers;
     }
 
-    /**
-     * Adds a modifier to the find operation
-     *
-     * @param key the modifier name
-     * @param value the modifier value
-     * @return this
-     */
-    public FindOptions modifier(final String key, final Object value) {
-        options.getModifiers().put(key, value);
+    /** @deprecated */
+    @Deprecated
+    public FindOptions modifiers(@Nullable Document modifiers) {
+        this.modifiers = modifiers;
         return this;
     }
 
-    /**
-     * Gets a document describing the fields to return for all matching documents.
-     *
-     * @return the project document, which may be null
-     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
-     */
-    DBObject getProjection() {
-        return options.getProjection();
+    public Projection projection() {
+        if(projection != null){
+            projection = new Projection(this);
+        }
+        return projection;
     }
 
-    /**
-     * Sets a document describing the fields to return for all matching documents.
-     *
-     * @param projection the project document, which may be null.
-     * @return this
-     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
-     */
-    FindOptions projection(final DBObject projection) {
-        options.projection(projection);
+    @Nullable
+    public Projection getProjection() {
+        return this.projection;
+    }
+
+    @Nullable
+    public Document getSort() {
+        return this.sort;
+    }
+
+    public FindOptions sort(@Nullable Document sort) {
+        this.sort = sort;
         return this;
     }
 
-    /**
-     * Gets the sort criteria to apply to the query. The default is null, which means that the documents will be returned in an undefined
-     * order.
-     *
-     * @return a document describing the sort criteria
-     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
-     */
-    DBObject getSortDBObject() {
-        return options.getSort();
-    }
-
-    /**
-     * Sets the sort criteria to apply to the query.
-     *
-     * @param sort the sort criteria, which may be null.
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
-     */
-    FindOptions sort(final DBObject sort) {
-        options.sort(sort);
-        return this;
-    }
-
-    /**
-     * The server normally times out idle cursors after an inactivity period (10 minutes)
-     * to prevent excess memory use.  If true, that timeout is disabled.
-     *
-     * @return true if cursor timeout is disabled
-     */
     public boolean isNoCursorTimeout() {
-        return options.isNoCursorTimeout();
+        return this.noCursorTimeout;
     }
 
-    /**
-     * The server normally times out idle cursors after an inactivity period (10 minutes)
-     * to prevent excess memory use. Set this option to prevent that.
-     *
-     * @param noCursorTimeout true if cursor timeout is disabled
-     * @return this
-     */
-    public FindOptions noCursorTimeout(final boolean noCursorTimeout) {
-        options.noCursorTimeout(noCursorTimeout);
+    public FindOptions noCursorTimeout(boolean noCursorTimeout) {
+        this.noCursorTimeout = noCursorTimeout;
         return this;
     }
 
-    /**
-     * Users should not set this under normal circumstances.
-     *
-     * @return if oplog replay is enabled
-     */
     public boolean isOplogReplay() {
-        return options.isOplogReplay();
+        return this.oplogReplay;
     }
 
-    /**
-     * Users should not set this under normal circumstances.
-     *
-     * @param oplogReplay if oplog replay is enabled
-     * @return this
-     */
-    public FindOptions oplogReplay(final boolean oplogReplay) {
-        options.oplogReplay(oplogReplay);
+    public FindOptions oplogReplay(boolean oplogReplay) {
+        this.oplogReplay = oplogReplay;
         return this;
     }
 
-    /**
-     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
-     *
-     * @return if partial results for sharded clusters is enabled
-     */
     public boolean isPartial() {
-        return options.isPartial();
+        return this.partial;
     }
 
-    /**
-     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
-     *
-     * @param partial if partial results for sharded clusters is enabled
-     * @return this
-     */
-    public FindOptions partial(final boolean partial) {
-        options.partial(partial);
+    public FindOptions partial(boolean partial) {
+        this.partial = partial;
         return this;
     }
 
-    /**
-     * Get the cursor type.
-     *
-     * @return the cursor type
-     */
     public CursorType getCursorType() {
-        return options.getCursorType();
+        return this.cursorType;
     }
 
-    /**
-     * Sets the cursor type.
-     *
-     * @param cursorType the cursor type
-     * @return this
-     */
-    public FindOptions cursorType(final CursorType cursorType) {
-        options.cursorType(cursorType);
+    public FindOptions cursorType(CursorType cursorType) {
+        this.cursorType = (CursorType)Assertions.notNull("cursorType", cursorType);
         return this;
     }
 
-    /**
-     * Returns the readPreference
-     *
-     * @return the readPreference
-     */
-    public ReadPreference getReadPreference() {
-        return options.getReadPreference();
-    }
-
-    /**
-     * Sets the readPreference
-     *
-     * @param readPreference the readPreference
-     * @return this
-     */
-    public FindOptions readPreference(final ReadPreference readPreference) {
-        options.readPreference(readPreference);
-        return this;
-    }
-
-    /**
-     * Returns the readConcern
-     *
-     * @return the readConcern
-     * @mongodb.server.release 3.2
-     */
-    public ReadConcern getReadConcern() {
-        return options.getReadConcern();
-    }
-
-    /**
-     * Sets the readConcern
-     *
-     * @param readConcern the readConcern
-     * @return this
-     * @mongodb.server.release 3.2
-     */
-    public FindOptions readConcern(final ReadConcern readConcern) {
-        options.readConcern(readConcern);
-        return this;
-    }
-
-    /**
-     * Returns the collation options
-     *
-     * @return the collation options
-     * @mongodb.server.release 3.4
-     */
+    @Nullable
     public Collation getCollation() {
-        return options.getCollation();
+        return this.collation;
     }
 
-    /**
-     * Sets the collation
-     *
-     * @param collation the collation
-     * @return this
-     * @mongodb.server.release 3.4
-     */
-    public FindOptions collation(final Collation collation) {
-        options.collation(collation);
+    public FindOptions collation(@Nullable Collation collation) {
+        this.collation = collation;
         return this;
     }
 
-    DBCollectionFindOptions getOptions() {
-        return options;
+    @Nullable
+    public String getComment() {
+        return this.comment;
     }
 
-    boolean hasHint() {
-        return getModifiers().get("$indexHint") != null;
+    public FindOptions comment(@Nullable String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    @Nullable
+    public Document getHint() {
+        return this.hint;
+    }
+
+    public FindOptions hint(@Nullable Document hint) {
+        this.hint = hint;
+        return this;
+    }
+
+    @Nullable
+    public Document getMax() {
+        return this.max;
+    }
+
+    public FindOptions max(@Nullable Document max) {
+        this.max = max;
+        return this;
+    }
+
+    @Nullable
+    public Document getMin() {
+        return this.min;
+    }
+
+    public FindOptions min(@Nullable Document min) {
+        this.min = min;
+        return this;
+    }
+
+    public boolean isReturnKey() {
+        return this.returnKey;
+    }
+
+    public FindOptions returnKey(boolean returnKey) {
+        this.returnKey = returnKey;
+        return this;
+    }
+
+    public boolean isShowRecordId() {
+        return this.showRecordId;
+    }
+
+    public FindOptions showRecordId(boolean showRecordId) {
+        this.showRecordId = showRecordId;
+        return this;
+    }
+
+    public ReadPreference getReadPreference() {
+        return readPreference;
+    }
+
+    public FindOptions readPreference(final ReadPreference readPreference) {
+        this.readPreference = readPreference;
+        return this;
+    }
+
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
+
+    public FindOptions writeConcern(final WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
+        return this;
+    }
+
+    public <T> FindIterable<T> apply(final FindIterable<T> iterable) {
+        return iterable;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FindOptions)) {
+            return false;
+        }
+
+        final FindOptions that = (FindOptions) o;
+
+        if (getBatchSize() != that.getBatchSize()) {
+            return false;
+        }
+        if (getLimit() != that.getLimit()) {
+            return false;
+        }
+        if (maxTimeMS != that.maxTimeMS) {
+            return false;
+        }
+        if (maxAwaitTimeMS != that.maxAwaitTimeMS) {
+            return false;
+        }
+        if (getSkip() != that.getSkip()) {
+            return false;
+        }
+        if (isNoCursorTimeout() != that.isNoCursorTimeout()) {
+            return false;
+        }
+        if (isOplogReplay() != that.isOplogReplay()) {
+            return false;
+        }
+        if (isPartial() != that.isPartial()) {
+            return false;
+        }
+        if (maxScan != that.maxScan) {
+            return false;
+        }
+        if (isReturnKey() != that.isReturnKey()) {
+            return false;
+        }
+        if (isShowRecordId() != that.isShowRecordId()) {
+            return false;
+        }
+        if (snapshot != that.snapshot) {
+            return false;
+        }
+        if (getModifiers() != null ? !getModifiers().equals(that.getModifiers()) : that.getModifiers() != null) {
+            return false;
+        }
+        if (getSort() != null ? !getSort().equals(that.getSort()) : that.getSort() != null) {
+            return false;
+        }
+        if (getCursorType() != that.getCursorType()) {
+            return false;
+        }
+        if (getCollation() != null ? !getCollation().equals(that.getCollation()) : that.getCollation() != null) {
+            return false;
+        }
+        if (getComment() != null ? !getComment().equals(that.getComment()) : that.getComment() != null) {
+            return false;
+        }
+        if (getHint() != null ? !getHint().equals(that.getHint()) : that.getHint() != null) {
+            return false;
+        }
+        if (getMax() != null ? !getMax().equals(that.getMax()) : that.getMax() != null) {
+            return false;
+        }
+        if (getMin() != null ? !getMin().equals(that.getMin()) : that.getMin() != null) {
+            return false;
+        }
+        if (getReadPreference() != null ? !getReadPreference().equals(that.getReadPreference()) : that.getReadPreference() != null) {
+            return false;
+        }
+        if (getWriteConcern() != null ? !getWriteConcern().equals(that.getWriteConcern()) : that.getWriteConcern() != null) {
+            return false;
+        }
+        return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getBatchSize();
+        result = 31 * result + getLimit();
+        result = 31 * result + (getModifiers() != null ? getModifiers().hashCode() : 0);
+        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
+        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
+        result = 31 * result + getSkip();
+        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
+        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
+        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
+        result = 31 * result + (isOplogReplay() ? 1 : 0);
+        result = 31 * result + (isPartial() ? 1 : 0);
+        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
+        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
+        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
+        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
+        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
+        result = 31 * result + (int) (maxScan ^ (maxScan >>> 32));
+        result = 31 * result + (isReturnKey() ? 1 : 0);
+        result = 31 * result + (isShowRecordId() ? 1 : 0);
+        result = 31 * result + (snapshot ? 1 : 0);
+        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
+        result = 31 * result + (getWriteConcern() != null ? getWriteConcern().hashCode() : 0);
+        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "FindOptions{" +
+               "batchSize=" + batchSize +
+               ", collation=" + collation +
+               ", comment='" + comment + '\'' +
+               ", cursorType=" + cursorType +
+               ", hint=" + hint +
+               ", limit=" + limit +
+               ", max=" + max +
+               ", maxAwaitTimeMS=" + maxAwaitTimeMS +
+               ", maxScan=" + maxScan +
+               ", maxTimeMS=" + maxTimeMS +
+               ", min=" + min +
+               ", modifiers=" + modifiers +
+               ", noCursorTimeout=" + noCursorTimeout +
+               ", oplogReplay=" + oplogReplay +
+               ", partial=" + partial +
+               ", projection=" + projection +
+               ", readPreference=" + readPreference +
+               ", returnKey=" + returnKey +
+               ", showRecordId=" + showRecordId +
+               ", skip=" + skip +
+               ", snapshot=" + snapshot +
+               ", sort=" + sort +
+               ", writeConcern=" + writeConcern +
+               '}';
+    }
+
+    public FindOptions copy() {
+        return new FindOptions(this);
     }
 }

@@ -1,20 +1,16 @@
 package dev.morphia.query;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import static java.util.Collections.singletonList;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -24,7 +20,7 @@ import static dev.morphia.utils.ReflectionUtils.iterToList;
 public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     private final Mapper mapper;
     private final Class<T> clazz;
-    private Map<String, Map<String, Object>> ops = new HashMap<>();
+    private Document ops = new Document();
     private boolean validateNames = true;
 
     /**
@@ -113,9 +109,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        BasicDBObject dbObject = new BasicDBObject(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
-        options.update(dbObject);
-        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), dbObject);
+        Document document = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
+        options.update(document);
+        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
 
         return this;
     }
@@ -233,8 +229,8 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     /**
      * @return the operations listed
      */
-    public DBObject getOps() {
-        return new BasicDBObject(ops);
+    public Document getOps() {
+        return new Document(ops);
     }
 
     /**
@@ -243,8 +239,8 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
      * @param ops the operations
      */
     @SuppressWarnings("unchecked")
-    public void setOps(final DBObject ops) {
-        this.ops = (Map<String, Map<String, Object>>) ops;
+    public void setOps(final Document ops) {
+        this.ops = ops;
     }
 
     //TODO Clean this up a little.
@@ -267,7 +263,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
 
         if (UpdateOperator.ADD_TO_SET_EACH.equals(op)) {
-            val = new BasicDBObject(UpdateOperator.EACH.val(), val);
+            val = new Document(UpdateOperator.EACH.val(), val);
         }
 
         addOperation(op, pathTarget.translatedPath(), val);
@@ -277,9 +273,9 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         final String opString = op.val();
 
         if (!ops.containsKey(opString)) {
-            ops.put(opString, new LinkedHashMap<>());
+            ops.put(opString, new Document());
         }
-        ops.get(opString).put(fieldName, val);
+        ((Document) ops.get(opString)).put(fieldName, val);
     }
 
     protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {

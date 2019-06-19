@@ -1,6 +1,7 @@
 package dev.morphia.example;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.result.UpdateResult;
 import dev.morphia.annotations.IndexOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -14,8 +15,6 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public final class QuickTour {
 
         // create the Datastore connecting to the database running on the default port on the local host
         final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");
-        datastore.getDB().dropDatabase();
+        datastore.getDatabase().drop();
         datastore.ensureIndexes();
 
         final Employee elmer = new Employee("Elmer Fudd", 50000.0);
@@ -70,11 +69,11 @@ public final class QuickTour {
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter("salary <=", 30000);
-        final UpdateResults results = underPaidQuery.update()
-                                                    .inc("salary", 10000)
-                                                    .execute();
+        final UpdateResult results = underPaidQuery.update()
+                                                   .inc("salary", 10000)
+                                                   .execute();
 
-        Assert.assertEquals(1, results.getUpdatedCount());
+        Assert.assertEquals(1, results.getModifiedCount());
 
         final Query<Employee> overPaidQuery = datastore.find(Employee.class)
                                                        .filter("salary >", 100000);

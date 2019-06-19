@@ -1,19 +1,17 @@
 package dev.morphia.query;
 
 
-import com.mongodb.DBObject;
-import com.mongodb.ReadPreference;
-import com.mongodb.WriteResult;
+import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
 import dev.morphia.query.QueryImpl.Update;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import org.bson.Document;
 import org.bson.types.CodeWScope;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -27,17 +25,6 @@ public interface Query<T> {
      * @return the container
      */
     CriteriaContainer and(Criteria... criteria);
-
-    /**
-     * Batch-size of the fetched result (cursor).
-     *
-     * @param value must be >= 0.  A value of 0 indicates the server default.
-     * @return this
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#batchSize(int)
-     */
-    @Deprecated
-    Query<T> batchSize(int value);
 
     /**
      * Creates a criteria to apply against a field
@@ -120,97 +107,6 @@ public interface Query<T> {
     Query<T> filter(String condition, Object value);
 
     /**
-     * @return the batch size
-     * @see #batchSize(int)
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#batchSize(int)
-     */
-    @Deprecated
-    int getBatchSize();
-
-    /**
-     * @return the offset.
-     * @see #offset(int)
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#getSkip()
-     */
-    @Deprecated
-    int getOffset();
-
-    /**
-     * Hints as to which index should be used.
-     *
-     * @param idxName the index name to hint
-     * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$hint", idxName)}
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> hintIndex(String idxName);
-
-    /**
-     * Limit the fetched result set to a certain number of values.
-     *
-     * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link FindOptions#batchSize(int)} which
-     *              is the preferred method
-     * @return this
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#limit(int)
-     */
-    @Deprecated
-    Query<T> limit(int value);
-
-    /**
-     * <p> Specify the inclusive lower bound for a specific index in order to constrain the results of this query. <p/> You can chain
-     * key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.lowerIndexBound(new
-     * BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
-     *
-     * @param lowerBound The inclusive lower bound.
-     * @return this
-     * @mongodb.driver.manual reference/operator/meta/min/ $min
-     * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code options.modifier("$min", new Document(...)) }
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> lowerIndexBound(DBObject lowerBound);
-
-    /**
-     * Constrains the query to only scan the specified number of documents when fulfilling the query.
-     *
-     * @param value must be > 0.  A value < 0 indicates no limit
-     * @return this
-     * @mongodb.driver.manual reference/operator/meta/maxScan/#op._S_maxScan $maxScan
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$maxScan", value) }
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> maxScan(int value);
-
-    /**
-     * Specifies a time limit for executing the query. Requires server version 2.6 or above.
-     *
-     * @param maxTime     must be > 0.  A value < 0 indicates no limit
-     * @param maxTimeUnit the unit of time to use
-     * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.maxTime(value, unit) }
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
-
-    /**
-     * Starts the query results at a particular zero-based offset.
-     *
-     * @param value must be >= 0
-     * @return this
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#skip(int)
-     */
-    @Deprecated
-    Query<T> offset(int value);
-
-    /**
      * Creates a container to hold 'or' clauses
      *
      * @param criteria the clauses to 'or' together
@@ -243,7 +139,9 @@ public interface Query<T> {
      * @param include true to include the field in the results
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     * @deprecated use {@link FindOptions#projection()}
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> project(String field, boolean include);
 
     /**
@@ -254,7 +152,9 @@ public interface Query<T> {
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
+     * @deprecated use {@link FindOptions#projection()}
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> project(String field, ArraySlice slice);
 
     /**
@@ -264,65 +164,19 @@ public interface Query<T> {
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @mongodb.driver.manual reference/operator/projection/meta/ $meta
+     * @deprecated use {@link FindOptions#projection()}
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> project(Meta meta);
-
-    /**
-     * Route query to non-primary node
-     *
-     * @return this
-     * @see ReadPreference#secondary()
-     * @see ReadPreference#secondaryPreferred()
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#readPreference(ReadPreference)
-     * @see ReadPreference#secondary()
-     * @see ReadPreference#secondaryPreferred()
-     */
-    @Deprecated
-    Query<T> queryNonPrimary();
-
-    /**
-     * Route query to primary node
-     *
-     * @return this
-     * @see ReadPreference#primary()
-     * @deprecated use the methods that accept Options directly.
-     * @see FindOptions#readPreference(ReadPreference)
-     * @see ReadPreference#primary()
-     * @see ReadPreference#primaryPreferred()
-     */
-    @Deprecated
-    Query<T> queryPrimaryOnly();
 
     /**
      * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
      *
      * @return this
+     * @deprecated use {@link FindOptions#projection()}
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> retrieveKnownFields();
-
-    /**
-     * Limits the fields retrieved
-     *
-     * @param include true if the fields should be included in the results.  false to exclude them.
-     * @param fields  the fields in question
-     * @return this
-     * @deprecated use {@link #project(String, boolean)} instead
-     */
-    @Deprecated
-    Query<T> retrievedFields(boolean include, String... fields);
-
-    /**
-     * Only return the index field or fields for the results of the query. If $returnKey is set to true and the query does not use an index
-     * to perform the read operation, the returned documents will not contain any fields
-     *
-     * @return the Query to enable chaining of commands
-     * @mongodb.driver.manual reference/operator/meta/returnKey/#op._S_returnKey $returnKey
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.modifier("$returnKey", true) }
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> returnKey();
 
     /**
      * Perform a text search on the content of the fields indexed with a text index..
@@ -342,33 +196,6 @@ public interface Query<T> {
      * @mongodb.driver.manual reference/operator/query/text/ $text
      */
     Query<T> search(String text, String language);
-
-    /**
-     * <p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query. <p/> You can chain
-     * key/value pairs to build a constraint for a compound index. For instance: </p> <p> {@code query.upperIndexBound(new
-     * BasicDBObject("a", 1).append("b", 2)); } </p> <p> to build a constraint on index {@code {"a", "b"}} </p>
-     *
-     * @param upperBound The exclusive upper bound.
-     * @return this
-     * @mongodb.driver.manual reference/operator/meta/max/ $max
-     * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code options.modifier("$max", new Document(...)) }
-     * @see FindOptions#modifier(String, Object)
-     */
-    @Deprecated
-    Query<T> upperIndexBound(DBObject upperBound);
-
-    /**
-     * Updates the ReadPreference to use
-     *
-     * @param readPref the ReadPreference to use
-     * @return this
-     * @see ReadPreference
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#readPreference(ReadPreference)
-     */
-    @Deprecated
-    Query<T> useReadPreference(ReadPreference readPref);
 
     /**
      * Limit the query using this javascript block; only one per query
@@ -506,32 +333,46 @@ public interface Query<T> {
 
     T delete();
 
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @param options the options to apply
+     * @return the deleted entity
+     * @deprecated use {@link #delete(FindAndDeleteOptions)}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
     T delete(FindAndModifyOptions options);
+
+    T delete(FindAndDeleteOptions options);
 
     Modify<T> modify();
 
     /**
-     * This is only intended for use as a bridge for the deprecated methods.  Any use will break in the future.
      * @morphia.internal
      * @param operations the prebuilt operations
      * @return the Modify instance
      * @since 2.0
      * @deprecated
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Modify<T> modify(UpdateOperations<T> operations);
 
-    default WriteResult remove() {
+    default DeleteResult remove() {
         return remove(new DeleteOptions());
     }
 
-    WriteResult remove(DeleteOptions options);
+    DeleteResult remove(DeleteOptions options);
 
     Update update();
 
-    Update update(DBObject dbObject);
+    /**
+     * @morphia.internal
+     * @param document
+     * @return
+     */
+    Update update(Document document);
 
     /**
-     * This is only intended for use as a bridge for the deprecated methods.  Any use will break in the future.
      * @morphia.internal
      * @param operations the prebuilt operations
      * @return the Updates instance

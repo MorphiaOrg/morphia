@@ -15,15 +15,14 @@
 package dev.morphia;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import org.junit.Test;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Shape;
 import dev.morphia.testmodel.ShapeShifter;
+import org.bson.Document;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,22 +35,21 @@ import static org.junit.Assert.assertTrue;
 public class TestInterfaces extends TestBase {
 
     @Test
-    public void testDynamicInstantiation() throws Exception {
-        final DBCollection shapes = getDb().getCollection("shapes");
-        final DBCollection shapeshifters = getDb().getCollection("shapeshifters");
+    public void testDynamicInstantiation() {
+        final MongoCollection<Document> shapes = getDatabase().getCollection("shapes");
+        final MongoCollection<Document> shapeshifters = getDatabase().getCollection("shapeshifters");
 
         getMorphia().map(Circle.class).map(Rectangle.class).map(ShapeShifter.class);
 
         final Shape rectangle = new Rectangle(2, 5);
 
-        final DBObject rectangleDbObj = getMorphia().toDBObject(rectangle);
-        shapes.save(rectangleDbObj);
+        final Document rectangleDbObj = getMorphia().toDocument(rectangle);
+        shapes.insertOne(rectangleDbObj);
 
-        final BasicDBObject rectangleDbObjLoaded = (BasicDBObject) shapes.findOne(new BasicDBObject("_id",
-                                                                                                    rectangleDbObj.get("_id")));
-        final Shape rectangleLoaded = getMorphia().fromDBObject(getDs(), Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
+        final Document rectangleDbObjLoaded = shapes.find(new Document("_id", rectangleDbObj.get("_id"))).first();
+        final Shape rectangleLoaded = getMorphia().fromDocument(getDs(), Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
 
-        assertTrue(rectangle.getArea() == rectangleLoaded.getArea());
+        assertEquals(rectangle.getArea(), rectangleLoaded.getArea(), 0.0);
         assertTrue(rectangleLoaded instanceof Rectangle);
 
         final ShapeShifter shifter = new ShapeShifter();
@@ -60,12 +58,11 @@ public class TestInterfaces extends TestBase {
         shifter.getAvailableShapes().add(new Rectangle(3, 3));
         shifter.getAvailableShapes().add(new Circle(4.4));
 
-        final DBObject shifterDbObj = getMorphia().toDBObject(shifter);
-        shapeshifters.save(shifterDbObj);
+        final Document shifterDbObj = getMorphia().toDocument(shifter);
+        shapeshifters.insertOne(shifterDbObj);
 
-        final BasicDBObject shifterDbObjLoaded = (BasicDBObject) shapeshifters.findOne(new BasicDBObject("_id",
-                                                                                                         shifterDbObj.get("_id")));
-        final ShapeShifter shifterLoaded = getMorphia().fromDBObject(getDs(), ShapeShifter.class, shifterDbObjLoaded,
+        final Document shifterDbObjLoaded = shapeshifters.find(new Document("_id", shifterDbObj.get("_id"))).first();
+        final ShapeShifter shifterLoaded = getMorphia().fromDocument(getDs(), ShapeShifter.class, shifterDbObjLoaded,
                                                                      new DefaultEntityCache());
         assertNotNull(shifterLoaded);
         assertNotNull(shifterLoaded.getReferencedShape());
@@ -73,9 +70,9 @@ public class TestInterfaces extends TestBase {
         assertNotNull(rectangle);
         assertNotNull(rectangle.getArea());
 
-        assertTrue(rectangle.getArea() == shifterLoaded.getReferencedShape().getArea());
+        assertEquals(rectangle.getArea(), shifterLoaded.getReferencedShape().getArea(), 0.0);
         assertTrue(shifterLoaded.getReferencedShape() instanceof Rectangle);
-        assertTrue(shifter.getMainShape().getArea() == shifterLoaded.getMainShape().getArea());
+        assertEquals(shifter.getMainShape().getArea(), shifterLoaded.getMainShape().getArea(), 0.0);
         assertEquals(shifter.getAvailableShapes().size(), shifterLoaded.getAvailableShapes().size());
     }
 }

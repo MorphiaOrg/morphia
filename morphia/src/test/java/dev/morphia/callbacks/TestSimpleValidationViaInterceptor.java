@@ -1,10 +1,6 @@
 package dev.morphia.callbacks;
 
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.AbstractEntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
@@ -13,6 +9,10 @@ import dev.morphia.callbacks.TestSimpleValidationViaInterceptor.NonNullValidatio
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -76,7 +76,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
     public static class NonNullValidation extends AbstractEntityInterceptor {
         @Override
-        public void prePersist(final Object ent, final DBObject dbObj, final Mapper mapper) {
+        public void prePersist(final Object ent, final Document document, final Mapper mapper) {
             final MappedClass mc = mapper.getMappedClass(ent);
             final List<MappedField> fieldsToTest = mc.getFieldsAnnotatedWith(NonNull.class);
             for (final MappedField mf : fieldsToTest) {

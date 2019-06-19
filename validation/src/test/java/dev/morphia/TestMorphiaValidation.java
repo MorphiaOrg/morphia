@@ -22,7 +22,7 @@ public class TestMorphiaValidation extends TestBase {
     }
 
     /**
-     * Test method for {@link ValidationExtension#prePersist(Object, com.mongodb.DBObject, dev.morphia.mapping.Mapper)}.
+     * Test method for {@link ValidationExtension#prePersist(Object, com.mongodb.Document, dev.morphia.mapping.Mapper)}.
      */
     @Test
     public final void testPrePersist() {

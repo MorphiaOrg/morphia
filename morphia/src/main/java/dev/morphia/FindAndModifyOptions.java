@@ -16,23 +16,30 @@
 
 package dev.morphia;
 
-import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
+import org.bson.conversions.Bson;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.mongodb.assertions.Assertions.notNull;
 
 /**
  * The options for find and modify operations.
  *
  * @since 1.3
  */
-public final class FindAndModifyOptions {
-    private DBCollectionFindAndModifyOptions options = new DBCollectionFindAndModifyOptions()
-        .returnNew(true);
+public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
+    private WriteConcern writeConcern;
+
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
+
+    public void writeConcern(final WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
+    }
 
     /**
      * Creates a new options instance.
@@ -40,232 +47,51 @@ public final class FindAndModifyOptions {
     public FindAndModifyOptions() {
     }
 
-    public FindAndModifyOptions copy() {
-        FindAndModifyOptions copy = new FindAndModifyOptions();
-        copy.bypassDocumentValidation(getBypassDocumentValidation());
-        copy.collation(getCollation());
-        copy.maxTime(getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
-        copy.projection(getProjection());
-        copy.remove(isRemove());
-        copy.returnNew(isReturnNew());
-        copy.sort(getSort());
-        copy.update(getUpdate());
-        copy.upsert(isUpsert());
-        copy.writeConcern(getWriteConcern());
-        return copy;
-    }
-
-    /**
-     * @return
-     * @morphia.internal
-     */
-    public DBCollectionFindAndModifyOptions getOptions() {
-        return copy().options;
-    }
-
-    DBObject getProjection() {
-        return options.getProjection();
-    }
-
-    /**
-     * @param projection
-     * @return
-     * @morphia.internal
-     */
-    public FindAndModifyOptions projection(final DBObject projection) {
-        options.projection(projection);
-        return this;
-    }
-
-    /**
-     * Returns the sort
-     *
-     * @return the sort
-     */
-    DBObject getSort() {
-        return options.getSort();
-    }
-
-    /**
-     * Sets the sort
-     *
-     * @param sort the sort
-     * @return this
-     * @morphia.internal
-     */
-    public FindAndModifyOptions sort(final DBObject sort) {
-        options.sort(sort);
-        return this;
-    }
-
-    /**
-     * Returns the remove
-     *
-     * @return the remove
-     */
-    public boolean isRemove() {
-        return options.isRemove();
-    }
-
-    /**
-     * Indicates whether to remove the elements matching the query or not
-     *
-     * @param remove true if the matching elements should be deleted
-     * @return this
-     */
-    public FindAndModifyOptions remove(final boolean remove) {
-        options.remove(remove);
-        return this;
-    }
-
-    /**
-     * Returns the update
-     *
-     * @return the update
-     */
-    DBObject getUpdate() {
-        return options.getUpdate();
-    }
-
-    /**
-     * Sets the update
-     *
-     * @param update the update
-     * @return this
-     * @morphia.internal
-     */
-    public FindAndModifyOptions update(final DBObject update) {
-        options.update(update);
-        return this;
-    }
-
-    /**
-     * Returns the upsert
-     *
-     * @return the upsert
-     */
-    public boolean isUpsert() {
-        return options.isUpsert();
-    }
-
-    /**
-     * Indicates that an upsert should be performed
-     *
-     * @param upsert the upsert
-     * @return this
-     * @mongodb.driver.manual reference/method/db.collection.update/#upsert-behavior upsert
-     */
-    public FindAndModifyOptions upsert(final boolean upsert) {
-        options.upsert(upsert);
-        return this;
-    }
-
-    /**
-     * Returns the returnNew
-     *
-     * @return the returnNew
-     */
-    public boolean isReturnNew() {
-        return options.returnNew();
-    }
-
-    /**
-     * Sets the returnNew
-     *
-     * @param returnNew the returnNew
-     * @return this
-     */
-    public FindAndModifyOptions returnNew(final boolean returnNew) {
-        options.returnNew(returnNew);
-        return this;
-    }
-
-    /**
-     * Returns the bypassDocumentValidation
-     *
-     * @return the bypassDocumentValidation
-     */
-    public Boolean getBypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
-    /**
-     * Sets the bypassDocumentValidation
-     *
-     * @param bypassDocumentValidation the bypassDocumentValidation
-     * @return this
-     */
+    @Override
     public FindAndModifyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        options.bypassDocumentValidation(bypassDocumentValidation);
+        super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
-    /**
-     * Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum execution time in the given time unit
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public long getMaxTime(final TimeUnit timeUnit) {
-        notNull("timeUnit", timeUnit);
-        return options.getMaxTime(timeUnit);
+    @Override
+    public FindAndModifyOptions projection(final Bson projection) {
+        super.projection(projection);
+        return this;
     }
 
-    /**
-     * Sets the maximum execution time on the server for this operation.
-     *
-     * @param maxTime  the max time
-     * @param timeUnit the time unit, which may not be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
+    @Override
+    public FindAndModifyOptions sort(final Bson sort) {
+        super.sort(sort);
+        return this;
+    }
+
+    @Override
+    public FindAndModifyOptions upsert(final boolean upsert) {
+        super.upsert(upsert);
+        return this;
+    }
+
+    @Override
+    public FindAndModifyOptions returnDocument(final ReturnDocument returnDocument) {
+        super.returnDocument(returnDocument);
+        return this;
+    }
+
+    @Override
     public FindAndModifyOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
-        options.maxTime(maxTime, timeUnit);
+        super.maxTime(maxTime, timeUnit);
         return this;
     }
 
-    /**
-     * Returns the writeConcern
-     *
-     * @return the writeConcern
-     * @mongodb.server.release 3.2
-     */
-    public WriteConcern getWriteConcern() {
-        return options.getWriteConcern();
-    }
-
-    /**
-     * Sets the writeConcern
-     *
-     * @param writeConcern the writeConcern
-     * @return this
-     * @mongodb.server.release 3.2
-     */
-    public FindAndModifyOptions writeConcern(final WriteConcern writeConcern) {
-        options.writeConcern(writeConcern);
-        return this;
-    }
-
-    /**
-     * Returns the collation options
-     *
-     * @return the collation options
-     * @mongodb.server.release 3.4
-     */
-    public Collation getCollation() {
-        return options.getCollation();
-    }
-
-    /**
-     * Sets the collation
-     *
-     * @param collation the collation
-     * @return this
-     * @mongodb.server.release 3.4
-     */
+    @Override
     public FindAndModifyOptions collation(final Collation collation) {
-        options.collation(collation);
+        super.collation(collation);
+        return this;
+    }
+
+    @Override
+    public FindAndModifyOptions arrayFilters(final List<? extends Bson> arrayFilters) {
+        super.arrayFilters(arrayFilters);
         return this;
     }
 }

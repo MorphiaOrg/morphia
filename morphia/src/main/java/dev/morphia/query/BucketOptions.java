@@ -1,8 +1,7 @@
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.aggregation.Accumulator;
+import org.bson.Document;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,19 +18,19 @@ public class BucketOptions {
 
 
     /**
-     * Converts a BucketOptions to a DBObject for use by the Java driver.
+     * Converts a BucketOptions to a Document for use by the Java driver.
      *
-     * @return the DBObject
+     * @return the Document
      */
-    public DBObject toDBObject() {
-        DBObject dbObject = new BasicDBObject();
+    public Document toDocument() {
+        Document dbObject = new Document();
         if (defaultField != null) {
             dbObject.put("default", defaultField);
         }
 
-        DBObject output = new BasicDBObject();
+        Document output = new Document();
         for (Map.Entry<String, Accumulator> entry : accumulators.entrySet()) {
-            output.put(entry.getKey(), entry.getValue().toDBObject());
+            output.put(entry.getKey(), entry.getValue().toDocument());
         }
         if (!accumulators.isEmpty()) {
             dbObject.put("output", output);

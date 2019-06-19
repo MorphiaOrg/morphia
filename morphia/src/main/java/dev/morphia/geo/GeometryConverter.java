@@ -1,9 +1,9 @@
 package dev.morphia.geo;
 
-import com.mongodb.DBObject;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
+import org.bson.Document;
 
 /**
  * A Morphia TypeConverter that knows how to turn things that are labelled with the Geometry interface into the correct concrete class,
@@ -21,9 +21,9 @@ public class GeometryConverter extends TypeConverter implements SimpleValueConve
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        DBObject dbObject = (DBObject) fromDBObject;
+    public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        Document dbObject = (Document) fromDocument;
         String type = (String) dbObject.get("type");
-        return getMapper().getConverters().decode(GeoJsonType.fromString(type).getTypeClass(), fromDBObject, optionalExtraInfo);
+        return getMapper().getConverters().decode(GeoJsonType.fromString(type).getTypeClass(), fromDocument, optionalExtraInfo);
     }
 }

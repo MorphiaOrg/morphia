@@ -16,12 +16,12 @@ package dev.morphia.utils;
 
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappingException;
+import org.bson.Document;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -382,7 +382,7 @@ public final class ReflectionUtils {
     public static boolean isPropertyType(final Class type) {
         return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
                                 || type == CodeWScope.class || type == ObjectId.class || type == Key.class
-                                || type == DBObject.class || type == BasicDBObject.class);
+                                || type == Document.class || type == BasicDBObject.class);
 
     }
 

@@ -20,8 +20,8 @@ public class IdentityConverter extends TypeConverter {
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        return fromDBObject;
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        return fromDocument;
     }
 
     @Override

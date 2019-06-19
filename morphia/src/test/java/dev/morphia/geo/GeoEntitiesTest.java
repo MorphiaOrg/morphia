@@ -1,19 +1,18 @@
 package dev.morphia.geo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.JSONMatcher;
+import org.bson.Document;
+import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.lineString;
 import static dev.morphia.geo.GeoJson.multiPolygon;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.GeoJson.polygon;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test driving features for Issue 643 - add support for saving entities with GeoJSON.
@@ -25,7 +24,7 @@ public class GeoEntitiesTest extends TestBase {
         City city = new City("New City", point(3.0, 7.0));
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(city);
+        Document dbObject = getMorphia().toDocument(city);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -46,19 +45,19 @@ public class GeoEntitiesTest extends TestBase {
         Point point = point(3.0, 7.0);
         LineString lineString = lineString(point(1, 2), point(3, 5), point(19, 13));
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
         MultiPoint multiPoint = GeoJson.multiPoint(point(1, 2), point(3, 5), point(19, 13));
         MultiLineString multiLineString = GeoJson.multiLineString(lineString(point(1, 2), point(3, 5), point(19, 13)),
-                                                                  lineString(point(1.5, 2.0),
-                                                                             point(1.9, 2.0),
-                                                                             point(1.9, 1.8),
-                                                                             point(1.5, 2.0)));
+            lineString(point(1.5, 2.0),
+                point(1.9, 2.0),
+                point(1.9, 1.8),
+                point(1.5, 2.0)));
         MultiPolygon multiPolygon = multiPolygon(polygon(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                                 polygon(lineString(point(1.2, 3.0), point(2.5, 4.5), point(6.7, 1.9), point(1.2, 3.0)),
-                                                         lineString(point(3.5, 2.4), point(1.7, 2.8), point(3.5, 2.4))));
+            polygon(lineString(point(1.2, 3.0), point(2.5, 4.5), point(6.7, 1.9), point(1.2, 3.0)),
+                lineString(point(3.5, 2.4), point(1.7, 2.8), point(3.5, 2.4))));
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point, lineString, polygonWithHoles, multiPoint,
-                                                                           multiLineString, multiPolygon);
+            multiLineString, multiPolygon);
         AllTheThings allTheThings = new AllTheThings(name, geometryCollection);
         getDs().save(allTheThings);
 
@@ -89,10 +88,10 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "Many Paths";
         Paths paths = new Paths(name, GeoJson.multiLineString(lineString(point(1, 2), point(3, 5), point(19, 13)),
-                                                              lineString(point(1.5, 2.0),
-                                                                         point(1.9, 2.0),
-                                                                         point(1.9, 1.8),
-                                                                         point(1.5, 2.0))));
+            lineString(point(1.5, 2.0),
+                point(1.9, 2.0),
+                point(1.9, 1.8),
+                point(1.5, 2.0))));
         getDs().save(paths);
 
         // when
@@ -123,10 +122,10 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "All these shapes";
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
         Regions regions = new Regions(name, multiPolygon(polygon(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                                         polygonWithHoles));
+            polygonWithHoles));
         getDs().save(regions);
 
         // when
@@ -142,8 +141,8 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String polygonName = "A polygon with holes";
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
         Area area = new Area(polygonName, polygonWithHoles);
         getDs().save(area);
 
@@ -190,29 +189,29 @@ public class GeoEntitiesTest extends TestBase {
         Point point = point(3.0, 7.0);
         LineString lineString = lineString(point(1, 2), point(3, 5), point(19, 13));
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
         MultiPoint multiPoint = GeoJson.multiPoint(point(1, 2), point(3, 5), point(19, 13));
         MultiLineString multiLineString = GeoJson.multiLineString(lineString(point(1, 2), point(3, 5), point(19, 13)),
-                                                                  lineString(point(1.5, 2.0),
-                                                                             point(1.9, 2.0),
-                                                                             point(1.9, 1.8),
-                                                                             point(1.5, 2.0)));
+            lineString(point(1.5, 2.0),
+                point(1.9, 2.0),
+                point(1.9, 1.8),
+                point(1.5, 2.0)));
         MultiPolygon multiPolygon = multiPolygon(polygon(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                                 polygon(lineString(point(1.2, 3.0), point(2.5, 4.5), point(6.7, 1.9), point(1.2, 3.0)),
-                                                         lineString(point(3.5, 2.4), point(1.7, 2.8), point(3.5, 2.4))));
+            polygon(lineString(point(1.2, 3.0), point(2.5, 4.5), point(6.7, 1.9), point(1.2, 3.0)),
+                lineString(point(3.5, 2.4), point(1.7, 2.8), point(3.5, 2.4))));
 
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point, lineString, polygonWithHoles, multiPoint, multiLineString,
-                                                                           multiPolygon);
+            multiPolygon);
         AllTheThings allTheThings = new AllTheThings(name, geometryCollection);
 
         // when
         getDs().save(allTheThings);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedArea = getDs().getCollection(AllTheThings.class).findOne(new BasicDBObject("name", name),
-                                                                                new BasicDBObject("_id", 0)
-                                                                                    .append("className", 0));
+        Document storedArea = getDs().getCollection(AllTheThings.class).find(new Document("name", name))
+                                     .projection(new Document("_id", 0).append("className", 0))
+                                     .first();
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: '" + name + "',"
@@ -306,8 +305,9 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(route);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedRoute = getDs().getCollection(Route.class).findOne(new BasicDBObject("name", "My Route"),
-                                                                          new BasicDBObject("_id", 0).append("className", 0));
+        Document storedRoute = getDs().getCollection(Route.class).find(new Document("name", "My Route"))
+                                      .projection(new Document("_id", 0).append("className", 0))
+                                      .first();
         assertThat(storedRoute, is(notNullValue()));
         // lat/long is always long/lat on the server
         assertThat(storedRoute.toString(), JSONMatcher.jsonEqual("  {"
@@ -332,8 +332,9 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(stores);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedObject = getDs().getCollection(Stores.class).findOne(new BasicDBObject("name", name),
-                                                                            new BasicDBObject("_id", 0).append("className", 0));
+        Document storedObject = getDs().getCollection(Stores.class).find(new Document("name", name))
+                                       .projection(new Document("_id", 0).append("className", 0))
+                                       .first();
         assertThat(storedObject, is(notNullValue()));
         assertThat(storedObject.toString(), JSONMatcher.jsonEqual("  {"
                                                                   + " name: " + name + ","
@@ -356,8 +357,9 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(city);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedCity = getDs().getCollection(City.class).findOne(new BasicDBObject("name", "New City"),
-                                                                        new BasicDBObject("_id", 0).append("className", 0));
+        Document storedCity = getDs().getCollection(City.class).find(new Document("name", "New City"))
+                                     .projection(new Document("_id", 0).append("className", 0))
+                                     .first();
         assertThat(storedCity, is(notNullValue()));
         assertThat(storedCity.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: 'New City',"
@@ -374,17 +376,18 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "Many Paths";
         Paths paths = new Paths(name, GeoJson.multiLineString(lineString(point(1, 2), point(3, 5), point(19, 13)),
-                                                              lineString(point(1.5, 2.0),
-                                                                         point(1.9, 2.0),
-                                                                         point(1.9, 1.8),
-                                                                         point(1.5, 2.0))));
+            lineString(point(1.5, 2.0),
+                point(1.9, 2.0),
+                point(1.9, 1.8),
+                point(1.5, 2.0))));
 
         // when
         getDs().save(paths);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedPaths = getDs().getCollection(Paths.class).findOne(new BasicDBObject("name", name),
-                                                                          new BasicDBObject("_id", 0).append("className", 0));
+        Document storedPaths = getDs().getCollection(Paths.class).find(new Document("name", name))
+                                      .projection(new Document("_id", 0).append("className", 0))
+                                      .first();
         assertThat(storedPaths, is(notNullValue()));
         // lat/long is always long/lat on the server
         assertThat(storedPaths.toString(), JSONMatcher.jsonEqual("  {"
@@ -412,19 +415,19 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "All these shapes";
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8),
-                                                      point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8),
+                point(2.2, 2.1)));
         Regions regions = new Regions(name, multiPolygon(polygon(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                                         polygonWithHoles));
+            polygonWithHoles));
 
         // when
         getDs().save(regions);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedRegions = getDs().getCollection(Regions.class).findOne(new BasicDBObject("name", name),
-                                                                              new BasicDBObject("_id", 0)
-                                                                                  .append("className", 0));
+        Document storedRegions = getDs().getCollection(Regions.class).find(new Document("name", name))
+                                        .projection(new Document("_id", 0).append("className", 0))
+                                        .first();
         assertThat(storedRegions, is(notNullValue()));
         assertThat(storedRegions.toString(), JSONMatcher.jsonEqual("  {"
                                                                    + " name: '" + name + "',"
@@ -464,18 +467,19 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String polygonName = "A polygon with holes";
         Polygon polygonWithHoles = polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
-                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
-                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
+            lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
+            lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
         Area area = new Area(polygonName, polygonWithHoles);
 
         // when
         getDs().save(area);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedArea = getDs().getCollection(Area.class).findOne(new BasicDBObject("name", polygonName),
-                                                                        new BasicDBObject("_id", 0)
-                                                                            .append("className", 0)
-                                                                            .append("area.className", 0));
+        Document storedArea = getDs().getCollection(Area.class).find(new Document("name", polygonName))
+                                     .projection(new Document("_id", 0)
+                                                     .append("className", 0)
+                                                     .append("area.className", 0))
+                                     .first();
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: " + polygonName + ","
@@ -513,10 +517,11 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(area);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedArea = getDs().getCollection(Area.class).findOne(new BasicDBObject("name", "The Area"),
-                                                                        new BasicDBObject("_id", 0)
-                                                                            .append("className", 0)
-                                                                            .append("area.className", 0));
+        Document storedArea = getDs().getCollection(Area.class).find(new Document("name", "The Area"))
+                                     .projection(new Document("_id", 0)
+                                                     .append("className", 0)
+                                                     .append("area.className", 0))
+                                     .first();
         assertThat(storedArea, is(notNullValue()));
         assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
                                                                 + " name: 'The Area',"
@@ -535,10 +540,10 @@ public class GeoEntitiesTest extends TestBase {
     public void shouldSaveAnEntityWithNullPoints() {
         getDs().save(new City("New City", null));
 
-        DBObject storedCity = getDs().getCollection(City.class)
-                                     .findOne(new BasicDBObject("name", "New City"),
-                                              new BasicDBObject("_id", 0)
-                                                  .append("className", 0));
+        Document storedCity = getDs().getCollection(City.class)
+                                     .find(new Document("name", "New City"))
+                                     .projection(new Document("_id", 0).append("className", 0))
+                                     .first();
         assertThat(storedCity, is(notNullValue()));
         assertThat(storedCity.toString(), JSONMatcher.jsonEqual("{ name: 'New City'}"));
     }

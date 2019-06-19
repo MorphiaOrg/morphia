@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 /**
  * Defines $meta expression object
@@ -71,8 +70,7 @@ public class Meta {
         return new Meta(MetaDataKeyword.textScore, field);
     }
 
-    DBObject toDatabase() {
-        BasicDBObject metaObject = new BasicDBObject(META, metaDataKeyword.getName());
-        return new BasicDBObject(field, metaObject);
+    Document toDatabase() {
+        return new Document(field, new Document(META, metaDataKeyword.getName()));
     }
 }

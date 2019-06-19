@@ -15,6 +15,10 @@
 package dev.morphia.indexes;
 
 import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -27,6 +31,7 @@ import dev.morphia.mapping.MappedClass;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author Scott Hernandez
@@ -45,10 +50,12 @@ public class TestIndexInheritance extends TestBase {
                           .size());
 
         getDs().ensureIndexes();
-        final DBCollection coll = getDs().getCollection(Circle.class);
+        final MongoCollection<Document> coll = getDs().getCollection(Circle.class);
 
-        assertEquals(4, coll.getIndexInfo()
-                            .size());
+        Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
+        fail("listIndexes = " + listIndexes);
+//        assertEquals(4, listIndexes)
+//                            .size());
     }
 
     @Test
@@ -59,10 +66,13 @@ public class TestIndexInheritance extends TestBase {
                     .getMappedClass(Circle.class);
 
         getDs().ensureIndexes();
-        final DBCollection coll = getDs().getCollection(Circle.class);
+        final MongoCollection<Document> coll = getDs().getCollection(Circle.class);
 
-        assertEquals(4, coll.getIndexInfo()
-                            .size());
+        Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
+        fail("listIndexes = " + listIndexes);
+
+//        assertEquals(4, coll.getIndexInfo()
+//                            .size());
     }
 
     @Indexes(@Index(fields = @Field("description")))

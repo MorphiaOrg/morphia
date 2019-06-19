@@ -16,13 +16,13 @@
 
 package dev.morphia.aggregation;
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 interface AggregationElement {
     /**
      * This is an internal method and subject to change or removal.  Do not use.
      *
-     * @return the DBObject form of the the element
+     * @return the Document form of the the element
      */
-    DBObject toDBObject();
+    Document toDocument();
 }

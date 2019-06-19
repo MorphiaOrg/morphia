@@ -1,14 +1,14 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
-import com.mongodb.DBObject;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.PreSave;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.annotations.Transient;
 import dev.morphia.testutil.TestEntity;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
@@ -31,7 +31,7 @@ public class SerializedNameTest extends TestBase {
         private String document;
 
         @PreSave
-        public void preSave(final DBObject o) {
+        public void preSave(final Document o) {
             document = o.toString();
         }
     }

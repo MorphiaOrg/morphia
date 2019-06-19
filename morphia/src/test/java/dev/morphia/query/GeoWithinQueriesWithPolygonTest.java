@@ -106,10 +106,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesInTheUK = toList(getDs().find(City.class)
-                                                 .field("location")
-                                                 .within(uk)
-                                                 .execute());
+        List<City> citiesInTheUK = getDs().find(City.class)
+                                          .field("location")
+                                          .within(uk)
+                                          .execute().toList();
 
         // then
         assertThat(citiesInTheUK.size(), is(2));
@@ -163,10 +163,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> everythingInTheUK = toList(getDs().find(AllTheThings.class)
-                                                             .field("everything")
-                                                             .within(uk)
-                                                             .execute());
+        List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
+                                                      .field("everything")
+                                                      .within(uk)
+                                                      .execute().toList();
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -216,10 +216,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsInTheUK = toList(getDs().find(Regions.class)
-                                                     .field("regions")
-                                                     .within(uk)
-                                                     .execute());
+        List<Regions> regionsInTheUK = getDs().find(Regions.class)
+                                              .field("regions")
+                                              .within(uk)
+                                              .execute().toList();
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -252,10 +252,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Route> routesInTheUK = toList(getDs().find(Route.class)
-                                                  .field("route")
-                                                  .within(uk)
-                                                  .execute());
+        List<Route> routesInTheUK = getDs().find(Route.class)
+                                           .field("route")
+                                           .within(uk)
+                                           .execute().toList();
 
         // then
         assertThat(routesInTheUK.size(), is(1));

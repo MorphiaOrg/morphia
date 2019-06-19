@@ -1,18 +1,19 @@
 package dev.morphia.aggregation;
 
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import dev.morphia.TestBase;
+import dev.morphia.aggregation.zipcode.City;
+import dev.morphia.aggregation.zipcode.Population;
+import dev.morphia.aggregation.zipcode.State;
+import dev.morphia.query.Query;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
-import dev.morphia.TestBase;
-import dev.morphia.aggregation.zipcode.City;
-import dev.morphia.aggregation.zipcode.Population;
-import dev.morphia.aggregation.zipcode.State;
-import dev.morphia.query.Query;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +23,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static dev.morphia.aggregation.Group.average;
 import static dev.morphia.aggregation.Group.first;
 import static dev.morphia.aggregation.Group.grouping;
@@ -31,6 +31,7 @@ import static dev.morphia.aggregation.Group.last;
 import static dev.morphia.aggregation.Group.sum;
 import static dev.morphia.aggregation.Projection.projection;
 import static dev.morphia.query.Sort.ascending;
+import static java.lang.String.format;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -71,10 +72,10 @@ public class ZipCodeDataSetTest extends TestBase {
                     download(new URL("http://media.mongodb.org/zips.json"), file);
                 }
             }
-            DBCollection zips = getDb().getCollection("zips");
-            if (zips.count() == 0) {
+            MongoCollection<Document> zips = getDatabase().getCollection("zips");
+            if (zips.countDocuments() == 0) {
                 new ProcessExecutor().command(MONGO_IMPORT,
-                    "--db", getDb().getName(),
+                    "--db", getDatabase().getName(),
                     "--collection", "zipcodes",
                     "--file", file.getAbsolutePath())
                                      .redirectError(System.err)

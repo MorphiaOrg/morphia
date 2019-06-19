@@ -12,11 +12,11 @@ public class EnumConverter extends TypeConverter implements SimpleValueConverter
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (fromDocument == null) {
             return null;
         }
-        return Enum.valueOf(targetClass, fromDBObject.toString());
+        return Enum.valueOf(targetClass, fromDocument.toString());
     }
 
     @Override

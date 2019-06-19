@@ -1,9 +1,9 @@
 package dev.morphia.geo;
 
-import com.mongodb.BasicDBObject;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
+import org.bson.Document;
 
 /**
  * A Morphia TypeConverter that knows how to turn things that are labelled with the Geometry interface into the correct concrete class,
@@ -21,17 +21,16 @@ public class NamedCoordinateReferenceSystemConverter extends TypeConverter imple
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+    public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
         throw new UnsupportedOperationException("We should never need to decode these");
     }
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         NamedCoordinateReferenceSystem crs = (NamedCoordinateReferenceSystem) value;
-        final BasicDBObject dbObject = new BasicDBObject("type", crs.getType().getTypeName());
-        dbObject.put("properties", new BasicDBObject("name", crs.getName()));
 
-        return dbObject;
+        return new Document("type", crs.getType().getTypeName())
+                   .append("properties", new Document("name", crs.getName()));
     }
 
     @Override

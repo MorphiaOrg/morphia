@@ -1,7 +1,7 @@
 package dev.morphia.query;
 
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 
 /**
@@ -11,9 +11,9 @@ import com.mongodb.DBObject;
  */
 public interface Criteria {
     /**
-     * @return the DBObject form of this type
+     * @return the Document form of this type
      */
-    DBObject toDBObject();
+    Document toDocument();
 
     /**
      * Used to add this Criteria to a CriteriaContainer

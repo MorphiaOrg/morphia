@@ -16,8 +16,7 @@
 
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 import java.util.Arrays;
 
@@ -63,9 +62,8 @@ public class ArraySlice {
         return skip;
     }
 
-    DBObject toDatabase() {
-        return
-            new BasicDBObject("$slice", skip == null ? limit : Arrays.asList(skip, limit));
+    Document toDatabase() {
+        return new Document("$slice", skip == null ? limit : Arrays.asList(skip, limit));
 
     }
 }

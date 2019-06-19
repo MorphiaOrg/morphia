@@ -38,11 +38,11 @@ public class GeoQueriesTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesOrderedByDistanceFromLondon = toList(datastore.find(City.class)
-                                                                       .field("location")
-                                                                       .near(pointBuilder().latitude(latitude)
-                                                                                           .longitude(longitude).build(), 200000)
-                                                                       .execute());
+        List<City> citiesOrderedByDistanceFromLondon = datastore.find(City.class)
+                                                                .field("location")
+                                                                .near(pointBuilder().latitude(latitude)
+                                                                                    .longitude(longitude).build(), 200000)
+                                                                .execute().toList();
 
         // then
         assertThat(citiesOrderedByDistanceFromLondon.size(), is(1));

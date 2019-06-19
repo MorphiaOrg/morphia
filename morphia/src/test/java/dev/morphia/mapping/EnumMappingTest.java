@@ -93,7 +93,7 @@ public class EnumMappingTest extends TestBase {
 
     @Test
     public void testEnumMapping() {
-        getDs().getDB().dropDatabase();
+        getDs().getDatabase().drop();
 
         getMorphia().map(ContainsEnum.class);
 

@@ -14,14 +14,14 @@ import java.util.Map;
 public class MapOfValuesConverter extends TypeConverter {
     @Override
     @SuppressWarnings("unchecked")
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
-        if (fromDBObject == null) {
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField mf) {
+        if (fromDocument == null) {
             return null;
         }
 
 
         final Map values = getMapper().getOptions().getObjectFactory().createMap(mf);
-        new IterHelper<Object, Object>().loopMap(fromDBObject, new MapIterCallback<Object, Object>() {
+        new IterHelper<Object, Object>().loopMap(fromDocument, new MapIterCallback<Object, Object>() {
             @Override
             public void eval(final Object k, final Object val) {
                 final Object objKey = getMapper().getConverters().decode(mf.getMapKeyClass(), k, mf);

@@ -31,7 +31,6 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl.Update;
-import dev.morphia.query.UpdateOperations;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.junit.Assert;

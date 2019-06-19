@@ -20,30 +20,30 @@ public abstract class TypeConverter {
     }
 
     /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
+     * decode the {@link com.mongodb.Document} and provide the corresponding java (type-safe) object
      *
      * @param targetClass  the class to create and populate
-     * @param fromDBObject the DBObject to use when populating the new instance
+     * @param fromDocument the Document to use when populating the new instance
      * @return the new instance
      */
-    public final Object decode(final Class targetClass, final Object fromDBObject) {
-        return decode(targetClass, fromDBObject, null);
+    public final Object decode(final Class targetClass, final Object fromDocument) {
+        return decode(targetClass, fromDocument, null);
     }
 
     /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object <br><b>NOTE: optionalExtraInfo might
+     * decode the {@link com.mongodb.Document} and provide the corresponding java (type-safe) object <br><b>NOTE: optionalExtraInfo might
      * be
      * null</b>
      *
      * @param targetClass       the class to create and populate
-     * @param fromDBObject      the DBObject to use when populating the new instance
+     * @param fromDocument      the Document to use when populating the new instance
      * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding
      * @return the new instance
      */
-    public abstract Object decode(Class<?> targetClass, Object fromDBObject, MappedField optionalExtraInfo);
+    public abstract Object decode(Class<?> targetClass, Object fromDocument, MappedField optionalExtraInfo);
 
     /**
-     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
+     * encode the type safe java object into the corresponding {@link com.mongodb.Document}
      *
      * @param value The object to encode
      * @return the encoded version of the object
@@ -53,7 +53,7 @@ public abstract class TypeConverter {
     }
 
     /**
-     * encode the (type-safe) java object into the corresponding {@link com.mongodb.DBObject}
+     * encode the (type-safe) java object into the corresponding {@link com.mongodb.Document}
      *
      * @param value             The object to encode
      * @param optionalExtraInfo the MappedField that contains the metadata useful for decoding

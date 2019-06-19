@@ -14,9 +14,8 @@
 
 package dev.morphia;
 
-
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.annotations.Embedded;
@@ -102,38 +101,38 @@ public class Morphia {
     }
 
     /**
-     * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
+     * Creates an entity and populates its state based on the document given.  This method is primarily an internal method.  Reliance on
      * this method may break your application in future releases.
      *
      * @param <T>         type of the entity
      * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass type to create
-     * @param dbObject    the object state to use
+     * @param document    the object state to use
      * @return the newly created and populated entity
      */
-    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject) {
-        return fromDBObject(datastore, entityClass, dbObject, mapper.createEntityCache());
+    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document) {
+        return fromDocument(datastore, entityClass, document, mapper.createEntityCache());
     }
 
     /**
-     * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
+     * Creates an entity and populates its state based on the document given.  This method is primarily an internal method.  Reliance on
      * this method may break your application in future releases.
      *
      * @param <T>         type of the entity
      * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass type to create
-     * @param dbObject    the object state to use
+     * @param document    the object state to use
      * @param cache       the EntityCache to use to prevent multiple loads of the same entities over and over
      * @return the newly created and populated entity
      */
-    public <T> T fromDBObject(final Datastore datastore, final Class<T> entityClass, final DBObject dbObject, final EntityCache cache) {
+    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document, final EntityCache cache) {
         if (!entityClass.isInterface() && !mapper.isMapped(entityClass)) {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-            return mapper.fromDBObject(datastore, entityClass, dbObject, cache);
+            return mapper.fromDocument(datastore, entityClass, document, cache);
         } catch (Exception e) {
-            throw new MappingException("Could not map entity from DBObject", e);
+            throw new MappingException("Could not map entity from Document", e);
         }
     }
 
@@ -272,18 +271,18 @@ public class Morphia {
     }
 
     /**
-     * Converts an entity to a DBObject.  This method is primarily an internal method. Reliance on this method may break your application
+     * Converts an entity to a Document.  This method is primarily an internal method. Reliance on this method may break your application
      * in
      * future releases.
      *
      * @param entity the entity to convert
-     * @return the DBObject
+     * @return the Document
      */
-    public DBObject toDBObject(final Object entity) {
+    public Document toDocument(final Object entity) {
         try {
-            return mapper.toDBObject(entity);
+            return mapper.toDocument(entity);
         } catch (Exception e) {
-            throw new MappingException("Could not map entity to DBObject", e);
+            throw new MappingException("Could not map entity to Document", e);
         }
     }
 }

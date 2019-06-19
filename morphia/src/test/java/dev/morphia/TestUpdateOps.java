@@ -13,8 +13,7 @@
 
 package dev.morphia;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import com.mongodb.client.result.UpdateResult;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -28,13 +27,13 @@ import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
-import dev.morphia.query.UpdateResults;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,12 +88,12 @@ public class TestUpdateOps extends TestBase {
                                      .field("_id").equal(parentId)
                                      .field("children.first")
                                      .equal(childName);
-        UpdateResults updateResults = query.update()
-                                           .set("children.$.last", updatedLastName)
-                                           .execute();
+        UpdateResult updateResult = query.update()
+                                         .set("children.$.last", updatedLastName)
+                                         .execute();
 
         // then
-        assertThat(updateResults.getUpdatedCount(), is(1));
+        assertThat(updateResult.getModifiedCount(), is(1));
         assertThat(getDs().find(Parent.class).filter("id", parentId)
                           .execute(new FindOptions().limit(1))
                           .next()
@@ -117,10 +117,10 @@ public class TestUpdateOps extends TestBase {
     }
 
     private void validateClassName(final String path, final UpdateOperations<Parent> ops, final boolean expected) {
-        DBObject ops1 = ((UpdateOpsImpl) ops).getOps();
+        Document ops1 = ((UpdateOpsImpl) ops).getOps();
         Map pull = (Map) ops1.get("$pull");
         Map children = (Map) pull.get(path);
-        Assert.assertEquals(expected, children.containsKey("className"));
+        assertEquals(expected, children.containsKey("className"));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class TestUpdateOps extends TestBase {
 
         final MorphiaCursor<ContainsPic> iterator = finder.order(Sort.ascending("size")).execute();
         for (int i = 0; i < 3; i++) {
-            Assert.assertEquals(i + 1, iterator.next().getSize());
+            assertEquals(i + 1, iterator.next().getSize());
         }
     }
 
@@ -328,7 +328,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(heightOf1.count(), is(3L));
         assertThat(heightOf2.count(), is(0L));
 
-        UpdateResults results = heightOf1
+        UpdateResult results = heightOf1
                                    .update()
                                    .inc("height")
                                    .execute(new UpdateOptions().multi(true));
@@ -537,17 +537,17 @@ public class TestUpdateOps extends TestBase {
         Datastore ds = getDs();
         ds.save(logs);
 
-        UpdateResults results = ds.find(EntityLogs.class).update()
+        UpdateResult results = ds.find(EntityLogs.class).update()
                                   .removeAll("logs", new EntityLog("log3", date))
                                   .execute();
 
-        Assert.assertEquals(1, results.getUpdatedCount());
+        assertEquals(1, results.getModifiedCount());
         EntityLogs updated = ds.find(EntityLogs.class)
                                .execute(new FindOptions().limit(1))
                                .next();
-        Assert.assertEquals(4, updated.logs.size());
+        assertEquals(4, updated.logs.size());
         for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+            assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
         }
     }
 
@@ -566,17 +566,17 @@ public class TestUpdateOps extends TestBase {
         Datastore ds = getDs();
         ds.save(logs);
 
-        UpdateResults results = ds.find(EntityLogs.class).update()
+        UpdateResult results = ds.find(EntityLogs.class).update()
                                   .removeAll("logs", singletonList(new EntityLog("log3", date)))
                                   .execute();
 
-        Assert.assertEquals(1, results.getUpdatedCount());
+        assertEquals(1, results.getModifiedCount());
         EntityLogs updated = ds.find(EntityLogs.class)
                                .execute(new FindOptions().limit(1))
                                .next();
-        Assert.assertEquals(4, updated.logs.size());
+        assertEquals(4, updated.logs.size());
         for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+            assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
         }
     }
 
@@ -588,13 +588,13 @@ public class TestUpdateOps extends TestBase {
         dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
         getDs().save(asList(dumbColl, dumbColl2));
 
-        UpdateResults deleteResults = getDs().find(DumbColl.class)
+        UpdateResult deleteResults = getDs().find(DumbColl.class)
                                              .field("opaqueId").equalIgnoreCase("ID")
-                                             .update(new BasicDBObject("$pull",
-                                               new BasicDBObject("fromArray", new BasicDBObject("whereId", "not there"))))
+                                             .update(new Document("$pull",
+                                               new Document("fromArray", new Document("whereId", "not there"))))
                                              .execute();
 
-        final UpdateResults execute = getDs().find(DumbColl.class).field("opaqueId").equalIgnoreCase("ID")
+        final UpdateResult execute = getDs().find(DumbColl.class).field("opaqueId").equalIgnoreCase("ID")
                                              .update()
                                              .removeAll("fromArray", new DumbArrayElement("something"))
                                              .execute();
@@ -704,12 +704,12 @@ public class TestUpdateOps extends TestBase {
         }
         EntityLogs logs1 = logs.get(0);
         Query<EntityLogs> query = getDs().find(EntityLogs.class);
-        BasicDBObject object = new BasicDBObject("new", "value");
+        Document object = new Document("new", "value");
         query.update()
              .set("raw", object)
              .execute();
 
-        List<EntityLogs> list = toList(getDs().find(EntityLogs.class).execute());
+        List<EntityLogs> list = getDs().find(EntityLogs.class).execute().toList();
         for (int i = 0; i < list.size(); i++) {
             final EntityLogs entityLogs = list.get(i);
             assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
@@ -733,7 +733,7 @@ public class TestUpdateOps extends TestBase {
         //test with Key<Pic>
 
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
-        assertThat(query.update().set("pic", pic).execute().getUpdatedCount(), is(1));
+        assertThat(query.update().set("pic", pic).execute().getModifiedCount(), is(1));
 
         //test reading the object.
         final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
@@ -772,9 +772,9 @@ public class TestUpdateOps extends TestBase {
 
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
-        final UpdateResults res = query.update().set("keys", cpk.keys).execute();
+        final UpdateResult res = query.update().set("keys", cpk.keys).execute();
 
-        assertThat(res.getUpdatedCount(), is(1));
+        assertThat(res.getModifiedCount(), is(1));
 
         //test reading the object.
         final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
@@ -800,7 +800,7 @@ public class TestUpdateOps extends TestBase {
         //test with Key<Pic>
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class).filter("name", cp.getName());
-        assertThat(query.update().set("pic", pic).execute().getUpdatedCount(), is(1));
+        assertThat(query.update().set("pic", pic).execute().getModifiedCount(), is(1));
 
         //test reading the object.
         final ContainsPic cp2 = getDs().find(ContainsPic.class)
@@ -832,7 +832,7 @@ public class TestUpdateOps extends TestBase {
         getDs().save(cInt);
 
         Query<ContainsInt> query = getDs().find(ContainsInt.class);
-        final UpdateResults res = query.update().inc("val", 1.1D).execute();
+        final UpdateResult res = query.update().inc("val", 1.1D).execute();
         assertUpdated(res, 1);
 
         assertThat(query.execute(new FindOptions().limit(1)).next().val, is(22));
@@ -844,21 +844,18 @@ public class TestUpdateOps extends TestBase {
         query.update().inc("r", 1D).execute();
     }
 
-    private void assertInserted(final UpdateResults res) {
-        assertThat(res.getInsertedCount(), is(1));
-        assertThat(res.getUpdatedCount(), is(0));
-        assertThat(res.getUpdatedExisting(), is(false));
+    private void assertInserted(final UpdateResult res) {
+        assertThat(res.getUpsertedId(), is(1));
+        assertThat(res.getModifiedCount(), is(0));
     }
 
-    private void assertUpdated(final UpdateResults res, final int count) {
-        assertThat(res.getInsertedCount(), is(0));
-        assertThat(res.getUpdatedCount(), is(count));
-        assertThat(res.getUpdatedExisting(), is(true));
+    private void assertUpdated(final UpdateResult res, final int count) {
+        assertThat(res.getModifiedCount(), is(count));
     }
 
     private EntityLogs createEntryLogs(final String value) {
         EntityLogs logs = new EntityLogs();
-        logs.raw = new BasicDBObject("name", value);
+        logs.raw = new Document("name", value);
         getDs().save(logs);
 
         return logs;
@@ -866,8 +863,8 @@ public class TestUpdateOps extends TestBase {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void validateNoClassName(final EntityLogs loaded) {
-        List<DBObject> logs = (List<DBObject>) loaded.raw.get("logs");
-        for (DBObject o : logs) {
+        List<Document> logs = (List<Document>) loaded.raw.get("logs");
+        for (Document o : logs) {
             Assert.assertNull(o.get("className"));
         }
     }
@@ -901,10 +898,10 @@ public class TestUpdateOps extends TestBase {
         private String uuid;
         @Embedded
         private List<EntityLog> logs = new ArrayList<>();
-        private DBObject raw;
+        private Document raw;
 
         @PreLoad
-        public void preload(final DBObject raw) {
+        public void preload(final Document raw) {
             this.raw = raw;
         }
     }
@@ -973,26 +970,27 @@ public class TestUpdateOps extends TestBase {
         }
 
         @Override
-        public int hashCode() {
-            int result = first != null ? first.hashCode() : 0;
-            result = 31 * result + (last != null ? last.hashCode() : 0);
-            return result;
-        }
-
-        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
-            if (o == null || getClass() != o.getClass()) {
+            if (!(o instanceof Child)) {
                 return false;
             }
 
-            Child child = (Child) o;
+            final Child child = (Child) o;
 
-            return first != null ? first.equals(child.first)
-                                 : child.first == null && (last != null ? last.equals(child.last) : child.last == null);
+            if (!Objects.equals(first, child.first)) {
+                return false;
+            }
+            return Objects.equals(last, child.last);
+        }
 
+        @Override
+        public int hashCode() {
+            int result = first != null ? first.hashCode() : 0;
+            result = 31 * result + (last != null ? last.hashCode() : 0);
+            return result;
         }
     }
 

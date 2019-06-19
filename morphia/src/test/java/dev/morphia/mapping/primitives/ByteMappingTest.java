@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class ByteMappingTest extends TestBase {
         getMorphia().map(Bytes.class);
         final String data = "{ \"primitiveArray\": BinData(0, "
                             + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
-        getDb().eval("db.Bytes.insert(" + data + ")");
+        getDatabase().runCommand(new Document("eval", "db.Bytes.insert(" + data + ")"));
         final Bytes loaded = getDs().find(Bytes.class).execute(new FindOptions().limit(1)).tryNext();
     }
 

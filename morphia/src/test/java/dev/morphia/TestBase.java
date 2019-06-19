@@ -1,17 +1,17 @@
 package dev.morphia;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public abstract class TestBase {
         this.mongoClient = mongoClient;
         this.db = getMongoClient().getDB(TEST_DB_NAME);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
-        this.ds = getMorphia().createDatastore(getMongoClient(), getDb().getName());
+        this.ds = getMorphia().createDatastore(getMongoClient(), db.getName());
     }
 
     protected static String getMongoURI() {
@@ -41,10 +41,6 @@ public abstract class TestBase {
 
     public AdvancedDatastore getAds() {
         return (AdvancedDatastore) getDs();
-    }
-
-    public DB getDb() {
-        return db;
     }
 
     public MongoDatabase getDatabase() {
@@ -61,6 +57,10 @@ public abstract class TestBase {
 
     public Morphia getMorphia() {
         return morphia;
+    }
+
+    public Mapper getMapper() {
+        return getMorphia().getMapper();
     }
 
     public boolean isReplicaSet() {
@@ -83,13 +83,14 @@ public abstract class TestBase {
     }
 
     protected void cleanup() {
-        DB db = getDb();
+        MongoDatabase db = getDatabase();
         if (db != null) {
-            db.dropDatabase();
+            db.drop();
         }
     }
 
-    protected int count(final Iterator<?> iterator) {
+    protected int count(final MongoIterable<?> iterable) {
+        MongoCursor<?> iterator = iterable.iterator();
         int count = 0;
         while (iterator.hasNext()) {
             count++;
@@ -103,8 +104,7 @@ public abstract class TestBase {
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtLeastVersion(final double version) {
-        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
-        return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
+        return getServerVersion() >= version;
     }
 
     /**
@@ -112,29 +112,28 @@ public abstract class TestBase {
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtMostVersion(final double version) {
-        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
-        return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
+        return getServerVersion() <= version;
     }
 
-    private CommandResult runIsMaster() {
-        // Check to see if this is a replica set... if not, get out of here.
-        return mongoClient.getDB("admin").command(new BasicDBObject("ismaster", 1));
+    protected List<Document> getIndexInfo(final Class<?> clazz) {
+        throw new UnsupportedOperationException();
+//        return getDs().getCollection(clazz).getIndexInfo();
     }
 
-    public BasicDBObject obj(final String key, final Object value) {
-        return new BasicDBObject(key, value);
+    private double getServerVersion() {
+        String version = (String) getMongoClient()
+                                      .getDatabase("admin")
+                                      .runCommand(new Document("serverStatus", 1))
+                                      .get("version");
+        return Double.parseDouble(version.substring(0, 3));
     }
 
-    protected static <E> List<E> toList(final MongoCursor<E> cursor) {
-        final List<E> results = new ArrayList<E>();
-        try {
-            while (cursor.hasNext()) {
-                results.add(cursor.next());
-            }
-        } finally {
-            cursor.close();
-        }
-        return results;
+    private Document runIsMaster() {
+        throw new UnsupportedOperationException();
+//        return mongoClient.getDatabase("admin").runCommand(new Document("ismaster", 1));
     }
 
+    public Document obj(final String key, final Object value) {
+        return new Document(key, value);
+    }
 }

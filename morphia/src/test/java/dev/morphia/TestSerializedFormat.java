@@ -16,19 +16,18 @@
 
 package dev.morphia;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import dev.morphia.query.QueryImpl;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.Query;
+import dev.morphia.query.QueryImpl;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,20 +35,21 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static dev.morphia.converters.DefaultConverters.JAVA_8;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
-import static dev.morphia.converters.DefaultConverters.JAVA_8;
 
 public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(new ObjectId(0, 0, (short) 0, 0))
+                                            .field("id").equal(new ObjectId(0, 0))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
 
@@ -83,22 +83,22 @@ public class TestSerializedFormat extends TestBase {
                                             .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
-        DBObject dbObject = ((QueryImpl) query).getQueryObject();
-        final DBObject parse = BasicDBObject.parse(readFully("/QueryStructure.json"));
-        Assert.assertEquals(parse, dbObject);
+        Document document = ((QueryImpl) query).getQueryDocument();
+        final Document parse = Document.parse(readFully("/QueryStructure.json"));
+        Assert.assertEquals(parse, document);
     }
 
-    private void verifyCoverage(final DBObject dbObject) {
+    private void verifyCoverage(final Document document) {
         for (MappedField field : getMorphia().getMapper().getMappedClass(ReferenceType.class).getPersistenceFields()) {
             String name = field.getNameToStore();
-            boolean found = dbObject.containsField(name);
+            boolean found = document.containsKey(name);
             if (!found) {
-                for (String s : dbObject.keySet()) {
+                for (String s : document.keySet()) {
                     found |= s.startsWith(name + ".");
 
                 }
             }
-            assertTrue("Not found in dbObject: " + name, found);
+            assertTrue("Not found in document: " + name, found);
         }
     }
 
@@ -152,9 +152,9 @@ public class TestSerializedFormat extends TestBase {
 
         getDs().save(entity);
 
-        DBObject dbObject = getDs().getCollection(ReferenceType.class).findOne();
-        Assert.assertEquals(BasicDBObject.parse(readFully("/ReferenceType.json")), dbObject);
-        verifyCoverage(dbObject);
+        Document document = getDs().getCollection(ReferenceType.class).find().first();
+        Assert.assertEquals(Document.parse(readFully("/ReferenceType.json")), document);
+        verifyCoverage(document);
     }
 
     private String readFully(final String name) {
@@ -400,48 +400,48 @@ class ReferenceType {
         if (!id.equals(that.id)) {
             return false;
         }
-        if (string != null ? !string.equals(that.string) : that.string != null) {
+        if (!Objects.equals(string, that.string)) {
             return false;
         }
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(embeddedArray, that.embeddedArray)) {
             return false;
         }
-        if (embeddedSet != null ? !embeddedSet.equals(that.embeddedSet) : that.embeddedSet != null) {
+        if (!Objects.equals(embeddedSet, that.embeddedSet)) {
             return false;
         }
-        if (embeddedList != null ? !embeddedList.equals(that.embeddedList) : that.embeddedList != null) {
+        if (!Objects.equals(embeddedList, that.embeddedList)) {
             return false;
         }
-        if (map != null ? !map.equals(that.map) : that.map != null) {
+        if (!Objects.equals(map, that.map)) {
             return false;
         }
-        if (mapOfList != null ? !mapOfList.equals(that.mapOfList) : that.mapOfList != null) {
+        if (!Objects.equals(mapOfList, that.mapOfList)) {
             return false;
         }
-        if (mapOfSet != null ? !mapOfSet.equals(that.mapOfSet) : that.mapOfSet != null) {
+        if (!Objects.equals(mapOfSet, that.mapOfSet)) {
             return false;
         }
-        if (selfReference != null ? !selfReference.equals(that.selfReference) : that.selfReference != null) {
+        if (!Objects.equals(selfReference, that.selfReference)) {
             return false;
         }
-        if (idOnly != null ? !idOnly.equals(that.idOnly) : that.idOnly != null) {
+        if (!Objects.equals(idOnly, that.idOnly)) {
             return false;
         }
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(referenceArray, that.referenceArray)) {
             return false;
         }
-        if (referenceSet != null ? !referenceSet.equals(that.referenceSet) : that.referenceSet != null) {
+        if (!Objects.equals(referenceSet, that.referenceSet)) {
             return false;
         }
-        if (referenceList != null ? !referenceList.equals(that.referenceList) : that.referenceList != null) {
+        if (!Objects.equals(referenceList, that.referenceList)) {
             return false;
         }
-        if (referenceMap != null ? !referenceMap.equals(that.referenceMap) : that.referenceMap != null) {
+        if (!Objects.equals(referenceMap, that.referenceMap)) {
             return false;
         }
-        return referenceMapOfList != null ? referenceMapOfList.equals(that.referenceMapOfList) : that.referenceMapOfList == null;
+        return Objects.equals(referenceMapOfList, that.referenceMapOfList);
 
     }
 
@@ -483,10 +483,10 @@ class EmbeddedReferenceType {
 
         final EmbeddedReferenceType that = (EmbeddedReferenceType) o;
 
-        if (number != null ? !number.equals(that.number) : that.number != null) {
+        if (!Objects.equals(number, that.number)) {
             return false;
         }
-        return text != null ? text.equals(that.text) : that.text == null;
+        return Objects.equals(text, that.text);
 
     }
 

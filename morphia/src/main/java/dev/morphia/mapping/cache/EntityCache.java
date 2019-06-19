@@ -4,7 +4,7 @@ package dev.morphia.mapping.cache;
 import dev.morphia.Key;
 
 /**
- * A primarily internal class used by MorphiaIterator to track entities loaded from mongo to prevent multiple loads of objects when keys
+ * A primarily internal class used to track entities loaded from mongo to prevent multiple loads of objects when keys
  * are
  * seen multiple times in a query result.
  */

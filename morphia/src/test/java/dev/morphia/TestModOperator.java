@@ -20,52 +20,52 @@ public class TestModOperator extends TestBase {
         getDs().save(new Inventory("Candy", 2));
         getDs().save(new Inventory("Basketballs", 12));
 
-        List<Inventory> list = toList(getDs().find(Inventory.class)
-                                             .filter("quantity mod", new Integer[]{4, 0})
-                                             .order(ascending("name"))
-                                             .execute());
+        List<Inventory> list = getDs().find(Inventory.class)
+                                      .filter("quantity mod", new Integer[]{4, 0})
+                                      .order(ascending("name"))
+                                      .execute().toList();
 
         Assert.assertEquals(2, list.size());
         Assert.assertEquals("Basketballs", list.get(0).name);
         Assert.assertEquals("Flowers", list.get(1).name);
 
-        list = toList(getDs().find(Inventory.class)
-                             .filter("quantity mod", new Integer[]{4, 2})
-                             .order(ascending("name"))
-                             .execute());
+        list = getDs().find(Inventory.class)
+                      .filter("quantity mod", new Integer[]{4, 2})
+                      .order(ascending("name"))
+                      .execute().toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Candy", list.get(0).name);
 
-        list = toList(getDs().find(Inventory.class)
-                             .filter("quantity mod", new Integer[]{6, 0})
-                             .order(ascending("name"))
-                             .execute());
+        list = getDs().find(Inventory.class)
+                      .filter("quantity mod", new Integer[]{6, 0})
+                      .order(ascending("name"))
+                      .execute().toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Basketballs", list.get(0).name);
 
-        list = toList(getDs().find(Inventory.class)
-                             .field("quantity").mod(4, 0)
-                             .order(ascending("name"))
-                             .execute());
+        list = getDs().find(Inventory.class)
+                      .field("quantity").mod(4, 0)
+                      .order(ascending("name"))
+                      .execute().toList();
 
         Assert.assertEquals(2, list.size());
         Assert.assertEquals("Basketballs", list.get(0).name);
         Assert.assertEquals("Flowers", list.get(1).name);
 
-        list = toList(getDs().find(Inventory.class)
-                             .field("quantity").mod(4, 2)
-                             .order(ascending("name"))
-                             .execute());
+        list = getDs().find(Inventory.class)
+                      .field("quantity").mod(4, 2)
+                      .order(ascending("name"))
+                      .execute().toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Candy", list.get(0).name);
 
-        list = toList(getDs().find(Inventory.class)
-                             .field("quantity").mod(6, 0)
-                             .order(ascending("name"))
-                             .execute());
+        list = getDs().find(Inventory.class)
+                      .field("quantity").mod(6, 0)
+                      .order(ascending("name"))
+                      .execute().toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Basketballs", list.get(0).name);

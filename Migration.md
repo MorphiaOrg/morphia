@@ -35,3 +35,5 @@ getDs().find(SomeEntity.class)
 * Some of the old `update()` methods made certain assumptions with `multi` update being the default.  In keeping with the change of the 
 server defaulting to single document updates, Morphia defaults to single document updates as well unless explicitly set to update 
 multiple documents.  See the [`update()`](https://docs.mongodb.com/manual/reference/method/db.collection.update/) documentation for details.
+* Iterable parameters have been changed to List.  Lists are easier to work with and `List.of()` makes creating them from arrays, e.g., 
+trivial

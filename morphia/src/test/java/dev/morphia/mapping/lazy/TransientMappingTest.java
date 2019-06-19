@@ -16,13 +16,13 @@
 
 package dev.morphia.mapping.lazy;
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.Serializable;
 
@@ -43,13 +43,13 @@ public class TransientMappingTest extends TestBase {
         entity.morphiaTransientSerializable = serializable;
 
         getDs().save(entity);
-        DBObject dbObj = getDs().getCollection(HasTransientFields.class).findOne();
-        Assert.assertFalse("morphiaTransientString", dbObj.containsField("morphiaTransientString"));
-        Assert.assertFalse("morphiaTransientInt", dbObj.containsField("morphiaTransientInt"));
-        Assert.assertFalse("morphiaTransientSerializable", dbObj.containsField("morphiaTransientSerializable"));
-        Assert.assertFalse("javaTransientString", dbObj.containsField("javaTransientString"));
-        Assert.assertFalse("javaTransientInt", dbObj.containsField("javaTransientInt"));
-        Assert.assertFalse("javaTransientSerializable", dbObj.containsField("javaTransientSerializable"));
+        Document document = getDs().getCollection(HasTransientFields.class).find().first();
+        Assert.assertFalse("morphiaTransientString", document.containsKey("morphiaTransientString"));
+        Assert.assertFalse("morphiaTransientInt", document.containsKey("morphiaTransientInt"));
+        Assert.assertFalse("morphiaTransientSerializable", document.containsKey("morphiaTransientSerializable"));
+        Assert.assertFalse("javaTransientString", document.containsKey("javaTransientString"));
+        Assert.assertFalse("javaTransientInt", document.containsKey("javaTransientInt"));
+        Assert.assertFalse("javaTransientSerializable", document.containsKey("javaTransientSerializable"));
     }
 
     private static class HasTransientFields {

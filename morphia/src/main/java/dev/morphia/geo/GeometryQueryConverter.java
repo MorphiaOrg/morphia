@@ -1,10 +1,10 @@
 package dev.morphia.geo;
 
-import com.mongodb.BasicDBObject;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 /**
  * Converts Point objects into DBObjects for querying only.  When saving entities with Points in, this converter should not be used.
@@ -21,13 +21,13 @@ public class GeometryQueryConverter extends TypeConverter implements SimpleValue
     }
 
     @Override
-    public Object decode(final Class<?> targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
+    public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
         throw new UnsupportedOperationException("Should never have to decode a query object");
     }
 
     @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         Object encode = getMapper().getConverters().encode(value);
-        return new BasicDBObject("$geometry", encode);
+        return new Document("$geometry", encode);
     }
 }

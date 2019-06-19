@@ -1,36 +1,34 @@
 package dev.morphia.query;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import dev.morphia.FindAndModifyOptions;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
+import org.bson.Document;
 
-public class Modify<R> extends UpdatesImpl<Modify<R>> {
-    private final QueryImpl<R> query;
-    private final DBCollection collection;
-    private final DBObject queryObject;
+public class Modify<T> extends UpdatesImpl<Modify<T>> {
+    private final QueryImpl<T> query;
+    private final MongoCollection<T> collection;
+    private final Document queryObject;
 
-    Modify(final QueryImpl<R> query) {
+    Modify(final QueryImpl<T> query) {
         super(query.ds, query.mapper, query.clazz);
         this.query = query;
-        this.collection = query.dbColl;
-        this.queryObject = query.getQueryObject();
+        this.collection = query.collection;
+        this.queryObject = query.getQueryDocument();
     }
 
-    public R execute() {
-        return execute(new FindAndModifyOptions());
+    public T execute() {
+        return execute(new FindOneAndUpdateOptions()
+                           .sort(query.getSort())
+                           .projection(query.getFieldsObject()));
     }
 
-    public R execute(final FindAndModifyOptions options) {
+    public T execute(final FindOneAndUpdateOptions options) {
         versionUpdate();
-        DBObject res = collection.findAndModify(queryObject, options.copy()
-                                                                    .sort(query.getSortObject())
-                                                                    .projection(query.getFieldsObject())
-                                                                    .update(getOps())
-                                                                    .getOptions());
+        Document res = (Document) collection.findOneAndUpdate(queryObject, getOps(), options);
 
-        return mapper.fromDBObject(datastore, query.getEntityClass(), res, mapper.createEntityCache());
+        return mapper.fromDocument(datastore, query.getEntityClass(), res, mapper.createEntityCache());
 
     }
 

@@ -16,13 +16,11 @@
 
 package dev.morphia;
 
-import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
-import org.bson.Document;
+import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.testutil.TestEntity;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -30,7 +28,7 @@ import static java.util.Collections.emptyList;
 public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testInsert() {
-        DBCollection collection = getDs().getCollection(TestEntity.class);
+        MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getAds().insert(new TestEntity());
         Assert.assertEquals(1, collection.count());
         this.getAds().insert(new TestEntity(), new InsertOptions()
@@ -41,7 +39,7 @@ public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testBulkInsert() {
 
-        DBCollection collection = getDs().getCollection(TestEntity.class);
+        MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(5, collection.count());

@@ -1,8 +1,8 @@
 package dev.morphia;
 
-import com.mongodb.DBObject;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz);
 
     /**
-     * Creates an instance of the class defined in the discriminator field in the dbObject passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
      * is missing, the given Class is used instead.
      *
      * @param clazz type class to instantiate
@@ -30,10 +30,10 @@ public interface ObjectFactory {
      * @param <T>   the type of the entity
      * @return the new instance
      */
-    <T> T createInstance(Class<T> clazz, DBObject dbObj);
+    <T> T createInstance(Class<T> clazz, Document dbObj);
 
     /**
-     * Creates an instance of the class defined in the discriminator field in the dbObject passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
      * is missing, morphia attempts to the MappedField to determine which concrete class to instantiate.
      *
      * @param mapper the Mapper to use
@@ -41,7 +41,7 @@ public interface ObjectFactory {
      * @param dbObj  the state to populate the new instance with
      * @return the new instance
      */
-    Object createInstance(Mapper mapper, MappedField mf, DBObject dbObj);
+    Object createInstance(Mapper mapper, MappedField mf, Document dbObj);
 
     /**
      * Defines how morphia creates a List object.

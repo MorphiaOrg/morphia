@@ -1,9 +1,7 @@
 package dev.morphia.mapping;
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
@@ -14,6 +12,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,11 +42,11 @@ public class ReferenceTest extends ProxyTestBase {
     public void testComplexIds() {
         Complex complex = new Complex(new ChildId("Bob", 67), "Kelso");
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-                                    new Complex(new ChildId("JD", 26), "Dorian"),
-                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
+            new Complex(new ChildId("JD", 26), "Dorian"),
+            new Complex(new ChildId("Carla", 29), "Espinosa"));
         List<Complex> lazyList = asList(new Complex(new ChildId("Bippity", 67), "Boppity"),
-                                        new Complex(new ChildId("Cinder", 22), "Ella"),
-                                        new Complex(new ChildId("Prince", 29), "Charming"));
+            new Complex(new ChildId("Cinder", 22), "Ella"),
+            new Complex(new ChildId("Prince", 29), "Charming"));
 
         ComplexParent parent = new ComplexParent();
         parent.complex = complex;
@@ -87,8 +86,8 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(refs);
 
         // ensure that we're not using DBRef
-        final DBCollection collection = getDs().getCollection(Container.class);
-        final DBObject persisted = collection.findOne(key.getId());
+        final MongoCollection<Document> collection = getDs().getCollection(Container.class);
+        final Document persisted = collection.find(new Document("_id", key.getId())).first();
         assertNotNull(persisted);
         assertEquals("foo", persisted.get("singleRef"));
         assertEquals("foo", persisted.get("lazySingleRef"));
@@ -100,7 +99,7 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals(expectedList, persisted.get("collectionRef"));
         assertEquals(expectedList, persisted.get("lazyCollectionRef"));
 
-        final DBObject expectedMap = new BasicDBObject();
+        final Document expectedMap = new Document();
         expectedMap.put("0", "foo");
         expectedMap.put("1", "bar");
         expectedMap.put("2", "baz");
@@ -116,8 +115,8 @@ public class ReferenceTest extends ProxyTestBase {
         }
         assertEquals(refs.get(0), unwrap(retrieved.getLazySingleRef()));
 
-        final List<Ref> expectedRefList = new ArrayList<Ref>();
-        final Map<Integer, Ref> expectedRefMap = new LinkedHashMap<Integer, Ref>();
+        final List<Ref> expectedRefList = new ArrayList<>();
+        final Map<Integer, Ref> expectedRefMap = new LinkedHashMap<>();
 
         for (int i = 0; i < refs.size(); i++) {
             expectedRefList.add(refs.get(i));
@@ -157,7 +156,7 @@ public class ReferenceTest extends ProxyTestBase {
         final Container container = new Container(singletonList(ref));
         getDs().save(container);
         final Query<Container> query = getDs().find(Container.class)
-                                               .disableValidation()
+                                              .disableValidation()
                                               .field("singleRef").equal(ref);
         Assert.assertNotNull(query.execute(new FindOptions().limit(1)).next());
     }
@@ -171,22 +170,22 @@ public class ReferenceTest extends ProxyTestBase {
         parent1.children.add(child1);
         getDs().save(parent1);
 
-        List<Parent> parentList = toList(getDs().find(Parent.class).execute());
+        List<Parent> parentList = getDs().find(Parent.class).execute().toList();
         Assert.assertEquals(1, parentList.size());
 
         // reset Datastore to reset internal Mapper cache, so Child class
         // already cached by previous save is cleared
-        Datastore localDs = getMorphia().createDatastore(getMongoClient(), new Mapper(), getDb().getName());
+        Datastore localDs = getMorphia().createDatastore(getMongoClient(), new Mapper(), getDatabase().getName());
 
-        parentList = toList(localDs.find(Parent.class).execute());
+        parentList = localDs.find(Parent.class).execute().toList();
         Assert.assertEquals(1, parentList.size());
     }
 
     @Test
     public void testFetchKeys() {
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-                                    new Complex(new ChildId("JD", 26), "Dorian"),
-                                    new Complex(new ChildId("Carla", 29), "Espinosa"));
+            new Complex(new ChildId("JD", 26), "Dorian"),
+            new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
         MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
@@ -203,7 +202,7 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(ref);
         // create entity B with a reference to A
         Sets sets = new Sets();
-        sets.refs = new HashSet<Ref>();
+        sets.refs = new HashSet<>();
         sets.refs.add(ref);
         getDs().save(sets);
 
@@ -211,8 +210,8 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertNotNull(getDs().find(Sets.class).filter("refs", ref).first());
 
         final MapOfSet map = new MapOfSet();
-        map.strings = new HashMap<String, Set<String>>();
-        map.strings.put("name", new TreeSet<String>(asList("one", "two", "three")));
+        map.strings = new HashMap<>();
+        map.strings.put("name", new TreeSet<>(asList("one", "two", "three")));
         getDs().save(map);
         final MapOfSet first = getDs().find(MapOfSet.class).first();
         Assert.assertEquals(map, first);
@@ -258,8 +257,8 @@ public class ReferenceTest extends ProxyTestBase {
             lazySingleRef = refs.get(0);
             collectionRef = refs;
             lazyCollectionRef = refs;
-            mapRef = new LinkedHashMap<Integer, Ref>();
-            lazyMapRef = new LinkedHashMap<Integer, Ref>();
+            mapRef = new LinkedHashMap<>();
+            lazyMapRef = new LinkedHashMap<>();
 
             for (int i = 0; i < refs.size(); i++) {
                 mapRef.put(i, refs.get(i));
@@ -388,7 +387,7 @@ public class ReferenceTest extends ProxyTestBase {
         @Id
         private ObjectId id;
         @Reference(lazy = true)
-        private List<Child> children = new ArrayList<Child>();
+        private List<Child> children = new ArrayList<>();
 
     }
 
@@ -400,10 +399,10 @@ public class ReferenceTest extends ProxyTestBase {
         private Complex complex;
 
         @Reference
-        private List<Complex> list = new ArrayList<Complex>();
+        private List<Complex> list = new ArrayList<>();
 
         @Reference(lazy = true)
-        private List<Complex> lazyList = new ArrayList<Complex>();
+        private List<Complex> lazyList = new ArrayList<>();
 
         public ObjectId getId() {
             return id;

@@ -1,16 +1,16 @@
 package dev.morphia.ext;
 
 
-import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Id;
 import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
@@ -24,7 +24,7 @@ public class EnumValueConverterTest extends TestBase {
     public void testEnum() {
         final EnumEntity ee = new EnumEntity();
         getDs().save(ee);
-        final DBObject dbObj = getDs().getCollection(EnumEntity.class).findOne();
+        final Document dbObj = getDs().getCollection(EnumEntity.class).find().first();
         Assert.assertEquals(1, dbObj.get("val"));
     }
 
@@ -41,11 +41,11 @@ public class EnumValueConverterTest extends TestBase {
         }
 
         @Override
-        public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-            if (fromDBObject == null) {
+        public Object decode(final Class targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+            if (fromDocument == null) {
                 return null;
             }
-            return AEnum.values()[(Integer) fromDBObject];
+            return AEnum.values()[(Integer) fromDocument];
         }
 
         @Override

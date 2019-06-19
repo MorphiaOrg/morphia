@@ -16,8 +16,7 @@
 
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.Document;
 
 /**
  * The options to apply to a $push update operator.
@@ -29,7 +28,7 @@ public class PushOptions {
     private Integer position;
     private Integer slice;
     private Integer sort;
-    private DBObject sortDocument;
+    private Document sortDocument;
 
     /**
      * Creates an empty options class
@@ -82,24 +81,24 @@ public class PushOptions {
             throw new IllegalStateException("sortDocument can not be set if sort already is");
         }
         if (sortDocument == null) {
-            sortDocument = new BasicDBObject();
+            sortDocument = new Document();
         }
         sortDocument.put(field, direction);
         return this;
     }
 
-    void update(final BasicDBObject dbObject) {
+    void update(final Document document) {
         if (position != null) {
-            dbObject.put("$position", position);
+            document.put("$position", position);
         }
         if (slice != null) {
-            dbObject.put("$slice", slice);
+            document.put("$slice", slice);
         }
         if (sort != null) {
-            dbObject.put("$sort", sort);
+            document.put("$sort", sort);
         }
         if (sortDocument != null) {
-            dbObject.put("$sort", sortDocument);
+            document.put("$sort", sortDocument);
         }
     }
 

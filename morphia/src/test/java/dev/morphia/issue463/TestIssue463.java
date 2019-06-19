@@ -1,13 +1,13 @@
 package dev.morphia.issue463;
 
 
-import com.mongodb.BasicDBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class TestIssue463 extends TestBase {
@@ -20,9 +20,9 @@ public class TestIssue463 extends TestBase {
         class2.setText("hello world");
         getDs().save(class2);
 
-        final BasicDBObject query = new BasicDBObject("_id", class2.getId());
-        Assert.assertFalse(getDs().getCollection(Class1.class).find(query).hasNext());
-        Assert.assertTrue(getDs().getCollection(Class2.class).find(query).hasNext());
+        final Document query = new Document("_id", class2.getId());
+        Assert.assertNull(getDs().getCollection(Class1.class).find(query).first());
+        Assert.assertNotNull(getDs().getCollection(Class2.class).find(query).first());
     }
 
     @Entity(value = "class1", noClassnameStored = true)

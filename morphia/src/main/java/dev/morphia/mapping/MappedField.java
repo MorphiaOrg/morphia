@@ -16,8 +16,8 @@
 
 package dev.morphia.mapping;
 
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.Key;
@@ -65,7 +65,7 @@ import static java.util.Arrays.asList;
 public class MappedField {
     private static final Logger LOG = LoggerFactory.getLogger(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<Class<? extends Annotation>>();
+    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<>();
 
     static {
         INTERESTING.add(Serialized.class);
@@ -82,8 +82,8 @@ public class MappedField {
     }
 
     // Annotations that have been found relevant to mapping
-    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
-    private final List<MappedField> typeParameters = new ArrayList<MappedField>();
+    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<>();
+    private final List<MappedField> typeParameters = new ArrayList<>();
     private Class persistedClass;
     private Field field; // the field :)
     private Class realType; // the real type
@@ -210,10 +210,10 @@ public class MappedField {
     }
 
     /**
-     * @param dbObj the DBObject get the value from
+     * @param dbObj the Document get the value from
      * @return the value from best mapping of this field
      */
-    public Object getDbObjectValue(final DBObject dbObj) {
+    public Object getDocumentValue(final Document dbObj) {
         return dbObj.get(getFirstFieldName(dbObj));
     }
 
@@ -246,17 +246,17 @@ public class MappedField {
     }
 
     /**
-     * Gets the field name to use when converting from a DBObject
+     * Gets the field name to use when converting from a Document
      *
-     * @param dbObj the DBObject to scan for alternate names
-     * @return the value of this field mapped from the DBObject
+     * @param dbObj the Document to scan for alternate names
+     * @return the value of this field mapped from the Document
      * @see AlsoLoad
      */
-    public String getFirstFieldName(final DBObject dbObj) {
+    public String getFirstFieldName(final Document dbObj) {
         String fieldName = getNameToStore();
         boolean foundField = false;
         for (final String n : getLoadNames()) {
-            if (dbObj.containsField(n)) {
+            if (dbObj.containsKey(n)) {
                 if (!foundField) {
                     foundField = true;
                     fieldName = n;
@@ -292,7 +292,7 @@ public class MappedField {
     protected List<String> inferLoadNames() {
         final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);
         if (al != null && al.value() != null && al.value().length > 0) {
-            final List<String> names = new ArrayList<String>();
+            final List<String> names = new ArrayList<>();
             names.add(getMappedFieldName());
             names.addAll(asList(al.value()));
             return names;
@@ -517,7 +517,7 @@ public class MappedField {
         }
 
         if (!isMongoType && !isSingleValue && (subType == null || subType == Object.class)) {
-            if (LOG.isWarnEnabled() && !mapper.getConverters().hasDbObjectConverter(this)) {
+            if (LOG.isWarnEnabled() && !mapper.getConverters().hasDocumentConverter(this)) {
                 LOG.warn(format("The multi-valued field '%s' is a possible heterogeneous collection. It cannot be verified. "
                                    + "Please declare a valid type to get rid of this warning. %s", getFullName(), subType));
             }

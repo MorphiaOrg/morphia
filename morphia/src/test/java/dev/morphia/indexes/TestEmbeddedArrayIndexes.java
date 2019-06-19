@@ -13,9 +13,7 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.DBCollection;
-import org.bson.types.ObjectId;
-import org.junit.Test;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Field;
@@ -24,7 +22,11 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.MappedClass;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -35,16 +37,16 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestEmbeddedArrayIndexes extends TestBase {
     @Test
-    public void testParamEntity() throws Exception {
+    public void testParamEntity() {
         final MappedClass mc = getMorphia().getMapper().getMappedClass(A.class);
         assertNotNull(mc);
 
         assertEquals(1, mc.getAnnotations(Indexes.class).size());
 
         getDs().ensureIndexes(A.class);
-        final DBCollection coll = getDs().getCollection(A.class);
 
-        assertEquals("indexes found: coll.getIndexInfo()" + coll.getIndexInfo(), 3, coll.getIndexInfo().size());
+        List<Document> indexInfo = getIndexInfo(A.class);
+        assertEquals("indexes found: coll.getIndexInfo()" + indexInfo, 3, indexInfo.size());
 
     }
 

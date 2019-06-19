@@ -1,11 +1,11 @@
 package dev.morphia.converters;
 
 
-import com.mongodb.DBObject;
 import dev.morphia.ObjectFactory;
 import dev.morphia.mapping.EphemeralMappedField;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.utils.ReflectionUtils;
+import org.bson.Document;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -23,25 +23,25 @@ import static java.lang.String.format;
 public class IterableConverter extends TypeConverter {
     @Override
     @SuppressWarnings("unchecked")
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField mf) {
-        if (mf == null || fromDBObject == null) {
-            return fromDBObject;
+    public Object decode(final Class targetClass, final Object fromDocument, final MappedField mf) {
+        if (mf == null || fromDocument == null) {
+            return fromDocument;
         }
 
         final Class subtypeDest = mf.getSubClass();
         final Collection values = createNewCollection(mf);
 
         final Converters converters = getMapper().getConverters();
-        if (fromDBObject.getClass().isArray()) {
+        if (fromDocument.getClass().isArray()) {
             //This should never happen. The driver always returns list/arrays as a List
-            for (final Object o : (Object[]) fromDBObject) {
+            for (final Object o : (Object[]) fromDocument) {
                 values.add(converters.decode((subtypeDest != null) ? subtypeDest : o.getClass(), o, mf));
             }
-        } else if (fromDBObject instanceof Iterable) {
+        } else if (fromDocument instanceof Iterable) {
             // map back to the java data type
             // (List/Set/Array[])
-            for (final Object o : (Iterable) fromDBObject) {
-                if (o instanceof DBObject) {
+            for (final Object o : (Iterable) fromDocument) {
+                if (o instanceof Document) {
                     final List<MappedField> typeParameters = mf.getTypeParameters();
                     if (!typeParameters.isEmpty()) {
                         final MappedField mappedField = typeParameters.get(0);
@@ -59,7 +59,7 @@ public class IterableConverter extends TypeConverter {
             }
         } else {
             //Single value case.
-            values.add(converters.decode((subtypeDest != null) ? subtypeDest : fromDBObject.getClass(), fromDBObject, mf));
+            values.add(converters.decode((subtypeDest != null) ? subtypeDest : fromDocument.getClass(), fromDocument, mf));
         }
 
         //convert to and array if that is the destination type (not a list/set)

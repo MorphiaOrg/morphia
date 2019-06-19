@@ -1,6 +1,5 @@
 package dev.morphia.mapping.experimental;
 
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.AdvancedDatastore;
@@ -8,6 +7,7 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import static java.util.Arrays.asList;
  */
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private List<Object> ids;
-    private Map<String, List<Object>> collections = new HashMap<String, List<Object>>();
+    private Map<String, List<Object>> collections = new HashMap<>();
 
     CollectionReference() {
     }
@@ -61,7 +61,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     static List register(final Map<String, List<Object>> collections, final String name) {
         List<Object> list = collections.get(name);
         if (list == null) {
-            list = new ArrayList<Object>();
+            list = new ArrayList<>();
             collections.put(name, list);
         }
         return list;
@@ -101,7 +101,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                                                                           .filter("_id in ", collectionIds)
                                                                           .execute();
         try {
-            final Map<Object, Object> idMap = new HashMap<Object, Object>();
+            final Map<Object, Object> idMap = new HashMap<>();
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
@@ -138,16 +138,16 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
      * @param mapper the mapper
      * @param mappedField the MappedField
      * @param paramType the type of the underlying entity
-     * @param dbObject the DBObject to decode
+     * @param document the Document to decode
      * @return the entities
      */
     public static MorphiaReference<?> decode(final Datastore datastore,
                                              final Mapper mapper,
                                              final MappedField mappedField,
                                              final Class paramType,
-                                             final DBObject dbObject) {
+                                             final Document document) {
         MorphiaReference reference = null;
-        final List dbVal = (List) mappedField.getDbObjectValue(dbObject);
+        final List dbVal = (List) mappedField.getDocumentValue(document);
         if (dbVal != null) {
             final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
             final MappedClass mappedClass = mapper.getMappedClass(subType);

@@ -1,15 +1,15 @@
 package dev.morphia.mapping.primitives;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindOptions;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class CharacterMappingTest extends TestBase {
     @Test
     public void emptyStringToWrapper() {
         final Characters characters = testMapping("singleWrapper", "");
-        Assert.assertEquals(new Character((char) 0), characters.singleWrapper);
+        Assert.assertEquals(Character.valueOf((char) 0), characters.singleWrapper);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class CharacterMappingTest extends TestBase {
     }
 
     @Test
-    public void mapping() throws Exception {
+    public void mapping() {
         getMorphia().map(Characters.class);
         final Characters entity = new Characters();
         entity.listWrapperArray.add(new Character[]{'1', 'g', '#'});
@@ -88,7 +88,7 @@ public class CharacterMappingTest extends TestBase {
     @Test
     public void singleCharToWrapper() {
         final Characters characters = testMapping("singleWrapper", "a");
-        Assert.assertEquals(new Character('a'), characters.singleWrapper);
+        Assert.assertEquals(Character.valueOf('a'), characters.singleWrapper);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class CharacterMappingTest extends TestBase {
 
     @Test(expected = MappingException.class)
     public void stringToPrimitive() {
-        final Characters characters = testMapping("singlePrimitive", "ab");
+        testMapping("singlePrimitive", "ab");
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CharacterMappingTest extends TestBase {
 
     @Test(expected = MappingException.class)
     public void stringToWrapper() {
-        final Characters characters = testMapping("singleWrapper", "ab");
+        testMapping("singleWrapper", "ab");
     }
 
     @Test
@@ -129,8 +129,8 @@ public class CharacterMappingTest extends TestBase {
     private Characters testMapping(final String field, final String value) {
         getMorphia().map(Characters.class);
 
-        final DBCollection collection = getDs().getCollection(Characters.class);
-        collection.insert(new BasicDBObject(field, value));
+        final MongoCollection<Document> collection = getDs().getCollection(Characters.class);
+        collection.insertOne(new Document(field, value));
 
         return getDs().find(Characters.class).execute(new FindOptions().limit(1)).tryNext();
     }
@@ -138,9 +138,9 @@ public class CharacterMappingTest extends TestBase {
     public static class Characters {
         @Id
         private ObjectId id;
-        private List<Character[]> listWrapperArray = new ArrayList<Character[]>();
-        private List<char[]> listPrimitiveArray = new ArrayList<char[]>();
-        private List<Character> listWrapper = new ArrayList<Character>();
+        private List<Character[]> listWrapperArray = new ArrayList<>();
+        private List<char[]> listPrimitiveArray = new ArrayList<>();
+        private List<Character> listWrapper = new ArrayList<>();
         private char singlePrimitive;
         private Character singleWrapper;
         private char[] primitiveArray;

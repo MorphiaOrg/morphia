@@ -1,6 +1,6 @@
 package dev.morphia.geo;
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.testutil.JSONMatcher;
@@ -22,7 +22,7 @@ public class GeometryCollectionTest extends TestBase {
         getMorphia().getMapper().addMappedClass(Point.class);
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(geometryCollection);
+        Document dbObject = getMorphia().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -46,7 +46,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPoint);
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(geometryCollection);
+        Document dbObject = getMorphia().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -73,7 +73,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPolygon);
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(geometryCollection);
+        Document dbObject = getMorphia().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -112,7 +112,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point);
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(geometryCollection);
+        Document dbObject = getMorphia().toDocument(geometryCollection);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
         assertThat(dbObject, is(notNullValue()));
@@ -138,7 +138,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(polygonWithHoles);
 
         // when
-        DBObject dbObject = getMorphia().toDBObject(geometryCollection);
+        Document dbObject = getMorphia().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"

@@ -1,8 +1,8 @@
 package dev.morphia.mapping;
 
-import com.mongodb.DBObject;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.utils.ReflectionUtils;
+import org.bson.Document;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -60,8 +60,8 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    public Object getDbObjectValue(final DBObject dbObj) {
-        return dbObj;
+    public Object getDocumentValue(final Document document) {
+        return document;
     }
 
     @Override

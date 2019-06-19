@@ -1,7 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import dev.morphia.geo.CoordinateReferenceSystem;
 import dev.morphia.geo.Geometry;
 import dev.morphia.geo.GeometryQueryConverter;
@@ -58,11 +56,11 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     }
 
     @Override
-    public DBObject toDBObject() {
-        DBObject query;
+    public Document toDocument() {
+        Document query;
         FilterOperator operator = getOperator();
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getMapper());
-        final DBObject geometryAsDBObject = (DBObject) geometryQueryConverter.encode(geometry, null);
+        final Document geometryAsDBObject = (Document) geometryQueryConverter.encode(geometry, null);
 
         switch (operator) {
             case NEAR:
@@ -70,19 +68,19 @@ final class Geo2dSphereCriteria extends FieldCriteria {
                 if (options != null) {
                     geometryAsDBObject.putAll(options);
                 }
-                query = new BasicDBObject(NEAR.val(), geometryAsDBObject);
+                query = new Document(NEAR.val(), geometryAsDBObject);
                 break;
             case GEO_WITHIN:
             case INTERSECTS:
-                query = new BasicDBObject(operator.val(), geometryAsDBObject);
+                query = new Document(operator.val(), geometryAsDBObject);
                 if (crs != null) {
-                    ((DBObject) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
+                    ((Document) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
                 }
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));
         }
 
-        return new BasicDBObject(getField(), query);
+        return new Document(getField(), query);
     }
 }

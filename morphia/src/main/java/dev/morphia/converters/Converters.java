@@ -1,10 +1,10 @@
 package dev.morphia.converters;
 
-import com.mongodb.DBObject;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +24,9 @@ public abstract class Converters {
     private static final Logger LOG = LoggerFactory.getLogger(Converters.class);
 
     private final Mapper mapper;
-    private final List<TypeConverter> untypedTypeEncoders = new LinkedList<TypeConverter>();
-    private final Map<Class, List<TypeConverter>> tcMap = new ConcurrentHashMap<Class, List<TypeConverter>>();
-    private final List<Class<? extends TypeConverter>> registeredConverterClasses = new ArrayList<Class<? extends TypeConverter>>();
+    private final List<TypeConverter> untypedTypeEncoders = new LinkedList<>();
+    private final Map<Class, List<TypeConverter>> tcMap = new ConcurrentHashMap<>();
+    private final List<Class<? extends TypeConverter>> registeredConverterClasses = new ArrayList<>();
 
     /**
      * Creates a bundle with a particular Mapper.
@@ -69,24 +69,24 @@ public abstract class Converters {
     }
 
     /**
-     * decode the {@link com.mongodb.DBObject} and provide the corresponding java (type-safe) object
+     * decode the {@link Document} and provide the corresponding java (type-safe) object
      * <br><b>NOTE: mf might be null</b>
      *
      * @param c            the class to create and populate
-     * @param fromDBObject the DBObject to use when populating the new instance
+     * @param fromDocument the Document to use when populating the new instance
      * @param mf           the MappedField that contains the metadata useful for decoding
      * @return the new instance
      */
-    public Object decode(final Class c, final Object fromDBObject, final MappedField mf) {
+    public Object decode(final Class c, final Object fromDocument, final MappedField mf) {
         Class toDecode = c;
         if (toDecode == null) {
-            toDecode = fromDBObject.getClass();
+            toDecode = fromDocument.getClass();
         }
-        return getEncoder(toDecode).decode(toDecode, fromDBObject, mf);
+        return getEncoder(toDecode).decode(toDecode, fromDocument, mf);
     }
 
     /**
-     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
+     * encode the type safe java object into the corresponding {@link Document}
      *
      * @param o The object to encode
      * @return the encoded version of the object
@@ -99,7 +99,7 @@ public abstract class Converters {
     }
 
     /**
-     * encode the type safe java object into the corresponding {@link com.mongodb.DBObject}
+     * encode the type safe java object into the corresponding {@link Document}
      *
      * @param c The type to use when encoding
      * @param o The object to encode
@@ -110,15 +110,15 @@ public abstract class Converters {
     }
 
     /**
-     * Creates an entity and populates its state based on the dbObject given.  This method is primarily an internal method.  Reliance on
+     * Creates an entity and populates its state based on the document given.  This method is primarily an internal method.  Reliance on
      * this method may break your application in future releases.
      *
      * @param dbObj        the object state to use
      * @param mf           the MappedField containing the metadata to use when decoding in to a field
      * @param targetEntity then entity to hold the state from the database
      */
-    public void fromDBObject(final DBObject dbObj, final MappedField mf, final Object targetEntity) {
-        final Object object = mf.getDbObjectValue(dbObj);
+    public void fromDocument(final Document dbObj, final MappedField mf, final Object targetEntity) {
+        final Object object = mf.getDocumentValue(dbObj);
         if (object != null) {
             final TypeConverter enc = getEncoder(mf);
             final Object decodedValue = enc.decode(mf.getType(), object, mf);
@@ -135,7 +135,7 @@ public abstract class Converters {
      * @param field the field to check with
      * @return true if there is a converter for the type of the field
      */
-    public boolean hasDbObjectConverter(final MappedField field) {
+    public boolean hasDocumentConverter(final MappedField field) {
         final TypeConverter converter = getEncoder(field);
         return converter != null && !(converter instanceof IdentityConverter) && !(converter instanceof SimpleValueConverter);
     }
@@ -144,7 +144,7 @@ public abstract class Converters {
      * @param c the type to check
      * @return true if there is a converter for the type
      */
-    public boolean hasDbObjectConverter(final Class c) {
+    public boolean hasDocumentConverter(final Class c) {
         final TypeConverter converter = getEncoder(c);
         return converter != null && !(converter instanceof IdentityConverter) && !(converter instanceof SimpleValueConverter);
     }
@@ -218,14 +218,14 @@ public abstract class Converters {
     }
 
     /**
-     * Converts an entity to a DBObject
+     * Converts an entity to a Document
      *
      * @param containingObject The object to convert
      * @param mf               the MappedField to extract
-     * @param dbObj            the DBObject to populate
+     * @param dbObj            the Document to populate
      * @param opts             the options to apply
      */
-    public void toDBObject(final Object containingObject, final MappedField mf, final DBObject dbObj, final MapperOptions opts) {
+    public void toDocument(final Object containingObject, final MappedField mf, final Document dbObj, final MapperOptions opts) {
         final Object fieldValue = mf.getFieldValue(containingObject);
         final TypeConverter enc = getEncoder(fieldValue, mf);
 
@@ -285,7 +285,7 @@ public abstract class Converters {
             tcMap.get(type).add(0, tc);
             LOG.warn("Added duplicate converter for " + type + " ; " + tcMap.get(type));
         } else {
-            final List<TypeConverter> values = new ArrayList<TypeConverter>();
+            final List<TypeConverter> values = new ArrayList<>();
             values.add(tc);
             tcMap.put(type, values);
         }

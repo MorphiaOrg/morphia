@@ -1,6 +1,6 @@
 package dev.morphia.testutil;
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -14,7 +14,7 @@ import static org.junit.Assert.fail;
  * Hamcrest matcher that can be used with a List of DBObjects representing the indexes on a Collection.  This list, for example, might be
  * from a call like {@code getDs().getCollection(Entity.class).getIndexInfo()}
  */
-public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
+public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
     private final String indexName;
     private final boolean indexShouldBePresent;
 
@@ -29,7 +29,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
      * @param indexName the expected name of the index
      * @return a Matcher that will match if a list of DBObjects contains an index with the given name
      */
-    public static Matcher<? super List<DBObject>> hasIndexNamed(final String indexName) {
+    public static Matcher<? super List<Document>> hasIndexNamed(final String indexName) {
         return new IndexMatcher(indexName, true);
     }
 
@@ -40,7 +40,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
      * @param indexName the expected name of the index
      * @return a Matcher that will fail if a list of DBObjects contains an index with the given name
      */
-    public static Matcher<? super List<DBObject>> doesNotHaveIndexNamed(final String indexName) {
+    public static Matcher<? super List<Document>> doesNotHaveIndexNamed(final String indexName) {
         return new IndexMatcher(indexName, false);
     }
 
@@ -50,10 +50,10 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
     }
 
     @Override
-    protected boolean matchesSafely(final List<DBObject> indexes) {
+    protected boolean matchesSafely(final List<Document> indexes) {
         boolean indexFound = false;
-        for (final DBObject dbObj : indexes) {
-            if (dbObj.get("name").equals(indexName)) {
+        for (final Document document : indexes) {
+            if (document.get("name").equals(indexName)) {
                 indexFound = true;
             }
         }
@@ -62,7 +62,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<DBObject>> {
     }
 
     @Override
-    protected void describeMismatchSafely(final List<DBObject> indexes, final Description mismatchDescription) {
+    protected void describeMismatchSafely(final List<Document> indexes, final Description mismatchDescription) {
         fail(format("Expected %s to find index with name '%s' in %s",
                     indexShouldBePresent ? "" : "not",
                     indexName, indexes));
