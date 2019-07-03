@@ -18,6 +18,7 @@ import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
@@ -26,9 +27,9 @@ import dev.morphia.annotations.PreSave;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Serialized;
-import dev.morphia.converters.CustomConverters;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.cache.EntityCache;
+import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.mapping.lazy.LazyProxyFactory;
@@ -38,6 +39,7 @@ import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.ValidationException;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,13 +70,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Mapper {
-    /**
-     * The @{@link dev.morphia.annotations.Id} field name that is stored with mongodb.
-     *
-     * @deprecated use "_id" directly
-     */
-    @Deprecated
-    public static final String ID_KEY = "_id";
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
@@ -106,7 +101,7 @@ public class Mapper {
     private final Map<Class, Object> instanceCache = new ConcurrentHashMap();
     // TODO: make these configurable
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
-    private final dev.morphia.converters.Converters converters;
+    private final Datastore datastore;
     private MapperOptions opts = MapperOptions.builder().build();
 
     /**
@@ -114,32 +109,18 @@ public class Mapper {
      *
      * @param opts the options to use
      */
-    public Mapper(final MapperOptions opts) {
-        this();
+    Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
+        this.datastore = datastore;
+
         this.opts = opts;
-    }
+        final MorphiaCodecProvider codecProvider = new MorphiaCodecProvider(datastore, this,
+            singletonList(new MorphiaConvention(datastore, opts)), packages);
+        final MorphiaTypesCodecProvider typesCodecProvider = new MorphiaTypesCodecProvider(this);
 
-    /**
-     * Creates a Mapper with default options
-     *
-     * @see MapperOptions
-     */
-    public Mapper() {
-        converters = new CustomConverters(this);
-    }
-
-    /**
-     * Creates a new Mapper with the given options and a Mapper to copy.  This is effectively a copy constructor that allows a developer
-     * to override the options.
-     *
-     * @param options the options to use
-     * @param mapper  the collection of MappedClasses to add
-     */
-    public Mapper(final MapperOptions options, final Mapper mapper) {
-        this(options);
-        for (final MappedClass mappedClass : mapper.getMappedClasses()) {
-            addMappedClass(mappedClass, false);
-        }
+        this.codecRegistry = fromRegistries(fromProviders(new MorphiaShortCutProvider(this, codecProvider)),
+            new PrimitiveCodecProvider(codecRegistry),
+            codecRegistry,
+            fromProviders(new EnumCodecProvider(), typesCodecProvider, codecProvider));
     }
 
     /**
@@ -149,6 +130,10 @@ public class Mapper {
      */
     public void addInterceptor(final EntityInterceptor ei) {
         interceptors.add(ei);
+    }
+
+    public boolean hasInterceptors() {
+        return !interceptors.isEmpty();
     }
 
     /**
@@ -213,6 +198,24 @@ public class Mapper {
         }
 
         return subtypes;
+    }
+
+    public <T> boolean isMappable(final Class<T> clazz) {
+        return hasAnnotation(clazz, Entity.class, Embedded.class);
+    }
+
+    public Object getCodecRegistry() {
+        return null;
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation>... annotations) {
+        for (Class<? extends Annotation> annotation : annotations) {
+            if(clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

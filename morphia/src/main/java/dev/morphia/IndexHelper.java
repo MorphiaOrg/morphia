@@ -34,7 +34,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
 import org.bson.Document;
 import org.bson.codecs.Encoder;
-import org.bson.codecs.EncoderContext;
+import dev.morphia.mapping.codec.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

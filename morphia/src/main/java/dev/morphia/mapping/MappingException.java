@@ -13,12 +13,7 @@
 
 package dev.morphia.mapping;
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 public class MappingException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
     /**
      * Creates an exception with a message
      *
