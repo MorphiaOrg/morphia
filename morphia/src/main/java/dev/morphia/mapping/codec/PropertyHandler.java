@@ -2,10 +2,13 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.codec.pojo.InstanceCreator;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.pojo.InstanceCreator;
+import org.bson.codecs.pojo.PropertyModel;
+import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
 import java.util.Map;

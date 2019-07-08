@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.classrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -15,12 +16,12 @@ public class NonStaticInnerClassTest extends TestBase {
 
     @Test(expected = MappingException.class)
     public void testInValidInnerClass() throws Exception {
-        getMorphia().map(InValid.class);
+        Mapper.map(InValid.class);
     }
 
     @Test
     public void testValidInnerClass() throws Exception {
-        getMorphia().map(Valid.class);
+        Mapper.map(Valid.class);
     }
 
     static class Valid {

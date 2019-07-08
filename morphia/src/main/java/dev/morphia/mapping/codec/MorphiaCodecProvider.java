@@ -3,16 +3,17 @@ package dev.morphia.mapping.codec;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.ClassModel;
-import dev.morphia.mapping.codec.pojo.ClassModelBuilder;
-import dev.morphia.mapping.codec.pojo.Convention;
-import dev.morphia.mapping.codec.pojo.DiscriminatorLookup;
-import dev.morphia.mapping.codec.pojo.MorphiaCodecImpl;
+import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.ClassModel;
+import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.CollectionPropertyCodecProvider;
+import org.bson.codecs.pojo.Convention;
+import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.bson.codecs.pojo.MapPropertyCodecProvider;
+import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 
 import java.util.ArrayList;
@@ -26,18 +27,16 @@ import static org.bson.assertions.Assertions.notNull;
 
 public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, ClassModel<?>> classModels = new HashMap<>();
-    private final Map<Class<?>, MorphiaCodec<?>> codecs = new HashMap<>();
+    private final Map<Class<?>, PojoCodec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
     private final List<Convention> conventions;
     private final DiscriminatorLookup discriminatorLookup;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
-    private Datastore datastore;
 
     public MorphiaCodecProvider(final Datastore datastore,
                                 final Mapper mapper,
                                 final List<Convention> conventions,
                                 final Set<String> packages) {
-        this.datastore = datastore;
         this.mapper = mapper;
         this.conventions = conventions;
         this.discriminatorLookup = new DiscriminatorLookup(this.classModels, packages);
@@ -49,11 +48,11 @@ public class MorphiaCodecProvider implements CodecProvider {
     @SuppressWarnings("unchecked")
     public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
         if (mapper.isMappable(clazz)) {
-            MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(clazz);
+            PojoCodec<T> codec = (PojoCodec<T>) codecs.get(clazz);
             if (codec == null) {
                 ClassModel<T> classModel = createClassModel(clazz, conventions);
                 discriminatorLookup.addClassModel(classModel);
-                codec = new MorphiaCodecImpl<T>(datastore, mapper, new MappedClass(classModel, mapper), classModel, registry,
+                codec = new MorphiaCodec<>(mapper, new MappedClass(classModel, mapper), classModel, registry,
                     propertyCodecProviders, discriminatorLookup);
             }
 
@@ -64,7 +63,7 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     /**
      * Registers codec providers that receive the type parameters of properties for instances encoded and decoded
-     * by a {@link MorphiaCodec} handled by this provider.
+     * by a {@link PojoCodec} handled by this provider.
      *
      * @param providers property codec providers to register
      */

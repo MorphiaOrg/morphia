@@ -77,11 +77,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
         final MappedClass mc = mapper.getMappedClass(clazz);
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
-        if (entAn != null) {
-            getOptions().readPreference(mapper.getMappedClass(clazz).getEntityAnnotation().queryNonPrimary()
-                                        ? ReadPreference.secondaryPreferred()
-                                        : null);
-        }
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
 
@@ -101,12 +96,12 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public long count() {
-        return collection.countDocuments(getQueryDocument());
+        return collection.count(getQueryDocument());
     }
 
     @Override
     public long count(final CountOptions options) {
-        return collection.countDocuments(getQueryDocument(), options);
+        return collection.count(getQueryDocument(), options);
     }
 
     @Override
@@ -249,7 +244,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
             Entity entityAnnotation = mc.getEntityAnnotation();
 
-            if (projection.isIncluding() && entityAnnotation != null && !entityAnnotation.noClassnameStored()) {
+            if (projection.isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
                 document.put(ds.getMapper().getOptions().getDiscriminatorField(), 1);
             }
         }
@@ -603,7 +598,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             final List<MappedField> fields = mapper.getMappedClass(clazz)
                                                    .getFieldsAnnotatedWith(Version.class);
             if (!fields.isEmpty()) {
-                inc(fields.get(0).getNameToStore(), 1);
+                inc(fields.get(0).getMappedFieldName(), 1);
             }
             MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
             return options.isMulti()

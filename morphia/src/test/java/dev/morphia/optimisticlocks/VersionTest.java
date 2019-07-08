@@ -2,6 +2,7 @@ package dev.morphia.optimisticlocks;
 
 
 import com.mongodb.client.result.UpdateResult;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetection() throws Exception {
-        getMorphia().map(ALongPrimitive.class);
+        Mapper.map(ALongPrimitive.class);
 
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.version);
@@ -66,18 +67,18 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidVersionUse() throws Exception {
-        getMorphia().map(InvalidVersionUse.class);
+        Mapper.map(InvalidVersionUse.class);
     }
 
     @Test
     public void testVersionFieldNameContribution() throws Exception {
         final MappedField mappedFieldByJavaField = getMorphia().getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
-        Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getNameToStore());
+        Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getMappedFieldName());
     }
 
     @Test
     public void testVersionInHashcode() throws Exception {
-        getMorphia().mapPackage("com.example");
+        Mapper.mapPackage("com.example");
 
         final VersionInHashcode model = new VersionInHashcode();
         model.data = "whatever";

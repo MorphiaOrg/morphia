@@ -8,6 +8,7 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -20,7 +21,7 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testClassAnnotation() {
-        getMorphia().map(ClassAnnotation.class);
+        Mapper.map(ClassAnnotation.class);
         getDs().ensureIndexes();
 
         getDs().save(new ClassAnnotation());
@@ -42,7 +43,7 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testIndexedField() {
-        getMorphia().map(HasExpiryField.class);
+        Mapper.map(HasExpiryField.class);
         getDs().ensureIndexes();
 
         getDs().save(new HasExpiryField());

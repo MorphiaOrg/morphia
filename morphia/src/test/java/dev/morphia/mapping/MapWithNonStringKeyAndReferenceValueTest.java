@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     @Test
     public void testMapKeyShouldBeInteger() throws Exception {
-        getMorphia().map(ChildEntity.class, ParentEntity.class);
+        Mapper.map(ChildEntity.class, ParentEntity.class);
 
         final ChildEntity ce1 = new ChildEntity();
         ce1.value = "first";
@@ -46,7 +46,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         if (!LazyFeatureDependencies.assertDependencyFullFilled()) {
             return;
         }
-        getMorphia().map(ChildEntity.class, ParentEntity.class);
+        Mapper.map(ChildEntity.class, ParentEntity.class);
 
         final ChildEntity ce1 = new ChildEntity();
         ce1.value = "first";

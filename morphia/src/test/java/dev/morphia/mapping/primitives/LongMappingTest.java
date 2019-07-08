@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import java.util.List;
 public class LongMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        getMorphia().map(Longs.class);
+        Mapper.map(Longs.class);
         final Longs ent = new Longs();
         ent.listWrapperArray.add(new Long[]{1L, 2L});
         ent.listPrimitiveArray.add(new long[]{2, 3, 12});

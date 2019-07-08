@@ -15,7 +15,7 @@
 package dev.morphia;
 
 
-import com.mongodb.BasicDBObject;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class TestIdField extends TestBase {
     @Test
     public void testIdFieldNameMapping() {
         final Rectangle r = new Rectangle(1, 12);
-        final Document document = getMorphia().toDocument(r);
+        final Document document = TestBase.toDocument(r);
         assertFalse(document.containsKey("id"));
         assertTrue(document.containsKey("_id"));
         assertEquals(4, document.size()); //_id, h, w, className
@@ -67,7 +67,7 @@ public class TestIdField extends TestBase {
 
     @Test
     public void testKeyAsId() {
-        getMorphia().map(KeyAsId.class);
+        Mapper.map(KeyAsId.class);
 
         final Rectangle r = new Rectangle(1, 1);
         //        Rectangle r2 = new Rectangle(11,11);
@@ -83,7 +83,7 @@ public class TestIdField extends TestBase {
 
     @Test
     public void testMapAsId() {
-        getMorphia().map(MapAsId.class);
+        Mapper.map(MapAsId.class);
 
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");

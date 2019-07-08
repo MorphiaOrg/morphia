@@ -6,6 +6,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.PreSave;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
 import org.bson.Document;
@@ -25,7 +26,7 @@ public class PropertyAndEmbeddedTest extends TestBase {
 
         Assert.assertTrue(e.document.contains("myFunkyR"));
 
-        getMorphia().map(E2.class);
+        Mapper.map(E2.class);
     }
 
     public static class E extends TestEntity {

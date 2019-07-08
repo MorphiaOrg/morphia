@@ -19,7 +19,7 @@ public class TestEntityInterceptorMoment extends TestBase {
 
     @Test
     public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
-        getMorphia().map(E.class);
+        Mapper.map(E.class);
         getMorphia().getMapper().addInterceptor(new Interceptor());
 
         getDs().save(new E());

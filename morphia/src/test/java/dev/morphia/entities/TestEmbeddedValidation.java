@@ -17,6 +17,7 @@
 package dev.morphia.entities;
 
 import com.mongodb.client.MongoCursor;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +27,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class TestEmbeddedValidation extends TestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() {
-        getMorphia().map(TestEntity.class);
+        Mapper.map(TestEntity.class);
         TestEntity entity = new TestEntity();
 
         Map<String, Object> map = mapOf("type", "text");

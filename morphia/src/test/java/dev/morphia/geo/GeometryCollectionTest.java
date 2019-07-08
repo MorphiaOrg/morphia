@@ -22,7 +22,7 @@ public class GeometryCollectionTest extends TestBase {
         getMorphia().getMapper().addMappedClass(Point.class);
 
         // when
-        Document dbObject = getMorphia().toDocument(geometryCollection);
+        Document dbObject = TestBase.toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -46,7 +46,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPoint);
 
         // when
-        Document dbObject = getMorphia().toDocument(geometryCollection);
+        Document dbObject = TestBase.toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -73,7 +73,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPolygon);
 
         // when
-        Document dbObject = getMorphia().toDocument(geometryCollection);
+        Document dbObject = TestBase.toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -112,7 +112,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point);
 
         // when
-        Document dbObject = getMorphia().toDocument(geometryCollection);
+        Document dbObject = TestBase.toDocument(geometryCollection);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
         assertThat(dbObject, is(notNullValue()));
@@ -138,7 +138,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(polygonWithHoles);
 
         // when
-        Document dbObject = getMorphia().toDocument(geometryCollection);
+        Document dbObject = TestBase.toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"

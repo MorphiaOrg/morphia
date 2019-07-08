@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.MongoException;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -121,8 +122,8 @@ public class QueryInTest extends TestBase {
 
     @Test
     public void testMapping() {
-        getMorphia().map(HasRefs.class);
-        getMorphia().map(ReferencedEntity.class);
+        Mapper.map(HasRefs.class);
+        Mapper.map(ReferencedEntity.class);
     }
 
     @Test

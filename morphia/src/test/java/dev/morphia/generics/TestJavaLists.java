@@ -20,8 +20,8 @@ import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
@@ -34,8 +34,8 @@ import static org.junit.Assert.assertNull;
 public class TestJavaLists extends TestBase {
     @Test
     public void emptyModel() {
-        getMorphia().getMapper().getOptions().setStoreEmpties(true);
-        getMorphia().getMapper().getOptions().setStoreNulls(false);
+        getMapper().getOptions().setStoreEmpties(true);
+        getMapper().getOptions().setStoreNulls(false);
 
         TestEmptyModel model = new TestEmptyModel();
         model.text = "text";
@@ -50,21 +50,13 @@ public class TestJavaLists extends TestBase {
     }
 
     @Test
-    public void jsonObjects() {
-        getMorphia().map(JsonList.class);
-        populate(new Document(Document.parse("{\"jsonObject\": { \"array\": [{ \"foo\": \"bar\" }]},}")));
-        populate(new Document(Document.parse("{\"jsonList\" : [ 1, \"string\", true, null ],}")));
-        populate(new Document(Document.parse("{\"jsonList\" : [ {  \"foo\" : \"bar\" }],}")));
-    }
-
-    @Test
     public void mapperTest() {
-        getMorphia().map(Employee.class);
+        Mapper.map(Employee.class);
 
         for (boolean nulls : new boolean[]{true, false}) {
             for (boolean empties : new boolean[]{true, false}) {
-                getMorphia().getMapper().getOptions().setStoreNulls(nulls);
-                getMorphia().getMapper().getOptions().setStoreEmpties(empties);
+                getMapper().getOptions().setStoreNulls(nulls);
+                getMapper().getOptions().setStoreEmpties(empties);
                 empties();
             }
         }
@@ -83,10 +75,6 @@ public class TestJavaLists extends TestBase {
 
         assertEquals(employee.byteList, loaded.byteList);
         assertNull(loaded.floatList);
-    }
-
-    private void populate(final Document jsonObject) {
-        getMorphia().fromDocument(null, JsonList.class, jsonObject);
     }
 
     @Entity

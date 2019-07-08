@@ -3,6 +3,7 @@ package dev.morphia.example;
 import com.mongodb.MongoClient;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.annotations.IndexOptions;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import dev.morphia.Datastore;
@@ -31,7 +32,7 @@ public final class QuickTour {
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
-        morphia.mapPackage("dev.morphia.example");
+        Mapper.mapPackage("dev.morphia.example");
 
         // create the Datastore connecting to the database running on the default port on the local host
         final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");

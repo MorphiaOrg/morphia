@@ -1,6 +1,7 @@
 package dev.morphia.converters;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -15,7 +16,7 @@ public class CustomConverterDefaultTest extends TestBase {
     public void testConversion() {
         final FooConverter fc = new FooConverter();
         getMorphia().getMapper().getConverters().addConverter(fc);
-        getMorphia().map(E.class);
+        Mapper.map(E.class);
         E e = new E();
         e.foo = new Foo("test");
         getDs().save(e);

@@ -22,7 +22,6 @@ import com.mongodb.WriteConcern;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
-import com.mongodb.lang.Nullable;
 import org.bson.Document;
 
 import java.util.concurrent.TimeUnit;
@@ -30,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * The options to apply to a find operation (also commonly referred to as a query).
  *
- * @since 1.3
  * @mongodb.driver.manual tutorial/query-documents/ Find
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
+ * @since 1.3
  */
 public final class FindOptions {
     private int batchSize;
@@ -87,17 +86,10 @@ public final class FindOptions {
         this.writeConcern = original.writeConcern;
         this.projection = original.projection;
     }
-    public int getLimit() {
-        return this.limit;
-    }
 
     public FindOptions limit(int limit) {
         this.limit = limit;
         return this;
-    }
-
-    public int getSkip() {
-        return this.skip;
     }
 
     public FindOptions skip(int skip) {
@@ -129,53 +121,30 @@ public final class FindOptions {
         return this;
     }
 
-    public int getBatchSize() {
-        return this.batchSize;
-    }
-
     public FindOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     */
     @Deprecated
-    @Nullable
-    public Document getModifiers() {
-        return this.modifiers;
-    }
-
-    /** @deprecated */
-    @Deprecated
-    public FindOptions modifiers(@Nullable Document modifiers) {
+    public FindOptions modifiers(Document modifiers) {
         this.modifiers = modifiers;
         return this;
     }
 
     public Projection projection() {
-        if(projection != null){
+        if (projection != null) {
             projection = new Projection(this);
         }
         return projection;
     }
 
-    @Nullable
-    public Projection getProjection() {
-        return this.projection;
-    }
-
-    @Nullable
-    public Document getSort() {
-        return this.sort;
-    }
-
-    public FindOptions sort(@Nullable Document sort) {
+    public FindOptions sort(Document sort) {
         this.sort = sort;
         return this;
-    }
-
-    public boolean isNoCursorTimeout() {
-        return this.noCursorTimeout;
     }
 
     public FindOptions noCursorTimeout(boolean noCursorTimeout) {
@@ -183,17 +152,9 @@ public final class FindOptions {
         return this;
     }
 
-    public boolean isOplogReplay() {
-        return this.oplogReplay;
-    }
-
     public FindOptions oplogReplay(boolean oplogReplay) {
         this.oplogReplay = oplogReplay;
         return this;
-    }
-
-    public boolean isPartial() {
-        return this.partial;
     }
 
     public FindOptions partial(boolean partial) {
@@ -201,67 +162,34 @@ public final class FindOptions {
         return this;
     }
 
-    public CursorType getCursorType() {
-        return this.cursorType;
-    }
-
     public FindOptions cursorType(CursorType cursorType) {
-        this.cursorType = (CursorType)Assertions.notNull("cursorType", cursorType);
+        this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
     }
 
-    @Nullable
-    public Collation getCollation() {
-        return this.collation;
-    }
-
-    public FindOptions collation(@Nullable Collation collation) {
+    public FindOptions collation(Collation collation) {
         this.collation = collation;
         return this;
     }
 
-    @Nullable
-    public String getComment() {
-        return this.comment;
-    }
-
-    public FindOptions comment(@Nullable String comment) {
+    public FindOptions comment(String comment) {
         this.comment = comment;
         return this;
     }
 
-    @Nullable
-    public Document getHint() {
-        return this.hint;
-    }
-
-    public FindOptions hint(@Nullable Document hint) {
+    public FindOptions hint(Document hint) {
         this.hint = hint;
         return this;
     }
 
-    @Nullable
-    public Document getMax() {
-        return this.max;
-    }
-
-    public FindOptions max(@Nullable Document max) {
+    public FindOptions max(Document max) {
         this.max = max;
         return this;
     }
 
-    @Nullable
-    public Document getMin() {
-        return this.min;
-    }
-
-    public FindOptions min(@Nullable Document min) {
+    public FindOptions min(Document min) {
         this.min = min;
         return this;
-    }
-
-    public boolean isReturnKey() {
-        return this.returnKey;
     }
 
     public FindOptions returnKey(boolean returnKey) {
@@ -269,26 +197,14 @@ public final class FindOptions {
         return this;
     }
 
-    public boolean isShowRecordId() {
-        return this.showRecordId;
-    }
-
     public FindOptions showRecordId(boolean showRecordId) {
         this.showRecordId = showRecordId;
         return this;
     }
 
-    public ReadPreference getReadPreference() {
-        return readPreference;
-    }
-
     public FindOptions readPreference(final ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
-    }
-
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
     }
 
     public FindOptions writeConcern(final WriteConcern writeConcern) {
@@ -298,6 +214,34 @@ public final class FindOptions {
 
     public <T> FindIterable<T> apply(final FindIterable<T> iterable) {
         return iterable;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getBatchSize();
+        result = 31 * result + getLimit();
+        result = 31 * result + (getModifiers() != null ? getModifiers().hashCode() : 0);
+        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
+        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
+        result = 31 * result + getSkip();
+        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
+        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
+        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
+        result = 31 * result + (isOplogReplay() ? 1 : 0);
+        result = 31 * result + (isPartial() ? 1 : 0);
+        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
+        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
+        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
+        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
+        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
+        result = 31 * result + (int) (maxScan ^ (maxScan >>> 32));
+        result = 31 * result + (isReturnKey() ? 1 : 0);
+        result = 31 * result + (isShowRecordId() ? 1 : 0);
+        result = 31 * result + (snapshot ? 1 : 0);
+        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
+        result = 31 * result + (getWriteConcern() != null ? getWriteConcern().hashCode() : 0);
+        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -380,32 +324,84 @@ public final class FindOptions {
         return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getBatchSize();
-        result = 31 * result + getLimit();
-        result = 31 * result + (getModifiers() != null ? getModifiers().hashCode() : 0);
-        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
-        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
-        result = 31 * result + getSkip();
-        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
-        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
-        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
-        result = 31 * result + (isOplogReplay() ? 1 : 0);
-        result = 31 * result + (isPartial() ? 1 : 0);
-        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
-        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
-        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
-        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
-        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
-        result = 31 * result + (int) (maxScan ^ (maxScan >>> 32));
-        result = 31 * result + (isReturnKey() ? 1 : 0);
-        result = 31 * result + (isShowRecordId() ? 1 : 0);
-        result = 31 * result + (snapshot ? 1 : 0);
-        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
-        result = 31 * result + (getWriteConcern() != null ? getWriteConcern().hashCode() : 0);
-        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
-        return result;
+    public int getBatchSize() {
+        return this.batchSize;
+    }
+
+    public int getLimit() {
+        return this.limit;
+    }
+
+    public int getSkip() {
+        return this.skip;
+    }
+
+    public boolean isNoCursorTimeout() {
+        return this.noCursorTimeout;
+    }
+
+    public boolean isOplogReplay() {
+        return this.oplogReplay;
+    }
+
+    public boolean isPartial() {
+        return this.partial;
+    }
+
+    public boolean isReturnKey() {
+        return this.returnKey;
+    }
+
+    public boolean isShowRecordId() {
+        return this.showRecordId;
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public Document getModifiers() {
+        return this.modifiers;
+    }
+
+    public Document getSort() {
+        return this.sort;
+    }
+
+    public CursorType getCursorType() {
+        return this.cursorType;
+    }
+
+    public Collation getCollation() {
+        return this.collation;
+    }
+
+    public String getComment() {
+        return this.comment;
+    }
+
+    public Document getHint() {
+        return this.hint;
+    }
+
+    public Document getMax() {
+        return this.max;
+    }
+
+    public Document getMin() {
+        return this.min;
+    }
+
+    public ReadPreference getReadPreference() {
+        return readPreference;
+    }
+
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
+
+    public Projection getProjection() {
+        return this.projection;
     }
 
     @Override

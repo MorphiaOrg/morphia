@@ -4,6 +4,7 @@ package dev.morphia.issue463;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -13,7 +14,7 @@ import org.junit.Test;
 public class TestIssue463 extends TestBase {
     @Test
     public void save() {
-        getMorphia().map(Class1.class, Class2.class);
+        Mapper.map(Class1.class, Class2.class);
 
         final Class2 class2 = new Class2();
         class2.setId(new ObjectId());

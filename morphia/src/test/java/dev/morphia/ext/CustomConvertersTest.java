@@ -26,6 +26,7 @@ import dev.morphia.converters.SimpleValueConverter;
 import dev.morphia.converters.TypeConverter;
 import dev.morphia.entities.EntityWithListsAndArrays;
 import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -56,7 +57,7 @@ public class CustomConvertersTest extends TestBase {
         getMorphia().getMapper().getConverters().addConverter(ListToMapConvert.class);
         getMorphia().getMapper().getOptions().setStoreEmpties(false);
         getMorphia().getMapper().getOptions().setStoreNulls(false);
-        getMorphia().map(EntityWithListsAndArrays.class);
+        Mapper.map(EntityWithListsAndArrays.class);
         final EntityWithListsAndArrays entity = new EntityWithListsAndArrays();
         entity.setListOfStrings(Arrays.asList("string 1", "string 2", "string 3"));
         getDs().save(entity);
@@ -70,13 +71,13 @@ public class CustomConvertersTest extends TestBase {
 
     @Before
     public void setup() {
-        getMorphia().map(MyEntity.class, ValueObject.class);
+        Mapper.map(MyEntity.class, ValueObject.class);
     }
 
     @Test
     public void shouldUseSuppliedConverterToEncodeAndDecodeObject() {
         // given
-        getMorphia().map(CharEntity.class);
+        Mapper.map(CharEntity.class);
 
         // when
         getDs().save(new CharEntity());

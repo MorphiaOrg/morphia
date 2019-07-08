@@ -15,6 +15,7 @@
 package dev.morphia;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,12 +46,12 @@ public class TestInheritanceMappings extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(Car.class).map(AbstractVehicle.class).map(FlyingCar.class);
+        Mapper.map(FlyingCar.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testMapEntity() {
-        getMorphia().map(MapLike.class);
+        Mapper.map(MapLike.class);
         MapLike m = new MapLike();
         m.put("Name", "Scott");
         getDs().save(m);
@@ -68,7 +69,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamEntity() {
-        getMorphia().map(ParameterizedEntity.class);
+        Mapper.map(ParameterizedEntity.class);
         ParameterizedEntity c = new ParameterizedEntity();
         c.setId("foo");
         c.b = "eh";
@@ -87,7 +88,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamIdEntity() {
-        getMorphia().map(ParameterizedIdEntity.class);
+        Mapper.map(ParameterizedIdEntity.class);
         ParameterizedIdEntity c = new ParameterizedIdEntity();
         c.setId("foo");
         getDs().save(c);
@@ -100,7 +101,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamIdEntity2() {
-        getMorphia().map(ParameterizedIdEntity2.class);
+        Mapper.map(ParameterizedIdEntity2.class);
         ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
         c.setId("foo");
         getDs().save(c);

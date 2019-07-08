@@ -10,6 +10,7 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -31,14 +32,14 @@ public class TestTextIndexing extends TestBase {
     @Test(expected = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;
-        getMorphia().map(clazz);
+        Mapper.map(clazz);
         getDs().getCollection(clazz).drop();
         getDs().ensureIndexes();
     }
 
     @Test
     public void testIndexAll() {
-        getMorphia().map(TextIndexAll.class);
+        Mapper.map(TextIndexAll.class);
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(TextIndexAll.class);
@@ -54,7 +55,7 @@ public class TestTextIndexing extends TestBase {
 
     @Test
     public void testSingleAnnotation() {
-        getMorphia().map(CompoundTextIndex.class);
+        Mapper.map(CompoundTextIndex.class);
         getDs().getCollection(CompoundTextIndex.class).drop();
         getDs().ensureIndexes();
 
@@ -78,7 +79,7 @@ public class TestTextIndexing extends TestBase {
     public void testTextAnnotation() {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
-        getMorphia().map(clazz);
+        Mapper.map(clazz);
         getDs().getCollection(clazz).drop();
         getDs().ensureIndexes();
 

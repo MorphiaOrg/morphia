@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ByteMappingTest extends TestBase {
     @Test
     public void blobs() {
-        getMorphia().map(Bytes.class);
+        Mapper.map(Bytes.class);
         final String data = "{ \"primitiveArray\": BinData(0, "
                             + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
         getDatabase().runCommand(new Document("eval", "db.Bytes.insert(" + data + ")"));
@@ -26,7 +27,7 @@ public class ByteMappingTest extends TestBase {
 
     @Test
     public void testMapping() {
-        getMorphia().map(Bytes.class);
+        Mapper.map(Bytes.class);
         final Bytes ent = new Bytes();
         ent.listWrapperArray.add(new Byte[]{1, 2});
         ent.listPrimitiveArray.add(new byte[]{2, 3, 12});

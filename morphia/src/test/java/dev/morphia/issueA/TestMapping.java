@@ -4,6 +4,7 @@ package dev.morphia.issueA;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -18,11 +19,11 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testMapping() {
-        getMorphia().map(ClassLevelThree.class);
+        Mapper.map(ClassLevelThree.class);
         final ClassLevelThree sp = new ClassLevelThree();
 
         //Old way
-        final Document wrapObj = getMorphia().toDocument(sp);  //the error points here from the user
+        final Document wrapObj = TestBase.toDocument(sp);  //the error points here from the user
         getDs().getDatabase().getCollection("testColl").insertOne(wrapObj);
 
 

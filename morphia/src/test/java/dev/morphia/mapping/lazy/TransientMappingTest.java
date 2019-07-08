@@ -19,6 +19,7 @@ package dev.morphia.mapping.lazy;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -30,7 +31,7 @@ public class TransientMappingTest extends TestBase {
 
     @Test
     public void mapClassWithTransientFields() {
-        getMorphia().map(HasTransientFields.class);
+        Mapper.map(HasTransientFields.class);
         final HasTransientFields entity = new HasTransientFields();
         entity.javaTransientString = "should not be persisted";
         entity.morphiaTransientString = "should not be persisted";

@@ -4,6 +4,7 @@ package dev.morphia.mapping.primitives;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindOptions;
 import org.bson.Document;
@@ -46,7 +47,7 @@ public class CharacterMappingTest extends TestBase {
 
     @Test
     public void mapping() {
-        getMorphia().map(Characters.class);
+        Mapper.map(Characters.class);
         final Characters entity = new Characters();
         entity.listWrapperArray.add(new Character[]{'1', 'g', '#'});
         entity.listPrimitiveArray.add(new char[]{'1', 'd', 'z'});
@@ -127,7 +128,7 @@ public class CharacterMappingTest extends TestBase {
     }
 
     private Characters testMapping(final String field, final String value) {
-        getMorphia().map(Characters.class);
+        Mapper.map(Characters.class);
 
         final MongoCollection<Document> collection = getDs().getCollection(Characters.class);
         collection.insertOne(new Document(field, value));

@@ -1,6 +1,7 @@
 package dev.morphia.issue173;
 
 import com.mongodb.WriteConcern;
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.InsertOptions;
@@ -15,7 +16,7 @@ public class TestCalendar extends TestBase {
 
     @Test
     public final void testCalendar() {
-        getMorphia().map(A.class);
+        Mapper.map(A.class);
         final A a = new A();
         a.c = Calendar.getInstance();
         getDs().save(a, new InsertOptions()

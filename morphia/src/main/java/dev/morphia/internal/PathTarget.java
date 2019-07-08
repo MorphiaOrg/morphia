@@ -128,7 +128,7 @@ public class PathTarget {
                 if (hasNext() && (field.isReference() || field.hasAnnotation(Serialized.class))) {
                     failValidation();
                 }
-                translate(field.getNameToStore());
+                translate(field.getMappedFieldName());
                 if (field.isMap() && hasNext()) {
                     next();  // consume the map key segment
                 }

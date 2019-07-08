@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
@@ -21,17 +22,17 @@ public class MapKeyDifferentFromStringTest extends TestBase {
 
     @Test
     public void testCheck() {
-        getMorphia().map(MapWithWrongKeyType1.class);
+        Mapper.map(MapWithWrongKeyType1.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidKeyType() {
-        getMorphia().map(MapWithWrongKeyType3.class);
+        Mapper.map(MapWithWrongKeyType3.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidReferenceType() {
-        getMorphia().map(MapWithWrongKeyType2.class);
+        Mapper.map(MapWithWrongKeyType2.class);
     }
 
     public static class MapWithWrongKeyType1 extends TestEntity {

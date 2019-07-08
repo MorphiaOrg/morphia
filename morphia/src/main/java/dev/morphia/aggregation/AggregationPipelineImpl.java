@@ -288,7 +288,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         String target;
         if (firstStage) {
             MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
-            target = field != null ? field.getNameToStore() : projection.getTarget();
+            target = field != null ? field.getMappedFieldName() : projection.getTarget();
         } else {
             target = projection.getTarget();
         }

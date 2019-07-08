@@ -19,6 +19,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl.Update;
@@ -173,7 +174,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testAddAll() {
-        getMorphia().map(EntityLogs.class, EntityLog.class);
+        Mapper.map(EntityLogs.class, EntityLog.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
 
         EntityLogs logs = new EntityLogs();
@@ -206,7 +207,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMultiUpdates() {
-        getMorphia().map(ContainsPic.class);
+        Mapper.map(ContainsPic.class);
         Query<ContainsPic> finder = getDs().find(ContainsPic.class);
 
         createContainsPic(0);

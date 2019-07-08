@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Reference;
@@ -15,7 +16,7 @@ public class LazyReferenceOnArrayTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testLazyRefOnArray() {
-        getMorphia().map(LazyOnArray.class);
+        Mapper.map(LazyOnArray.class);
     }
 
     public static class R extends TestEntity {

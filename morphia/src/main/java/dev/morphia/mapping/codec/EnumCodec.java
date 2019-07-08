@@ -4,6 +4,7 @@ import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
 
 class EnumCodec<T extends Enum<T>> implements Codec<T> {
     private final Class<T> clazz;

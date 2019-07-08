@@ -1,6 +1,7 @@
 package dev.morphia.mapping.lazy;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -30,8 +31,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        getMorphia().map(ContainerWithRefInField.class);
-        getMorphia().map(OtherEntity.class);
+        Mapper.map(ContainerWithRefInField.class);
+        Mapper.map(OtherEntity.class);
 
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
@@ -61,8 +62,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        getMorphia().map(ContainerWithRefList.class);
-        getMorphia().map(OtherEntity.class);
+        Mapper.map(ContainerWithRefList.class);
+        Mapper.map(OtherEntity.class);
 
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();
@@ -96,8 +97,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        getMorphia().map(ContainerWithRefInField.class);
-        getMorphia().map(OtherEntityChild.class);
+        Mapper.map(ContainerWithRefInField.class);
+        Mapper.map(OtherEntityChild.class);
 
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
@@ -127,8 +128,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        getMorphia().map(ContainerWithRefList.class);
-        getMorphia().map(OtherEntityChild.class);
+        Mapper.map(ContainerWithRefList.class);
+        Mapper.map(OtherEntityChild.class);
 
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();

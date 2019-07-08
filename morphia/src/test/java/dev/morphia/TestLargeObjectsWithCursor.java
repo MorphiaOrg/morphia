@@ -1,6 +1,7 @@
 package dev.morphia;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
     @Before
     public void setUp() {
         super.setUp();
-        getMorphia().map(E.class);
+        Mapper.map(E.class);
         documentsNb = 1000;
         for (int i = 0; i < documentsNb; i++) {
             getDs().save(new E(i));

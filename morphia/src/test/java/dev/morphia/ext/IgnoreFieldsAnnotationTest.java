@@ -15,6 +15,7 @@
 package dev.morphia.ext;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class IgnoreFieldsAnnotationTest extends TestBase {
     public void setUp() {
         super.setUp();
         MappedClass.addInterestingAnnotation(IgnoreFields.class);
-        getMorphia().map(User.class);
+        Mapper.map(User.class);
         processIgnoreFieldsAnnotations();
     }
 

@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import dev.morphia.annotations.Id;
 public class ByteArrayMappingTest extends TestBase {
     @Test
     public void testCharMapping() throws Exception {
-        getMorphia().map(ContainsByteArray.class);
+        Mapper.map(ContainsByteArray.class);
         final ContainsByteArray entity = new ContainsByteArray();
         final Byte[] test = new Byte[]{6, 9, 1, -122};
         entity.ba = test;

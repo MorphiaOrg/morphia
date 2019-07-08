@@ -6,6 +6,7 @@ import dev.morphia.TestBase;
 import dev.morphia.aggregation.zipcode.City;
 import dev.morphia.aggregation.zipcode.Population;
 import dev.morphia.aggregation.zipcode.State;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
 import org.bson.Document;
 import org.junit.Assert;
@@ -107,7 +108,7 @@ public class ZipCodeDataSetTest extends TestBase {
     public void smallestAndLargestCities() {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
-        getMorphia().mapPackage(getClass().getPackage().getName());
+        Mapper.mapPackage(getClass().getPackage().getName());
         AggregationPipeline pipeline = getDs().createAggregation(City.class)
 
                                               .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))

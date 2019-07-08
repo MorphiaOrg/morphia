@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import static java.util.Collections.singletonMap;
 public class TestArrayUpdates extends TestBase {
     @Test
     public void testStudents() {
-        getMorphia().map(Student.class);
+        Mapper.map(Student.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 
@@ -51,7 +51,7 @@ public class TestArrayUpdates extends TestBase {
 
     @Test
     public void testUpdatesWithArrayIndexPosition() {
-        getMorphia().map(Student.class);
+        Mapper.map(Student.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 

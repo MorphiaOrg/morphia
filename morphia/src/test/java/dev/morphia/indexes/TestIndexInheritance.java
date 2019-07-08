@@ -14,10 +14,8 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.DBCollection;
 import com.mongodb.client.MongoCollection;
-import org.bson.BsonDocument;
-import org.bson.BsonString;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -40,7 +38,7 @@ public class TestIndexInheritance extends TestBase {
 
     @Test
     public void testClassIndexInherit() throws Exception {
-        getMorphia().map(Circle.class)
+        Mapper
                     .map(Shape.class);
         final MappedClass mc = getMorphia().getMapper()
                                            .getMappedClass(Circle.class);
@@ -60,7 +58,7 @@ public class TestIndexInheritance extends TestBase {
 
     @Test
     public void testInheritedFieldIndex() throws Exception {
-        getMorphia().map(Circle.class)
+        Mapper
                     .map(Shape.class);
         getMorphia().getMapper()
                     .getMappedClass(Circle.class);

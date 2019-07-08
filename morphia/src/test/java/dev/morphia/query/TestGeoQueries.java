@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.MongoQueryException;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class TestGeoQueries extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(Place.class);
+        Mapper.map(Place.class);
     }
 
     @Test

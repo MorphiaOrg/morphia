@@ -1,5 +1,6 @@
 package dev.morphia.query;
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class TestTextSearching extends TestBase {
 
     @Test
     public void testTextSearch() {
-        getMorphia().map(Greeting.class);
+        Mapper.map(Greeting.class);
         getDs().ensureIndexes();
 
         getDs().save(new Greeting("good morning", "english"));
@@ -75,7 +76,7 @@ public class TestTextSearching extends TestBase {
 
     @Test
     public void testTextSearchSorting() {
-        getMorphia().map(Book.class);
+        Mapper.map(Book.class);
         getDs().ensureIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),
@@ -94,7 +95,7 @@ public class TestTextSearching extends TestBase {
 
     @Test
     public void testTextSearchValidationFailed() {
-        getMorphia().map(Book.class);
+        Mapper.map(Book.class);
         getDs().ensureIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),
@@ -113,7 +114,7 @@ public class TestTextSearching extends TestBase {
 
     @Test
     public void testTextSearchWithMeta() {
-        getMorphia().map(Book.class);
+        Mapper.map(Book.class);
         getDs().ensureIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),

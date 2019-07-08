@@ -16,6 +16,7 @@
 
 package dev.morphia.converters;
 
+import dev.morphia.mapping.Mapper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class TestStoringMapWithDateKey extends TestBase {
 
     @Test
     public void testSaveFindEntity() {
-        getMorphia().map(User.class);
+        Mapper.map(User.class);
         final User expectedUser = new User();
         expectedUser.addValue(new Date(), 10d);
 

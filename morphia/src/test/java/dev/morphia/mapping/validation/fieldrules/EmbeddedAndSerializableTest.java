@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import java.util.List;
 public class EmbeddedAndSerializableTest extends TestBase {
     @Test
     public void embedded() {
-        getMorphia().map(Project.class, Period.class);
+        Mapper.map(Project.class, Period.class);
 
         Project project = new Project();
         project.period = new Period();
@@ -46,7 +47,7 @@ public class EmbeddedAndSerializableTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testCheck() {
-        getMorphia().map(E.class);
+        Mapper.map(E.class);
     }
 
     private void compare(final Period original, final Period loaded) {

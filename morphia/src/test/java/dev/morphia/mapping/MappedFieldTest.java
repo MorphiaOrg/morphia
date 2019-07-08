@@ -32,7 +32,7 @@ public class MappedFieldTest extends TestBase {
         assertTrue(field.isArray());
         assertTrue(field.getType().isArray());
         assertEquals("arrayOfInt", field.getJavaFieldName());
-        assertEquals("arrayOfInt", field.getNameToStore());
+        assertEquals("arrayOfInt", field.getMappedFieldName());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class MappedFieldTest extends TestBase {
         assertTrue(field.isSingleValue());
         assertTrue(String.class == field.getType());
         assertEquals("name", field.getJavaFieldName());
-        assertEquals("n", field.getNameToStore());
+        assertEquals("n", field.getMappedFieldName());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class MappedFieldTest extends TestBase {
         assertTrue(List.class == field.getType());
         assertTrue(String.class == field.getSubType());
         assertEquals("listOfString", field.getJavaFieldName());
-        assertEquals("listOfString", field.getNameToStore());
+        assertEquals("listOfString", field.getMappedFieldName());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class MappedFieldTest extends TestBase {
         assertTrue(field.isSingleValue());
         assertTrue(ObjectId.class == field.getType());
         assertEquals("id", field.getJavaFieldName());
-        assertEquals("_id", field.getNameToStore());
+        assertEquals("_id", field.getMappedFieldName());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class MappedFieldTest extends TestBase {
         final MappedField nested = level2Types.get(0);
         assertTrue(String.class == nested.getConcreteType());
         assertEquals("listOfListOfString", field.getJavaFieldName());
-        assertEquals("listOfListOfString", field.getNameToStore());
+        assertEquals("listOfListOfString", field.getMappedFieldName());
 
         final BasicDBList list = new BasicDBList();
         list.add(dbList("a", "b", "c"));

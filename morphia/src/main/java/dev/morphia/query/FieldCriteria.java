@@ -5,6 +5,7 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.PropertyHandler;
 import dev.morphia.utils.ReflectionUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -12,49 +13,40 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Defines a Criteria against a field
+ * @morphia.internal
  */
 class FieldCriteria extends AbstractCriteria {
-    private static final Logger LOG = LoggerFactory.getLogger(FieldCriteria.class);
-
     private final String field;
     private final FilterOperator operator;
     private final Object value;
     private final boolean not;
-    private final Mapper mapper;
+    private Mapper mapper;
 
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
-        this(mapper, query, field, op, value, false, mapper.getMappedClass(query.getEntityClass()));
+        this(mapper, query, field, op, value, false);
     }
 
-    FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
-                  final boolean not, final MappedClass mappedClass) {
+    @SuppressWarnings("deprecation")
+    FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
         this.mapper = mapper;
         //validate might modify prop string to translate java field name to db field name
-        final PathTarget pathTarget = new PathTarget(mapper, mappedClass, fieldName,
-            query.isValidatingNames());
-        final MappedField mf = pathTarget.getTarget();
+        final StringBuilder sb = new StringBuilder(fieldName);
 
-        MappedClass mc = null;
-        try {
-            if (value != null && !ReflectionUtils.isPropertyType(value.getClass())
-                && !ReflectionUtils.implementsInterface(value.getClass(), Iterable.class)) {
-                if (mf != null && !mf.isTypeMongoCompatible()) {
-                    mc = mapper.getMappedClass((mf.isSingleValue()) ? mf.getType() : mf.getSubClass());
-                } else {
-                    mc = mapper.getMappedClass(value);
-                }
+        final PathTarget pathTarget = new PathTarget(mapper,  mapper.getMappedClass(query.getEntityClass()),
+            fieldName, query.isValidatingNames());
+        final MappedField mappedField = pathTarget.getTarget();
+
+        Object mappedValue = value;
+        if (mapper.isMappable(value.getClass()) && mappedField != null) {
+            PropertyHandler handler = mappedField.getHandler();
+            if(handler != null) {
+                mappedValue = handler.encodeValue(value);
             }
-        } catch (Exception e) {
-            // Ignore these. It is likely they related to mapping validation that is unimportant for queries (the query will
-            // fail/return-empty anyway)
-            LOG.debug("Error during mapping of filter criteria: ", e);
         }
-
-        Object mappedValue = mapper.toMongoObject(mf, mc, value);
 
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
 
@@ -68,19 +60,24 @@ class FieldCriteria extends AbstractCriteria {
             && Iterable.class.isAssignableFrom(value.getClass())) {
             mappedValue = Collections.emptyList();
         }
-
         this.field = pathTarget.translatedPath();
         this.operator = op;
         this.value = mappedValue;
         this.not = not;
     }
 
-    protected Mapper getMapper() {
-        return mapper;
+    private boolean isMappable(final Object value, final Mapper mapper) {
+        boolean mappable;
+        if(value instanceof Iterable) {
+            Iterator iterator = ((Iterable)value).iterator();
+            mappable = iterator.hasNext() && isMappable(iterator.next(), mapper);
+        } else {
+            mappable = mapper.isMappable(value.getClass());
+        }
+        return mappable;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Document toDocument() {
         final Document obj = new Document();
         if (FilterOperator.EQUAL.equals(operator)) {
@@ -90,6 +87,7 @@ class FieldCriteria extends AbstractCriteria {
             } else {
                 obj.put(field, value);
             }
+
         } else {
             final Object object = obj.get(field); // operator within inner object
             Map<String, Object> inner;
@@ -141,6 +139,10 @@ class FieldCriteria extends AbstractCriteria {
      */
     public boolean isNot() {
         return not;
+    }
+
+    protected Mapper getMapper() {
+        return mapper;
     }
 
     @Override

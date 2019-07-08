@@ -1,6 +1,7 @@
 package dev.morphia;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static dev.morphia.query.Sort.ascending;
 public class TestModOperator extends TestBase {
     @Test
     public void mod() {
-        getMorphia().map(Inventory.class);
+        Mapper.map(Inventory.class);
         getDs().save(new Inventory("Flowers", 8));
         getDs().save(new Inventory("Candy", 2));
         getDs().save(new Inventory("Basketballs", 12));

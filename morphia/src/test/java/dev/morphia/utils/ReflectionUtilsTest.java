@@ -49,7 +49,7 @@ public class ReflectionUtilsTest extends TestBase {
 
     @Test
     public void shouldSupportGenericArrays() {
-        getMorphia().map(MyEntity.class);
+        Mapper.map(MyEntity.class);
     }
 
     /**

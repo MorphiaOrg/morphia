@@ -1,5 +1,6 @@
 package dev.morphia.issue50;
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
@@ -10,7 +11,7 @@ public class TestIdTwice extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public final void shouldThrowExceptionIfThereIsMoreThanOneId() {
-        getMorphia().map(A.class);
+        Mapper.map(A.class);
     }
 
     public static class A extends TestEntity {

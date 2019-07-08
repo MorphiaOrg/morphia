@@ -63,7 +63,7 @@ public class IndexHelperTest extends TestBase {
 
     @Before
     public void before() {
-        getMorphia().map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
+        Mapper.map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
     }
 
     @Test

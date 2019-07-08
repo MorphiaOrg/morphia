@@ -231,7 +231,7 @@ public abstract class Converters {
 
         final Object encoded = enc.encode(fieldValue, mf);
         if (encoded != null || opts.isStoreNulls()) {
-            dbObj.put(mf.getNameToStore(), encoded);
+            dbObj.put(mf.getMappedFieldName(), encoded);
         }
     }
 

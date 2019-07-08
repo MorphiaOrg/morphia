@@ -38,7 +38,7 @@ import java.util.Map;
 public class EmbeddedMappingTest extends TestBase {
     @Test
     public void mapGenericEmbeds() {
-        getMorphia().map(AuditEntry.class, Delta.class);
+        Mapper.map(AuditEntry.class, Delta.class);
 
         final AuditEntry<String> entry = new AuditEntry<>();
 
@@ -60,7 +60,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void testNestedInterfaces() {
-        getMorphia().map(WithNested.class, NestedImpl.class);
+        Mapper.map(WithNested.class, NestedImpl.class);
         getDs().ensureIndexes();
 
         final List<Document> indexInfo = getIndexInfo(WithNested.class);
@@ -100,7 +100,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void validateNestedInterfaces() {
-        getMorphia().map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
+        Mapper.map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
         try {
             getDs().ensureIndexes();
         } catch (MappingException e) {

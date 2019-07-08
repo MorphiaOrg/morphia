@@ -31,6 +31,7 @@ import dev.morphia.entities.IndexOnValue;
 import dev.morphia.entities.NamedIndexOnValue;
 import dev.morphia.entities.UniqueIndexOnValue;
 import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
@@ -55,13 +56,13 @@ public class TestIndexed extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
+        Mapper.map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
     }
 
     @Test
     public void shouldNotCreateAnIndexWhenAnIndexedEntityIsMarkedAsNotSaved() {
         // given
-        getMorphia().map(IndexOnValue.class, NoIndexes.class);
+        Mapper.map(IndexOnValue.class, NoIndexes.class);
         Datastore ds = getDs();
 
         // when
@@ -76,7 +77,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void shouldThrowExceptionWhenAddingADuplicateValueForAUniqueIndex() {
-        getMorphia().map(UniqueIndexOnValue.class);
+        Mapper.map(UniqueIndexOnValue.class);
         getDs().ensureIndexes();
         long value = 7L;
 
@@ -115,7 +116,7 @@ public class TestIndexed extends TestBase {
     @Test
     public void testCanCreate2dSphereIndexes() {
         // given
-        getMorphia().map(Place.class);
+        Mapper.map(Place.class);
 
         // when
         getDs().ensureIndexes();
@@ -129,7 +130,7 @@ public class TestIndexed extends TestBase {
     @Test
     public void testCanCreate2dSphereIndexesOnLegacyCoordinatePairs() {
         // given
-        getMorphia().map(LegacyPlace.class);
+        Mapper.map(LegacyPlace.class);
 
         // when
         getDs().ensureIndexes();
@@ -184,7 +185,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testDefaults() {
-        getMorphia().map(NewIndexed.class);
+        Mapper.map(NewIndexed.class);
         getDs().ensureIndexes();
     }
 

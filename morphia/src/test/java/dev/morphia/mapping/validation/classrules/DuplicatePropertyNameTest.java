@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.classrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
@@ -18,17 +19,17 @@ import java.util.Map;
 public class DuplicatePropertyNameTest extends TestBase {
     @Test(expected = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameDifferentType() throws Exception {
-        getMorphia().map(DuplicatedPropertyName2.class);
+        Mapper.map(DuplicatedPropertyName2.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameSameType() throws Exception {
-        getMorphia().map(DuplicatedPropertyName.class);
+        Mapper.map(DuplicatedPropertyName.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameShadowedFields() throws Exception {
-        getMorphia().map(Extends.class);
+        Mapper.map(Extends.class);
     }
 
     @Entity

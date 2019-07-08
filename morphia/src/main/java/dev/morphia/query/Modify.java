@@ -36,7 +36,7 @@ public class Modify<T> extends UpdatesImpl<Modify<T>> {
         final MappedClass mc = mapper.getMappedClass(clazz);
 
         if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            inc(mc.getMappedVersionField().getNameToStore());
+            inc(mc.getMappedVersionField().getMappedFieldName());
         }
 
     }

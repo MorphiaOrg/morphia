@@ -16,6 +16,7 @@ package dev.morphia;
 
 
 import com.mongodb.client.MongoCollection;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
@@ -39,15 +40,15 @@ public class TestInterfaces extends TestBase {
         final MongoCollection<Document> shapes = getDatabase().getCollection("shapes");
         final MongoCollection<Document> shapeshifters = getDatabase().getCollection("shapeshifters");
 
-        getMorphia().map(Circle.class).map(Rectangle.class).map(ShapeShifter.class);
+        Mapper.map(ShapeShifter.class);
 
         final Shape rectangle = new Rectangle(2, 5);
 
-        final Document rectangleDbObj = getMorphia().toDocument(rectangle);
+        final Document rectangleDbObj = TestBase.toDocument(rectangle);
         shapes.insertOne(rectangleDbObj);
 
         final Document rectangleDbObjLoaded = shapes.find(new Document("_id", rectangleDbObj.get("_id"))).first();
-        final Shape rectangleLoaded = getMorphia().fromDocument(getDs(), Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
+        final Shape rectangleLoaded = TestBase.fromDocument(getDs(), Shape.class, rectangleDbObjLoaded, new DefaultEntityCache());
 
         assertEquals(rectangle.getArea(), rectangleLoaded.getArea(), 0.0);
         assertTrue(rectangleLoaded instanceof Rectangle);
@@ -58,11 +59,11 @@ public class TestInterfaces extends TestBase {
         shifter.getAvailableShapes().add(new Rectangle(3, 3));
         shifter.getAvailableShapes().add(new Circle(4.4));
 
-        final Document shifterDbObj = getMorphia().toDocument(shifter);
+        final Document shifterDbObj = TestBase.toDocument(shifter);
         shapeshifters.insertOne(shifterDbObj);
 
         final Document shifterDbObjLoaded = shapeshifters.find(new Document("_id", shifterDbObj.get("_id"))).first();
-        final ShapeShifter shifterLoaded = getMorphia().fromDocument(getDs(), ShapeShifter.class, shifterDbObjLoaded,
+        final ShapeShifter shifterLoaded = TestBase.fromDocument(getDs(), ShapeShifter.class, shifterDbObjLoaded,
                                                                      new DefaultEntityCache());
         assertNotNull(shifterLoaded);
         assertNotNull(shifterLoaded.getReferencedShape());

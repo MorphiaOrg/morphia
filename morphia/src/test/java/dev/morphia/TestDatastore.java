@@ -28,6 +28,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.generics.model.ChildEmbedded;
 import dev.morphia.generics.model.ChildEntity;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
@@ -127,7 +128,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testGet() {
-        getMorphia().map(FacebookUser.class);
+        Mapper.map(FacebookUser.class);
         List<FacebookUser> fbUsers = new ArrayList<>();
         fbUsers.add(new FacebookUser(1, "user 1"));
         fbUsers.add(new FacebookUser(2, "user 2"));
@@ -200,7 +201,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testMultipleDatabasesSingleThreaded() {
-        getMorphia().map(FacebookUser.class);
+        Mapper.map(FacebookUser.class);
 
         final Datastore ds1 = getMorphia().createDatastore(getMongoClient(), "db1");
         final Datastore ds2 = getMorphia().createDatastore(getMongoClient(), "db2");

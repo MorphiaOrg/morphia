@@ -27,6 +27,7 @@ import com.mongodb.client.model.ValidationOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.entities.DocumentValidation;
 import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
@@ -55,7 +56,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void createValidation() {
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -86,7 +87,7 @@ public class TestDocumentValidation extends TestBase {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -118,7 +119,7 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void validationDocuments() {
         Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
 
         for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
@@ -130,7 +131,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void findAndModify() {
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -156,7 +157,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void update() {
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -182,7 +183,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void save() {
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {
@@ -219,7 +220,7 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void testBypassDocumentValidation() {
         checkMinServerVersion(3.2);
-        getMorphia().map(User.class);
+        Mapper.map(User.class);
         getDs().enableDocumentValidation();
 
         final User user = new User("Jim Halpert", new Date());
@@ -238,7 +239,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void insert() {
-        getMorphia().map(DocumentValidation.class);
+        Mapper.map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {

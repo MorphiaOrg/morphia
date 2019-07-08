@@ -1,25 +1,28 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.mapping.codec.MorphiaCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.ClassModel;
+import org.bson.codecs.pojo.DiscriminatorLookup;
+import org.bson.codecs.pojo.PojoCodec;
+import org.bson.codecs.pojo.PropertyCodecRegistry;
 
 import java.util.concurrent.ConcurrentMap;
 
-public class LazyMorphiaCodec<T> implements MorphiaCodec<T> {
+public class LazyMorphiaCodec<T> extends PojoCodec<T> {
     private final ClassModel<T> classModel;
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
     private final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache;
-    private volatile MorphiaCodecImpl<T> morphiaCodec;
+    private volatile PojoCodec<T> morphiaCodec;
 
     LazyMorphiaCodec(final ClassModel<T> classModel, final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
-                  final DiscriminatorLookup discriminatorLookup, final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache) {
+                     final DiscriminatorLookup discriminatorLookup, final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache) {
         this.classModel = classModel;
         this.registry = registry;
         this.propertyCodecRegistry = propertyCodecRegistry;
@@ -44,7 +47,7 @@ public class LazyMorphiaCodec<T> implements MorphiaCodec<T> {
 
     private Codec<T> getMorphiaCodec() {
         if (morphiaCodec == null) {
-            morphiaCodec = new MorphiaCodecImpl<T>(classModel, registry, propertyCodecRegistry, discriminatorLookup, codecCache, true);
+            morphiaCodec = new MorphiaCodec<T>(classModel, registry, propertyCodecRegistry, discriminatorLookup, true);
         }
         return morphiaCodec;
     }

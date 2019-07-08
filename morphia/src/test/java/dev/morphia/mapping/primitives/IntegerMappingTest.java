@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import java.util.List;
 public class IntegerMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        getMorphia().map(Integers.class);
+        Mapper.map(Integers.class);
         final Integers ent = new Integers();
         ent.listWrapperArray.add(new Integer[]{1, 2});
         ent.listPrimitiveArray.add(new int[]{2, 3, 12});

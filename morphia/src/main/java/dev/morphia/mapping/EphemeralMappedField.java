@@ -75,7 +75,7 @@ public class EphemeralMappedField extends MappedField {
     }
 
     @Override
-    public String getNameToStore() {
+    public String getMappedFieldName() {
         return "superFake";
     }
 

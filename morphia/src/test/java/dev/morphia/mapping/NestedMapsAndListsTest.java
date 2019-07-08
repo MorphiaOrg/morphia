@@ -28,7 +28,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testListOfList() {
-        getMorphia().map(ListOfList.class);
+        Mapper.map(ListOfList.class);
         ListOfList list = new ListOfList();
         list.list.add(asList("a", "b", "c"));
         list.list.add(asList("123", "456"));
@@ -40,7 +40,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testListOfListOfPerson() {
-        getMorphia().map(ListListPerson.class);
+        Mapper.map(ListListPerson.class);
         ListListPerson list = new ListListPerson();
         list.list.add(asList(new Person("Peter"), new Person("Paul"), new Person("Mary")));
         list.list.add(asList(new Person("Crosby"), new Person("Stills"), new Person("Nash")));
@@ -52,7 +52,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testListOfMap() {
-        getMorphia().map(ListOfMap.class);
+        Mapper.map(ListOfMap.class);
 
         ListOfMap entity = new ListOfMap();
         HashMap<String, String> mapA = new HashMap<String, String>();
@@ -71,7 +71,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testListOfMapOfEntity() {
-        getMorphia().map(ListMapPerson.class);
+        Mapper.map(ListMapPerson.class);
         ListMapPerson listMap = new ListMapPerson();
         listMap.list.add(map("Rick", new Person("Richard")));
         listMap.list.add(map("Bill", new Person("William")));
@@ -98,7 +98,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testUserData() {
-        getMorphia().map(MapOfListString.class);
+        Mapper.map(MapOfListString.class);
         MapOfListString ud = new MapOfListString();
         ud.id = "123";
         ArrayList<String> d = new ArrayList<String>();

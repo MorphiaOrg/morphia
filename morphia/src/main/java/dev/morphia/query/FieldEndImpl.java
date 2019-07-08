@@ -338,7 +338,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
-        target.add(new FieldCriteria(mapper, query, field, op, val, not, mapper.getMappedClass(query.getEntityClass())));
+        target.add(new FieldCriteria(mapper, query, field, op, val, not));
         return target;
     }
 

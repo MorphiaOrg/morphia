@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.testmappackage.SimpleEntity;
@@ -20,7 +21,7 @@ public class MorphiaTest extends TestBase {
     public void shouldOnlyMapEntitiesInTheGivenPackage() {
         // when
         final Morphia morphia = new Morphia();
-        morphia.mapPackage("dev.morphia.testmappackage");
+        Mapper.mapPackage("dev.morphia.testmappackage");
 
         // then
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
@@ -33,7 +34,7 @@ public class MorphiaTest extends TestBase {
         // when
         final Morphia morphia = new Morphia();
         morphia.getMapper().getOptions().setMapSubPackages(true);
-        morphia.mapPackage("dev.morphia.testmappackage");
+        Mapper.mapPackage("dev.morphia.testmappackage");
 
         // then
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();

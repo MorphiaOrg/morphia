@@ -1,5 +1,6 @@
 package dev.morphia.mapping.lazy;
 
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import static java.util.Arrays.asList;
 public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
     @Test
     public void interfaces() {
-        getMorphia().map(InterfaceA.class, InterfaceB.class, ClassA.class, B1.class, B2.class);
+        Mapper.map(InterfaceA.class, InterfaceB.class, ClassA.class, B1.class, B2.class);
 
         final B1 b1 = new B1("Sandor Clegane");
 

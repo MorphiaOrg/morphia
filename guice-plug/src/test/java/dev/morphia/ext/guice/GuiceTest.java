@@ -5,6 +5,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,8 +37,8 @@ public class GuiceTest extends TestBase {
             }
         });
         new GuiceExtension(getMorphia(), i);
-        getMorphia().map(E1.class);
-        getMorphia().map(E2.class);
+        Mapper.map(E1.class);
+        Mapper.map(E2.class);
     }
 
     @Test

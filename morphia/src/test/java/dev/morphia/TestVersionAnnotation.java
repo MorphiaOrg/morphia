@@ -13,6 +13,7 @@
 
 package dev.morphia;
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.entities.version.AbstractVersionedBase;
@@ -21,7 +22,6 @@ import dev.morphia.entities.version.VersionedChildEntity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,7 +71,7 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        Morphia morphia = getMorphia().mapPackage("dev.morphia.entities.version");
+        Morphia morphia = Mapper.mapPackage("dev.morphia.entities.version");
 
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(2));
@@ -85,7 +85,7 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        Morphia morphia = getMorphia().map(VersionedChildEntity.class);
+        Morphia morphia = Mapper.map(VersionedChildEntity.class);
 
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(2));

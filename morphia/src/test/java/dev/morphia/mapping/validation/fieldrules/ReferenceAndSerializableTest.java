@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Reference;
@@ -15,7 +16,7 @@ import dev.morphia.testutil.TestEntity;
 public class ReferenceAndSerializableTest extends TestBase {
     @Test(expected = ConstraintViolationException.class)
     public void testCheck() {
-        getMorphia().map(E.class);
+        Mapper.map(E.class);
     }
 
     public static class R extends TestEntity {

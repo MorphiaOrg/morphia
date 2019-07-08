@@ -15,6 +15,7 @@
 package dev.morphia;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class TestDatatypes extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        getMorphia().map(ContainsByte.class, ContainsDouble.class, ContainsFloat.class, ContainsShort.class);
+        Mapper.map(ContainsByte.class, ContainsDouble.class, ContainsFloat.class, ContainsShort.class);
     }
 
     @Test

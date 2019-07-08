@@ -42,7 +42,7 @@ public class NewAnnotationTest extends TestBase {
     public void testIt() {
         MappedField.addInterestingAnnotation(Lowercase.class);
         getMorphia().getMapper().addInterceptor(new ToLowercaseHelper());
-        getMorphia().map(User.class);
+        Mapper.map(User.class);
         final User u = new User();
         u.email = "ScottHernandez@gmail.com";
 
@@ -86,7 +86,7 @@ public class NewAnnotationTest extends TestBase {
             for (final MappedField mf : toLowercase) {
                 try {
                     final Object fieldValue = mf.getFieldValue(ent);
-                    document.put(mf.getNameToStore() + "_lowercase", fieldValue.toString().toLowerCase());
+                    document.put(mf.getMappedFieldName() + "_lowercase", fieldValue.toString().toLowerCase());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

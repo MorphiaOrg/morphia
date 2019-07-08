@@ -8,6 +8,7 @@ import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -25,7 +26,7 @@ public class TestMaxMin extends TestBase {
     @Before
     public void setUp() {
         super.setUp();
-        getMorphia().map(IndexedEntity.class);
+        Mapper.map(IndexedEntity.class);
         getDs().ensureIndexes();
     }
 

@@ -116,7 +116,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
      */
     public static MapReference decode(final Datastore datastore, final Mapper mapper, final MappedField mappedField,
                                       final Document document) {
-        final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
+        final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
 
         final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
         MapReference reference = null;

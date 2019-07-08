@@ -29,9 +29,6 @@ import java.lang.annotation.Target;
 
 /**
  * Allows marking and naming the collectionName
- *
- * @author Olafur Gauti Gudmundsson
- * @author Scott Hernandez
  */
 @Documented
 @Inherited
@@ -49,15 +46,9 @@ public @interface Entity {
     String concern() default "";
 
     /**
-     * @return When true, instructs Morphia to not include when serializing an entity to mongodb.
+     * @return true if the discriminator for this type should be stored
      */
-    //@Deprecated //to be replaced. This is a temp hack until polymorphism and discriminators are implemented
-    boolean noClassnameStored() default false;
-
-    /**
-     * @return slaveOk for queries for this Entity.
-     */
-    boolean queryNonPrimary() default false;
+    boolean useDiscriminator() default true;
 
     /**
      * @return the collection name to for this entity.  Defaults to the class's simple name

@@ -20,6 +20,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
@@ -62,7 +63,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
-    private final Morphia morphia;
     private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final IndexHelper indexHelper;
@@ -73,32 +73,17 @@ class DatastoreImpl implements AdvancedDatastore {
     /**
      * Create a new DatastoreImpl
      *
-     * @param morphia     the Morphia instance
      * @param mongoClient the connection to the MongoDB instance
      * @param dbName      the name of the database for this data store.
-     * @deprecated This is not meant to be directly instantiated by end user code.  Use
-     * {@link Morphia#createDatastore(MongoClient, Mapper, String)}
      */
-    DatastoreImpl(final Morphia morphia, final MongoClient mongoClient, final String dbName) {
-        this.morphia = morphia;
-        this.mapper = morphia.getMapper();
+    DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
         this.mongoClient = mongoClient;
+
         this.database = mongoClient.getDatabase(dbName)
                                    .withCodecRegistry(fromRegistries(mongoClient.getMongoClientOptions().getCodecRegistry(),
                                        getDefaultCodecRegistry()));
+        this.mapper = new Mapper(this, mongoClient.getMongoClientOptions().getCodecRegistry(), options);
         this.indexHelper = new IndexHelper(mapper, database);
-    }
-
-    /**
-     * Creates a copy of this Datastore and all its configuration but with a new database
-     *
-     * @param database the new database to use for operations
-     * @return the new Datastore instance
-     * @deprecated use {@link Morphia#createDatastore(MongoClient, Mapper, String)}
-     */
-    @Deprecated
-    public DatastoreImpl copy(final String database) {
-        return new DatastoreImpl(morphia, mongoClient, database);
     }
 
     /**
@@ -181,7 +166,7 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void enableDocumentValidation() {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            process(mc, (Validation) mc.getAnnotation(Validation.class));
+            process(mc, mc.getAnnotation(Validation.class));
         }
     }
 
@@ -621,7 +606,7 @@ class DatastoreImpl implements AdvancedDatastore {
         }
 
         final MappedField mfVersion = mc.getMappedVersionField();
-        final String versionKeyName = mfVersion.getNameToStore();
+        final String versionKeyName = mfVersion.getMappedFieldName();
 
         Long oldVersion = (Long) mfVersion.getFieldValue(entity);
         long newVersion = nextValue(oldVersion);
@@ -755,7 +740,7 @@ class DatastoreImpl implements AdvancedDatastore {
         Document document = entityToDocument(ent, involvedObjects);
         List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
         for (MappedField mappedField : versionFields) {
-            String name = mappedField.getNameToStore();
+            String name = mappedField.getMappedFieldName();
             if (document.get(name) == null) {
                 document.put(name, 1);
                 mappedField.setFieldValue(ent, 1L);

@@ -90,7 +90,7 @@ public class TestSerializedFormat extends TestBase {
 
     private void verifyCoverage(final Document document) {
         for (MappedField field : getMorphia().getMapper().getMappedClass(ReferenceType.class).getPersistenceFields()) {
-            String name = field.getNameToStore();
+            String name = field.getMappedFieldName();
             boolean found = document.containsKey(name);
             if (!found) {
                 for (String s : document.keySet()) {

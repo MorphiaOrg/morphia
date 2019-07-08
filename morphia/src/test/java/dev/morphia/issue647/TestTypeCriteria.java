@@ -1,5 +1,6 @@
 package dev.morphia.issue647;
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class TestTypeCriteria extends TestBase {
         entity.firstName = "first_name";
         getDs().save(entity);
 
-        getMorphia().map(Class1.class);
+        Mapper.map(Class1.class);
 
         Query<Class1> query = getDs().find(Class1.class);
         query.criteria("first_name").type(Type.STRING);

@@ -141,7 +141,7 @@ public class Projection {
         Document projection = new Document();
         mapper.getMappedClass(clazz).getPersistenceFields()
               .stream()
-              .map(mf -> new PathTarget(mapper, mapper.getMappedClass(clazz), mf.getNameToStore()).translatedPath())
+              .map(mf -> new PathTarget(mapper, mapper.getMappedClass(clazz), mf.getMappedFieldName()).translatedPath())
               .forEach(name -> projection.put(name, 1));
 
         return projection;

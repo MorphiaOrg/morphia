@@ -1,6 +1,7 @@
 package dev.morphia.issue155;
 
 
+import dev.morphia.mapping.Mapper;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class EnumBehindAnInterfaceTest extends TestBase {
     @Test
     @Ignore("does not work since the EnumConverter stores as a single string value -- no type info")
     public void testEnumBehindAnInterfacePersistence() throws Exception {
-        getMorphia().map(ContainerEntity.class);
+        Mapper.map(ContainerEntity.class);
         ContainerEntity n = new ContainerEntity();
         getDs().save(n);
         n = getDs().get(n);

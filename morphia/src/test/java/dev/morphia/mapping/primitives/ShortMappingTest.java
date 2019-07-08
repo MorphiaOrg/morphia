@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import java.util.List;
 public class ShortMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        getMorphia().map(Shorts.class);
+        Mapper.map(Shorts.class);
         final Shorts ent = new Shorts();
         ent.listWrapperArray.add(new Short[]{1, 2});
         ent.listPrimitiveArray.add(new short[]{2, 3, 12});

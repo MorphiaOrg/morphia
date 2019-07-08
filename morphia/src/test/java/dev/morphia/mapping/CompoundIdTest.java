@@ -50,7 +50,7 @@ public class CompoundIdTest extends TestBase {
 
     @Test
     public void testReference() {
-        getMorphia().map(CompoundIdEntity.class, CompoundId.class);
+        Mapper.map(CompoundIdEntity.class, CompoundId.class);
 
         final CompoundIdEntity sibling = new CompoundIdEntity();
         sibling.id = new CompoundId("sibling ID");

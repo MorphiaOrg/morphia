@@ -3,6 +3,10 @@ package dev.morphia;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.cache.EntityCache;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 
@@ -11,7 +15,7 @@ public abstract class TestBase {
     private MongoClient mongoClient;
     private DB db;
     private Datastore ds;
-    private Morphia morphia = new Morphia();
+    private Mapper mapper;
 
     protected TestBase() {
         try {
@@ -21,11 +25,51 @@ public abstract class TestBase {
         }
     }
 
+    /**
+     * Converts an entity to a Document.  This method is primarily an internal method. Reliance on this method may break your application
+     * in
+     * future releases.
+     *
+     * @param entity the entity to convert
+     * @return the Document
+     */
+    public Document toDocument(final Object entity) {
+        try {
+            return mapper.toDocument(entity);
+        } catch (Exception e) {
+            throw new MappingException("Could not map entity to Document", e);
+        }
+    }
+
+    /**
+     * Creates an entity and populates its state based on the document given.  This method is primarily an internal method.  Reliance on
+     * this method may break your application in future releases.
+     *
+     * @param <T>         type of the entity
+     * @param datastore   the Datastore to use when fetching this reference
+     * @param entityClass type to create
+     * @param document    the object state to use
+     * @param cache       the EntityCache to use to prevent multiple loads of the same entities over and over
+     * @return the newly created and populated entity
+     */
+    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document,
+                                   final EntityCache cache) {
+        if (!entityClass.isInterface() && !datastore.getMapper().isMapped(entityClass)) {
+            throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
+        }
+        try {
+            return mapper.fromDocument(datastore, entityClass, document, cache);
+        } catch (Exception e) {
+            throw new MappingException("Could not map entity from Document", e);
+        }
+    }
+
     @Before
     public void setUp() {
         this.mongoClient.dropDatabase("morphia_test");
         this.db = this.mongoClient.getDB("morphia_test");
-        this.ds = this.morphia.createDatastore(this.mongoClient, this.db.getName());
+        this.ds = Morphia.createDatastore(this.mongoClient, this.db.getName());
+        mapper = ds.getMapper();
     }
 
     @After
@@ -39,9 +83,5 @@ public abstract class TestBase {
 
     public Datastore getDs() {
         return ds;
-    }
-
-    public Morphia getMorphia() {
-        return morphia;
     }
 }

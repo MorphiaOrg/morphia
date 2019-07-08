@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import java.util.List;
 public class FloatMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        getMorphia().map(Floats.class);
+        Mapper.map(Floats.class);
         final Floats ent = new Floats();
         ent.listWrapperArray.add(new Float[]{1.1f, 2.2f});
         ent.listPrimitiveArray.add(new float[]{2.0f, 3.6f, 12.4f});

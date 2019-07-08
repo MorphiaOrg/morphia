@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import dev.morphia.annotations.CappedAt;
@@ -14,7 +15,7 @@ public class TestCapped extends TestBase {
     @Test
     public void testCappedEntity() {
         // given
-        getMorphia().map(CurrentStatus.class);
+        Mapper.map(CurrentStatus.class);
         getDs().ensureCaps();
 
         // when-then

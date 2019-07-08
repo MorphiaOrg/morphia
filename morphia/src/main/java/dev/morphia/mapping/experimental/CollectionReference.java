@@ -149,7 +149,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         MorphiaReference reference = null;
         final List dbVal = (List) mappedField.getDocumentValue(document);
         if (dbVal != null) {
-            final Class subType = mappedField.getTypeParameters().get(0).getSubClass();
+            final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
             final MappedClass mappedClass = mapper.getMappedClass(subType);
 
             if (Set.class.isAssignableFrom(paramType)) {

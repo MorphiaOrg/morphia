@@ -3,7 +3,6 @@ package dev.morphia.query;
 
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
-import com.mongodb.DBCollection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
@@ -24,13 +23,13 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
-import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Assert;
@@ -78,7 +77,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
-        getMorphia().map(GenericKeyValue.class);
+        Mapper.map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
         final List<Object> keys = Arrays.<Object>asList("key1", "key2");
@@ -94,7 +93,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        getMorphia().map(KeyValue.class);
+        Mapper.map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
         final List<Object> keys = Arrays.<Object>asList("key1", "key2");
@@ -251,7 +250,7 @@ public class TestQuery extends TestBase {
     public void testCollations() {
         checkMinServerVersion(3.4);
 
-        getMorphia().map(ContainsRenamedFields.class);
+        Mapper.map(ContainsRenamedFields.class);
         getDs().save(asList(new ContainsRenamedFields("first", "last"),
             new ContainsRenamedFields("First", "Last")));
 
@@ -877,7 +876,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testMultipleConstraintsOnOneField() {
         checkMinServerVersion(3.0);
-        getMorphia().map(ContainsPic.class);
+        Mapper.map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         query.field("size").greaterThanOrEq(10);
@@ -1259,7 +1258,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testReturnOnlyIndexedFields() {
-        getMorphia().map(Pic.class);
+        Mapper.map(Pic.class);
         getDs().ensureIndexes(Pic.class);
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
@@ -1314,7 +1313,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testTailableCursors() {
-        getMorphia().map(CappedPic.class);
+        Mapper.map(CappedPic.class);
         final Datastore ds = getDs();
         ds.ensureCaps();
 
@@ -1430,7 +1429,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testQueryUnmappedData() {
-        getMorphia().map(Class1.class);
+        Mapper.map(Class1.class);
         getDs().ensureIndexes();
 
         getDs().getDatabase().getCollection("user").insertOne(

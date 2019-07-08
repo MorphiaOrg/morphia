@@ -30,6 +30,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.Builder;
 import dev.morphia.utils.IndexType;
@@ -100,7 +101,7 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void embeddedIndexPartialFilters() {
-        getMorphia().map(FeedEvent.class, InboxEvent.class);
+        Mapper.map(FeedEvent.class, InboxEvent.class);
         getDs().ensureIndexes();
         final MongoCollection<Document> inboxEvent = getDatabase().getCollection("InboxEvent");
         for (final Document index : inboxEvent.listIndexes()) {

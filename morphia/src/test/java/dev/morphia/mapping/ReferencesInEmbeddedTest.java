@@ -32,8 +32,8 @@ public class ReferencesInEmbeddedTest extends TestBase {
 
     @Test
     public void testMapping() throws Exception {
-        getMorphia().map(Container.class);
-        getMorphia().map(ReferencedEntity.class);
+        Mapper.map(Container.class);
+        Mapper.map(ReferencedEntity.class);
     }
 
     @Test

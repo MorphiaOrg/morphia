@@ -33,7 +33,7 @@ public class FieldEnumString {
             if (sb.length() > 0) {
                 sb.append(", ");
             }
-            sb.append(mappedField.getNameToStore());
+            sb.append(mappedField.getMappedFieldName());
         }
         display = sb.toString();
     }

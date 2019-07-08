@@ -14,6 +14,7 @@
 package dev.morphia.issue80;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -34,12 +35,12 @@ public class GenericsMappingTest extends TestBase {
 
     @Test
     public void testBoundGenerics() {
-        getMorphia().map(Element.class, AudioElement.class);
+        Mapper.map(Element.class, AudioElement.class);
     }
 
     @Test
     public void testIt() {
-        getMorphia().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
+        Mapper.map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();
         hai.setThing(7);

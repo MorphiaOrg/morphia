@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import java.util.List;
 public class BooleanMappingTest extends TestBase {
     @Test
     public void testMapping() {
-        getMorphia().map(Booleans.class);
+        Mapper.map(Booleans.class);
         final Booleans ent = new Booleans();
         ent.booleans.add(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE});
         ent.list.addAll(Arrays.asList(Boolean.TRUE, Boolean.TRUE));

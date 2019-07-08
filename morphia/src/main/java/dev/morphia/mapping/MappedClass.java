@@ -29,22 +29,15 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.PreSave;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
-import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.codec.pojo.ClassModel;
 import dev.morphia.mapping.validation.MappingValidator;
-import dev.morphia.utils.ReflectionUtils;
 import org.bson.Document;
+import org.bson.codecs.pojo.ClassModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -53,19 +46,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * @morphia.internal
  */
 public class MappedClass {
     private static final Logger LOG = LoggerFactory.getLogger(MappedClass.class);
-    /**
-     * Annotations we are interested in looking for.
-     *
-     * @see #addInterestingAnnotation
-     */
     private static final List<Class<? extends Annotation>> INTERESTING_ANNOTATIONS = new ArrayList<>();
     /**
      * Annotations interesting for life-cycle events
@@ -187,6 +177,7 @@ public class MappedClass {
     @SuppressWarnings("unchecked")
     public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
                                      final Mapper mapper) {
+        if(1==1) throw new UnsupportedOperationException();
         if (hasLifecycle(event) || mapper.hasInterceptors()) {
             final List<ClassMethodPair> methodPairs = lifecycleMethods.get(event);
             try {
@@ -342,7 +333,7 @@ public class MappedClass {
      */
     public MappedField getMappedField(final String storedName) {
         return persistenceFields.stream()
-                                .filter(mappedField -> mappedField.getNameToStore().equals(storedName))
+                                .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName))
                                 .findFirst()
                                 .orElse(null);
     }
@@ -511,8 +502,8 @@ public class MappedClass {
             if (!field.isTransient()) {
                 persistenceFields.add(field);
             } else {
-                LOG.warning(format("Ignoring (will not persist) field: %s.%s [type:%s]", type.getName(),
-                    field.getJavaFieldName(), field.getType().getName()));
+                LOG.warn("Ignoring (will not persist) field: %s.%s [type:%s]", type.getName(),
+                    field.getJavaFieldName(), field.getType().getName());
             }
         });
     }

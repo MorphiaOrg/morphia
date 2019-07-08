@@ -34,7 +34,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
 import org.bson.Document;
 import org.bson.codecs.Encoder;
-import dev.morphia.mapping.codec.EncoderContext;
+import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,9 +99,9 @@ final class IndexHelper {
         List<Index> list = new ArrayList<Index>();
         for (final MappedField mf : mc.getPersistenceFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
-                list.add(convert(mf.getAnnotation(Indexed.class), mf.getNameToStore()));
+                list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedFieldName()));
             } else if (mf.hasAnnotation(Text.class)) {
-                list.add(convert(mf.getAnnotation(Text.class), mf.getNameToStore()));
+                list.add(convert(mf.getAnnotation(Text.class), mf.getMappedFieldName()));
             }
         }
         return list;
@@ -245,7 +245,7 @@ final class IndexHelper {
         }
         String namePath;
         if (mf != null) {
-            namePath = mf.getNameToStore();
+            namePath = mf.getMappedFieldName();
         } else {
             if (!options.disableValidation()) {
                 throw pathFail(mc, path);
@@ -254,8 +254,8 @@ final class IndexHelper {
             }
         }
         if (path.size() > 1) {
+            Class concreteType = !mf.isScalarValue() ? mf.getSpecializedType() : mf.getType();
             try {
-                Class concreteType = !mf.isSingleValue() ? mf.getSubClass() : mf.getConcreteType();
                 namePath += "." + findField(mapper.getMappedClass(concreteType), options, path.subList(1, path.size()));
             } catch (MappingException e) {
                 if (!options.disableValidation()) {

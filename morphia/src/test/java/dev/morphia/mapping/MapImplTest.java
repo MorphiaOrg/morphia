@@ -25,7 +25,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMap() throws Exception {
-        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
         cmoeg.values.put("first", g1);
@@ -42,7 +42,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapUpdateOperations() {
-        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
@@ -66,7 +66,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapUpdateOperationsOnInterfaceValue() throws Exception {
-        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
@@ -90,7 +90,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapWithValueInterface() throws Exception {
-        getMorphia().map(ContainsMapOfEmbeddedGoos.class).map(ContainsMapOfEmbeddedInterfaces.class);
+        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
 
         final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();

@@ -17,8 +17,6 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.model.InsertManyOptions;
-import com.mongodb.lang.Nullable;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.

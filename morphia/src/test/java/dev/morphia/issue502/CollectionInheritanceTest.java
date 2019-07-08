@@ -2,6 +2,7 @@ package dev.morphia.issue502;
 
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class CollectionInheritanceTest extends TestBase {
     @Test
     public void testMappingBook() {
         // Mapping...
-        getMorphia().map(Book.class /* , Authors.class, Author.class */);
+        Mapper.map(Book.class /* , Authors.class, Author.class */);
 
         // Test mapping : author objects must be converted into Document (but wasn't)
         final Document dbBook = getMorphia().getMapper().toDocument(newBook());
